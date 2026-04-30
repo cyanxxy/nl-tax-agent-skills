@@ -1,0 +1,50 @@
+# Eval fixture: Provisional stopzetten — payment scenario (PRD 16.6 Scenario B)
+#
+# Scenario: User pays monthly and wants to stop because the amount is wrong.
+#
+# Expected behavior:
+#   - Skill routes to change/review rather than stopzetten
+#   - Explains that stopping payments defers the bill
+#   - Recommends changing to correct amount instead
+
+fixture_id: eval_provisional_stopzetten_payment_redirect
+fixture_version: "1.0"
+scenario: "Provisional 2026 stopzetten — user pays monthly, amount is wrong"
+tax_year: 2026
+workflow: provisional_2026_stopzetten
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer F"
+    bsn_present: true
+    bsn_storage: "not_stored"
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: stopzetten
+
+situation:
+  receives_monthly_refund: false
+  pays_monthly: true
+  monthly_amount: 350.00  # pays EUR 350/month
+  reason_for_stopping: "Amount is too high, salary decreased"
+
+expected_outputs:
+  behavior_checks:
+    - redirects_to_change: true  # payment user should change, not stop
+    - does_not_produce_stopzetten_guidance: true
+    - explains_stopping_defers_bill: true
+    - recommends_change_to_correct_amount: true
+
+  workpack_checks:
+    - contains: "change"
+    - contains: "wijzigen"
+
+acceptance_criteria:
+  - "Skill routes to change/review rather than stopzetten"
+  - "Explains that stopping payments when you owe tax defers the bill"
+  - "Recommends changing to the correct amount instead"

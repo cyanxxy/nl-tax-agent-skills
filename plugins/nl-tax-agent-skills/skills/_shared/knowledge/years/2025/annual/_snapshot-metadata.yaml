@@ -1,0 +1,50 @@
+snapshot_metadata_version: '1.0'
+sources:
+  bd_annual_data_checklist_2025:
+    content_hash_sha256: e060ffe6af16dc1344da356d24d6df98261b880ee2b998de8802f4017b3cabdb
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_annual_data_checklist_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte
+  bd_annual_return_4_steps_2025:
+    content_hash_sha256: eb9af3873496574d2a170dc33823f82589a7ce198de40c069bd5839410aa425c
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_annual_return_4_steps_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen
+  bd_annual_return_landing_2025:
+    content_hash_sha256: eb9af3873496574d2a170dc33823f82589a7ce198de40c069bd5839410aa425c
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_annual_return_landing_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/belastingaangifte
+  bd_box1_rates_2025:
+    content_hash_sha256: 34fe32ca33c18ba8a8256c54f6c2264d61d89ccf30908c10731c0435e79532ca
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_box1_rates_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+  bd_fisin_2025_index:
+    content_hash_sha256: eb9af3873496574d2a170dc33823f82589a7ce198de40c069bd5839410aa425c
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_fisin_2025_index
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
+  bd_general_tax_credit_2025:
+    content_hash_sha256: 264e0627978035dbed69e36c2cacb8be68ce02032081bad08754100c4ee68ef8
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_general_tax_credit_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2025
+  bd_labour_tax_credit_2025:
+    content_hash_sha256: 264e0627978035dbed69e36c2cacb8be68ce02032081bad08754100c4ee68ef8
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_labour_tax_credit_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2025
+  bd_own_home_deduction_cap_2025:
+    content_hash_sha256: 2accf5040bbcff9e4535596d361eb168abe2a32d3be96d1c760dff195e5b17e8
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_own_home_deduction_cap_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning

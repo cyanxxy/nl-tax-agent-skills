@@ -1,0 +1,52 @@
+# Eval fixture: Provisional stopzetten — refund scenario (PRD 16.6 Scenario A)
+#
+# Scenario: User receives a monthly refund and wants to stop it.
+#
+# Expected behavior:
+#   - Stopzetten guidance is produced
+#   - Skill explains stopzetten is a manual official flow
+#   - No calculation of final tax consequences
+
+fixture_id: eval_provisional_stopzetten_refund
+fixture_version: "1.0"
+scenario: "Provisional 2026 stopzetten — user receives monthly refund"
+tax_year: 2026
+workflow: provisional_2026_stopzetten
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer E"
+    bsn_present: true
+    bsn_storage: "not_stored"
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: stopzetten
+
+situation:
+  receives_monthly_refund: true
+  monthly_amount: 200.00  # receives EUR 200/month
+  reason_for_stopping: "Deductions no longer apply"
+
+expected_outputs:
+  workpack_checks:
+    - section: "Subflow"
+      contains: "stopzetten"
+    - contains: "manual"
+    - contains: "official"
+    - contains: "Mijn Belastingdienst"
+
+  behavior_checks:
+    - stopzetten_guidance_produced: true
+    - does_not_redirect_to_change: true  # refund → stopzetten is correct
+    - explains_manual_flow: true
+    - no_final_tax_calculation: true
+
+acceptance_criteria:
+  - "Stopzetten guidance is produced"
+  - "Skill explains stopzetten is a manual official flow"
+  - "Does not redirect to change (refund scenario is appropriate for stopzetten)"

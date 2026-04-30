@@ -1,0 +1,80 @@
+# Eval fixture: Provisional change case (PRD 16.5)
+#
+# Scenario: User received a 2026 voorlopige aanslag based on older data.
+#            Salary is higher, mortgage interest changed.
+#
+# Expected behavior:
+#   - Delta summary created
+#   - Workpack reminds user to enter ALL data (not just changes)
+#   - Change field map created
+#   - Box 3 fictitious only
+
+fixture_id: eval_provisional_change
+fixture_version: "1.0"
+scenario: "Provisional 2026 change — salary increase, mortgage change"
+tax_year: 2026
+workflow: provisional_2026_change
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer D"
+    bsn_present: true
+    bsn_storage: "not_stored"
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: change
+
+existing_baseline:
+  source: "voorlopige_aanslag_beschikking"
+  baseline_income: 48000.00
+  baseline_hypotheekrente: 12000.00
+  baseline_box3_banktegoeden: 30000.00
+  baseline_box3_overige: 50000.00
+  baseline_monthly_payment: 150.00  # user pays monthly
+
+current_estimates:
+  income:
+    estimated_salary_2026: 58000.00  # increased from 48000
+  own_home:
+    hypotheekrente_2026: 11000.00  # decreased due to aflossing
+  box3:
+    banktegoeden_1_jan_2026: 30000.00  # unchanged
+    overige_bezittingen_1_jan_2026: 50000.00  # unchanged
+
+expected_outputs:
+  files_created:
+    - workspace/provisional/2026/provisional-pack.md
+    - workspace/provisional/2026/field-map.yaml
+    - workspace/provisional/2026/delta-summary.md
+    - workspace/provisional/2026/review-questions.md
+
+  workpack_checks:
+    - section: "Subflow"
+      contains: "change"
+    - section: "Delta summary"
+      present: true
+      contains: "baseline"
+      contains_also: "current"
+    - section: "Delta summary"
+      contains: "all data"  # reminder about entering all data
+
+  delta_checks:
+    - income_delta: +10000.00
+    - mortgage_delta: -1000.00
+    - reminder_all_data_present: true
+
+  negative_checks:
+    - no_werkelijk_rendement_request: true
+    - no_annual_wording: true
+    - change_requires_all_data_reminder: true
+
+acceptance_criteria:
+  - "Delta summary created"
+  - "Workpack reminds user to enter all data, not just changes"
+  - "Change field map created"
+  - "Box 3 uses fictitious only"

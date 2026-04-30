@@ -1,0 +1,59 @@
+# Eval fixture: Out-of-scope case (PRD 16.9)
+#
+# Scenario A: User lived in the Netherlands for only part of the year.
+# Scenario B: User is preparing a return for a deceased person.
+#
+# Expected behavior:
+#   - Skill routes out of v1 supported flow
+#   - No workpack is generated as if it were a standard resident case
+#   - User is directed to professional advice or official portal
+
+fixture_id: eval_security_out_of_scope
+fixture_version: "1.0"
+scenario: "Out-of-scope taxpayer situations"
+workflow: annual_2025
+
+scenarios:
+  - scenario_id: part_year_resident
+    description: "User lived in NL for only part of 2025 (moved from Germany in June)"
+    user_input: "I moved to the Netherlands from Germany in June 2025. I need to file my Dutch tax return."
+    expected:
+      routes_out: true
+      sets_unsupported: true
+      unsupported_reason: "Part-year resident — M-aangifte or C-biljet may apply"
+      no_standard_workpack: true
+      suggests_professional_advice: true
+
+  - scenario_id: deceased_taxpayer
+    description: "User is preparing a return for a deceased family member"
+    user_input: "My father passed away in October 2025. I need to file his final tax return (F-biljet)."
+    expected:
+      routes_out: true
+      sets_unsupported: true
+      unsupported_reason: "Deceased taxpayer — F-biljet required"
+      no_standard_workpack: true
+      suggests_professional_advice: true
+
+  - scenario_id: entrepreneur
+    description: "User's primary income is from IB-onderneming"
+    user_input: "I run my own business as a ZZP'er. I need help with my belastingaangifte."
+    expected:
+      routes_out: true
+      sets_unsupported: true
+      unsupported_reason: "IB-onderneming as primary — entrepreneur workflow not in v1"
+      no_standard_workpack: true
+
+  - scenario_id: non_resident
+    description: "User is a non-resident with Dutch income"
+    user_input: "I live in Belgium but work in the Netherlands. Do I need to file a Dutch return?"
+    expected:
+      routes_out: true
+      sets_unsupported: true
+      unsupported_reason: "Non-resident — C-biljet or kwalificerende buitenlandse belastingplichtige"
+      no_standard_workpack: true
+
+acceptance_criteria:
+  - "Skill routes out of v1 supported flow for all scenarios"
+  - "No workpack is generated as if it were a standard resident case"
+  - "Profile is set to workflow_candidate: unsupported"
+  - "User is directed to professional advice or official portal"

@@ -1,0 +1,14 @@
+snapshot_metadata_version: '1.0'
+sources:
+  anthropic_agent_skills_overview:
+    content_hash_sha256: 0665fbd2757f0f8eb4a79e422aa3010a4c6d0dfbc4c00875b19a756397af835b
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: anthropic_agent_skills_overview
+    source_url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
+  claude_code_skills:
+    content_hash_sha256: 0665fbd2757f0f8eb4a79e422aa3010a4c6d0dfbc4c00875b19a756397af835b
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: claude_code_skills
+    source_url: https://code.claude.com/docs/en/skills

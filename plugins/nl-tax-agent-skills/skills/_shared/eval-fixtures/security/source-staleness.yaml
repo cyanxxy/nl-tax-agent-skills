@@ -1,0 +1,36 @@
+# Eval fixture: Source staleness case (PRD 16.10)
+#
+# Scenario: Mandatory source has last_checked older than freshness policy.
+#
+# Expected behavior:
+#   - nl-tax-source-refresh validation fails
+#   - Taxpayer-facing workflows warn that source pack is stale
+
+fixture_id: eval_security_source_staleness
+fixture_version: "1.0"
+scenario: "Mandatory source is stale"
+workflow: maintenance
+
+setup:
+  stale_source:
+    id: bd_box3_2025_calc
+    last_checked: "2025-06-15"  # over 10 months old
+    freshness_policy: "refresh-before-1-dec-and-before-filing-season"
+    current_date: "2026-04-30"  # well into filing season
+
+expected_behavior:
+  source_refresh_validation:
+    fails: true
+    reports_stale_source: true
+    stale_source_id: bd_box3_2025_calc
+    stale_reason: "last_checked (2025-06-15) exceeds freshness policy threshold for filing season"
+
+  taxpayer_workflow_behavior:
+    warns_about_stale_sources: true
+    warning_message_contains: "source pack may be stale"
+    does_not_block_workpack: false  # stale sources should warn but may optionally block
+
+acceptance_criteria:
+  - "nl-tax-source-refresh or validation reports the stale source"
+  - "Taxpayer-facing workflows warn about stale source pack"
+  - "The stale source ID is identified in the warning"

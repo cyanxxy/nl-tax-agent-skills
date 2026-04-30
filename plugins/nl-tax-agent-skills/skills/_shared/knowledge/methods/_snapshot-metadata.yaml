@@ -1,0 +1,8 @@
+snapshot_metadata_version: '1.0'
+sources:
+  regels_overheid_regelspraak:
+    content_hash_sha256: 828835327c7bef9c80d99dab5cc90b9f2388beb22dc0f902fd3a3ed985fdf072
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: regels_overheid_regelspraak
+    source_url: https://regels.overheid.nl/docs/methods/REGELSPRAAK

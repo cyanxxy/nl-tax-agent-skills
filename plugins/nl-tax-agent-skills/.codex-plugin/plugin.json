@@ -1,0 +1,37 @@
+{
+  "name": "nl-tax-agent-skills",
+  "version": "0.1.0",
+  "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
+  "author": {
+    "name": "Tax Skill Developers"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "tax",
+    "dutch-tax",
+    "agent-skills",
+    "workpacks",
+    "voorlopige-aanslag"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "NL Tax Agent Skills",
+    "shortDescription": "Dutch tax workpack skills for annual return 2025 and voorlopige aanslag 2026.",
+    "longDescription": "A skills-only plugin that gives an LLM a structured local playbook for Dutch individual income-tax preparation. It guides intake, evidence indexing, source-backed reasoning, annual-return workpacks, provisional-assessment workpacks, field maps, and manual submission checklists without logging in, filing, signing, or handling DigiD credentials.",
+    "developerName": "Tax Skill Developers",
+    "category": "Productivity",
+    "capabilities": [
+      "Agent Skills",
+      "Local Workpacks",
+      "Source-Backed Guidance"
+    ],
+    "defaultPrompt": [
+      "Prepare my 2025 Dutch annual tax workpack.",
+      "Review my 2026 voorlopige aanslag.",
+      "Index my Dutch tax evidence files."
+    ],
+    "brandColor": "#1F6FEB",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/logo.png"
+  }
+}

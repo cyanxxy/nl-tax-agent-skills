@@ -1,0 +1,89 @@
+# Eval fixture: Provisional request case (PRD 16.4)
+#
+# Scenario: User wants to request a 2026 voorlopige aanslag.
+#            New mortgage deduction, estimated salary, savings + investments.
+#
+# Expected behavior:
+#   - Provisional request workpack created
+#   - All amounts labeled as estimates
+#   - Box 3 provisional method used (fictitious only)
+#   - No werkelijk rendement request appears
+
+fixture_id: eval_provisional_request
+fixture_version: "1.0"
+scenario: "Provisional 2026 request — new mortgage, employed, savings"
+tax_year: 2026
+workflow: provisional_2026_request
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer C"
+    bsn_present: true
+    bsn_storage: "not_stored"
+    date_of_birth_known: true
+    aow_status_known: true
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: request
+
+estimated_data:
+  income:
+    estimated_salary_2026: 52000.00
+  own_home:
+    woz_waarde_2026: 380000.00
+    hypotheekrente_2026: 14000.00
+    mortgage_start_year: 2025
+    annuitair: true
+  box3:
+    banktegoeden_1_jan_2026: 35000.00
+    overige_bezittingen_1_jan_2026: 60000.00
+    schulden_1_jan_2026: 5000.00
+
+expected_outputs:
+  files_created:
+    - workspace/provisional/2026/provisional-pack.md
+    - workspace/provisional/2026/field-map.yaml
+    - workspace/provisional/2026/review-questions.md
+    - workspace/shared/assumptions.md
+
+  files_not_created:
+    - workspace/annual/**
+
+  workpack_checks:
+    - section: "Subflow"
+      contains: "request"
+    - section: "Scope"
+      contains: "2026"
+      not_contains: "2025"
+    - section: "Box 3 provisional estimate"
+      contains: "fictitious"
+      not_contains: "werkelijk rendement"
+    - section: "Box 3 provisional estimate"
+      contains: "provisional fictitious calculation"
+    - section: "Income estimate"
+      contains: "estimate"
+    - section: "Not submission advice"
+      present: true
+
+  field_map_checks:
+    - workflow: "provisional_assessment"
+    - tax_year: 2026
+    - no_werkelijk_rendement_field: true
+
+  negative_checks:
+    - no_werkelijk_rendement_request: true  # CRITICAL
+    - no_annual_wording: true
+    - no_digid_credential_fields: true
+    - all_amounts_labeled_estimate: true
+
+acceptance_criteria:
+  - "Provisional request workpack created"
+  - "All amounts labeled as estimates"
+  - "Box 3 provisional method used (fictitious only)"
+  - "No werkelijk rendement request appears"
+  - "No annual return wording in output"

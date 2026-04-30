@@ -1,0 +1,20 @@
+snapshot_metadata_version: '1.0'
+sources:
+  bd_box3_2025_actual_return:
+    content_hash_sha256: 1170ee301f0111b0ed865e04e6516b14ad692f645714cc24de519549862cadaa
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_box3_2025_actual_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/werkelijk-rendement-belastingaangifte
+  bd_box3_2025_calc:
+    content_hash_sha256: a26cdaca17b69292fe4af557ee6ad30658e276bb222eeecc6b0182c80f1df5f2
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_box3_2025_calc
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025
+  bd_fisin_box3_actual_return_2025:
+    content_hash_sha256: 1170ee301f0111b0ed865e04e6516b14ad692f645714cc24de519549862cadaa
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: bd_fisin_box3_actual_return_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/Box_3_Werkelijk_rendement

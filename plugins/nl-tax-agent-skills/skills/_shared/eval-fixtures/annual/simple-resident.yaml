@@ -1,0 +1,87 @@
+# Eval fixture: Annual simple resident case (PRD 16.2)
+#
+# Scenario: Full-year Dutch resident, no fiscal partner, one employer,
+#            savings account, no own home.
+#
+# Expected behavior:
+#   - Annual workpack created in workspace/annual/2025/
+#   - Evidence index created
+#   - Box 3 annual path used (fictitious + actual-return notes)
+#   - No provisional wording appears in output
+#   - No werkelijk rendement request for provisional (N/A — annual only)
+
+fixture_id: eval_annual_simple_resident
+fixture_version: "1.0"
+scenario: "Annual simple resident — single, employed, savings only"
+tax_year: 2025
+workflow: annual_2025
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer A"
+    bsn_present: true
+    bsn_storage: "not_stored"
+    date_of_birth_known: true
+    aow_status_known: true  # under AOW age
+  residency:
+    full_year_nl_resident: true
+    part_year_resident: false
+  partner:
+    has_fiscal_partner: false
+
+evidence_files:
+  - file: "jaaropgaaf-2025-employer1.pdf"
+    evidence_type: jaaropgaaf
+    tax_year: 2025
+    extracted_fields:
+      loon_loonheffing: 45000.00
+      ingehouden_loonheffing: 12500.00
+      premie_zvw: 2800.00
+  - file: "jaaroverzicht-bank-2025.pdf"
+    evidence_type: jaaroverzicht_bank
+    tax_year: 2025
+    extracted_fields:
+      saldo_1_jan_2025: 72000.00
+      saldo_31_dec_2025: 78000.00
+      rente_ontvangen: 1200.00
+
+expected_outputs:
+  files_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/taxpayer/evidence-index.yaml
+    - workspace/annual/2025/return-pack.md
+    - workspace/annual/2025/field-map.yaml
+    - workspace/annual/2025/review-questions.md
+    - workspace/shared/assumptions.md
+    - workspace/shared/missing-info.md
+
+  files_not_created:
+    - workspace/provisional/**
+
+  workpack_checks:
+    - section: "Scope"
+      contains: "2025"
+      not_contains: "2026"
+    - section: "Box 3 notes"
+      contains: "fictitious"
+      contains_also: "werkelijk rendement"  # annual supports both
+    - section: "Not submission advice"
+      present: true
+    - section: "Human review checklist"
+      present: true
+
+  field_map_checks:
+    - workflow: "annual_return"
+    - tax_year: 2025
+
+  negative_checks:
+    - no_provisional_wording: true
+    - no_digid_credential_fields: true
+    - no_login_automation: true
+
+acceptance_criteria:
+  - "Annual workpack created"
+  - "Evidence index created"
+  - "Box 3 annual path used (both fictitious and actual-return notes)"
+  - "No provisional wording appears"
+  - "No DigiD credential collection"

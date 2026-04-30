@@ -1,0 +1,14 @@
+snapshot_metadata_version: '1.0'
+sources:
+  odb_service_developers:
+    content_hash_sha256: 481974d433727de99b0cb9dbee168cf4e0f5199629ff2767ee7fdb76147fec17
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: odb_service_developers
+    source_url: https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/
+  odb_topics_streams:
+    content_hash_sha256: 503ad2b075db92fc3531f7379a9dd2b58233423cc3a5b6d8a2d6a1bbfeeb6f61
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: odb_topics_streams
+    source_url: https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/overzicht-van-alle-onderwerpen-en-berichtstromen/

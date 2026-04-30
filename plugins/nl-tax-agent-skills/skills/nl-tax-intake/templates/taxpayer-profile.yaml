@@ -1,0 +1,32 @@
+taxpayer_profile_version: "1.0"
+created_at: ""
+workflow_candidate: ""
+
+person:
+  display_name: null
+  bsn_present: false
+  bsn_storage: "not_stored"
+  date_of_birth_known: false
+  aow_status_known: false
+
+residency:
+  full_year_nl_resident: null
+  part_year_resident: null
+  unsupported_reason: null
+
+partner:
+  has_fiscal_partner: null
+  partner_bsn_present: false
+  partner_digid_requested: false
+
+workflows:
+  annual_2025:
+    requested: false
+    status: "not_started"
+  provisional_2026:
+    requested: false
+    subflow: null
+    status: "not_started"
+
+notes:
+  - "No DigiD credentials collected."

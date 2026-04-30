@@ -1,0 +1,496 @@
+# =============================================================================
+# Source Register  --  Dutch Tax Skills Project
+# =============================================================================
+# Canonical list of every external source that skills depend on.
+# Each entry carries enough metadata so that the refresh pipeline can
+# validate freshness, and each skill can declare which sources it needs.
+#
+# Fields per entry:
+#   id                 unique key (snake_case)
+#   title              human-readable name
+#   domain / url       authoritative location
+#   source_type        law | official_guidance | official_rates |
+#                      official_doctrine | official_algorithm_register |
+#                      platform_docs | developer_reference | methodology
+#   snapshot_path      local markdown snapshot relative to repo root
+#   last_checked       ISO date of most recent manual verification
+#   freshness_policy   how often / when to re-check
+#   owner              team or role responsible for keeping the snapshot current
+#   mandatory_for      list of skill names that MUST have access to this source
+#
+# Optional fields (present where applicable):
+#   workflow           annual_return | provisional_assessment | security
+#   tax_year           numeric year the source applies to
+# =============================================================================
+
+sources:
+
+  # ===========================================================================
+  #  Anthropic / Claude Skills
+  # ===========================================================================
+
+  - id: anthropic_agent_skills_overview
+    title: "Agent Skills overview"
+    domain: platform.claude.com
+    url: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
+    source_type: platform_docs
+    snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check monthly; platform docs may change with new releases"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+      - nl-tax-evidence-indexer
+      - nl-tax-source-refresh
+
+  - id: claude_code_skills
+    title: "Extend Claude with skills"
+    domain: code.claude.com
+    url: "https://code.claude.com/docs/en/skills"
+    source_type: platform_docs
+    snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check monthly; platform docs may change with new releases"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+      - nl-tax-evidence-indexer
+      - nl-tax-source-refresh
+
+  # ===========================================================================
+  #  Dutch legal backbone
+  # ===========================================================================
+
+  - id: law_wet_inkomstenbelasting_2001
+    title: "Wet inkomstenbelasting 2001"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/laws/wet-inkomstenbelasting-2001.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag (3rd Tuesday of September) and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+
+  - id: law_uitvoeringsregeling_ib_2001
+    title: "Uitvoeringsregeling inkomstenbelasting 2001"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0012031/"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/laws/uitvoeringsregeling-inkomstenbelasting-2001.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+
+  - id: law_uitvoeringsbesluit_ib_2001
+    title: "Uitvoeringsbesluit inkomstenbelasting 2001"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0012066/"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/laws/uitvoeringsbesluit-inkomstenbelasting-2001.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+
+  # ===========================================================================
+  #  Annual return 2025
+  # ===========================================================================
+
+  - id: bd_annual_return_landing_2025
+    title: "Belastingaangifte"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/belastingaangifte"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-evidence-indexer
+
+  - id: bd_annual_return_4_steps_2025
+    title: "Doe online aangifte inkomstenbelasting in 4 stappen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-evidence-indexer
+
+  - id: bd_annual_data_checklist_2025
+    title: "Deze gegevens hebt u nodig bij het invullen van uw belastingaangifte"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/evidence-checklist.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-evidence-indexer
+
+  - id: bd_fisin_2025_index
+    title: "Fiscale Informatie 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index"
+    source_type: official_doctrine
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-evidence-indexer
+
+  # ===========================================================================
+  #  Annual rates and credits
+  # ===========================================================================
+
+  - id: bd_box1_rates_2025
+    title: "Box 1: uitleg en tarieven"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1"
+    source_type: official_rates
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
+  - id: bd_general_tax_credit_2025
+    title: "Tabel algemene heffingskorting 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2025"
+    source_type: official_rates
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
+  - id: bd_labour_tax_credit_2025
+    title: "Tabel arbeidskorting 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2025"
+    source_type: official_rates
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
+  - id: bd_own_home_deduction_cap_2025
+    title: "Beperking hypotheekrenteaftrek als u een hoog inkomen hebt"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning"
+    source_type: official_guidance
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/own-home.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
+  # ===========================================================================
+  #  Box 3
+  # ===========================================================================
+
+  - id: bd_box3_2025_calc
+    title: "Hoe wordt mijn box 3-inkomen over 2025 berekend?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box3/fictitious.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box3
+
+  - id: bd_box3_2025_actual_return
+    title: "Werkelijk rendement in belastingaangifte 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/werkelijk-rendement-belastingaangifte"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box3
+
+  - id: bd_fisin_box3_actual_return_2025
+    title: "Fiscale Informatie 2025 — Box 3 Werkelijk rendement"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/Box_3_Werkelijk_rendement"
+    source_type: official_doctrine
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box3
+
+  - id: bd_box3_2026_provisional
+    title: "Hoe is het box 3-inkomen op mijn voorlopige aanslag 2026 berekend?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/box3-provisional.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after legislative changes"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-box3
+
+  # ===========================================================================
+  #  Voorlopige aanslag 2026
+  # ===========================================================================
+
+  - id: bd_provisional_landing_2026
+    title: "Voorlopige aanslag"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/voorlopige-aanslag"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/request-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  - id: bd_provisional_request_2026
+    title: "In 4 stappen zelf online een voorlopige aanslag 2026 aanvragen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-4-stappen-zelf-voorlopige-aanslag-aanvragen"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/request-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  - id: bd_provisional_change_2026
+    title: "In 4 stappen zelf online uw voorlopige aanslag 2026 wijzigen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/change-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  - id: bd_provisional_review_2026
+    title: "Hoe controleer ik mijn voorlopige aanslag en in welke situaties moet ik hem wijzigen?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/review-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  - id: bd_provisional_stopzetten_2026
+    title: "Ik wil mijn voorlopige aanslag 2026 stopzetten - kan dat?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-stoppen"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  - id: bd_provisional_rates_2026
+    title: "Voorlopige aanslag 2026: gebruikte tarieven en heffingskortingen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen"
+    source_type: official_rates
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-intake
+
+  # ===========================================================================
+  #  Security and authorization
+  # ===========================================================================
+
+  - id: bd_digid_machtigen
+    title: "DigiD Machtigen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen"
+    source_type: official_guidance
+    workflow: security
+    snapshot_path: "skills/_shared/knowledge/security/machtigen.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check quarterly; DigiD Machtigen procedures may change with platform updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+      - nl-tax-evidence-indexer
+
+  # ===========================================================================
+  #  Algorithm reference
+  # ===========================================================================
+
+  - id: bd_algoritmeregister_vva_eva
+    title: "Weegmodule verzoek voorlopige aanslag (VVA) en bedrijfsregels eerste voorlopige aanslag (EVA)"
+    domain: over-ons.belastingdienst.nl
+    url: "https://over-ons.belastingdienst.nl/onderwerpen/omgaan-met-gegevens/algoritmeregister/weegmodule-verzoek-voorlopige-aanslag-vva-en-bedrijfsregels-eerste-voorlopige-aanslag-eva/"
+    source_type: official_algorithm_register
+    workflow: provisional_assessment
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when the Belastingdienst updates its algoritmeregister; typically annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+
+  # ===========================================================================
+  #  ODB compatibility
+  # ===========================================================================
+
+  - id: odb_service_developers
+    title: "Dienstverlening aan softwareontwikkelaars en gegevensleveranciers"
+    domain: odb.belastingdienst.nl
+    url: "https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/"
+    source_type: developer_reference
+    snapshot_path: "skills/_shared/knowledge/compat/odb-topics.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check quarterly; ODB specifications may change with new filing seasons"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-source-refresh
+
+  - id: odb_topics_streams
+    title: "Overzicht van alle onderwerpen en berichtstromen"
+    domain: odb.belastingdienst.nl
+    url: "https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/overzicht-van-alle-onderwerpen-en-berichtstromen/"
+    source_type: developer_reference
+    snapshot_path: "skills/_shared/knowledge/compat/odb-productoverzichten.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check quarterly; ODB specifications may change with new filing seasons"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-source-refresh
+
+  # ===========================================================================
+  #  Rule-authoring methodology
+  # ===========================================================================
+
+  - id: regels_overheid_regelspraak
+    title: "Regelspraak"
+    domain: regels.overheid.nl
+    url: "https://regels.overheid.nl/docs/methods/REGELSPRAAK"
+    source_type: methodology
+    snapshot_path: "skills/_shared/knowledge/methods/regelspraak.md"
+    last_checked: "2026-04-30"
+    freshness_policy: "check when regels.overheid.nl publishes a new Regelspraak version"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-box3
+      - nl-tax-partner-deductions
+      - nl-tax-evidence-indexer
+      - nl-tax-source-refresh

@@ -1,0 +1,23 @@
+evidence_index_version: "1.0"
+created_at: ""
+updated_at: ""
+source_directory: ""
+total_files: 0
+classified_files: 0
+review_required_count: 0
+suspicious_count: 0
+items: []
+# Each item:
+#   evidence_id: "ev_001"
+#   file_path: "uploads/example.pdf"
+#   file_sha256: ""
+#   file_size_bytes: 0
+#   evidence_type: ""
+#   tax_year: null
+#   owner: "taxpayer"
+#   extraction_status: "indexed_only"
+#   confidence: null
+#   review_required: true
+#   suspicious_content_detected: false
+#   notes: []
+#   extracted_fields: {}

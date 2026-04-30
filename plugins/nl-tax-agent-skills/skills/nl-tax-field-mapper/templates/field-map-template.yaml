@@ -1,0 +1,24 @@
+field_map_version: "1.0"
+workflow: ""          # "annual" or "provisional"
+tax_year: null        # e.g. 2025 for annual, 2026 for provisional
+created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
+
+fields: []
+# Each field entry:
+#   field_id: ""                    # Unique identifier from the field reference
+#   label: ""                       # Dutch label as shown on the portal
+#   source:
+#     type: ""                      # One of: evidence | estimate | baseline | calculated
+#     evidence_id: null             # Reference to evidence-index.yaml entry (if applicable)
+#     profile_path: ""              # Path in taxpayer profile (if applicable)
+#   value: null                     # The value to enter on the form
+#   confidence: null                # 0.0 to 1.0 per mapping principles
+#   manual_review_required: true    # Boolean — true if human must verify before entry
+#   notes: []                       # List of notes, warnings, or context strings
+
+missing_fields: []
+# Each missing field entry:
+#   field_id: ""                    # The field identifier from the field reference
+#   label: ""                       # Dutch label of the missing field
+#   reason: ""                      # Why data is not available
+#   blocking: true                  # true if the return/assessment cannot proceed without it

@@ -1,0 +1,102 @@
+# Eval fixture: Annual partner + box 3 actual-return case (PRD 16.3)
+#
+# Scenario: Fiscal partners, savings + investments + crypto,
+#            actual return shows lower than fictitious return.
+#
+# Expected behavior:
+#   - Both fictitious and actual-return notes are generated
+#   - Partner allocation assumptions are explicit
+#   - No claim of final official calculation is made
+#   - Comparison notes show actual return is more favorable
+
+fixture_id: eval_annual_partner_box3_actual
+fixture_version: "1.0"
+scenario: "Annual partner + box 3 actual return favorable"
+tax_year: 2025
+workflow: annual_2025
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer B"
+    bsn_present: true
+    bsn_storage: "not_stored"
+    date_of_birth_known: true
+    aow_status_known: true
+  residency:
+    full_year_nl_resident: true
+    part_year_resident: false
+  partner:
+    has_fiscal_partner: true
+    partner_bsn_present: true
+
+evidence_files:
+  - file: "jaaropgaaf-2025-taxpayer.pdf"
+    evidence_type: jaaropgaaf
+    tax_year: 2025
+    owner: taxpayer
+    extracted_fields:
+      loon_loonheffing: 65000.00
+      ingehouden_loonheffing: 22000.00
+  - file: "jaaropgaaf-2025-partner.pdf"
+    evidence_type: jaaropgaaf
+    tax_year: 2025
+    owner: partner
+    extracted_fields:
+      loon_loonheffing: 35000.00
+      ingehouden_loonheffing: 8500.00
+  - file: "jaaroverzicht-bank-2025.pdf"
+    evidence_type: jaaroverzicht_bank
+    tax_year: 2025
+    owner: shared
+    extracted_fields:
+      saldo_1_jan_2025: 45000.00
+      rente_ontvangen: 650.00
+  - file: "jaaroverzicht-beleggingen-2025.pdf"
+    evidence_type: jaaroverzicht_beleggingen
+    tax_year: 2025
+    owner: shared
+    extracted_fields:
+      waarde_1_jan_2025: 180000.00
+      waarde_31_dec_2025: 165000.00  # market declined
+      dividenden_ontvangen: 3200.00
+      gerealiseerde_verliezen: -8500.00
+  - file: "crypto-overzicht-2025.pdf"
+    evidence_type: crypto_overzicht
+    tax_year: 2025
+    owner: taxpayer
+    extracted_fields:
+      waarde_1_jan_2025: 25000.00
+      waarde_31_dec_2025: 18000.00  # crypto declined
+
+box3_scenario:
+  total_banktegoeden: 45000.00
+  total_overige_bezittingen: 205000.00  # investments + crypto
+  total_schulden: 0.00
+  combined_heffingsvrij_vermogen: 114000.00  # partners
+  actual_return_total: -4650.00  # 650 interest + 3200 dividends - 8500 losses = negative
+  fictitious_favorable: false
+  actual_return_favorable: true  # actual return is negative, much lower than fictitious
+
+expected_outputs:
+  workpack_checks:
+    - section: "Box 3 notes"
+      contains: "fictitious"
+      contains_also: "werkelijk rendement"
+      contains_also: "actual return"
+    - section: "Box 3 notes"
+      contains: "comparison"
+    - section: "Fiscal partner notes"
+      contains: "allocation"
+    - section: "Not submission advice"
+      present: true
+
+  negative_checks:
+    - no_final_calculation_claim: true
+    - no_provisional_wording: true
+    - partner_allocation_explicit: true
+
+acceptance_criteria:
+  - "Both fictitious and actual-return notes are generated"
+  - "Partner allocation assumptions are explicit"
+  - "No claim of final official calculation is made"
+  - "Comparison notes present"

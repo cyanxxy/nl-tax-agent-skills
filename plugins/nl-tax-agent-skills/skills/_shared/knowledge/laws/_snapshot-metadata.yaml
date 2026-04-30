@@ -1,0 +1,20 @@
+snapshot_metadata_version: '1.0'
+sources:
+  law_uitvoeringsbesluit_ib_2001:
+    content_hash_sha256: 2550c398c4edbb641afa227dab0d4bcf2c58809c04a98655569a87640d08cade
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: law_uitvoeringsbesluit_ib_2001
+    source_url: https://wetten.overheid.nl/BWBR0012066/
+  law_uitvoeringsregeling_ib_2001:
+    content_hash_sha256: 5cbd81fdd821ea425d3df3950491adc07c2d835336a983a640232110ea15e2c2
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: law_uitvoeringsregeling_ib_2001
+    source_url: https://wetten.overheid.nl/BWBR0012031/
+  law_wet_inkomstenbelasting_2001:
+    content_hash_sha256: 83c86d8d18b3c4372e3a2fccf54de6785a669ca23164d6d73bb79947134de4b6
+    review_status: reviewed
+    snapshot_created_at: '2026-04-30T19:48:44.402110+00:00'
+    source_id: law_wet_inkomstenbelasting_2001
+    source_url: https://wetten.overheid.nl/BWBR0011353/

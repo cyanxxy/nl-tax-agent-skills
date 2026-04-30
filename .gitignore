@@ -1,0 +1,45 @@
+# Real taxpayer data must never be committed
+workspace/
+uploads/
+evidence/
+
+# Common sensitive document/data formats
+*.pdf
+*.jpg
+*.jpeg
+*.png
+!plugins/**/assets/*.png
+*.heic
+*.tif
+*.tiff
+*.xlsx
+*.xls
+*.csv
+*.zip
+*.7z
+*.rar
+
+# Generated local packs and secrets
+__pycache__/
+*.py[cod]
+*.bsn
+*.iban
+*.secret
+*.key
+*.pem
+.env
+.env.*
+
+# Local AI assistant/session files
+.agents/
+.claude/
+.codex/
+CLAUDE.md
+claude.md
+CLAUDE.local.md
+*.session.log
+*.local.md
+
+# OS files
+.DS_Store
+Thumbs.db
