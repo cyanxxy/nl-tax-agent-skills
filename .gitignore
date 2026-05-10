@@ -22,6 +22,7 @@ evidence/
 # Generated local packs and secrets
 __pycache__/
 *.py[cod]
+plugins/*/version.json
 *.bsn
 *.iban
 *.secret

@@ -18,7 +18,6 @@ That marketplace points at this plugin directory.
 nl-tax-agent-skills/
   .claude-plugin/plugin.json    # Claude Code plugin manifest
   .codex-plugin/plugin.json     # Codex plugin manifest
-  version.json                  # Cowork org-plugin sync version
   assets/
     icon.png
     logo.png
@@ -155,6 +154,12 @@ plugins/nl-tax-agent-skills/.codex-plugin/plugin.json
 
 The plugin also includes `commands/` because Codex plugin bundles can expose flat command files in addition to `skills/`.
 
+## Update Behavior
+
+The Claude-facing marketplace and plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude then uses the git commit SHA as the plugin version, so each pushed commit can be picked up by the Cowork marketplace **Update** button or by Claude Code plugin update.
+
+If you deploy this plugin as a local `org-plugins/` directory for Cowork on third-party platforms, create a deployment-local `version.json` and bump its `version` string on every rollout. That file is not committed here because it would make GitHub-synced updates look unchanged unless manually bumped.
+
 ## Release Checks
 
 - The release artifact must contain only this plugin package, the repository README, the license, and the marketplace manifest.
@@ -168,7 +173,6 @@ Run these checks from the repository root:
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
-python3 -m json.tool plugins/nl-tax-agent-skills/version.json >/dev/null
 test -d plugins/nl-tax-agent-skills/commands
 
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \

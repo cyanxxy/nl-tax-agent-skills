@@ -19,7 +19,6 @@ plugins/nl-tax-agent-skills/
   .claude-plugin/plugin.json
   .codex-plugin/plugin.json
   README.md
-  version.json
   assets/
     icon.png
     logo.png
@@ -98,6 +97,19 @@ zip -r ../../nl-tax-agent-skills.plugin.zip . \
 ```
 
 Then use **Cowork > Customize > Browse plugins** and upload the custom plugin file.
+
+### Cowork GitHub Updates
+
+This marketplace intentionally does not set a fixed Claude plugin `version` in either:
+
+```text
+.claude-plugin/marketplace.json
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json
+```
+
+For GitHub-synced Cowork marketplaces and Claude Code installs, Claude falls back to the git commit SHA as the plugin version. That means each pushed commit can be picked up by the Cowork marketplace **Update** button or by Claude Code plugin update without also editing a version string.
+
+If this plugin is deployed through Cowork on third-party platforms by copying it into an `org-plugins/` directory, add a deployment-local `version.json` and bump its `version` string on every rollout. Do not commit that file for the GitHub-synced marketplace flow.
 
 ## Install In Claude Code
 
@@ -211,7 +223,6 @@ Run package checks from the repo root:
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
-python3 -m json.tool plugins/nl-tax-agent-skills/version.json >/dev/null
 test -d plugins/nl-tax-agent-skills/commands
 
 if [ -f .agents/plugins/marketplace.json ]; then

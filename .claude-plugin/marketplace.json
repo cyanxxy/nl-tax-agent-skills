@@ -3,16 +3,12 @@
   "owner": {
     "name": "Tax Skill Developers"
   },
-  "metadata": {
-    "description": "Marketplace for the NL Tax Agent Skills plugin.",
-    "version": "0.1.1"
-  },
+  "description": "Marketplace for the NL Tax Agent Skills plugin.",
   "plugins": [
     {
       "name": "nl-tax-agent-skills",
       "source": "./plugins/nl-tax-agent-skills",
       "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
-      "version": "0.1.1",
       "author": {
         "name": "Tax Skill Developers"
       },
