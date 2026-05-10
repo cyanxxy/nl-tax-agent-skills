@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
   "author": {
     "name": "Tax Skill Developers"

@@ -1,6 +1,6 @@
 # NL Tax Agent Skills Plugin
 
-A local Claude Code/Codex plugin that bundles LLM-native Agent Skills for preparing Dutch individual income-tax workpacks.
+A local Claude Code, Claude Cowork, and Codex plugin that bundles LLM-native Agent Skills and slash-command wrappers for preparing Dutch individual income-tax workpacks.
 
 The plugin is the product package:
 
@@ -19,9 +19,18 @@ plugins/nl-tax-agent-skills/
   .claude-plugin/plugin.json
   .codex-plugin/plugin.json
   README.md
+  version.json
   assets/
     icon.png
     logo.png
+  commands/                         # flat slash-command wrappers for host compatibility
+    nl-tax-intake.md
+    nl-tax-evidence-indexer.md
+    nl-tax-annual-return.md
+    nl-tax-provisional-assessment.md
+    nl-tax-field-mapper.md
+    nl-tax-submit-companion.md
+    nl-tax-source-refresh.md
   skills/
     _shared/
       source-register.yaml
@@ -41,7 +50,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-source-refresh/          # developer-only source maintenance
 ```
 
-There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills are bundled inside the plugin. The repo also contains local-only ignored assistant state such as `.agents/`, `.claude/`, `.codex/`, and `CLAUDE.md`; those are not release content.
+There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills and slash-command wrappers are bundled inside the plugin. The repo also contains local-only ignored assistant state such as `.agents/`, `.claude/`, `.codex/`, and `CLAUDE.md`; those are not release content.
 
 ## Install In Claude Cowork
 
@@ -105,7 +114,7 @@ For local development without installing the marketplace:
 claude --plugin-dir ./plugins/nl-tax-agent-skills
 ```
 
-Plugin commands are namespaced:
+Plugin skills and command wrappers are namespaced. In current Claude Code, the skill takes precedence when a skill and command wrapper share the same name; the command wrappers exist for hosts and versions that surface `commands/` separately:
 
 ```text
 /nl-tax-agent-skills:nl-tax-intake annual
@@ -121,6 +130,8 @@ For Codex local discovery, use a machine-local marketplace entry if needed:
 ```text
 .agents/plugins/marketplace.json
 ```
+
+Codex should discover the plugin from `.codex-plugin/plugin.json` and surface the same bundled skills plus command wrappers when the plugin is installed.
 
 The `.agents/` directory is ignored by Git. Keep assistant state and machine-specific config out of the repo, including `.agents/`, `.claude/`, `.codex/`, `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`.
 
@@ -200,6 +211,8 @@ Run package checks from the repo root:
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+python3 -m json.tool plugins/nl-tax-agent-skills/version.json >/dev/null
+test -d plugins/nl-tax-agent-skills/commands
 
 if [ -f .agents/plugins/marketplace.json ]; then
   python3 -m json.tool .agents/plugins/marketplace.json >/dev/null

@@ -1,8 +1,8 @@
 # NL Tax Agent Skills Plugin
 
-Plugin package for preparing Dutch individual income-tax workpacks through LLM-native Agent Skills.
+Plugin package for preparing Dutch individual income-tax workpacks through LLM-native Agent Skills and slash-command wrappers.
 
-This directory is the product package. The skills are bundled inside the plugin under `skills/`.
+This directory is the product package. The skills are bundled inside the plugin under `skills/`; flat command wrappers live under `commands/` for hosts and versions that expose slash commands separately from skills.
 
 The repository root contains the Claude marketplace manifest:
 
@@ -18,9 +18,18 @@ That marketplace points at this plugin directory.
 nl-tax-agent-skills/
   .claude-plugin/plugin.json    # Claude Code plugin manifest
   .codex-plugin/plugin.json     # Codex plugin manifest
+  version.json                  # Cowork org-plugin sync version
   assets/
     icon.png
     logo.png
+  commands/                     # Flat slash-command wrappers
+    nl-tax-intake.md
+    nl-tax-evidence-indexer.md
+    nl-tax-annual-return.md
+    nl-tax-provisional-assessment.md
+    nl-tax-field-mapper.md
+    nl-tax-submit-companion.md
+    nl-tax-source-refresh.md
   skills/                       # Bundled Agent Skills
     _shared/                    # Source pack, workflow gate, templates, fixtures
       source-register.yaml
@@ -84,7 +93,7 @@ Load the plugin directly during local development:
 claude --plugin-dir ./plugins/nl-tax-agent-skills
 ```
 
-Plugin skills are namespaced. Examples:
+Plugin skills and command wrappers are namespaced. In current Claude Code, plugin skills are directly slash-invokable; if a command wrapper and skill share the same name, the skill takes precedence. Examples:
 
 ```text
 /nl-tax-agent-skills:nl-tax-intake annual
@@ -144,6 +153,8 @@ The plugin manifest for Codex is:
 plugins/nl-tax-agent-skills/.codex-plugin/plugin.json
 ```
 
+The plugin also includes `commands/` because Codex plugin bundles can expose flat command files in addition to `skills/`.
+
 ## Release Checks
 
 - The release artifact must contain only this plugin package, the repository README, the license, and the marketplace manifest.
@@ -157,6 +168,8 @@ Run these checks from the repository root:
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+python3 -m json.tool plugins/nl-tax-agent-skills/version.json >/dev/null
+test -d plugins/nl-tax-agent-skills/commands
 
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
