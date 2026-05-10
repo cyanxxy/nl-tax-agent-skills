@@ -1,10 +1,10 @@
 # Rule note: Deduction allocation for provisional assessment 2026
 
-source_id: bd_fisin_2026_prov_deduction_alloc
-workflow: provisional-assessment
+source_ids: bd_fiscal_partnership, bd_provisional_request_2026, bd_provisional_review_2026, bd_provisional_rates_2026, bd_eigenwoningforfait_2025_2026, bd_own_home_deduction_cap_2026
+workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -35,7 +35,7 @@ For the provisional assessment:
 
 This means:
 - The marginal-rate optimization is based on estimated income levels, which may change.
-- A partner currently in the 35.82% bracket may end up in the 49.50% bracket if income changes during the year, or vice versa.
+- A partner currently in the 35.75% bracket may end up in the 49.50% bracket if income changes during the year, or vice versa.
 - Deduction amounts may turn out higher or lower than estimated.
 
 ## Provisional assessment uses the allocation as submitted
@@ -96,5 +96,5 @@ Because all amounts are estimates and the allocation can be changed:
 ## Notes
 
 - The provisional assessment for 2026 uses ONLY the fictitious return method for box 3. Werkelijk rendement is not relevant for the provisional and should not be considered in allocation calculations.
-- Provisional 2026 rates may differ from annual 2025 rates. Always use the rates from `rates-and-credits.md` for 2026, not the 2025 annual rates.
+- Provisional 2026 rates differ from annual 2025 rates. Always use the rates from `rates-and-credits.md` for 2026, not the 2025 annual rates.
 - If the partner situation is uncertain (e.g., considering moving in together, possible separation), advise filing the provisional assessment based on the current situation and changing it if the situation changes.

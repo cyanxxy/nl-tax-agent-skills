@@ -124,13 +124,13 @@ Compile the eigen woning section if applicable.
 ### 3.4 Eigenwoningforfait calculation
 
 - Apply the rate from `own-home.md` based on the WOZ-waarde bracket
-- Most common: 0.35% for WOZ between EUR 75,000 and EUR 1,310,000
+- Most common: 0.35% for WOZ more than EUR 75,000 up to and including EUR 1,330,000
 - Show the calculation explicitly (WOZ-waarde * percentage)
 
 ### 3.5 Tariefsaanpassing
 
 - If the taxpayer's box 1 income falls in schijf 3 (above EUR 76,817):
-  - Calculate the portion of mortgage interest deduction that falls in schijf 3
+  - Calculate the portion of deductible own-home costs that falls in schijf 3
   - The effective deduction rate is capped at 37.48%
   - Calculate the tariefsaanpassing amount (difference between 49.50% and 37.48%)
 - If income is below schijf 3: no tariefsaanpassing applies
@@ -138,7 +138,7 @@ Compile the eigen woning section if applicable.
 ### 3.6 Hillenregeling
 
 - If the eigenwoningforfait exceeds the mortgage interest paid:
-  - Apply the Hillenregeling correction (76.67% in 2025, year 7 of phase-out)
+  - Apply the Hillenregeling correction (76.667% in 2025)
   - The correction reduces the net positive eigenwoningforfait
 - If mortgage interest exceeds eigenwoningforfait: Hillenregeling does not apply
 
@@ -191,23 +191,27 @@ Collect values for each asset category:
 ### 4.3 Fictitious return calculation
 
 Follow the calculation method from `fictitious.md`:
-1. Total per category on 1 January 2025
-2. Calculate weighted fictitious return percentage
-3. Determine rendementsgrondslag (total assets minus debts minus heffingsvrij vermogen)
-4. Calculate forfaitair rendement = rendementsgrondslag * weighted percentage
-5. Calculate box 3 tax = forfaitair rendement * 36%
+1. Calculate aftrekbare schulden after the debt threshold
+2. Calculate belastbaar rendement by category
+3. Calculate rendementsgrondslag
+4. Calculate grondslag sparen en beleggen after heffingsvrij vermogen
+5. Calculate aandeel in de rendementsgrondslag
+6. Calculate box 3 income and box 3 tax
 
-Common failure: do NOT apply heffingsvrij vermogen before calculating the weighted percentage.
+Common failure: do NOT apply heffingsvrij vermogen before calculating belastbaar rendement.
 
 ### 4.4 Actual return data collection
 
 Follow the data requirements from `actual-return.md`:
 1. Actual interest received on bank accounts during 2025
 2. Dividends received (before dividend withholding tax)
-3. Rental income (net of directly attributable costs)
-4. Realized capital gains and losses
-5. Unrealized value changes (mark-to-market for listed securities)
-6. Deductible costs (custody fees, transaction costs)
+3. Rental income and other income from box 3 assets
+4. Value changes for disposed box 3 assets, including sale proceeds and start-of-year or acquisition values
+5. Value changes for retained or acquired box 3 assets, including investments, securities, crypto-assets, second homes, other box 3 real estate, and other assets where value changes count
+6. Interest paid on box 3 debts
+7. Qualifying WOZ-value investment correction data, if applicable
+
+Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
 If the taxpayer cannot provide actual return data: note that the fictitious method will apply by default.
 
@@ -242,7 +246,7 @@ Compile all deductible items from evidence and user-provided data.
 ### 5.2 Specifieke zorgkosten (medical expenses)
 
 - Collect qualifying medical expenses not reimbursed by insurance
-- Apply the drempel (income-dependent threshold, approximately 1.65% of drempelinkomen)
+- Apply the zorgkosten drempel only if the exact reviewed 2025 table has been added to the source pack; otherwise flag the deductible amount for manual review
 - Drempelinkomen = combined income of both partners before persoonsgebonden aftrek
 - Only the amount above the drempel is deductible
 - Note the multiplier for certain specific zorgkosten categories

@@ -187,6 +187,38 @@ sources:
       - nl-tax-annual-return
       - nl-tax-evidence-indexer
 
+  - id: bd_annual_deadline_2025
+    title: "Wanneer moet mijn aangifte inkomstenbelasting binnen zijn?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-submit-companion
+
+  - id: bd_annual_extension_2025
+    title: "Kan ik nog uitstel aanvragen voor de belastingaangifte 2025?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-submit-companion
+
   # ===========================================================================
   #  Annual rates and credits
   # ===========================================================================
@@ -198,7 +230,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-10"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -212,7 +244,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-10"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -226,7 +258,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-10"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -240,12 +272,129 @@ sources:
     source_type: official_guidance
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/own-home.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-10"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
       - nl-tax-annual-return
       - nl-tax-box1-home
+
+  - id: bd_own_home_deduction_cap_2026
+    title: "Beperking hypotheekrenteaftrek als u een hoog inkomen hebt"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/own-home.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+
+  - id: bd_eigenwoningforfait_2025_2026
+    title: "Eigenwoningforfait - wat is het en hoe bereken ik het?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hoe-werkt-eigenwoningforfait"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/own-home/eigenwoningforfait.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check after Prinsjesdag; eigenwoningforfait thresholds and Hillen phase-out can change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+      - nl-tax-partner-deductions
+
+  - id: bd_hypotheekrenteaftrek_conditions
+    title: "Mag ik mijn hypotheekrente altijd aftrekken?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check after Prinsjesdag and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+
+  - id: bd_own_home_deductible_costs
+    title: "Eigen woning - welke kosten mag ik aftrekken?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check after Prinsjesdag and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+
+  - id: bd_temporary_two_homes_interest
+    title: "Ik heb tijdelijk 2 woningen - hoe zit het dan met de hypotheekrenteaftrek?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check after Prinsjesdag and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box1-home
+
+  # ===========================================================================
+  #  Fiscal partnership and allocation
+  # ===========================================================================
+
+  - id: bd_fiscal_partnership
+    title: "Fiscaal partnerschap - Wanneer ben ik fiscaal partner?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check at start of filing season and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-partner-deductions
+      - nl-tax-field-mapper
+
+  - id: bd_fiscal_partner_death_return
+    title: "Ik ben fiscale partner van de overledene - hoe doe ik aangifte inkomstenbelasting voor mijzelf?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check at start of filing season and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_fiscal_partner_separation
+    title: "Is mijn ex nog mijn fiscale partner?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
+    last_checked: "2026-05-10"
+    freshness_policy: "check at start of filing season and after BD portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
 
   # ===========================================================================
   #  Box 3
@@ -259,7 +408,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/fictitious.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-04"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -274,7 +423,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-04"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -289,7 +438,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-04"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -304,7 +453,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/box3-provisional.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-04"
     freshness_policy: "check when provisional assessment season opens (January) and after legislative changes"
     owner: "tax-content"
     mandatory_for:
@@ -398,7 +547,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-05-04"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:

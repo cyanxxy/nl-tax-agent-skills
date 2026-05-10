@@ -1,7 +1,7 @@
 # Rule note: Evidence checklist for annual return 2025
 
 source_id: bd_annual_data_checklist_2025
-workflow: annual-return
+workflow: annual_return
 tax_year: 2025
 status: active
 last_reviewed: "2026-04-30"

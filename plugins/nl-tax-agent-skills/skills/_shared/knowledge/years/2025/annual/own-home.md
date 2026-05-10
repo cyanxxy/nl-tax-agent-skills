@@ -1,10 +1,10 @@
 # Rule note: Own home (eigen woning) rules for 2025
 
-source_id: bd_own_home_deduction_cap_2025
-workflow: annual-return
+source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -25,10 +25,10 @@ The eigenwoningforfait is a deemed income percentage applied to the WOZ-waarde (
 | EUR 12,500 to EUR 25,000              | 0.10%                           |
 | EUR 25,000 to EUR 50,000              | 0.20%                           |
 | EUR 50,000 to EUR 75,000              | 0.25%                           |
-| EUR 75,000 to EUR 1,310,000           | 0.35%                           |
-| Above EUR 1,310,000                   | EUR 4,585 + 2.35% of excess over EUR 1,310,000 |
+| EUR 75,000 to EUR 1,330,000           | 0.35%                           |
+| Above EUR 1,330,000                   | EUR 4,655 + 2.35% of excess over EUR 1,330,000 |
 
-The most common bracket is EUR 75,000 to EUR 1,310,000 at 0.35%. For example, a property with WOZ-waarde of EUR 400,000 has an eigenwoningforfait of EUR 1,400 (400,000 x 0.35%).
+The most common bracket is EUR 75,000 to EUR 1,330,000 at 0.35%. For example, a property with WOZ-waarde of EUR 400,000 has an eigenwoningforfait of EUR 1,400 (400,000 x 0.35%).
 
 ### WOZ-waarde determination
 
@@ -61,13 +61,13 @@ Mortgage interest paid on the eigen woning loan is deductible in box 1.
 
 ## Tariefsaanpassing eigen woning (rate adjustment for high-income earners)
 
-For taxpayers with box 1 income in the highest bracket (schijf 3, above EUR 76,817 at 49.50%), the effective tax benefit of the mortgage interest deduction is capped.
+For taxpayers with box 1 income in the highest bracket (schijf 3, above EUR 76,817 at 49.50%), the effective tax benefit of deductible own-home costs is capped.
 
 ### 2025 cap
 
-- In 2025, the mortgage interest deduction is effectively limited to 37.48% (the schijf 2 rate).
-- This means that for high-income taxpayers, the portion of mortgage interest that would otherwise be deductible at 49.50% is only deductible at 37.48%.
-- The difference (49.50% - 37.48% = 12.02% of the interest amount falling in schijf 3) is added back as a tariefsaanpassing, reducing the tax benefit.
+- In 2025, deductible own-home costs are effectively limited to 37.48% (the schijf 2 rate).
+- This means that for high-income taxpayers, the portion of own-home costs that would otherwise be deductible at 49.50% is only deductible at 37.48%.
+- The difference (49.50% - 37.48% = 12.02% of the deductible own-home costs falling in schijf 3) is added back as a tariefsaanpassing, reducing the tax benefit.
 
 ### Calculation in the workpack
 
@@ -83,7 +83,7 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 ### Phase-out status for 2025
 
 - The Hillenregeling is being gradually phased out over 30 years, starting from 2019.
-- In 2025 (year 7 of phase-out), approximately 76.67% of the Hillenregeling benefit remains.
+- In 2025, 76.667% of the difference between the eigenwoningforfait and deductible own-home costs is taken into account.
 - Each year, the correction is reduced by 3.33 percentage points (1/30th per year).
 - By 2048, the Hillenregeling will be fully phased out.
 
@@ -95,9 +95,8 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 
 ## Fiscal partner and eigen woning
 
-- When fiscal partners own a home together, the eigenwoningforfait and mortgage interest are allocated based on ownership shares (eigendomsverhouding), typically 50/50.
-- Partners can choose to allocate the net eigen woning result differently for tax optimization, but the gross components (forfait and interest) follow ownership.
-- Both partners must report their share of the eigen woning in their individual return.
+- Fiscal partners may allocate the saldo of own-home income and deductions in the return.
+- The allocation must be consistent across both partners and total 100%.
 
 ## Moving during 2025
 

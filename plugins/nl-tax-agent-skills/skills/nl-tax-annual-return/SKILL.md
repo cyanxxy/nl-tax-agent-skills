@@ -23,6 +23,9 @@ Prepare a complete annual income-tax return workpack for tax year 2025 (aangifte
 1. **Taxpayer profile exists** at `workspace/taxpayer/profile.yaml` with `workflow_candidate: annual_2025`
 2. **Evidence index exists** at `workspace/taxpayer/evidence-index.yaml` (partial indexing is acceptable -- missing evidence will be flagged in the workpack)
 3. **Shared knowledge is available** under `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/annual/**` and `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/**`
+4. **Supported-workflows contract confirms annual_2025 is active** in `${CLAUDE_SKILL_DIR}/../_shared/supported-workflows.yaml`
+
+If the user asks for annual return 2027, or any annual return year other than 2025, stop before reading evidence or generating files. Explain that the requested year is not source-backed in this plugin yet and that 2025/2026 values must not be reused.
 
 ## What this skill does
 
@@ -101,20 +104,20 @@ Compile BOTH fictitious and actual return data. This is required for the annual 
 
 #### Fictitious return (forfaitair rendement)
 - Collect asset values per category on peildatum 1 January 2025
-- Banktegoeden (category I, 0.36%)
-- Overige bezittingen (category II, 6.04%)
-- Schulden (category III, 2.47%)
-- Calculate weighted fictitious return percentage
-- Apply heffingsvrij vermogen (EUR 57,000 single / EUR 114,000 partners)
-- Calculate rendementsgrondslag, forfaitair rendement, and box 3 tax at 36%
+- Read percentages, heffingsvrij vermogen, and debt threshold from `_shared/knowledge/years/2025/box3/fictitious.md`
+- Do not use Box 3 percentages copied into this `SKILL.md`; the knowledge file is canonical
+- Calculate aftrekbare schulden after the debt threshold
+- Calculate belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and box 3 tax
 
 #### Actual return (werkelijk rendement) data collection
 - Collect actual interest received on bank accounts
 - Collect dividends received
-- Collect rental income (net of attributable costs)
-- Collect realized capital gains/losses
-- Collect unrealized value changes (mark-to-market for listed securities)
-- Collect deductible costs (custody fees, transaction costs)
+- Collect rental income and other income from box 3 assets
+- Collect value changes for disposed box 3 assets, including sale proceeds and start-of-year or acquisition values
+- Collect value changes for retained or acquired box 3 assets, including investments, securities, crypto-assets, second homes, other box 3 real estate, and other assets where value changes count
+- Collect interest paid on box 3 debts
+- Collect qualifying WOZ-value investment correction data if applicable
+- Do not collect custody fees, transaction costs, management fees, maintenance costs, or adviser fees as deductible actual-return costs
 
 #### Comparison
 - Present fictitious return calculation alongside actual return data
@@ -221,6 +224,8 @@ This skill uses annual 2025 knowledge only:
 - `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/**`
 
 Do NOT use provisional 2026 knowledge (`${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2026/provisional/**`) for annual return preparation. The annual return is backward-looking at tax year 2025; provisional knowledge is forward-looking at tax year 2026.
+
+Do NOT prepare annual 2027 workpacks until `supported-workflows.yaml` lists annual_2027 as active and the source-register and knowledge-pack validators pass for 2027 annual sources.
 
 ## Box 3 scope
 

@@ -17,47 +17,58 @@ The peildatum for tax year 2025 is **1 January 2025**. All assets and debts are 
 
 ## Heffingsvrij vermogen (tax-free allowance)
 
-- Single taxpayer: EUR 57,000
-- Fiscal partners (combined): EUR 114,000
+- Single taxpayer: EUR 57,684
+- Fiscal partners (combined): EUR 115,368
 
-The heffingsvrij vermogen is deducted from the rendementsgrondslag before the fictitious return is applied.
+The heffingsvrij vermogen is deducted from the rendementsgrondslag to determine the grondslag sparen en beleggen.
+
+## Drempel schulden
+
+- Single taxpayer: EUR 3,800
+- Fiscal partners (combined): EUR 7,600
+
+Only the amount of box 3 debts above this threshold is treated as aftrekbare schulden.
 
 ## Asset categories and fictitious return percentages
 
-Three categories determine the weighted average fictitious return:
+Three categories determine the belastbaar rendement:
 
 ### Categorie I -- Banktegoeden (savings and bank deposits)
 
 - Includes: savings accounts, current accounts, deposits, term deposits
-- Fictitious return percentage for 2025: **0.36%**
-- _Verify against source snapshot -- this percentage may be refined when the definitive percentage is published_
+- Fictitious return percentage for 2025: **1.37%**
 
 ### Categorie II -- Overige bezittingen (other assets)
 
 - Includes: investments, listed and unlisted securities, crypto-assets, real estate (not being own home), receivables (vorderingen), rights to periodic payments, other assets
-- Fictitious return percentage for 2025: **6.04%**
-- _Verify against source snapshot -- this percentage may be refined when the definitive percentage is published_
+- Fictitious return percentage for 2025: **5.88%**
 
 ### Categorie III -- Schulden (debts)
 
 - Includes: all debts EXCEPT mortgage debt on the own home (eigenwoningschuld, which belongs in box 1)
-- Fictitious return percentage for 2025: **2.47%**
-- _Verify against source snapshot -- this percentage may be refined when the definitive percentage is published_
+- Fictitious return percentage for 2025: **2.70%**
 
 ## Calculation method
 
-The fictitious return is a weighted average based on the composition of assets and debts:
+Use the Belastingdienst step model. Do not present this as a free-form weighted-average shortcut.
 
-1. **Determine totals per category** on peildatum 1 January 2025
-2. **Calculate weighted fictitious return percentage:**
-   - (Categorie I total * 0.36% + Categorie II total * 6.04% - Categorie III total * 2.47%) / (Categorie I total + Categorie II total - Categorie III total)
-3. **Determine rendementsgrondslag:**
-   - Rendementsgrondslag = total assets (Categorie I + Categorie II) minus schulden (Categorie III) minus heffingsvrij vermogen
-   - If the result is negative, the rendementsgrondslag is EUR 0
-4. **Calculate forfaitair rendement:**
-   - Forfaitair rendement = rendementsgrondslag * weighted fictitious return percentage
-5. **Calculate box 3 tax:**
-   - Box 3 tax = forfaitair rendement * 36%
+1. **Bereken het belastbaar rendement**
+   - Banktegoeden * 1.37%
+   - Overige bezittingen * 5.88%
+   - Aftrekbare schulden * 2.70%, subtracted from the asset returns
+   - Aftrekbare schulden = total box 3 debts minus the debt threshold
+2. **Bereken de rendementsgrondslag**
+   - Rendementsgrondslag = banktegoeden + overige bezittingen - aftrekbare schulden
+3. **Bereken de grondslag sparen en beleggen**
+   - Grondslag sparen en beleggen = rendementsgrondslag - heffingsvrij vermogen
+   - If the result is negative, use EUR 0
+4. **Bereken het aandeel in de rendementsgrondslag**
+   - Aandeel = taxpayer's share of the grondslag sparen en beleggen divided by the rendementsgrondslag
+   - Round the percentage to 2 decimals; do not truncate
+5. **Bereken het voordeel uit sparen en beleggen**
+   - Box 3 income = belastbaar rendement * aandeel in de rendementsgrondslag
+6. **Bereken hoeveel belasting moet worden betaald**
+   - Box 3 tax = box 3 income * 36%
 
 ## Box 3 tax rate
 
@@ -78,11 +89,14 @@ When taxpayers qualify as fiscal partners:
 When building the workpack for box 3:
 
 1. Collect the value of all assets and debts per category on peildatum 1 January 2025
-2. Calculate the weighted fictitious return percentage based on the actual composition
-3. Apply the heffingsvrij vermogen deduction
-4. If fiscal partners are present, compute the optimal allocation split
-5. Always present the full breakdown: totals per category, weighted percentage, rendementsgrondslag, forfaitair rendement, and tax amount
+2. Calculate aftrekbare schulden after the debt threshold
+3. Calculate belastbaar rendement by category
+4. Calculate rendementsgrondslag, grondslag sparen en beleggen, aandeel in de rendementsgrondslag, box 3 income, and tax
+5. If fiscal partners are present, compute allocation scenarios for the grondslag sparen en beleggen
+6. Always present the full breakdown using the official step names above
 
 ## Common failure
 
-Do not apply the heffingsvrij vermogen before calculating the weighted return percentage. The weighting is based on the full asset and debt composition; the heffingsvrij vermogen is only deducted from the rendementsgrondslag in step 3.
+Do not subtract the full debt amount. First subtract the debt threshold and use only aftrekbare schulden in the return and rendementsgrondslag calculations.
+
+Do not apply the heffingsvrij vermogen before calculating the belastbaar rendement. The heffingsvrij vermogen is only deducted to determine the grondslag sparen en beleggen.

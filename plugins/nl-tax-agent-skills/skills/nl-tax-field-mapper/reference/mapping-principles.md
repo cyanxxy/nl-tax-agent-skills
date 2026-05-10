@@ -1,5 +1,12 @@
 # Mapping Principles — Workpack Data to Form Fields
 
+source_ids: bd_annual_data_checklist_2025, bd_provisional_request_2026, bd_box3_2025_calc, bd_box3_2026_provisional
+workflow: all
+tax_year: all
+status: active
+last_reviewed: "2026-05-10"
+review_status: reviewed
+
 This reference defines how workpack findings are mapped to submission form fields. These principles apply to both annual and provisional field maps.
 
 ---

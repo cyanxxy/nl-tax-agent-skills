@@ -44,7 +44,7 @@ Developer-only maintenance skill that refreshes official source snapshots from a
 | `box3`          | Sources with IDs containing `box3`                    |
 | `all`           | Every source in the register                          |
 
-An optional year argument filters by `tax_year` (e.g., `all 2025`).
+An optional year argument filters by `tax_year` while keeping shared all-year sources that are mandatory for the selected workflow (e.g., `all 2025`).
 
 ## Scripts
 
@@ -54,6 +54,7 @@ An optional year argument filters by `tax_year` (e.g., `all 2025`).
 | `build_snapshots.py`          | Verify snapshot files and compute content hashes |
 | `validate_source_register.py` | Validate register entries for correctness        |
 | `validate_knowledge_pack.py`  | Cross-reference knowledge files against register |
+| `validate_supported_workflows.py` | Validate active and blocked workflow/year declarations |
 
 ## Safety
 
@@ -67,3 +68,7 @@ An optional year argument filters by `tax_year` (e.g., `all 2025`).
 ## Output
 
 This skill prints validation results and change reports to stdout. It does not produce taxpayer-facing output.
+
+## Future-year unlock
+
+Annual/provisional 2027 are intentionally blocked in `${CLAUDE_SKILL_DIR}/../_shared/supported-workflows.yaml` until official source snapshots exist. To unlock a future year, add exact official sources to `source-register.yaml`, create reviewed knowledge snapshots for that exact workflow/year plus any required shared all-year sources, move the workflow from `blocked_workflows` to `active_workflows`, and run all validators.

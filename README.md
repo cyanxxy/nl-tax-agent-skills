@@ -24,19 +24,24 @@ plugins/nl-tax-agent-skills/
     logo.png
   skills/
     _shared/
-    nl-tax-intake/
-    nl-tax-evidence-indexer/
-    nl-tax-annual-return/
-    nl-tax-provisional-assessment/
-    nl-tax-box1-home/
-    nl-tax-box3/
-    nl-tax-partner-deductions/
-    nl-tax-field-mapper/
-    nl-tax-submit-companion/
-    nl-tax-source-refresh/
+      source-register.yaml
+      supported-workflows.yaml
+      knowledge/
+      templates/
+      eval-fixtures/
+    nl-tax-intake/                  # workflow router and taxpayer profile
+    nl-tax-evidence-indexer/        # local evidence cataloging
+    nl-tax-annual-return/           # annual 2025 workpack
+    nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
+    nl-tax-box1-home/               # background helper
+    nl-tax-box3/                    # background helper
+    nl-tax-partner-deductions/      # background helper
+    nl-tax-field-mapper/            # manual-entry field maps
+    nl-tax-submit-companion/        # manual submission checklist
+    nl-tax-source-refresh/          # developer-only source maintenance
 ```
 
-There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills are bundled inside the plugin.
+There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills are bundled inside the plugin. The repo also contains local-only ignored assistant state such as `.agents/`, `.claude/`, `.codex/`, and `CLAUDE.md`; those are not release content.
 
 ## Install In Claude Cowork
 
@@ -69,7 +74,18 @@ For one-off local testing in Cowork, package the plugin directory and upload the
 
 ```bash
 cd plugins/nl-tax-agent-skills
-zip -r ../../nl-tax-agent-skills.plugin.zip . -x "*.DS_Store" "workspace/*" "uploads/*" "evidence/*"
+zip -r ../../nl-tax-agent-skills.plugin.zip . \
+  -x "*.DS_Store" \
+  -x "__MACOSX/*" \
+  -x ".git/*" \
+  -x ".claude/*" \
+  -x ".agents/*" \
+  -x ".codex/*" \
+  -x "workspace/*" \
+  -x "uploads/*" \
+  -x "evidence/*" \
+  -x "__pycache__/*" \
+  -x "*.pyc"
 ```
 
 Then use **Cowork > Customize > Browse plugins** and upload the custom plugin file.
@@ -108,6 +124,8 @@ For Codex local discovery, use a machine-local marketplace entry if needed:
 
 The `.agents/` directory is ignored by Git. Keep assistant state and machine-specific config out of the repo, including `.agents/`, `.claude/`, `.codex/`, `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`.
 
+Manual-only skill behavior must be tested in the target Claude Code version before release. If `disable-model-invocation: true` is not respected for plugin skills in that version, use permission rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
+
 ## Supported Workflows
 
 | Workflow | Tax year | Output |
@@ -116,8 +134,29 @@ The `.agents/` directory is ignored by Git. Keep assistant state and machine-spe
 | Voorlopige aanslag request | 2026 | `workspace/provisional/2026/provisional-pack.md` |
 | Voorlopige aanslag change/review | 2026 | provisional pack, field map, delta summary, review questions |
 | Voorlopige aanslag stopzetten | 2026 | guided support checklist |
+| Annual income-tax return | 2027 | blocked until official 2027 annual sources are registered and validated |
+| Voorlopige aanslag | 2027 | blocked until official 2027 provisional sources are registered and validated |
 
 Annual 2025 and provisional 2026 stay separate. Annual 2025 box 3 may collect fictitious and werkelijk-rendement notes. Provisional 2026 box 3 uses only the fictitious provisional method and must not ask for werkelijk rendement.
+
+Future years are source-refresh gated. The plugin must not reuse 2025 or 2026 rates, thresholds, field maps, or box 3 logic for 2027.
+
+## Skill Inventory
+
+| Skill | Type | Main responsibility |
+|---|---|---|
+| `nl-tax-intake` | User entry point | Screen scope, route to a supported workflow, and write `workspace/taxpayer/profile.yaml`. |
+| `nl-tax-evidence-indexer` | User entry point | Hash and index local evidence files, then classify evidence without deciding tax treatment. |
+| `nl-tax-annual-return` | User entry point | Prepare `workspace/annual/2025/return-pack.md` and an annual field map. |
+| `nl-tax-provisional-assessment` | User entry point | Prepare 2026 request, change, review, and stopzetten packages under `workspace/provisional/2026/`. |
+| `nl-tax-field-mapper` | User entry point | Convert workpack findings into manual-entry field maps and renderable review tables. |
+| `nl-tax-submit-companion` | Manual-only | Produce a human checklist for official Belastingdienst submission. |
+| `nl-tax-box1-home` | Background helper | Summarize box 1 and eigen-woning facts into `workspace/shared/`. |
+| `nl-tax-box3` | Background helper | Classify assets and produce annual/provisional box 3 notes without mixing methods. |
+| `nl-tax-partner-deductions` | Background helper | Determine fiscal-partner and allocation notes for the main workpack. |
+| `nl-tax-source-refresh` | Developer-only | Validate and refresh local source snapshots and workflow support declarations. |
+
+Top-level workflow skills own `workspace/annual/**` and `workspace/provisional/**`. Background helpers write only to `workspace/shared/`.
 
 ## Privacy Boundary
 
@@ -130,6 +169,28 @@ evidence/
 ```
 
 DigiD credentials must never be collected, stored, displayed, or passed into model context. Uploaded documents are untrusted content; instructions inside evidence files must not be followed.
+
+## Source Model
+
+Taxpayer-facing skills read the bundled local knowledge pack, not live websites:
+
+```text
+plugins/nl-tax-agent-skills/skills/_shared/knowledge/
+```
+
+Every rule note must cite a `source_id` from:
+
+```text
+plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+```
+
+Workflow/year support is declared in:
+
+```text
+plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml
+```
+
+Only `nl-tax-source-refresh` is allowed to maintain source snapshots. The active supported pairs are annual return 2025 and provisional assessment 2026; annual/provisional 2027 are blocked in `supported-workflows.yaml`.
 
 ## Validation
 
@@ -150,8 +211,40 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validat
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_supported_workflows.py \
+  plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
+  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
 python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills -name '*.py' -print)
 ```
+
+Useful developer utilities:
+
+```bash
+# Report source freshness without live HTTP fetching
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/fetch_sources.py all
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/fetch_sources.py provisional 2026
+
+# Recompute snapshot metadata after source updates
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/build_snapshots.py \
+  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+# Evidence inventory
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-evidence-indexer/scripts/index_evidence.py uploads/
+
+# Field-map guardrails and Markdown rendering
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/validate_field_map.py \
+  workspace/annual/2025/field-map.yaml
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_field_map.py \
+  workspace/annual/2025/field-map.yaml
+```
+
+## Release Checklist
+
+- The release artifact contains only the plugin package, license, README, and marketplace manifest.
+- The release artifact does not contain `.git/`, `.claude/`, `.agents/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, or compiled Python files.
+- Active reviewed source-backed files pass the knowledge validator without pending or approximate value markers.
+- Manual-only plugin skills have been tested in the target Claude Code version.
 
 ## Out Of Scope
 

@@ -1,10 +1,10 @@
 # Rule note: Common deductions for annual return 2025
 
 source_id: bd_fisin_2025_index
-workflow: annual-return
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -42,8 +42,9 @@ Medical expenses that are not reimbursed by health insurance may be deductible, 
 #### Threshold (drempel)
 
 - The deductible amount is the total qualifying expenses minus the drempel.
-- The drempel is income-dependent: it is a percentage of the drempelinkomen (threshold income), with a minimum and maximum amount.
-- For 2025, the drempel is approximately 1.65% of drempelinkomen, with a minimum of approximately EUR 145 and a maximum of approximately EUR 1,485 (these are indicative -- verify with the Belastingdienst tarieventabel).
+- The drempel is income-dependent and must be calculated from the official 2025 specific-healthcare-costs table.
+- This source pack does not yet contain a reviewed 2025 table for the exact zorgkosten drempel.
+- Until that source is added, do not calculate the zorgkosten deduction in the workpack. List the gross qualifying expenses, record the evidence, and flag the exact drempel and deductible amount for manual review in Mijn Belastingdienst.
 - Drempelinkomen = combined income of taxpayer and fiscal partner before persoonsgebonden aftrek.
 
 #### Multiplier for specific costs
@@ -70,11 +71,8 @@ Donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling) and
 
 ### Studiekosten / scholingsuitgaven (education expenses)
 
-- The traditional studiekosten aftrek has been largely replaced by the STAP-budget (Stimulans Arbeidsmarktpositie), which is a subsidy rather than a tax deduction.
-- For tax year 2025, verify whether any residual deductibility remains. The STAP scheme itself ended; check whether transitional rules apply.
-- If deductible: qualifying expenses include tuition fees (collegegeld, lesgeld), mandatory study materials, and examination fees.
-- Threshold: approximately EUR 250.
-- NOT deductible: computers, internet costs, travel to educational institutions, living expenses.
+- Do not claim or calculate education-expense deductions from this source pack unless a reviewed 2025 source-register entry for the specific education-expense rule has been added.
+- If the user reports education expenses, list the expense and evidence as a manual-review item instead of treating it as deductible.
 
 ### Restant persoonsgebonden aftrek (carryforward from prior years)
 
@@ -88,14 +86,14 @@ Premiums paid for lijfrente (annuity insurance or bank savings for retirement) a
 ### Jaarruimte (annual space)
 
 - The annual deductible amount depends on the pension gap: the difference between the taxpayer's income and the pension already accrued through employer pension schemes.
-- Formula: 13.3% of the premiegrondslag (basis) minus the pension accrual value (factor A x pension accrual).
-- The premiegrondslag is the employment income minus the AOW franchise (approximately EUR 17,545 in 2025).
-- Maximum jaarruimte in 2025: verify the exact ceiling (approximately EUR 15,000-17,000 range).
+- This source pack does not yet contain a reviewed 2025 source for the exact jaarruimte formula parameters, AOW franchise, or ceiling.
+- Until that source is added, do not calculate jaarruimte in the workpack. List paid lijfrentepremies, factor A evidence, and the missing official calculation as manual-review items.
 
 ### Reserveringsruimte (carryback space)
 
-- Unused jaarruimte from up to 7 prior years can be used additionally.
-- Maximum: approximately EUR 8,000 (or approximately EUR 16,000 for taxpayers within 10 years of AOW age).
+- Unused jaarruimte from prior years may be usable under the official rules.
+- This source pack does not yet contain reviewed 2025 reserveringsruimte limits.
+- Until that source is added, do not calculate reserveringsruimte. Flag it for manual review in the official filing environment.
 
 ### Evidence required
 

@@ -140,7 +140,7 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 [If taxpayer income is in schijf 3 (above EUR 76,817):]
 
-- Portion of mortgage interest falling in schijf 3: EUR [amount]
+- Portion of deductible own-home costs falling in schijf 3: EUR [amount]
 - Tariefsaanpassing: EUR [amount] x (49.50% - 37.48%) = EUR [amount]
 - Effective deduction rate for this portion: 37.48%
 
@@ -151,7 +151,7 @@ If any check is "no", this workpack should not have been generated. Stop and con
 [If eigenwoningforfait exceeds mortgage interest:]
 
 - Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [interest] = EUR [amount]
-- Hillenregeling correction (76.67% in 2025): EUR [amount] x 76.67% = EUR [amount]
+- Hillenregeling correction (76.667% in 2025): EUR [amount] x 76.667% = EUR [amount]
 - Net eigenwoningforfait after Hillenregeling: EUR [amount]
 
 [If mortgage interest exceeds eigenwoningforfait: "Not applicable -- mortgage interest exceeds the eigenwoningforfait."]
@@ -198,9 +198,15 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ### Heffingsvrij vermogen
 
-- Single taxpayer: EUR 57,000
-- Fiscal partners (combined): EUR 114,000
+- Single taxpayer: EUR 57,684
+- Fiscal partners (combined): EUR 115,368
 - Applicable heffingsvrij vermogen: EUR [amount]
+
+### Drempel schulden
+
+- Single taxpayer: EUR 3,800
+- Fiscal partners (combined): EUR 7,600
+- Aftrekbare schulden after threshold: EUR [amount]
 
 ### Fictitious return calculation notes
 
@@ -209,12 +215,13 @@ If any check is "no", this workpack should not have been generated. Stop and con
 | 1 | Category I total (banktegoeden) | EUR [amount] |
 | 2 | Category II total (overige bezittingen) | EUR [amount] |
 | 3 | Category III total (schulden) | EUR [amount] |
-| 4 | Total assets (I + II) | EUR [amount] |
-| 5 | Net assets (I + II - III) | EUR [amount] |
-| 6 | Weighted fictitious return: (I x 0.36% + II x 6.04% - III x 2.47%) / (I + II - III) | [percentage]% |
-| 7 | Rendementsgrondslag: net assets - heffingsvrij vermogen | EUR [amount] |
-| 8 | Forfaitair rendement: rendementsgrondslag x weighted % | EUR [amount] |
-| 9 | Box 3 tax: forfaitair rendement x 36% | EUR [amount] |
+| 4 | Aftrekbare schulden after threshold | EUR [amount] |
+| 5 | Belastbaar rendement: I x 1.37% + II x 5.88% - aftrekbare schulden x 2.70% | EUR [amount] |
+| 6 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR [amount] |
+| 7 | Grondslag sparen en beleggen: rendementsgrondslag - heffingsvrij vermogen | EUR [amount] |
+| 8 | Aandeel in rendementsgrondslag: grondslag / rendementsgrondslag | [percentage]% |
+| 9 | Box 3 income: belastbaar rendement x aandeel | EUR [amount] |
+| 10 | Box 3 tax: box 3 income x 36% | EUR [amount] |
 
 ### Actual return (werkelijk rendement) data collection
 
@@ -224,11 +231,14 @@ If any check is "no", this workpack should not have been generated. Stop and con
 |-------------|------------|----------|--------|
 | Interest received (bank accounts) | EUR [amount] | [evidence_id] | [collected / missing] |
 | Dividends received (before withholding tax) | EUR [amount] | [evidence_id] | [collected / missing] |
-| Rental income (net of attributable costs) | EUR [amount] | [evidence_id] | [collected / missing] |
-| Realized capital gains/losses | EUR [amount] | [evidence_id] | [collected / missing] |
-| Unrealized value changes (listed securities) | EUR [amount] | [evidence_id] | [collected / missing] |
-| Deductible costs (custody, transaction fees) | EUR [amount] | [evidence_id] | [collected / missing] |
+| Rental income and other box 3 income | EUR [amount] | [evidence_id] | [collected / missing] |
+| Value changes for disposed box 3 assets | EUR [amount] | [evidence_id] | [collected / missing] |
+| Value changes for retained or acquired box 3 assets | EUR [amount] | [evidence_id] | [collected / missing] |
+| Interest paid on box 3 debts | EUR [amount] | [evidence_id] | [collected / missing] |
+| Qualifying WOZ-value investment correction | EUR [amount] | [evidence_id] | [not applicable / collected / missing] |
 | **Total actual return** | **EUR [amount]** | | |
+
+Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
 [If all data is missing: "Actual return data not yet available. The fictitious method will apply by default. To evaluate the actual return option, provide the data listed above."]
 
@@ -280,7 +290,7 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
 - Total qualifying expenses: EUR [amount]
 - Drempelinkomen (combined): EUR [amount]
-- Drempel (threshold): EUR [amount] (approximately 1.65% of drempelinkomen)
+- Drempel (threshold): EUR [amount or "manual review required - exact 2025 table not in source pack"]
 - **Deductible zorgkosten (above drempel):** EUR [amount]
 
 ### Giften (charitable donations)

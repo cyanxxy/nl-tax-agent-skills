@@ -1,5 +1,12 @@
 # Box 3 — Actual Return (Werkelijk Rendement) Rules for Annual 2025
 
+source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
+workflow: annual_return
+tax_year: 2025
+status: active
+last_reviewed: "2026-05-10"
+review_status: reviewed
+
 **CRITICAL: This reference is ONLY for the annual 2025 path. It must NEVER be used for provisional 2026.**
 
 ## Background
@@ -12,28 +19,33 @@ Based on the Hoge Raad kerstarrest (December 2021), taxpayers may opt for taxati
 - Interest received (rente-inkomsten)
 - Dividends received (dividend)
 - Rental income from box 3 property (huurinkomsten)
-- Realized capital gains and losses (gerealiseerde koerswinsten/-verliezen)
-- Unrealized value changes for listed securities (ongerealiseerde waardeveranderingen beursgenoteerde effecten)
+- Value changes of box 3 assets during 2025, including investments, securities, crypto-assets, second homes, other box 3 real estate, and assets acquired or disposed of during the year
+- Interest paid on box 3 debts, as a permitted negative component
 
 ### Excluded
 - Value changes in own home (waardeverandering eigen woning)
 - Pension rights (pensioenrechten)
 - Life insurance values (levensverzekeringen)
 
-## Deductible Costs
+## Costs
 
-### Deductible from Actual Return
-- Custody fees (bewaarloon)
-- Management fees (beheerkosten)
-- Interest on box 3 loans (rente op box 3 schulden)
+Costs may not be deducted from actual return, except for the official exceptions below.
 
 ### NOT Deductible
+- Custody fees (bewaarloon)
+- Management fees (beheerkosten)
+- Transaction costs
+- Maintenance costs
 - Bank fees for payment accounts (bankkosten betaalrekening)
-- Financial adviser fees not directly related to investments (advieskosten niet direct gerelateerd aan beleggingen)
+- Financial adviser fees
+
+### Permitted Exceptions
+- Interest paid on box 3 debts
+- Qualifying WOZ-value investment correction under the official conditions
 
 ## Comparison Method
 
-1. Calculate the fictitious return using the category-weighted method
+1. Calculate the fictitious return using the official Belastingdienst step model
 2. Calculate the actual return using the rules above
 3. Present both side by side
 4. Note which method produces the lower tax liability

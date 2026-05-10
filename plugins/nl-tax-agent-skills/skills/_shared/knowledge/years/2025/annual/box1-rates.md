@@ -1,10 +1,10 @@
 # Rule note: Box 1 income tax rates for 2025
 
 source_id: bd_box1_rates_2025
-workflow: annual-return
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -13,7 +13,7 @@ Box 1 (inkomen uit werk en woning) income is taxed in progressive brackets (schi
 
 These are reference notes for workpack preparation -- not final tax advice.
 
-## Tax brackets for non-AOW-age taxpayers (born after 1957, under AOW age in 2025)
+## Tax brackets for taxpayers who are 66 or younger in 2025
 
 | Schijf | Taxable income (belastbaar inkomen) | Combined rate (IB + premie volksverzekeringen) |
 |--------|-------------------------------------|-----------------------------------------------|
@@ -33,17 +33,48 @@ The premie volksverzekeringen component applies only to schijf 1. In schijf 2 an
 
 Note: the exact IB component of schijf 1 is the combined rate minus the premie components (35.82% - 17.90% - 0.10% - 9.65% = 8.17%).
 
-## Tax brackets for AOW-age taxpayers (born before or in 1957, at or above AOW age in 2025)
+## Tax brackets for taxpayers who reach AOW age during 2025
 
-AOW-age taxpayers do not pay AOW premie. Their schijf 1 rate is lower because the AOW premie component (17.90%) is excluded.
+Taxpayers who reach AOW age during 2025 have an adjusted first-bracket rate. Do not derive this from the whole-year AOW table.
+
+| AOW age reached in | First-bracket rate up to EUR 38,441 |
+|---|---:|
+| January | 17.92% |
+| February | 19.41% |
+| March | 20.90% |
+| April | 22.39% |
+| May | 23.88% |
+| June | 25.37% |
+| July | 26.87% |
+| August | 28.36% |
+| September | 29.85% |
+| October | 31.34% |
+| November | 32.83% |
+| December | 34.32% |
+
+For these taxpayers, schijf 2 and 3 use the same 2025 boundaries and rates as the official AOW-age table: more than EUR 38,441 up to and including EUR 76,817 at 37.48%, and more than EUR 76,817 at 49.50%.
+
+## Tax brackets for taxpayers who have reached AOW age for all of 2025
+
+AOW-age taxpayers pay a lower first-bracket rate because they no longer pay AOW premie. The first-bracket boundary differs for taxpayers born before 1 January 1946.
+
+### Born before 1 January 1946
+
+| Schijf | Taxable income (belastbaar inkomen) | Combined rate (IB + remaining premies) |
+|--------|-------------------------------------|----------------------------------------|
+| 1      | Up to EUR 40,502                    | 17.92%                                 |
+| 2      | More than EUR 40,502 up to and including EUR 76,817 | 37.48% |
+| 3      | More than EUR 76,817                | 49.50%                                 |
+
+### Born on or after 1 January 1946 and already AOW-age before 2025
 
 | Schijf | Taxable income (belastbaar inkomen) | Combined rate (IB + remaining premies) |
 |--------|-------------------------------------|----------------------------------------|
 | 1      | Up to EUR 38,441                    | 17.92%                                 |
-| 2      | EUR 38,441 to EUR 76,817            | 37.48%                                 |
-| 3      | Above EUR 76,817                    | 49.50%                                 |
+| 2      | More than EUR 38,441 up to and including EUR 76,817 | 37.48% |
+| 3      | More than EUR 76,817                | 49.50%                                 |
 
-Note: the AOW-age rate for schijf 1 (17.92%) consists of the IB component (8.17%) plus Anw premie (0.10%) plus Wlz premie (9.65%). The AOW premie (17.90%) is not owed.
+Note: the whole-year AOW first-bracket rate (17.92%) consists of the IB component (8.17%) plus Anw premie (0.10%) plus Wlz premie (9.65%). The AOW premie (17.90%) is not owed.
 
 ## Calculation example (non-AOW-age)
 

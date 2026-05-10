@@ -1,0 +1,107 @@
+version: 1
+last_reviewed: "2026-05-10"
+
+policy:
+  source_backed_only: true
+  rule: >-
+    A workflow is supported only when the exact workflow and tax year, plus any
+    required shared all-year sources, have reviewed source-register entries,
+    local knowledge snapshots, and passing validators. Never reuse rates,
+    thresholds, field maps, or box 3 rules from another tax year.
+
+active_workflows:
+  - id: annual_2025
+    workflow: annual_return
+    tax_year: 2025
+    status: active
+    profile_candidates:
+      - annual_2025
+    knowledge_dirs:
+      - skills/_shared/knowledge/own-home
+      - skills/_shared/knowledge/partners
+      - skills/_shared/knowledge/years/2025/annual
+      - skills/_shared/knowledge/years/2025/box3
+    output_paths:
+      - workspace/annual/2025/return-pack.md
+      - workspace/annual/2025/field-map.yaml
+    required_source_ids:
+      - bd_annual_return_landing_2025
+      - bd_annual_return_4_steps_2025
+      - bd_annual_data_checklist_2025
+      - bd_fisin_2025_index
+      - bd_annual_deadline_2025
+      - bd_annual_extension_2025
+      - bd_box1_rates_2025
+      - bd_general_tax_credit_2025
+      - bd_labour_tax_credit_2025
+      - bd_own_home_deduction_cap_2025
+      - bd_eigenwoningforfait_2025_2026
+      - bd_hypotheekrenteaftrek_conditions
+      - bd_own_home_deductible_costs
+      - bd_temporary_two_homes_interest
+      - bd_fiscal_partnership
+      - bd_box3_2025_calc
+      - bd_box3_2025_actual_return
+      - bd_fisin_box3_actual_return_2025
+
+  - id: provisional_2026
+    workflow: provisional_assessment
+    tax_year: 2026
+    status: active
+    profile_candidates:
+      - provisional_2026_request
+      - provisional_2026_change
+      - provisional_2026_review
+      - provisional_2026_stopzetten
+    knowledge_dirs:
+      - skills/_shared/knowledge/own-home
+      - skills/_shared/knowledge/partners
+      - skills/_shared/knowledge/years/2026/provisional
+    output_paths:
+      - workspace/provisional/2026/provisional-pack.md
+      - workspace/provisional/2026/field-map.yaml
+      - workspace/provisional/2026/delta-summary.md
+      - workspace/provisional/2026/review-questions.md
+    required_source_ids:
+      - bd_provisional_landing_2026
+      - bd_provisional_request_2026
+      - bd_provisional_change_2026
+      - bd_provisional_review_2026
+      - bd_provisional_stopzetten_2026
+      - bd_provisional_rates_2026
+      - bd_eigenwoningforfait_2025_2026
+      - bd_own_home_deduction_cap_2026
+      - bd_hypotheekrenteaftrek_conditions
+      - bd_own_home_deductible_costs
+      - bd_fiscal_partnership
+      - bd_box3_2026_provisional
+      - bd_algoritmeregister_vva_eva
+
+blocked_workflows:
+  - id: annual_2027
+    workflow: annual_return
+    tax_year: 2027
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      No reviewed annual-return 2027 source-register entries or local knowledge
+      snapshots exist yet. Do not prepare a 2027 annual return workpack or
+      substitute 2025 or 2026 values.
+    unlock_condition: >-
+      Add official Belastingdienst/wetten.overheid.nl 2027 annual sources,
+      update the source register and knowledge snapshots, then pass validation.
+
+  - id: provisional_2027
+    workflow: provisional_assessment
+    tax_year: 2027
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      No reviewed provisional-assessment 2027 source-register entries or local
+      knowledge snapshots exist yet. Do not prepare a 2027 provisional workpack
+      or substitute 2026 provisional values.
+    unlock_condition: >-
+      Add official Belastingdienst 2027 provisional sources, update the source
+      register and knowledge snapshots, then pass validation.

@@ -22,27 +22,52 @@ nl-tax-agent-skills/
     icon.png
     logo.png
   skills/                       # Bundled Agent Skills
-    _shared/                    # Source pack, templates, eval fixtures
-    nl-tax-intake/
-    nl-tax-evidence-indexer/
-    nl-tax-annual-return/
-    nl-tax-provisional-assessment/
-    nl-tax-box1-home/
-    nl-tax-box3/
-    nl-tax-partner-deductions/
-    nl-tax-field-mapper/
-    nl-tax-submit-companion/
-    nl-tax-source-refresh/
+    _shared/                    # Source pack, workflow gate, templates, fixtures
+      source-register.yaml
+      supported-workflows.yaml
+      knowledge/
+      templates/
+      eval-fixtures/
+    nl-tax-intake/                  # workflow router and taxpayer profile
+    nl-tax-evidence-indexer/        # local evidence cataloging
+    nl-tax-annual-return/           # annual 2025 workpack
+    nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
+    nl-tax-box1-home/               # background helper
+    nl-tax-box3/                    # background helper
+    nl-tax-partner-deductions/      # background helper
+    nl-tax-field-mapper/            # manual-entry field maps
+    nl-tax-submit-companion/        # manual submission checklist
+    nl-tax-source-refresh/          # developer-only source maintenance
 ```
 
 The bundled skills cover:
 
 - annual income-tax return workpack for tax year 2025;
 - voorlopige aanslag 2026 request, change, review, and stopzetten guidance;
+- source-refresh gated 2027 annual/provisional workflows, blocked until official 2027 sources are registered and validated;
 - evidence indexing with untrusted-content handling;
 - box 1, box 3, partner/deduction, field-map, source-refresh, and manual submission companion workflows.
 
 The plugin intentionally does not include a backend service, web app, browser automation, DigiD collection, signing, filing, Digipoort transport, or autonomous submission.
+
+The plugin must not prepare 2027 annual or provisional workpacks from 2025/2026 values. Future tax years become active only after exact official source snapshots are added and all validators pass.
+
+## Skill Inventory
+
+| Skill | Type | Main responsibility |
+|---|---|---|
+| `nl-tax-intake` | User entry point | Screen scope, select a supported workflow, and create `workspace/taxpayer/profile.yaml`. |
+| `nl-tax-evidence-indexer` | User entry point | Index local evidence files, compute hashes, and produce evidence review questions. |
+| `nl-tax-annual-return` | User entry point | Prepare the annual 2025 return workpack and field map. |
+| `nl-tax-provisional-assessment` | User entry point | Prepare 2026 request, change, review, or stopzetten packages. |
+| `nl-tax-field-mapper` | User entry point | Convert workpack findings into manual-entry field maps. |
+| `nl-tax-submit-companion` | Manual-only | Create a manual checklist for official submission. |
+| `nl-tax-box1-home` | Background helper | Summarize box 1 and own-home notes into `workspace/shared/`. |
+| `nl-tax-box3` | Background helper | Classify assets and produce source-backed box 3 notes. |
+| `nl-tax-partner-deductions` | Background helper | Produce fiscal-partner and allocation notes. |
+| `nl-tax-source-refresh` | Developer-only | Validate source registers, knowledge snapshots, and supported workflows. |
+
+Only the annual and provisional workflow skills write main workpacks. Helper skills write shared notes only.
 
 ## Claude Code
 
@@ -89,7 +114,18 @@ For one-off local testing in Cowork, ZIP this plugin directory and upload the cu
 
 ```bash
 cd plugins/nl-tax-agent-skills
-zip -r ../../nl-tax-agent-skills.plugin.zip . -x "*.DS_Store" "workspace/*" "uploads/*" "evidence/*"
+zip -r ../../nl-tax-agent-skills.plugin.zip . \
+  -x "*.DS_Store" \
+  -x "__MACOSX/*" \
+  -x ".git/*" \
+  -x ".claude/*" \
+  -x ".agents/*" \
+  -x ".codex/*" \
+  -x "workspace/*" \
+  -x "uploads/*" \
+  -x "evidence/*" \
+  -x "__pycache__/*" \
+  -x "*.pyc"
 ```
 
 ## Codex
@@ -108,6 +144,33 @@ The plugin manifest for Codex is:
 plugins/nl-tax-agent-skills/.codex-plugin/plugin.json
 ```
 
+## Release Checks
+
+- The release artifact must contain only this plugin package, the repository README, the license, and the marketplace manifest.
+- Do not include `.git/`, `.claude/`, `.agents/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, or compiled Python files.
+- Run source-register, knowledge-pack, and supported-workflows validation before release.
+- Test manual-only skills in the target Claude Code version before release. If `disable-model-invocation: true` is not respected for plugin skills, use permission rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
+
+Run these checks from the repository root:
+
+```bash
+python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
+python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
+python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
+  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py \
+  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_supported_workflows.py \
+  plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
+  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills -name '*.py' -print)
+```
+
 ## Privacy Boundary
 
 Real taxpayer data belongs only in ignored local workspace paths such as `workspace/`, `uploads/`, and `evidence/`. Do not add real taxpayer files, DigiD credentials, BSNs, IBANs, screenshots, PDFs, or spreadsheets to this plugin package.
@@ -121,3 +184,15 @@ plugins/nl-tax-agent-skills/skills/_shared/knowledge/
 ```
 
 Only the developer-only `nl-tax-source-refresh` skill may refresh official source snapshots.
+
+Workflow/year support is controlled by:
+
+```text
+plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml
+```
+
+The source register is the canonical list of official sources:
+
+```text
+plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+```

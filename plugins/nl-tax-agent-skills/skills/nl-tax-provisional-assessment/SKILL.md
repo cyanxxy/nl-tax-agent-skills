@@ -30,12 +30,16 @@ Prepare a voorlopige aanslag 2026 workpack for one of four subflows: request, ch
 - Taxpayer profile exists at `workspace/taxpayer/profile.yaml`
 - The profile contains a valid `workflow_candidate` for a provisional 2026 subflow
 - For change, review, and stopzetten: the user has an existing voorlopige aanslag for 2026
+- `provisional_2026` is listed as active in `${CLAUDE_SKILL_DIR}/../_shared/supported-workflows.yaml`
+
+If the user asks for voorlopige aanslag 2027, or any provisional year other than 2026, stop before collecting estimates or generating files. Explain that the requested year is not source-backed in this plugin yet and that 2026 provisional values must not be reused.
 
 ## Knowledge sources
 
 Use ONLY `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2026/provisional/**` for all provisional calculations, rates, and rules.
 
 **NEVER use annual 2025 knowledge for provisional 2026 calculations.**
+**NEVER use provisional 2026 knowledge for provisional 2027 calculations.**
 
 The following knowledge files apply:
 - `box3-provisional.md` — box 3 fictitious return method and asset categories
@@ -62,6 +66,7 @@ This is the single most critical validation in this skill. Violation of this rul
 ## Annual/provisional separation
 
 - NEVER use annual 2025 rates, credits, or rules for the provisional 2026 calculation
+- NEVER use provisional 2026 rates, credits, or rules for a 2027 provisional request
 - NEVER apply annual return logic (backward-looking, evidence-based) to the provisional assessment (forward-looking, estimate-based)
 - NEVER ask for werkelijk rendement in provisional 2026
 - NEVER write output files to `workspace/annual/**`

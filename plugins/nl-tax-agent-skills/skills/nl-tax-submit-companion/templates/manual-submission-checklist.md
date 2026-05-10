@@ -32,7 +32,7 @@ Do not share DigiD credentials with this tool or any other person/tool not autho
 - [ ] Save confirmation/receipt
 - [ ] Note the submission date
 - [ ] If annual: expect definitieve aanslag within [timeframe]
-- [ ] If provisional: expect beschikking within ~8 weeks
+- [ ] If provisional: note the response timing shown in Mijn Belastingdienst or the confirmation
 - [ ] Keep evidence files for your records (typically 5 years)
 
 ## Authorization check

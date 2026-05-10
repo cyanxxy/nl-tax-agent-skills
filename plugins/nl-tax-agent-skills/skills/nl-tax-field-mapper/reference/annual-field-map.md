@@ -1,5 +1,12 @@
 # Annual Income Tax Return Field Reference (Aangifte Inkomstenbelasting 2025)
 
+source_ids: bd_annual_data_checklist_2025, bd_box3_2025_calc, bd_box3_2025_actual_return, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_fiscal_partnership
+workflow: annual_return
+tax_year: 2025
+status: active
+last_reviewed: "2026-05-10"
+review_status: reviewed
+
 This reference defines the known fields in the Dutch annual income tax return that the field mapper produces. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
 
 ---
@@ -79,15 +86,17 @@ This reference defines the known fields in the Dutch annual income tax return th
 | `box3.schulden` | Schulden op peildatum 1 januari 2025 | Debts on reference date | Box 3 — Schulden | conditional | `schuld_overzicht` |
 | `box3.werkelijk_rendement_rente` | Ontvangen rente (werkelijk rendement) | Interest received (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_bank` |
 | `box3.werkelijk_rendement_dividend` | Ontvangen dividend (werkelijk rendement) | Dividends received (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_beleggingen` |
-| `box3.werkelijk_rendement_huur` | Netto huurinkomsten (werkelijk rendement) | Net rental income (actual return) | Box 3 — Werkelijk rendement | optional | `huurcontract`, user-provided |
+| `box3.werkelijk_rendement_huur` | Huurinkomsten (werkelijk rendement) | Rental income (actual return) | Box 3 — Werkelijk rendement | optional | `huurcontract`, user-provided |
 | `box3.werkelijk_rendement_waardeverandering` | Waardeveranderingen (werkelijk rendement) | Value changes (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_beleggingen` |
-| `box3.werkelijk_rendement_kosten` | Aftrekbare kosten (werkelijk rendement) | Deductible costs (actual return) | Box 3 — Werkelijk rendement | optional | Various |
+| `box3.werkelijk_rendement_box3_schuldrente` | Betaalde rente op box 3-schulden | Interest paid on box 3 debts | Box 3 — Werkelijk rendement | optional | `schuld_overzicht`, user-provided |
+| `box3.werkelijk_rendement_woz_investment_correction` | WOZ-investeringcorrectie | Qualifying WOZ-value investment correction | Box 3 — Werkelijk rendement | optional | `woz_beschikking`, user-provided |
 
 ### Notes on box 3 fields
 - Peildatum for 2025 annual return is 1 January 2025.
 - The annual return supports BOTH fictitious return (forfaitair rendement) and actual return (werkelijk rendement). The field map collects data for both.
 - Werkelijk rendement fields are optional -- the taxpayer may choose the fictitious method instead.
-- The heffingsvrij vermogen (EUR 57,000 single / EUR 114,000 partners) is applied in the portal.
+- The heffingsvrij vermogen (EUR 57,684 single / EUR 115,368 partners) is applied in the portal.
+- Do not map custody fees, transaction costs, management fees, maintenance costs, or adviser fees as deductible actual-return costs.
 
 ---
 

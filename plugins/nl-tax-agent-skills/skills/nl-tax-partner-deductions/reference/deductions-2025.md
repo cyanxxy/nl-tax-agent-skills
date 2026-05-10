@@ -1,10 +1,10 @@
 # Rule note: Deduction allocation for annual return 2025
 
-source_id: bd_fisin_2025_deduction_alloc
-workflow: annual-return
+source_ids: bd_fisin_2025_index, bd_fiscal_partnership, bd_own_home_deduction_cap_2025
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -60,21 +60,21 @@ The core optimization principle for deduction allocation:
 ### Why this works
 
 A deduction of EUR 1,000 saves:
-- EUR 495 if the partner is in the 49.50% bracket (box 1 schijf 2, income above approximately EUR 76,817 in 2025)
-- EUR 358 if the partner is in the 35.82% bracket (box 1 schijf 1, income up to approximately EUR 76,817 in 2025)
+- EUR 495 if the partner is in the 49.50% bracket (income above the 2025 schijf 3 threshold)
+- EUR 358 if the partner is in the 35.82% bracket (income in the 2025 first bracket)
 
 The difference is EUR 137 per EUR 1,000 of deductions. For large deduction amounts (e.g., mortgage interest of EUR 10,000+), this can result in savings of over EUR 1,000.
 
 ### Exception: tariefsaanpassing eigen woning
 
-The tariefsaanpassing (rate adjustment) for mortgage interest limits the effective deduction rate for hypotheekrenteaftrek to 37.48% in 2025, even if the partner is in the 49.50% bracket.
+The tariefsaanpassing (rate adjustment) limits the effective deduction rate for deductible own-home costs to 37.48% in 2025, even if the partner is in the 49.50% bracket.
 
 This means:
-- For mortgage interest specifically, the benefit of allocating to the higher-bracket partner is reduced.
-- The effective rate difference for mortgage interest is 37.48% vs 35.82% = only 1.66 percentage points.
-- For other deductions (zorgkosten, giften, alimentatie), the full bracket difference applies.
+- For own-home deductible costs, the benefit of allocating to the higher-bracket partner is reduced.
+- The effective rate difference for own-home deductible costs is 37.48% vs 35.82% = only 1.66 percentage points.
+- For non-own-home deductions (zorgkosten, giften, alimentatie), the full bracket difference may apply.
 
-Implication: it may be better to allocate mortgage interest to the lower-bracket partner (where tariefsaanpassing has no impact because they are already below the cap) and allocate other deductions to the higher-bracket partner (where they benefit from the full 49.50% rate).
+Implication: it may be better to allocate the own-home saldo to the lower-bracket partner (where tariefsaanpassing has no impact because they are already below the cap) and allocate other deductions to the higher-bracket partner (where they benefit from the full 49.50% rate).
 
 ## Heffingskorting interaction
 
@@ -82,15 +82,15 @@ Allocation choices affect the heffingskortingen because they change each partner
 
 ### Algemene heffingskorting (general tax credit)
 
-- Phases out as income increases above approximately EUR 24,813 (2025).
+- Use the exact 2025 algemene heffingskorting table in `_shared/knowledge/years/2025/annual/credits.md`.
 - If allocating deductions to the higher-income partner reduces their income below the phase-out threshold, it may increase their algemene heffingskorting.
 - Conversely, not allocating deductions to the lower-income partner keeps their income higher, potentially reducing their algemene heffingskorting.
-- The phase-out rate is approximately 6.63% of income above the threshold.
+- Do not estimate the phase-out rate from memory; use the reviewed source-backed table.
 
 ### Arbeidskorting (employment tax credit)
 
 - The arbeidskorting is based on individual employment income and cannot be affected by deduction allocation.
-- However, the arbeidskorting phases out at higher incomes (above approximately EUR 39,958 in 2025 at a rate of approximately 6.51%).
+- However, the arbeidskorting phases out at higher incomes under the exact 2025 table in `_shared/knowledge/years/2025/annual/credits.md`.
 - Deduction allocation does not change employment income, so it does not directly affect the arbeidskorting.
 
 ### Net effect
@@ -114,6 +114,6 @@ The calling skill (annual return or provisional assessment) must present the all
 1. **Allocating employment income between partners.** Employment income is not allocatable. It stays with the earner.
 2. **Forgetting to consider heffingskorting impact.** Moving deductions to the higher-bracket partner reduces their income, which may change their heffingskorting. The net benefit may be smaller than the bracket-rate difference suggests.
 3. **Assuming 50/50 split is always optimal.** It almost never is. The marginal-rate-optimized allocation typically outperforms an even split. The only situation where 50/50 is optimal is when both partners have identical marginal rates and identical heffingskorting positions.
-4. **Ignoring tariefsaanpassing for mortgage interest.** Treating mortgage interest deduction at the full marginal rate overstates the benefit for higher-bracket partners.
+4. **Ignoring tariefsaanpassing for own-home costs.** Treating deductible own-home costs at the full marginal rate overstates the benefit for higher-bracket partners.
 5. **Splitting the eigen woning result partially.** The eigen woning result should generally be allocated as a unit to one partner (unless both are co-owners with separate mortgage portions).
 6. **Not verifying that both partners file consistently.** Both partners must use the same allocation in their returns. Inconsistent filing leads to rejection.

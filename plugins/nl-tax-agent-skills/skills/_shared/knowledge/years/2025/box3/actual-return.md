@@ -19,9 +19,9 @@ The following income and value changes constitute actual return for box 3 purpos
 
 - Actual interest received on bank accounts and deposits
 - Dividends received (before dividend withholding tax)
-- Rental income from real estate (net of directly attributable costs)
-- Realized capital gains and losses on sale of investments, securities, and crypto-assets
-- Unrealized value changes (mark-to-market) for listed securities between 1 January and 31 December 2025
+- Rental income and other income from box 3 assets
+- Value changes of box 3 assets during 2025, including investments, listed or unlisted securities, crypto-assets, second homes, other box 3 real estate, and assets acquired or disposed of during the year
+- Interest paid on box 3 debts, as a permitted negative component
 - Other actual income from box 3 assets (e.g., royalties from intellectual property held as investment)
 
 ## What does NOT count as actual return
@@ -34,20 +34,25 @@ The following are excluded from the actual return calculation:
 - Inheritance or gifts received during the year (these are not return on existing assets)
 - Changes in value of assets exempt from box 3
 
-## Deductible costs under actual return
+## Costs under actual return
 
-Costs that are directly attributable to box 3 assets may be deducted:
+Costs may not be deducted when reporting actual return, except for the specific items listed below.
+
+Do not deduct:
 
 - Custody and administration fees (bewaarloon)
 - Transaction costs for buying and selling investments
+- Management fees (beheerkosten)
 - Property management costs for rented real estate
-- Other costs with a direct causal link to generating box 3 income
-
-Costs that are NOT deductible:
-
+- Maintenance costs for a second home or other box 3 real estate
 - General financial advice costs
 - Costs related to the own home
 - Tax advisory costs
+
+Permitted exceptions:
+
+- Interest paid on box 3 debts may be included as a negative component of actual return
+- A qualifying WOZ-value investment correction may reduce the year-end WOZ value, only under the official conditions
 
 ## Data required for actual return calculation
 
@@ -55,10 +60,11 @@ The workpack must collect the following data to enable the actual return compari
 
 1. **Bank accounts:** actual interest received during 2025 (from annual statements or jaaropgaven)
 2. **Dividends:** dividend amounts received per security, including dividend withholding tax
-3. **Rental income:** gross rental income and directly attributable costs per property
-4. **Realized gains/losses:** purchase price and sale price for each disposed asset
-5. **Unrealized value changes:** value of listed securities on 1 January 2025 and 31 December 2025 (from broker/bank statements)
-6. **Deductible costs:** custody fees, transaction costs, and other directly attributable costs with supporting documentation
+3. **Rental income:** gross rental income per property
+4. **Disposed assets:** value at the start of 2025 or acquisition value, sale proceeds, and sale date for each disposed box 3 asset
+5. **Retained or acquired assets:** value at the start of 2025 or acquisition value and value at 31 December 2025 for investments, securities, crypto-assets, second homes, other box 3 real estate, and other box 3 assets where value changes count
+6. **Box 3 debt interest:** interest paid on debts that belong in box 3
+7. **WOZ-value investment correction:** qualifying corrections under the official conditions
 
 ## Comparison method
 
@@ -85,4 +91,6 @@ When building the workpack for box 3 with actual return data:
 
 ## Common failure
 
-Do not assume that a negative actual return automatically means the taxpayer pays zero box 3 tax. The comparison is between the two methods: if actual return is negative and fictitious return is positive, the taxpayer benefits from claiming actual return (resulting in EUR 0 or a negative amount). However, the official filing environment determines the final outcome -- the workpack should present both calculations without making the election.
+Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
+
+If total actual return is negative, present the actual return method as EUR 0 box 3 income for the comparison. Negative actual return is not carried to another year.

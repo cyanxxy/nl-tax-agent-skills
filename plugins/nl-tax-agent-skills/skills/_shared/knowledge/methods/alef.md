@@ -28,7 +28,7 @@ This project does not implement ALEF as a formal framework. It borrows the follo
 
 ### Decompose complex tax topics into discrete, testable rules
 
-Each knowledge file covers one topic. Within that topic, individual rules are stated as clear conditions with defined outcomes. A rule like "box 3 tax is calculated as forfaitair rendement times the box 3 rate" is decomposed into: asset categorization, weighted return calculation, heffingsvrij vermogen deduction, and rate application.
+Each knowledge file covers one topic. Within that topic, individual rules are stated as clear conditions with defined outcomes. A rule like "box 3 tax is calculated as box 3 income times the box 3 rate" is decomposed into: asset categorization, debt-threshold handling, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, and rate application.
 
 ### Maintain source traceability
 

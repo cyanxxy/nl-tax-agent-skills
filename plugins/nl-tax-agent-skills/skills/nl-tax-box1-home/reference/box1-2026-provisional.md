@@ -1,10 +1,10 @@
 # Box 1 for Provisional Assessment 2026
 
-source_id: bd_provisional_rates_2026
+source_ids: bd_provisional_rates_2026, bd_eigenwoningforfait_2025_2026, bd_own_home_deduction_cap_2026, bd_hypotheekrenteaftrek_conditions
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Purpose
@@ -30,17 +30,17 @@ The provisional assessment is forward-looking. It covers a tax year that is eith
 
 Use the 2026 provisional rates from `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2026/provisional/rates-and-credits.md`.
 
-Do NOT use 2025 rates for the provisional 2026 calculation. The 2026 rates may differ from 2025. If 2026 rates are marked as "pending verification" in the knowledge file, note this caveat in the output but still use the provisional 2026 values.
+Do NOT use 2025 rates for the provisional 2026 calculation. Use the 2026 provisional values in `rates-and-credits.md`.
 
-### 2026 provisional brackets (approximate, from rates-and-credits.md)
+### 2026 provisional brackets from rates-and-credits.md
 
 | Schijf | Taxable income | Rate |
 |--------|---------------|------|
-| 1 | Up to ~EUR 38,441 | ~35.82% |
-| 2 | ~EUR 38,441 to ~EUR 76,817 | ~37.48% |
-| 3 | Above ~EUR 76,817 | ~49.50% |
+| 1 | Up to and including EUR 38,883 | 35.75% |
+| 2 | More than EUR 38,883 up to and including EUR 78,426 | 37.56% |
+| 3 | More than EUR 78,426 | 49.50% |
 
-All values marked with ~ are provisional and subject to change.
+These are the reviewed provisional 2026 values in the local source pack. Do not use them for any other year.
 
 ---
 
@@ -81,7 +81,7 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 - Use the most recent known WOZ-waarde as the basis
 - Note: the WOZ-waarde for 2026 returns (waardepeildatum 1 January 2025) may not yet be known when the provisional assessment is prepared
 - If the 2026 WOZ-waarde is not available, use the 2025 WOZ-waarde as an estimate and flag it
-- Apply the 2026 eigenwoningforfait percentage (verify against 2026 knowledge file; if not available, use the 2025 percentage as an estimate with a note)
+- Apply the reviewed 2026 eigenwoningforfait table from `_shared/knowledge/years/2026/provisional/own-home.md`. Do not carry forward 2025 thresholds.
 
 ### Hypotheekrenteaftrek
 
@@ -93,13 +93,13 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 
 ### Tariefsaanpassing
 
-- If estimated 2026 income exceeds the schijf 3 threshold (~EUR 76,817), note that tariefsaanpassing will apply
-- Use the 2026 provisional cap rate (~37.48%, verify against rates-and-credits.md)
+- If estimated 2026 income exceeds the schijf 3 threshold (EUR 78,426), note that tariefsaanpassing will apply
+- Use the 2026 cap rate of 37.56% and tariefsaanpassing percentage of 11.94% from `_shared/knowledge/years/2026/provisional/own-home.md`
 
 ### Hillenregeling
 
-- If the eigenwoningforfait exceeds the estimated mortgage interest, the Hillenregeling may apply
-- Use the 2026 phase-out percentage: approximately 73.33% (year 8 of the 30-year phase-out)
+- If the eigenwoningforfait exceeds the estimated mortgage interest, the aftrek wegens geen of geringe eigenwoningschuld may apply.
+- Use the reviewed 2026 percentage from `_shared/knowledge/years/2026/provisional/own-home.md`: 71.867% of the difference between eigenwoningforfait and deductible own-home costs.
 - Mark as estimated
 
 ---
@@ -138,7 +138,7 @@ When producing notes for the provisional 2026 workflow:
 
 1. Clearly label every amount as "ESTIMATED"
 2. Note the source of each estimate (current salary, current mortgage, etc.)
-3. Include a caveat that provisional rates may differ from final 2026 rates
+3. Include a caveat that the output is a provisional-assessment calculation
 4. Do not present provisional amounts with false precision -- round to the nearest EUR 10 or EUR 100 as appropriate
 5. Flag any estimates that are highly uncertain (e.g., variable income, expected job change)
 

@@ -174,6 +174,34 @@ def is_url_allowed(url):
         return False
 
 
+def has_mandatory_for(source, skill_name):
+    """Return whether a source is mandatory for a skill."""
+    mandatory_for = source.get("mandatory_for", [])
+    if isinstance(mandatory_for, str):
+        mandatory_for = [mandatory_for]
+    return skill_name in mandatory_for
+
+
+def applies_to_year(source, year):
+    """Return whether a source is relevant for a year filter.
+
+    Sources without tax_year are shared knowledge sources. Keep them in
+    year-filtered workflow checks so source refresh does not silently omit
+    shared sources required by supported-workflows.yaml.
+    """
+    if year is None:
+        return True
+
+    source_year = source.get("tax_year")
+    if source_year is None:
+        return True
+
+    try:
+        return int(source_year) == int(year)
+    except (ValueError, TypeError):
+        return False
+
+
 def matches_scope(source, scope, year=None):
     """Check if a source matches the given scope and optional year filter."""
     scope = scope.lower()
@@ -181,9 +209,15 @@ def matches_scope(source, scope, year=None):
     if scope == "all":
         match = True
     elif scope == "annual":
-        match = source.get("workflow") == "annual_return"
+        match = (
+            source.get("workflow") == "annual_return"
+            or has_mandatory_for(source, "nl-tax-annual-return")
+        )
     elif scope == "provisional":
-        match = source.get("workflow") == "provisional_assessment"
+        match = (
+            source.get("workflow") == "provisional_assessment"
+            or has_mandatory_for(source, "nl-tax-provisional-assessment")
+        )
     elif scope == "box3":
         match = "box3" in source.get("id", "").lower()
     else:
@@ -194,16 +228,7 @@ def matches_scope(source, scope, year=None):
     if not match:
         return False
 
-    if year is not None:
-        source_year = source.get("tax_year")
-        if source_year is not None:
-            try:
-                if int(source_year) != int(year):
-                    return False
-            except (ValueError, TypeError):
-                pass
-
-    return True
+    return applies_to_year(source, year)
 
 
 def check_staleness(source, now):

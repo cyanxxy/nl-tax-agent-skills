@@ -15,6 +15,8 @@ Convert workpack findings into manual-entry field maps that guide the taxpayer t
 - After a provisional assessment workpack has been generated at `workspace/provisional/2026/provisional-pack.md`
 - When the user asks to prepare a field map for manual data entry
 
+Do not generate field maps for 2027 until `${CLAUDE_SKILL_DIR}/../_shared/supported-workflows.yaml` lists the requested 2027 workflow as active and the matching source-backed field reference exists.
+
 ## What this skill does
 
 1. **Read the workpack** — annual `workspace/annual/2025/return-pack.md` or provisional `workspace/provisional/2026/provisional-pack.md`

@@ -64,7 +64,7 @@ Additional sections may be included where the topic requires them (e.g., calcula
 
 Tax rules change annually. By structuring knowledge as discrete, source-traced rule notes:
 
-- Annual updates can be applied systematically (change the year-specific file, verify against source)
+- Annual updates can be applied systematically by changing the year-specific file and comparing it with the registered official source
 - Errors can be traced to their source (which rule note, which source, which skill)
 - New tax years can be added by cloning and updating year-specific files
 - Auditors (human or automated) can verify that rules match their sources

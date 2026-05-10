@@ -57,7 +57,7 @@ Output: partner eligibility determination with confidence level and any review f
 
 From the profile and evidence, compile a list of items that can be allocated between partners:
 - **Box 3:** assets and debts (any split 0-100%)
-- **Eigen woning:** net income result (eigenwoningforfait minus hypotheekrente) -- must be allocated to one partner as a unit
+- **Eigen woning:** saldo of own-home income and deductions -- fiscal partners may allocate it in any ratio that totals 100%
 - **Persoonsgebonden aftrek:** alimentatie, zorgkosten, giften, lijfrentepremie -- allocation rules vary per item
 - **Heffingskortingen:** note which are affected by allocation choices (inkomensafhankelijke combinatiekorting, algemene heffingskorting uitbetaling)
 

@@ -70,10 +70,13 @@ The box 3 section MUST follow this structure:
 1. Categorie I: Banktegoeden — amount as of 1 January 2026
 2. Categorie II: Overige bezittingen — amount as of 1 January 2026
 3. Categorie III: Schulden — amount as of 1 January 2026 (excluding eigenwoningschuld)
-4. Heffingsvrij vermogen — deducted from rendementsgrondslag
-5. Weighted fictitious return percentage — calculated from category composition
-6. Forfaitair rendement — rendementsgrondslag times weighted percentage
-7. Box 3 tax — forfaitair rendement times 36%
+4. Aftrekbare schulden after the debt threshold
+5. Belastbaar rendement
+6. Rendementsgrondslag
+7. Grondslag sparen en beleggen
+8. Aandeel in rendementsgrondslag
+9. Box 3 income
+10. Box 3 tax at 36%
 
 ### Required box 3 note
 

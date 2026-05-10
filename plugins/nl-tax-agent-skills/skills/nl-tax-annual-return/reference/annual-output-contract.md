@@ -76,8 +76,8 @@ Only list source_ids that were actually used. Do not pad the list with sources t
 
 The box 3 section MUST include notes for BOTH methods:
 
-1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, weighted average, rendementsgrondslag, and tax amount.
-2. **Actual return (werkelijk rendement) data collection:** Data gathered or gaps identified for interest, dividends, rental income, capital gains/losses, unrealized value changes, and deductible costs.
+1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, aftrekbare schulden, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax amount.
+2. **Actual return (werkelijk rendement) data collection:** Data gathered or gaps identified for interest, dividends, rental income, capital gains/losses, unrealized value changes, interest paid on box 3 debts, and qualifying WOZ-value investment correction.
 
 If the taxpayer has no actual return data available, the workpack must still include the actual return section with a note that the fictitious method will apply by default and a list of data that would be needed to evaluate the actual return option.
 

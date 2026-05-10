@@ -81,4 +81,4 @@ When helping a user review their voorlopige aanslag:
 
 ## Common failure
 
-Do not assume that an existing voorlopige aanslag is correct just because the Belastingdienst issued it. Automatically generated assessments (EVA) are based on prior-year data and may be outdated. Always prompt the user to verify against their current situation.
+Do not assume that an existing voorlopige aanslag is correct just because the Belastingdienst issued it. Automatically generated assessments (EVA) are based on prior-year data and may be outdated. Always prompt the user to compare it with their current situation.

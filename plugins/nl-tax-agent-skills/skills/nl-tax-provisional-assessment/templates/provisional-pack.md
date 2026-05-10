@@ -139,9 +139,17 @@
 
 | Item                                  | Amount            |
 |---------------------------------------|-------------------|
-| Heffingsvrij vermogen (single)        | EUR 57,000        |
-| Heffingsvrij vermogen (partners)      | EUR 114,000       |
+| Heffingsvrij vermogen (single)        | EUR 59,357        |
+| Heffingsvrij vermogen (partners)      | EUR 118,714       |
 | Applied heffingsvrij vermogen         | EUR               |
+
+### Drempel schulden
+
+| Item                                  | Amount            |
+|---------------------------------------|-------------------|
+| Drempel schulden (single)             | EUR 3,800         |
+| Drempel schulden (partners)           | EUR 7,600         |
+| Aftrekbare schulden after threshold   | EUR               |
 
 ### Provisional fictitious return calculation
 
@@ -150,15 +158,16 @@
 | Total Categorie I (banktegoeden)      | EUR               |
 | Total Categorie II (overige bezittingen) | EUR            |
 | Total Categorie III (schulden)        | EUR               |
-| Rendementsgrondslag before HVV        | EUR               |
-| Minus heffingsvrij vermogen           | EUR               |
-| **Rendementsgrondslag**               | EUR               |
-| Weighted fictitious return percentage |                   |
-| **Forfaitair rendement**              | EUR               |
+| Aftrekbare schulden after threshold   | EUR               |
+| Belastbaar rendement: I x 1.28% + II x 6.00% - aftrekbare schulden x 2.70% | EUR |
+| Rendementsgrondslag: I + II - aftrekbare schulden | EUR      |
+| Grondslag sparen en beleggen          | EUR               |
+| Aandeel in rendementsgrondslag        |                   |
+| **Box 3 income**                      | EUR               |
 | Box 3 tax rate                        | 36%               |
 | **Box 3 tax**                         | EUR               |
 
-Note: The weighted fictitious return percentage is calculated based on the composition of assets and debts across the three categories. The heffingsvrij vermogen is deducted from the rendementsgrondslag AFTER the weighted percentage is calculated.
+Note: This is a provisional-assessment calculation. Do not collect werkelijk rendement in this workflow.
 
 ## Deductions estimate
 

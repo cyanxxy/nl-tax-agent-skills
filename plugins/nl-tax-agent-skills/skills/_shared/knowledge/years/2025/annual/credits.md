@@ -1,10 +1,10 @@
 # Rule note: Tax credits (heffingskortingen) for 2025
 
 source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025
-workflow: annual-return
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -17,10 +17,23 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 The algemene heffingskorting applies to all taxpayers with box 1 income.
 
-- Maximum amount: EUR 3,068 (for income up to approximately EUR 24,813)
-- The credit phases out (afbouw) as income increases above the phase-out threshold
-- Fully phased out at approximately EUR 76,817 (the top of schijf 2)
-- Phase-out rate: the credit is reduced by a percentage of income above the threshold
+For taxpayers who do not reach AOW age in 2025:
+
+| Verzamelinkomen | Algemene heffingskorting |
+|---|---:|
+| Up to and including EUR 28,406 | EUR 3,068 |
+| EUR 28,407 up to and including EUR 76,817 | EUR 3,068 - 6.337% x (verzamelinkomen - EUR 28,406) |
+| EUR 76,818 or more | EUR 0 |
+
+For taxpayers who have the AOW age for the whole of 2025:
+
+| Verzamelinkomen | Algemene heffingskorting |
+|---|---:|
+| Up to and including EUR 28,406 | EUR 1,536 |
+| EUR 28,407 up to and including EUR 76,817 | EUR 1,536 - 3.170% x (verzamelinkomen - EUR 28,406) |
+| EUR 76,818 or more | EUR 0 |
+
+For taxpayers who reach AOW age during 2025, do not interpolate in the workpack. Flag this for manual review in Mijn Belastingdienst because the Belastingdienst calculates the adjusted amount in the official form.
 
 ### Phase-out mechanism
 
@@ -30,25 +43,41 @@ For taxable income above the phase-out start:
 
 ### AOW-age adjustment
 
-For taxpayers at or above AOW age, the algemene heffingskorting is reduced proportionally because they do not pay AOW premie. The AOW-age maximum is approximately 50% of the non-AOW-age maximum (the exact percentage corresponds to the ratio of the AOW-age schijf 1 rate to the non-AOW-age schijf 1 rate).
+For taxpayers who have the AOW age for the whole year, use the AOW table above. For taxpayers who reach AOW age during 2025, mark the exact amount as a manual-review item in the official form.
 
 ## Arbeidskorting (labour tax credit)
 
 The arbeidskorting applies to taxpayers with income from employment or self-employment (arbeidsinkomen). It does NOT apply to pension income, social benefits (uitkeringen), or alimentatie.
 
-- Maximum amount: EUR 5,599
-- The credit phases in as income increases from zero
-- Maximum is reached at approximately EUR 39,958
-- The credit then phases out above EUR 39,958
-- Fully phased out at approximately EUR 128,810
+For taxpayers who do not reach AOW age in 2025:
+
+| Arbeidsinkomen | Arbeidskorting |
+|---|---:|
+| Up to and including EUR 12,169 | 8.053% x arbeidsinkomen |
+| EUR 12,170 up to and including EUR 26,288 | EUR 980 + 30.030% x (arbeidsinkomen - EUR 12,169) |
+| EUR 26,289 up to and including EUR 43,071 | EUR 5,220 + 2.258% x (arbeidsinkomen - EUR 26,288) |
+| EUR 43,072 up to and including EUR 129,078 | EUR 5,599 - 6.510% x (arbeidsinkomen - EUR 43,071) |
+| EUR 129,079 or more | EUR 0 |
+
+For taxpayers who have the AOW age for the whole of 2025:
+
+| Arbeidsinkomen | Arbeidskorting |
+|---|---:|
+| Up to and including EUR 12,169 | 4.029% x arbeidsinkomen |
+| EUR 12,170 up to and including EUR 26,288 | EUR 491 + 15.023% x (arbeidsinkomen - EUR 12,169) |
+| EUR 26,289 up to and including EUR 43,071 | EUR 2,612 + 1.130% x (arbeidsinkomen - EUR 26,288) |
+| EUR 43,072 up to and including EUR 129,078 | EUR 2,802 - 3.257% x (arbeidsinkomen - EUR 43,071) |
+| EUR 129,079 or more | EUR 0 |
+
+For taxpayers who reach AOW age during 2025, mark the exact amount as a manual-review item in the official form.
 
 ### Phase-in and phase-out mechanism
 
 The arbeidskorting has a multi-step calculation:
 1. Low income range: the credit increases as a percentage of arbeidsinkomen
-2. Middle income range: the credit reaches its maximum of EUR 5,599 around EUR 39,958
-3. High income range: above EUR 39,958, the credit is reduced by a percentage of the excess income
-4. Zero point: the credit reaches EUR 0 at approximately EUR 128,810
+2. Middle income range: the credit continues increasing under the published table
+3. High income range: from EUR 43,072 through EUR 129,078, the credit is reduced by the published phase-out formula
+4. Zero point: from EUR 129,079, the credit is EUR 0
 
 ### What qualifies as arbeidsinkomen
 
@@ -64,7 +93,7 @@ The following do NOT qualify:
 
 ### AOW-age adjustment
 
-For AOW-age taxpayers, the maximum arbeidskorting is reduced proportionally (same ratio as for the algemene heffingskorting). The phase-in percentages and phase-out thresholds are also adjusted.
+For taxpayers who have the AOW age for the whole year, use the AOW table above. For taxpayers who reach AOW age during 2025, mark the exact amount as a manual-review item in the official form.
 
 ## Other heffingskortingen (less common, noted for completeness)
 
@@ -73,12 +102,12 @@ For AOW-age taxpayers, the maximum arbeidskorting is reduced proportionally (sam
 - For working parents with a child under 12 in the household
 - Income-dependent; requires minimum arbeidsinkomen
 - Only the partner with the lower income can claim this credit
-- Being phased out; verify availability for 2025
+- Do not calculate this credit unless a source-register entry for the 2025 IACK table has been added and reviewed.
 
 ### Jonggehandicaptenkorting
 
 - For taxpayers who received a Wajong benefit at the start of the calendar year
-- Fixed amount (approximately EUR 820 in 2025)
+- Do not calculate this credit unless a source-register entry for the 2025 jonggehandicaptenkorting amount has been added and reviewed.
 
 ### Ouderenkorting
 

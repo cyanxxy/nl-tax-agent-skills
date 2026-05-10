@@ -1,5 +1,12 @@
 # Provisional Assessment Field Reference (Voorlopige Aanslag 2026)
 
+source_ids: bd_provisional_request_2026, bd_box3_2026_provisional, bd_provisional_rates_2026, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions
+workflow: provisional_assessment
+tax_year: 2026
+status: active
+last_reviewed: "2026-05-10"
+review_status: reviewed
+
 This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
 
 ---
@@ -71,7 +78,8 @@ The following fields DO NOT EXIST in the provisional assessment and must NEVER a
 - `box3.werkelijk_rendement_dividend` -- DOES NOT EXIST
 - `box3.werkelijk_rendement_huur` -- DOES NOT EXIST
 - `box3.werkelijk_rendement_waardeverandering` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_kosten` -- DOES NOT EXIST
+- `box3.werkelijk_rendement_box3_schuldrente` -- DOES NOT EXIST
+- `box3.werkelijk_rendement_woz_investment_correction` -- DOES NOT EXIST
 
 Any field with `werkelijk_rendement` in its `field_id` is INVALID in a provisional field map. The validation script will reject it.
 

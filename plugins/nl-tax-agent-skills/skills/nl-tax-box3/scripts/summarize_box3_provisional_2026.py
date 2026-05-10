@@ -21,24 +21,38 @@ All monetary amounts in EUR (estimated positions as of 1 January 2026).
 """
 
 import argparse
+from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
 import json
 import sys
 
 
-# 2026 provisional fictitious return percentages
-# NOTE: These are provisional estimates. Verify against published rates.
-PERC_BANKTEGOEDEN = 0.0036      # 0.36% (verify from knowledge pack)
-PERC_OVERIGE_BEZITTINGEN = 0.0604  # 6.04% (verify from knowledge pack)
-PERC_SCHULDEN = 0.0247          # 2.47% (verify from knowledge pack)
+PERC_BANKTEGOEDEN = 0.0128
+PERC_OVERIGE_BEZITTINGEN = 0.0600
+PERC_SCHULDEN = 0.0270
 
-# Tax rate on box 3 income
-TAX_RATE = 0.36                 # 36%
+TAX_RATE = 0.36
+HEFFINGSVRIJ_PER_PERSON = 59_357
+SCHULDEN_DREMPEL_PER_PERSON = 3_800
 
-# Heffingsvrij vermogen per person
-HEFFINGSVRIJ_PER_PERSON = 57_000
 
-# Schulden drempel per person
-SCHULDEN_DREMPEL_PER_PERSON = 3_700
+def nearest_euro(value):
+    return int(Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+
+def floor_euro(value):
+    return int(Decimal(str(value)).to_integral_value(rounding=ROUND_FLOOR))
+
+
+def aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag):
+    """Return the rounded percentage used in Belastingdienst examples."""
+    if rendementsgrondslag <= 0 or grondslag_sparen_en_beleggen <= 0:
+        return 0.0
+    percentage = (
+        Decimal(str(grondslag_sparen_en_beleggen))
+        / Decimal(str(rendementsgrondslag))
+        * Decimal("100")
+    )
+    return float(percentage.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 def check_prohibited_arguments():
@@ -73,95 +87,65 @@ def check_prohibited_arguments():
 
 
 def calculate_provisional_fictitious(banktegoeden, overige, schulden, heffingsvrij, has_partner):
-    """
-    Calculate fictitious box 3 return for the 2026 provisional assessment.
-    Uses ONLY the fictitious return method. No actual return calculation.
-    """
-    # Schulden drempel
+    """Calculate provisional 2026 box 3 using the official fictitious step model."""
     drempel = SCHULDEN_DREMPEL_PER_PERSON * (2 if has_partner else 1)
-    qualifying_schulden = max(0, schulden - drempel)
-
-    # Total assets
+    aftrekbare_schulden = max(0.0, schulden - drempel)
     total_assets = banktegoeden + overige
-    total_vermogen = total_assets - qualifying_schulden
 
-    # Heffingsvrij vermogen
-    if heffingsvrij > 0:
-        hvv = heffingsvrij
-    else:
-        hvv = HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
+    rendement_bank = banktegoeden * PERC_BANKTEGOEDEN
+    rendement_overige = overige * PERC_OVERIGE_BEZITTINGEN
+    rendement_schulden = aftrekbare_schulden * PERC_SCHULDEN
+    belastbaar_rendement = rendement_bank + rendement_overige - rendement_schulden
 
-    # Rendementsgrondslag (cannot be negative)
-    grondslag = max(0, total_vermogen - hvv)
+    rendementsgrondslag = total_assets - aftrekbare_schulden
+    hvv = heffingsvrij if heffingsvrij > 0 else HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
+    grondslag_sparen_en_beleggen = max(0.0, rendementsgrondslag - hvv)
 
-    if grondslag == 0:
-        return {
-            "grondslag": 0,
-            "fictitious_return": 0.0,
-            "estimated_tax": 0.0,
-            "details": {
-                "total_assets": total_assets,
-                "qualifying_schulden": qualifying_schulden,
-                "total_vermogen": total_vermogen,
-                "heffingsvrij_vermogen": hvv,
-                "schulden_drempel": drempel,
-            },
-        }
+    aandeel_pct = aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag)
+    aandeel_fraction = aandeel_pct / 100
 
-    # Category weights use net composition:
-    # (bank + overige - schulden) is the denominator before heffingsvrij vermogen.
-    weight_bank = banktegoeden / total_vermogen
-    weight_overige = overige / total_vermogen
-    weight_schulden = qualifying_schulden / total_vermogen
-
-    # Fictitious return per category
-    fict_bank = grondslag * weight_bank * PERC_BANKTEGOEDEN
-    fict_overige = grondslag * weight_overige * PERC_OVERIGE_BEZITTINGEN
-    fict_schulden = grondslag * weight_schulden * PERC_SCHULDEN
-
-    fictitious_return = round(fict_bank + fict_overige - fict_schulden, 2)
-    estimated_tax = round(max(0, fictitious_return) * TAX_RATE, 2)
+    belastbaar_rendement_eur = nearest_euro(belastbaar_rendement)
+    box3_inkomen = max(0, floor_euro(belastbaar_rendement_eur * aandeel_fraction))
+    box3_belasting = floor_euro(box3_inkomen * TAX_RATE)
 
     return {
-        "grondslag": grondslag,
-        "fictitious_return": fictitious_return,
-        "estimated_tax": estimated_tax,
-        "category_weights": {
-            "banktegoeden": round(weight_bank, 4),
-            "overige_bezittingen": round(weight_overige, 4),
-            "schulden": round(weight_schulden, 4),
-        },
-        "category_returns": {
-            "banktegoeden": round(fict_bank, 2),
-            "overige_bezittingen": round(fict_overige, 2),
-            "schulden": round(fict_schulden, 2),
-        },
+        "belastbaar_rendement": belastbaar_rendement_eur,
+        "rendementsgrondslag": nearest_euro(rendementsgrondslag),
+        "grondslag_sparen_en_beleggen": nearest_euro(grondslag_sparen_en_beleggen),
+        "aandeel_in_rendementsgrondslag": aandeel_pct,
+        "box3_inkomen": box3_inkomen,
+        "box3_belasting": box3_belasting,
         "details": {
-            "total_assets": total_assets,
-            "qualifying_schulden": qualifying_schulden,
-            "total_vermogen": total_vermogen,
-            "heffingsvrij_vermogen": hvv,
-            "schulden_drempel": drempel,
+            "banktegoeden": nearest_euro(banktegoeden),
+            "overige_bezittingen": nearest_euro(overige),
+            "schulden": nearest_euro(schulden),
+            "schulden_drempel": nearest_euro(drempel),
+            "aftrekbare_schulden": nearest_euro(aftrekbare_schulden),
+            "heffingsvrij_vermogen": nearest_euro(hvv),
+            "rendement_banktegoeden": nearest_euro(rendement_bank),
+            "rendement_overige_bezittingen": nearest_euro(rendement_overige),
+            "rendement_schulden": nearest_euro(rendement_schulden),
         },
     }
 
 
 def main():
-    # FIRST: Check for prohibited actual return parameters
     check_prohibited_arguments()
 
     parser = argparse.ArgumentParser(
-        description="Calculate box 3 fictitious return for the 2026 provisional assessment. "
-                    "Uses ONLY the fictitious method. Werkelijk rendement is NOT accepted."
+        description=(
+            "Calculate box 3 fictitious return for the 2026 provisional assessment. "
+            "Uses ONLY the fictitious method. Werkelijk rendement is NOT accepted."
+        )
     )
     parser.add_argument("--banktegoeden", type=float, required=True,
                         help="Estimated banktegoeden as of 1 Jan 2026 in EUR")
     parser.add_argument("--overige", type=float, required=True,
                         help="Estimated overige bezittingen as of 1 Jan 2026 in EUR")
     parser.add_argument("--schulden", type=float, required=True,
-                        help="Estimated schulden as of 1 Jan 2026 in EUR")
+                        help="Estimated box 3 debts as of 1 Jan 2026 in EUR")
     parser.add_argument("--heffingsvrij", type=float, default=0,
-                        help="Heffingsvrij vermogen in EUR (default: 57000/person, 114000 with partner)")
+                        help="Heffingsvrij vermogen in EUR (default: 59357 per person)")
     parser.add_argument("--has_partner", action="store_true",
                         help="Whether taxpayer has a fiscal partner")
 
@@ -179,25 +163,24 @@ def main():
         "assessment_type": "provisional_2026",
         "method": "fictitious_only",
         "peildatum": "2026-01-01",
-        "input_note": "All amounts are ESTIMATES as of 1 January 2026",
-        "grondslag": result["grondslag"],
-        "fictitious_return": result["fictitious_return"],
-        "estimated_tax": result["estimated_tax"],
+        "input_note": "All amounts are estimates as of 1 January 2026",
+        **result,
+        "fictitious_return": result["box3_inkomen"],
+        "estimated_tax": result["box3_belasting"],
         "tax_rate": TAX_RATE,
         "percentages_used": {
             "banktegoeden": PERC_BANKTEGOEDEN,
             "overige_bezittingen": PERC_OVERIGE_BEZITTINGEN,
             "schulden": PERC_SCHULDEN,
-            "note": "Verify these percentages against the published 2026 provisional rates",
         },
-        "calculation_details": result,
-        "werkelijk_rendement": "NOT_APPLICABLE — provisional assessment uses fictitious method only",
+        "werkelijk_rendement": "NOT_APPLICABLE: provisional assessment uses fictitious method only",
+        "rounding_note": "Displayed amounts use portal-style whole-euro rounding.",
     }
 
     if args.has_partner:
         output["partner_note"] = (
-            "Combined heffingsvrij vermogen of EUR 114,000 applied. "
-            "Partners may freely allocate box 3 assets and debts between them."
+            "Combined heffingsvrij vermogen of EUR 118,714 applied. "
+            "Partners may allocate the grondslag sparen en beleggen between them."
         )
 
     print(json.dumps(output, indent=2, ensure_ascii=False))

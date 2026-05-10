@@ -9,6 +9,8 @@ Checks:
     - Every snapshot references a source_id from the register
     - Freshness thresholds are met
     - Knowledge files without source_id references are flagged
+    - Every source_id reference anywhere in skills/*.md is registered
+    - Active reviewed knowledge files do not contain unverified-value markers
 """
 
 import json
@@ -35,6 +37,19 @@ FRESHNESS_DAYS = {
     "refresh-on-demand": 730,
 }
 
+VALID_KNOWLEDGE_WORKFLOWS = {"all", "annual_return", "provisional_assessment"}
+
+
+REVIEW_BLOCKING_PATTERNS = [
+    ("pending verification", re.compile(r"pending verification", re.IGNORECASE)),
+    ("verify against", re.compile(r"verify against", re.IGNORECASE)),
+    ("may differ from", re.compile(r"may differ from", re.IGNORECASE)),
+    ("approximate marker", re.compile(r"\bapprox(?:imate|imately)?\b", re.IGNORECASE)),
+    ("indicative marker", re.compile(r"\bindicative\b", re.IGNORECASE)),
+    ("approximate EUR marker", re.compile(r"~\s*EUR", re.IGNORECASE)),
+    ("approximate numeric marker", re.compile(r"~\s*\d+(?:[.,]\d+)?\s*%?")),
+]
+
 
 def check_freshness(last_checked, policy):
     if not last_checked:
@@ -52,12 +67,38 @@ def check_freshness(last_checked, policy):
 
 def find_knowledge_files(knowledge_dir):
     """Find all .md files in the knowledge directory."""
+    return find_markdown_files(knowledge_dir)
+
+
+def find_markdown_files(root_dir):
+    """Find all .md files under a directory."""
     result = []
-    for root, _, files in os.walk(knowledge_dir):
+    for root, _, files in os.walk(root_dir):
         for f in files:
             if f.endswith(".md") and not f.startswith("_"):
                 result.append(os.path.join(root, f))
     return result
+
+
+def find_reference_files(skills_dir):
+    """Find .md files in skill reference directories."""
+    result = []
+    for root, _, files in os.walk(skills_dir):
+        if os.path.basename(root) != "reference":
+            continue
+        for f in files:
+            if f.endswith(".md") and not f.startswith("_"):
+                result.append(os.path.join(root, f))
+    return result
+
+
+def is_relative_to(path, parent):
+    """Return whether path is inside parent, without pathlib for Py3.8 compatibility."""
+    try:
+        os.path.relpath(path, parent)
+        return os.path.commonpath([os.path.abspath(path), os.path.abspath(parent)]) == os.path.abspath(parent)
+    except ValueError:
+        return False
 
 
 def find_content_root(register_path):
@@ -111,6 +152,43 @@ def extract_source_ids(filepath):
     return ids
 
 
+def extract_metadata_value(filepath, key):
+    """Extract a simple `key: value` metadata field from a markdown file."""
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            for line in f:
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#"):
+                    continue
+                if stripped.startswith("## "):
+                    break
+                match = re.match(rf"{re.escape(key)}:\s*(.+)", stripped)
+                if match:
+                    return match.group(1).strip().strip('"').strip("'")
+    except (OSError, UnicodeDecodeError):
+        pass
+    return ""
+
+
+def split_metadata_values(raw):
+    """Split comma-separated metadata such as `workflow: annual_return, all`."""
+    return [part.strip() for part in raw.split(",") if part.strip()]
+
+
+def find_review_blocking_markers(filepath):
+    """Find unverified-value markers that are not allowed in active reviewed files."""
+    markers = []
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            for lineno, line in enumerate(f, start=1):
+                for label, pattern in REVIEW_BLOCKING_PATTERNS:
+                    if pattern.search(line):
+                        markers.append((lineno, label, line.strip()))
+    except (OSError, UnicodeDecodeError):
+        pass
+    return markers
+
+
 def main():
     if len(sys.argv) < 2:
         print(
@@ -134,6 +212,9 @@ def main():
     registered_ids = set()
     missing_snapshots = []
     stale_sources = []
+    review_marker_errors = []
+    workflow_metadata_errors = []
+    source_reference_errors = []
 
     for source in sources:
         sid = source.get("id", "")
@@ -152,15 +233,34 @@ def main():
         if is_stale:
             stale_sources.append((sid, reason))
 
-    # Find knowledge files and check source references
+    # Check every source_id reference in all skill markdown files.
+    skills_dir = os.path.dirname(base_dir)
+    if os.path.isdir(skills_dir):
+        for mf in find_markdown_files(skills_dir):
+            refs = extract_source_ids(mf)
+            unknown = refs - registered_ids
+            if unknown:
+                rel_path = os.path.relpath(mf, project_root)
+                for u in sorted(unknown):
+                    source_reference_errors.append((rel_path, u))
+
+    # Find knowledge and source-backed reference files and check source references.
     unreferenced = []
     if os.path.isdir(knowledge_dir):
-        knowledge_files = find_knowledge_files(knowledge_dir)
-        for kf in knowledge_files:
+        source_backed_files = set(find_knowledge_files(knowledge_dir))
+        if os.path.isdir(skills_dir):
+            source_backed_files.update(find_reference_files(skills_dir))
+
+        for kf in sorted(source_backed_files):
             refs = extract_source_ids(kf)
             if not refs:
-                rel_path = os.path.relpath(kf, project_root)
-                unreferenced.append(rel_path)
+                status = extract_metadata_value(kf, "status").lower()
+                review_status = extract_metadata_value(kf, "review_status").lower()
+                if is_relative_to(kf, knowledge_dir) or (
+                    status == "active" and review_status == "reviewed"
+                ):
+                    rel_path = os.path.relpath(kf, project_root)
+                    unreferenced.append(rel_path)
             else:
                 unknown = refs - registered_ids
                 if unknown:
@@ -168,8 +268,30 @@ def main():
                     for u in unknown:
                         print(f"  WARNING: {rel_path} references unknown source_id: {u}")
 
+            status = extract_metadata_value(kf, "status").lower()
+            review_status = extract_metadata_value(kf, "review_status").lower()
+            if status == "active" and review_status == "reviewed":
+                workflow = extract_metadata_value(kf, "workflow")
+                workflows = split_metadata_values(workflow) if workflow else []
+                invalid_workflows = [
+                    wf for wf in workflows if wf not in VALID_KNOWLEDGE_WORKFLOWS
+                ]
+                if invalid_workflows:
+                    rel_path = os.path.relpath(kf, project_root)
+                    workflow_metadata_errors.append((rel_path, workflow))
+                markers = find_review_blocking_markers(kf)
+                if markers:
+                    rel_path = os.path.relpath(kf, project_root)
+                    for lineno, label, text in markers:
+                        review_marker_errors.append((rel_path, lineno, label, text))
+
     # Report
-    has_errors = bool(missing_snapshots)
+    has_errors = bool(
+        missing_snapshots
+        or review_marker_errors
+        or workflow_metadata_errors
+        or source_reference_errors
+    )
 
     if missing_snapshots:
         print("MISSING SNAPSHOTS:")
@@ -189,11 +311,32 @@ def main():
             print(f"  - {f}")
         print()
 
+    if review_marker_errors:
+        print("ACTIVE REVIEWED FILES WITH UNVERIFIED-VALUE MARKERS:")
+        for rel_path, lineno, label, text in review_marker_errors:
+            print(f"  - {rel_path}:{lineno}: {label}: {text}")
+        print()
+
+    if workflow_metadata_errors:
+        print("ACTIVE REVIEWED FILES WITH INVALID WORKFLOW METADATA:")
+        for rel_path, workflow in workflow_metadata_errors:
+            print(f"  - {rel_path}: workflow: {workflow}")
+        print()
+
+    if source_reference_errors:
+        print("SOURCE_ID REFERENCES NOT PRESENT IN SOURCE REGISTER:")
+        for rel_path, source_id in source_reference_errors:
+            print(f"  - {rel_path}: source_id: {source_id}")
+        print()
+
     total_sources = len(sources)
     print(f"Summary: {total_sources} sources, "
           f"{len(missing_snapshots)} missing, "
           f"{len(stale_sources)} stale, "
-          f"{len(unreferenced)} unreferenced files")
+          f"{len(unreferenced)} unreferenced files, "
+          f"{len(review_marker_errors)} review marker errors, "
+          f"{len(workflow_metadata_errors)} workflow metadata errors, "
+          f"{len(source_reference_errors)} unknown source_id errors")
 
     if not has_errors and not stale_sources:
         print("VALIDATION PASSED")

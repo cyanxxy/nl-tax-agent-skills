@@ -9,7 +9,7 @@
 5. Enter deductions and box 3 estimates
 6. Review the summary
 7. Submit the request
-8. Expect a response (beschikking) within approximately 8 weeks
+8. Note the response timing shown in Mijn Belastingdienst or in the Belastingdienst confirmation
 
 ## For CHANGE (wijzigen)
 

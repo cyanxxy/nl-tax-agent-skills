@@ -1,6 +1,6 @@
 ---
 name: nl-tax-intake
-description: Determine the correct Dutch tax workflow and create a taxpayer profile for annual return 2025 or voorlopige aanslag 2026.
+description: Determine the correct Dutch tax workflow and create a taxpayer profile for source-backed annual return 2025 or voorlopige aanslag 2026; block unsupported future years such as 2027 until official sources are added.
 argument-hint: "[annual|provisional|review|stopzetten]"
 context: fork
 allowed-tools: Read Grep Write Edit
@@ -20,7 +20,7 @@ Determine which Dutch tax workflow applies and create the base taxpayer profile.
 ## What this skill does
 
 1. **Screen the taxpayer** — determine if the case is within v1 scope
-2. **Identify the workflow** — annual return 2025, or voorlopige aanslag 2026 (request/change/review/stopzetten)
+2. **Identify the workflow** — annual return 2025, voorlopige aanslag 2026 (request/change/review/stopzetten), or unsupported future year
 3. **Create the taxpayer profile** — write `workspace/taxpayer/profile.yaml`
 4. **Identify missing information** — write `workspace/shared/missing-info.md`
 5. **Record assumptions** — write `workspace/shared/assumptions.md`
@@ -42,11 +42,16 @@ Ask these in order, stopping if the case is out of scope:
 - If deceased: route to unsupported case
 
 ### 4. Workflow selection
+
+Before selecting a workflow, read `${CLAUDE_SKILL_DIR}/../_shared/supported-workflows.yaml`. Only workflows listed under `active_workflows` may proceed to workpack preparation.
+
 - **Annual return 2025:** User wants to file their 2025 income tax return
 - **Provisional 2026 request:** User wants to request a new voorlopige aanslag for 2026
 - **Provisional 2026 change:** User wants to change an existing voorlopige aanslag for 2026
 - **Provisional 2026 review:** User wants to check if their voorlopige aanslag is still correct
 - **Provisional 2026 stopzetten:** User wants to stop their voorlopige aanslag
+- **Annual or provisional 2027:** set `workflow_candidate: unsupported_future_year` and explain that 2027 is blocked until official Belastingdienst/wetten.overheid.nl sources are registered and validated. Do not reuse 2025 or 2026 values.
+- **Any other unlisted year:** set `workflow_candidate: unsupported_future_year` unless the supported-workflows file lists it as active.
 
 ### 5. Fiscal partner
 - Do you have a fiscal partner?
@@ -85,3 +90,4 @@ Do NOT write to:
 Tell the user which workflow was selected and what happens next:
 - Annual 2025 → suggest uploading evidence, then running the annual return skill
 - Provisional 2026 → explain what estimates are needed, then running the provisional assessment skill
+- Unsupported future year → explain which exact year/workflow was requested, that no source-backed local knowledge exists yet, and that the developer must run source refresh after official sources are published

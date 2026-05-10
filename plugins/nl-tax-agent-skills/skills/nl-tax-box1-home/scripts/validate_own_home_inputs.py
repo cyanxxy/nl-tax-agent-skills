@@ -36,29 +36,30 @@ from typing import Optional
 
 
 # ---------------------------------------------------------------------------
-# Constants — 2025 and 2026 parameters
+# Constants — reviewed 2025 and 2026 parameters
 # ---------------------------------------------------------------------------
 
 # Eigenwoningforfait percentages by year
 EIGENWONINGFORFAIT_TABLE: dict[int, list[tuple[float, float, float, Optional[float]]]] = {
-    # Each entry: (lower_bound, upper_bound, percentage, fixed_base)
-    # fixed_base is used only for the top bracket (above EUR 1,310,000)
+    # Each entry: (lower_bound, upper_bound, percentage, fixed_base).
+    # Standard brackets are lower-exclusive and upper-inclusive, except the
+    # first bracket which includes zero. The top bracket is strictly above
+    # lower_bound and uses fixed_base.
     2025: [
         (0, 12_500, 0.0000, None),
         (12_500, 25_000, 0.0010, None),
         (25_000, 50_000, 0.0020, None),
         (50_000, 75_000, 0.0025, None),
-        (75_000, 1_310_000, 0.0035, None),
-        (1_310_000, float("inf"), 0.0235, 4_585),
+        (75_000, 1_330_000, 0.0035, None),
+        (1_330_000, float("inf"), 0.0235, 4_655),
     ],
     2026: [
-        # Provisional — use 2025 values as estimates until 2026 is confirmed
         (0, 12_500, 0.0000, None),
         (12_500, 25_000, 0.0010, None),
         (25_000, 50_000, 0.0020, None),
         (50_000, 75_000, 0.0025, None),
-        (75_000, 1_310_000, 0.0035, None),
-        (1_310_000, float("inf"), 0.0235, 4_585),
+        (75_000, 1_350_000, 0.0035, None),
+        (1_350_000, float("inf"), 0.0235, 4_725),
     ],
 }
 
@@ -70,25 +71,16 @@ TARIEFSAANPASSING: dict[int, dict[str, float]] = {
         "cap_rate": 0.3748,
     },
     2026: {
-        # Provisional — may differ from 2025
-        "schijf3_threshold": 76_817,
+        "schijf3_threshold": 78_426,
         "schijf3_rate": 0.4950,
-        "cap_rate": 0.3748,
+        "cap_rate": 0.3756,
     },
 }
 
 # Hillenregeling phase-out: year -> percentage of benefit remaining
 HILLENREGELING_REMAINING: dict[int, float] = {
-    2019: 0.9667,
-    2020: 0.9333,
-    2021: 0.9000,
-    2022: 0.8667,
-    2023: 0.8333,
-    2024: 0.8000,
-    2025: 0.7667,
-    2026: 0.7333,
-    2027: 0.7000,
-    2028: 0.6667,
+    2025: 0.76667,
+    2026: 0.71867,
 }
 
 
@@ -148,18 +140,20 @@ def calculate_eigenwoningforfait(woz_value: float, tax_year: int) -> float:
     """Calculate the eigenwoningforfait based on WOZ-waarde and tax year."""
     table = EIGENWONINGFORFAIT_TABLE.get(tax_year)
     if table is None:
-        # Fall back to 2025 table with a warning (caller should note this)
-        table = EIGENWONINGFORFAIT_TABLE[2025]
+        raise ValueError(
+            f"No reviewed eigenwoningforfait table is available for {tax_year}."
+        )
 
     for lower, upper, pct, fixed_base in table:
-        if lower <= woz_value < upper:
-            if fixed_base is not None:
-                # Top bracket: fixed base + percentage of excess
+        if fixed_base is not None:
+            if woz_value > lower:
                 return round(fixed_base + (woz_value - lower) * pct)
+            continue
+
+        if (lower == 0 and 0 <= woz_value <= upper) or (lower < woz_value <= upper):
             return round(woz_value * pct)
 
-    # Should not reach here, but handle gracefully
-    return round(woz_value * 0.0035)
+    raise ValueError(f"WOZ value EUR {woz_value:,.2f} is outside the reviewed table.")
 
 
 def check_mortgage_qualification(start_year: int) -> Optional[bool]:
@@ -185,10 +179,12 @@ def calculate_tariefsaanpassing(
     warnings: list[str] = []
     params = TARIEFSAANPASSING.get(tax_year)
     if params is None:
-        params = TARIEFSAANPASSING[2025]
-        warnings.append(
-            f"Tariefsaanpassing parameters for {tax_year} not available; "
-            f"using 2025 parameters as estimate."
+        return (
+            None,
+            None,
+            [
+                f"No reviewed tariefsaanpassing parameters are available for {tax_year}."
+            ],
         )
 
     if taxable_income is None:
@@ -199,7 +195,7 @@ def calculate_tariefsaanpassing(
                 "WARNING: Taxable income not provided. Cannot determine if "
                 "tariefsaanpassing applies. If box 1 income before eigen woning "
                 f"deduction exceeds EUR {params['schijf3_threshold']:,.0f}, the "
-                "effective mortgage interest deduction rate is capped at "
+                "effective deduction rate for own-home costs is capped at "
                 f"{params['cap_rate'] * 100:.2f}%."
             ],
         )
@@ -213,7 +209,7 @@ def calculate_tariefsaanpassing(
     adjustment = round(mortgage_interest * rate_diff, 2)
     warnings.append(
         f"Tariefsaanpassing applies: income EUR {taxable_income:,.0f} exceeds "
-        f"schijf 3 threshold EUR {threshold:,.0f}. Mortgage interest deduction "
+        f"schijf 3 threshold EUR {threshold:,.0f}. Own-home deduction "
         f"benefit is reduced by EUR {adjustment:,.2f} "
         f"({rate_diff * 100:.2f}% of EUR {mortgage_interest:,.2f})."
     )
@@ -337,7 +333,11 @@ def main() -> int:
         )
 
     # --- Eigenwoningforfait ---
-    ewf = calculate_eigenwoningforfait(effective_woz, tax_year)
+    try:
+        ewf = calculate_eigenwoningforfait(effective_woz, tax_year)
+    except ValueError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
 
     # --- Mortgage qualification ---
     qualifies_post2013 = check_mortgage_qualification(mortgage_start_year)
@@ -376,7 +376,7 @@ def main() -> int:
             f"Hillenregeling applies: eigenwoningforfait (EUR {ewf:,}) exceeds "
             f"mortgage interest (EUR {effective_interest:,.2f}). "
             f"Correction of EUR {hillen_correction:,} applied "
-            f"({hillen_remaining * 100:.2f}% remaining in {tax_year})."
+            f"({hillen_remaining * 100:.3f}% remaining in {tax_year})."
         )
     else:
         net_after_hillen = net_eigen_woning
@@ -432,7 +432,7 @@ def main() -> int:
     if result.hillenregeling_applies:
         print(f"Hillenregeling:         YES")
         print(f"  Correction:           EUR {result.hillenregeling_correction:,}")
-        print(f"  Benefit remaining:    {result.hillenregeling_remaining_pct * 100:.2f}%")
+        print(f"  Benefit remaining:    {result.hillenregeling_remaining_pct * 100:.3f}%")
         print(f"  Net after Hillen:     EUR {result.net_after_hillen:,}")
     else:
         print(f"Hillenregeling:         NO (mortgage interest >= eigenwoningforfait)")

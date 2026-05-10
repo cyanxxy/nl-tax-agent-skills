@@ -1,10 +1,10 @@
 # Eigen Woning (Own Home) Rules — Annual Return 2025
 
-source_id: bd_own_home_deduction_cap_2025
-workflow: annual-return
+source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest, bd_fiscal_partnership
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Purpose
@@ -27,10 +27,10 @@ The eigenwoningforfait is a deemed rental income amount based on the WOZ-waarde 
 | EUR 12,500 to EUR 25,000 | 0.10% | EUR 20,000 -> EUR 20 |
 | EUR 25,000 to EUR 50,000 | 0.20% | EUR 40,000 -> EUR 80 |
 | EUR 50,000 to EUR 75,000 | 0.25% | EUR 60,000 -> EUR 150 |
-| EUR 75,000 to EUR 1,310,000 | 0.35% | EUR 400,000 -> EUR 1,400 |
-| Above EUR 1,310,000 | EUR 4,585 + 2.35% of excess | EUR 1,500,000 -> EUR 9,050 |
+| EUR 75,000 to EUR 1,330,000 | 0.35% | EUR 400,000 -> EUR 1,400 |
+| Above EUR 1,330,000 | EUR 4,655 + 2.35% of excess | EUR 1,500,000 -> EUR 8,650 |
 
-The vast majority of Dutch homes fall in the EUR 75,000 to EUR 1,310,000 bracket. Use 0.35% as the standard calculation unless the WOZ-waarde falls outside this range.
+The vast majority of Dutch homes fall in the EUR 75,000 to EUR 1,330,000 bracket. Use 0.35% as the standard calculation unless the WOZ-waarde falls outside this range.
 
 ### WOZ-waarde source
 
@@ -82,29 +82,29 @@ Mortgage interest paid on the eigen woning loan is deductible from box 1 income.
 
 ## Tariefsaanpassing eigen woning (rate adjustment for high earners)
 
-For taxpayers whose box 1 income exceeds the schijf 2 boundary (EUR 76,817 in 2025), the effective tax benefit of the mortgage interest deduction is limited.
+For taxpayers whose box 1 income exceeds the schijf 2 boundary (EUR 76,817 in 2025), the effective tax benefit of deductible own-home costs is limited.
 
 ### 2025 rules
 
-- The maximum effective deduction rate for mortgage interest is capped at 37.48% (the schijf 2 rate)
-- Taxpayers in schijf 3 (49.50%) do not get the full 49.50% tax benefit on their mortgage interest
-- The tariefsaanpassing adds back the difference: (49.50% - 37.48%) = 12.02% of the mortgage interest amount that falls within the schijf 3 portion of income
+- The maximum effective deduction rate for own-home deductible costs is capped at 37.48% (the schijf 2 rate)
+- Taxpayers in schijf 3 (49.50%) do not get the full 49.50% tax benefit on those costs
+- The tariefsaanpassing adds back the difference: (49.50% - 37.48%) = 12.02% of the deductible own-home costs that fall within the schijf 3 portion of income
 
 ### When tariefsaanpassing applies
 
 - The taxpayer's box 1 taxable income (before eigen woning deduction) exceeds EUR 76,817
-- The taxpayer has deductible mortgage interest
+- The taxpayer has deductible own-home costs
 
 ### When tariefsaanpassing does NOT apply
 
 - Income is below EUR 76,817 (entirely in schijf 1 and/or schijf 2)
-- No mortgage interest is deducted (e.g., mortgage-free homeowner)
+- No deductible own-home costs are deducted
 
 ### Calculation approach
 
 1. Determine total box 1 income before the eigen woning deduction
 2. If income > EUR 76,817, calculate the tariefsaanpassing:
-   - Tariefsaanpassing = deductible mortgage interest x (49.50% - 37.48%)
+   - Tariefsaanpassing = deductible own-home costs x (49.50% - 37.48%)
    - This amount is recorded as an adjustment that reduces the net tax benefit of the deduction
 3. If income context is not yet available when this skill runs, output a WARNING that tariefsaanpassing may apply and must be checked by the calling skill
 
@@ -116,20 +116,7 @@ The Hillenregeling provides relief for homeowners who have paid off their mortga
 
 ### Phase-out status for 2025
 
-The Hillenregeling is being phased out over 30 years (2019-2048):
-
-| Year | Percentage of benefit remaining |
-|------|-------------------------------|
-| 2019 | 96.67% |
-| 2020 | 93.33% |
-| 2021 | 90.00% |
-| 2022 | 86.67% |
-| 2023 | 83.33% |
-| 2024 | 80.00% |
-| 2025 | 76.67% |
-| 2026 | 73.33% |
-| ... | ... |
-| 2048 | 0.00% |
+For 2025, 76.667% of the difference between the eigenwoningforfait and deductible own-home costs is taken into account as the aftrek wegens geen of geringe eigenwoningschuld. Use this reviewed percentage in calculations.
 
 ### When the Hillenregeling applies
 
@@ -142,13 +129,13 @@ The Hillenregeling applies when:
 1. Determine eigenwoningforfait (A)
 2. Determine deductible mortgage interest (B)
 3. If A > B, the excess = A - B
-4. Hillenregeling correction = excess x 76.67% (for 2025)
+4. Hillenregeling correction = excess x 76.667% (for 2025)
 5. Net eigenwoningforfait after Hillenregeling = A - Hillenregeling correction
 6. The remaining net amount is added to box 1 income
 
 ### Practical effect
 
-- For a homeowner with NO mortgage: the eigenwoningforfait is reduced by 76.67%, so only 23.33% of it is effectively taxed
+- For a homeowner with NO mortgage: the eigenwoningforfait is reduced by 76.667%, so 23.333% of it remains before other box 1 effects
 - For a homeowner with a small mortgage where forfait > interest: partial benefit applies
 - For a homeowner whose mortgage interest exceeds the forfait (the common case): the Hillenregeling does not apply, and the net result remains a deduction
 
@@ -199,6 +186,6 @@ Each missing item should generate a corresponding entry in `workspace/shared/rev
 
 - The eigenwoningforfait percentage of 0.35% applies specifically to 2025. Do not carry forward to other years without verification.
 - The tariefsaanpassing cap of 37.48% is specific to 2025 and may change in subsequent years.
-- The Hillenregeling phase-out percentage (76.67% remaining) is specific to 2025.
-- For fiscal partners: the eigenwoningforfait and mortgage interest follow ownership shares (typically 50/50). Partners may allocate the NET eigen woning result differently for tax optimization, but the gross components follow ownership.
+- The Hillenregeling phase-out percentage (76.667% remaining) is specific to 2025.
+- For fiscal partners: the saldo of own-home income and deductions is an allocatable item in the return. Any allocation must be consistent across both partners and total 100%.
 - This skill produces notes only. The calling skill (annual return or provisional assessment) is responsible for incorporating these notes into the final workpack.

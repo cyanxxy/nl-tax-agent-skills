@@ -2,7 +2,7 @@
 
 **Created:** 2026-04-30
 **Purpose:** Redesign the current Dutch tax capability as a plugin that bundles LLM-native Agent Skills, not as a loose collection of static templates and scripts.
-**Scope:** `plugins/nl-tax-agent-skills/` is the primary distributable plugin. The bundled skills support Dutch annual return 2025 and voorlopige aanslag 2026 workpack preparation.
+**Scope:** `plugins/nl-tax-agent-skills/` is the primary distributable plugin. The bundled skills support Dutch annual return 2025 and voorlopige aanslag 2026 workpack preparation. Annual/provisional 2027 are explicit future goals, but remain blocked until exact official 2027 sources are registered, snapshotted, reviewed, and validated.
 
 ---
 
@@ -75,6 +75,7 @@ Before the LLM redesign, fix the contract bugs found in review.
 - [ ] Preferred option: create one metadata file per source, for example `_snapshot-metadata/<source_id>.yaml`.
 - [x] Update `build_snapshots.py` and validators accordingly.
 - [ ] Ensure every registered source can be checked independently.
+- [x] Add a supported-workflows contract so future years such as 2027 cannot be treated as source-backed before official sources exist.
 
 ### 2.5 Provisional output contract
 
@@ -251,6 +252,7 @@ This redesign is complete when:
 - [ ] Field maps use `annual_return` or `provisional_assessment`.
 - [ ] Source-refresh tools agree on snapshot presence and metadata.
 - [ ] Provisional 2026 never asks for werkelijk rendement.
+- [x] 2027 annual/provisional workflows are blocked until official source-backed knowledge exists.
 - [ ] Workpacks include sources used, missing information, assumptions, human review checklist, and not-submission-advice sections.
 
 ---

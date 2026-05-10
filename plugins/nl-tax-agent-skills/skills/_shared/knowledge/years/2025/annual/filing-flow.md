@@ -1,10 +1,10 @@
 # Rule note: Filing flow for annual return 2025
 
-source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index
-workflow: annual-return
+source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index, bd_annual_deadline_2025, bd_annual_extension_2025
+workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-10"
 review_status: reviewed
 
 ## Rule
@@ -15,13 +15,18 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## The four-step filing process
 
-### Step 1: Log in (Inloggen)
+### Step 1: Prepare (Voorbereiden)
 
-- The taxpayer logs in at Mijn Belastingdienst using DigiD.
+- The taxpayer gathers the required documents and data, including DigiD, rekeningnummer, 2025 jaaropgaven, 2025 bank and investment overviews, crypto exchange overviews if relevant, WOZ-waarde with valuation date 1 January 2024, mortgage annual statement, and evidence for deductions.
 - DigiD is the government's digital identity system. This skill must never collect, store, or process DigiD credentials. See security/digid.md.
 - If filing on behalf of someone else, proper authorization via DigiD Machtigen must be in place first. See security/machtigen.md.
 
-### Step 2: Check pre-filled data (Vooringevulde aangifte controleren)
+### Step 2: Open the return (De aangifte openen)
+
+- The taxpayer logs in at Mijn Belastingdienst using DigiD.
+- In Mijn Belastingdienst, the taxpayer selects `Inkomstenbelasting` and then the relevant tax year.
+
+### Step 3: Check pre-filled data (Controleren)
 
 - The Belastingdienst pre-fills the return with data it has received from employers, banks, pension funds, mortgage lenders, and other third parties. This is called the vooringevulde aangifte (VIA).
 - VIA data should be verified, not blindly trusted. Known issues include:
@@ -30,10 +35,6 @@ These are reference notes for workpack preparation -- not final tax advice.
   - Missing foreign income
   - Outdated WOZ-waarde (gemeente may not have submitted updated value)
   - Missing deductible items (zorgkosten, giften) which are never pre-filled
-- The workpack prepared by this skill includes verification checkpoints: each item in the workpack is paired with the corresponding VIA field so the taxpayer can compare.
-
-### Step 3: Add or correct information (Aanvullen en corrigeren)
-
 - The taxpayer adds information that is missing from the VIA and corrects any pre-filled data that is wrong.
 - Common additions include:
   - Deductible items: zorgkosten, giften, alimentatie, lijfrentepremie
@@ -43,7 +44,7 @@ These are reference notes for workpack preparation -- not final tax advice.
   - Box 3 assets not reported by Dutch financial institutions (foreign accounts, crypto, real estate abroad)
 - The workpack groups additions and corrections by section (box 1, box 3, deductions) so the taxpayer can work through them systematically.
 
-### Step 4: Review, sign, and submit (Controleren, ondertekenen en versturen)
+### Step 4: Review, sign, and submit (Ondertekenen en versturen)
 
 - The taxpayer reviews the complete return, including the calculated tax result.
 - The return is digitally signed via DigiD and submitted.
@@ -53,11 +54,11 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Filing deadline
 
-- The standard deadline for filing the 2025 annual return is 1 May 2026.
-- The taxpayer can request an extension (uitstel) through Mijn Belastingdienst or via a tax adviser. Extensions typically grant until 1 September 2026.
-- If the taxpayer receives a blue envelope (aangiftebrief) or a digital notification, the deadline stated in that notice applies.
+- The filing deadline is the date shown in the taxpayer's aangiftebrief. The Belastingdienst says this is often 1 May.
+- For the 2025 return, the Belastingdienst extension page states that 1 May 2026 was the deadline when the return had to be received for taxpayers with that date.
+- If extension is granted, the taxpayer gets 4 extra months to file.
 - Late filing may result in a verzuimboete (penalty for late filing).
-- For returns filed in 2026 for tax year 2025: verify the exact deadline on the Belastingdienst website, as it may shift if 1 May falls on a weekend or public holiday.
+- Always use the date in the taxpayer's notice or Mijn Belastingdienst rather than assuming the default date.
 
 ## Workpack purpose
 
@@ -72,6 +73,6 @@ The workpack is a preparation tool. The taxpayer retains full responsibility for
 
 ## Notes
 
-- VIA data typically becomes available from approximately 1 March of the filing year (2026 for tax year 2025). Filing before that date means more data may need to be entered manually.
+- Check VIA availability in the official filing environment before relying on pre-filled data. Filing before the pre-filled data is complete means more data may need to be entered manually.
 - Fiscal partners can allocate certain income and deductions between them. The workpack should note allocation choices and their tax impact.
 - The Belastingdienst may send a voorlopige aanslag (provisional assessment) based on the filed return. This is separate from the definitieve aanslag (final assessment) which may follow later.

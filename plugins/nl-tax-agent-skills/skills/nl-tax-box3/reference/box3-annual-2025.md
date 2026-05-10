@@ -1,5 +1,12 @@
 # Box 3 — Annual 2025: Classification and Calculation Rules
 
+source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
+workflow: annual_return
+tax_year: 2025
+status: active
+last_reviewed: "2026-05-10"
+review_status: reviewed
+
 ## Asset Classification
 
 ### Banktegoeden (Bank Assets)
@@ -30,12 +37,17 @@
 | Parameter | Value |
 |---|---|
 | Peildatum | 1 January 2025 |
-| Heffingsvrij vermogen | EUR 57,000 per person |
-| Drempel schulden | EUR 3,700 per person |
+| Heffingsvrij vermogen | EUR 57,684 per person |
+| Drempel schulden | EUR 3,800 per person |
+| Banktegoeden percentage | 1.37% |
+| Overige bezittingen percentage | 5.88% |
+| Schulden percentage | 2.70% |
+| Box 3 tax rate | 36% |
 
 ## Important Notes
 
-- For the annual return: need BOTH 1 January AND 31 December positions for some calculations
-- Debts below the drempel (EUR 3,700 per person) are not deductible from the grondslag
+- For the annual return: need BOTH 1 January AND 31 December positions for actual-return checks, but the fictitious method uses the 1 January 2025 position
+- Debts below the drempel (EUR 3,800 per person) are not deductible from the grondslag
 - Partners can freely allocate box 3 assets and debts between them (any split from 0%/100% to 100%/0%)
 - The annual return allows choosing between the fictitious return method and the actual return method (werkelijk rendement)
+- Fictitious-return workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
