@@ -2,7 +2,7 @@
 description: Refresh official Dutch tax source snapshots and validate the local knowledge pack. Developer-only.
 argument-hint: "[annual|provisional|box3|all] [year]"
 disable-model-invocation: true
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-source-refresh/scripts/*.py *)
+allowed-tools: Read, Grep, Write, Edit, Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-source-refresh/scripts/*.py:*)
 ---
 
 # NL Tax Source Refresh

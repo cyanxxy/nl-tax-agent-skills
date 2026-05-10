@@ -1,7 +1,7 @@
 ---
 description: Convert Dutch annual return or voorlopige aanslag workpack findings into a manual-entry field map.
 argument-hint: "[annual|provisional] [year]"
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py *)
+allowed-tools: Read, Grep, Write, Edit, Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py:*)
 ---
 
 # NL Tax Field Mapper

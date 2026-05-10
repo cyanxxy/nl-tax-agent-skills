@@ -1,7 +1,7 @@
 ---
 description: Index Dutch tax evidence files into a structured local evidence index without deciding tax treatment.
 argument-hint: "[path-to-upload-folder]"
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-evidence-indexer/scripts/*.py *)
+allowed-tools: Read, Grep, Write, Edit, Bash(python ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-evidence-indexer/scripts/*.py:*)
 ---
 
 # NL Tax Evidence Indexer
