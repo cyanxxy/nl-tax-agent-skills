@@ -2,7 +2,12 @@
 name: nl-tax-field-mapper
 description: Convert Dutch annual return or voorlopige aanslag workpack findings into a manual-entry field map.
 argument-hint: "[annual|provisional] [year]"
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Write
+  - Edit
+  - Bash(python3 *.py:*)
 ---
 
 # NL Tax Field Mapper
@@ -68,7 +73,7 @@ The following are NEVER mapped:
 After generating a field map, run the validation script:
 
 ```
-python ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
 The validation checks:
@@ -84,7 +89,7 @@ The validation checks:
 To generate a human-readable review table:
 
 ```
-python ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
 ## Safety

@@ -2,7 +2,10 @@
 name: nl-tax-box1-home
 description: Background Dutch box 1 and own-home knowledge for annual return 2025 and voorlopige aanslag 2026 workpacks.
 user-invocable: false
-allowed-tools: Read Grep Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-box1-home/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Bash(python3 *.py:*)
 ---
 
 # NL Tax Box 1 & Own Home — Background Helper

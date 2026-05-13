@@ -2,9 +2,12 @@
 name: nl-tax-provisional-assessment
 description: Prepare a Dutch voorlopige aanslag 2026 request, change, review, or stopzetten guidance package from taxpayer profile, evidence, baseline, and current-year estimates.
 argument-hint: "[2026] [request|change|review|stopzetten]"
-context: fork
-agent: general-purpose
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-provisional-assessment/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Write
+  - Edit
+  - Bash(python3 *.py:*)
 ---
 
 # NL Tax Provisional Assessment

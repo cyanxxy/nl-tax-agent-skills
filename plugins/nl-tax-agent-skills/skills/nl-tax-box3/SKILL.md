@@ -2,7 +2,10 @@
 name: nl-tax-box3
 description: Background Dutch box 3 knowledge for annual return 2025 and voorlopige aanslag 2026. Use for asset classification, annual actual-vs-fictitious comparison notes, and provisional fictitious box 3 notes.
 user-invocable: false
-allowed-tools: Read Grep Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-box3/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Bash(python3 *.py:*)
 ---
 
 # nl-tax-box3

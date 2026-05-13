@@ -4,7 +4,7 @@ source_id: anthropic_agent_skills_overview, claude_code_skills
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-13"
 review_status: reviewed
 
 ## Rule
@@ -26,7 +26,7 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 
 ## Execution context
 
-- `context: fork` runs skill in isolated subagent -- use for tasks with clear output contracts
+- `context: fork` runs the skill in an isolated subagent with no access to the parent conversation. The subagent receives the SKILL.md content as a one-shot prompt and returns a single summary. Only use this for stateless analysis tasks that need no user follow-up (e.g. summarizing a fixed input). Never use it for skills that ask the user questions, iterate on assumptions, or produce workpacks across multiple turns -- the subagent cannot read or reply to the user
 - `disable-model-invocation: true` prevents auto-invocation (for maintenance or dangerous skills)
 - `user-invocable: false` hides from slash-command menu but allows model invocation
 
@@ -52,9 +52,9 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 When creating or modifying skills in this project:
 
 1. Keep SKILL.md concise -- move detailed rules, rates, and procedures to knowledge files in `_shared/knowledge/`
-2. Use `context: fork` for skills that produce discrete output (workpacks, reports)
+2. Do NOT set `context: fork` on the workpack or intake skills. These are interactive workflows that need to ask the user follow-up questions and iterate across turns; a forked subagent cannot do that. Reserve `context: fork` for stateless one-shot analysis only
 3. Set `disable-model-invocation: true` for skills that modify source data or perform destructive operations
-4. Always declare `allowed-tools` to minimize approval friction during execution
+4. Always declare `allowed-tools` as a YAML list (space-separated strings also work, but lists are unambiguous). Use `python3` (not `python`) in `Bash(...)` patterns -- macOS does not ship a bare `python` interpreter
 5. Register any new external sources in `_shared/source-register.yaml`
 
 ## Common failure

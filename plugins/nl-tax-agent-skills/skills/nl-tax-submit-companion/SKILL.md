@@ -3,7 +3,11 @@ name: nl-tax-submit-companion
 description: Create a manual submission checklist for Dutch annual return or voorlopige aanslag workflows. Does not log in, sign, submit, or handle DigiD.
 argument-hint: "[annual|provisional] [2025|2026]"
 disable-model-invocation: true
-allowed-tools: Read Grep Write Edit
+allowed-tools:
+  - Read
+  - Grep
+  - Write
+  - Edit
 ---
 
 # nl-tax-submit-companion

@@ -2,7 +2,10 @@
 name: nl-tax-partner-deductions
 description: Background Dutch fiscal-partner and deduction allocation knowledge for annual return and voorlopige aanslag workpacks.
 user-invocable: false
-allowed-tools: Read Grep Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-partner-deductions/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Bash(python3 *.py:*)
 ---
 
 # NL Tax Partner Deductions -- Background Helper

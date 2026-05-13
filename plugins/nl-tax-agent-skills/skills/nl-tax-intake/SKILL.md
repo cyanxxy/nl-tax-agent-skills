@@ -2,8 +2,11 @@
 name: nl-tax-intake
 description: Determine the correct Dutch tax workflow and create a taxpayer profile for source-backed annual return 2025 or voorlopige aanslag 2026; block unsupported future years such as 2027 until official sources are added.
 argument-hint: "[annual|provisional|review|stopzetten]"
-context: fork
-allowed-tools: Read Grep Write Edit
+allowed-tools:
+  - Read
+  - Grep
+  - Write
+  - Edit
 ---
 
 # NL Tax Intake

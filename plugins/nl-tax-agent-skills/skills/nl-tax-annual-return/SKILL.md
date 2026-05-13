@@ -2,9 +2,12 @@
 name: nl-tax-annual-return
 description: Prepare a Dutch annual income-tax return 2025 workpack from taxpayer profile, evidence index, and local annual tax knowledge.
 argument-hint: "[2025]"
-context: fork
-agent: general-purpose
-allowed-tools: Read Grep Write Edit Bash(python ${CLAUDE_SKILL_DIR}/../nl-tax-annual-return/scripts/*.py *)
+allowed-tools:
+  - Read
+  - Grep
+  - Write
+  - Edit
+  - Bash(python3 *.py:*)
 ---
 
 # NL Tax Annual Return
