@@ -4,7 +4,7 @@ source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 **CRITICAL: This reference is ONLY for the annual 2025 path. It must NEVER be used for provisional 2026.**
@@ -12,6 +12,8 @@ review_status: reviewed
 ## Background
 
 Based on the Hoge Raad kerstarrest (December 2021), taxpayers may opt for taxation based on their actual return if this results in a lower tax liability than the fictitious return method.
+
+Actual return is calculated without applying heffingsvrij vermogen. For fiscal partners, the actual return is divided using the same allocation chosen for the joint grondslag sparen en beleggen.
 
 ## What Counts as Actual Return
 
@@ -46,7 +48,7 @@ Costs may not be deducted from actual return, except for the official exceptions
 ## Comparison Method
 
 1. Calculate the fictitious return using the official Belastingdienst step model
-2. Calculate the actual return using the rules above
+2. Calculate the actual return using the rules above, without deducting heffingsvrij vermogen
 3. Present both side by side
 4. Note which method produces the lower tax liability
 5. The official filing environment (Belastingdienst) makes the binding calculation — the workpack provides notes only

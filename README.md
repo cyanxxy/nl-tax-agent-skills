@@ -1,6 +1,6 @@
 # NL Tax Agent Skills Plugin
 
-A local Claude Code, Claude Cowork, and Codex plugin that bundles LLM-native Agent Skills and slash-command wrappers for preparing Dutch individual income-tax workpacks.
+A local Claude Code, Claude Cowork, and Codex plugin that bundles LLM-native Agent Skills and slash-command wrappers for preparing Dutch individual income-tax information packs and manual form-entry guidance.
 
 The plugin is the product package:
 
@@ -8,7 +8,7 @@ The plugin is the product package:
 plugins/nl-tax-agent-skills/
 ```
 
-No backend. No web app. No autonomous filing. No DigiD automation. The bundled skills guide local workpack preparation only; humans review and submit through official Belastingdienst channels.
+No backend. No web app. No autonomous filing. No DigiD automation. The bundled skills collect and organize local information, map it to manual-entry fields, and guide the taxpayer step by step while the taxpayer fills and submits the official Belastingdienst forms themselves.
 
 ## Package Shape
 
@@ -239,7 +239,9 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validat
   plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
-python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills -name '*.py' -print)
+python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
+python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
+python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ```
 
 Useful developer utilities:

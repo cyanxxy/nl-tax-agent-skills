@@ -4,7 +4,7 @@ source_id: bd_fisin_2025_index
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -114,7 +114,7 @@ Fiscal partners can allocate the following deductions between them in the most t
 
 - Persoonsgebonden aftrek components (alimentatie, zorgkosten, giften, etc.)
 - Eigen woning: the net result can be allocated between partners
-- Box 3 income: the grondslag (assets minus debts) can be allocated freely between partners
+- Box 3: the joint grondslag sparen en beleggen can be allocated freely between partners
 
 ### Allocation strategy
 

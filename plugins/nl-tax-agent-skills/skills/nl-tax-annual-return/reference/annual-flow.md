@@ -213,6 +213,8 @@ Follow the data requirements from `actual-return.md`:
 
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
+Do not deduct heffingsvrij vermogen from actual return. If fiscal partners choose a box 3 allocation, apply the same allocation percentage to actual return for the comparison.
+
 If the taxpayer cannot provide actual return data: note that the fictitious method will apply by default.
 
 ### 4.5 Comparison: fictitious vs actual
@@ -224,11 +226,10 @@ If the taxpayer cannot provide actual return data: note that the fictitious meth
 
 ### 4.6 Partner allocation for box 3
 
-- If fiscal partners: box 3 assets and debts can be freely allocated (0%-100%)
-- The allocation applies to the ENTIRE box 3 base (not asset-by-asset)
+- If fiscal partners: the joint grondslag sparen en beleggen can be freely allocated (0%-100%)
+- The allocation applies to the entire joint box 3 base, not individual assets or debts
 - Both partners must use the same allocation ratio
-- Compute the optimal split that minimizes combined box 3 tax
-- Present the default (50/50) and the optimized allocation
+- Present simple scenarios such as 50/50, 100/0, and 0/100; do not select a binding allocation automatically
 
 ---
 

@@ -4,7 +4,7 @@ source_ids: bd_fiscal_partnership, bd_provisional_request_2026, bd_provisional_r
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -17,8 +17,9 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 The allocation rules for the provisional assessment 2026 are structurally identical to the annual return:
 
-- Box 3 assets and debts: any split 0-100% between partners
-- Eigen woning result: allocated to one partner (or by ownership share for co-owners)
+- Box 3 joint grondslag sparen en beleggen: any split 0-100% between partners
+- Box 3 calculation: allocate the joint grondslag sparen en beleggen, not individual assets or debts
+- Eigen woning result: fiscal partners may allocate the saldo of own-home income and deductions in any split totaling 100%
 - Persoonsgebonden aftrek: allocated freely between partners (with the same per-category constraints as described in `deductions-2025.md`)
 - Heffingskortingen: affected indirectly by allocation choices
 
@@ -62,7 +63,7 @@ Because all amounts are estimates and the allocation can be changed:
 1. **Avoid excessive precision.** Spending time finding the mathematically optimal allocation for estimated amounts provides limited value when the actual amounts will differ.
 2. **Focus on the largest items.** Optimize allocation for the items with the biggest tax impact:
    - **Mortgage interest (hypotheekrenteaftrek):** usually the largest deduction. Allocate to the partner where it provides the most benefit, considering the tariefsaanpassing cap.
-   - **Box 3 grondslag:** allocate to make best use of both partners' heffingsvrij vermogen. A straightforward approach is to split box 3 so that neither partner has unused heffingsvrij vermogen.
+   - **Box 3 grondslag:** the combined heffingsvrij vermogen is applied before allocation. Allocate the remaining joint grondslag sparen en beleggen in a 100%-total split that gives the best overall result after all tax and credit effects.
 3. **Use reasonable defaults for smaller items.** For smaller deductions (giften, zorgkosten), a simple allocation (e.g., to the higher-earning partner) is sufficient. Fine-tuning these can wait for the annual return.
 4. **Consider cash flow.** The provisional assessment determines monthly payment or refund amounts. An allocation that reduces one partner's monthly payment but increases the other's has no net effect on the household -- unless there is a cash flow reason to prefer one partner's account receiving the refund.
 
@@ -78,8 +79,9 @@ Because all amounts are estimates and the allocation can be changed:
 ### Box 3 allocation (second biggest impact)
 
 - Estimate combined box 3 grondslag for 2026 peildatum (1 January 2026).
-- Allocate to maximize use of both partners' heffingsvrij vermogen.
-- If combined grondslag exceeds 2x heffingsvrij vermogen, allocate the excess to the partner with the lower overall tax burden (but for provisional purposes, an even split of the excess is a reasonable default).
+- Apply the combined heffingsvrij vermogen first.
+- Allocate the joint grondslag sparen en beleggen, not individual assets or debts.
+- For provisional purposes, compare simple scenarios such as 50/50, 100/0, and 0/100 rather than over-optimizing exact percentages from estimates.
 
 ### Other deductions
 

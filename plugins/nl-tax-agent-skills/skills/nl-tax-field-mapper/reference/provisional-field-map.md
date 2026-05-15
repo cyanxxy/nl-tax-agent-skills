@@ -4,7 +4,7 @@ source_ids: bd_provisional_request_2026, bd_box3_2026_provisional, bd_provisiona
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
@@ -68,6 +68,8 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 |---|---|---|---|---|---|
 | `box3.geschatte_banktegoeden` | Geschatte banktegoeden op 1 januari 2026 | Estimated bank balances on 1 Jan 2026 | Box 3 — Bezittingen | conditional | Recent bank statements / estimate |
 | `box3.geschatte_overige_bezittingen` | Geschatte overige bezittingen op 1 januari 2026 | Estimated other assets on 1 Jan 2026 | Box 3 — Bezittingen | conditional | Recent portfolio / estimate |
+| `box3.geschatte_groene_beleggingen_spaartegoeden` | Geschatte groene beleggingen en groene spaartegoeden | Estimated green investments and green savings | Box 3 — Vrijstellingen | optional | Recent green fund / bank statements |
+| `box3.geschat_contant_geld` | Geschat contant geld en cadeaubonnen | Estimated cash and gift cards | Box 3 — Bezittingen | optional | User estimate |
 | `box3.geschatte_schulden` | Geschatte schulden op 1 januari 2026 | Estimated debts on 1 Jan 2026 | Box 3 — Schulden | conditional | Current debt levels / estimate |
 
 ### HARD RULE: No werkelijk rendement in provisional
@@ -89,6 +91,21 @@ Werkelijk rendement may become relevant when filing the annual 2026 return in 20
 - Peildatum for the provisional 2026 is 1 January 2026.
 - Only the fictitious return method (forfaitair rendement) applies. The portal computes the fictitious return from the asset estimates.
 - The heffingsvrij vermogen is applied automatically by the portal.
+- Green investments/savings and cash must be identifiable separately because exemptions can change the amount included in banktegoeden or overige bezittingen.
+
+---
+
+## Partner Allocation Estimates
+
+| field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
+|---|---|---|---|---|---|
+| `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen | Box 3 base allocation | Partner | conditional | User choice |
+| `partner.verdeling_eigenwoning_saldo` | Verdeling saldo eigen woning | Own-home balance allocation | Partner | conditional | User choice |
+| `partner.verdeling_aftrekposten` | Verdeling aftrekposten | Deduction allocation | Partner | conditional | User choice |
+
+### Notes on partner allocation estimates
+- If there is a fiscal partner and the provisional form asks for allocation, map the allocation of the joint grondslag sparen en beleggen, not individual assets or debts.
+- Allocation values are estimates for cash-flow planning. The final allocation is chosen again in the annual 2026 return.
 
 ---
 
@@ -117,5 +134,4 @@ The following annual return fields have no equivalent in the provisional assessm
 | `aftrek.giften_anbi` | Rolled into general estimated deductions |
 | `aftrek.giften_cultureel` | Rolled into general estimated deductions |
 | `aftrek.lijfrentepremie` | Rolled into general estimated deductions |
-| `partner.verdeling_*` | Allocation is simplified in provisional |
 | `box1.loonheffing` | Not separately entered; the portal handles withholding |

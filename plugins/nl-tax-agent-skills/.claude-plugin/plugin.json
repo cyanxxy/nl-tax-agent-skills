@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
+  "description": "Dutch tax preparation skills that help users gather information and fill official forms manually, step by step.",
   "author": {
     "name": "Tax Skill Developers"
   },

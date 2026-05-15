@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box3
-description: Background Dutch box 3 knowledge for annual return 2025 and voorlopige aanslag 2026. Use for asset classification, annual actual-vs-fictitious comparison notes, and provisional fictitious box 3 notes.
+description: Use when box 3 classification or method notes are needed.
 user-invocable: false
 allowed-tools:
   - Read
@@ -8,37 +8,10 @@ allowed-tools:
   - Bash(python3 *.py:*)
 ---
 
-# nl-tax-box3
+# NL Tax Box 3
 
-THIS IS A CRITICAL SKILL that enforces the annual/provisional box 3 distinction.
+Background helper for box 3 notes.
 
-## What it does
+Annual 2025 must cover fictitious return and werkelijk-rendement data collection for user review. Provisional 2026 must use only the provisional fictitious method and must never ask for werkelijk rendement.
 
-1. Classify assets into banktegoeden, overige bezittingen, schulden
-2. For annual 2025: support BOTH fictitious and actual-return notes
-3. For provisional 2026: use ONLY fictitious provisional method
-4. Generate partner allocation notes where applicable
-
-## HARD RULES
-
-- **Annual 2025 path**: collect data for BOTH fictitious and werkelijk rendement, compare, note which appears favorable
-- **Provisional 2026 path**: ONLY fictitious method. NEVER ask for werkelijk rendement.
-- If workflow is provisional and user asks about actual return: explain it may be relevant later in the annual 2026 return
-
-## Knowledge sources
-
-- `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/fictitious.md`
-- `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/actual-return.md`
-- `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/examples.md`
-- `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2026/provisional/box3-provisional.md`
-- `${CLAUDE_SKILL_DIR}/../nl-tax-box3/reference/**`
-
-## Output
-
-- `workspace/shared/box3-notes.md`
-- `workspace/shared/box3-review-questions.md`
-
-## Must NOT write to
-
-- `workspace/annual/2025/return-pack.md`
-- `workspace/provisional/2026/provisional-pack.md`
+Write only `workspace/shared/box3-notes.md` and `workspace/shared/box3-review-questions.md`. Do not write workpacks directly.

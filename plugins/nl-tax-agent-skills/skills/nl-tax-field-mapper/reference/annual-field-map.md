@@ -4,7 +4,7 @@ source_ids: bd_annual_data_checklist_2025, bd_box3_2025_calc, bd_box3_2025_actua
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 This reference defines the known fields in the Dutch annual income tax return that the field mapper produces. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
@@ -83,6 +83,8 @@ This reference defines the known fields in the Dutch annual income tax return th
 |---|---|---|---|---|---|
 | `box3.banktegoeden` | Banktegoeden op peildatum 1 januari 2025 | Bank balances on reference date | Box 3 — Bezittingen | conditional | `bankafschrift`, `jaaroverzicht_bank` |
 | `box3.overige_bezittingen` | Overige bezittingen op peildatum 1 januari 2025 | Other assets on reference date | Box 3 — Bezittingen | conditional | `jaaroverzicht_beleggingen`, `crypto_overzicht`, `eigendom_bewijs` |
+| `box3.groene_beleggingen_spaartegoeden` | Groene beleggingen en groene spaartegoeden | Green investments and green savings | Box 3 — Vrijstellingen | optional | `jaaroverzicht_groenfonds`, `jaaroverzicht_bank` |
+| `box3.contant_geld` | Contant geld en cadeaubonnen | Cash and gift cards | Box 3 — Bezittingen | optional | User-provided / cash log |
 | `box3.schulden` | Schulden op peildatum 1 januari 2025 | Debts on reference date | Box 3 — Schulden | conditional | `schuld_overzicht` |
 | `box3.werkelijk_rendement_rente` | Ontvangen rente (werkelijk rendement) | Interest received (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_bank` |
 | `box3.werkelijk_rendement_dividend` | Ontvangen dividend (werkelijk rendement) | Dividends received (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_beleggingen` |
@@ -95,7 +97,9 @@ This reference defines the known fields in the Dutch annual income tax return th
 - Peildatum for 2025 annual return is 1 January 2025.
 - The annual return supports BOTH fictitious return (forfaitair rendement) and actual return (werkelijk rendement). The field map collects data for both.
 - Werkelijk rendement fields are optional -- the taxpayer may choose the fictitious method instead.
-- The heffingsvrij vermogen (EUR 57,684 single / EUR 115,368 partners) is applied in the portal.
+- The heffingsvrij vermogen (EUR 57,684 single / EUR 115,368 partners) applies to the fictitious method; do not deduct it from werkelijk rendement.
+- For fiscal partners, the actual return follows the same allocation percentage as the joint grondslag sparen en beleggen.
+- Green investments/savings and cash must be identifiable separately because exemptions can change the amount included in banktegoeden or overige bezittingen.
 - Do not map custody fees, transaction costs, management fees, maintenance costs, or adviser fees as deductible actual-return costs.
 
 ---
@@ -124,11 +128,11 @@ This reference defines the known fields in the Dutch annual income tax return th
 |---|---|---|---|---|---|
 | `partner.bsn` | BSN partner | Partner citizen service number | Partner | conditional | Pre-filled after partner DigiD link; do NOT store |
 | `partner.inkomen` | Inkomen partner | Partner income | Partner | conditional | Partner `jaaropgaaf` |
-| `partner.verdeling_box3` | Verdeling box 3 (percentage) | Box 3 allocation (percentage) | Partner | conditional | User choice |
+| `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen (percentage) | Box 3 base allocation percentage | Partner | conditional | User choice |
 | `partner.verdeling_eigenwoning` | Verdeling eigen woning (percentage) | Own-home allocation (percentage) | Partner | conditional | User choice |
 | `partner.verdeling_aftrekposten` | Verdeling persoonsgebonden aftrek | Deduction allocation | Partner | conditional | User choice |
 
 ### Notes on partner fields
 - Partner BSN is entered via DigiD partner-link in the portal. The field mapper notes it is needed but NEVER stores the BSN value.
-- Allocation choices (verdeling) determine how shared income, assets, and deductions are split between partners. The optimal split depends on individual tax positions.
+- Allocation choices (verdeling) determine how shared income, the joint box 3 base, and deductions are split between partners. The optimal split depends on individual tax positions.
 - Non-allocatable items (arbeidskorting, ondernemersaftrek) cannot be transferred to the partner.

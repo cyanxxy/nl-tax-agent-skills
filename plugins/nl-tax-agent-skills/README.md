@@ -1,6 +1,6 @@
 # NL Tax Agent Skills Plugin
 
-Plugin package for preparing Dutch individual income-tax workpacks through LLM-native Agent Skills and slash-command wrappers.
+Plugin package for preparing Dutch individual income-tax information packs and manual form-entry guidance through LLM-native Agent Skills and slash-command wrappers.
 
 This directory is the product package. The skills are bundled inside the plugin under `skills/`; flat command wrappers live under `commands/` for hosts and versions that expose slash commands separately from skills.
 
@@ -56,7 +56,7 @@ The bundled skills cover:
 - evidence indexing with untrusted-content handling;
 - box 1, box 3, partner/deduction, field-map, source-refresh, and manual submission companion workflows.
 
-The plugin intentionally does not include a backend service, web app, browser automation, DigiD collection, signing, filing, Digipoort transport, or autonomous submission.
+The plugin intentionally does not include a backend service, web app, browser automation, DigiD collection, signing, filing, Digipoort transport, or autonomous submission. It helps the taxpayer collect information, review it, and follow step-by-step guidance while filling the official forms manually.
 
 The plugin must not prepare 2027 annual or provisional workpacks from 2025/2026 values. Future tax years become active only after exact official source snapshots are added and all validators pass.
 
@@ -185,7 +185,9 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validat
   plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
-python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills -name '*.py' -print)
+python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
+python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
+python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ```
 
 ## Privacy Boundary

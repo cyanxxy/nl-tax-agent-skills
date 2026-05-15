@@ -4,7 +4,7 @@ source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -23,6 +23,8 @@ The following income and value changes constitute actual return for box 3 purpos
 - Value changes of box 3 assets during 2025, including investments, listed or unlisted securities, crypto-assets, second homes, other box 3 real estate, and assets acquired or disposed of during the year
 - Interest paid on box 3 debts, as a permitted negative component
 - Other actual income from box 3 assets (e.g., royalties from intellectual property held as investment)
+
+Actual return is calculated over the total box 3 assets and debts to which the actual-return method applies. Do not deduct the heffingsvrij vermogen from the actual-return amount.
 
 ## What does NOT count as actual return
 
@@ -71,11 +73,15 @@ The workpack must collect the following data to enable the actual return compari
 The workpack should enable comparison between the two methods:
 
 1. Calculate the fictitious return (forfaitair rendement) per the standard box 3 method
-2. Calculate the total actual return from all collected data
+2. Calculate the total actual return from all collected data, without applying heffingsvrij vermogen
 3. Present both figures side by side
 4. Note which method is more favorable for the taxpayer
 
 **The official return filing environment performs the final binding comparison.** The workpack provides the calculation as informational notes only and does not make a binding election.
+
+## Fiscal partner allocation
+
+For fiscal partners, the actual return follows the same distribution chosen for the joint grondslag sparen en beleggen in the annual return. If partners allocate 50% of the joint grondslag to each partner, split the actual return 50/50 for the comparison. If they allocate 100% to one partner and 0% to the other, use that same distribution for actual return.
 
 ## Developer instruction
 
@@ -88,6 +94,7 @@ When building the workpack for box 3 with actual return data:
 5. Add a note that the final election happens in the official filing environment
 6. Never present the actual return option in a voorlopige aanslag workpack
 7. If the taxpayer has no actual return data available, note that the fictitious method will apply by default
+8. For fiscal partners, apply the same allocation percentage to actual return as to the joint grondslag sparen en beleggen
 
 ## Common failure
 

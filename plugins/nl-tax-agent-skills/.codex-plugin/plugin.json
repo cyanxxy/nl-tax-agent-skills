@@ -1,7 +1,7 @@
 {
   "name": "nl-tax-agent-skills",
   "version": "0.1.1",
-  "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
+  "description": "Dutch tax preparation skills that help users gather information and fill official forms manually, step by step.",
   "author": {
     "name": "Tax Skill Developers"
   },
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "NL Tax Agent Skills",
-    "shortDescription": "Dutch tax workpack skills for annual return 2025 and voorlopige aanslag 2026.",
-    "longDescription": "A skills and slash-command plugin that gives an LLM a structured local playbook for Dutch individual income-tax preparation. It guides intake, evidence indexing, source-backed reasoning, annual-return workpacks, provisional-assessment workpacks, field maps, and manual submission checklists without logging in, filing, signing, or handling DigiD credentials.",
+    "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",
+    "longDescription": "Local Dutch tax preparation skills for manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, automating the portal, or handling DigiD.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",
     "capabilities": [
@@ -26,10 +26,13 @@
       "Source-Backed Guidance"
     ],
     "defaultPrompt": [
-      "Prepare my 2025 Dutch annual tax workpack.",
-      "Review my 2026 voorlopige aanslag.",
-      "Index my Dutch tax evidence files."
+      "Help me prepare my 2025 Dutch tax form.",
+      "Guide me through my 2026 voorlopige aanslag.",
+      "Index my Dutch tax documents locally."
     ],
+    "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
+    "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills#privacy-boundary",
+    "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills#supported-workflows",
     "brandColor": "#1F6FEB",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/logo.png"

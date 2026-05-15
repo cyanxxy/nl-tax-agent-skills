@@ -4,7 +4,7 @@ source_id: bd_box3_2025_calc
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -36,11 +36,13 @@ Three categories determine the belastbaar rendement:
 ### Categorie I -- Banktegoeden (savings and bank deposits)
 
 - Includes: savings accounts, current accounts, deposits, term deposits
+- Includes contant geld only for the amount above the cash exemption, and includes the non-exempt part of green savings.
 - Fictitious return percentage for 2025: **1.37%**
 
 ### Categorie II -- Overige bezittingen (other assets)
 
 - Includes: investments, listed and unlisted securities, crypto-assets, real estate (not being own home), receivables (vorderingen), rights to periodic payments, other assets
+- Includes only the non-exempt part of green investments. The 2025 green-investment exemption shown in the official box 3 example is EUR 26,312 per person / EUR 52,624 for fiscal partners.
 - Fictitious return percentage for 2025: **5.88%**
 
 ### Categorie III -- Schulden (debts)
@@ -64,7 +66,7 @@ Use the Belastingdienst step model. Do not present this as a free-form weighted-
    - If the result is negative, use EUR 0
 4. **Bereken het aandeel in de rendementsgrondslag**
    - Aandeel = taxpayer's share of the grondslag sparen en beleggen divided by the rendementsgrondslag
-   - Round the percentage to 2 decimals; do not truncate
+   - Use the percentage as displayed in the official examples: truncate toward zero to 2 decimals
 5. **Bereken het voordeel uit sparen en beleggen**
    - Box 3 income = belastbaar rendement * aandeel in de rendementsgrondslag
 6. **Bereken hoeveel belasting moet worden betaald**
@@ -78,10 +80,10 @@ The box 3 tax rate for 2025 is **36%**, applied to the calculated fictitious ret
 
 When taxpayers qualify as fiscal partners:
 
-- Box 3 assets and debts can be freely allocated between partners
-- Any split from 0% to 100% is permitted, as long as the combined totals equal 100%
-- Partners should choose the allocation that results in the lowest combined box 3 tax
-- The allocation is chosen at the time of filing and applies to ALL box 3 assets and debts uniformly (you cannot split asset-by-asset; the chosen percentage applies to the entire box 3 base)
+- The joint grondslag sparen en beleggen can be freely allocated between partners
+- Any split from 0% to 100% is permitted, as long as the allocation of the joint grondslag totals 100%
+- Partners should review allocation scenarios for the lowest combined result after all tax and credit effects
+- The allocation is chosen at the time of filing and applies to the joint box 3 base; do not split asset-by-asset in the field map
 - Both partners must use the same allocation ratio in their respective returns
 
 ## Developer instruction
@@ -89,14 +91,17 @@ When taxpayers qualify as fiscal partners:
 When building the workpack for box 3:
 
 1. Collect the value of all assets and debts per category on peildatum 1 January 2025
-2. Calculate aftrekbare schulden after the debt threshold
-3. Calculate belastbaar rendement by category
-4. Calculate rendementsgrondslag, grondslag sparen en beleggen, aandeel in de rendementsgrondslag, box 3 income, and tax
-5. If fiscal partners are present, compute allocation scenarios for the grondslag sparen en beleggen
-6. Always present the full breakdown using the official step names above
+2. Separately identify green investments/savings and cash amounts because exemptions can change what is included in banktegoeden or overige bezittingen
+3. Calculate aftrekbare schulden after the debt threshold
+4. Calculate belastbaar rendement by category
+5. Calculate rendementsgrondslag, grondslag sparen en beleggen, aandeel in de rendementsgrondslag, box 3 income, and tax
+6. If fiscal partners are present, compute allocation scenarios for the joint grondslag sparen en beleggen
+7. Always present the full breakdown using the official step names above
 
 ## Common failure
 
 Do not subtract the full debt amount. First subtract the debt threshold and use only aftrekbare schulden in the return and rendementsgrondslag calculations.
 
 Do not apply the heffingsvrij vermogen before calculating the belastbaar rendement. The heffingsvrij vermogen is only deducted to determine the grondslag sparen en beleggen.
+
+Do not allocate individual assets or debts between fiscal partners for the fictitious calculation. Allocate the joint grondslag sparen en beleggen.

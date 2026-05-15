@@ -260,9 +260,6 @@ def check_snapshot_exists(source, base_dir):
 
 
 # ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def find_source_register():
     """Locate source-register.yaml relative to the script or working directory."""
     candidates = [
@@ -303,7 +300,7 @@ def find_repo_root(register_path):
     return candidates[-1]
 
 
-def main():
+def parse_cli_args(argv):
     if len(sys.argv) < 2:
         print("Usage: python fetch_sources.py <scope> [year] [--fetch]",
               file=sys.stderr)
@@ -313,11 +310,11 @@ def main():
         print("--fetch: v1 stub, reports what would be fetched", file=sys.stderr)
         sys.exit(1)
 
-    scope = sys.argv[1]
+    scope = argv[1]
     year = None
     fetch_flag = False
 
-    for arg in sys.argv[2:]:
+    for arg in argv[2:]:
         if arg == "--fetch":
             fetch_flag = True
         elif arg.isdigit() and len(arg) == 4:
@@ -325,34 +322,20 @@ def main():
         else:
             print(f"Warning: Ignoring unknown argument '{arg}'", file=sys.stderr)
 
-    # Locate source register
-    register_path = find_source_register()
-    if register_path is None:
-        print("Error: Could not find source-register.yaml.", file=sys.stderr)
-        print("Expected at: skills/_shared/source-register.yaml or "
-              ".claude/skills/_shared/source-register.yaml", file=sys.stderr)
-        sys.exit(1)
+    return scope, year, fetch_flag
 
-    repo_root = find_repo_root(register_path)
-    now = datetime.now(timezone.utc)
 
-    # Load register
+def load_sources(register_path):
     data = load_yaml(register_path)
     sources = data.get("sources", [])
-
     if not sources:
         print("Error: No sources found in source-register.yaml.", file=sys.stderr)
         sys.exit(1)
+    return sources
 
-    # Filter by scope and year
-    matched = [s for s in sources if matches_scope(s, scope, year)]
 
-    if not matched:
-        print(f"Warning: No sources match scope='{scope}'"
-              f"{f', year={year}' if year else ''}.", file=sys.stderr)
-
-    # Check each source
-    results = {
+def empty_report(now, scope, year, fetch_flag, register_path, sources, matched):
+    return {
         "report_type": "source_freshness_check",
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "scope": scope,
@@ -371,55 +354,66 @@ def main():
         },
     }
 
+
+def source_report_entry(source, now, repo_root, fetch_flag):
+    source_id = source.get("id", "unknown")
+    url = source.get("url", "")
+    is_stale, staleness_reason = check_staleness(source, now)
+    snapshot_exists, _ = check_snapshot_exists(source, repo_root)
+    url_allowed = is_url_allowed(url)
+
+    entry = {
+        "source_id": source_id,
+        "title": source.get("title", ""),
+        "url": url,
+        "source_type": source.get("source_type", ""),
+        "last_checked": source.get("last_checked", ""),
+        "is_stale": is_stale,
+        "staleness_detail": staleness_reason,
+        "snapshot_exists": snapshot_exists,
+        "snapshot_path": source.get("snapshot_path", ""),
+        "url_on_allowlist": url_allowed,
+    }
+
+    if fetch_flag and is_stale:
+        if url_allowed:
+            entry["fetch_action"] = "WOULD_FETCH (v1 stub -- no live HTTP)"
+        else:
+            entry["fetch_action"] = "BLOCKED -- URL not on domain allowlist"
+
+    return entry
+
+
+def add_entry_to_summary(results, entry):
+    summary = results["summary"]
+    if entry["is_stale"]:
+        summary["stale"] += 1
+    else:
+        summary["fresh"] += 1
+    if entry["snapshot_exists"]:
+        summary["snapshot_present"] += 1
+    else:
+        summary["snapshot_missing"] += 1
+    if not entry["url_on_allowlist"]:
+        summary["url_not_allowed"] += 1
+
+
+def build_report(sources, matched, now, repo_root, register_path, scope, year, fetch_flag):
+    results = empty_report(now, scope, year, fetch_flag, register_path, sources, matched)
     for source in matched:
-        source_id = source.get("id", "unknown")
-        url = source.get("url", "")
-        is_stale, staleness_reason = check_staleness(source, now)
-        snapshot_exists, snapshot_detail = check_snapshot_exists(source, repo_root)
-        url_allowed = is_url_allowed(url)
-
-        entry = {
-            "source_id": source_id,
-            "title": source.get("title", ""),
-            "url": url,
-            "source_type": source.get("source_type", ""),
-            "last_checked": source.get("last_checked", ""),
-            "is_stale": is_stale,
-            "staleness_detail": staleness_reason,
-            "snapshot_exists": snapshot_exists,
-            "snapshot_path": source.get("snapshot_path", ""),
-            "url_on_allowlist": url_allowed,
-        }
-
-        if fetch_flag and is_stale:
-            if url_allowed:
-                entry["fetch_action"] = "WOULD_FETCH (v1 stub -- no live HTTP)"
-            else:
-                entry["fetch_action"] = "BLOCKED -- URL not on domain allowlist"
-
+        entry = source_report_entry(source, now, repo_root, fetch_flag)
         results["sources_checked"].append(entry)
+        add_entry_to_summary(results, entry)
+    return results
 
-        # Update summary
-        if is_stale:
-            results["summary"]["stale"] += 1
-        else:
-            results["summary"]["fresh"] += 1
-        if snapshot_exists:
-            results["summary"]["snapshot_present"] += 1
-        else:
-            results["summary"]["snapshot_missing"] += 1
-        if not url_allowed:
-            results["summary"]["url_not_allowed"] += 1
 
-    # Output
-    print(dump_output(results))
-
-    # Summary to stderr
+def print_summary(results, scope, year, fetch_flag):
     s = results["summary"]
     print(f"\n--- Freshness Check Summary ---", file=sys.stderr)
     print(f"Scope: {scope}"
           f"{f' (year={year})' if year else ''}", file=sys.stderr)
-    print(f"Sources matched: {len(matched)} / {len(sources)}", file=sys.stderr)
+    print(f"Sources matched: {results['matched_sources']} / {results['total_sources']}",
+          file=sys.stderr)
     print(f"Fresh: {s['fresh']}  |  Stale: {s['stale']}", file=sys.stderr)
     print(f"Snapshots present: {s['snapshot_present']}  |  "
           f"Missing: {s['snapshot_missing']}", file=sys.stderr)
@@ -428,6 +422,38 @@ def main():
     if fetch_flag:
         print(f"Fetch mode: v1 stub (no live HTTP requests performed)",
               file=sys.stderr)
+
+
+def main():
+    scope, year, fetch_flag = parse_cli_args(sys.argv)
+    register_path = find_source_register()
+    if register_path is None:
+        print("Error: Could not find source-register.yaml.", file=sys.stderr)
+        print("Expected at: skills/_shared/source-register.yaml or "
+              ".claude/skills/_shared/source-register.yaml", file=sys.stderr)
+        sys.exit(1)
+
+    repo_root = find_repo_root(register_path)
+    now = datetime.now(timezone.utc)
+    sources = load_sources(register_path)
+    matched = [s for s in sources if matches_scope(s, scope, year)]
+
+    if not matched:
+        print(f"Warning: No sources match scope='{scope}'"
+              f"{f', year={year}' if year else ''}.", file=sys.stderr)
+
+    results = build_report(
+        sources,
+        matched,
+        now,
+        repo_root,
+        register_path,
+        scope,
+        year,
+        fetch_flag,
+    )
+    print(dump_output(results))
+    print_summary(results, scope, year, fetch_flag)
 
 
 if __name__ == "__main__":

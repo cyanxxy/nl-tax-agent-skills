@@ -23,6 +23,8 @@ evidence/
 __pycache__/
 *.py[cod]
 plugins/*/version.json
+evals/*/runs/
+evals/*/benchmark-usage.jsonl
 *.bsn
 *.iban
 *.secret

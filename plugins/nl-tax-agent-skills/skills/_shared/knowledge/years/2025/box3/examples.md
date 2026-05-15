@@ -4,7 +4,7 @@ source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -143,7 +143,7 @@ When generating box 3 examples or performing calculations in the workpack:
 1. Always show the official calculation chain: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax.
 2. For actual return comparisons, show both methods side by side with a clear recommendation note.
 3. For fiscal partners, compute allocation scenarios for the grondslag sparen en beleggen.
-4. Present monetary outputs in whole euros and round the aandeel percentage to two decimal places.
+4. Present monetary outputs in whole euros and truncate the aandeel percentage toward zero to two decimal places, matching the official examples.
 5. Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
 ## Common failure

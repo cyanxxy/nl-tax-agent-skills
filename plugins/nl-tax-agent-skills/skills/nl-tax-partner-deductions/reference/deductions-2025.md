@@ -4,7 +4,7 @@ source_ids: bd_fisin_2025_index, bd_fiscal_partnership, bd_own_home_deduction_ca
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-15"
 review_status: reviewed
 
 ## Rule
@@ -74,7 +74,7 @@ This means:
 - The effective rate difference for own-home deductible costs is 37.48% vs 35.82% = only 1.66 percentage points.
 - For non-own-home deductions (zorgkosten, giften, alimentatie), the full bracket difference may apply.
 
-Implication: it may be better to allocate the own-home saldo to the lower-bracket partner (where tariefsaanpassing has no impact because they are already below the cap) and allocate other deductions to the higher-bracket partner (where they benefit from the full 49.50% rate).
+Implication: model more than one allocation for the own-home saldo instead of assuming the highest-bracket partner is always best. Fiscal partners may allocate the saldo of own-home income and deductions in any split that totals 100%.
 
 ## Heffingskorting interaction
 
@@ -115,5 +115,5 @@ The calling skill (annual return or provisional assessment) must present the all
 2. **Forgetting to consider heffingskorting impact.** Moving deductions to the higher-bracket partner reduces their income, which may change their heffingskorting. The net benefit may be smaller than the bracket-rate difference suggests.
 3. **Assuming 50/50 split is always optimal.** It almost never is. The marginal-rate-optimized allocation typically outperforms an even split. The only situation where 50/50 is optimal is when both partners have identical marginal rates and identical heffingskorting positions.
 4. **Ignoring tariefsaanpassing for own-home costs.** Treating deductible own-home costs at the full marginal rate overstates the benefit for higher-bracket partners.
-5. **Splitting the eigen woning result partially.** The eigen woning result should generally be allocated as a unit to one partner (unless both are co-owners with separate mortgage portions).
+5. **Treating the eigen woning result as tied to ownership share for fiscal partners.** Fiscal partners may allocate the saldo of own-home income and deductions in any split totaling 100%. Ownership-share rules matter when people are not fiscal partners.
 6. **Not verifying that both partners file consistently.** Both partners must use the same allocation in their returns. Inconsistent filing leads to rejection.

@@ -413,7 +413,10 @@ def main() -> int:
     print(f"Mortgage interest:      EUR {result.mortgage_interest:,.2f}")
     print(f"Mortgage start year:    {result.mortgage_start_year}")
     if result.mortgage_qualifies_post2013 is not None:
-        label = "post-2013 (annuitair/lineair required)" if result.mortgage_qualifies_post2013 else "pre-2013 (transitional rules)"
+        if result.mortgage_qualifies_post2013:
+            label = "post-2013 (annuitair/lineair required)"
+        else:
+            label = "pre-2013 (transitional rules)"
         print(f"Mortgage regime:        {label}")
     print(f"Net eigen woning:       EUR {result.net_eigen_woning:,}")
     print()
