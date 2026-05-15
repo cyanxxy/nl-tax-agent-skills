@@ -46,6 +46,7 @@ nl-tax-agent-skills/
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
     nl-tax-source-refresh/          # developer-only source maintenance
+  tests/                        # validator unit tests (test_validators.py)
 ```
 
 The bundled skills cover:
@@ -79,11 +80,11 @@ Only the annual and provisional workflow skills write main workpacks. Helper ski
 
 ## Claude Code
 
-Install through the repository marketplace at `https://github.com/cyanxxy/nl-tax-agent-skills`:
+Install through the repository marketplace at `https://github.com/cyanxxy/nl-tax-agent-skills` by running these slash commands inside Claude Code:
 
-```bash
-claude plugin marketplace add cyanxxy/nl-tax-agent-skills
-claude plugin install nl-tax-agent-skills@nl-tax-agent-skills-marketplace
+```text
+/plugin marketplace add cyanxxy/nl-tax-agent-skills
+/plugin install nl-tax-agent-skills@nl-tax-agent-skills-marketplace
 ```
 
 Load the plugin directly during local development:
@@ -102,23 +103,9 @@ Plugin skills and command wrappers are namespaced. In current Claude Code, plugi
 
 ## Claude Cowork
 
-Personal marketplace install:
+This repository is open source. Anthropic's Cowork organization marketplace flow accepts only **private or internal** GitHub repositories on `github.com`, so the public upstream repository cannot be added directly as an org marketplace.
 
-1. Open Claude Desktop and switch to **Cowork**.
-2. Open **Customize**.
-3. Click **Browse plugins**.
-4. Select **Personal**.
-5. Click **+** and choose **Add marketplace from GitHub**.
-6. Enter `https://github.com/cyanxxy/nl-tax-agent-skills`.
-7. Install **NL Tax Agent Skills** from the marketplace.
-
-Organization marketplace install:
-
-1. An owner on a Team or Enterprise plan opens **Organization settings > Plugins**.
-2. Choose GitHub as the source and enter `cyanxxy/nl-tax-agent-skills`.
-3. Set **NL Tax Agent Skills** to **Available for install**, **Installed by default**, or **Required**.
-
-For one-off local testing in Cowork, ZIP this plugin directory and upload the custom plugin file:
+**Personal install (ZIP upload).** Package the plugin directory and upload it to Cowork:
 
 ```bash
 cd plugins/nl-tax-agent-skills
@@ -135,6 +122,12 @@ zip -r ../../nl-tax-agent-skills.plugin.zip . \
   -x "__pycache__/*" \
   -x "*.pyc"
 ```
+
+Then in Claude Desktop switch to **Cowork**, open **Customize** in the left sidebar, click **Browse plugins**, and upload the custom plugin file.
+
+**Team or Enterprise organization install.** Fork or mirror this plugin into a private or internal GitHub repository on `github.com` under your organization. Then in Claude Desktop go to **Organization settings > Plugins**, click **Add plugin**, choose **GitHub** as the source, and enter `your-org/your-fork` in `owner/repo` format. Set the plugin to one of **Available for install**, **Installed by default**, **Not available**, or **Required**.
+
+**Community marketplace.** Open-source plugins can be submitted to the Anthropic community marketplace at [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission). Once accepted, Cowork users install it from the in-product catalog.
 
 ## Codex
 
@@ -156,9 +149,9 @@ The plugin also includes `commands/` because Codex plugin bundles can expose fla
 
 ## Update Behavior
 
-The Claude-facing marketplace and plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude then uses the git commit SHA as the plugin version, so each pushed commit can be picked up by the Cowork marketplace **Update** button or by Claude Code plugin update.
+The marketplace manifest and plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude resolves the plugin version from `plugin.json` → marketplace entry → git commit SHA, so each pushed commit is picked up automatically by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
-If you deploy this plugin as a local `org-plugins/` directory for Cowork on third-party platforms, create a deployment-local `version.json` and bump its `version` string on every rollout. That file is not committed here because it would make GitHub-synced updates look unchanged unless manually bumped.
+If you redistribute this plugin through a non-Anthropic, Codex-style host that copies the plugin into a local `org-plugins/` directory (a Codex MVP convention, not part of Anthropic Cowork), create a deployment-local `version.json` and bump its `version` string on every rollout. That file is not committed because it would make GitHub-synced updates look unchanged unless manually bumped.
 
 ## Release Checks
 
