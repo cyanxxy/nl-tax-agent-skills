@@ -351,6 +351,51 @@ sources:
       - nl-tax-provisional-assessment
       - nl-tax-box1-home
 
+  - id: bd_giften_aftrek_2025
+    title: "Hoeveel aftrek krijgt u? -- giften aan goede doelen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/aftrekposten/persoonsgebonden-aftrek/giften_aan_goede_doelen/hoeveel_aftrek_krijg_u/"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-05-16"
+    freshness_policy: "check after Prinsjesdag and at start of filing season"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_zorgkosten_overzicht_2025
+    title: "Zorgkosten 2025 -- overzicht aftrekbare kosten ziekte of invaliditeit"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/overzicht-zorgkosten-2025"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-05-16"
+    freshness_policy: "check at start of filing season; threshold and kilometer rate may change with the Belastingplan"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_bijtelling_auto_2025
+    title: "Bijtelling privegebruik auto 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-auto-2025"
+    source_type: official_rates
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
+    last_checked: "2026-05-16"
+    freshness_policy: "check after Prinsjesdag; bijtelling percentages and zero-emission cap change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
   # ===========================================================================
   #  Fiscal partnership and allocation
   # ===========================================================================
