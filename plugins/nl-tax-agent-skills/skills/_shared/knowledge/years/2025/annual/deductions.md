@@ -1,6 +1,6 @@
 # Rule note: Common deductions for annual return 2025
 
-source_id: bd_fisin_2025_index
+source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -34,7 +34,8 @@ Medical expenses that are not reimbursed by health insurance may be deductible, 
 - Prescribed medication (voorgeschreven medicijnen) not covered by basic insurance
 - Medical aids and devices (hulpmiddelen) such as hearing aids, wheelchairs, prosthetics
 - Extra costs of a medically prescribed diet (dieetkosten) -- standard amounts per diet type set by the Belastingdienst
-- Travel costs to medical facilities (reiskosten ziektebezoek) -- EUR 0.23 per km for car travel
+- Travel by car to arts, ziekenhuis, or apotheek: EUR 0.23 per kilometer (parking, ferry, and toll costs separately). Travel by taxi or public transport: actual costs.
+- Reiskosten ziekenbezoek (visiting a sick relative): EUR 0.23 per km, but only if (a) you shared a household with the sick person at the start of the illness, (b) the verpleging lasts longer than 1 month in total, and (c) the one-way distance home-to-place-of-care exceeds 10 km
 - Costs of home modifications for medical reasons (aanpassingen woning)
 - Extra clothing and bedding costs due to illness or disability (extra kleding en beddengoed)
 - Prescribed therapies not covered by insurance
@@ -58,7 +59,9 @@ Donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling) and
 #### Periodieke giften (periodic gifts)
 
 - Regular donations committed for at least 5 years via a notarial deed or written agreement (schenkingsovereenkomst).
-- No threshold and no maximum: the full amount is deductible.
+- No threshold (drempel) applies.
+- Maximum deductible: EUR 1,500,000 per year, combined for taxpayer and fiscal partner, for 2025 and 2026 (was EUR 250,000 in 2024).
+- Overgangsregeling: periodieke-gift agreements entered into before 4 October 2022 at 16:00 keep the unlimited deduction through tax year 2027.
 - Evidence required: notarial deed or written agreement, plus proof of payments.
 
 #### Gewone giften / eenmalige giften (incidental gifts)

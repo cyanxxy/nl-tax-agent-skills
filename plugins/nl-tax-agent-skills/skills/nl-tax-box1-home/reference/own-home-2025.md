@@ -153,7 +153,7 @@ The Hillenregeling applies when:
 ### Temporary double housing (verhuisregeling)
 
 - When the old home is for sale and the new home is already purchased, the taxpayer may temporarily have two own homes
-- Under the verhuisregeling, mortgage interest on the old home remains deductible for up to 3 years after it ceased being the primary residence, provided it is for sale
+- Under the verhuisregeling, mortgage interest on the old home remains deductible for the year of moving plus the following 3 calendar years, provided it is for sale, empty, and not rented out
 - The eigenwoningforfait for the old home continues to apply during this period
 - Collect: move date, date old home listed for sale, date old home sold
 

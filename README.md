@@ -54,9 +54,21 @@ There are no standalone `.claude/skills` or `.agents/skills` trees in the cleane
 
 ## Install In Claude Cowork
 
-This repository is open source. Anthropic's Cowork organization marketplace flow accepts only **private or internal** GitHub repositories on `github.com`, so this public upstream repository cannot be added directly as an org marketplace — see the organization install option below.
+This repository is open source and hosted on `github.com`. Cowork supports two install paths, with different repo-visibility requirements:
 
-**Personal install (ZIP upload).** Package the plugin directory and upload it to Cowork:
+**Personal install (public GitHub repo).** In Claude Desktop, switch to the **Cowork** tab, click **Customize** in the left sidebar, then click **Browse plugins**. Select the **Personal** tab, click **+**, choose **Add marketplace from GitHub**, and enter the repository URL:
+
+```text
+https://github.com/cyanxxy/nl-tax-agent-skills
+```
+
+Cowork syncs the marketplace and surfaces `nl-tax-agent-skills`. Click **Install** on the plugin entry. Public GitHub repos are accepted for personal marketplaces, so no fork or ZIP upload is required.
+
+**Team or Enterprise organization install.** Cowork's organization marketplace flow accepts only **private or internal** GitHub repositories on `github.com` — public repos are not accepted at the org level. Fork or mirror this plugin into a private or internal GitHub repository on `github.com` under your organization. Then in Claude Desktop go to **Organization settings > Plugins**, click **Add plugin**, choose **GitHub** as the source, and enter `your-org/your-fork` in `owner/repo` format. Set the plugin to one of **Available for install**, **Installed by default**, **Not available**, or **Required**.
+
+**Community marketplace.** Open-source plugins can also be submitted to the Anthropic community marketplace at [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission). Once accepted, Cowork users install it from the in-product catalog without adding a marketplace or forking.
+
+**Optional ZIP fallback.** If the GitHub-marketplace path is unavailable in a given Cowork build, package the plugin directory and upload it through the same **Browse plugins** modal:
 
 ```bash
 cd plugins/nl-tax-agent-skills
@@ -73,12 +85,6 @@ zip -r ../../nl-tax-agent-skills.plugin.zip . \
   -x "__pycache__/*" \
   -x "*.pyc"
 ```
-
-Then in Claude Desktop, switch to **Cowork**, open **Customize** in the left sidebar, click **Browse plugins**, and upload the custom plugin file.
-
-**Team or Enterprise organization install.** Fork or mirror this plugin into a private or internal GitHub repository on `github.com` under your organization. Then in Claude Desktop go to **Organization settings > Plugins**, click **Add plugin**, choose **GitHub** as the source, and enter `your-org/your-fork` in `owner/repo` format. Set the plugin to one of **Available for install**, **Installed by default**, **Not available**, or **Required**.
-
-**Community marketplace.** Open-source plugins can also be submitted to the Anthropic community marketplace at [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission). Once accepted, Cowork users install it from the in-product catalog without ZIP uploads or forks.
 
 ### Update Behavior
 

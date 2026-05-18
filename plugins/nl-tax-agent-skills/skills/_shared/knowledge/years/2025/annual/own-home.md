@@ -101,7 +101,7 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 ## Moving during 2025
 
 - If the taxpayer bought or sold the eigen woning during 2025, the eigenwoningforfait is pro-rated for the period of ownership.
-- There may be a period of double own-home costs (verhuisregeling) when the old home is for sale and the new home is already purchased. Under certain conditions, interest on both homes remains deductible for up to 3 years.
+- There may be a period of double own-home costs (verhuisregeling) when the old home is for sale and the new home is already purchased. Under certain conditions, interest on both homes remains deductible for the year of moving plus the following 3 calendar years.
 - The workpack should capture move dates and determine the pro-rated amounts.
 
 ## Notes
