@@ -22,11 +22,15 @@ A voorlopige aanslag should be requested when:
 
 ## 4-step online process
 
-### Step 1 -- Log in with DigiD
+### Step 1 -- Prepare
+
+Prepare the estimated income, deduction, own-home, and box 3 information for 2026.
+
+### Step 2 -- Log in with DigiD
 
 Log in to Mijn Belastingdienst using DigiD. The skill does not collect, store, or process DigiD credentials. See security/digid.md for the hard prohibition on credential handling.
 
-### Step 2 -- Enter estimated income for 2026
+### Step 3 -- Fill in the request
 
 Enter all expected income for the year 2026, including:
 
@@ -36,25 +40,23 @@ Enter all expected income for the year 2026, including:
 - Self-employment income (winst uit onderneming)
 - Other income sources
 
-### Step 3 -- Enter deductions and box 3 data
-
 Enter expected deductions and assets/debts:
 
 - Mortgage interest (hypotheekrente) and eigenwoningforfait
 - Alimony payments (alimentatie)
 - Insurance premiums (lijfrentepremie, arbeidsongeschiktheidsverzekering)
-- Other deductible expenses (specific care costs, study costs where applicable, gifts)
+- Other deductible expenses (specific care costs, gifts, and other officially deductible items)
 - Box 3: assets and debts as of 1 January 2026 (peildatum) -- see box3-provisional.md for details
 
-### Step 4 -- Review summary, check amounts, and submit
+### Step 4 -- Sign and send
 
 - Review the calculated monthly payment or refund amount
 - Verify that all entered amounts are reasonable estimates
-- Submit the request
+- Sign and send the request
 
 ## Processing and result
 
-- Processing time: typically within 8 weeks after submission
+- Processing time: usually within 4 weeks after submission; sometimes longer, but within 8 weeks
 - The Belastingdienst issues a beschikking (decision) with the monthly payment or refund amount
 - Monthly payments or refunds begin after the beschikking is issued
 - The voorlopige aanslag is settled when the annual return for 2026 is filed (in 2027)

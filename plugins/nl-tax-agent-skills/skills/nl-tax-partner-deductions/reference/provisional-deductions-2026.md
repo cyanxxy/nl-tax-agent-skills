@@ -93,7 +93,7 @@ Because all amounts are estimates and the allocation can be changed:
 - **Request:** initial allocation is set when requesting the first voorlopige aanslag. Use reasonable estimates and the guidance above.
 - **Change:** when changing the voorlopige aanslag, the entire income and deduction picture is re-entered. The allocation can be revised at this point.
 - **Review:** when reviewing an existing voorlopige aanslag, check whether the current allocation is still reasonable given any changes in circumstances (income change, new deduction, partner status change).
-- **Stopzetten:** stopping the provisional assessment does not involve allocation choices. It stops the monthly payments or refunds entirely.
+- **Stopzetten:** stopping does not involve allocation choices and is only available for monthly refund cases. Payment corrections must use the change subflow.
 
 ## Notes
 

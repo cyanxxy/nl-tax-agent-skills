@@ -1,6 +1,6 @@
 # Rule note: Own home (eigen woning) rules for 2025
 
-source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
+source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -50,7 +50,7 @@ Mortgage interest paid on the eigen woning loan is deductible in box 1.
 ### What is deductible
 
 - Mortgage interest (hypotheekrente) paid during the calendar year
-- Financing costs related to the mortgage (e.g., notarial costs for the mortgage deed, appraisal fees) -- these may be deductible in the year incurred or spread over the loan term
+- Qualifying one-off mortgage financing costs (e.g., notarial costs for the mortgage deed, appraisal fees for obtaining the loan, NHG application costs) -- deductible at once in the year paid
 - Penalty interest (boeterente) for early repayment in certain situations
 
 ### What is NOT deductible
@@ -100,9 +100,10 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 
 ## Moving during 2025
 
-- If the taxpayer bought or sold the eigen woning during 2025, the eigenwoningforfait is pro-rated for the period of ownership.
+- If the taxpayer bought, sold, or moved during 2025, calculate eigenwoningforfait for the period the taxpayer was registered at the address as their main residence.
+- For periods when the former home is empty and for sale, or the new home is empty/under construction before occupancy, the eigenwoningforfait can be EUR 0 under the official moving-home rules.
 - There may be a period of double own-home costs (verhuisregeling) when the old home is for sale and the new home is already purchased. Under certain conditions, interest on both homes remains deductible for the year of moving plus the following 3 calendar years.
-- The workpack should capture move dates and determine the pro-rated amounts.
+- The workpack should capture registration/move dates, sale/listing status, vacancy/rental status, and determine the correct period amounts.
 
 ## Notes
 

@@ -32,7 +32,7 @@ The following are excluded from the actual return calculation:
 
 - Hypothetical or imputed returns
 - Changes in value of the own home (eigenwoningforfait belongs in box 1)
-- Pension rights and annuity rights (these are box 1)
+- Exempt pension rights and box 1 annuity rights. Do not categorically exclude every periodic-payment or annuity-like right: non-exempt periodic-payment rights, net annuities, or net pensions may belong in box 3 and require manual review.
 - Inheritance or gifts received during the year (these are not return on existing assets)
 - Changes in value of assets exempt from box 3
 
@@ -62,7 +62,7 @@ The workpack must collect the following data to enable the actual return compari
 
 1. **Bank accounts:** actual interest received during 2025 (from annual statements or jaaropgaven)
 2. **Dividends:** dividend amounts received per security, including dividend withholding tax
-3. **Rental income:** gross rental income per property
+3. **Rental income:** received bare rent (kale huur) per rented box 3 property; separate any service-cost components and add the relevant value change
 4. **Disposed assets:** value at the start of 2025 or acquisition value, sale proceeds, and sale date for each disposed box 3 asset
 5. **Retained or acquired assets:** value at the start of 2025 or acquisition value and value at 31 December 2025 for investments, securities, crypto-assets, second homes, other box 3 real estate, and other box 3 assets where value changes count
 6. **Box 3 debt interest:** interest paid on debts that belong in box 3

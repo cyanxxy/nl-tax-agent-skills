@@ -14,6 +14,7 @@ Checks:
 """
 
 import json
+import hashlib
 import os
 import re
 import sys
@@ -28,6 +29,17 @@ def load_yaml_or_json(path):
         return yaml.safe_load(content)
     except ImportError:
         return json.loads(content)
+
+
+def compute_sha256(filepath):
+    h = hashlib.sha256()
+    with open(filepath, "rb") as f:
+        while True:
+            chunk = f.read(8192)
+            if not chunk:
+                break
+            h.update(chunk)
+    return h.hexdigest()
 
 
 FRESHNESS_DAYS = {
@@ -229,6 +241,67 @@ def collect_source_status(sources, project_root):
     return registered_ids, missing_snapshots, stale_sources
 
 
+def metadata_for_source(metadata, source_id):
+    if not isinstance(metadata, dict):
+        return None
+
+    sources = metadata.get("sources")
+    if isinstance(sources, dict):
+        entry = sources.get(source_id)
+        return entry if isinstance(entry, dict) else None
+
+    if metadata.get("source_id") == source_id:
+        return metadata
+
+    return None
+
+
+def collect_snapshot_metadata_errors(sources, project_root):
+    errors = []
+
+    for source in sources:
+        sid = source.get("id", "")
+        snapshot_path = source.get("snapshot_path", "")
+        if not sid or not snapshot_path:
+            continue
+
+        abs_snapshot = os.path.join(project_root, snapshot_path)
+        if not os.path.isfile(abs_snapshot):
+            continue
+
+        meta_path = os.path.join(os.path.dirname(abs_snapshot), "_snapshot-metadata.yaml")
+        rel_meta_path = os.path.relpath(meta_path, project_root)
+        if not os.path.isfile(meta_path):
+            errors.append((sid, "missing snapshot metadata file", rel_meta_path))
+            continue
+
+        try:
+            metadata = load_yaml_or_json(meta_path)
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            errors.append((sid, f"unreadable snapshot metadata: {exc}", rel_meta_path))
+            continue
+
+        source_meta = metadata_for_source(metadata, sid)
+        if not source_meta:
+            errors.append((sid, "missing snapshot metadata entry", rel_meta_path))
+            continue
+
+        stored_hash = source_meta.get("content_hash_sha256", "")
+        current_hash = compute_sha256(abs_snapshot)
+        if stored_hash != current_hash:
+            errors.append((sid, "hash mismatch", rel_meta_path))
+
+        stored_url = source_meta.get("source_url", "")
+        source_url = source.get("url", "")
+        if stored_url != source_url:
+            errors.append((sid, "source_url mismatch", rel_meta_path))
+
+        if source_meta.get("review_status") != "reviewed":
+            errors.append((sid, "snapshot metadata not reviewed", rel_meta_path))
+
+    return errors
+
+
 def collect_skill_source_reference_errors(skills_dir, project_root, registered_ids):
     source_reference_errors = []
     if not os.path.isdir(skills_dir):
@@ -309,6 +382,7 @@ def print_report(
     sources,
     missing_snapshots,
     stale_sources,
+    snapshot_metadata_errors,
     unreferenced,
     review_marker_errors,
     workflow_metadata_errors,
@@ -319,6 +393,11 @@ def print_report(
         "STALE SOURCES:",
         stale_sources,
         lambda row: f"{row[0]}: {row[1]}",
+    )
+    print_section(
+        "SNAPSHOT METADATA ERRORS:",
+        snapshot_metadata_errors,
+        lambda row: f"{row[0]}: {row[1]} ({row[2]})",
     )
     print_section("KNOWLEDGE FILES WITHOUT SOURCE REFERENCES:", unreferenced, lambda path: path)
     print_section(
@@ -340,6 +419,7 @@ def print_report(
     print(f"Summary: {len(sources)} sources, "
           f"{len(missing_snapshots)} missing, "
           f"{len(stale_sources)} stale, "
+          f"{len(snapshot_metadata_errors)} metadata errors, "
           f"{len(unreferenced)} unreferenced files, "
           f"{len(review_marker_errors)} review marker errors, "
           f"{len(workflow_metadata_errors)} workflow metadata errors, "
@@ -360,6 +440,7 @@ def main():
         sources,
         project_root,
     )
+    snapshot_metadata_errors = collect_snapshot_metadata_errors(sources, project_root)
     source_reference_errors = collect_skill_source_reference_errors(
         skills_dir,
         project_root,
@@ -378,6 +459,7 @@ def main():
 
     has_errors = bool(
         missing_snapshots
+        or snapshot_metadata_errors
         or review_marker_errors
         or workflow_metadata_errors
         or source_reference_errors
@@ -387,6 +469,7 @@ def main():
         sources,
         missing_snapshots,
         stale_sources,
+        snapshot_metadata_errors,
         unreferenced,
         review_marker_errors,
         workflow_metadata_errors,

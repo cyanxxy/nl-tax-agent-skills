@@ -1,6 +1,6 @@
 # Box 3 — Actual Return (Werkelijk Rendement) Rules for Annual 2025
 
-source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
+source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025, bd_fisin_box3_assets_debts_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -26,8 +26,8 @@ Actual return is calculated without applying heffingsvrij vermogen. For fiscal p
 
 ### Excluded
 - Value changes in own home (waardeverandering eigen woning)
-- Pension rights (pensioenrechten)
-- Life insurance values (levensverzekeringen)
+- Exempt pension rights and box 1 annuity rights. Non-exempt periodic-payment rights, net annuities, and net pensions may belong in box 3 and require manual review.
+- Exempt life-insurance values, including qualifying own-home capital insurance. Non-exempt capital insurance values can belong in box 3.
 
 ## Costs
 

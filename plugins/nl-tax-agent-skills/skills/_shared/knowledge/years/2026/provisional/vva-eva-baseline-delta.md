@@ -1,4 +1,4 @@
-# Rule note: VVA/EVA baseline + delta model for provisional assessment 2026
+# Rule note: VVA/EVA algorithm-register handling for provisional assessment 2026
 
 source_id: bd_algoritmeregister_vva_eva
 workflow: provisional_assessment
@@ -9,7 +9,7 @@ review_status: reviewed
 
 ## Rule
 
-The Belastingdienst uses a baseline + forecast + delta approach for provisional assessments. The provisional workflow must be modeled as a forward-looking estimate, distinct from the backward-looking annual return.
+The Belastingdienst algorithm register describes VVA selection rules and EVA business rules. It does not describe a submitted "delta" model. The skill may use a baseline-vs-current comparison as an internal review aid for the taxpayer, but must not present that comparison as Belastingdienst processing logic.
 
 ## Key terms
 
@@ -21,27 +21,20 @@ A VVA is a request for a provisional assessment submitted by the taxpayer. The t
 
 An EVA is the first provisional assessment generated automatically by the Belastingdienst, typically based on prior-year data. The taxpayer receives this without requesting it. If the taxpayer's situation has changed, the EVA should be reviewed and potentially changed (see review-flow.md and change-flow.md).
 
-## Baseline + forecast + delta model
+## Official algorithm-register scope
 
-The Belastingdienst applies a three-part model for provisional assessments:
+The algorithm-register entry describes two official processes:
 
-### Baseline
+### VVA selection rules
 
-- The starting point for the provisional assessment
-- Sources: prior-year annual return data, earlier submitted VVA, or prior EVA
-- Represents the last known tax position of the taxpayer
+- A taxpayer-submitted VVA is assessed using selection rules.
+- The selection rules help determine whether a request can be accepted automatically or needs manual handling.
+- This is an internal Belastingdienst process; the taxpayer does not interact with the rules directly.
 
-### Forecast
+### EVA business rules
 
-- The expected current-year amounts
-- Sources: taxpayer-submitted estimates (VVA) or Belastingdienst projections (EVA)
-- Represents the anticipated tax position for the provisional year
-
-### Delta
-
-- The difference between the baseline and the forecast
-- Determines the adjustment to the monthly payment or refund
-- A positive delta means higher tax expected; a negative delta means lower tax expected
+- EVA uses business rules to estimate a first provisional assessment, based on the most recent definitive or provisional assessment data available to the Belastingdienst.
+- If the taxpayer's situation has changed, the EVA should be reviewed and potentially changed (see review-flow.md and change-flow.md).
 
 ## Important distinctions
 
@@ -62,24 +55,22 @@ The Belastingdienst applies a three-part model for provisional assessments:
 
 The Belastingdienst applies a weegmodule (weighing module) to VVA submissions:
 
-- Business rules evaluate whether submitted estimates are plausible
-- Implausible values may be flagged, adjusted, or trigger follow-up
-- The weegmodule compares submitted values against the baseline and expected ranges
+- Business rules evaluate whether submitted estimates can be processed automatically
+- Values may be routed to manual handling or follow-up under internal rules
 - This is an internal Belastingdienst process -- the taxpayer does not interact with the weegmodule directly
 
 ## Developer instruction
 
 When modeling the provisional assessment workflow:
 
-1. **Model as baseline + forecast + delta**, not as "annual return lite"
-2. Start from a baseline (prior-year data or earlier VVA/EVA) when available
-3. Collect the forecast (estimated current-year amounts) from the taxpayer
-4. Calculate the delta to show the change in expected tax position
-5. Present the result as a monthly payment or refund based on the delta
-6. Do not reuse annual return data structures or flows for the provisional assessment -- build separate, purpose-built flows
-7. Accept estimates and indicate that precision is not required for the provisional assessment
-8. When an EVA is present, treat it as the baseline and allow the user to adjust it through a VVA
+1. Model the user workflow as a forward-looking estimate, not as "annual return lite"
+2. When reviewing or changing an existing assessment, compare the current assessment with the user's updated estimates as a workpack review aid only
+3. Do not state that the Belastingdienst processes or receives a delta
+4. Present any comparison as informational; the official portal recalculates from the complete submitted data
+5. Do not reuse annual return data structures or flows for the provisional assessment -- build separate, purpose-built flows
+6. Accept estimates and indicate that precision is lower than in the annual return, because final settlement occurs through the 2026 annual return
+7. When an EVA is present, use it as the current assessment to review and allow the user to adjust it through a VVA
 
 ## Common failure
 
-Do not model the provisional assessment as a copy of the annual return with reduced fields. The provisional assessment has its own logic (baseline + forecast + delta), its own data requirements (estimates, not actuals), and its own purpose (monthly payment/refund scheduling). Treating it as a simplified annual return leads to incorrect workflows, incorrect data collection, and user confusion.
+Do not claim that the Belastingdienst uses or accepts a baseline + forecast + delta submission. A delta summary is only a taxpayer-facing explanation of what changed between the current assessment and the prepared updated estimates.

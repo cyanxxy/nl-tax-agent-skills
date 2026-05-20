@@ -49,7 +49,7 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 - Healthcare costs (specifieke zorgkosten): receipts and summaries for medical expenses not reimbursed by insurance, including prescribed medications, medical aids, travel costs to medical facilities, dietary costs on medical prescription.
 - Gifts (giften): receipts or bank statements for donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling). Distinguish between periodic gifts (periodieke giften via notarial deed or written agreement) and incidental gifts (with threshold).
-- Study costs (studiekosten / scholingsuitgaven): largely replaced by STAP-budget, but residual deductibility may apply. Collect receipts for tuition and mandatory study materials.
+- Study costs (studiekosten / scholingsuitgaven): do not treat as deductible from this source pack. If reported, collect evidence only as a manual-review item until a reviewed official source is added.
 - Alimentatie (maintenance payments): documentation of alimony paid to ex-partner (partneralimentatie is deductible; kinderalimentatie is not). Court order or notarial deed showing the obligation.
 - Alimentatie received: jaaropgaaf of alimentatie received (this is taxable income in box 1).
 - Lijfrentepremie (annuity premium): annual statement from the insurer or bank showing premiums paid. Needed for jaarruimte/reserveringsruimte calculation.

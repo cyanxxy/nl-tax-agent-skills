@@ -1,6 +1,6 @@
 # Eigen Woning (Own Home) Rules — Annual Return 2025
 
-source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest, bd_fiscal_partnership
+source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest, bd_fiscal_partnership
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -63,15 +63,16 @@ Mortgage interest paid on the eigen woning loan is deductible from box 1 income.
 ### Deductible items
 
 - Mortgage interest (hypotheekrente) paid during calendar year 2025
-- Mortgage-related financing costs in certain circumstances (notarial costs for the mortgage deed, appraisal fees for the purchase)
+- Qualifying one-off mortgage financing costs in the year paid (for example mortgage-advice/intermediary fees, mortgage-deed notary costs, mortgage-deed cadastral fees, valuation costs for obtaining the loan, NHG application costs)
 - Penalty interest (boeterente) for early repayment, under specific conditions
+- Periodic payments for erfpacht, opstal, or beklemming
 
 ### Non-deductible items
 
 - Principal repayments (aflossingen)
 - Home insurance premiums (opstalverzekering, inboedelverzekering)
 - Maintenance and renovation costs
-- Ground rent (erfpacht canon) -- note: this has its own separate deduction rules
+- Purchase costs such as transfer tax, purchase broker fees, and purchase-deed notary or cadastral fees
 
 ### Evidence required
 
@@ -146,7 +147,7 @@ The Hillenregeling applies when:
 ### Sold and bought in the same year
 
 - If the taxpayer sold one home and bought another during 2025:
-  - Eigenwoningforfait is pro-rated for each property based on ownership period
+  - Eigenwoningforfait is calculated for the period the taxpayer was registered at each address as their main residence
   - Mortgage interest is deductible only for the period each loan was active
   - Both properties must be the taxpayer's primary residence during their respective periods
 
@@ -154,13 +155,13 @@ The Hillenregeling applies when:
 
 - When the old home is for sale and the new home is already purchased, the taxpayer may temporarily have two own homes
 - Under the verhuisregeling, mortgage interest on the old home remains deductible for the year of moving plus the following 3 calendar years, provided it is for sale, empty, and not rented out
-- The eigenwoningforfait for the old home continues to apply during this period
-- Collect: move date, date old home listed for sale, date old home sold
+- The eigenwoningforfait for the old home is EUR 0 while it is empty and for sale
+- Collect: move/registration date, date old home listed for sale, vacancy/rental status, date old home sold
 
 ### Partial year ownership
 
 - If the eigen woning was owned for only part of 2025 (purchased or sold during the year):
-  - Eigenwoningforfait is calculated for the full year and then pro-rated: (number of days owned / 365)
+  - Eigenwoningforfait is calculated for the period the taxpayer was registered there as their main residence, not simply by ownership days
   - Mortgage interest deduction applies only for the period the mortgage was active
 
 ---

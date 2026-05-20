@@ -19,7 +19,7 @@ When changing a voorlopige aanslag, the portal does not carry forward previous e
 - All deductions (mortgage interest, alimentatie, premiums, etc.)
 - All box 3 assets and debts
 
-The new voorlopige aanslag completely replaces the previous one. Any data not re-entered will be treated as zero.
+The new voorlopige aanslag replaces the previous one. Official guidance says all data must be filled in again, including data that does not change, so the workpack must prepare the complete dataset.
 
 ## Common reasons to change
 
@@ -35,7 +35,7 @@ The new voorlopige aanslag completely replaces the previous one. Any data not re
 
 - A new beschikking (decision) is issued after the change is processed
 - Monthly payments or refunds are recalculated for the remaining months of the year
-- The delta between the old and new assessment determines the adjusted monthly amount
+- The Belastingdienst recalculates the assessment from the newly submitted complete dataset
 - If the change results in a higher tax liability, monthly payments increase
 - If the change results in a lower tax liability, monthly payments decrease or a refund may start
 - Overpayments or underpayments from earlier months are spread across the remaining months
@@ -62,4 +62,4 @@ When building a workpack for changing a voorlopige aanslag 2026:
 
 ## Common failure
 
-Do not allow the user to submit only the changed fields. The Belastingdienst portal requires a complete re-entry. If only changed fields are submitted, all other fields default to zero, resulting in an incorrect assessment. Always ensure the workpack contains the full dataset.
+Do not prepare only the changed fields. The Belastingdienst guidance requires all data to be filled in again, including unchanged data. Always ensure the workpack contains the full dataset.

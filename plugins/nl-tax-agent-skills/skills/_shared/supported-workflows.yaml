@@ -34,17 +34,23 @@ active_workflows:
       - bd_box1_rates_2025
       - bd_general_tax_credit_2025
       - bd_labour_tax_credit_2025
+      - bd_tax_credit_payout_2025
       - bd_own_home_deduction_cap_2025
       - bd_eigenwoningforfait_2025_2026
+      - bd_eigenwoningforfait_multiple_homes
       - bd_hypotheekrenteaftrek_conditions
       - bd_own_home_deductible_costs
       - bd_temporary_two_homes_interest
       - bd_fiscal_partnership
+      - bd_fiscal_partner_death_return
+      - bd_fiscal_partner_separation
       - bd_box3_2025_calc
       - bd_box3_2025_actual_return
+      - bd_fisin_box3_assets_debts_2025
       - bd_fisin_box3_actual_return_2025
       - bd_giften_aftrek_2025
       - bd_zorgkosten_overzicht_2025
+      - bd_deduction_rate_cap_2025
       - bd_bijtelling_auto_2025
 
   - id: provisional_2026
@@ -73,10 +79,14 @@ active_workflows:
       - bd_provisional_stopzetten_2026
       - bd_provisional_rates_2026
       - bd_eigenwoningforfait_2025_2026
+      - bd_eigenwoningforfait_multiple_homes
       - bd_own_home_deduction_cap_2026
       - bd_hypotheekrenteaftrek_conditions
       - bd_own_home_deductible_costs
+      - bd_temporary_two_homes_interest
       - bd_fiscal_partnership
+      - bd_fiscal_partner_death_return
+      - bd_fiscal_partner_separation
       - bd_box3_2026_provisional
       - bd_algoritmeregister_vva_eva
 

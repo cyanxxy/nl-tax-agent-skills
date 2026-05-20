@@ -1,6 +1,6 @@
 # Rule note: Eigenwoningforfait 2025 and 2026
 
-source_id: bd_eigenwoningforfait_2025_2026
+source_ids: bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes
 workflow: all
 tax_year: all
 status: active
@@ -41,5 +41,7 @@ For 2026, the aftrek wegens geen of geringe eigenwoningschuld applies to 71.867%
 
 - The 2025 annual return uses the WOZ value with valuation date 1 January 2024.
 - The 2026 provisional assessment uses a projected or known WOZ value for the 2026 estimate; if the taxpayer does not have the current WOZ beschikking, flag the WOZ value as estimated.
+- For a moving year, calculate eigenwoningforfait for the period the taxpayer was registered at the home as their main residence.
+- For a former home that is empty and for sale, or a new bought home that is empty or under construction before occupancy, the eigenwoningforfait can be EUR 0 for that period under the official moving-home rules.
 - Do not carry thresholds, fixed amounts, or Hillen percentages from one year to another.
 - If the official form computes a different amount, the official form is binding and the workpack should record the difference as a review item.

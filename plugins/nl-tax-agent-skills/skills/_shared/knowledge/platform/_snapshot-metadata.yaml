@@ -3,12 +3,12 @@ sources:
   anthropic_agent_skills_overview:
     content_hash_sha256: f08ae3c0a7241b168f87e90437c521f89896dc7bd0a9ce42b5275c259475232d
     review_status: reviewed
-    snapshot_created_at: '2026-05-13T21:15:33.264728+00:00'
+    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
     source_id: anthropic_agent_skills_overview
     source_url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
   claude_code_skills:
     content_hash_sha256: f08ae3c0a7241b168f87e90437c521f89896dc7bd0a9ce42b5275c259475232d
     review_status: reviewed
-    snapshot_created_at: '2026-05-13T21:15:33.264728+00:00'
+    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
     source_id: claude_code_skills
     source_url: https://code.claude.com/docs/en/skills

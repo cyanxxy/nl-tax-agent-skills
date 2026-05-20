@@ -1,4 +1,4 @@
-# Delta Summary — Voorlopige Aanslag 2026 Change
+# Comparison Summary — Voorlopige Aanslag 2026 Change
 
 ## Baseline
 
@@ -28,11 +28,11 @@
 
 - All "Baseline" values are labeled as **from-baseline**
 - All "Current Estimate" values are labeled as **estimate**
-- Delta = Current Estimate minus Baseline
+- Delta = Current Estimate minus Baseline for workpack review only
 
 ## Impact
 
-[Summary of expected impact on monthly payment or refund based on the delta]
+[Summary of expected directional impact on monthly payment or refund based on the workpack comparison]
 
 - If net tax position increases: "Based on these changes, your estimated tax liability for 2026 is higher than the current voorlopige aanslag. This may result in higher monthly payments."
 - If net tax position decreases: "Based on these changes, your estimated tax liability for 2026 is lower than the current voorlopige aanslag. This may result in lower monthly payments or a higher monthly refund."
@@ -42,4 +42,4 @@ Note: The Belastingdienst performs its own recalculation based on the full submi
 
 ## Reminder
 
-When changing your voorlopige aanslag, you must enter ALL data again — not only the items that changed. The new voorlopige aanslag replaces the previous one entirely. Any data not re-entered will be treated as zero by the Belastingdienst portal.
+When changing your voorlopige aanslag, you must enter ALL data again -- not only the items that changed. The new voorlopige aanslag replaces the previous one entirely. Official guidance says unchanged data must also be filled in again.

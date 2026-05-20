@@ -30,10 +30,10 @@
 
 ## Voorlopige Aanslag 2026 — Stopzetten
 
-- **Direction:** Forward-looking — stop monthly payments or refunds
+- **Direction:** Forward-looking — stop monthly refunds; payment corrections go through wijzigen
 - **Prerequisite:** User already has a voorlopige aanslag for 2026
 - **What the user needs:** Confirmation that they want to stop; understanding of consequences
-- **Trigger phrases:** "voorlopige aanslag stopzetten", "stop my provisional", "stop monthly payments"
+- **Trigger phrases:** "voorlopige aanslag stopzetten", "stop my provisional", "stop monthly refund"
 
 ## Key Distinction
 

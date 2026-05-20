@@ -166,6 +166,7 @@ Collect values for each asset category:
 
 #### Banktegoeden (category I)
 - All savings accounts, current accounts, deposits, term deposits
+- Cash only above the 2025 cash exemption, non-exempt green savings, premiedepots, VvE reserve shares, and money on notary/bailiff third-party accounts where applicable
 - Source: bank statements or jaaropgaven with balance on 1 January 2025
 - Match against evidence index items classified as bankafschrift or jaaropgaaf-bank
 
@@ -173,13 +174,13 @@ Collect values for each asset category:
 - Investment portfolios (listed securities, mutual funds)
 - Crypto-assets (valued at market price on 1 January 2025)
 - Real estate not being the eigen woning (second homes, rental property)
-- Receivables (vorderingen) -- loans to others
+- Receivables (vorderingen) -- loans to others, after checking official exceptions
 - Other assets
 - Source: portfolio year-end statements, crypto exchange statements
 
 #### Schulden (category III)
 - All debts EXCEPT mortgage debt on the eigen woning
-- Consumer loans, student debt, other liabilities
+- Consumer loans, study debts under the Wet studiefinanciering, other liabilities
 - Note the debt threshold below which debts are not deductible
 
 ### 4.2 Assets on 31 December 2025
@@ -205,7 +206,7 @@ Common failure: do NOT apply heffingsvrij vermogen before calculating belastbaar
 Follow the data requirements from `actual-return.md`:
 1. Actual interest received on bank accounts during 2025
 2. Dividends received (before dividend withholding tax)
-3. Rental income and other income from box 3 assets
+3. Bare rental income (kale huur) and other income from box 3 assets
 4. Value changes for disposed box 3 assets, including sale proceeds and start-of-year or acquisition values
 5. Value changes for retained or acquired box 3 assets, including investments, securities, crypto-assets, second homes, other box 3 real estate, and other assets where value changes count
 6. Interest paid on box 3 debts
@@ -271,7 +272,7 @@ Compile all deductible items from evidence and user-provided data.
 
 ### 5.5 Other deductions
 
-- Studiekosten / scholingsuitgaven (if still deductible for 2025)
+- Studiekosten / scholingsuitgaven: collect only as a manual-review item unless a reviewed official source is added
 - Restant persoonsgebonden aftrek from prior years
 - Any other qualifying deductions from the profile or evidence
 
@@ -279,7 +280,7 @@ Compile all deductible items from evidence and user-provided data.
 
 - Total persoonsgebonden aftrek
 - Note the allocation order: box 1 first, then box 3, then box 2
-- If fiscal partners: note allocation options (allocate to highest marginal rate)
+- If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best
 
 ---
 
@@ -308,9 +309,9 @@ List items that are personal and cannot be allocated:
 
 ### 6.4 Allocation recommendations
 
-- Identify the partner with the higher marginal tax rate
-- Recommend allocating deductions to the higher-rate partner
-- Consider the tariefsaanpassing for eigen woning (37.48% cap)
+- Identify each partner's marginal rate and affected credits
+- Present allocation scenarios rather than choosing one automatically
+- Consider the 2025 tariefsaanpassing/deduction-rate cap for listed deductions (37.48% cap)
 - Consider the phase-out of heffingskortingen
 - Present at least the default and one optimized allocation for review
 

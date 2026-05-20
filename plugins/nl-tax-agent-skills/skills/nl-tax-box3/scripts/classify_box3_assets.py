@@ -30,6 +30,8 @@ BANKTEGOEDEN_KEYWORDS = [
     "bank", "bankrekening", "betaalrekening",
     "rekening",
     "deposit", "deposito",
+    "premiedepot",
+    "derdengelden", "derdenrekening",
     "savings", "current account",
 ]
 
@@ -60,6 +62,11 @@ TYPE_HINT_MAP = {
     "bank": "banktegoeden",
     "spaarrekening": "banktegoeden",
     "betaalrekening": "banktegoeden",
+    "premiedepot": "banktegoeden",
+    "vve_reserve": "banktegoeden",
+    "reservefonds_vve": "banktegoeden",
+    "notary_third_party_account": "banktegoeden",
+    "bailiff_third_party_account": "banktegoeden",
     # Overige bezittingen
     "shares": "overige_bezittingen",
     "bonds": "overige_bezittingen",
@@ -84,6 +91,16 @@ TYPE_HINT_MAP = {
     "lening": "schulden",
     "krediet": "schulden",
 }
+
+
+BANKTEGOEDEN_EDGE_CASES = [
+    ("VvE reserve share", ("vve", "reserve")),
+    ("premium deposit", ("premiedepot",)),
+    ("notary third-party account", ("notaris", "derdengeld")),
+    ("notary third-party account", ("notaris", "derden")),
+    ("bailiff third-party account", ("deurwaarder", "derdengeld")),
+    ("bailiff third-party account", ("deurwaarder", "derden")),
+]
 
 
 def match_keywords(text, keywords):
@@ -117,6 +134,12 @@ def classify_asset(asset):
 
     # Step 2: Keyword matching on name + type_hint combined
     combined_text = f"{name} {type_hint}"
+    combined_lower = combined_text.lower()
+
+    for label, required_terms in BANKTEGOEDEN_EDGE_CASES:
+        if all(term in combined_lower for term in required_terms):
+            flags.append(f"Resolved official banktegoeden edge case: {label}")
+            return "banktegoeden", 0.85, flags
 
     bank_score = match_keywords(combined_text, BANKTEGOEDEN_KEYWORDS)
     overige_score = match_keywords(combined_text, OVERIGE_BEZITTINGEN_KEYWORDS)

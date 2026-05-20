@@ -35,7 +35,8 @@ The taxpayer receives a monthly refund and wants to stop it. This is appropriate
 2. Navigate to the existing voorlopige aanslag 2026
 3. Select the option to stop (stopzetten) the monthly refunds
 4. Confirm the request
-5. Processing time: typically within a few weeks
+5. Processing time: usually within 5 weeks, and always within 8 weeks
+6. Stopzetten can be done until 1 October 2026
 
 ### Effect
 
@@ -61,19 +62,13 @@ The taxpayer receives a monthly refund and wants to stop it. This is appropriate
 
 ### Why stopzetten is wrong for payment correction
 
-If the taxpayer currently pays a monthly amount and the amount is wrong (too high), the correct path is to CHANGE the voorlopige aanslag, not to stop it.
+If the taxpayer currently pays a monthly amount and the amount is wrong (too high), the correct path is to CHANGE the voorlopige aanslag, not to stop it. Official stopzetten guidance applies to monthly refunds, not monthly payment cases.
 
 **Stopping payments when tax is owed does NOT reduce the tax obligation.** It only defers the payment to annual return time, where the full amount becomes due as a lump sum — potentially with interest.
 
-### What happens if the user stops payments anyway
+### Payment cases cannot use stopzetten
 
-- Monthly payments stop
-- The tax obligation for 2026 does NOT change
-- When the annual return for 2026 is filed (in 2027), the Belastingdienst calculates the total tax owed
-- The amount previously collected through monthly payments is subtracted
-- The remaining balance is due as a single payment
-- This balance may be large and unexpected
-- Interest (invorderingsrente) may apply on the unpaid amount
+The workpack must not provide a stopzetten checklist for a taxpayer who pays monthly. Route to the change flow so the full 2026 estimate can be recalculated.
 
 ### Better alternative: change the voorlopige aanslag
 
@@ -91,7 +86,7 @@ When a user who pays monthly wants to stop because the amount is wrong:
 2. Explain the risk of a large lump-sum bill at annual return time
 3. Recommend changing the voorlopige aanslag instead
 4. If the user agrees, transition to the change subflow
-5. If the user insists on stopping despite understanding the risk, document their decision in the assumptions section but still recommend change
+5. If the user still asks to stop a monthly payment case, state that stopzetten is not available for payment cases and continue with the change flow
 
 ---
 
@@ -106,9 +101,9 @@ If the taxpayer pays a monthly amount and the amount is correct, no action is ne
 Some taxpayers want to stop their voorlopige aanslag because they plan to file the annual return early and settle then. In this case:
 
 - Explain that the annual return process handles the settlement automatically
-- When the annual return for 2026 is filed, the Belastingdienst reconciles the provisional payments/refunds against the final tax amount
-- Stopping the voorlopige aanslag is optional in this case — the annual return will settle the difference regardless
-- If the taxpayer wants to stop to avoid further payments/refunds in the interim, stopzetten is acceptable
+- When the annual return for 2026 is filed, the Belastingdienst reconciles the provisional refunds or payments against the final tax amount
+- Stopzetten is only an option if the taxpayer is receiving a monthly refund; payment cases must use the change flow
+- If the taxpayer receives a monthly refund and wants to avoid further refunds in the interim, stopzetten can be appropriate until 1 October 2026
 - Make sure the taxpayer understands that filing the annual return is required regardless of whether the voorlopige aanslag is stopped
 
 ---
@@ -123,6 +118,8 @@ When stopzetten is the appropriate action, include this checklist:
 - [ ] Confirm you understand that stopping does not eliminate the tax obligation for 2026
 - [ ] Confirm you understand that settlement occurs when the annual return for 2026 is filed
 - [ ] If you received refunds that were too high, you may need to repay the excess at annual return time
+- [ ] Confirm you are receiving a monthly refund; if you pay monthly, use wijzigen instead
+- [ ] Confirm it is before 1 October 2026
 - [ ] Log in to Mijn Belastingdienst using your DigiD
 - [ ] Navigate to your voorlopige aanslag 2026
 - [ ] Select the option to stop (stopzetten)
@@ -136,5 +133,6 @@ When stopzetten is the appropriate action, include this checklist:
 
 - Do NOT calculate final tax consequences for the stopzetten subflow unless ALL assumptions are explicitly stated and confirmed by the user
 - Stopzetten does not mean the tax year is closed — the annual return is still required
+- Stopzetten is for monthly refunds only; route monthly payment corrections to wijzigen
 - If the user's situation is complex (multiple income sources, international elements, business income), recommend consulting a tax adviser before stopping
 - Do not share DigiD credentials with this tool

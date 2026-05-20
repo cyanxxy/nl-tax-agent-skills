@@ -3,6 +3,7 @@
 
 import importlib.util
 import pathlib
+import tempfile
 import unittest
 
 
@@ -124,6 +125,87 @@ class ValidatorSmokeTests(unittest.TestCase):
         self.assertEqual(result["aandeel_in_rendementsgrondslag"], 32.15)
         self.assertEqual(result["box3_inkomen"], 5_119)
         self.assertEqual(result["box3_belasting"], 1_842)
+
+    def test_box3_classifier_recognizes_official_bank_asset_edge_cases(self):
+        module = load_module(
+            "skills/nl-tax-box3/scripts/classify_box3_assets.py",
+            "classify_box3_assets_edge_cases",
+        )
+        cases = [
+            {"name": "Aandeel reservefonds VvE", "type_hint": "", "value": 900},
+            {"name": "Premiedepot hypotheek", "type_hint": "", "value": 1200},
+            {"name": "Derdengeldenrekening notaris", "type_hint": "", "value": 5000},
+        ]
+
+        for case in cases:
+            with self.subTest(case=case["name"]):
+                category, _, _ = module.classify_asset(case)
+                self.assertEqual(category, "banktegoeden")
+
+    def test_knowledge_validator_reports_missing_snapshot_metadata(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py",
+            "validate_knowledge_pack_missing_metadata",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot.parent.mkdir(parents=True)
+            snapshot.write_text("source_id: source_one\nstatus: active\n", encoding="utf-8")
+
+            errors = module.collect_snapshot_metadata_errors(
+                [
+                    {
+                        "id": "source_one",
+                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "url": "https://www.belastingdienst.nl/example",
+                    }
+                ],
+                str(root),
+            )
+
+        self.assertTrue(any(error[0] == "source_one" and "missing" in error[1] for error in errors))
+
+    def test_knowledge_validator_reports_stale_snapshot_hash(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py",
+            "validate_knowledge_pack_stale_metadata",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot.parent.mkdir(parents=True)
+            snapshot.write_text("source_id: source_one\nstatus: active\n", encoding="utf-8")
+            metadata = snapshot.parent / "_snapshot-metadata.yaml"
+            metadata.write_text(
+                "\n".join(
+                    [
+                        "snapshot_metadata_version: '1.0'",
+                        "sources:",
+                        "  source_one:",
+                        "    content_hash_sha256: stale",
+                        "    review_status: reviewed",
+                        "    snapshot_created_at: '2026-01-01T00:00:00+00:00'",
+                        "    source_id: source_one",
+                        "    source_url: https://www.belastingdienst.nl/example",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            errors = module.collect_snapshot_metadata_errors(
+                [
+                    {
+                        "id": "source_one",
+                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "url": "https://www.belastingdienst.nl/example",
+                    }
+                ],
+                str(root),
+            )
+
+        self.assertTrue(any(error[0] == "source_one" and "hash mismatch" in error[1] for error in errors))
 
 
 if __name__ == "__main__":

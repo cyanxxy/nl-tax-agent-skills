@@ -1,6 +1,6 @@
 # Rule note: Common deductions for annual return 2025
 
-source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025
+source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -119,12 +119,16 @@ Fiscal partners can allocate the following deductions between them in the most t
 - Eigen woning: the net result can be allocated between partners
 - Box 3: the joint grondslag sparen en beleggen can be allocated freely between partners
 
+### High-income deduction-rate cap
+
+For 2025, taxpayers with income in the highest box 1 bracket do not necessarily receive a 49.50% benefit for deductions. The maximum rate for listed aftrekposten in the highest bracket is 37.48%. This cap applies beyond own-home costs and includes, among others, persoonsgebonden aftrek, gifts, specific healthcare costs, paid partneralimentatie, own-home costs, and entrepreneur deductions where applicable.
+
 ### Allocation strategy
 
-- In general, allocate deductions to the partner with the highest marginal tax rate for maximum benefit.
-- The tariefsaanpassing eigen woning (37.48% cap) may affect optimal allocation of the eigen woning result.
+- Model allocation scenarios instead of assuming the highest-income partner is always best.
+- The 37.48% deduction-rate cap may affect own-home costs and other listed deductions.
 - The phase-out of heffingskortingen (algemene heffingskorting, arbeidskorting) also affects the optimal allocation.
-- The workpack should model at least the default allocation and one optimized allocation for the taxpayer to compare.
+- The workpack should model at least the default allocation and one alternative allocation for the taxpayer to compare, and require taxpayer review.
 
 ### Items that CANNOT be allocated
 
@@ -144,7 +148,7 @@ Fiscal partners can allocate the following deductions between them in the most t
 
 ## Notes
 
-- The persoonsgebonden aftrek is allocated in order: box 1 first, then box 3, then box 2. Since box 1 typically has the highest marginal rate, this ordering generally maximizes the tax benefit.
+- The persoonsgebonden aftrek is allocated in order: box 1 first, then box 3, then box 2. For 2025, remember that listed deductions in the highest box 1 bracket may be capped at the 37.48% deduction rate.
 - For the 2025 return, collect all supporting documents as listed in evidence-checklist.md.
 - The Belastingdienst may request proof (bewijsstukken) of deductions up to 5 years after filing. The taxpayer should retain all receipts and documentation.
 - Deductions reduce taxable income, not tax payable directly. The actual tax benefit depends on the marginal rate at which the deduction is applied.

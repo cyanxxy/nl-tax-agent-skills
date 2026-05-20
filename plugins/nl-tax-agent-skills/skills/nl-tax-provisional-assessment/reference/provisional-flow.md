@@ -121,7 +121,7 @@ User enters provisional skill
    - Housing: new mortgage, sold home, refinanced, paid off mortgage
    - Partner: marriage, separation, divorce, partner income changes
    - Deductions: started/stopped alimentatie, changed premiums, other
-   - Box 3: significant asset or debt changes since 1 January 2026
+   - Box 3: corrections to the estimated asset or debt values on 1 January 2026; later-year changes do not change the 2026 box 3 peildatum
 3. **Comparison** — for each category, note whether the current voorlopige aanslag figure still matches reality
 
 ### Output generation
@@ -139,14 +139,14 @@ User enters provisional skill
 
 1. Does the taxpayer profile exist and contain `provisional_2026_stopzetten`?
 2. Is the user receiving a monthly refund (teruggaaf) or paying a monthly amount (betaling)?
-   - **Refund → stopzetten may be appropriate**
+   - **Refund → stopzetten may be appropriate until 1 October 2026**
    - **Payment + amount is wrong → REDIRECT to change subflow**
    - **Payment + amount is correct → no action needed**
 3. Why does the user want to stop?
    - Deductions no longer apply → stopzetten appropriate
    - Situation changed → review whether change or stopzetten is better
    - Wants to avoid repayment risk → stopzetten appropriate
-   - Will file early and settle then → explain that the annual return handles this; stopzetten is optional
+   - Will file early and settle then → explain that the annual return handles this; stopzetten is only available if the user receives a monthly refund
 
 ### Data collection steps
 

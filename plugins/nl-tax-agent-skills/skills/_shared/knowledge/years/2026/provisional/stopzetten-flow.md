@@ -9,7 +9,7 @@ review_status: reviewed
 
 ## Rule
 
-Stopzetten means stopping the monthly payments or refunds of a voorlopige aanslag. This is primarily relevant when the taxpayer RECEIVES a monthly refund (teruggaaf) and wants to stop it. Stopping does not mean the taxpayer no longer owes tax -- it defers the settlement to the annual return.
+Stopzetten is available for a voorlopige aanslag where the taxpayer RECEIVES a monthly refund (teruggaaf) and wants to stop that refund. If the taxpayer pays a monthly amount, they cannot use stopzetten; they must change the voorlopige aanslag instead. Stopping a refund does not mean the taxpayer no longer owes tax -- final settlement happens through the annual return.
 
 ## When stopzetten is appropriate
 
@@ -26,21 +26,22 @@ Stopzetten is the correct action when:
 
 If the taxpayer currently PAYS a monthly amount and the amount is wrong:
 
-- The correct path is usually to CHANGE the voorlopige aanslag (see change-flow.md), not to stop it
+- The correct path is to CHANGE the voorlopige aanslag (see change-flow.md), not to stop it
+- Official stopzetten guidance does not allow stopping a monthly payment case
 - Stopping payments when tax is owed can result in a large bill at annual return time
-- Only consider stopping if the taxpayer has strong reasons and understands the consequence
 
 ## How to stop
 
 1. Log in to Mijn Belastingdienst with DigiD
 2. Navigate to the existing voorlopige aanslag 2026
-3. Select the option to stop (stopzetten) the monthly payments or refunds
+3. Select the option to stop (stopzetten) the monthly refund
 4. Confirm the request
+5. Stopzetten can be done until 1 October 2026
 
 ## Effect of stopzetten
 
-- Monthly payments or refunds stop after processing
-- No further amounts are collected or paid out for the remainder of the year
+- Monthly refunds stop after processing
+- No further refund amounts are paid out for the remainder of the year
 - The final settlement happens when the annual return for 2026 is filed (in 2027)
 - Any tax owed or overpaid is reconciled at that time
 - Interest may apply on underpayments at annual return time
@@ -53,19 +54,18 @@ Stopping a voorlopige aanslag does NOT mean:
 - That the Belastingdienst will not collect what is due
 - That the annual return is not required
 
-It only means that monthly payments/refunds are paused. The full tax obligation is determined and settled when the annual return is filed.
+It only means that monthly refunds are stopped. The full tax obligation is determined and settled when the annual return is filed.
 
 ## Developer instruction
 
 When a user asks about stopping their voorlopige aanslag:
 
 1. First determine whether the user is receiving a refund or making payments
-2. If receiving a refund: stopping is straightforward -- explain that refunds will cease and settlement happens at annual return
-3. If making payments: strongly recommend CHANGING the voorlopige aanslag instead of stopping it
+2. If receiving a refund: explain that refunds will cease and settlement happens at annual return
+3. If making payments: route to CHANGING the voorlopige aanslag; do not offer stopzetten
    - Explain the risk of a large lump-sum bill at annual return time
-   - Only proceed with stopzetten if the user explicitly confirms after understanding the risk
-4. In all cases, warn that stopping does not eliminate the tax obligation
-5. Direct the user to the Mijn Belastingdienst portal for the actual action
+4. Warn that stopping a refund does not eliminate the tax obligation
+5. Direct the user to the Mijn Belastingdienst portal for the actual action and note the 1 October 2026 cutoff
 
 ## Common failure
 

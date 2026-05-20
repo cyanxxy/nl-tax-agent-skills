@@ -1,6 +1,6 @@
 # Box 3 — Annual 2025: Classification and Calculation Rules
 
-source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
+source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025, bd_fisin_box3_assets_debts_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -14,8 +14,11 @@ review_status: reviewed
 - Current accounts (betaalrekeningen)
 - Term deposits (deposito's)
 - Foreign bank accounts (buitenlandse bankrekeningen)
-- Cash only above the cash exemption
+- Cash only above the 2025 cash exemption: EUR 661 without fiscal partner / EUR 1,322 with fiscal partner
 - Non-exempt green savings
+- Premiedepots
+- Share in a VvE reserve fund
+- Money on notary or bailiff third-party accounts
 
 ### Overige Bezittingen (Other Assets)
 - Shares (aandelen)
@@ -24,14 +27,14 @@ review_status: reviewed
 - ETFs (exchange-traded funds)
 - Cryptocurrency (crypto)
 - Real estate — not own home (vastgoed, niet eigen woning)
-- Loans given (verstrekte leningen)
-- Other receivables (overige vorderingen)
+- Loans given (verstrekte leningen), after checking official exceptions
+- Other receivables (overige vorderingen), after checking official exceptions such as receivables between fiscal partners or between parents and minor children, and usually non-callable inheritance receivables
 - Non-exempt green investments
 
 ### Schulden (Debts)
 - Personal loans (persoonlijke leningen)
 - Credit card debt (creditcardschuld)
-- Study debt registered with BKR (studieschuld BKR)
+- Study debts under the Wet studiefinanciering
 - Other debts (overige schulden)
 - **NOT**: mortgage on own home (hypotheek eigen woning) — this belongs in box 1
 

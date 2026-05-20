@@ -265,6 +265,21 @@ sources:
       - nl-tax-annual-return
       - nl-tax-box1-home
 
+  - id: bd_tax_credit_payout_2025
+    title: "Heffingskortingen laten uitbetalen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/heffingskortingen-laten-uitbetalen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-05-17"
+    freshness_policy: "check at start of filing season and after Belastingdienst portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
   - id: bd_own_home_deduction_cap_2025
     title: "Beperking hypotheekrenteaftrek als u een hoog inkomen hebt"
     domain: belastingdienst.nl
@@ -294,6 +309,21 @@ sources:
       - nl-tax-provisional-assessment
       - nl-tax-box1-home
 
+  - id: bd_deduction_rate_cap_2025
+    title: "Afbouw tarief aftrekposten bij hoog inkomen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-05-17"
+    freshness_policy: "check after Prinsjesdag and at start of filing season"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
   - id: bd_eigenwoningforfait_2025_2026
     title: "Eigenwoningforfait - wat is het en hoe bereken ik het?"
     domain: belastingdienst.nl
@@ -308,6 +338,19 @@ sources:
       - nl-tax-provisional-assessment
       - nl-tax-box1-home
       - nl-tax-partner-deductions
+
+  - id: bd_eigenwoningforfait_multiple_homes
+    title: "Verschillende woningen in het jaar"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/own-home/eigenwoningforfait.md"
+    last_checked: "2026-05-17"
+    freshness_policy: "check at start of filing season and after Belastingdienst portal updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
 
   - id: bd_hypotheekrenteaftrek_conditions
     title: "Mag ik mijn hypotheekrente altijd aftrekken?"
@@ -469,6 +512,21 @@ sources:
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
     last_checked: "2026-05-04"
+    freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box3
+
+  - id: bd_fisin_box3_assets_debts_2025
+    title: "Fiscale Informatie 2025 — Bezittingen en schulden box 3"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/bezittingen_en_schulden_box_3_"
+    source_type: official_doctrine
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box3/fictitious.md"
+    last_checked: "2026-05-17"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:

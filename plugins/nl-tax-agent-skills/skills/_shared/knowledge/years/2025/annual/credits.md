@@ -1,6 +1,6 @@
 # Rule note: Tax credits (heffingskortingen) for 2025
 
-source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025
+source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -15,7 +15,7 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Algemene heffingskorting (general tax credit)
 
-The algemene heffingskorting applies to all taxpayers with box 1 income.
+The algemene heffingskorting depends on the taxpayer's verzamelinkomen: income in boxes 1, 2, and 3 after persoonsgebonden aftrekposten.
 
 For taxpayers who do not reach AOW age in 2025:
 
@@ -37,8 +37,8 @@ For taxpayers who reach AOW age during 2025, do not interpolate in the workpack.
 
 ### Phase-out mechanism
 
-For taxable income above the phase-out start:
-- Reduction = phase-out percentage x (taxable income - phase-out threshold)
+For verzamelinkomen above the phase-out start:
+- Reduction = phase-out percentage x (verzamelinkomen - phase-out threshold)
 - The credit cannot become negative; it floors at EUR 0
 
 ### AOW-age adjustment
@@ -127,7 +127,7 @@ For taxpayers who have the AOW age for the whole year, use the AOW table above. 
 ## Applying credits in the workpack
 
 1. Calculate gross box 1 tax using the rates from box1-rates.md
-2. Determine the algemene heffingskorting based on total box 1 income
+2. Determine the algemene heffingskorting based on verzamelinkomen, not only box 1 income
 3. Determine the arbeidskorting based on arbeidsinkomen only
 4. Determine any other applicable credits
 5. Net tax = gross tax - total credits (minimum EUR 0; credits cannot create a refund on their own beyond the gross tax amount, but combined with wage tax withholding they can result in a refund)
@@ -137,7 +137,7 @@ For taxpayers who have the AOW age for the whole year, use the AOW table above. 
 - The algemene heffingskorting is personal and cannot be allocated
 - The arbeidskorting is personal and based on individual arbeidsinkomen
 - Some credits (e.g., IACK) have specific partner allocation rules
-- For partners with no or low income, the unused portion of the algemene heffingskorting may be paid out (uitbetaling) to the partner via the payroll tax system or via the return
+- For the least-earning partner, payout of unused algemene heffingskorting is restricted. In 2025, taxpayers born after 1962 do not receive a payout. Taxpayers born before 1963 may receive up to EUR 3,068, depending on their own income and the partner's tax due. Flag this as a manual-review item rather than assuming payout applies.
 
 ## Notes
 

@@ -1,6 +1,6 @@
 # Rule note: Box 3 fictitious return (forfaitair rendement) calculation 2025
 
-source_id: bd_box3_2025_calc
+source_ids: bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -36,12 +36,14 @@ Three categories determine the belastbaar rendement:
 ### Categorie I -- Banktegoeden (savings and bank deposits)
 
 - Includes: savings accounts, current accounts, deposits, term deposits
-- Includes contant geld only for the amount above the cash exemption, and includes the non-exempt part of green savings.
+- Includes contant geld only for the amount above the 2025 cash exemption (EUR 661 without fiscal partner / EUR 1,322 with fiscal partner), and includes the non-exempt part of green savings.
+- Also includes official bank-asset edge cases such as premiedepots, a taxpayer's share in a VvE reserve fund, and money on notary or bailiff third-party accounts.
 - Fictitious return percentage for 2025: **1.37%**
 
 ### Categorie II -- Overige bezittingen (other assets)
 
 - Includes: investments, listed and unlisted securities, crypto-assets, real estate (not being own home), receivables (vorderingen), rights to periodic payments, other assets
+- Receivables/loans require exception checks. Official guidance excludes certain receivables, including receivables between fiscal partners or between parents and minor children, and usually non-callable inheritance receivables.
 - Includes only the non-exempt part of green investments. The 2025 green-investment exemption shown in the official box 3 example is EUR 26,312 per person / EUR 52,624 for fiscal partners.
 - Fictitious return percentage for 2025: **5.88%**
 

@@ -1,8 +1,8 @@
-# Delta Rules — Baseline + Forecast + Delta Model
+# Delta Rules — Workpack Baseline and Estimate Comparison
 
 ## Purpose
 
-This document defines the baseline + forecast + delta model used for provisional assessment workpacks. The delta model provides the taxpayer with a clear understanding of what changed and how it affects their provisional assessment. It is for user understanding only — the Belastingdienst recalculates from scratch.
+This document defines the baseline and current-estimate comparison used inside provisional assessment workpacks. The comparison provides the taxpayer with a clear understanding of what changed and the likely direction of the monthly amount. It is for user understanding only -- the Belastingdienst recalculates from the complete submitted data.
 
 ---
 
