@@ -1,5 +1,5 @@
 version: 1
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-05-20"
 
 policy:
   source_backed_only: true
@@ -20,11 +20,18 @@ active_workflows:
       - skills/_shared/knowledge/own-home
       - skills/_shared/knowledge/partners
       - skills/_shared/knowledge/years/2025/annual
+      - skills/_shared/knowledge/years/2025/box2
       - skills/_shared/knowledge/years/2025/box3
     output_paths:
       - workspace/annual/2025/return-pack.md
       - workspace/annual/2025/field-map.yaml
     required_source_ids:
+      - anthropic_agent_skills_overview
+      - claude_code_skills
+      - law_wet_inkomstenbelasting_2001
+      - law_uitvoeringsregeling_ib_2001
+      - law_uitvoeringsbesluit_ib_2001
+      - regels_overheid_regelspraak
       - bd_annual_return_landing_2025
       - bd_annual_return_4_steps_2025
       - bd_annual_data_checklist_2025
@@ -44,6 +51,9 @@ active_workflows:
       - bd_fiscal_partnership
       - bd_fiscal_partner_death_return
       - bd_fiscal_partner_separation
+      - bd_box2_rates_2025_2026
+      - bd_box2_income_ab_guidance
+      - bd_fisin_aanmerkelijk_belang_2025
       - bd_box3_2025_calc
       - bd_box3_2025_actual_return
       - bd_fisin_box3_assets_debts_2025
@@ -72,6 +82,12 @@ active_workflows:
       - workspace/provisional/2026/delta-summary.md
       - workspace/provisional/2026/review-questions.md
     required_source_ids:
+      - anthropic_agent_skills_overview
+      - claude_code_skills
+      - law_wet_inkomstenbelasting_2001
+      - law_uitvoeringsregeling_ib_2001
+      - law_uitvoeringsbesluit_ib_2001
+      - regels_overheid_regelspraak
       - bd_provisional_landing_2026
       - bd_provisional_request_2026
       - bd_provisional_change_2026
@@ -87,10 +103,94 @@ active_workflows:
       - bd_fiscal_partnership
       - bd_fiscal_partner_death_return
       - bd_fiscal_partner_separation
+      - bd_box2_rates_2025_2026
+      - bd_box2_income_ab_guidance
+      - bd_fisin_aanmerkelijk_belang_2026
       - bd_box3_2026_provisional
       - bd_algoritmeregister_vva_eva
 
 blocked_workflows:
+  - id: annual_2025_entrepreneurs_roadmap
+    workflow: annual_return
+    tax_year: 2025
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    profile_candidates:
+      - annual_2025_entrepreneurs
+    case_scope: entrepreneurs_and_business_profit
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Entrepreneur and business-profit cases need dedicated official sources,
+      local knowledge snapshots, field maps, and tests before a workpack can be
+      prepared.
+    unlock_condition: >-
+      Add reviewed Belastingdienst/wetten.overheid.nl entrepreneur sources,
+      update knowledge snapshots and field maps, then pass validation.
+
+  - id: annual_2025_nonresidents_c_form_roadmap
+    workflow: annual_return
+    tax_year: 2025
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    profile_candidates:
+      - annual_2025_nonresident_c_form
+    case_scope: nonresident_c_form
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Nonresident C-form cases are outside the reviewed resident annual-return
+      source set and must not reuse resident-only assumptions.
+    unlock_condition: >-
+      Add official C-form/nonresident sources, local snapshots, field maps, and
+      validation tests before enabling workpack preparation.
+
+  - id: annual_2025_migration_m_form_roadmap
+    workflow: annual_return
+    tax_year: 2025
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    profile_candidates:
+      - annual_2025_migration_m_form
+    case_scope: migration_m_form
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Migration M-form cases require separate official guidance and field maps
+      and are not covered by the active resident annual-return workflow.
+    unlock_condition: >-
+      Add reviewed M-form sources, knowledge snapshots, field maps, and
+      validation tests before enabling workpack preparation.
+
+  - id: annual_2025_deceased_f_form_roadmap
+    workflow: annual_return
+    tax_year: 2025
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    profile_candidates:
+      - annual_2025_deceased_f_form
+    case_scope: deceased_f_form
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Deceased-taxpayer F-form cases need dedicated official sources and are not
+      covered by the active annual-return workflow.
+    unlock_condition: >-
+      Add reviewed F-form/deceased-taxpayer sources, local snapshots, field
+      maps, and tests before enabling workpack preparation.
+
+  - id: annual_2025_foreign_treaty_heavy_roadmap
+    workflow: annual_return
+    tax_year: 2025
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    profile_candidates:
+      - annual_2025_foreign_treaty_heavy
+    case_scope: foreign_income_and_treaty_heavy
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Foreign-income and treaty-heavy cases need separate source coverage for
+      treaty positions, double-tax relief, and cross-border evidence.
+    unlock_condition: >-
+      Add reviewed foreign-income and treaty sources, local snapshots, field
+      maps, and validation tests before enabling workpack preparation.
+
   - id: annual_2027
     workflow: annual_return
     tax_year: 2027

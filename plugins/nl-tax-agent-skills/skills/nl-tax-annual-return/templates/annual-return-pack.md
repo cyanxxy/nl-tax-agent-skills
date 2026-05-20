@@ -14,6 +14,7 @@ Created: [timestamp]
 - [ ] Individual taxpayer (not business): [yes/no]
 - [ ] Living taxpayer: [yes/no]
 - [ ] No M-biljet required: [yes/no]
+- [ ] No complex Box 2 manual-review trigger blocking standard preparation: [yes/no/not applicable]
 
 If any check is "no", this workpack should not have been generated. Stop and consult the intake skill.
 
@@ -168,6 +169,45 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 [A negative result reduces box 1 taxable income.]
 
+## Box 2 notes
+
+[If no aanmerkelijk belang: "Not applicable -- no substantial interest (aanmerkelijk belang) reported."]
+
+### Substantial-interest status
+
+- Has aanmerkelijk belang: [yes/no/manual review]
+- Basis: [generally 5% threshold, assessed with fiscal partner where applicable]
+- Evidence/source: [evidence_id or assumption_id]
+- Complex-case review: [none / valuation dispute / emigration / death / restructuring / treaty or nonresident issue / informal capital / non-arm's-length transfer / DGA corporate-tax issue]
+
+### Regular benefits
+
+| Item | Amount | Source |
+|------|--------|--------|
+| Gross regular benefits, including dividends (`box2.reguliere_voordelen_bruto`) | EUR [amount] | [evidence_id or assumption_id] |
+| Costs of regular benefits (`box2.kosten_reguliere_voordelen`) | EUR [amount] | [evidence_id or assumption_id] |
+| Fictitious regular benefit from BV lending (`box2.fictief_regulier_voordeel_bv_lening`) | EUR [amount] | [evidence_id or assumption_id / manual review] |
+| Dividend withholding tax to credit (`box2.ingehouden_dividendbelasting`) | EUR [amount] | [evidence_id or assumption_id] |
+
+### Disposal benefits
+
+| Item | Amount | Source |
+|------|--------|--------|
+| Net transfer price (`box2.vervreemdingsprijs`) | EUR [amount] | [evidence_id or assumption_id] |
+| Acquisition price (`box2.verkrijgingsprijs`) | EUR [amount] | [evidence_id or assumption_id] |
+| Disposal costs used to derive net transfer price (`box2.vervreemdingskosten`) | EUR [amount] | [evidence_id or assumption_id] |
+| Disposal benefit (`box2.vervreemdingsvoordeel`) | EUR [amount or "manual review required"] | [calculation / evidence_id / assumption_id] |
+
+Standard preparation formula: official net transfer price minus acquisition price. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first. Use manual review instead of a calculated amount when valuation, informal capital, non-arm's-length, restructuring, treaty, nonresident, emigration, death, or corporate-tax-heavy DGA facts are present.
+
+### Loss setoff and partner allocation
+
+- Substantial-interest loss to set off (`box2.te_verrekenen_verlies_ab`): EUR [amount] ([evidence_id or assumption_id])
+- Fiscal-partner Box 2 allocation (`partner.verdeling_box2_inkomen`): [taxpayer %] / [partner %]
+- Allocation total equals 100%: [yes/no/manual review]
+
+Note: Box 2 allocation and any reviewed calculation remain preparation notes for manual Mijn Belastingdienst entry; they are not filing or tax advice.
+
 ## Box 3 notes
 
 ### Assets on peildatum (1 January 2025)
@@ -290,8 +330,8 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
 - Total qualifying expenses: EUR [amount]
 - Drempelinkomen (combined): EUR [amount]
-- Drempel (threshold): EUR [amount or "manual review required - exact 2025 table not in source pack"]
-- **Deductible zorgkosten (above drempel):** EUR [amount]
+- Zorgkosten threshold manual review: [required unless the exact reviewed 2025 threshold table is registered and all required inputs are present]
+- Deductible zorgkosten result: [manual review required / EUR amount with source-backed calculation]
 
 ### Giften (charitable donations)
 
@@ -324,9 +364,10 @@ Total periodieke giften: EUR [amount] (fully deductible, no threshold or cap)
 - Premiums paid in 2025: EUR [amount]
 - Provider: [name]
 - Evidence: [evidence_id]
-- Jaarruimte available: EUR [amount]
-- Reserveringsruimte available: EUR [amount]
-- **Deductible lijfrentepremie:** EUR [amount]
+- Lijfrente limit manual review: [required unless exact reviewed 2025 jaarruimte/reserveringsruimte rules and all required inputs are present]
+- Jaarruimte available: [manual review required / EUR amount with source-backed calculation]
+- Reserveringsruimte available: [manual review required / EUR amount with source-backed calculation]
+- Deductible lijfrentepremie result: [manual review required / EUR amount with source-backed calculation]
 
 ### Other deductions
 
@@ -341,9 +382,9 @@ Total periodieke giften: EUR [amount] (fully deductible, no threshold or cap)
 | Deduction category | Amount |
 |-------------------|--------|
 | Alimentatie | EUR [amount] |
-| Zorgkosten (above drempel) | EUR [amount] |
+| Zorgkosten (above drempel) | [manual review required / EUR amount] |
 | Giften (periodiek + gewoon) | EUR [amount] |
-| Lijfrentepremie | EUR [amount] |
+| Lijfrentepremie | [manual review required / EUR amount] |
 | Other | EUR [amount] |
 | **Total persoonsgebonden aftrek** | **EUR [amount]** |
 
@@ -367,6 +408,7 @@ The following items can be freely allocated between partners:
 | Item | Default allocation | Optimized allocation | Tax impact |
 |------|-------------------|---------------------|------------|
 | Eigen woning result | 50/50 | [recommendation] | EUR [savings] |
+| Box 2 income | [taxpayer %] / [partner %] | [review scenarios] | [manual review] |
 | Box 3 grondslag | 50/50 | [recommendation] | EUR [savings] |
 | Persoonsgebonden aftrek | [to higher-rate partner] | [recommendation] | EUR [savings] |
 
@@ -381,6 +423,7 @@ Items that CANNOT be allocated:
 - [ ] Consider tariefsaanpassing impact on eigen woning allocation
 - [ ] Consider heffingskorting phase-out impact on income allocation
 - [ ] Review box 3 allocation for optimal combined result
+- [ ] Review Box 2 allocation if there is an aanmerkelijk belang
 - [ ] Confirm both partners will use the same box 3 allocation ratio
 
 ## Field map summary
@@ -434,7 +477,12 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] Evidence matches reported amounts -- no unexplained discrepancies
 - [ ] Box 3 peildatum values verified against bank/broker statements
 - [ ] Box 3 method choice reviewed (fictitious vs actual return)
+- [ ] Box 2 dividends, share-sale data, withholding tax, loss setoff, and partner allocation reviewed if applicable
+- [ ] Complex Box 2 facts routed to manual review or professional advice
 - [ ] Partner allocation reviewed and agreed with fiscal partner
+- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed in the official portal; no calculated amounts are shown here unless exact reviewed sources are registered
+- [ ] Zorgkosten threshold manual review completed if exact reviewed 2025 threshold sources are not registered
+- [ ] Lijfrente limit manual review completed if exact reviewed 2025 jaarruimte/reserveringsruimte sources are not registered
 - [ ] Deductions have supporting evidence retained for at least 5 years
 - [ ] All assumptions reviewed and confirmed or corrected
 - [ ] Missing information resolved or consciously accepted

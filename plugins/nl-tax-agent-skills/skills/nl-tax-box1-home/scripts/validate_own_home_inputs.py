@@ -32,6 +32,7 @@ from __future__ import annotations
 import json
 import sys
 from dataclasses import dataclass, field
+from decimal import Decimal, ROUND_CEILING
 from typing import Optional
 
 
@@ -77,10 +78,11 @@ TARIEFSAANPASSING: dict[int, dict[str, float]] = {
     },
 }
 
-# Hillenregeling phase-out: year -> percentage of benefit remaining
-HILLENREGELING_REMAINING: dict[int, float] = {
-    2025: 0.76667,
-    2026: 0.71867,
+# Hillenregeling phase-out: year -> percentage of benefit remaining.
+# Keep Decimal values for whole-euro rounding; expose floats in results.
+HILLENREGELING_REMAINING: dict[int, Decimal] = {
+    2025: Decimal("0.76667"),
+    2026: Decimal("0.71867"),
 }
 
 
@@ -225,7 +227,8 @@ def calculate_hillenregeling(
 
     Returns (applies, correction_amount, remaining_percentage).
     """
-    remaining_pct = HILLENREGELING_REMAINING.get(tax_year, 0.0)
+    remaining_decimal = HILLENREGELING_REMAINING.get(tax_year, Decimal("0"))
+    remaining_pct = float(remaining_decimal)
 
     if eigenwoningforfait <= mortgage_interest:
         # Forfait does not exceed interest — Hillenregeling does not apply
@@ -233,7 +236,11 @@ def calculate_hillenregeling(
 
     # Excess forfait that would otherwise be added to income
     excess = eigenwoningforfait - mortgage_interest
-    correction = round(excess * remaining_pct)
+    correction = int(
+        (Decimal(str(excess)) * remaining_decimal).quantize(
+            Decimal("1"), rounding=ROUND_CEILING
+        )
+    )
 
     return (True, correction, remaining_pct)
 

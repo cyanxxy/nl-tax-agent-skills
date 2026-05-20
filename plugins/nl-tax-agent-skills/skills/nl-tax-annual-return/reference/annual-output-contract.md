@@ -15,14 +15,15 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 5. **Evidence summary** — summary of the evidence index used
 6. **Income notes** — all box 1 income categories (employment, pension, benefits, other)
 7. **Own-home notes** — WOZ, mortgage interest, eigenwoningforfait, tariefsaanpassing, net result
-8. **Box 3 notes** — assets, debts, fictitious return, actual return data, comparison, partner allocation
-9. **Deductions notes** — alimentatie, zorgkosten, giften, lijfrentepremie, other
-10. **Fiscal partner notes** — partner status, allocation options, review points
-11. **Field map summary** — reference to the field map file
-12. **Missing information** — all identified data gaps
-13. **Assumptions** — all assumptions made during workpack generation
-14. **Human review checklist** — items requiring human verification before filing
-15. **Not submission advice** — mandatory disclaimer section
+8. **Box 2 notes** — substantial-interest status, regular benefits, disposal benefits, dividend withholding tax credit, loss setoff, partner allocation, manual-review triggers
+9. **Box 3 notes** — assets, debts, fictitious return, actual return data, comparison, partner allocation
+10. **Deductions notes** — alimentatie, zorgkosten, giften, lijfrentepremie, other
+11. **Fiscal partner notes** — partner status, allocation options, review points
+12. **Field map summary** — reference to the field map file
+13. **Missing information** — all identified data gaps
+14. **Assumptions** — all assumptions made during workpack generation
+15. **Human review checklist** — items requiring human verification before filing
+16. **Not submission advice** — mandatory disclaimer section
 
 ---
 
@@ -67,6 +68,36 @@ Typical source_ids for an annual return workpack include:
 - `regels_overheid_regelspraak`
 
 Only list source_ids that were actually used. Do not pad the list with sources that were not consulted.
+
+---
+
+## Box 2 requirements
+
+### Standard Box 2 preparation
+
+The Box 2 section MUST be present. If the taxpayer has no aanmerkelijk belang, mark it not applicable.
+
+When Box 2 applies, include standard preparation fields for:
+
+- `box2.has_aanmerkelijk_belang`
+- `box2.reguliere_voordelen_bruto`
+- `box2.kosten_reguliere_voordelen`
+- `box2.vervreemdingsprijs`
+- `box2.verkrijgingsprijs`
+- `box2.vervreemdingskosten`
+- `box2.vervreemdingsvoordeel`
+- `box2.fictief_regulier_voordeel_bv_lening`
+- `box2.ingehouden_dividendbelasting`
+- `box2.te_verrekenen_verlies_ab`
+- `partner.verdeling_box2_inkomen`
+
+Regular benefits include dividends. Disposal benefits include share-sale profit; the standard preparation formula is official net transfer price minus acquisition price. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first. Dividend withholding tax may be credited when supported by evidence.
+
+### Box 2 manual-review routing
+
+The workpack MUST route Box 2 to manual review or unsupported when facts involve valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, or corporate-tax-heavy DGA issues.
+
+If fiscal partners allocate Box 2 income, the workpack MUST show the allocation percentage and verify that the total allocation equals 100%. Do not present allocation as final filing advice.
 
 ---
 
@@ -133,7 +164,7 @@ Before finalizing the workpack, the skill must verify:
 
 ### Structural validation
 
-- [ ] All 15 required sections are present
+- [ ] All 16 required sections are present
 - [ ] Sections appear in the correct order
 - [ ] No section is empty (each has content or an explicit "not applicable" note)
 
@@ -143,8 +174,11 @@ Before finalizing the workpack, the skill must verify:
 - [ ] Every `assumption_id` referenced in the body appears in the Assumptions section
 - [ ] Every `evidence_id` referenced in the body exists in `workspace/taxpayer/evidence-index.yaml`
 - [ ] The Sources Used section lists at least one `source_id`
+- [ ] Box 2 section includes standard fields or a not-applicable note
+- [ ] Complex Box 2 facts are routed to manual review or unsupported
 - [ ] Box 3 section includes both fictitious and actual return notes
 - [ ] Partner allocation is addressed (even if no partner -- state "not applicable")
+- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 
 ### Cross-contamination validation
 

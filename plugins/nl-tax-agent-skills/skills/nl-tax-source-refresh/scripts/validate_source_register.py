@@ -29,6 +29,7 @@ VALID_SKILL_NAMES = {
     "nl-tax-annual-return",
     "nl-tax-provisional-assessment",
     "nl-tax-box1-home",
+    "nl-tax-box2",
     "nl-tax-box3",
     "nl-tax-partner-deductions",
     "nl-tax-field-mapper",

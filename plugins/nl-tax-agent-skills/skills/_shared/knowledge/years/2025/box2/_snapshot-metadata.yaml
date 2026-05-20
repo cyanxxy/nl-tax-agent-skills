@@ -1,0 +1,20 @@
+snapshot_metadata_version: '1.0'
+sources:
+  bd_box2_income_ab_guidance:
+    content_hash_sha256: 1adc7bc1791d35eaa328a5f6394e4a93ac6260e8c216ee79a0e79d51feca9c7c
+    review_status: reviewed
+    snapshot_created_at: '2026-05-20T00:00:00+00:00'
+    source_id: bd_box2_income_ab_guidance
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang
+  bd_box2_rates_2025_2026:
+    content_hash_sha256: 0cd091839ce80666ff533dff8f65f98b5744b9e4651f35097a6e1a2fb48984c8
+    review_status: reviewed
+    snapshot_created_at: '2026-05-20T00:00:00+00:00'
+    source_id: bd_box2_rates_2025_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
+  bd_fisin_aanmerkelijk_belang_2025:
+    content_hash_sha256: 9f0e55ede0d1ec6125b7e3b6d9f611bc0e4b06760367881ed26fae9474333743
+    review_status: reviewed
+    snapshot_created_at: '2026-05-20T00:00:00+00:00'
+    source_id: bd_fisin_aanmerkelijk_belang_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aanmerkelijk_belang

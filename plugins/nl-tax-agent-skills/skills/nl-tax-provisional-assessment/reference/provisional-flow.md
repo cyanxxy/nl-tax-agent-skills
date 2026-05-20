@@ -44,13 +44,20 @@ User enters provisional skill
 2. **Pension/benefit income estimate** — AOW, pension, WW, WIA, bijstand expected in 2026
 3. **Other income estimate** — freelance, rental, foreign income expected in 2026
 4. **Own-home deduction estimate** — mortgage interest (hypotheekrente) for 2026, eigenwoningforfait based on WOZ-waarde
-5. **Other deductions estimate** — alimentatie, lijfrentepremie, arbeidsongeschiktheidsverzekering, specific care costs, gifts
-6. **Box 3 data** — assets and debts as of peildatum 1 January 2026:
+5. **Other deductions estimate** — alimentatie, lijfrentepremie, arbeidsongeschiktheidsverzekering, specific care costs, gifts. Treat zorgkosten thresholds and lijfrente limits as manual-review items unless exact reviewed sources and all required inputs are present.
+6. **Box 2 estimate** — standard aanmerkelijk-belang estimates:
+   - Estimated regular benefits, including dividends
+   - Estimated disposal benefits from share sales
+   - Estimated related costs and dividend withholding tax
+   - Estimated fictitious regular benefit from BV lending, if applicable
+   - Fiscal-partner Box 2 allocation, if applicable
+   - Route valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA facts to manual review or unsupported
+7. **Box 3 data** — assets and debts as of peildatum 1 January 2026:
    - Categorie I: Banktegoeden
    - Categorie II: Overige bezittingen
    - Categorie III: Schulden (excluding eigenwoningschuld)
    - Heffingsvrij vermogen deduction
-   - FICTITIOUS METHOD ONLY — no werkelijk rendement
+   - FICTITIOUS METHOD ONLY
 
 ### Output generation
 
@@ -82,6 +89,7 @@ User enters provisional skill
 2. **Full re-entry of all current estimates** (CRITICAL — not just changes):
    - All income categories (employment, pension/benefit, other)
    - All deductions (own-home, alimentatie, premiums, other)
+   - All standard Box 2 estimates (regular benefits, disposal benefits, costs, withholding tax, partner allocation)
    - All box 3 data (assets and debts as of 1 January 2026, fictitious method only)
 3. **Delta calculation** — compare baseline to current estimates:
    - Per-category: income (up/down), deductions (up/down), box 3 (up/down), partner changes
@@ -121,6 +129,8 @@ User enters provisional skill
    - Housing: new mortgage, sold home, refinanced, paid off mortgage
    - Partner: marriage, separation, divorce, partner income changes
    - Deductions: started/stopped alimentatie, changed premiums, other
+   - Credits: IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting facts requiring manual review
+   - Box 2: expected dividends, share sales, costs, dividend withholding tax, or partner allocation changed
    - Box 3: corrections to the estimated asset or debt values on 1 January 2026; later-year changes do not change the 2026 box 3 peildatum
 3. **Comparison** — for each category, note whether the current voorlopige aanslag figure still matches reality
 
@@ -168,7 +178,8 @@ User enters provisional skill
 ## Common rules across all subflows
 
 - All amounts are estimates unless explicitly labeled as from-baseline
-- Box 3 uses fictitious method only — werkelijk rendement is never collected
+- Box 2 amounts must be labeled as estimates or from-baseline.
+- Box 3 uses the provisional fictitious method only. Include only the explanatory note: "Werkelijk rendement is not part of provisional 2026."
 - Every workpack must include the "Not submission advice" footer
 - Every workpack must include the DigiD warning
 - Every workpack must list source_ids for all knowledge sources used

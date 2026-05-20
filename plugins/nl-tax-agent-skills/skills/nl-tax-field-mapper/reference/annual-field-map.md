@@ -56,7 +56,10 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `box1.resultaat_overige_werkzaamheden` | Resultaat uit overige werkzaamheden | Income from other activities | Box 1 — Overig | conditional | Various / user-provided |
+| `box1.resultaat_overige_werkzaamheden` | Resultaat uit overige werkzaamheden | Income from other activities | Box 1 — Overig | manual review only | Various / user-provided |
+
+Resultaat uit overige werkzaamheden is a manual-review marker in this workflow;
+do not calculate it as standard support until reviewed sources are added.
 
 ---
 
@@ -74,6 +77,29 @@ This reference defines the known fields in the Dutch annual income tax return th
 - Eigenwoningforfait is calculated as a percentage of the WOZ-waarde. The percentage depends on the WOZ value range (see `_shared/knowledge/years/2025/annual/own-home.md`).
 - Hypotheekrente (mortgage interest) is deductible only for qualifying mortgages (annuitair or lineair for post-2013 mortgages).
 - The net eigen woning result (eigenwoningforfait minus hypotheekrente) flows into box 1.
+
+---
+
+## Box 2 — Substantial Interest (Aanmerkelijk belang)
+
+| field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
+|---|---|---|---|---|---|
+| `box2.has_aanmerkelijk_belang` | Aanmerkelijk belang aanwezig | Has substantial interest | Box 2 — Aanmerkelijk belang | conditional | Profile / shareholder register / user-provided |
+| `box2.reguliere_voordelen_bruto` | Reguliere voordelen bruto | Gross regular benefits | Box 2 — Reguliere voordelen | conditional | Dividend statement / BV records |
+| `box2.kosten_reguliere_voordelen` | Kosten reguliere voordelen | Costs of regular benefits | Box 2 — Reguliere voordelen | optional | Expense evidence / user-provided |
+| `box2.vervreemdingsprijs` | Vervreemdingsprijs | Net transfer price | Box 2 — Vervreemding | conditional | Sale agreement / notarial deed |
+| `box2.verkrijgingsprijs` | Verkrijgingsprijs | Acquisition price | Box 2 — Vervreemding | conditional | Acquisition records / shareholder register |
+| `box2.vervreemdingskosten` | Vervreemdingskosten | Disposal costs | Box 2 — Vervreemding | optional | Transaction evidence |
+| `box2.vervreemdingsvoordeel` | Vervreemdingsvoordeel | Disposal benefit | Box 2 — Vervreemding | conditional | Calculated / manual review |
+| `box2.fictief_regulier_voordeel_bv_lening` | Fictief regulier voordeel bovenmatige lening BV | Fictitious regular benefit for BV lending | Box 2 — Reguliere voordelen | conditional | Loan statement / manual review |
+| `box2.ingehouden_dividendbelasting` | Ingehouden dividendbelasting | Dividend withholding tax | Box 2 — Te verrekenen belasting | conditional | Dividend statement |
+| `box2.te_verrekenen_verlies_ab` | Te verrekenen verlies uit aanmerkelijk belang | Substantial-interest loss to set off | Box 2 — Verliesverrekening | conditional | Prior assessment / loss statement |
+
+### Notes on box 2 fields
+- Standard Box 2 preparation is supported for `annual_2025` when the taxpayer has straightforward aanmerkelijk-belang facts.
+- Regular benefits include dividends. Disposal benefits include share-sale profit; the standard preparation formula is official net transfer price minus acquisition price. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first.
+- Dividend withholding tax may be credited when supported by evidence.
+- Require manual review for valuation disputes, informal capital, non-arm's-length transfers, restructurings, treaty/nonresident issues, emigration, death, and corporate-tax-heavy DGA cases.
 
 ---
 
@@ -116,9 +142,9 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 ### Notes on deduction fields
 - Partneralimentatie is deductible; kinderalimentatie is NOT deductible.
-- Specifieke zorgkosten have a drempel (threshold) that depends on income. Only the amount above the threshold is deductible.
+- Specifieke zorgkosten have a drempel (threshold) that depends on income. Only calculate the amount above the threshold if exact reviewed 2025 threshold sources and inputs are available; otherwise mark manual review required.
 - Giften have different rules for periodieke giften (no threshold, requires agreement) and gewone giften (threshold applies).
-- Lijfrentepremie deduction is limited by jaarruimte and reserveringsruimte calculations.
+- Lijfrentepremie deduction is limited by jaarruimte and reserveringsruimte calculations. Only calculate the limit if exact reviewed 2025 rules and inputs are available; otherwise mark manual review required.
 
 ---
 
@@ -129,10 +155,11 @@ This reference defines the known fields in the Dutch annual income tax return th
 | `partner.bsn` | BSN partner | Partner citizen service number | Partner | conditional | Pre-filled after partner DigiD link; do NOT store |
 | `partner.inkomen` | Inkomen partner | Partner income | Partner | conditional | Partner `jaaropgaaf` |
 | `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen (percentage) | Box 3 base allocation percentage | Partner | conditional | User choice |
+| `partner.verdeling_box2_inkomen` | Verdeling Box 2 inkomen (percentage) | Box 2 income allocation percentage | Partner | conditional | User choice |
 | `partner.verdeling_eigenwoning` | Verdeling eigen woning (percentage) | Own-home allocation (percentage) | Partner | conditional | User choice |
 | `partner.verdeling_aftrekposten` | Verdeling persoonsgebonden aftrek | Deduction allocation | Partner | conditional | User choice |
 
 ### Notes on partner fields
 - Partner BSN is entered via DigiD partner-link in the portal. The field mapper notes it is needed but NEVER stores the BSN value.
-- Allocation choices (verdeling) determine how shared income, the joint box 3 base, and deductions are split between partners. The optimal split depends on individual tax positions.
+- Allocation choices (verdeling) determine how shared Box 2 income, the joint box 3 base, and deductions are split between partners. Box 2 allocation must total 100% for full-year fiscal partners. The optimal split depends on individual tax positions.
 - Non-allocatable items (arbeidskorting, ondernemersaftrek) cannot be transferred to the partner.

@@ -77,12 +77,16 @@
 
 ### Estimated tax credits
 
-| Credit                               | Amount (estimate) |
-|---------------------------------------|-------------------|
-| Algemene heffingskorting              | EUR               |
-| Arbeidskorting                        | EUR               |
-| Other applicable credits              | EUR               |
-| **Total estimated tax credits**       | EUR               |
+| Credit area                           | Handling |
+|---------------------------------------|----------|
+| Algemene heffingskorting              | [portal estimate / source-backed estimate / manual review] |
+| Arbeidskorting                        | [portal estimate / source-backed estimate / manual review] |
+| IACK                                  | [manual review unless exact reviewed sources and required facts are present] |
+| Ouderenkorting                        | [manual review unless exact reviewed sources and required facts are present] |
+| Alleenstaandeouderenkorting           | [manual review unless exact reviewed sources and required facts are present] |
+| Jonggehandicaptenkorting              | [manual review unless exact reviewed sources and required facts are present] |
+
+Do not show calculated credit amounts unless exact reviewed sources are registered and all required taxpayer facts are available.
 
 ## Own-home estimate
 
@@ -102,9 +106,24 @@
 
 | **Net own-home deduction**            | EUR               |
 
+## Box 2 provisional estimate
+
+[If no aanmerkelijk belang: "Not applicable -- no substantial interest (aanmerkelijk belang) reported."]
+
+| Item | Amount label | Source |
+|------|--------------|--------|
+| Estimated regular benefits, including dividends (`box2.geschatte_reguliere_voordelen`) | EUR [amount] (estimate/from-baseline) | [source or assumption] |
+| Estimated disposal benefits (`box2.geschatte_vervreemdingsvoordelen`) | EUR [amount] (estimate/from-baseline) | [source or assumption] |
+| Estimated costs (`box2.geschatte_kosten`) | EUR [amount] (estimate/from-baseline) | [source or assumption] |
+| Estimated dividend withholding tax (`box2.geschatte_ingehouden_dividendbelasting`) | EUR [amount] (estimate/from-baseline) | [source or assumption] |
+| Estimated fictitious regular benefit from BV lending (`box2.geschat_fictief_regulier_voordeel_bv_lening`) | EUR [amount] (estimate/from-baseline/manual review) | [source or assumption] |
+| Fiscal-partner Box 2 allocation (`partner.verdeling_box2_inkomen`) | [taxpayer %] / [partner %] (estimate/from-baseline) | [user choice / baseline] |
+
+Manual review / unsupported triggers: valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA issues.
+
 ## Box 3 provisional estimate
 
-> CRITICAL: For the 2026 voorlopige aanslag, use the box 3 categories and values required for the provisional fictitious calculation. Werkelijk rendement is not part of the provisional calculation; it may become relevant later in the annual 2026 return.
+> Werkelijk rendement is not part of provisional 2026.
 
 ### Assets on 1 January 2026
 
@@ -163,11 +182,9 @@
 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR      |
 | Grondslag sparen en beleggen          | EUR               |
 | Aandeel in rendementsgrondslag        |                   |
-| **Box 3 income**                      | EUR               |
+| **Box 3 income**                      | EUR (estimate/from-baseline) |
 | Box 3 tax rate                        | 36%               |
-| **Box 3 tax**                         | EUR               |
-
-Note: This is a provisional-assessment calculation. Do not collect werkelijk rendement in this workflow.
+| **Box 3 tax**                         | EUR (estimate/from-baseline) |
 
 ## Deductions estimate
 
@@ -179,14 +196,14 @@ Note: This is a provisional-assessment calculation. Do not collect werkelijk ren
 
 ### Estimated other deductions 2026
 
-| Item                                  | Amount (estimate) |
-|---------------------------------------|-------------------|
-| Lijfrentepremie                       | EUR               |
-| Arbeidsongeschiktheidsverzekering     | EUR               |
-| Specific care costs                   | EUR               |
-| Gifts (giften)                        | EUR               |
-| Other deductible expenses             | EUR               |
-| **Total other deductions**            | EUR               |
+| Item                                  | Handling |
+|---------------------------------------|----------|
+| Lijfrentepremie                       | [estimate; lijfrente limit manual review unless exact reviewed sources and required inputs are present] |
+| Arbeidsongeschiktheidsverzekering     | [estimate] |
+| Specific care costs                   | [estimate; zorgkosten threshold manual review unless exact reviewed sources and required inputs are present] |
+| Gifts (giften)                        | [estimate] |
+| Other deductible expenses             | [estimate/manual review] |
+| **Total other deductions**            | [estimate/manual review] |
 
 ## Field map summary
 
@@ -213,8 +230,12 @@ Note: This is a provisional-assessment calculation. Do not collect werkelijk ren
 
 - [ ] All income estimates are reasonable and based on current knowledge
 - [ ] Deduction estimates are based on the current situation for 2026
+- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed manually unless exact reviewed sources are registered
+- [ ] Zorgkosten threshold manual review completed if relevant
+- [ ] Lijfrente limit manual review completed if relevant
+- [ ] Box 2 estimates are labeled estimate or from-baseline, if applicable
 - [ ] Box 3 assets reflect the position as of 1 January 2026
-- [ ] Box 3 uses fictitious method only (no werkelijk rendement)
+- [ ] Box 3 uses the provisional fictitious method
 - [ ] For change subflow: all data has been entered, not just the changed items
 - [ ] All assumptions have been reviewed and are acceptable
 - [ ] All missing information items have been addressed or acknowledged

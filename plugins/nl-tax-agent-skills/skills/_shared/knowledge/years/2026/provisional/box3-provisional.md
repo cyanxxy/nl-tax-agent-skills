@@ -9,19 +9,14 @@ review_status: reviewed
 
 ## Rule
 
-For the 2026 voorlopige aanslag, box 3 is calculated using ONLY the fictitious return method (forfaitair rendement). Werkelijk rendement (actual return) is not part of the provisional calculation.
+For the 2026 voorlopige aanslag, box 3 is calculated using ONLY the fictitious return method (forfaitair rendement).
 
-> For the 2026 voorlopige aanslag, use the box 3 categories and values required for the provisional fictitious calculation. Werkelijk rendement is not part of the provisional calculation; it may become relevant later in the annual 2026 return.
+Use only this explanatory note: "Werkelijk rendement is not part of provisional 2026."
 
-## HARD RULE -- No werkelijk rendement in provisional 2026
+## Actual-return boundary
 
-Do NOT collect or enter werkelijk rendement for the 2026 voorlopige aanslag.
-
-- Werkelijk rendement is not part of the provisional calculation
-- It may become relevant later in the annual 2026 return (filed in 2027)
-- If the user asks about actual return for the provisional 2026 assessment: explain that it is not applicable here and will only potentially apply at annual return time
-
-This distinction is critical and must be enforced in all provisional assessment flows.
+Reject any field, input prompt, calculation, or method-choice wording that tries
+to use werkelijk rendement in this provisional workflow.
 
 ## Reference date (peildatum)
 
@@ -83,7 +78,7 @@ The percentages for banktegoeden and schulden are provisional for the 2026 provi
    - If the result is negative or zero, use EUR 0 and no box 3 tax is due
 4. **Bereken het aandeel in de rendementsgrondslag**
    - Aandeel = taxpayer's share of the grondslag sparen en beleggen divided by the rendementsgrondslag
-   - Use the percentage as displayed in the official examples: truncate toward zero to 2 decimals
+   - Round the percentage to 3 decimals, following the general official step instruction for provisional 2026
 5. **Bereken het voordeel uit sparen en beleggen**
    - Box 3 income = belastbaar rendement * aandeel in de rendementsgrondslag
 6. **Bereken hoeveel belasting moet worden betaald**
@@ -104,9 +99,9 @@ When taxpayers qualify as fiscal partners:
 When building the workpack for box 3 in the voorlopige aanslag 2026:
 
 1. Collect the value of all assets and debts per category on peildatum 1 January 2026
-2. Use ONLY the fictitious return method -- do not offer or collect werkelijk rendement
-3. If the user asks about actual return (werkelijk rendement), respond with:
-   - "Werkelijk rendement is not part of the 2026 provisional assessment. It may become relevant when filing the annual 2026 return in 2027."
+2. Use ONLY the fictitious return method
+3. If the user asks about actual return (werkelijk rendement), respond only with:
+   - "Werkelijk rendement is not part of provisional 2026."
 4. Separately identify green investments/savings and cash amounts because exemptions can change what is included in banktegoeden or overige bezittingen
 5. Calculate aftrekbare schulden after the debt threshold
 6. Calculate belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in de rendementsgrondslag, box 3 income, and tax
@@ -120,6 +115,6 @@ Do not subtract the full debt amount. First subtract the debt threshold and use 
 
 Do not apply the heffingsvrij vermogen before calculating the belastbaar rendement. The heffingsvrij vermogen is only deducted to determine the grondslag sparen en beleggen.
 
-Do not collect werkelijk rendement data in the provisional flow. This is the most critical enforcement rule for this file.
+Reject werkelijk-rendement inputs, fields, calculations, and method choices in the provisional flow.
 
 Do not allocate individual assets or debts between fiscal partners for the fictitious calculation. Allocate the joint grondslag sparen en beleggen.

@@ -15,7 +15,7 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 1. **All fields are estimates** -- every value is the taxpayer's best projection, not a confirmed amount from evidence.
 2. **Fewer detail fields** -- the provisional form asks for totals, not breakdowns per employer or per account.
-3. **NO werkelijk rendement** -- the actual return (werkelijk rendement) field does NOT exist in the provisional assessment. This is a HARD RULE. Werkelijk rendement may become relevant when filing the annual 2026 return in 2027, but it is never part of the voorlopige aanslag.
+3. **Box 3 explanatory note only** -- use this note and no input fields: "Werkelijk rendement is not part of provisional 2026."
 4. **Peildatum is 1 January 2026** -- not 1 January 2025 as in the annual return.
 5. **No allocation of prior-year evidence** -- provisional estimates are forward-looking, not evidence-based.
 
@@ -62,6 +62,26 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 ---
 
+## Box 2 Estimates (Geschat aanmerkelijk belang)
+
+All Box 2 values in a provisional 2026 field map are estimates or from-baseline values. Do not present them as annual actuals.
+
+| field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
+|---|---|---|---|---|---|
+| `box2.geschatte_reguliere_voordelen` | Geschatte reguliere voordelen | Estimated regular benefits | Box 2 — Aanmerkelijk belang | conditional | Estimate / prior-year dividend / baseline |
+| `box2.geschatte_vervreemdingsvoordelen` | Geschatte vervreemdingsvoordelen | Estimated disposal benefits | Box 2 — Aanmerkelijk belang | conditional | Estimate / planned share sale / baseline |
+| `box2.geschatte_kosten` | Geschatte kosten Box 2 | Estimated Box 2 costs | Box 2 — Aanmerkelijk belang | optional | Estimate / baseline |
+| `box2.geschatte_ingehouden_dividendbelasting` | Geschatte ingehouden dividendbelasting | Estimated dividend withholding tax | Box 2 — Te verrekenen belasting | conditional | Estimate / dividend statement / baseline |
+| `box2.geschat_fictief_regulier_voordeel_bv_lening` | Geschat fictief regulier voordeel bovenmatige lening BV | Estimated fictitious regular benefit for BV lending | Box 2 — Aanmerkelijk belang | conditional | Estimate / loan statement / manual review |
+
+### Notes on box 2 estimates
+- Regular benefits include dividends.
+- Disposal benefits include estimated share-sale profit.
+- Route valuation disputes, informal capital, non-arm's-length transfers, restructurings, treaty/nonresident issues, emigration, death, and corporate-tax-heavy DGA cases to manual review or unsupported.
+- Fiscal-partner allocation uses `partner.verdeling_box2_inkomen` and should total 100% when applicable.
+
+---
+
 ## Box 3 Estimates (Geschat vermogen) — Fictitious Return ONLY
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
@@ -72,20 +92,11 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 | `box3.geschat_contant_geld` | Geschat contant geld en cadeaubonnen | Estimated cash and gift cards | Box 3 — Bezittingen | optional | User estimate |
 | `box3.geschatte_schulden` | Geschatte schulden op 1 januari 2026 | Estimated debts on 1 Jan 2026 | Box 3 — Schulden | conditional | Current debt levels / estimate |
 
-### HARD RULE: No werkelijk rendement in provisional
+### Box 3 note
 
-The following fields DO NOT EXIST in the provisional assessment and must NEVER appear in a provisional field map:
+Use only this explanatory note: "Werkelijk rendement is not part of provisional 2026."
 
-- `box3.werkelijk_rendement_rente` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_dividend` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_huur` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_waardeverandering` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_box3_schuldrente` -- DOES NOT EXIST
-- `box3.werkelijk_rendement_woz_investment_correction` -- DOES NOT EXIST
-
-Any field with `werkelijk_rendement` in its `field_id` is INVALID in a provisional field map. The validation script will reject it.
-
-Werkelijk rendement may become relevant when filing the annual 2026 return in 2027, but it is never part of the voorlopige aanslag.
+The validation script rejects provisional field IDs or labels that try to add werkelijk-rendement inputs, calculations, or method choices.
 
 ### Notes on box 3 estimates
 - Peildatum for the provisional 2026 is 1 January 2026.
@@ -99,6 +110,7 @@ Werkelijk rendement may become relevant when filing the annual 2026 return in 20
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
+| `partner.verdeling_box2_inkomen` | Geschatte verdeling Box 2 inkomen | Estimated Box 2 income allocation | Partner | conditional | User choice / baseline |
 | `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen | Box 3 base allocation | Partner | conditional | User choice |
 | `partner.verdeling_eigenwoning_saldo` | Verdeling saldo eigen woning | Own-home balance allocation | Partner | conditional | User choice |
 | `partner.verdeling_aftrekposten` | Verdeling aftrekposten | Deduction allocation | Partner | conditional | User choice |
@@ -106,6 +118,7 @@ Werkelijk rendement may become relevant when filing the annual 2026 return in 20
 ### Notes on partner allocation estimates
 - If there is a fiscal partner and the provisional form asks for allocation, map the allocation of the joint grondslag sparen en beleggen, not individual assets or debts.
 - Allocation values are estimates for cash-flow planning. The final allocation is chosen again in the annual 2026 return.
+- Box 2 allocation values are estimates or from-baseline and must total 100% when shown for fiscal partners.
 
 ---
 
@@ -119,6 +132,7 @@ Werkelijk rendement may become relevant when filing the annual 2026 return in 20
 ### Notes on deduction estimates
 - The provisional form has fewer deduction fields than the annual return.
 - Detailed breakdowns (zorgkosten, giften, lijfrentepremie) are typically combined into a single estimated deductions field or a small number of summary fields.
+- Zorgkosten thresholds and lijfrente limits require manual review unless exact reviewed sources and all required inputs are available.
 - The taxpayer should estimate conservatively to avoid underpayment.
 
 ---
@@ -129,7 +143,7 @@ The following annual return fields have no equivalent in the provisional assessm
 
 | Annual field_id | Reason not in provisional |
 |---|---|
-| `box3.werkelijk_rendement_*` | Werkelijk rendement is not part of the provisional calculation |
+| `box3.werkelijk_rendement_*` | Werkelijk rendement is not part of provisional 2026 |
 | `aftrek.zorgkosten` | Rolled into general estimated deductions |
 | `aftrek.giften_anbi` | Rolled into general estimated deductions |
 | `aftrek.giften_cultureel` | Rolled into general estimated deductions |

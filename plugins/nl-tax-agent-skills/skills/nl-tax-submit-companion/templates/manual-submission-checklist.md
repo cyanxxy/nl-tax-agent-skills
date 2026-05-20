@@ -5,9 +5,9 @@
 
 ## Important notice
 
-This checklist is a preparation aid. It does **NOT** log in, sign, submit, or interact with the Belastingdienst on your behalf. You must complete all steps yourself through the official Mijn Belastingdienst portal.
+This checklist is a preparation aid. It does **NOT** log in, sign, submit, or interact with the Belastingdienst on your behalf. You must complete all online steps yourself through the official Mijn Belastingdienst portal using your DigiD, or through an authorized helper using DigiD Machtigen.
 
-Do not share DigiD credentials with this tool or any other person/tool not authorized via DigiD Machtigen.
+Do not share DigiD credentials with this tool. A helper must use their own DigiD through the authorized DigiD Machtigen route.
 
 ## Pre-submission checks
 
@@ -39,3 +39,4 @@ Do not share DigiD credentials with this tool or any other person/tool not autho
 
 - [ ] I am submitting my own return with my own DigiD
 - [ ] OR: I am authorized via DigiD Machtigen to submit on behalf of the taxpayer
+- [ ] I understand paper filing is outside this supported online workflow unless exact official guidance has been added for my case

@@ -13,7 +13,7 @@ sources:
     source_id: law_uitvoeringsregeling_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012031/
   law_wet_inkomstenbelasting_2001:
-    content_hash_sha256: 83c86d8d18b3c4372e3a2fccf54de6785a669ca23164d6d73bb79947134de4b6
+    content_hash_sha256: 8b69e898a022d5eb7bccf966476173c437aec4460d3e81b570601c0679de4f97
     review_status: reviewed
     snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
     source_id: law_wet_inkomstenbelasting_2001

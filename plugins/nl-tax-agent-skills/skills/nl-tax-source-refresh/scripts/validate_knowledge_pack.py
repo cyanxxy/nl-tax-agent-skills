@@ -268,6 +268,7 @@ def collect_snapshot_metadata_errors(sources, project_root):
         abs_snapshot = os.path.join(project_root, snapshot_path)
         if not os.path.isfile(abs_snapshot):
             continue
+        rel_snapshot = os.path.relpath(abs_snapshot, project_root)
 
         meta_path = os.path.join(os.path.dirname(abs_snapshot), "_snapshot-metadata.yaml")
         rel_meta_path = os.path.relpath(meta_path, project_root)
@@ -298,6 +299,10 @@ def collect_snapshot_metadata_errors(sources, project_root):
 
         if source_meta.get("review_status") != "reviewed":
             errors.append((sid, "snapshot metadata not reviewed", rel_meta_path))
+
+        snapshot_refs = extract_source_ids(abs_snapshot)
+        if sid not in snapshot_refs:
+            errors.append((sid, "snapshot does not reference source_id", rel_snapshot))
 
     return errors
 

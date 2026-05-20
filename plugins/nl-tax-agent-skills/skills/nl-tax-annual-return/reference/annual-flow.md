@@ -30,7 +30,9 @@ Before generating any workpack content, verify that all prerequisites are met.
 
 - Confirm the taxpayer is an individual with employment/pension/benefit income as primary
 - If IB-onderneming is the primary income source: stop -- unsupported case
-- Minor side business alongside employment may still be in scope -- assess and note
+- If IB-onderneming, freelance or side-business income, or resultaat uit
+  overige werkzaamheden appears: route to manual review or unsupported unless a
+  source-backed workflow has been added.
 
 ### 1.5 Living taxpayer confirmed
 
@@ -48,7 +50,13 @@ Before generating any workpack content, verify that all prerequisites are met.
 - If missing: warn the user that no evidence has been indexed -- the workpack will contain more gaps
 - If partially indexed: proceed but flag uncovered categories
 
-### 1.8 Knowledge files available
+### 1.8 Box 2 scope check
+
+- Standard Box 2 preparation is supported for `annual_2025` when the taxpayer has an aanmerkelijk belang and the facts are straightforward.
+- Keep the case in scope for regular benefits such as dividends, disposal benefits such as share-sale profit, dividend withholding tax credit, loss carry-forward fields, and fiscal-partner allocation of Box 2 income.
+- Route to manual review or unsupported for valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
+
+### 1.9 Knowledge files available
 
 - Verify that the annual 2025 knowledge directory exists and contains expected files
 - Read all files under `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/annual/`
@@ -86,8 +94,12 @@ Compile all box 1 income from evidence and user-provided data.
 ### 2.4 Other box 1 income
 
 - Check for income from other activities (resultaat uit overige werkzaamheden)
-- Check for alimentatie received (taxable as box 1 income)
-- Check for any other income sources mentioned in the profile or evidence
+  and record it as manual-review data; do not calculate or map it as standard
+  Box 1 support without reviewed sources.
+- Check for alimentatie received (taxable as box 1 income) and route to manual
+  review unless exact reviewed sources and field-map support have been added.
+- Check for any other income sources mentioned in the profile or evidence and
+  keep them out of standard calculations until source-backed.
 
 ### 2.5 Income summary
 
@@ -153,6 +165,49 @@ Compile the eigen woning section if applicable.
 - If fiscal partners co-own the property: allocate based on ownership shares (typically 50/50)
 - Note that the net eigen woning result can be allocated differently for tax optimization
 - Both partners must report their share in their individual return
+
+---
+
+## Phase 3A — Box 2 compilation
+
+Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, mark the section not applicable and continue.
+
+### 3A.1 Substantial-interest status
+
+- Confirm whether the taxpayer has an aanmerkelijk belang.
+- Standard threshold: generally 5%, assessed together with the fiscal partner where applicable.
+- Map `box2.has_aanmerkelijk_belang` as yes/no/manual review.
+
+### 3A.2 Regular benefits
+
+- Collect gross regular benefits, normally dividends from the substantial-interest company.
+- Collect directly related costs of regular benefits.
+- Collect dividend withholding tax that can be credited.
+- Map:
+  - `box2.reguliere_voordelen_bruto`
+  - `box2.kosten_reguliere_voordelen`
+  - `box2.ingehouden_dividendbelasting`
+
+### 3A.3 Disposal benefits
+
+- Collect net transfer price, acquisition price, and any disposal costs needed to reconcile gross sale proceeds to the official net transfer price.
+- Disposal benefit is the official net transfer price minus acquisition price, unless manual review is required. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first.
+- Map:
+  - `box2.vervreemdingsprijs`
+  - `box2.verkrijgingsprijs`
+  - `box2.vervreemdingskosten`
+  - `box2.vervreemdingsvoordeel`
+
+### 3A.4 Other standard Box 2 fields
+
+- Collect any fictitious regular benefit from excess borrowing from the BV as `box2.fictief_regulier_voordeel_bv_lening`.
+- Collect any substantial-interest loss available for setoff as `box2.te_verrekenen_verlies_ab`.
+- If fiscal partners were full-year partners, record `partner.verdeling_box2_inkomen` and verify that the combined allocation totals 100%.
+
+### 3A.5 Manual-review triggers
+
+- Require manual review for valuation disputes, informal capital, non-arm's-length transfers, restructurings, treaty/nonresident issues, emigration, death, and corporate-tax-heavy DGA cases.
+- Do not calculate complex Box 2 positions when these triggers appear; record the facts and ask for professional review.
 
 ---
 
@@ -266,8 +321,8 @@ Compile all deductible items from evidence and user-provided data.
 ### 5.4 Lijfrentepremie (annuity premium)
 
 - Collect premiums paid for lijfrente products
-- Calculate jaarruimte based on employment income and pension accrual (factor A)
-- Check reserveringsruimte from unused jaarruimte of prior 7 years
+- Calculate jaarruimte and reserveringsruimte only if the exact reviewed 2025 source rules and required inputs are present; otherwise flag the limit and deductible amount for manual review
+- Required inputs normally include employment income, pension accrual (factor A), and unused jaarruimte of prior years
 - Evidence: annual statement from lijfrente provider, factor A statement from employer
 
 ### 5.5 Other deductions
@@ -281,6 +336,12 @@ Compile all deductible items from evidence and user-provided data.
 - Total persoonsgebonden aftrek
 - Note the allocation order: box 1 first, then box 3, then box 2
 - If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best
+
+### 5.7 Tax credits requiring manual review
+
+- Add manual-review handling for IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting.
+- Do not show calculated credit amounts unless exact reviewed sources are registered and all required taxpayer facts are available.
+- Record the relevant taxpayer facts and ask the user to verify the official portal result.
 
 ---
 
@@ -297,6 +358,7 @@ If the taxpayer has a fiscal partner, compile the partner section.
 
 List all items that can be freely allocated between partners:
 - Eigen woning result (net forfait minus interest)
+- Box 2 income from aanmerkelijk belang, when full-year fiscal partner allocation applies
 - Box 3 grondslag (assets minus debts)
 - Persoonsgebonden aftrek components (alimentatie, zorgkosten, giften, etc.)
 
@@ -378,6 +440,7 @@ Check the completed workpack against `reference/annual-output-contract.md`:
 - All required sections present
 - All amounts have source attribution
 - All assumptions listed
+- Standard Box 2 fields covered or marked not applicable; complex Box 2 facts routed to manual review/unsupported
 - Both box 3 methods covered
 - "Not submission advice" section present
 - No provisional-2026 wording present

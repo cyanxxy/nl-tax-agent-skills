@@ -1,6 +1,6 @@
 # Rule note: Box 1 income tax rates for 2025
 
-source_id: bd_box1_rates_2025
+source_ids: bd_box1_rates_2025, bd_bijtelling_auto_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -95,6 +95,26 @@ Box 1 taxable income includes:
 - Periodic payments received (alimentatie)
 - Own home: eigenwoningforfait minus deductible mortgage interest (may be negative)
 - Minus: persoonsgebonden aftrek (personal deductions allocated to box 1)
+
+## Company car private-use addition 2025
+
+If a taxpayer privately uses a company car or a car that belongs to business
+assets, a private-use addition may be included in taxable Box 1 income unless
+the taxpayer can show no more than 500 private kilometres for the year.
+
+For cars first admitted in 2025, the reviewed official percentages are:
+
+- 17% for zero-emission cars.
+- 22% for cars with CO2 emissions above zero.
+- The 17% rate applies without the EUR 30,000 cap only for hydrogen cars and
+  cars fully powered by integrated solar cells that meet the official
+  conditions.
+- For other zero-emission cars, the 17% rate applies up to and including a
+  catalogue value of EUR 30,000; the portion above EUR 30,000 uses 22%.
+
+In standard employee cases this amount is normally already included in the
+jaaropgaaf taxable wage. If it appears missing, disputed, or not supported by
+the employer statement, flag it for manual review.
 
 ## Notes
 

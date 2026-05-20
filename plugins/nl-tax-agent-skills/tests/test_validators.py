@@ -3,6 +3,9 @@
 
 import importlib.util
 import pathlib
+import json
+import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -93,7 +96,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         self.assertEqual(result["box3_inkomen"], 5_135)
         self.assertEqual(result["box3_belasting"], 1_848)
 
-    def test_provisional_box3_matches_official_2026_mixed_example(self):
+    def test_provisional_box3_uses_official_2026_three_decimal_share_rule(self):
         module = load_module(
             "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026",
@@ -105,11 +108,11 @@ class ValidatorSmokeTests(unittest.TestCase):
             heffingsvrij=0,
             has_partner=False,
         )
-        self.assertEqual(result["aandeel_in_rendementsgrondslag"], 81.94)
-        self.assertEqual(result["box3_inkomen"], 12_965)
+        self.assertEqual(result["aandeel_in_rendementsgrondslag"], 81.947)
+        self.assertEqual(result["box3_inkomen"], 12_966)
         self.assertEqual(result["box3_belasting"], 4_667)
 
-    def test_provisional_box3_partner_allocation_matches_official_2026_example(self):
+    def test_provisional_box3_partner_allocation_uses_official_2026_three_decimal_share_rule(self):
         module = load_module(
             "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026_partner",
@@ -122,9 +125,32 @@ class ValidatorSmokeTests(unittest.TestCase):
             has_partner=True,
             allocation_pct=50,
         )
-        self.assertEqual(result["aandeel_in_rendementsgrondslag"], 32.15)
-        self.assertEqual(result["box3_inkomen"], 5_119)
-        self.assertEqual(result["box3_belasting"], 1_842)
+        self.assertEqual(result["aandeel_in_rendementsgrondslag"], 32.154)
+        self.assertEqual(result["box3_inkomen"], 5_120)
+        self.assertEqual(result["box3_belasting"], 1_843)
+
+    def test_provisional_box3_output_has_only_allowed_actual_return_note(self):
+        script = ROOT / "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py"
+        output = subprocess.check_output(
+            [
+                sys.executable,
+                str(script),
+                "--banktegoeden",
+                "150000",
+                "--overige",
+                "275000",
+                "--schulden",
+                "100000",
+            ],
+            text=True,
+        )
+        data = json.loads(output)
+
+        self.assertNotIn("werkelijk_rendement", data)
+        self.assertEqual(
+            data["box3_provisional_actual_return_note"],
+            "Werkelijk rendement is not part of provisional 2026.",
+        )
 
     def test_box3_classifier_recognizes_official_bank_asset_edge_cases(self):
         module = load_module(
@@ -206,6 +232,58 @@ class ValidatorSmokeTests(unittest.TestCase):
             )
 
         self.assertTrue(any(error[0] == "source_one" and "hash mismatch" in error[1] for error in errors))
+
+    def test_knowledge_validator_reports_snapshot_missing_its_registered_source_id(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py",
+            "validate_knowledge_pack_missing_source_id",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot.parent.mkdir(parents=True)
+            snapshot.write_text(
+                "source_id: different_source\nstatus: active\nreview_status: reviewed\n",
+                encoding="utf-8",
+            )
+            digest = module.compute_sha256(str(snapshot))
+            metadata = snapshot.parent / "_snapshot-metadata.yaml"
+            metadata.write_text(
+                "\n".join(
+                    [
+                        "snapshot_metadata_version: '1.0'",
+                        "sources:",
+                        "  source_one:",
+                        f"    content_hash_sha256: {digest}",
+                        "    review_status: reviewed",
+                        "    snapshot_created_at: '2026-01-01T00:00:00+00:00'",
+                        "    source_id: source_one",
+                        "    source_url: https://www.belastingdienst.nl/example",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            errors = module.collect_snapshot_metadata_errors(
+                [
+                    {
+                        "id": "source_one",
+                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "url": "https://www.belastingdienst.nl/example",
+                    }
+                ],
+                str(root),
+            )
+
+        self.assertTrue(
+            any(
+                error[0] == "source_one"
+                and "snapshot does not reference source_id" in error[1]
+                for error in errors
+            ),
+            errors,
+        )
 
 
 if __name__ == "__main__":

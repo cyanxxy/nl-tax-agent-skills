@@ -1,0 +1,30 @@
+# Eval fixture: Provisional 2026 Box 2 estimate
+
+fixture_id: eval_provisional_box2_estimate
+fixture_version: "1.0"
+scenario: "Provisional 2026 request with estimated Box 2 dividends"
+tax_year: 2026
+workflow: provisional_2026_request
+
+taxpayer_profile:
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: request
+
+estimated_data:
+  box2:
+    geschatte_reguliere_voordelen: 15000.00
+    geschatte_vervreemdingsvoordelen: 0.00
+    geschatte_kosten: 0.00
+    geschatte_ingehouden_dividendbelasting: 2250.00
+
+expected_behavior:
+  - "Create provisional workpack and field map"
+  - "Label all Box 2 amounts as estimate"
+  - "Map provisional box2.geschatte_* fields"
+  - "No werkelijk-rendement fields or choices"

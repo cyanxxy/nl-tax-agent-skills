@@ -40,12 +40,11 @@ The following taxpayer situations are not supported in version 1 of the Dutch ta
 - **Why unsupported:** Combines elements of resident and non-resident filing, requires complex allocation rules
 - **Advice:** Consult a tax adviser experienced in international/migration tax matters
 
-## 6. Box 2 Substantial Interest as Primary Workflow
+## 6. Complex Box 2 Substantial-Interest Cases
 
-- **Description:** The taxpayer's primary concern is Box 2 income from a substantial interest (aanmerkelijk belang) in a BV or other entity — dividends, share sales, deemed dispositions
-- **Why unsupported:** Requires corporate-personal tax interaction, valuation of shares, and complex Box 2 rules
-- **Advice:** Consult a tax adviser, especially one experienced with DGA (directeur-grootaandeelhouder) matters
-- **Note:** If the taxpayer has a small Box 2 position alongside primary Box 1 employment income, the case may still be in scope — assess on a case-by-case basis
+- **Supported standard preparation:** A full-year resident individual in an active `annual_2025` or `provisional_2026` workflow may include standard Box 2 preparation for an aanmerkelijk belang, including regular benefits such as dividends, disposal benefits such as share-sale profit, dividend withholding tax credit, loss carry-forward fields, and fiscal-partner Box 2 allocation.
+- **Manual review / unsupported boundary:** Route the case to manual review or unsupported when Box 2 involves valuation disputes, immigration or emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, or corporate-tax-heavy DGA questions.
+- **Advice:** For complex Box 2 cases, consult a tax adviser, especially one experienced with DGA (directeur-grootaandeelhouder) and corporate-tax interaction.
 
 ## 7. Multiple Nationalities with Tax Treaty Complications
 

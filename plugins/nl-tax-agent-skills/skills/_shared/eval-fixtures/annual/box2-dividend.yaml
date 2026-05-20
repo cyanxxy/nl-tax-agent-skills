@@ -1,0 +1,31 @@
+# Eval fixture: Annual Box 2 dividend case
+
+fixture_id: eval_annual_box2_dividend
+fixture_version: "1.0"
+scenario: "Annual 2025 standard Box 2 dividend"
+tax_year: 2025
+workflow: annual_2025
+
+taxpayer_profile:
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  box2:
+    has_aanmerkelijk_belang: true
+    complex_manual_review_triggers: []
+
+evidence_files:
+  - file: "dividendstatement-bv-2025.pdf"
+    evidence_type: dividend_statement
+    tax_year: 2025
+    extracted_fields:
+      reguliere_voordelen_bruto: 12000.00
+      ingehouden_dividendbelasting: 1800.00
+
+expected_behavior:
+  - "Create annual workpack and field map under workspace/annual/2025/"
+  - "Include box2.has_aanmerkelijk_belang"
+  - "Include box2.reguliere_voordelen_bruto"
+  - "Include box2.ingehouden_dividendbelasting"
+  - "No DigiD credential collection or portal automation"

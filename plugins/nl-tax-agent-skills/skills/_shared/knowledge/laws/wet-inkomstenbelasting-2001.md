@@ -28,7 +28,7 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 
 - Income from substantial interest in a company (dividend, capital gains)
 - Applies when a taxpayer holds 5% or more of shares in a BV or NV
-- **Out of scope for v1 of this project**
+- Standard full-year resident preparation is supported for active annual 2025 and provisional 2026 workflows; complex Box 2 facts stay manual review or unsupported.
 
 ### Box 3 -- Belastbaar inkomen uit sparen en beleggen
 
@@ -66,14 +66,14 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 
 ## Project scope
 
-This project covers box 1 and box 3 only. Box 2 (substantial interest) is out of scope for v1.
+This project covers Box 1, standard Box 2 preparation for active annual/provisional workflows, and Box 3. Complex Box 2 situations remain outside standard support until exact official-source-backed handling is added.
 
 ## Developer instruction
 
 When building any income tax calculation or workpack:
 
 1. Identify which box each income or deduction item belongs to
-2. Apply box-specific rules -- do not mix box 1 and box 3 rules
+2. Apply box-specific rules -- do not mix Box 1, Box 2, and Box 3 rules
 3. Check fiscal partnership status before allowing allocation of items
 4. Use year-specific knowledge files for rates, thresholds, and amounts
 5. This file provides structural orientation only -- never use it as the source for specific numbers

@@ -39,19 +39,17 @@ Over the calculated box 3 income, the provisional 2026 box 3 tax rate is 36%.
 - Fiscal partners allocate the joint grondslag sparen en beleggen, not individual assets or debts
 - Workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
 
-## HARD PROHIBITION
+## Actual-Return Boundary
 
-```
-CRITICAL: Do NOT collect werkelijk rendement for 2026 voorlopige aanslag.
-Do NOT ask the user for actual interest earned, dividends received, or capital gains for 2026.
-The provisional assessment uses ONLY the fictitious return method.
-Werkelijk rendement may become relevant in the annual 2026 return (filed in 2027).
-```
+Use only this explanatory note: "Werkelijk rendement is not part of provisional 2026."
+
+Reject any field, input prompt, calculation, or method-choice wording that tries
+to use werkelijk rendement in this provisional workflow.
 
 ## Handling User Questions About Actual Return
 
 If the user asks: "What about my actual return for 2026?"
 
-Respond with:
+Respond with exactly this note:
 
-> For the 2026 voorlopige aanslag, only the fictitious return method is used. Actual return (werkelijk rendement) may become relevant when you file your annual 2026 return after the year ends.
+> Werkelijk rendement is not part of provisional 2026.

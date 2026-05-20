@@ -7,11 +7,17 @@ sources:
     source_id: bd_algoritmeregister_vva_eva
     source_url: https://over-ons.belastingdienst.nl/onderwerpen/omgaan-met-gegevens/algoritmeregister/weegmodule-verzoek-voorlopige-aanslag-vva-en-bedrijfsregels-eerste-voorlopige-aanslag-eva/
   bd_box3_2026_provisional:
-    content_hash_sha256: 7818dec92f2700d378ec4f8b96a5916f52966833f98d43d8adf7eb36c19c496b
+    content_hash_sha256: a36b68964b1768207f6a655694568776f2e230d0e1d022a9238e0431e787c001
     review_status: reviewed
     snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
     source_id: bd_box3_2026_provisional
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026
+  bd_fisin_aanmerkelijk_belang_2026:
+    content_hash_sha256: 89783b2659883e82850fdb3bf8f0aaa370415859a6cfc1a322453a9d9e41a00f
+    review_status: reviewed
+    snapshot_created_at: '2026-05-20T00:00:00+00:00'
+    source_id: bd_fisin_aanmerkelijk_belang_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
   bd_own_home_deduction_cap_2026:
     content_hash_sha256: b9c118200a8e62fa57c2fff341e461ff34e1ee583be7b0d8df16d444055ae66a
     review_status: reviewed

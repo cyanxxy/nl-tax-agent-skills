@@ -7,7 +7,7 @@ Usage:
 Checks:
     - All required metadata fields present
     - No workflow mismatch (annual field in provisional map)
-    - No credential/login fields
+    - No credential/login/browser/submission fields
     - Confidence values in range 0.0-1.0
     - Source types are valid
     - For provisional: no werkelijk rendement field
@@ -22,6 +22,10 @@ VALID_WORKFLOWS = {"annual_return", "provisional_assessment"}
 CREDENTIAL_KEYWORDS = {
     "digid", "wachtwoord", "password", "inloggegevens",
     "username", "login", "credential", "secret", "pin",
+}
+PORTAL_AUTOMATION_KEYWORDS = {
+    "browser", "session", "submit", "submission", "sign", "signature",
+    "onderteken", "verzenden", "indienen",
 }
 WERKELIJK_KEYWORDS = {"werkelijk", "actual_return", "actual-return", "werkelijk_rendement"}
 
@@ -59,12 +63,15 @@ def validate(data):
     for i, field in enumerate(fields):
         fid = field.get("field_id", f"field[{i}]")
 
-        # Credential check
+        # Credential and portal-automation checks
         fid_lower = fid.lower()
         label_lower = (field.get("label") or "").lower()
         for kw in CREDENTIAL_KEYWORDS:
             if kw in fid_lower or kw in label_lower:
                 errors.append(f"Credential/login field detected: {fid}")
+        for kw in PORTAL_AUTOMATION_KEYWORDS:
+            if kw in fid_lower or kw in label_lower:
+                errors.append(f"Browser/submission automation field detected: {fid}")
 
         # Confidence range
         confidence = field.get("confidence")

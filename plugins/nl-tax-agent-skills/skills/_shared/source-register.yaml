@@ -485,6 +485,70 @@ sources:
       - nl-tax-partner-deductions
 
   # ===========================================================================
+  #  Box 2
+  # ===========================================================================
+
+  - id: bd_box2_rates_2025_2026
+    title: "Box 2: uitleg en tarieven"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/box2/box2-rates.md"
+    last_checked: "2026-05-20"
+    freshness_policy: "check after Prinsjesdag; Box 2 brackets can change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box2
+      - nl-tax-field-mapper
+
+  - id: bd_box2_income_ab_guidance
+    title: "Inkomsten uit aanmerkelijk belang"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/box2/box2-income-guidance.md"
+    last_checked: "2026-05-20"
+    freshness_policy: "check at start of filing season and after Belastingdienst Box 2 guidance updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-box2
+      - nl-tax-field-mapper
+
+  - id: bd_fisin_aanmerkelijk_belang_2025
+    title: "Fiscale Informatie 2025 -- Aanmerkelijk belang"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aanmerkelijk_belang"
+    source_type: official_doctrine
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md"
+    last_checked: "2026-05-20"
+    freshness_policy: "check at start of filing season; FISIN doctrine is year-specific"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box2
+
+  - id: bd_fisin_aanmerkelijk_belang_2026
+    title: "Fiscale Informatie 2026 -- Aanmerkelijk belang"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang"
+    source_type: official_doctrine
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md"
+    last_checked: "2026-05-20"
+    freshness_policy: "check at start of filing season; FISIN doctrine is year-specific"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-box2
+      - nl-tax-field-mapper
+
+  # ===========================================================================
   #  Box 3
   # ===========================================================================
 

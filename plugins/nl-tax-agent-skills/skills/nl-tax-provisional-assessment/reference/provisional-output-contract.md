@@ -20,6 +20,7 @@ Every provisional workpack (`workspace/provisional/2026/provisional-pack.md`) MU
 | Delta summary               | change                                    |
 | Income estimate             | request, change                           |
 | Own-home estimate           | request, change                           |
+| Box 2 provisional estimate  | request, change                           |
 | Box 3 provisional estimate  | request, change                           |
 | Deductions estimate         | request, change                           |
 | Field map summary           | request, change                           |
@@ -41,6 +42,8 @@ Every monetary amount in the workpack MUST be labeled with one of:
 
 Do NOT present any amount without a label. Unlabeled amounts create ambiguity about whether they are actuals, estimates, or inherited values.
 
+Box 2 provisional amounts MUST also be labeled this way. This applies to estimated regular benefits, estimated disposal benefits, estimated costs, estimated dividend withholding tax, estimated fictitious regular benefit from BV lending, and partner allocation values.
+
 ### Examples
 
 - "Employment income: EUR 45,000 (estimate)" — correct
@@ -57,10 +60,10 @@ Do NOT present any amount without a label. Unlabeled amounts create ambiguity ab
 
 The workpack MUST be rejected if any of the following are true:
 
-- Werkelijk rendement (actual return) is referenced as a data input
-- Werkelijk rendement is collected from the user
+- Werkelijk rendement is referenced as a data input
+- Werkelijk rendement is requested from the user
 - Werkelijk rendement is used in any calculation
-- The workpack offers a choice between fictitious and actual return methods
+- The workpack offers any method choice for box 3
 - Box 3 calculation uses any method other than the three-category fictitious return
 
 ### Required box 3 structure
@@ -82,7 +85,26 @@ The box 3 section MUST follow this structure:
 
 Every workpack with a box 3 section MUST include:
 
-> For the 2026 voorlopige aanslag, use the box 3 categories and values required for the provisional fictitious calculation. Werkelijk rendement is not part of the provisional calculation; it may become relevant later in the annual 2026 return.
+> Werkelijk rendement is not part of provisional 2026.
+
+No additional werkelijk-rendement input instructions, fields, calculations, or method-choice wording may be added.
+
+---
+
+## Box 2 validation rule
+
+Standard Box 2 provisional preparation is supported for `provisional_2026` request and change flows.
+
+The workpack and field map may include:
+
+- `box2.geschatte_reguliere_voordelen`
+- `box2.geschatte_vervreemdingsvoordelen`
+- `box2.geschatte_kosten`
+- `box2.geschatte_ingehouden_dividendbelasting`
+- `box2.geschat_fictief_regulier_voordeel_bv_lening`
+- `partner.verdeling_box2_inkomen`
+
+Every Box 2 amount must be labeled as estimate or from-baseline. Route valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA facts to manual review or unsupported.
 
 ---
 
@@ -178,7 +200,9 @@ Before delivering any workpack, verify:
 
 - [ ] All required sections are present for the applicable subflow
 - [ ] All amounts are labeled (estimate or from-baseline)
-- [ ] Box 3 uses fictitious method only — no werkelijk rendement reference
+- [ ] Box 2 amounts are labeled estimate or from-baseline, when applicable
+- [ ] Box 3 uses fictitious method only, with only the required explanatory note for werkelijk rendement
+- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Change subflow includes full re-entry reminder
 - [ ] Change subflow includes delta summary file
 - [ ] Stopzetten routes payment users to change subflow

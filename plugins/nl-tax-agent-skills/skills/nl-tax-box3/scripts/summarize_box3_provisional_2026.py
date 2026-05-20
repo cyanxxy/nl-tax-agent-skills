@@ -5,8 +5,8 @@ summarize_box3_provisional_2026.py
 Calculate box 3 fictitious return for the 2026 provisional assessment
 (voorlopige aanslag 2026).
 
-CRITICAL: This script uses ONLY the fictitious return method.
-It does NOT accept or calculate werkelijk rendement (actual return).
+This script uses ONLY the fictitious return method.
+Werkelijk rendement is not part of provisional 2026.
 If an actual_return parameter is provided, the script exits with an error.
 
 Usage:
@@ -45,11 +45,10 @@ def floor_euro(value):
 
 
 def aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag):
-    """Return the two-decimal percentage used in Belastingdienst examples.
+    """Return the three-decimal percentage from the official 2026 step model.
 
-    The official examples display truncated two-decimal percentages, e.g.
-    269,443 / 328,800 * 100 = 81.94% and
-    106,943 / 332,600 * 100 = 32.15%.
+    The general provisional 2026 instruction says to round the share percentage
+    to three decimals.
     """
     if rendementsgrondslag <= 0 or grondslag_sparen_en_beleggen <= 0:
         return 0.0
@@ -58,17 +57,14 @@ def aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag):
         / Decimal(str(rendementsgrondslag))
         * Decimal("100")
     )
-    return float(percentage.quantize(Decimal("0.01"), rounding=ROUND_FLOOR))
+    return float(percentage.quantize(Decimal("0.001"), rounding=ROUND_HALF_UP))
 
 
 def check_prohibited_arguments():
     """
-    HARD PROHIBITION: Exit with error if any actual return parameter is provided.
+    Exit with error if any actual-return parameter is provided.
 
-    CRITICAL: Do NOT collect werkelijk rendement for 2026 voorlopige aanslag.
-    Do NOT ask the user for actual interest earned, dividends received, or capital gains for 2026.
-    The provisional assessment uses ONLY the fictitious return method.
-    Werkelijk rendement may become relevant in the annual 2026 return (filed in 2027).
+    Werkelijk rendement is not part of provisional 2026.
     """
     prohibited_args = [
         "--actual_return", "--actual-return", "--werkelijk",
@@ -84,9 +80,7 @@ def check_prohibited_arguments():
                 "\n"
                 f"Prohibited parameter detected: {arg}\n"
                 "\n"
-                "Do NOT provide werkelijk rendement (actual return) data for the provisional assessment.\n"
-                "Actual return (werkelijk rendement) may become relevant when you file your\n"
-                "annual 2026 return after the year ends (filed in 2027).\n",
+                "Werkelijk rendement is not part of provisional 2026.\n",
                 file=sys.stderr,
             )
             sys.exit(1)
@@ -219,7 +213,7 @@ def main():
             "overige_bezittingen": PERC_OVERIGE_BEZITTINGEN,
             "schulden": PERC_SCHULDEN,
         },
-        "werkelijk_rendement": "NOT_APPLICABLE: provisional assessment uses fictitious method only",
+        "box3_provisional_actual_return_note": "Werkelijk rendement is not part of provisional 2026.",
         "rounding_note": "Displayed amounts use portal-style whole-euro rounding.",
     }
 
