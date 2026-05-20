@@ -4,6 +4,20 @@ Detailed step-by-step flow for generating the 2025 annual income-tax return work
 
 ---
 
+## Contents
+
+- Phase 1 — Pre-flight checks
+- Phase 2 — Income compilation
+- Phase 3 — Own-home compilation
+- Phase 3A — Box 2 compilation
+- Phase 4 — Box 3 compilation
+- Phase 5 — Deductions compilation
+- Phase 6 — Partner handling
+- Phase 7 — Field map generation
+- Phase 8 — Missing info compilation
+- Phase 9 — Review question generation
+- Phase 10 — Workpack assembly
+
 ## Phase 1 — Pre-flight checks
 
 Before generating any workpack content, verify that all prerequisites are met.

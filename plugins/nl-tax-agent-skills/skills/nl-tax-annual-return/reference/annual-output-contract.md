@@ -4,6 +4,17 @@ This document defines the required output structure, validation rules, and quali
 
 ---
 
+## Contents
+
+- Required sections
+- Source attribution rules
+- Box 2 requirements
+- Box 3 requirements
+- Field map requirements
+- Mandatory disclaimer
+- Validation rules
+- Output file locations
+
 ## Required sections
 
 Every workpack MUST contain ALL of the following sections, in order. If a section is not applicable to the taxpayer (e.g., no own home, no fiscal partner), the section must still be present with a note stating it is not applicable -- it must not be omitted.

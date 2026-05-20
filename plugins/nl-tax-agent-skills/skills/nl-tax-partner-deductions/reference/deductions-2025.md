@@ -7,6 +7,15 @@ status: active
 last_reviewed: "2026-05-15"
 review_status: reviewed
 
+## Contents
+
+- Rule
+- Persoonsgebonden aftrek: allocation rules per category
+- Optimization principle
+- Heffingskorting interaction
+- Warning: this skill suggests options, not optimal strategy
+- Common errors
+
 ## Rule
 
 When fiscal partners file their annual return for 2025, they can allocate certain deductions between them to optimize their combined tax position. This note covers the allocation rules and optimization principles specific to the 2025 annual return.

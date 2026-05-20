@@ -7,6 +7,15 @@ status: active
 last_reviewed: "2026-05-10"
 review_status: reviewed
 
+## Contents
+
+- Rule
+- Fiscal partner status
+- What fiscal partnership affects
+- Special situations
+- Verification checklist
+- Notes
+
 ## Rule
 
 Fiscal partnership determines whether taxpayers can file together and allocate certain income and deduction items. The official return is binding; this reference prepares review notes and allocation options.

@@ -7,6 +7,18 @@ status: active
 last_reviewed: "2026-05-15"
 review_status: reviewed
 
+## Contents
+
+- Rule
+- Same allocation rules apply
+- Key difference: all amounts are estimates
+- Provisional assessment uses the allocation as submitted
+- Can be changed later
+- Key message: do not over-optimize provisional allocation
+- Focus areas for provisional 2026
+- Interaction with provisional subflows
+- Notes
+
 ## Rule
 
 When fiscal partners submit a voorlopige aanslag (provisional assessment) request for 2026, the allocation of deductions between partners follows the same structural rules as the annual return. However, because the provisional assessment is based on estimates rather than actual amounts, the allocation strategy must account for uncertainty.

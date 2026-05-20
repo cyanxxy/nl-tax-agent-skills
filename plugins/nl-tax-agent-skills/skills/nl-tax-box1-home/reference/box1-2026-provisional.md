@@ -7,6 +7,19 @@ status: active
 last_reviewed: "2026-05-10"
 review_status: reviewed
 
+## Contents
+
+- Purpose
+- Key principle: all amounts are estimates
+- Rates and credits
+- Estimated employment income
+- Estimated pension and benefit amounts
+- Estimated own-home deduction
+- What is NOT required for provisional assessments
+- Differences from the annual return workflow
+- Output requirements
+- Notes
+
 ## Purpose
 
 This reference describes how to apply box 1 income and own-home rules when preparing the voorlopige aanslag (provisional assessment) for 2026. All amounts in a provisional assessment are ESTIMATES. No evidence verification is performed.

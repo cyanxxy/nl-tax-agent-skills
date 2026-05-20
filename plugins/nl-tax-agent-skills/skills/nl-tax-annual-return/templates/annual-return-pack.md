@@ -1,5 +1,24 @@
 # Annual Income-Tax Return Workpack -- 2025
 
+## Contents
+
+- Scope
+- Unsupported-case checks
+- Sources used
+- Taxpayer profile summary
+- Evidence summary
+- Income notes
+- Own-home notes
+- Box 2 notes
+- Box 3 notes
+- Deductions notes
+- Fiscal partner notes
+- Field map summary
+- Missing information
+- Assumptions
+- Human review checklist
+- Not submission advice
+
 ## Scope
 
 Tax year: 2025

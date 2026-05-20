@@ -7,6 +7,17 @@ status: active
 last_reviewed: "2026-05-10"
 review_status: reviewed
 
+## Contents
+
+- Purpose
+- Eigenwoningforfait calculation
+- Hypotheekrenteaftrek (mortgage interest deduction)
+- Tariefsaanpassing eigen woning (rate adjustment for high earners)
+- Hillenregeling (aftrek wegens geen of geringe eigenwoningschuld)
+- Multiple own-home situations
+- Missing data flags
+- Notes
+
 ## Purpose
 
 This reference describes the detailed eigen woning rules for the annual return 2025. It covers eigenwoningforfait calculation, hypotheekrenteaftrek, tariefsaanpassing, Hillenregeling, and edge cases for property changes during the year.

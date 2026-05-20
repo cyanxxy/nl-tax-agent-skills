@@ -1,5 +1,17 @@
 # Stopzetten Guidance — When to Stop vs When to Change
 
+## Contents
+
+- Purpose
+- Decision matrix
+- Monthly REFUND (teruggaaf) — stopzetten may be appropriate
+- Monthly PAYMENT (betaling) — CHANGE, not stop
+- Monthly PAYMENT (betaling) — amount is correct
+- Edge case: user wants to stop because they will file early
+- Manual checklist for stopzetten (for inclusion in workpack)
+- Stopzetten checklist
+- Safety notes
+
 ## Purpose
 
 This document provides the decision logic for determining whether stopzetten (stopping) a voorlopige aanslag is the correct action, or whether changing it is more appropriate. Incorrect routing can lead to unexpected large tax bills for the taxpayer.

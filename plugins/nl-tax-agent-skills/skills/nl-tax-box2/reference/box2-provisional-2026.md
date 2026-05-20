@@ -7,6 +7,22 @@ status: active
 last_reviewed: "2026-05-20"
 review_status: reviewed
 
+## Contents
+
+- Scope
+- Substantial-Interest Baseline
+- 2026 Estimated Rates
+- Estimated Regular Benefits
+- Estimated Disposal Benefits
+- Baseline-Derived Acquisition Price
+- Estimated Disposal Or Transfer Price
+- Estimated Deductible Costs
+- Estimated Dividend Withholding Tax
+- Estimated Loss And Setoff Data
+- Fiscal Partner Allocation Estimate
+- Excessive Borrowing Estimate
+- Complex Or Manual-Review Markers
+
 ## Scope
 
 Use these notes for `provisional_2026` Box 2 estimate support. Every amount in

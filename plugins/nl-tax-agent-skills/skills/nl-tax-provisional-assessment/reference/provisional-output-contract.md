@@ -1,5 +1,20 @@
 # Provisional Output Contract — Required Sections and Validation Rules
 
+## Contents
+
+- Purpose
+- Required sections
+- Amount labeling rules
+- Box 3 validation rule — CRITICAL
+- Box 2 validation rule
+- Change subflow validation rules
+- Stopzetten validation rules
+- Sources used section — REQUIRED
+- Sources used
+- Not submission advice footer — REQUIRED
+- File output rules
+- Validation checklist
+
 ## Purpose
 
 This document defines the mandatory output sections, labeling requirements, and validation rules for every provisional assessment workpack. A workpack that violates any rule in this contract is invalid and must not be delivered.

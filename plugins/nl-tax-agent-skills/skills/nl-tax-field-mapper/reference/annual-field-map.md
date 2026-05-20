@@ -11,6 +11,16 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 ---
 
+## Contents
+
+- Personal Data (Persoonsgegevens)
+- Box 1 — Income from Work and Home (Inkomen uit werk en woning)
+- Own Home (Eigen woning) — Box 1 Deduction
+- Box 2 — Substantial Interest (Aanmerkelijk belang)
+- Box 3 — Savings and Investments (Sparen en beleggen)
+- Deductions (Aftrekposten / Persoonsgebonden aftrek)
+- Partner Fields (Fiscaal partnerschap)
+
 ## Personal Data (Persoonsgegevens)
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |

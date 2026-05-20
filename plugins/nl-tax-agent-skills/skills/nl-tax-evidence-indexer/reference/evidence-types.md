@@ -4,6 +4,17 @@ This reference defines the evidence categories used by the NL Tax Evidence Index
 
 ---
 
+## Contents
+
+- Income & Employment
+- Banking & Savings
+- Investments & Crypto
+- Property & Housing
+- Deductions & Gifts
+- Debts & Liabilities
+- Tax Authority Documents
+- Catch-all
+
 ## Income & Employment
 
 ### jaaropgaaf

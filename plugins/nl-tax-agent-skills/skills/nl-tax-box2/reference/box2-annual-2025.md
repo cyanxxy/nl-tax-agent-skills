@@ -7,6 +7,22 @@ status: active
 last_reviewed: "2026-05-20"
 review_status: reviewed
 
+## Contents
+
+- Scope
+- Substantial Interest
+- Rates
+- Regular Benefits
+- Disposal Benefits
+- Acquisition Price
+- Disposal Or Transfer Price
+- Deductible Costs
+- Dividend Withholding Tax
+- Loss Handling
+- Fiscal Partner Allocation
+- Excessive Borrowing From Own BV
+- Complex Or Manual-Review Markers
+
 ## Scope
 
 Use these notes for standard full-year Dutch resident annual 2025 preparation

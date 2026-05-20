@@ -1,5 +1,24 @@
 # Voorlopige Aanslag Workpack — 2026
 
+## Contents
+
+- Subflow: [request/change/review/stopzetten]
+- Scope
+- Sources used
+- Existing baseline, if any
+- Current-year estimates
+- Delta summary
+- Income estimate
+- Own-home estimate
+- Box 2 provisional estimate
+- Box 3 provisional estimate
+- Deductions estimate
+- Field map summary
+- Missing information
+- Assumptions
+- Human review checklist
+- Not submission advice
+
 ## Subflow: [request/change/review/stopzetten]
 
 ## Scope

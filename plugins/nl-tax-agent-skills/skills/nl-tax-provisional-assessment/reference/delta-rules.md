@@ -1,5 +1,16 @@
 # Delta Rules — Workpack Baseline and Estimate Comparison
 
+## Contents
+
+- Purpose
+- Core concepts
+- Delta categories
+- Visual format
+- Impact summary
+- Important distinction
+- Handling missing baseline data
+- Partner changes
+
 ## Purpose
 
 This document defines the baseline and current-estimate comparison used inside provisional assessment workpacks. The comparison provides the taxpayer with a clear understanding of what changed and the likely direction of the monthly amount. It is for user understanding only -- the Belastingdienst recalculates from the complete submitted data.

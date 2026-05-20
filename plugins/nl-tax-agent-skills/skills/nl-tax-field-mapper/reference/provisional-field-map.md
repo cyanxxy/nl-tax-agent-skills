@@ -11,6 +11,18 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 ---
 
+## Contents
+
+- Key Differences from Annual Return
+- Personal Data (Persoonsgegevens)
+- Income Estimates (Geschat inkomen) — Box 1
+- Own Home Estimates (Geschatte eigen woning)
+- Box 2 Estimates (Geschat aanmerkelijk belang)
+- Box 3 Estimates (Geschat vermogen) — Fictitious Return ONLY
+- Partner Allocation Estimates
+- Deduction Estimates (Geschatte aftrekposten)
+- Fields NOT Present in Provisional
+
 ## Key Differences from Annual Return
 
 1. **All fields are estimates** -- every value is the taxpayer's best projection, not a confirmed amount from evidence.

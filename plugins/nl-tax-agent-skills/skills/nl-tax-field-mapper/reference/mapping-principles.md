@@ -11,6 +11,16 @@ This reference defines how workpack findings are mapped to submission form field
 
 ---
 
+## Contents
+
+- Mapping cardinality
+- Confidence scoring
+- Source tracking
+- Missing fields
+- Credential and login exclusions
+- Review flagging rules
+- Workflow-specific rules
+
 ## Mapping cardinality
 
 ### One workpack finding to multiple form fields
