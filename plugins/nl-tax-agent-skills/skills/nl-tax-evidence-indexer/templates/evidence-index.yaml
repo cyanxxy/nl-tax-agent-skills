@@ -1,21 +1,30 @@
-evidence_index_version: "1.0"
+evidence_index_version: "1.1"
 created_at: ""
 updated_at: ""
 source_directory: ""
 total_files: 0
 classified_files: 0
+user_chat_items: 0
 review_required_count: 0
 suspicious_count: 0
 items: []
 # Each item:
 #   evidence_id: "ev_001"
+#   source: "file" | "user_chat" | "deferred"
+#   # When source = file:
 #   file_path: "uploads/example.pdf"
 #   file_sha256: ""
 #   file_size_bytes: 0
+#   # When source = user_chat:
+#   file_path: null
+#   file_sha256: null
+#   quote: ""
+#   stated_at: ""
+#   # Common:
 #   evidence_type: ""
 #   tax_year: null
 #   owner: "taxpayer"
-#   extraction_status: "indexed_only"
+#   extraction_status: "indexed_only" | "user_chat" | "deferred"
 #   confidence: null
 #   review_required: true
 #   suspicious_content_detected: false

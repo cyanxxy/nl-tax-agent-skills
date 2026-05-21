@@ -106,11 +106,14 @@ def scan_directory(directory: str) -> list:
 
             entry = {
                 "evidence_id": evidence_id,
+                "source": "file",
                 "file_path": file_path,
                 "file_name": file_name,
                 "file_extension": ext_lower,
                 "file_sha256": file_hash,
                 "file_size_bytes": file_size,
+                "quote": None,
+                "stated_at": None,
                 "evidence_type": "",
                 "tax_year": None,
                 "owner": "taxpayer",
@@ -119,6 +122,7 @@ def scan_directory(directory: str) -> list:
                 "review_required": True,
                 "suspicious_content_detected": False,
                 "notes": [],
+                "extracted_fields": {},
             }
 
             # Flag macro-enabled files
@@ -143,12 +147,13 @@ def format_output(entries: list, directory: str) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     output_data = {
-        "evidence_index_version": "1.0",
+        "evidence_index_version": "1.1",
         "created_at": now,
         "updated_at": now,
         "source_directory": os.path.abspath(directory),
         "total_files": len(entries),
         "classified_files": 0,
+        "user_chat_items": 0,
         "review_required_count": sum(1 for e in entries if e["review_required"]),
         "suspicious_count": sum(
             1 for e in entries if e["suspicious_content_detected"]

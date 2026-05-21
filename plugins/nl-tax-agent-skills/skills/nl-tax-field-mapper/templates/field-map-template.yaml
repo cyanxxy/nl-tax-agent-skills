@@ -1,19 +1,25 @@
-field_map_version: "1.0"
+field_map_version: "1.1"
 workflow: ""          # "annual" or "provisional"
 tax_year: null        # e.g. 2025 for annual, 2026 for provisional
 created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
+updated_at: ""
 
 fields: []
 # Each field entry:
 #   field_id: ""                    # Unique identifier from the field reference
 #   label: ""                       # Dutch label as shown on the portal
+#   value: null                     # The value to enter on the form (null when source.type = "unknown")
 #   source:
-#     type: ""                      # One of: evidence | estimate | baseline | calculated
-#     evidence_id: null             # Reference to evidence-index.yaml entry (if applicable)
+#     type: ""                      # One of: evidence | user_chat | estimate | baseline | calculated | assumption | unknown
+#     evidence_id: null             # When source.type = evidence
+#     quote: ""                     # When source.type = user_chat (verbatim user text)
+#     stated_at: ""                 # When source.type = user_chat (YYYY-MM-DD)
+#     assumption_id: null           # When source.type = assumption
+#     baseline_ref: ""              # When source.type = baseline
+#     calculated_from: []           # When source.type = calculated (list of field_ids)
 #     profile_path: ""              # Path in taxpayer profile (if applicable)
-#   value: null                     # The value to enter on the form
 #   confidence: null                # 0.0 to 1.0 per mapping principles
-#   manual_review_required: true    # Boolean — true if human must verify before entry
+#   manual_review_required: true    # Boolean - true if human must verify before entry
 #   notes: []                       # List of notes, warnings, or context strings
 
 missing_fields: []
@@ -22,3 +28,12 @@ missing_fields: []
 #   label: ""                       # Dutch label of the missing field
 #   reason: ""                      # Why data is not available
 #   blocking: true                  # true if the return/assessment cannot proceed without it
+#   open_question_id: ""            # Cross-reference to workspace/shared/field-map-open-questions.yaml
+
+user_chat_values_index: []
+# Cross-index of all source.type = user_chat entries for spot-checking.
+# Each entry:
+#   field_id: ""
+#   value: null
+#   quote: ""
+#   stated_at: ""

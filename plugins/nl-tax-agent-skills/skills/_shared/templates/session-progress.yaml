@@ -1,0 +1,127 @@
+session_progress_version: "1.1"
+created_at: ""
+updated_at: ""
+active_workflow: "unknown"
+active_skill: ""
+last_question_asked: ""
+
+# Each section status is one of: not_started | in_progress | complete | deferred.
+# A workflow's overall workpack-generation gate is satisfied only when every
+# subsection is either `complete` or `deferred` (with deferred items recorded
+# in workspace/shared/missing-info.md or as confirmed assumptions).
+
+sections:
+  intake:
+    status: "not_started"
+    open_questions: []
+    answered: []
+    subsections:
+      screening:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      workflow_anchor:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      partner_status:
+        status: "not_started"
+        open_questions: []
+        answered: []
+
+  evidence:
+    status: "not_started"
+    open_questions: []
+    answered: []
+    subsections:
+      file_inventory:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      classification:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      user_chat_values:
+        status: "not_started"
+        open_questions: []
+        answered: []
+
+  annual_2025:
+    status: "not_started"
+    open_questions: []
+    answered: []
+    subsections:
+      box1:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      eigen_woning:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      box3_peildatum:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      box3_actual:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      deductions:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      partner_allocation:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      confirm:
+        status: "not_started"
+        open_questions: []
+        answered: []
+
+  provisional_2026:
+    status: "not_started"
+    subflow: ""               # request | change | review | stopzetten
+    open_questions: []
+    answered: []
+    subsections:
+      baseline:                # only for change / review / stopzetten
+        status: "not_started"
+        open_questions: []
+        answered: []
+      income_employment:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      income_pension_benefit:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      income_other:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      deductions:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      box3_peildatum:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      partner_allocation:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      stopzetten_direction:    # only for stopzetten
+        status: "not_started"
+        open_questions: []
+        answered: []
+      confirm:
+        status: "not_started"
+        open_questions: []
+        answered: []
+
+notes: []

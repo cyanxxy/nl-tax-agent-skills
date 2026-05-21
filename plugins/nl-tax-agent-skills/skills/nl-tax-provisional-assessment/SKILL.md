@@ -1,6 +1,6 @@
 ---
 name: nl-tax-provisional-assessment
-description: Use when preparing a 2026 voorlopige aanslag manual-entry guide.
+description: Prepare a conversational 2026 voorlopige aanslag manual-entry guide.
 allowed-tools:
   - Read
   - Grep
@@ -11,22 +11,116 @@ allowed-tools:
 
 # NL Tax Provisional Assessment
 
-Prepare local guidance for manually handling a 2026 voorlopige aanslag flow.
+Prepare local guidance for manually handling a 2026 voorlopige aanslag flow: request, change, review, or stopzetten.
 
-Load as needed: supported workflows, DigiD/prompt-injection security notes, 2026 provisional knowledge, provisional references, `templates/provisional-pack.md`, and profile.
+This skill is conversational. Do not assume the user has prepared all estimates upfront. Ask category by category, accept uploaded files or chat values, persist after every turn, and generate the workpack only when the user confirms.
 
-## Do
+## Read first
 
-1. Confirm an active `provisional_2026_*` workflow.
-2. Use only 2026 provisional sources and label amounts as estimates.
-3. Include standard Box 2 estimate preparation when applicable, with every Box 2 amount labeled as estimate or from-baseline.
-4. Route complex Box 2 facts to manual review or unsupported: valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
-5. For change/review, compare baseline and current estimates; remind the user to enter all data again.
-6. For stopzetten, separate refund cases from payment-correction cases.
-7. Write the relevant files under `workspace/provisional/2026/`.
+Load as needed:
 
-## Never
+- Supported workflows and the relevant provisional references
+- DigiD and prompt-injection security notes
+- 2026 provisional knowledge only
+- `templates/provisional-pack.md`
+- `workspace/taxpayer/profile.yaml`
+- `workspace/taxpayer/evidence-index.yaml`, if present
+- `workspace/shared/session-progress.yaml`, if present
 
+Confirm an active workflow candidate of `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, or `provisional_2026_stopzetten`. If the profile is missing or the workflow is wrong, hand back to intake.
+
+## Hard scope rules
+
+- Use only 2026 provisional sources and label amounts as estimates unless they come from a baseline.
+- Do not use annual 2025 rates, credits, or logic.
 - Do not request, calculate, or offer method choices for werkelijk rendement in provisional 2026.
+- Use only the provisional fictitious Box 3 method.
 - Do not write `workspace/annual/**`.
-- Do not log in, submit, sign, automate forms, or handle DigiD.
+
+If the user asks about werkelijk rendement, respond: "Werkelijk rendement is not part of the 2026 voorlopige aanslag. It may become relevant when filing the annual 2026 return in 2027."
+
+## Conversational behavior
+
+For every subflow:
+
+1. Use `workspace/shared/session-progress.yaml` to avoid re-asking answered questions.
+2. Group at most 3 closely related questions per turn.
+3. Accept file inputs or values stated in chat.
+4. Record each value in `workspace/provisional/2026/notes/<section>.yaml` with `source` (`file`, `user_chat`, `assumption`, `unknown`, or `baseline`) and either `evidence_id`, `baseline_ref`, or `quote` plus `stated_at`.
+5. If the user cannot answer, record `unknown`, add it to `workspace/shared/missing-info.md`, and continue.
+6. Never silently treat missing values as zero.
+
+## Subflow: request
+
+Walk the user through these sections one at a time:
+
+1. Confirm workflow.
+2. Estimated 2026 employment income per employer.
+3. Estimated 2026 pension and benefit income.
+4. Estimated 2026 other income.
+5. Estimated deductions, including own home, alimony, lijfrente/AOV, gifts, and other expenses.
+6. Standard Box 2 estimates where applicable: regular benefits/dividends, disposal benefits, costs, withholding tax, BV lending fictitious benefit, and partner allocation.
+7. Box 3 assets and debts on 1 January 2026 using the fictitious method only.
+8. Fiscal partner and allocation.
+9. Final review and confirmation.
+
+## Subflow: change
+
+1. Confirm `provisional_2026_change`.
+2. Establish the baseline from the current beschikking or from chat.
+3. Re-collect all current estimates, not just changed items. Remind the user every turn until confirmed: "When changing your voorlopige aanslag, you must enter ALL data again. Anything not re-entered defaults to zero. The new VA replaces the old one entirely."
+4. Generate a delta summary comparing baseline and current estimates.
+5. Ask for final confirmation before generating the workpack.
+
+## Subflow: review
+
+1. Confirm `provisional_2026_review`.
+2. Collect the current VA baseline by file or chat.
+3. Walk category by category and ask whether each item has changed since the VA was issued.
+4. Record changes incrementally.
+5. Generate review notes and recommend the change subflow if significant changes are found.
+6. Ask for final confirmation before generating outputs.
+
+## Subflow: stopzetten
+
+1. Confirm `provisional_2026_stopzetten`.
+2. Ask whether the user is receiving a monthly refund or paying a monthly amount.
+3. If the user receives a refund and wants to stop, generate stopzetten guidance after confirmation.
+4. If the user pays monthly and the amount is wrong, redirect to change; stopping payments does not reduce the debt.
+5. If the user pays monthly and the amount is correct, confirm no action is needed.
+
+## Workpack generation gate
+
+Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs until all of the following are true:
+
+1. The subflow's final review is complete.
+2. The user explicitly confirms in chat that the workpack should be generated.
+3. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
+
+When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly.
+
+## Output files
+
+Write incrementally:
+
+- `workspace/provisional/2026/notes/<section>.yaml`
+- `workspace/shared/session-progress.yaml`
+- `workspace/shared/missing-info.md`
+- `workspace/shared/assumptions.md`
+
+Write at the generation gate:
+
+- `workspace/provisional/2026/provisional-pack.md`
+- `workspace/provisional/2026/field-map.yaml`
+- `workspace/provisional/2026/delta-summary.md` for change/review
+- `workspace/provisional/2026/review-questions.md`
+
+## Safety
+
+- Do not log in, submit, sign, automate forms, handle DigiD, or collect BSN.
+- Route complex Box 2 facts to manual review or unsupported: valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
+- This workpack is a preparation aid, not tax advice or submission.
+
+## End-of-turn report
+
+After each turn, tell the user in 2-4 sentences which subflow and section were covered, what was recorded, and what comes next.

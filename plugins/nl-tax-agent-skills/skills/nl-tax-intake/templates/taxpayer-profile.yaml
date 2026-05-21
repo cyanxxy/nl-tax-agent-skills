@@ -1,21 +1,41 @@
-taxpayer_profile_version: "1.0"
+taxpayer_profile_version: "1.1"
 created_at: ""
+updated_at: ""
 workflow_candidate: ""
 
+# Every fact below carries provenance:
+#   source: file | user_chat | assumption | unknown
+#   evidence_id: "ev_001"        # when source = file
+#   quote: ""                    # when source = user_chat (verbatim user text)
+#   stated_at: ""                # when source = user_chat (date)
+#   assumption_id: "asn_001"     # when source = assumption
+
 person:
-  display_name: null
+  display_name:
+    value: null
+    source: "unknown"
   bsn_present: false
   bsn_storage: "not_stored"
-  date_of_birth_known: false
-  aow_status_known: false
+  date_of_birth_known:
+    value: false
+    source: "unknown"
+  aow_status_known:
+    value: false
+    source: "unknown"
 
 residency:
-  full_year_nl_resident: null
-  part_year_resident: null
+  full_year_nl_resident:
+    value: null
+    source: "unknown"
+  part_year_resident:
+    value: null
+    source: "unknown"
   unsupported_reason: null
 
 partner:
-  has_fiscal_partner: null
+  has_fiscal_partner:
+    value: null
+    source: "unknown"
   partner_bsn_present: false
   partner_digid_requested: false
 
@@ -28,5 +48,14 @@ workflows:
     subflow: null
     status: "not_started"
 
+intake_anchor_question:
+  asked: false
+  answered: false
+  question_id: ""
+  answer:
+    value: null
+    source: "unknown"
+
 notes:
   - "No DigiD credentials collected."
+  - "No BSN stored."

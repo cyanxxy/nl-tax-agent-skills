@@ -1,5 +1,15 @@
 # Annual Income-Tax Return Workpack -- 2025
 
+> **Provenance convention.** Every numeric line in this workpack records its source in a `Src` column or inline `Src:` note.
+> Source codes:
+> - `F:<evidence_id>` -- value from a file in the evidence index
+> - `U:"<short quote>" (<YYYY-MM-DD>)` -- value stated by the user in chat
+> - `A:<assumption_id>` -- confirmed assumption, also listed under Assumptions
+> - `?` -- required but still missing, also listed under Missing information
+> - `C:<formula>` -- computed from other sourced rows
+>
+> A row marked `?` is never silently treated as zero. It blocks finalization until resolved or explicitly accepted as missing.
+
 ## Contents
 
 - Scope
@@ -62,75 +72,75 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ## Taxpayer profile summary
 
-[Summary from workspace/taxpayer/profile.yaml. Include:]
+[Summary from workspace/taxpayer/profile.yaml. Include source provenance for each value:]
 
-- Name: [taxpayer name]
-- Date of birth: [date]
-- Residency: full-year Dutch resident 2025
-- Primary income type: [employment / pension / benefit / combination]
-- Fiscal partner: [yes/no]
-- Partner name: [if applicable]
-- Address: [municipality, for WOZ reference]
+- Name: [taxpayer name] -- Src: [F/U/A/?]
+- Date of birth: [date] -- Src: [F/U/A/?]
+- Residency: full-year Dutch resident 2025 -- Src: [F/U/A/?]
+- Primary income type: [employment / pension / benefit / combination] -- Src: [F/U/A/?]
+- Fiscal partner: [yes/no] -- Src: [F/U/A/?]
+- Partner name: [if applicable] -- Src: [F/U/A/?]
+- Address: [municipality, for WOZ reference] -- Src: [F/U/A/?]
 - Special circumstances: [any flags from intake]
 
 ## Evidence summary
 
-[Summary from workspace/taxpayer/evidence-index.yaml. Include:]
+[Summary from workspace/taxpayer/evidence-index.yaml. Include file-based and user-chat items:]
 
-- Total evidence files indexed: [count]
+- Total evidence items indexed: [count] (files: [count], user-chat values: [count])
 - Files by category:
   - Income (jaaropgaven, pension statements): [count]
   - Own home (WOZ-beschikking, mortgage statement): [count]
   - Box 3 (bank statements, portfolio statements): [count]
   - Deductions (medical receipts, donation receipts): [count]
   - Other: [count]
-- Files flagged for review: [count]
-- Files with low classification confidence: [count]
+- Items flagged for review: [count]
+- Items with low classification confidence: [count]
 
 ## Income notes
 
 ### Employment income (loon uit dienstbetrekking)
 
-| Employer | Gross salary | Loonheffing withheld | Evidence |
-|----------|-------------|---------------------|----------|
-| [name]   | EUR [amount] | EUR [amount]       | [evidence_id] |
+| Employer | Gross salary | Loonheffing withheld | Src (gross) | Src (loonheffing) |
+|----------|--------------|----------------------|-------------|-------------------|
+| [name]   | EUR [amount] | EUR [amount]         | [F/U/A/?]   | [F/U/A/?]         |
 
 [Add rows for each employer. If no employment income, state "Not applicable -- no employment income reported."]
 
 ### Pension income
 
-| Provider | Type | Gross pension | Loonheffing withheld | Evidence |
-|----------|------|--------------|---------------------|----------|
-| [name]   | [employer pension / AOW] | EUR [amount] | EUR [amount] | [evidence_id] |
+| Provider | Type | Gross pension | Loonheffing withheld | Src (gross) | Src (loonheffing) |
+|----------|------|---------------|----------------------|-------------|-------------------|
+| [name]   | [employer pension / AOW] | EUR [amount] | EUR [amount] | [F/U/A/?] | [F/U/A/?] |
 
 [Add rows for each pension provider. If no pension income, state "Not applicable."]
 
 ### Benefit income (uitkeringen)
 
-| Provider | Benefit type | Gross amount | Loonheffing withheld | Evidence |
-|----------|-------------|-------------|---------------------|----------|
-| [UWV/SVB] | [WW/WIA/WAO/ZW/Anw/AKW] | EUR [amount] | EUR [amount] | [evidence_id] |
+| Provider | Benefit type | Gross amount | Loonheffing withheld | Src (gross) | Src (loonheffing) |
+|----------|--------------|--------------|----------------------|-------------|-------------------|
+| [UWV/SVB] | [WW/WIA/WAO/ZW/Anw/AKW] | EUR [amount] | EUR [amount] | [F/U/A/?] | [F/U/A/?] |
 
 [Add rows for each benefit. If no benefit income, state "Not applicable."]
 
 ### Other box 1 income
 
-| Description | Amount | Source |
-|-------------|--------|--------|
-| [e.g., alimentatie received, freelance income] | EUR [amount] | [evidence_id or assumption_id] |
+| Description | Amount | Src |
+|-------------|--------|-----|
+| [e.g., alimentatie received, freelance income] | EUR [amount] | [F/U/A/?] |
 
 [If no other income, state "Not applicable."]
 
 ### Box 1 income total
 
-| Item | Amount |
-|------|--------|
-| Total gross employment income | EUR [amount] |
-| Total gross pension income | EUR [amount] |
-| Total gross benefit income | EUR [amount] |
-| Total other box 1 income | EUR [amount] |
-| **Total box 1 income (before deductions)** | **EUR [amount]** |
-| Total loonheffing withheld | EUR [amount] |
+| Item | Amount | Src |
+|------|--------|-----|
+| Total gross employment income | EUR [amount] | C:sum(employment.gross) |
+| Total gross pension income | EUR [amount] | C:sum(pension.gross) |
+| Total gross benefit income | EUR [amount] | C:sum(benefit.gross) |
+| Total other box 1 income | EUR [amount] | C:sum(other) |
+| **Total box 1 income (before deductions)** | **EUR [amount]** | C:sum(rows above) |
+| Total loonheffing withheld | EUR [amount] | C:sum(loonheffing) |
 
 ## Own-home notes
 
@@ -138,30 +148,28 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ### WOZ-waarde
 
-- WOZ-waarde (waardepeildatum 1 January 2024): EUR [amount]
-- Source: [evidence_id or assumption_id]
-- Bezwaar filed: [yes/no]
+- WOZ-waarde (waardepeildatum 1 January 2024): EUR [amount] -- Src: [F/U/A/?]
+- Bezwaar filed: [yes/no] -- Src: [F/U/A/?]
 
 ### Hypotheekrente
 
-- Total mortgage interest paid in 2025: EUR [amount]
-- Mortgage type: [annuitair / lineair / aflossingsvrij (pre-2013)]
-- Outstanding balance 31 December 2025: EUR [amount]
-- Source: [evidence_id]
+- Total mortgage interest paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Mortgage type: [annuitair / lineair / aflossingsvrij (pre-2013)] -- Src: [F/U/A/?]
+- Outstanding balance 31 December 2025: EUR [amount] -- Src: [F/U/A/?]
 - Deduction qualification: [confirmed / requires review]
 
 ### Eigenwoningforfait
 
 - WOZ-waarde bracket: EUR [lower] to EUR [upper]
 - Applicable percentage: [percentage]%
-- Eigenwoningforfait: EUR [WOZ-waarde] x [percentage]% = EUR [amount]
+- Eigenwoningforfait: EUR [WOZ-waarde] x [percentage]% = EUR [amount] -- Src: C:woz*pct
 
 ### Tariefsaanpassing
 
 [If taxpayer income is in schijf 3 (above EUR 76,817):]
 
-- Portion of deductible own-home costs falling in schijf 3: EUR [amount]
-- Tariefsaanpassing: EUR [amount] x (49.50% - 37.48%) = EUR [amount]
+- Portion of deductible own-home costs falling in schijf 3: EUR [amount] -- Src: C:...
+- Tariefsaanpassing: EUR [amount] x (49.50% - 37.48%) = EUR [amount] -- Src: C:...
 - Effective deduction rate for this portion: 37.48%
 
 [If income is below schijf 3: "Not applicable -- income does not exceed the schijf 3 threshold."]
@@ -170,21 +178,21 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 [If eigenwoningforfait exceeds mortgage interest:]
 
-- Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [interest] = EUR [amount]
-- Hillenregeling correction (76.667% in 2025): EUR [amount] x 76.667% = EUR [amount]
-- Net eigenwoningforfait after Hillenregeling: EUR [amount]
+- Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [interest] = EUR [amount] -- Src: C:...
+- Hillenregeling correction (76.667% in 2025): EUR [amount] x 76.667% = EUR [amount] -- Src: C:...
+- Net eigenwoningforfait after Hillenregeling: EUR [amount] -- Src: C:...
 
 [If mortgage interest exceeds eigenwoningforfait: "Not applicable -- mortgage interest exceeds the eigenwoningforfait."]
 
 ### Net own-home result
 
-| Item | Amount |
-|------|--------|
-| Eigenwoningforfait | EUR [amount] |
-| Minus: mortgage interest | EUR [amount] |
-| Plus: tariefsaanpassing (if applicable) | EUR [amount] |
-| Minus: Hillenregeling correction (if applicable) | EUR [amount] |
-| **Net own-home result** | **EUR [amount]** |
+| Item | Amount | Src |
+|------|--------|-----|
+| Eigenwoningforfait | EUR [amount] | C:above |
+| Minus: mortgage interest | EUR [amount] | [F/U/A/?] |
+| Plus: tariefsaanpassing (if applicable) | EUR [amount] | C:above |
+| Minus: Hillenregeling correction (if applicable) | EUR [amount] | C:above |
+| **Net own-home result** | **EUR [amount]** | C:sum |
 
 [A negative result reduces box 1 taxable income.]
 
@@ -196,33 +204,33 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 - Has aanmerkelijk belang: [yes/no/manual review]
 - Basis: [generally 5% threshold, assessed with fiscal partner where applicable]
-- Evidence/source: [evidence_id or assumption_id]
+- Evidence/source: [F/U/A/?]
 - Complex-case review: [none / valuation dispute / emigration / death / restructuring / treaty or nonresident issue / informal capital / non-arm's-length transfer / DGA corporate-tax issue]
 
 ### Regular benefits
 
-| Item | Amount | Source |
-|------|--------|--------|
-| Gross regular benefits, including dividends (`box2.reguliere_voordelen_bruto`) | EUR [amount] | [evidence_id or assumption_id] |
-| Costs of regular benefits (`box2.kosten_reguliere_voordelen`) | EUR [amount] | [evidence_id or assumption_id] |
-| Fictitious regular benefit from BV lending (`box2.fictief_regulier_voordeel_bv_lening`) | EUR [amount] | [evidence_id or assumption_id / manual review] |
-| Dividend withholding tax to credit (`box2.ingehouden_dividendbelasting`) | EUR [amount] | [evidence_id or assumption_id] |
+| Item | Amount | Src |
+|------|--------|-----|
+| Gross regular benefits, including dividends (`box2.reguliere_voordelen_bruto`) | EUR [amount] | [F/U/A/?] |
+| Costs of regular benefits (`box2.kosten_reguliere_voordelen`) | EUR [amount] | [F/U/A/?] |
+| Fictitious regular benefit from BV lending (`box2.fictief_regulier_voordeel_bv_lening`) | EUR [amount] | [F/U/A/? / manual review] |
+| Dividend withholding tax to credit (`box2.ingehouden_dividendbelasting`) | EUR [amount] | [F/U/A/?] |
 
 ### Disposal benefits
 
-| Item | Amount | Source |
-|------|--------|--------|
-| Net transfer price (`box2.vervreemdingsprijs`) | EUR [amount] | [evidence_id or assumption_id] |
-| Acquisition price (`box2.verkrijgingsprijs`) | EUR [amount] | [evidence_id or assumption_id] |
-| Disposal costs used to derive net transfer price (`box2.vervreemdingskosten`) | EUR [amount] | [evidence_id or assumption_id] |
-| Disposal benefit (`box2.vervreemdingsvoordeel`) | EUR [amount or "manual review required"] | [calculation / evidence_id / assumption_id] |
+| Item | Amount | Src |
+|------|--------|-----|
+| Net transfer price (`box2.vervreemdingsprijs`) | EUR [amount] | [F/U/A/?] |
+| Acquisition price (`box2.verkrijgingsprijs`) | EUR [amount] | [F/U/A/?] |
+| Disposal costs used to derive net transfer price (`box2.vervreemdingskosten`) | EUR [amount] | [F/U/A/?] |
+| Disposal benefit (`box2.vervreemdingsvoordeel`) | EUR [amount or "manual review required"] | [C:net-transfer-acquisition / F/U/A/?] |
 
 Standard preparation formula: official net transfer price minus acquisition price. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first. Use manual review instead of a calculated amount when valuation, informal capital, non-arm's-length, restructuring, treaty, nonresident, emigration, death, or corporate-tax-heavy DGA facts are present.
 
 ### Loss setoff and partner allocation
 
-- Substantial-interest loss to set off (`box2.te_verrekenen_verlies_ab`): EUR [amount] ([evidence_id or assumption_id])
-- Fiscal-partner Box 2 allocation (`partner.verdeling_box2_inkomen`): [taxpayer %] / [partner %]
+- Substantial-interest loss to set off (`box2.te_verrekenen_verlies_ab`): EUR [amount] -- Src: [F/U/A/?]
+- Fiscal-partner Box 2 allocation (`partner.verdeling_box2_inkomen`): [taxpayer %] / [partner %] -- Src: [F/U/A/?]
 - Allocation total equals 100%: [yes/no/manual review]
 
 Note: Box 2 allocation and any reviewed calculation remain preparation notes for manual Mijn Belastingdienst entry; they are not filing or tax advice.
@@ -233,69 +241,69 @@ Note: Box 2 allocation and any reviewed calculation remain preparation notes for
 
 #### Banktegoeden
 
-| Account | Bank | Balance 1 Jan 2025 | Evidence |
-|---------|------|-------------------|----------|
-| [description] | [bank name] | EUR [amount] | [evidence_id] |
+| Account | Bank | Balance 1 Jan 2025 | Src |
+|---------|------|--------------------|-----|
+| [description] | [bank name] | EUR [amount] | [F/U/A/?] |
 
-**Total banktegoeden (category I):** EUR [amount]
+**Total banktegoeden (category I):** EUR [amount] -- Src: C:sum
 
 #### Overige bezittingen (investments, crypto, other)
 
-| Asset | Type | Value 1 Jan 2025 | Evidence |
-|-------|------|-----------------|----------|
-| [description] | [investments / crypto / real estate / receivables / other] | EUR [amount] | [evidence_id] |
+| Asset | Type | Value 1 Jan 2025 | Src |
+|-------|------|------------------|-----|
+| [description] | [investments / crypto / real estate / receivables / other] | EUR [amount] | [F/U/A/?] |
 
-**Total overige bezittingen (category II):** EUR [amount]
+**Total overige bezittingen (category II):** EUR [amount] -- Src: C:sum
 
 ### Schulden (non-mortgage debts)
 
-| Debt | Type | Balance 1 Jan 2025 | Evidence |
-|------|------|-------------------|----------|
-| [description] | [consumer loan / student debt / other] | EUR [amount] | [evidence_id] |
+| Debt | Type | Balance 1 Jan 2025 | Src |
+|------|------|--------------------|-----|
+| [description] | [consumer loan / student debt / other] | EUR [amount] | [F/U/A/?] |
 
-**Total schulden (category III):** EUR [amount]
+**Total schulden (category III):** EUR [amount] -- Src: C:sum
 
 ### Heffingsvrij vermogen
 
 - Single taxpayer: EUR 57,684
 - Fiscal partners (combined): EUR 115,368
-- Applicable heffingsvrij vermogen: EUR [amount]
+- Applicable heffingsvrij vermogen: EUR [amount] -- Src: C:depends_on_partner_status
 
 ### Drempel schulden
 
 - Single taxpayer: EUR 3,800
 - Fiscal partners (combined): EUR 7,600
-- Aftrekbare schulden after threshold: EUR [amount]
+- Aftrekbare schulden after threshold: EUR [amount] -- Src: C:debts-threshold
 
 ### Fictitious return calculation notes
 
-| Step | Description | Amount |
-|------|-------------|--------|
-| 1 | Category I total (banktegoeden) | EUR [amount] |
-| 2 | Category II total (overige bezittingen) | EUR [amount] |
-| 3 | Category III total (schulden) | EUR [amount] |
-| 4 | Aftrekbare schulden after threshold | EUR [amount] |
-| 5 | Belastbaar rendement: I x 1.37% + II x 5.88% - aftrekbare schulden x 2.70% | EUR [amount] |
-| 6 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR [amount] |
-| 7 | Grondslag sparen en beleggen: rendementsgrondslag - heffingsvrij vermogen | EUR [amount] |
-| 8 | Aandeel in rendementsgrondslag: grondslag / rendementsgrondslag | [percentage]% |
-| 9 | Box 3 income: belastbaar rendement x aandeel | EUR [amount] |
-| 10 | Box 3 tax: box 3 income x 36% | EUR [amount] |
+| Step | Description | Amount | Src |
+|------|-------------|--------|-----|
+| 1 | Category I total (banktegoeden) | EUR [amount] | C:row above |
+| 2 | Category II total (overige bezittingen) | EUR [amount] | C:row above |
+| 3 | Category III total (schulden) | EUR [amount] | C:row above |
+| 4 | Aftrekbare schulden after threshold | EUR [amount] | C:debts-threshold |
+| 5 | Belastbaar rendement: I x 1.37% + II x 5.88% - aftrekbare schulden x 2.70% | EUR [amount] | C:formula |
+| 6 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR [amount] | C:formula |
+| 7 | Grondslag sparen en beleggen: rendementsgrondslag - heffingsvrij vermogen | EUR [amount] | C:formula |
+| 8 | Aandeel in rendementsgrondslag: grondslag / rendementsgrondslag | [percentage]% | C:formula |
+| 9 | Box 3 income: belastbaar rendement x aandeel | EUR [amount] | C:formula |
+| 10 | Box 3 tax: box 3 income x 36% | EUR [amount] | C:formula |
 
 ### Actual return (werkelijk rendement) data collection
 
-[Collect the following data for the actual return comparison. If data is not available, note the gap.]
+[Collect the following data for the actual return comparison. If data is not available, mark Src `?` and list the gap under Missing information.]
 
-| Income type | Amount 2025 | Evidence | Status |
-|-------------|------------|----------|--------|
-| Interest received (bank accounts) | EUR [amount] | [evidence_id] | [collected / missing] |
-| Dividends received (before withholding tax) | EUR [amount] | [evidence_id] | [collected / missing] |
-| Rental income and other box 3 income | EUR [amount] | [evidence_id] | [collected / missing] |
-| Value changes for disposed box 3 assets | EUR [amount] | [evidence_id] | [collected / missing] |
-| Value changes for retained or acquired box 3 assets | EUR [amount] | [evidence_id] | [collected / missing] |
-| Interest paid on box 3 debts | EUR [amount] | [evidence_id] | [collected / missing] |
-| Qualifying WOZ-value investment correction | EUR [amount] | [evidence_id] | [not applicable / collected / missing] |
-| **Total actual return** | **EUR [amount]** | | |
+| Income type | Amount 2025 | Src | Status |
+|-------------|-------------|-----|--------|
+| Interest received (bank accounts) | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Dividends received (before withholding tax) | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Rental income and other box 3 income | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Value changes for disposed box 3 assets | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Value changes for retained or acquired box 3 assets | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Interest paid on box 3 debts | EUR [amount] | [F/U/A/?] | [collected / missing] |
+| Qualifying WOZ-value investment correction | EUR [amount] | [F/U/A/?] | [not applicable / collected / missing] |
+| **Total actual return** | **EUR [amount]** | C:sum | |
 
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
@@ -303,10 +311,10 @@ Do not deduct custody fees, transaction costs, management fees, maintenance cost
 
 ### Comparison: fictitious vs actual
 
-| Method | Box 3 income | Box 3 tax (at 36%) | Data status |
-|--------|-------------|-------------------|-------------|
-| Fictitious return (forfaitair rendement) | EUR [amount] | EUR [amount] | Complete |
-| Actual return (werkelijk rendement) | EUR [amount] | EUR [amount] | [Complete / Partial / Missing] |
+| Method | Box 3 income | Box 3 tax (at 36%) | Src | Data status |
+|--------|-------------|-------------------|-----|-------------|
+| Fictitious return (forfaitair rendement) | EUR [amount] | EUR [amount] | C:fictitious_rows | Complete |
+| Actual return (werkelijk rendement) | EUR [amount] | EUR [amount] | C:actual_return_rows | [Complete / Partial / Missing] |
 
 More favorable method: [fictitious / actual / cannot determine -- data incomplete]
 
@@ -318,10 +326,10 @@ Note: The final election between fictitious and actual return is made in the off
 
 [If fiscal partner:]
 
-| Allocation | Taxpayer share | Partner share | Combined box 3 tax |
-|------------|---------------|--------------|-------------------|
-| Default (50/50) | EUR [amount] | EUR [amount] | EUR [amount] |
-| Optimized ([X]% / [Y]%) | EUR [amount] | EUR [amount] | EUR [amount] |
+| Allocation | Taxpayer share | Partner share | Combined box 3 tax | Src |
+|------------|---------------|--------------|-------------------|-----|
+| Default (50/50) | EUR [amount] | EUR [amount] | EUR [amount] | C:allocation |
+| Optimized ([X]% / [Y]%) | EUR [amount] | EUR [amount] | EUR [amount] | C:allocation |
 
 Recommended allocation: [percentage split] -- results in EUR [amount] lower combined box 3 tax.
 
@@ -333,9 +341,8 @@ Note: The allocation percentage applies to the entire box 3 base (assets minus d
 
 [If not applicable: "Not applicable -- no partneralimentatie payments."]
 
-- Total partneralimentatie paid in 2025: EUR [amount]
-- Evidence: [evidence_id]
-- Basis: [court order / divorce agreement / notarial deed]
+- Total partneralimentatie paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Basis: [court order / divorce agreement / notarial deed] -- Src: [F/U/A/?]
 
 Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
@@ -343,14 +350,14 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
 [If not applicable: "Not applicable -- no qualifying medical expenses claimed."]
 
-| Expense type | Gross amount | Reimbursed by insurance | Net qualifying amount | Evidence |
-|-------------|-------------|------------------------|----------------------|----------|
-| [type] | EUR [amount] | EUR [amount] | EUR [amount] | [evidence_id] |
+| Expense type | Gross amount | Reimbursed by insurance | Net qualifying amount | Src |
+|-------------|-------------|------------------------|----------------------|-----|
+| [type] | EUR [amount] | EUR [amount] | EUR [amount] | [F/U/A/?] |
 
-- Total qualifying expenses: EUR [amount]
-- Drempelinkomen (combined): EUR [amount]
+- Total qualifying expenses: EUR [amount] -- Src: C:sum
+- Drempelinkomen (combined): EUR [amount] -- Src: C:from_income
 - Zorgkosten threshold manual review: [required unless the exact reviewed 2025 threshold table is registered and all required inputs are present]
-- Deductible zorgkosten result: [manual review required / EUR amount with source-backed calculation]
+- Deductible zorgkosten result: [manual review required / EUR amount with source-backed calculation] -- Src: C:threshold_calc
 
 ### Giften (charitable donations)
 
@@ -358,54 +365,53 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
 #### Periodieke giften
 
-| Recipient (ANBI) | Annual amount | Agreement type | Evidence |
-|-------------------|--------------|----------------|----------|
-| [name] | EUR [amount] | [notarial deed / written agreement] | [evidence_id] |
+| Recipient (ANBI) | Annual amount | Agreement type | Src |
+|-------------------|--------------|----------------|-----|
+| [name] | EUR [amount] | [notarial deed / written agreement] | [F/U/A/?] |
 
-Total periodieke giften: EUR [amount] (fully deductible, no threshold or cap)
+Total periodieke giften: EUR [amount] -- Src: C:sum (fully deductible, no threshold or cap)
 
 #### Gewone giften (incidental)
 
-| Recipient (ANBI) | Amount | Cultural ANBI | Evidence |
-|-------------------|--------|--------------|----------|
-| [name] | EUR [amount] | [yes/no] | [evidence_id] |
+| Recipient (ANBI) | Amount | Cultural ANBI | Src |
+|-------------------|--------|--------------|-----|
+| [name] | EUR [amount] | [yes/no] | [F/U/A/?] |
 
-- Total gewone giften: EUR [amount]
-- Cultural ANBI multiplier applied: EUR [amount] (1.25x, max EUR 1,250 additional)
-- Drempel (1% of drempelinkomen, min EUR 60): EUR [amount]
-- Cap (10% of drempelinkomen): EUR [amount]
-- **Deductible gewone giften:** EUR [amount]
+- Total gewone giften: EUR [amount] -- Src: C:sum
+- Cultural ANBI multiplier applied: EUR [amount] (1.25x, max EUR 1,250 additional) -- Src: C:formula
+- Drempel (1% of drempelinkomen, min EUR 60): EUR [amount] -- Src: C:formula
+- Cap (10% of drempelinkomen): EUR [amount] -- Src: C:formula
+- **Deductible gewone giften:** EUR [amount] -- Src: C:formula
 
 ### Lijfrentepremie
 
 [If not applicable: "Not applicable -- no lijfrentepremie claimed."]
 
-- Premiums paid in 2025: EUR [amount]
-- Provider: [name]
-- Evidence: [evidence_id]
+- Premiums paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Provider: [name] -- Src: [F/U/A/?]
 - Lijfrente limit manual review: [required unless exact reviewed 2025 jaarruimte/reserveringsruimte rules and all required inputs are present]
-- Jaarruimte available: [manual review required / EUR amount with source-backed calculation]
-- Reserveringsruimte available: [manual review required / EUR amount with source-backed calculation]
-- Deductible lijfrentepremie result: [manual review required / EUR amount with source-backed calculation]
+- Jaarruimte available: [manual review required / EUR amount with source-backed calculation] -- Src: [F/U/A/?/C]
+- Reserveringsruimte available: [manual review required / EUR amount with source-backed calculation] -- Src: [F/U/A/?/C]
+- Deductible lijfrentepremie result: [manual review required / EUR amount with source-backed calculation] -- Src: C:min(premie, available room)
 
 ### Other deductions
 
 [If not applicable: "Not applicable -- no other deductions claimed."]
 
-| Deduction | Amount | Evidence |
-|-----------|--------|----------|
-| [e.g., restant persoonsgebonden aftrek prior years] | EUR [amount] | [evidence_id or assumption_id] |
+| Deduction | Amount | Src |
+|-----------|--------|-----|
+| [e.g., restant persoonsgebonden aftrek prior years] | EUR [amount] | [F/U/A/?] |
 
 ### Deductions total
 
-| Deduction category | Amount |
-|-------------------|--------|
-| Alimentatie | EUR [amount] |
-| Zorgkosten (above drempel) | [manual review required / EUR amount] |
-| Giften (periodiek + gewoon) | EUR [amount] |
-| Lijfrentepremie | [manual review required / EUR amount] |
-| Other | EUR [amount] |
-| **Total persoonsgebonden aftrek** | **EUR [amount]** |
+| Deduction category | Amount | Src |
+|-------------------|--------|-----|
+| Alimentatie | EUR [amount] | C:above |
+| Zorgkosten (above drempel) | [manual review required / EUR amount] | C:above |
+| Giften (periodiek + gewoon) | EUR [amount] | C:above |
+| Lijfrentepremie | [manual review required / EUR amount] | C:above |
+| Other | EUR [amount] | C:above |
+| **Total persoonsgebonden aftrek** | **EUR [amount]** | C:sum |
 
 Allocation order: box 1 first, then box 3, then box 2.
 
@@ -415,21 +421,21 @@ Allocation order: box 1 first, then box 3, then box 2.
 
 ### Partner status
 
-- Fiscal partner: [yes/no]
-- Basis: [married / registered partnership / cohabiting with qualifying conditions]
-- Partner for full year 2025: [yes/no]
+- Fiscal partner: [yes/no] -- Src: [F/U/A/?]
+- Basis: [married / registered partnership / cohabiting with qualifying conditions] -- Src: [F/U/A/?]
+- Partner for full year 2025: [yes/no] -- Src: [F/U/A/?]
 - Special circumstances: [e.g., partner has no income, partner is AOW-age]
 
 ### Allocation options
 
 The following items can be freely allocated between partners:
 
-| Item | Default allocation | Optimized allocation | Tax impact |
-|------|-------------------|---------------------|------------|
-| Eigen woning result | 50/50 | [recommendation] | EUR [savings] |
-| Box 2 income | [taxpayer %] / [partner %] | [review scenarios] | [manual review] |
-| Box 3 grondslag | 50/50 | [recommendation] | EUR [savings] |
-| Persoonsgebonden aftrek | [to higher-rate partner] | [recommendation] | EUR [savings] |
+| Item | Default allocation | Optimized allocation | Tax impact | Src |
+|------|-------------------|---------------------|------------|-----|
+| Eigen woning result | 50/50 | [recommendation] | EUR [savings] | C:allocation |
+| Box 2 income | [taxpayer %] / [partner %] | [review scenarios] | [manual review] | [U/A/?] |
+| Box 3 grondslag | 50/50 | [recommendation] | EUR [savings] | C:allocation |
+| Persoonsgebonden aftrek | [to higher-rate partner] | [recommendation] | EUR [savings] | C:allocation |
 
 Items that CANNOT be allocated:
 - Arbeidskorting (personal, based on individual arbeidsinkomen)
@@ -456,37 +462,45 @@ Note: This field map is specific to the annual return 2025. It is separate from 
 
 ## Missing information
 
-[From workspace/shared/missing-info.md, filtered for annual_2025]
+[From workspace/shared/missing-info.md, filtered for annual_2025. Every row in the workpack with `Src: ?` must appear here.]
 
 ### Critical (blocks accurate filing)
 
-| ID | Description | How to resolve |
-|----|-------------|---------------|
-| [MI-001] | [description] | [resolution guidance] |
+| ID | Description | Workpack row | How to resolve |
+|----|-------------|--------------|----------------|
+| [MI-001] | [description] | [section/row] | [resolution guidance] |
 
 ### Important (affects accuracy)
 
-| ID | Description | How to resolve |
-|----|-------------|---------------|
-| [MI-002] | [description] | [resolution guidance] |
+| ID | Description | Workpack row | How to resolve |
+|----|-------------|--------------|----------------|
+| [MI-002] | [description] | [section/row] | [resolution guidance] |
 
 ### Nice-to-have (minor impact)
 
-| ID | Description | How to resolve |
-|----|-------------|---------------|
-| [MI-003] | [description] | [resolution guidance] |
+| ID | Description | Workpack row | How to resolve |
+|----|-------------|--------------|----------------|
+| [MI-003] | [description] | [section/row] | [resolution guidance] |
 
 Total missing items: [count]
 
 ## Assumptions
 
-[From workspace/shared/assumptions.md, filtered for annual_2025]
+[From workspace/shared/assumptions.md, filtered for annual_2025. Every row with `Src: A:<id>` must appear here.]
 
-| Assumption ID | Description | Impact if incorrect | Resolution |
-|---------------|-------------|--------------------| -----------|
-| [A001] | [what was assumed] | [what changes if wrong] | [how to confirm] |
+| Assumption ID | Description | Confirmed by user | Impact if incorrect | Resolution |
+|---------------|-------------|-------------------|---------------------|------------|
+| [A001] | [what was assumed] | [yes/no] | [what changes if wrong] | [how to confirm] |
 
 Total assumptions: [count]
+
+## User-stated values index
+
+[Cross-index every `U:` row so the user can spot-check what was recorded from chat.]
+
+| Workpack row | Value | Quote | Stated at |
+|--------------|-------|-------|-----------|
+| [section/row] | [value] | "[verbatim quote]" | [YYYY-MM-DD] |
 
 ## Human review checklist
 
@@ -503,8 +517,9 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] Zorgkosten threshold manual review completed if exact reviewed 2025 threshold sources are not registered
 - [ ] Lijfrente limit manual review completed if exact reviewed 2025 jaarruimte/reserveringsruimte sources are not registered
 - [ ] Deductions have supporting evidence retained for at least 5 years
-- [ ] All assumptions reviewed and confirmed or corrected
-- [ ] Missing information resolved or consciously accepted
+- [ ] All `U:` user-chat values reviewed for accuracy
+- [ ] All `A:` assumptions reviewed and confirmed or corrected
+- [ ] All `?` missing information resolved or consciously accepted
 - [ ] WOZ-waarde matches the gemeente beschikking
 - [ ] Mortgage interest matches the jaaroverzicht hypotheek
 - [ ] Loonheffing withheld matches jaaropgaven total

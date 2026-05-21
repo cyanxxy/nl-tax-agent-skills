@@ -38,14 +38,14 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                     {
                         "field_id": "box2.has_aanmerkelijk_belang",
                         "label": "Aanmerkelijk belang",
-                        "source": {"type": "evidence"},
+                        "source": {"type": "evidence", "evidence_id": "ev_box2_001"},
                         "confidence": 0.9,
                         "manual_review_required": False,
                     },
                     {
                         "field_id": "box2.reguliere_voordelen_bruto",
                         "label": "Reguliere voordelen bruto",
-                        "source": {"type": "evidence"},
+                        "source": {"type": "evidence", "evidence_id": "ev_box2_002"},
                         "confidence": 0.9,
                         "manual_review_required": False,
                     },

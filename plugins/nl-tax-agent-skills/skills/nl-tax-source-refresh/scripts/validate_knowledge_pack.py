@@ -77,9 +77,34 @@ def check_freshness(last_checked, policy):
     return False, ""
 
 
+INTERNAL_KNOWLEDGE_PREFIXES = (
+    "methods",
+    "platform",
+    "security",
+    "compat",
+)
+
+
+def _is_internal_knowledge(rel_from_knowledge_dir):
+    """Return true for authored internal knowledge that is not source-backed."""
+    norm = rel_from_knowledge_dir.replace(os.sep, "/")
+    return any(
+        norm == prefix or norm.startswith(prefix + "/")
+        for prefix in INTERNAL_KNOWLEDGE_PREFIXES
+    )
+
+
 def find_knowledge_files(knowledge_dir):
-    """Find all .md files in the knowledge directory."""
-    return find_markdown_files(knowledge_dir)
+    """Find source-backed .md files in the knowledge directory."""
+    result = []
+    for root, _, files in os.walk(knowledge_dir):
+        rel = os.path.relpath(root, knowledge_dir)
+        if rel != "." and _is_internal_knowledge(rel):
+            continue
+        for f in files:
+            if f.endswith(".md") and not f.startswith("_"):
+                result.append(os.path.join(root, f))
+    return result
 
 
 def find_markdown_files(root_dir):

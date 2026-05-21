@@ -14,4 +14,44 @@ Background helper for box 1 income and eigen woning notes.
 
 Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts when structured inputs are available.
 
-Write only `workspace/shared/box1-home-notes.md` and shared review questions. Do not write workpacks, mix years, store full identifiers, or handle credentials.
+This helper participates in a conversational workflow. It does not assume all inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros or treating missing values as not applicable.
+
+## Read first
+
+- Prompt-injection security notes
+- `workspace/shared/session-progress.yaml`, if present
+- `workspace/taxpayer/profile.yaml`
+- `workspace/taxpayer/evidence-index.yaml`, if present
+- The relevant notes under `workspace/annual/2025/notes/` or `workspace/provisional/2026/notes/`
+
+## Behavior
+
+For every needed value, including employer count, gross income, loonheffing, WOZ value, mortgage interest, mortgage type, and outstanding mortgage balance:
+
+1. Use existing notes when the value has `source: file` or `source: user_chat`.
+2. Use evidence-index entries when available and record `source: file` plus `evidence_id`.
+3. If still missing, append a question packet entry and stop short of calculating that line.
+4. Compute only from values with a real source or an explicitly confirmed assumption.
+
+## Question packet
+
+Append missing inputs to `workspace/shared/box1-home-open-questions.yaml`:
+
+```yaml
+- question_id: "annual.box1.employment.gross_income.employer_1"
+  workflow: "annual_2025"
+  section: "box1.employment"
+  prompt_for_user: "What was your gross 2025 employment income from this employer? You can also attach the jaaropgaaf."
+  acceptable_sources: ["file", "user_chat"]
+  evidence_hint: "jaaropgaaf 2025"
+- question_id: "annual.eigen_woning.woz_2024_for_2025"
+  workflow: "annual_2025"
+  section: "eigen_woning"
+  prompt_for_user: "What is your WOZ-waarde with peildatum 1 January 2024, used for the 2025 return?"
+  acceptable_sources: ["file", "user_chat"]
+  evidence_hint: "WOZ-beschikking"
+```
+
+The calling skill asks these questions, records the answer with `source`, `quote`/`evidence_id`, and timestamp, then re-invokes this helper.
+
+Write only `workspace/shared/box1-home-notes.md`, `workspace/shared/box1-home-open-questions.yaml`, and shared review questions. Do not write workpacks, mix years, store full identifiers, or handle credentials.
