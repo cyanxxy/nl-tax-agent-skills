@@ -15,4 +15,6 @@ Create a step-by-step checklist from an existing workpack and field map. The tax
 
 Load the relevant workpack, field map, DigiD policy, submit-step reference, and checklist template. Write `workspace/shared/manual-submission-checklist.md`.
 
+Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree.
+
 Do not log in, submit, sign, automate the portal, ask for credentials, or process credentials. Mention DigiD Machtigen when someone else helps.

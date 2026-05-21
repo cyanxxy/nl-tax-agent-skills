@@ -1,4 +1,6 @@
 taxpayer_profile_version: "1.1"
+workspace_root: ""              # absolute path of the working folder; set once at intake, never changed
+intake_status: "not_started"    # not_started | in_progress | complete
 created_at: ""
 updated_at: ""
 workflow_candidate: ""

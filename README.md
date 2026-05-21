@@ -290,7 +290,7 @@ The body then specifies the *Do / Never* contract that constrains the skill, for
 - Do not present output as official advice or a final calculation.
 ```
 
-The flat `commands/` directory contains a thin slash-command wrapper for each user-facing skill. Wrappers exist so hosts that surface `commands/` separately can still invoke the skill — the wrapper loads `SKILL.md` from `${CLAUDE_PLUGIN_ROOT}` and forwards `$ARGUMENTS`.
+The flat `commands/` directory contains a thin slash-command wrapper for each user-facing skill. Wrappers exist so hosts that surface `commands/` separately can still invoke the skill — each wrapper is a one-line delegation to the bundled skill of the same name and forwards `$ARGUMENTS`. The skill owns the workflow; the wrapper never restates it, so the two cannot drift.
 
 ---
 

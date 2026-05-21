@@ -73,8 +73,8 @@ Before generating any workpack content, verify that all prerequisites are met.
 ### 1.9 Knowledge files available
 
 - Verify that the annual 2025 knowledge directory exists and contains expected files
-- Read all files under `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/annual/`
-- Read all files under `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2025/box3/`
+- Read all files under `_shared/knowledge/years/2025/annual/`
+- Read all files under `_shared/knowledge/years/2025/box3/`
 - Read security knowledge: `digid.md`, `prompt-injection.md`
 
 ---

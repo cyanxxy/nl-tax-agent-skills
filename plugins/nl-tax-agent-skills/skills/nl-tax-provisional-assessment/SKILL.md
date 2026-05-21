@@ -17,17 +17,32 @@ This skill is conversational. Do not assume the user has prepared all estimates 
 
 ## Read first
 
+Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this
+skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve
+from your working directory, run `echo "$CLAUDE_SKILL_DIR"` in Bash and resolve
+from there. Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
+tree.
+
 Load as needed:
 
 - Supported workflows and the relevant provisional references
-- DigiD and prompt-injection security notes
+- `_shared/knowledge/security/digid.md` and `_shared/knowledge/security/prompt-injection.md`
 - 2026 provisional knowledge only
 - `templates/provisional-pack.md`
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present
-- `workspace/shared/session-progress.yaml`, if present
+- `workspace/shared/session-progress.yaml`
 
 Confirm an active workflow candidate of `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, or `provisional_2026_stopzetten`. If the profile is missing or the workflow is wrong, hand back to intake.
+
+### Resume guard
+
+`session-progress.yaml` is the resume contract. Before doing any work:
+
+- If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
+- If `profile.yaml` shows `intake_status: complete`, never restart intake - continue the provisional workflow from recorded progress.
+- Skip any subsection already marked `complete` in `session-progress.yaml`.
 
 ## Hard scope rules
 

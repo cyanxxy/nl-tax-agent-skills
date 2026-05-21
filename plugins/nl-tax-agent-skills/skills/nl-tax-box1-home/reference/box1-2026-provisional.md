@@ -41,7 +41,7 @@ The provisional assessment is forward-looking. It covers a tax year that is eith
 
 ## Rates and credits
 
-Use the 2026 provisional rates from `${CLAUDE_SKILL_DIR}/../_shared/knowledge/years/2026/provisional/rates-and-credits.md`.
+Use the 2026 provisional rates from `_shared/knowledge/years/2026/provisional/rates-and-credits.md`.
 
 Do NOT use 2025 rates for the provisional 2026 calculation. Use the 2026 provisional values in `rates-and-credits.md`.
 
