@@ -26,13 +26,24 @@ If the relevant workpack does not exist, tell the user it must be generated firs
 
 ## Read first
 
-1. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/methods/interactive-elicitation.md`
-2. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/digid.md`
-3. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/prompt-injection.md`
+Bundled paths below are relative to this skill's own directory: `reference/`
+is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`. If
+a path does not resolve from your working directory, run
+`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
+resolve from there. Resolve every `workspace/...` path against `workspace_root`
+recorded in `session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree.
+
+1. `_shared/knowledge/methods/interactive-elicitation.md`
+2. `_shared/knowledge/security/digid.md`
+3. `_shared/knowledge/security/prompt-injection.md`
 4. `workspace/shared/session-progress.yaml`
 5. The workpack the user is asking about.
 6. The relevant field reference: `reference/annual-field-map.md` or `reference/provisional-field-map.md`.
 7. `reference/mapping-principles.md`.
+
+The DigiD and credential rules are also summarized in **Credential Exclusion**
+and **Safety** below; a failed read of items 2-3 never excuses skipping them.
 
 ## Workflow
 
@@ -106,7 +117,7 @@ Never map:
 After writing the field map, run:
 
 ```bash
-python ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_SKILL_DIR}/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
 The validator checks required metadata, workflow names, credential and portal-automation fields, confidence range, source provenance rules, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
@@ -114,7 +125,7 @@ The validator checks required metadata, workflow names, credential and portal-au
 ## Rendering
 
 ```bash
-python ${CLAUDE_SKILL_DIR}/../nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_SKILL_DIR}/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
 ## Output Files
@@ -130,7 +141,7 @@ Never merge annual and provisional field maps.
 
 ## Write Restrictions
 
-- Do not write to `${CLAUDE_SKILL_DIR}/../**`.
+- Do not write anywhere inside the plugin's skill directories; only write under the `workspace/` tree.
 - Do not write workpacks.
 - Do not modify the evidence index or taxpayer profile.
 

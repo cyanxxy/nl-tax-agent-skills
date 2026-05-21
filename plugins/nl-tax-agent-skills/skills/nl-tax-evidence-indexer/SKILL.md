@@ -23,12 +23,24 @@ Catalog whatever evidence the user has - files in `uploads/`/`evidence/`, **and 
 
 ## Read first (every turn)
 
-1. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract.
-2. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/digid.md`
-3. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/prompt-injection.md`
+Bundled paths below are relative to this skill's own directory: `reference/`
+and `templates/` are subfolders, and `_shared/` is the plugin-shared folder at
+`../_shared/`. If a path does not resolve from your working directory, run
+`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
+resolve from there. Resolve every `workspace/...` path against `workspace_root`
+recorded in `session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree.
+
+1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract.
+2. `_shared/knowledge/security/digid.md`
+3. `_shared/knowledge/security/prompt-injection.md`
 4. `reference/evidence-types.md`, `reference/extraction-boundaries.md`, `reference/untrusted-content-policy.md`
 5. `workspace/shared/session-progress.yaml` - to see which evidence questions are open.
 6. `workspace/taxpayer/evidence-index.yaml` if it exists. Otherwise prepare to create it from `templates/evidence-index.yaml`.
+
+The DigiD and prompt-injection rules are also summarized in **Prompt-injection
+handling** and **Safety** below; a failed read of items 2-3 never excuses
+skipping them.
 
 ## What this skill does
 

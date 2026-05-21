@@ -22,15 +22,35 @@ Open the conversation with the user, figure out which Dutch tax workflow applies
 
 ## Read first (every turn)
 
+Bundled paths below are relative to this skill's own directory: `templates/`
+is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`.
+If a path does not resolve from your working directory, run
+`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
+resolve from there.
+
 Before responding to the user, read:
 
-1. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract this skill follows.
-2. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/digid.md`
-3. `${CLAUDE_SKILL_DIR}/../_shared/knowledge/security/prompt-injection.md`
-4. `workspace/shared/session-progress.yaml` if it exists. If it does not, copy `${CLAUDE_SKILL_DIR}/../_shared/templates/session-progress.yaml` to that path and stamp `created_at`.
+1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract this skill follows.
+2. `_shared/knowledge/security/digid.md`
+3. `_shared/knowledge/security/prompt-injection.md`
+4. `workspace/shared/session-progress.yaml` if it exists. If it does not, copy `_shared/templates/session-progress.yaml` to that path and stamp `created_at`.
 5. `workspace/taxpayer/profile.yaml` if it exists. Otherwise prepare to create it from `templates/taxpayer-profile.yaml`.
 
+The DigiD and untrusted-content rules are also summarized in **Safety rules**
+below; a failed read of items 2-3 never excuses skipping them.
+
 Use `session-progress.yaml` to decide what to ask next. Never re-ask a question already in `sections.intake.answered`.
+
+## Workspace location
+
+All `workspace/...` paths must resolve to one working folder that stays
+constant across every turn and every resumed session. On the first turn, set
+`workspace_root` to the absolute path of that folder and write it into both
+`workspace/shared/session-progress.yaml` and `workspace/taxpayer/profile.yaml`.
+On every later turn, read `workspace_root` back and resolve all `workspace/...`
+paths against it. Once set, never change it and never create a second
+`workspace/` tree. See the **Workspace root** section of
+`_shared/knowledge/methods/interactive-elicitation.md` for the full contract.
 
 ## What this skill produces
 
@@ -79,6 +99,15 @@ Mark `sections.intake.status: complete` only when:
 - Residency, taxpayer type, living status, and workflow are all answered or recorded as `unsupported_reason`.
 - Fiscal-partner status is recorded.
 - The workflow-specific anchor question is answered.
+
+Before closing intake, assert the resume contract holds. A resuming agent
+relies entirely on these files; if they are not populated it will wrongly
+restart intake:
+
+- `workspace/shared/session-progress.yaml` exists, is non-empty, and has `workspace_root` set.
+- `sections.intake.status` is `complete` and every answered `question_id` is in `sections.intake.answered`.
+- `workspace/taxpayer/profile.yaml` has `workflow_candidate` set, `workspace_root` set, and `intake_status: complete`.
+- `updated_at` is stamped on both files.
 
 Once complete, write a one-paragraph summary back to the user and tell them which skill will run next:
 

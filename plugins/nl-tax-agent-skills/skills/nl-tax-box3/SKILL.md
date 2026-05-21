@@ -25,6 +25,10 @@ This helper participates in a conversational workflow. It does not assume all as
 
 ## Behavior
 
+Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree.
+
 For each needed input, check section notes and evidence first. If the value is unavailable, append a question packet entry to `workspace/shared/box3-open-questions.yaml`.
 
 ```yaml

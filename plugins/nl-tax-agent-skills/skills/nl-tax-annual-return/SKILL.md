@@ -17,17 +17,32 @@ This skill is conversational. Do not assume the user has pre-staged a complete f
 
 ## Read first
 
+Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this
+skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve
+from your working directory, run `echo "$CLAUDE_SKILL_DIR"` in Bash and resolve
+from there. Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
+tree.
+
 Load as needed:
 
 - Supported workflows and `reference/annual-flow.md`
-- DigiD and prompt-injection security notes
+- `_shared/knowledge/security/digid.md` and `_shared/knowledge/security/prompt-injection.md`
 - `reference/annual-output-contract.md`
 - `templates/annual-return-pack.md`
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present
-- `workspace/shared/session-progress.yaml`, if present
+- `workspace/shared/session-progress.yaml`
 
 Confirm `workflow_candidate: annual_2025`; stop and hand back to intake for unsupported cases.
+
+### Resume guard
+
+`session-progress.yaml` is the resume contract. Before doing any work:
+
+- If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
+- If `profile.yaml` shows `intake_status: complete`, never restart intake - continue the annual workflow from recorded progress.
+- Skip any section already marked `complete` in `session-progress.yaml`.
 
 ## Conversational workflow
 

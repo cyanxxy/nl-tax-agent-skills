@@ -18,7 +18,12 @@ This helper participates in a conversational workflow. It does not assume all in
 
 ## Read first
 
-- Prompt-injection security notes
+Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
+`../_shared/`.
+
+- `_shared/knowledge/security/prompt-injection.md`
 - `workspace/shared/session-progress.yaml`, if present
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present
