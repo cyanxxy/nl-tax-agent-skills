@@ -34,6 +34,14 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "annual_return",
                 "tax_year": 2025,
+                "missing_fields": [
+                    {"field_id": "personal.bsn"},
+                    {"field_id": "personal.naam"},
+                    {"field_id": "personal.adres"},
+                    {"field_id": "personal.geboortedatum"},
+                    {"field_id": "box1.loon"},
+                    {"field_id": "box1.loonheffing"},
+                ],
                 "fields": [
                     {
                         "field_id": "box2.has_aanmerkelijk_belang",
@@ -64,6 +72,10 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "provisional_assessment",
                 "tax_year": 2026,
+                "missing_fields": [
+                    {"field_id": "personal.bsn"},
+                    {"field_id": "personal.adres"},
+                ],
                 "fields": [
                     {
                         "field_id": "box2.geschatte_reguliere_voordelen",
@@ -152,6 +164,10 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "notes": [
                     "Werkelijk rendement is not part of provisional 2026."
                 ],
+                "missing_fields": [
+                    {"field_id": "personal.bsn"},
+                    {"field_id": "personal.adres"},
+                ],
                 "fields": [
                     {
                         "field_id": "box3.geschatte_banktegoeden",
@@ -231,6 +247,32 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("manual review", annual_flow)
         self.assertIn("resultaat uit overige werkzaamheden", annual_field_map)
         self.assertIn("manual review only", annual_field_map)
+
+    def test_field_mapper_skill_commands_use_python3(self):
+        skill = read_text("skills/nl-tax-field-mapper/SKILL.md")
+
+        self.assertIn("python3 ", skill)
+        self.assertIn("validate_field_map.py", skill)
+        self.assertIn("render_field_map.py", skill)
+        self.assertNotIn("\npython ", skill)
+
+    def test_source_refresh_docs_describe_fetch_as_plan_only(self):
+        skill = read_text("skills/nl-tax-source-refresh/SKILL.md")
+        command = read_text("commands/nl-tax-source-refresh.md")
+        combined = f"{skill}\n{command}".lower()
+
+        self.assertIn("plan", combined)
+        self.assertIn("no live http", combined)
+        self.assertNotIn("refresh or validate snapshots as requested", command)
+        self.assertNotIn("run the scripts in `scripts/` to fetch, rebuild, and validate", skill)
+
+    def test_intake_screens_complex_box2_before_workflow_anchor(self):
+        intake = read_text("skills/nl-tax-intake/SKILL.md")
+
+        self.assertIn("complex Box 2", intake)
+        self.assertIn("own BV", intake)
+        self.assertIn("manual review", intake)
+        self.assertIn("workflow-specific anchor", intake)
 
 
 if __name__ == "__main__":

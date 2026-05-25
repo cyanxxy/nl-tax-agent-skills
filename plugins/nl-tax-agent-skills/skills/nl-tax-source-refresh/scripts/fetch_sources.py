@@ -3,16 +3,16 @@
 NL Tax Source Refresh -- Fetch Sources
 
 Reads source-register.yaml, filters by scope and year, checks freshness
-against each source's freshness_policy, and reports which sources need
-refreshing.
+against each source's freshness_policy, and reports which sources need a
+manual refresh plan.
 
 Usage:
-    python fetch_sources.py <scope> [year] [--fetch]
-    python fetch_sources.py annual
-    python fetch_sources.py provisional 2026
-    python fetch_sources.py box3 2025
-    python fetch_sources.py all
-    python fetch_sources.py all --fetch
+    python3 fetch_sources.py <scope> [year] [--fetch]
+    python3 fetch_sources.py annual
+    python3 fetch_sources.py provisional 2026
+    python3 fetch_sources.py box3 2025
+    python3 fetch_sources.py all
+    python3 fetch_sources.py all --fetch
 
 Scope:
     annual       -- sources with workflow: annual_return
@@ -20,9 +20,9 @@ Scope:
     box3         -- sources with IDs containing 'box3'
     all          -- every source in the register
 
-The --fetch flag is accepted for forward compatibility but in this v1 stub
-only reports what would be fetched. Live HTTP fetching requires the developer
-to use the skill with appropriate network permissions.
+The --fetch flag is accepted for compatibility but remains a dry-run planning
+mode. It reports what would need manual refresh; it does not perform live HTTP
+requests or rewrite source snapshots.
 
 Output:
     YAML-formatted report to stdout (or JSON fallback).
@@ -302,12 +302,12 @@ def find_repo_root(register_path):
 
 def parse_cli_args(argv):
     if len(sys.argv) < 2:
-        print("Usage: python fetch_sources.py <scope> [year] [--fetch]",
+        print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]",
               file=sys.stderr)
         print("", file=sys.stderr)
         print("Scope: annual | provisional | box3 | all", file=sys.stderr)
         print("Year:  optional tax year filter (e.g., 2025)", file=sys.stderr)
-        print("--fetch: v1 stub, reports what would be fetched", file=sys.stderr)
+        print("--fetch: dry-run, plans what would need manual refresh", file=sys.stderr)
         sys.exit(1)
 
     scope = argv[1]
@@ -336,11 +336,13 @@ def load_sources(register_path):
 
 def empty_report(now, scope, year, fetch_flag, register_path, sources, matched):
     return {
-        "report_type": "source_freshness_check",
+        "report_type": "source_refresh_plan" if fetch_flag else "source_freshness_check",
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "scope": scope,
         "year_filter": year,
-        "fetch_requested": fetch_flag,
+        "mode": "plan_only_no_live_http" if fetch_flag else "validate_freshness",
+        "dry_run": bool(fetch_flag),
+        "refresh_plan_requested": fetch_flag,
         "register_path": register_path,
         "total_sources": len(sources),
         "matched_sources": len(matched),
@@ -377,9 +379,9 @@ def source_report_entry(source, now, repo_root, fetch_flag):
 
     if fetch_flag and is_stale:
         if url_allowed:
-            entry["fetch_action"] = "WOULD_FETCH (v1 stub -- no live HTTP)"
+            entry["refresh_action"] = "PLAN_REFRESH (dry-run -- no live HTTP)"
         else:
-            entry["fetch_action"] = "BLOCKED -- URL not on domain allowlist"
+            entry["refresh_action"] = "BLOCKED -- URL not on domain allowlist"
 
     return entry
 
@@ -420,7 +422,7 @@ def print_summary(results, scope, year, fetch_flag):
     if s["url_not_allowed"] > 0:
         print(f"URLs NOT on allowlist: {s['url_not_allowed']}", file=sys.stderr)
     if fetch_flag:
-        print(f"Fetch mode: v1 stub (no live HTTP requests performed)",
+        print(f"Refresh plan mode: dry-run (no live HTTP requests performed)",
               file=sys.stderr)
 
 

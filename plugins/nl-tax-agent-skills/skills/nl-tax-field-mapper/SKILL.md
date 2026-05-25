@@ -1,7 +1,6 @@
 ---
 name: nl-tax-field-mapper
-description: Convert Dutch annual return or voorlopige aanslag workpack findings into a manual-entry field map.
-argument-hint: "[annual|provisional] [year]"
+description: Use when workpacks need manual-entry field maps.
 allowed-tools:
   - Read
   - Grep
@@ -116,6 +115,8 @@ Never map:
 
 After writing the field map, run:
 
+Resolve the validator script from this skill directory and run:
+
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
@@ -123,6 +124,8 @@ python3 ${CLAUDE_SKILL_DIR}/scripts/validate_field_map.py <path-to-field-map.yam
 The validator checks required metadata, workflow names, credential and portal-automation fields, confidence range, source provenance rules, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
 
 ## Rendering
+
+Resolve the renderer script from this skill directory and run:
 
 ```bash
 python3 ${CLAUDE_SKILL_DIR}/scripts/render_field_map.py <path-to-field-map.yaml>

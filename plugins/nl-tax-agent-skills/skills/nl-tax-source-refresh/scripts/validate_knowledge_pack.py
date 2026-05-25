@@ -2,7 +2,7 @@
 """Validate knowledge pack against source register.
 
 Usage:
-    python validate_knowledge_pack.py <path-to-source-register.yaml>
+    python3 validate_knowledge_pack.py <path-to-source-register.yaml>
 
 Checks:
     - Every mandatory snapshot file exists
@@ -229,7 +229,7 @@ def find_review_blocking_markers(filepath):
 def parse_args(argv):
     if len(argv) < 2:
         print(
-            "Usage: python validate_knowledge_pack.py <path-to-source-register.yaml>",
+            "Usage: python3 validate_knowledge_pack.py <path-to-source-register.yaml>",
             file=sys.stderr,
         )
         sys.exit(1)

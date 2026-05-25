@@ -1,6 +1,6 @@
 ---
 name: nl-tax-provisional-assessment
-description: Prepare a conversational 2026 voorlopige aanslag manual-entry guide.
+description: Use when preparing provisional_2026 guides.
 allowed-tools:
   - Read
   - Grep
@@ -26,6 +26,7 @@ tree.
 
 Load as needed:
 
+- Resolve files relative to this skill directory unless a `workspace/...` path is named.
 - Supported workflows and the relevant provisional references
 - `_shared/knowledge/security/digid.md` and `_shared/knowledge/security/prompt-injection.md`
 - 2026 provisional knowledge only
@@ -34,7 +35,7 @@ Load as needed:
 - `workspace/taxpayer/evidence-index.yaml`, if present
 - `workspace/shared/session-progress.yaml`
 
-Confirm an active workflow candidate of `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, or `provisional_2026_stopzetten`. If the profile is missing or the workflow is wrong, hand back to intake.
+Confirm an active workflow candidate of `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, or `provisional_2026_stopzetten`. If the taxpayer profile is missing or the workflow is wrong, continue with `nl-tax-intake` first.
 
 ### Resume guard
 

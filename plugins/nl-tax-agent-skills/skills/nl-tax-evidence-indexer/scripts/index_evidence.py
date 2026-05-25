@@ -9,9 +9,9 @@ This script handles cataloging only. Classification of evidence types
 is performed by the skill/model, not by this script.
 
 Usage:
-    python index_evidence.py <directory_path>
-    python index_evidence.py uploads/
-    python index_evidence.py /absolute/path/to/evidence
+    python3 index_evidence.py <directory_path>
+    python3 index_evidence.py uploads/
+    python3 index_evidence.py /absolute/path/to/evidence
 
 Output:
     YAML-formatted list to stdout (or JSON if PyYAML is not available).
@@ -177,7 +177,7 @@ def format_output(entries: list, directory: str) -> str:
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python index_evidence.py <directory_path>", file=sys.stderr)
+        print("Usage: python3 index_evidence.py <directory_path>", file=sys.stderr)
         print("", file=sys.stderr)
         print("Scans a directory of tax evidence files and outputs a", file=sys.stderr)
         print(

@@ -7,8 +7,8 @@ interest positions, sign returns, submit returns, or replace professional
 review where losses or special events are present.
 
 Usage:
-    python calculate_box2_tax.py input.json
-    python calculate_box2_tax.py --tax-year 2025 --regular-benefits 10000
+    python3 calculate_box2_tax.py input.json
+    python3 calculate_box2_tax.py --tax-year 2025 --regular-benefits 10000
 """
 
 from __future__ import annotations

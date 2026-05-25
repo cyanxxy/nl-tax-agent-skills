@@ -6,7 +6,7 @@ filters for evidence items relevant to box 1 income.  Outputs a summary
 table and identifies gaps (missing evidence types).
 
 Usage:
-    python summarize_box1_inputs.py [--evidence-dir PATH]
+    python3 summarize_box1_inputs.py [--evidence-dir PATH]
 
 Options:
     --evidence-dir PATH   Directory containing the evidence index.

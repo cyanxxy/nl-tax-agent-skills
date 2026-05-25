@@ -2,7 +2,7 @@
 """Validate a field-map.yaml for correctness and policy compliance.
 
 Usage:
-    python validate_field_map.py <path-to-field-map.yaml>
+    python3 validate_field_map.py <path-to-field-map.yaml>
 
 Checks:
     - All required metadata fields present
@@ -17,7 +17,9 @@ Checks:
 
 import json
 import os
+import re
 import sys
+from pathlib import Path
 
 VALID_SOURCE_TYPES = {
     "evidence",
@@ -28,12 +30,12 @@ VALID_SOURCE_TYPES = {
     "assumption",
     "unknown",
 }
-VALID_WORKFLOWS = {
-    "annual",
-    "provisional",
-    "annual_return",
-    "provisional_assessment",
+REFERENCE_DIR = Path(__file__).resolve().parents[1] / "reference"
+SUPPORTED_WORKFLOW_YEARS = {
+    ("annual_return", 2025): REFERENCE_DIR / "annual-field-map.md",
+    ("provisional_assessment", 2026): REFERENCE_DIR / "provisional-field-map.md",
 }
+VALID_WORKFLOWS = {workflow for workflow, _ in SUPPORTED_WORKFLOW_YEARS}
 CREDENTIAL_KEYWORDS = {
     "digid", "wachtwoord", "password", "inloggegevens",
     "username", "login", "credential", "secret", "pin",
@@ -59,13 +61,52 @@ def _is_provisional(workflow):
     return workflow in {"provisional", "provisional_assessment"}
 
 
-def validate(data):
-    errors = []
-    warnings = []
+def _parse_tax_year(value):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
-    # Top-level metadata
+
+def required_reference_fields(reference_path):
+    required = set()
+    headers = None
+
+    with open(reference_path, "r", encoding="utf-8") as handle:
+        for raw_line in handle:
+            line = raw_line.strip()
+            if not line.startswith("|") or not line.endswith("|"):
+                headers = None
+                continue
+
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            normalized = [cell.lower() for cell in cells]
+            if "field_id" in normalized and "required" in normalized:
+                headers = normalized
+                continue
+            if headers is None or all(set(cell) <= {"-"} for cell in cells):
+                continue
+            if "field_id" not in headers or "required" not in headers:
+                continue
+
+            field_index = headers.index("field_id")
+            required_index = headers.index("required")
+            if len(cells) <= max(field_index, required_index):
+                continue
+            if cells[required_index].strip().lower() != "required":
+                continue
+
+            match = re.search(r"`([^`]+)`", cells[field_index])
+            if match:
+                required.add(match.group(1))
+
+    return required
+
+
+def validate_metadata(data, errors):
     workflow = data.get("workflow")
     tax_year = data.get("tax_year")
+    parsed_tax_year = _parse_tax_year(tax_year)
     version = data.get("field_map_version")
 
     if not version:
@@ -76,99 +117,130 @@ def validate(data):
         errors.append(f"Invalid workflow: {workflow}")
     if not tax_year:
         errors.append("Missing tax_year")
+    elif parsed_tax_year is None:
+        errors.append(f"Invalid tax_year: {tax_year}")
+    if workflow and tax_year and (workflow, parsed_tax_year) not in SUPPORTED_WORKFLOW_YEARS:
+        errors.append(
+            f"Unsupported workflow/tax_year combination: {workflow} {tax_year}"
+        )
 
-    fields = data.get("fields", []) or []
-    missing = data.get("missing_fields", []) or []
+    return workflow, parsed_tax_year
+
+
+def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, errors):
+    field_ids = {field.get("field_id") for field in fields if field.get("field_id")}
     missing_field_ids = {m.get("field_id") for m in missing if m.get("field_id")}
 
-    for i, field in enumerate(fields):
-        fid = field.get("field_id", f"field[{i}]")
+    reference_path = SUPPORTED_WORKFLOW_YEARS.get((workflow, parsed_tax_year))
+    if not reference_path:
+        return missing_field_ids
 
-        # Credential and portal-automation checks
+    represented_field_ids = field_ids | missing_field_ids
+    for required_field_id in sorted(
+        required_reference_fields(reference_path) - represented_field_ids
+    ):
+        errors.append(
+            "Required reference field not represented in fields or "
+            f"missing_fields: {required_field_id}"
+        )
+
+    return missing_field_ids
+
+
+def validate_sensitive_field_names(fid, label_lower, errors):
+    fid_lower = fid.lower()
+    for kw in CREDENTIAL_KEYWORDS:
+        if kw in fid_lower or kw in label_lower:
+            errors.append(f"Credential/login field detected: {fid}")
+    for kw in PORTAL_AUTOMATION_KEYWORDS:
+        if kw in fid_lower or kw in label_lower:
+            errors.append(f"Browser/submission automation field detected: {fid}")
+
+
+def validate_source(fid, field, missing_field_ids, errors, warnings):
+    source = field.get("source", {})
+    if not isinstance(source, dict):
+        errors.append(f"Source for {fid} is not a mapping")
+        return
+
+    src_type = source.get("type")
+    if not src_type:
+        warnings.append(f"No source.type set for {fid}")
+    elif src_type not in VALID_SOURCE_TYPES:
+        errors.append(f"Invalid source.type for {fid}: {src_type}")
+    elif src_type == "evidence" and not source.get("evidence_id"):
+        errors.append(f"source.type=evidence requires evidence_id ({fid})")
+    elif src_type == "user_chat":
+        if not source.get("quote"):
+            errors.append(f"source.type=user_chat requires source.quote ({fid})")
+        if not source.get("stated_at"):
+            warnings.append(f"source.type=user_chat without stated_at ({fid})")
+    elif src_type == "assumption" and not source.get("assumption_id"):
+        errors.append(f"source.type=assumption requires assumption_id ({fid})")
+    elif src_type == "baseline" and not source.get("baseline_ref"):
+        warnings.append(f"source.type=baseline without baseline_ref ({fid})")
+    elif src_type == "calculated" and not source.get("calculated_from"):
+        warnings.append(f"source.type=calculated without calculated_from ({fid})")
+    elif src_type == "unknown":
+        if field.get("value") not in (None, ""):
+            errors.append(f"source.type=unknown must have null value ({fid})")
+        if fid not in missing_field_ids:
+            errors.append(f"source.type=unknown requires entry in missing_fields ({fid})")
+
+
+def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
+    fid = field.get("field_id", f"field[{index}]")
+    label_lower = (field.get("label") or "").lower()
+
+    validate_sensitive_field_names(fid, label_lower, errors)
+
+    confidence = field.get("confidence")
+    if confidence is not None and not (0.0 <= confidence <= 1.0):
+        errors.append(f"Confidence out of range [0,1] for {fid}: {confidence}")
+
+    validate_source(fid, field, missing_field_ids, errors, warnings)
+
+    if _is_provisional(workflow):
         fid_lower = fid.lower()
-        label_lower = (field.get("label") or "").lower()
-        for kw in CREDENTIAL_KEYWORDS:
+        for kw in WERKELIJK_KEYWORDS:
             if kw in fid_lower or kw in label_lower:
-                errors.append(f"Credential/login field detected: {fid}")
-        for kw in PORTAL_AUTOMATION_KEYWORDS:
-            if kw in fid_lower or kw in label_lower:
-                errors.append(f"Browser/submission automation field detected: {fid}")
+                errors.append(
+                    f"CRITICAL: werkelijk rendement field in provisional map: {fid}"
+                )
 
-        # Confidence range
-        confidence = field.get("confidence")
-        if confidence is not None:
-            if not (0.0 <= confidence <= 1.0):
-                errors.append(f"Confidence out of range [0,1] for {fid}: {confidence}")
+    if field.get("manual_review_required") is None:
+        warnings.append(f"No manual_review_required set for {fid}")
 
-        # Source type and per-type required fields
-        source = field.get("source", {})
-        if not isinstance(source, dict):
-            errors.append(f"Source for {fid} is not a mapping")
-        else:
-            src_type = source.get("type")
-            if not src_type:
-                warnings.append(f"No source.type set for {fid}")
-            elif src_type not in VALID_SOURCE_TYPES:
-                errors.append(f"Invalid source.type for {fid}: {src_type}")
-            else:
-                if src_type == "evidence" and not source.get("evidence_id"):
-                    errors.append(
-                        f"source.type=evidence requires evidence_id ({fid})"
-                    )
-                if src_type == "user_chat":
-                    if not source.get("quote"):
-                        errors.append(
-                            f"source.type=user_chat requires source.quote ({fid})"
-                        )
-                    if not source.get("stated_at"):
-                        warnings.append(
-                            f"source.type=user_chat without stated_at ({fid})"
-                        )
-                if src_type == "assumption" and not source.get("assumption_id"):
-                    errors.append(
-                        f"source.type=assumption requires assumption_id ({fid})"
-                    )
-                if src_type == "baseline" and not source.get("baseline_ref"):
-                    warnings.append(
-                        f"source.type=baseline without baseline_ref ({fid})"
-                    )
-                if src_type == "calculated" and not source.get("calculated_from"):
-                    warnings.append(
-                        f"source.type=calculated without calculated_from ({fid})"
-                    )
-                if src_type == "unknown":
-                    if field.get("value") not in (None, ""):
-                        errors.append(
-                            f"source.type=unknown must have null value ({fid})"
-                        )
-                    if fid not in missing_field_ids:
-                        errors.append(
-                            f"source.type=unknown requires entry in missing_fields ({fid})"
-                        )
 
-        # Provisional: no werkelijk rendement
-        if _is_provisional(workflow):
-            for kw in WERKELIJK_KEYWORDS:
-                if kw in fid_lower or kw in label_lower:
-                    errors.append(
-                        f"CRITICAL: werkelijk rendement field in provisional map: {fid}"
-                    )
-
-        # Manual review flag
-        if field.get("manual_review_required") is None:
-            warnings.append(f"No manual_review_required set for {fid}")
-
-    # Missing fields section sanity
+def validate_missing_fields(missing, warnings):
     for m in missing:
         if not m.get("field_id") and not m.get("label"):
             warnings.append("Missing field entry without field_id or label")
+
+
+def validate(data):
+    errors = []
+    warnings = []
+
+    workflow, parsed_tax_year = validate_metadata(data, errors)
+    fields = data.get("fields", []) or []
+    missing = data.get("missing_fields", []) or []
+    if not fields and not missing:
+        errors.append("Field map must include at least one entry in fields or missing_fields")
+
+    missing_field_ids = validate_reference_coverage(
+        workflow, parsed_tax_year, fields, missing, errors
+    )
+    for index, field in enumerate(fields):
+        validate_field(field, index, workflow, missing_field_ids, errors, warnings)
+    validate_missing_fields(missing, warnings)
 
     return errors, warnings
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python validate_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
+        print("Usage: python3 validate_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
         sys.exit(1)
 
     path = sys.argv[1]

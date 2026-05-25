@@ -106,6 +106,7 @@ active_workflows:
       - bd_box2_rates_2025_2026
       - bd_box2_income_ab_guidance
       - bd_fisin_aanmerkelijk_belang_2026
+      - bd_box2_provisional_2026
       - bd_box3_2026_provisional
       - bd_algoritmeregister_vva_eva
 

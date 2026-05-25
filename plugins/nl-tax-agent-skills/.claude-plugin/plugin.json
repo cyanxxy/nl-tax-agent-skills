@@ -1,11 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "description": "Dutch tax preparation skills that help users gather information and fill official forms manually, step by step.",
+  "description": "Dutch tax skills for local manual-entry workpacks.",
   "author": {
     "name": "Tax Skill Developers"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "keywords": [
     "tax",
     "dutch-tax",

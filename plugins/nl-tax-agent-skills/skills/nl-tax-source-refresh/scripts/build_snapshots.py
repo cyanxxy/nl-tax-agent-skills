@@ -2,7 +2,7 @@
 """Build and verify snapshot metadata for source register entries.
 
 Usage:
-    python build_snapshots.py <path-to-source-register.yaml>
+    python3 build_snapshots.py <path-to-source-register.yaml>
 
 For each source entry with a snapshot_path:
     - Checks if the snapshot file exists
@@ -120,7 +120,7 @@ def find_content_root(register_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python build_snapshots.py <path-to-source-register.yaml>",
+        print("Usage: python3 build_snapshots.py <path-to-source-register.yaml>",
               file=sys.stderr)
         sys.exit(1)
 

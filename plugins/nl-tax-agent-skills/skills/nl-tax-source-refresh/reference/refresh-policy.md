@@ -2,6 +2,15 @@
 
 Freshness policies and refresh triggers for the Dutch Tax Skills source register.
 
+## Current implementation note
+
+`scripts/fetch_sources.py --fetch` is a dry-run refresh planner. It validates
+freshness and allowlist status, then reports which sources would need manual
+refresh. It does not make live HTTP requests and does not rewrite source
+snapshots. A real refresh requires a developer to retrieve official content,
+review it, update the local snapshot, run `build_snapshots.py`, and pass the
+validators.
+
 ## Freshness policies
 
 Each source in `source-register.yaml` carries a `freshness_policy` field. The refresh pipeline interprets these policies as follows:

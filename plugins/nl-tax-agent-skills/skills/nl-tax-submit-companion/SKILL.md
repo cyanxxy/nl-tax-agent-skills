@@ -1,6 +1,6 @@
 ---
 name: nl-tax-submit-companion
-description: Use when a user wants a manual portal checklist.
+description: Use when workpacks need manual submission checklists.
 disable-model-invocation: true
 allowed-tools:
   - Read

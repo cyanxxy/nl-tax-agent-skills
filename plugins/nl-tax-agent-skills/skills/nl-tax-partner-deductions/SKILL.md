@@ -1,6 +1,6 @@
 ---
 name: nl-tax-partner-deductions
-description: Use when partner or deduction allocation notes are needed.
+description: Use when partner or deduction notes are needed.
 user-invocable: false
 allowed-tools:
   - Read

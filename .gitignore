@@ -34,7 +34,10 @@ evals/*/benchmark-usage.jsonl
 .env.*
 
 # Local AI assistant/session files
-.agents/
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
 .claude/
 .codex/
 CLAUDE.md

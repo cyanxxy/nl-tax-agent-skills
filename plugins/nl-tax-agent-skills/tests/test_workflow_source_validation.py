@@ -5,6 +5,7 @@ import importlib.util
 import pathlib
 import tempfile
 import unittest
+from datetime import datetime, timezone
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -127,6 +128,59 @@ sources:
 
         self.assertEqual(errors, [])
         self.assertFalse(any("unknown skill" in warning for warning in warnings), warnings)
+
+    def test_provisional_2026_box2_note_is_registered_and_metadata_covered(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py",
+            "validate_knowledge_pack_box2_2026_note",
+        )
+        register = module.load_yaml_or_json(str(ROOT / "skills/_shared/source-register.yaml"))
+        sources = register.get("sources", [])
+        source_by_id = {source.get("id"): source for source in sources}
+
+        source = source_by_id.get("bd_box2_provisional_2026")
+
+        self.assertIsNotNone(source)
+        self.assertEqual(
+            source.get("snapshot_path"),
+            "skills/_shared/knowledge/years/2026/provisional/box2.md",
+        )
+        self.assertEqual(source.get("workflow"), "provisional_assessment")
+        self.assertEqual(source.get("tax_year"), 2026)
+        self.assertIn("nl-tax-box2", source.get("mandatory_for", []))
+        self.assertEqual(module.collect_snapshot_metadata_errors([source], str(ROOT)), [])
+
+    def test_fetch_flag_reports_refresh_plan_without_live_fetch_language(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
+            "fetch_sources_dry_run_plan",
+        )
+        source = {
+            "id": "bd_stale_test",
+            "title": "Stale test source",
+            "url": "https://www.belastingdienst.nl/example",
+            "source_type": "official_guidance",
+            "last_checked": "2025-01-01",
+            "snapshot_path": "skills/_shared/knowledge/years/2026/provisional/box2.md",
+        }
+
+        report = module.build_report(
+            [source],
+            [source],
+            datetime(2026, 5, 25, tzinfo=timezone.utc),
+            str(ROOT),
+            str(ROOT / "skills/_shared/source-register.yaml"),
+            "all",
+            None,
+            True,
+        )
+        entry = report["sources_checked"][0]
+
+        self.assertEqual(report["report_type"], "source_refresh_plan")
+        self.assertTrue(report["dry_run"])
+        self.assertEqual(report["mode"], "plan_only_no_live_http")
+        self.assertEqual(entry["refresh_action"], "PLAN_REFRESH (dry-run -- no live HTTP)")
+        self.assertNotIn("fetch_action", entry)
 
     def test_blocked_roadmap_workflows_remain_blocked_without_source_ids(self):
         module = load_module(

@@ -1,7 +1,6 @@
 ---
 name: nl-tax-intake
-description: Determine the correct Dutch tax workflow and create a taxpayer profile for annual return 2025 or voorlopige aanslag 2026.
-argument-hint: "[annual|provisional|review|stopzetten]"
+description: Use when Dutch tax help needs intake.
 allowed-tools:
   - Read
   - Grep
@@ -86,6 +85,7 @@ After each user reply:
    - If the case is unsupported (see below), say so clearly and stop.
    - If the workflow is identified, ask up to **two follow-ups**:
      - **Fiscal partner?** Yes / no. If yes, do NOT collect partner DigiD or BSN - only whether a partner exists.
+     - **Early complex Box 2 screen:** If the user mentions a BV, DGA role, aanmerkelijk belang, dividends, share sale, own BV loan, or Box 2 estimate, ask before the workflow-specific anchor: "Does the Box 2 situation involve a share sale or valuation dispute, emigration/immigration, restructuring, inheritance or gift, non-arm's-length pricing, or borrowing from your own BV?" If yes or unclear, record `complex_box2_screening: manual_review` and route to manual review before treating the case as a standard workflow.
      - **Workflow-specific anchor:**
        - `annual_2025` -> "Do you already have any documents (jaaropgaaf, bankafschriften, WOZ, mortgage jaaroverzicht), or shall we collect amounts step by step in chat?"
        - `provisional_2026_request` -> "Do you have a rough estimate of your 2026 income, or do you want me to ask category by category?"

@@ -1,0 +1,22 @@
+{
+  "name": "nl-tax-agent-skills-local",
+  "interface": {
+    "displayName": "NL Tax Agent Skills Local"
+  },
+  "plugins": [
+    {
+      "name": "nl-tax-agent-skills",
+      "description": "Dutch tax skills for local manual-entry workpacks.",
+      "license": "Apache-2.0",
+      "source": {
+        "source": "local",
+        "path": "./plugins/nl-tax-agent-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

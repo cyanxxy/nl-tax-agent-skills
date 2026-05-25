@@ -2,7 +2,7 @@
 """Render a field-map.yaml as a readable Markdown table for human review.
 
 Usage:
-    python render_field_map.py <path-to-field-map.yaml>
+    python3 render_field_map.py <path-to-field-map.yaml>
 
 Outputs Markdown to stdout grouped by section.
 """
@@ -115,7 +115,7 @@ def render(data):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python render_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
+        print("Usage: python3 render_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
         sys.exit(1)
 
     path = sys.argv[1]

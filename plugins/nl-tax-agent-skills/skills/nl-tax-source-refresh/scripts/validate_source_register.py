@@ -2,7 +2,7 @@
 """Validate the source register for completeness and correctness.
 
 Usage:
-    python validate_source_register.py <path-to-source-register.yaml>
+    python3 validate_source_register.py <path-to-source-register.yaml>
 
 Checks:
     - All required fields present for each entry
@@ -150,7 +150,7 @@ def validate(register_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python validate_source_register.py <path-to-source-register.yaml>",
+        print("Usage: python3 validate_source_register.py <path-to-source-register.yaml>",
               file=sys.stderr)
         sys.exit(1)
 

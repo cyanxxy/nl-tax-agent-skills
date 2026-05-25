@@ -1,11 +1,11 @@
 {
   "name": "nl-tax-agent-skills",
   "version": "0.1.1",
-  "description": "Dutch tax preparation skills that help users gather information and fill official forms manually, step by step.",
+  "description": "Dutch tax skills for local manual-entry workpacks.",
   "author": {
     "name": "Tax Skill Developers"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "keywords": [
     "tax",
     "dutch-tax",
@@ -26,9 +26,9 @@
       "Source-Backed Guidance"
     ],
     "defaultPrompt": [
-      "Help me prepare my 2025 Dutch tax form.",
-      "Guide me through my 2026 voorlopige aanslag.",
-      "Index my Dutch tax documents locally."
+      "Start Dutch tax intake.",
+      "Prepare 2026 voorlopige aanslag.",
+      "Index Dutch tax documents."
     ],
     "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
     "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills#privacy-boundary",

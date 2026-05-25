@@ -1,16 +1,17 @@
 # NL Tax Agent Skills Plugin
 
-Plugin package for preparing Dutch individual income-tax information packs and manual form-entry guidance through LLM-native Agent Skills and slash-command wrappers.
+Plugin package for preparing Dutch individual income-tax information packs and manual form-entry guidance through LLM-native Agent Skills and Claude Code slash-command wrappers.
 
-This directory is the product package. The skills are bundled inside the plugin under `skills/`; flat command wrappers live under `commands/` for hosts and versions that expose slash commands separately from skills.
+This directory is the product package. The skills are bundled inside the plugin under `skills/`; flat command wrappers live under `commands/` for Claude Code slash-command compatibility.
 
-The repository root contains the Claude marketplace manifest:
+The repository root contains marketplace manifests that point at this nested plugin package:
 
 ```text
-.claude-plugin/marketplace.json
+.claude-plugin/marketplace.json       # Claude marketplace
+.agents/plugins/marketplace.json      # repo-scoped Codex marketplace
 ```
 
-That marketplace points at this plugin directory.
+The package is licensed under Apache-2.0; see the repository root `LICENSE`.
 
 ## Package Contents
 
@@ -21,7 +22,7 @@ nl-tax-agent-skills/
   assets/
     icon.png
     logo.png
-  commands/                     # Flat slash-command wrappers
+  commands/                     # Claude Code slash-command wrappers
     nl-tax-intake.md
     nl-tax-evidence-indexer.md
     nl-tax-annual-return.md
@@ -137,32 +138,40 @@ zip -r ../../nl-tax-agent-skills.plugin.zip . \
 
 ## Codex
 
-For local Codex discovery, use a machine-local marketplace entry at:
+For Codex discovery from the repository root, use the tracked repo-scoped marketplace at:
 
 ```text
 .agents/plugins/marketplace.json
 ```
 
-That path is ignored by Git and should stay outside the plugin package.
-
-The plugin manifest for Codex is:
+That marketplace points to the nested plugin package at `plugins/nl-tax-agent-skills/`. The plugin package itself keeps the required Codex manifest at:
 
 ```text
 plugins/nl-tax-agent-skills/.codex-plugin/plugin.json
 ```
 
-The plugin also includes `commands/` because Codex plugin bundles can expose flat command files in addition to `skills/`.
+Only `.agents/plugins/marketplace.json` is tracked under `.agents/`; other assistant state in `.agents/` remains ignored.
+
+Codex users invoke the bundled skills after discovery. The plugin also includes `commands/`, but those files are Claude Code slash-command wrappers and should not be treated as the Codex command surface unless a target Codex host explicitly documents support for command files.
 
 ## Update Behavior
 
-The marketplace manifest and plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude resolves the plugin version from `plugin.json` → marketplace entry → git commit SHA, so each pushed commit is picked up automatically by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
+The Claude marketplace and Claude plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude can use the git commit SHA when manifest version metadata is omitted, so each pushed commit is picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
-If you redistribute this plugin through a non-Anthropic, Codex-style host that copies the plugin into a local `org-plugins/` directory (a Codex MVP convention, not part of Anthropic Cowork), create a deployment-local `version.json` and bump its `version` string on every rollout. That file is not committed because it would make GitHub-synced updates look unchanged unless manually bumped.
+The Codex manifest includes fixed release metadata:
+
+```json
+{
+  "version": "0.1.1"
+}
+```
+
+Bump `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` for every Codex plugin release. Do not remove that field unless the target Codex schema no longer requires or uses manifest version metadata.
 
 ## Release Checks
 
-- The release artifact must contain only this plugin package, the repository README, the license, and the marketplace manifest.
-- Do not include `.git/`, `.claude/`, `.agents/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, or compiled Python files.
+- The release artifact must contain only this plugin package, the repository README, the license, the Claude marketplace, and the repo-scoped Codex marketplace.
+- Do not include `.git/`, `.claude/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, compiled Python files, or local `.agents/` state other than `.agents/plugins/marketplace.json`.
 - Run source-register, knowledge-pack, and supported-workflows validation before release.
 - Test manual-only skills in the target Claude Code version before release. If `disable-model-invocation: true` is not respected for plugin skills, use permission rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
 
@@ -172,6 +181,7 @@ Run these checks from the repository root:
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
 test -d plugins/nl-tax-agent-skills/commands
 
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \

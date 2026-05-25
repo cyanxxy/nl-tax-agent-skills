@@ -10,7 +10,7 @@ Werkelijk rendement is not part of provisional 2026.
 If an actual_return parameter is provided, the script exits with an error.
 
 Usage:
-    python summarize_box3_provisional_2026.py \\
+    python3 summarize_box3_provisional_2026.py \\
         --banktegoeden <amount> \\
         --overige <amount> \\
         --schulden <amount> \\

@@ -1,6 +1,6 @@
 # Rule note: Box 2 provisional assessment 2026
 
-source_ids: bd_box2_rates_2025_2026, bd_box2_income_ab_guidance, bd_fisin_aanmerkelijk_belang_2026
+source_ids: bd_box2_rates_2025_2026, bd_box2_income_ab_guidance, bd_fisin_aanmerkelijk_belang_2026, bd_box2_provisional_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active

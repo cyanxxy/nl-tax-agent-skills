@@ -6,7 +6,7 @@ substantial-interest situations are flagged for review without making the CLI
 fail; malformed input exits nonzero.
 
 Usage:
-    python validate_box2_inputs.py input.json
+    python3 validate_box2_inputs.py input.json
 """
 
 from __future__ import annotations
@@ -292,7 +292,7 @@ def validate_json_file(path: Path) -> dict:
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if len(args) != 1:
-        print("Usage: python validate_box2_inputs.py input.json", file=sys.stderr)
+        print("Usage: python3 validate_box2_inputs.py input.json", file=sys.stderr)
         return 1
 
     try:

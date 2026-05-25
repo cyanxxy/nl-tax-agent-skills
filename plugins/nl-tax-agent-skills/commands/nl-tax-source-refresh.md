@@ -1,5 +1,5 @@
 ---
-description: Refresh official Dutch tax source snapshots and validate the local knowledge pack. Developer-only.
+description: Validate or plan official Dutch tax source snapshot refreshes. Developer-only.
 argument-hint: "[annual|provisional|box3|all] [year]"
 disable-model-invocation: true
 allowed-tools:

@@ -548,6 +548,22 @@ sources:
       - nl-tax-box2
       - nl-tax-field-mapper
 
+  - id: bd_box2_provisional_2026
+    title: "Box 2 provisional assessment 2026 preparation note"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/box2.md"
+    last_checked: "2026-05-20"
+    freshness_policy: "check when provisional assessment season opens and after Box 2 guidance or rate updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-box2
+      - nl-tax-field-mapper
+
   # ===========================================================================
   #  Box 3
   # ===========================================================================

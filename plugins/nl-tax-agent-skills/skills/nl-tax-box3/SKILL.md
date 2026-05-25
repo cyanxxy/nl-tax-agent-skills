@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box3
-description: Use when box 3 classification or method notes are needed.
+description: Use when Box 3 method notes are needed.
 user-invocable: false
 allowed-tools:
   - Read

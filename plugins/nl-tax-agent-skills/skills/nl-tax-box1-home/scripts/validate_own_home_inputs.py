@@ -6,7 +6,7 @@ Calculates eigenwoningforfait, checks tariefsaanpassing applicability, and
 determines whether the Hillenregeling applies.
 
 Usage:
-    python validate_own_home_inputs.py \\
+    python3 validate_own_home_inputs.py \\
         --woz-value 400000 \\
         --mortgage-interest 8500 \\
         --mortgage-start-year 2018 \\
@@ -207,13 +207,19 @@ def calculate_tariefsaanpassing(
         return (False, 0.0, warnings)
 
     # Tariefsaanpassing applies
+    deductible_costs = max(mortgage_interest, 0.0)
+    if deductible_costs == 0:
+        return (False, 0.0, warnings)
+
+    schijf3_deduction_portion = min(deductible_costs, taxable_income - threshold)
     rate_diff = params["schijf3_rate"] - params["cap_rate"]
-    adjustment = round(mortgage_interest * rate_diff, 2)
+    adjustment = round(schijf3_deduction_portion * rate_diff, 2)
     warnings.append(
         f"Tariefsaanpassing applies: income EUR {taxable_income:,.0f} exceeds "
         f"schijf 3 threshold EUR {threshold:,.0f}. Own-home deduction "
         f"benefit is reduced by EUR {adjustment:,.2f} "
-        f"({rate_diff * 100:.2f}% of EUR {mortgage_interest:,.2f})."
+        f"({rate_diff * 100:.2f}% of EUR {schijf3_deduction_portion:,.2f} "
+        "deductible costs falling in schijf 3)."
     )
     return (True, adjustment, warnings)
 

@@ -36,6 +36,22 @@ class Box1OwnHomeTests(unittest.TestCase):
         self.assertEqual(correction, 154)
         self.assertAlmostEqual(remaining, 0.76667)
 
+    def test_tariefsaanpassing_uses_only_deduction_portion_in_schijf3(self):
+        module = load_module(
+            "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+            "validate_own_home_inputs_tariefsaanpassing",
+        )
+
+        applies, adjustment, warnings = module.calculate_tariefsaanpassing(
+            mortgage_interest=10_000,
+            taxable_income=80_000,
+            tax_year=2025,
+        )
+
+        self.assertTrue(applies)
+        self.assertEqual(adjustment, 382.6)
+        self.assertTrue(any("EUR 3,183.00" in warning for warning in warnings))
+
 
 if __name__ == "__main__":
     unittest.main()

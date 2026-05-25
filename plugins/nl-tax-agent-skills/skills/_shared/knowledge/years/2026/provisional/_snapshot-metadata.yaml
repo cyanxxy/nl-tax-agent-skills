@@ -18,6 +18,12 @@ sources:
     snapshot_created_at: '2026-05-20T00:00:00+00:00'
     source_id: bd_fisin_aanmerkelijk_belang_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
+  bd_box2_provisional_2026:
+    content_hash_sha256: d177132411e889c783a7590962dd643684fe97c64b1ed1f26672cc201fef25b1
+    review_status: reviewed
+    snapshot_created_at: '2026-05-20T00:00:00+00:00'
+    source_id: bd_box2_provisional_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
   bd_own_home_deduction_cap_2026:
     content_hash_sha256: b9c118200a8e62fa57c2fff341e461ff34e1ee583be7b0d8df16d444055ae66a
     review_status: reviewed

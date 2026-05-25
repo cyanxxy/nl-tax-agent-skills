@@ -2,7 +2,7 @@
 """Validate source-backed workflow support declarations.
 
 Usage:
-    python validate_supported_workflows.py \
+    python3 validate_supported_workflows.py \
       <path-to-supported-workflows.yaml> <path-to-source-register.yaml>
 
 Checks:
@@ -300,7 +300,7 @@ def validate(config_path, register_path):
 def main():
     if len(sys.argv) != 3:
         print(
-            "Usage: python validate_supported_workflows.py "
+            "Usage: python3 validate_supported_workflows.py "
             "<supported-workflows.yaml> <source-register.yaml>",
             file=sys.stderr,
         )

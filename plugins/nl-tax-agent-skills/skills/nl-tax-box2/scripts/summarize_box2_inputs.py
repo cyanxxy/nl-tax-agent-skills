@@ -2,7 +2,7 @@
 """Render a concise Markdown Box 2 summary for manual-entry workpacks.
 
 Usage:
-    python summarize_box2_inputs.py input.json
+    python3 summarize_box2_inputs.py input.json
 """
 
 from __future__ import annotations
@@ -153,7 +153,7 @@ def render_markdown_summary(payload: dict[str, Any]) -> tuple[str, int]:
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if len(args) != 1:
-        print("Usage: python summarize_box2_inputs.py input.json", file=sys.stderr)
+        print("Usage: python3 summarize_box2_inputs.py input.json", file=sys.stderr)
         return 1
 
     try:

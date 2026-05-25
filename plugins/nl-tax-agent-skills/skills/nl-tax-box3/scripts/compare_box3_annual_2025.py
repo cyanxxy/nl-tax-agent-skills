@@ -6,7 +6,7 @@ Compare fictitious vs actual return for box 3 annual 2025.
 NOTE: This script is ONLY for the annual 2025 return, NOT for provisional assessments.
 
 Usage:
-    python compare_box3_annual_2025.py \\
+    python3 compare_box3_annual_2025.py \\
         --banktegoeden <amount> \\
         --overige <amount> \\
         --schulden <amount> \\
@@ -137,7 +137,7 @@ def calculate_fictitious_box3(
     return result
 
 
-def main():
+def build_parser():
     parser = argparse.ArgumentParser(
         description=(
             "Compare fictitious vs actual return for box 3 annual 2025. "
@@ -161,26 +161,10 @@ def main():
                             "For fiscal partners: taxpayer's share of the "
                             "joint grondslag sparen en beleggen. Default 100."
                         ))
+    return parser
 
-    args = parser.parse_args()
 
-    try:
-        fictitious = calculate_fictitious_box3(
-            banktegoeden=args.banktegoeden,
-            overige=args.overige,
-            schulden=args.schulden,
-            heffingsvrij=args.heffingsvrij,
-            has_partner=args.has_partner,
-            allocation_pct=args.allocation_pct,
-        )
-        actual_return_allocated = allocated_amount(
-            args.actual_return,
-            args.has_partner,
-            args.allocation_pct,
-        )
-    except ValueError as exc:
-        parser.error(str(exc))
-
+def compare_tax_methods(fictitious, actual_return_allocated):
     actual_return_for_tax = max(0.0, actual_return_allocated)
     actual_return_for_tax_eur = floor_euro(actual_return_for_tax)
     tax_at_actual = floor_euro(actual_return_for_tax_eur * TAX_RATE)
@@ -196,17 +180,24 @@ def main():
         favorable = "equal"
         savings = 0.0
 
-    output = {
-        "assessment_type": "annual_2025",
-        **fictitious,
-        "fictitious_return": fictitious["box3_inkomen"],
-        "actual_return_reported": nearest_euro(args.actual_return),
-        "actual_return_allocated": nearest_euro(actual_return_allocated),
+    return {
         "actual_return_for_tax": actual_return_for_tax_eur,
         "tax_at_fictitious": tax_at_fictitious,
         "tax_at_actual": tax_at_actual,
         "favorable_method": favorable,
         "tax_savings_from_favorable": savings,
+    }
+
+
+def build_output(args, fictitious, actual_return_allocated):
+    comparison = compare_tax_methods(fictitious, actual_return_allocated)
+    return {
+        "assessment_type": "annual_2025",
+        **fictitious,
+        "fictitious_return": fictitious["box3_inkomen"],
+        "actual_return_reported": nearest_euro(args.actual_return),
+        "actual_return_allocated": nearest_euro(actual_return_allocated),
+        **comparison,
         "tax_rate": TAX_RATE,
         "percentages_used": {
             "banktegoeden": PERC_BANKTEGOEDEN,
@@ -221,6 +212,33 @@ def main():
             "The official filing environment makes the binding calculation."
         ),
     }
+
+
+def run(args):
+    fictitious = calculate_fictitious_box3(
+        banktegoeden=args.banktegoeden,
+        overige=args.overige,
+        schulden=args.schulden,
+        heffingsvrij=args.heffingsvrij,
+        has_partner=args.has_partner,
+        allocation_pct=args.allocation_pct,
+    )
+    actual_return_allocated = allocated_amount(
+        args.actual_return,
+        args.has_partner,
+        args.allocation_pct,
+    )
+    return build_output(args, fictitious, actual_return_allocated)
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    try:
+        output = run(args)
+    except ValueError as exc:
+        parser.error(str(exc))
 
     print(json.dumps(output, indent=2, ensure_ascii=False))
 

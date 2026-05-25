@@ -37,8 +37,7 @@ artifacts. For normal Plugin Eval runs, the verifier reads
 Run the Plugin Eval benchmark:
 
 ```bash
-node /Users/mansour/.codex/plugins/cache/openai-curated/plugin-eval/08373044/scripts/plugin-eval.js \
-  benchmark plugins/nl-tax-agent-skills \
+plugin-eval benchmark plugins/nl-tax-agent-skills \
   --config evals/nl-tax-agent-skills/plugin-eval-benchmark.json \
   --format markdown
 ```
@@ -46,8 +45,26 @@ node /Users/mansour/.codex/plugins/cache/openai-curated/plugin-eval/08373044/scr
 Run the static Plugin Eval report:
 
 ```bash
-node /Users/mansour/.codex/plugins/cache/openai-curated/plugin-eval/08373044/scripts/plugin-eval.js \
-  analyze plugins/nl-tax-agent-skills \
+plugin-eval analyze plugins/nl-tax-agent-skills \
+  --format markdown
+```
+
+If `plugin-eval` is not on `PATH`, locate the bundled script dynamically instead of pinning a cache hash:
+
+```bash
+PLUGIN_EVAL_JS="$(
+  find "${CODEX_HOME:-$HOME/.codex}/plugins/cache" \
+    -path '*/plugin-eval/*/scripts/plugin-eval.js' \
+    -type f \
+    -print | head -n 1
+)"
+test -n "$PLUGIN_EVAL_JS"
+
+node "$PLUGIN_EVAL_JS" benchmark plugins/nl-tax-agent-skills \
+  --config evals/nl-tax-agent-skills/plugin-eval-benchmark.json \
+  --format markdown
+
+node "$PLUGIN_EVAL_JS" analyze plugins/nl-tax-agent-skills \
   --format markdown
 ```
 

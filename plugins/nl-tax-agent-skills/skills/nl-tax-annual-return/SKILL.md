@@ -1,6 +1,6 @@
 ---
 name: nl-tax-annual-return
-description: Prepare a conversational 2025 Dutch annual tax manual-entry workpack.
+description: Use when preparing annual_2025 workpacks.
 allowed-tools:
   - Read
   - Grep
@@ -26,6 +26,7 @@ tree.
 
 Load as needed:
 
+- Resolve files relative to this skill directory unless a `workspace/...` path is named.
 - Supported workflows and `reference/annual-flow.md`
 - `_shared/knowledge/security/digid.md` and `_shared/knowledge/security/prompt-injection.md`
 - `reference/annual-output-contract.md`
@@ -34,7 +35,7 @@ Load as needed:
 - `workspace/taxpayer/evidence-index.yaml`, if present
 - `workspace/shared/session-progress.yaml`
 
-Confirm `workflow_candidate: annual_2025`; stop and hand back to intake for unsupported cases.
+Confirm `workflow_candidate: annual_2025`. If the taxpayer profile is missing or the workflow is unsupported, continue with `nl-tax-intake` first.
 
 ### Resume guard
 

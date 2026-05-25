@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box2
-description: Use when preparing Box 2 substantial-interest inputs for Dutch annual 2025 or provisional 2026 manual-entry workpacks.
+description: Use when Box 2 substantial-interest notes are needed.
 user-invocable: false
 allowed-tools:
   - Read

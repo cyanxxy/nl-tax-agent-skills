@@ -6,7 +6,7 @@
 
 **An Agent Skills plugin for Claude Code, Cowork, and Codex that turns scattered Dutch tax paperwork into a Belastingdienst-ready workpack — annual 2025 and provisional 2026.**
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-supported-D97757)](https://claude.com/claude-code)
 [![Cowork](https://img.shields.io/badge/Cowork-supported-6E56CF)](https://claude.ai)
 [![Codex](https://img.shields.io/badge/Codex-compatible-111111)](#install-in-codex)
@@ -104,7 +104,14 @@ claude --plugin-dir ./plugins/nl-tax-agent-skills
 
 ### Install In Codex
 
-Codex discovers the plugin from `.codex-plugin/plugin.json` and surfaces the same bundled skills plus command wrappers. For machine-local discovery, drop a marketplace entry at `.agents/plugins/marketplace.json`. The `.agents/` directory is git-ignored — keep assistant state and machine-specific config out of the repo.
+Codex discovery has two layers in this repository:
+
+```text
+.agents/plugins/marketplace.json                  # repo-scoped marketplace
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json  # required plugin manifest
+```
+
+The repo-scoped marketplace points Codex at the nested plugin package under `plugins/nl-tax-agent-skills/`. Codex users invoke the bundled skills after discovery; the `commands/` directory contains Claude Code slash-command wrappers and is not documented here as a Codex command surface. Only `.agents/plugins/marketplace.json` is tracked under `.agents/`; other assistant state in `.agents/` remains ignored.
 
 <details>
 <summary><strong>ZIP fallback</strong> — if the GitHub-marketplace path is unavailable in your host build</summary>
@@ -130,18 +137,18 @@ Upload through the same **Browse plugins** modal.
 </details>
 
 <details>
-<summary><strong>Update behavior</strong> — why there is no fixed plugin <code>version</code></summary>
+<summary><strong>Update behavior</strong> — Claude and Codex versioning</summary>
 
-This marketplace intentionally omits a fixed plugin `version` in both:
+The Claude marketplace and Claude plugin manifest intentionally omit a fixed plugin `version` in both:
 
 ```text
 .claude-plugin/marketplace.json
 plugins/nl-tax-agent-skills/.claude-plugin/plugin.json
 ```
 
-For GitHub-synced marketplaces and Claude Code installs, Claude resolves the plugin version from `plugin.json` → marketplace entry → git commit SHA, so each pushed commit is picked up automatically by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
+For GitHub-synced marketplaces and Claude Code installs, Claude can use the git commit SHA when manifest version metadata is omitted, so each pushed commit is picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
-If you redistribute this plugin through a non-Anthropic, Codex-style host that copies the plugin into a local `org-plugins/` directory (a Codex MVP convention, not part of Anthropic Cowork), add a deployment-local `version.json` and bump its `version` string on every rollout. Do not commit that file — it would make GitHub-synced updates look unchanged unless manually bumped.
+The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` includes `version: "0.1.1"`. Treat that as Codex release metadata and bump it for every Codex plugin release. Do not remove it unless the target Codex schema no longer requires or uses manifest version metadata.
 
 </details>
 
@@ -191,7 +198,7 @@ Every value in a workpack must be traceable to (a) evidence, (b) profile data, (
 
 ## Using the Skills
 
-Skills are namespaced under the plugin. In current Claude Code the skill takes precedence when a skill and command wrapper share a name; the wrappers exist for hosts and versions that surface `commands/` separately.
+In Claude Code, skills are namespaced under the plugin and can be invoked with slash commands. In current Claude Code the skill takes precedence when a skill and command wrapper share a name; the `commands/` files are Claude Code wrapper fallbacks. In Codex, invoke the registered skills by name after installing or discovering the plugin.
 
 ```text
 /nl-tax-agent-skills:nl-tax-intake annual
@@ -394,7 +401,10 @@ The plugin is the product package — `plugins/nl-tax-agent-skills/`.
 
 ```text
 .claude-plugin/
-  marketplace.json
+  marketplace.json                 # Claude marketplace pointing to the nested plugin
+.agents/
+  plugins/
+    marketplace.json               # repo-scoped Codex marketplace pointing to the nested plugin
 plugins/nl-tax-agent-skills/
   .claude-plugin/plugin.json
   .codex-plugin/plugin.json
@@ -402,7 +412,7 @@ plugins/nl-tax-agent-skills/
   assets/
     icon.png
     logo.png
-  commands/                         # flat slash-command wrappers for host compatibility
+  commands/                         # Claude Code slash-command wrappers
     nl-tax-intake.md
     nl-tax-evidence-indexer.md
     nl-tax-annual-return.md
@@ -430,7 +440,7 @@ plugins/nl-tax-agent-skills/
   tests/                            # validator unit tests (test_validators.py)
 ```
 
-There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills and slash-command wrappers are bundled inside the plugin. Local-only assistant state (`.agents/`, `.claude/`, `.codex/`, `CLAUDE.md`, `claude.md`, `*.local.md`, `*.session.log`) is git-ignored and not release content.
+There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills and Claude Code slash-command wrappers are bundled inside the plugin. The only tracked `.agents/` file is `.agents/plugins/marketplace.json`; local assistant state under `.agents/`, `.claude/`, `.codex/`, plus `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`, remains git-ignored and is not plugin package content.
 
 ### Plugin manifest highlights
 
@@ -462,11 +472,8 @@ There are no standalone `.claude/skills` or `.agents/skills` trees in the cleane
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
+python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
 test -d plugins/nl-tax-agent-skills/commands
-
-if [ -f .agents/plugins/marketplace.json ]; then
-  python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
-fi
 
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
@@ -518,8 +525,8 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release Checklist
 
-- [ ] Release artifact contains only the plugin package, license, README, and marketplace manifest.
-- [ ] Release artifact excludes `.git/`, `.claude/`, `.agents/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, and compiled Python files.
+- [ ] Release artifact contains only the plugin package, license, README, Claude marketplace, and repo-scoped Codex marketplace.
+- [ ] Release artifact excludes `.git/`, `.claude/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, compiled Python files, and local `.agents/` state other than `.agents/plugins/marketplace.json`.
 - [ ] Active reviewed source-backed files pass the knowledge validator without pending or approximate value markers.
 - [ ] Manual-only plugin skills tested in the target Claude Code version.
 
@@ -538,6 +545,6 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 <div align="center">
 
-**License** &nbsp;·&nbsp; [MIT](LICENSE) &nbsp;&nbsp;|&nbsp;&nbsp; **Made for** Claude Code, Cowork, and Codex
+**License** &nbsp;·&nbsp; [Apache-2.0](LICENSE) &nbsp;&nbsp;|&nbsp;&nbsp; **Made for** Claude Code, Cowork, and Codex
 
 </div>

@@ -13,7 +13,7 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 
 ## Skill structure
 
-- Skills live at `${CLAUDE_SKILL_DIR}/../<skill-name>/SKILL.md`
+- Skills live in sibling skill directories as `<skill-name>/SKILL.md`
 - Skill directories may include: `reference/`, `templates/`, `examples/`, `scripts/`
 - Skills are discovered from frontmatter (name, description)
 - SKILL.md body should be concise; detailed knowledge belongs in supporting files
@@ -45,7 +45,7 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 
 - Shared resources in `_shared/` are project-level, loaded on demand
 - Knowledge files, templates, and registers in `_shared/` are available to all skills
-- Skills reference shared resources by relative path from the skill directory
+- Skills reference shared resources by relative path from the skill directory. Claude Code may expose a current skill-directory path at runtime, but project instructions should prefer host-neutral relative paths.
 
 ## Developer instruction
 

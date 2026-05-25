@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import glob
+import importlib.util
 import os
 import re
 import sys
@@ -155,6 +156,68 @@ def check_generated_output_regex(
                 errors.append(f"{case_id}: {rel_path} matches forbidden generated-output regex: {pattern}")
 
 
+def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
+    plugin_root = dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
+    candidates = [
+        workspace / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+        Path.cwd() / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+    ]
+    for script in candidates:
+        if script.is_file():
+            spec = importlib.util.spec_from_file_location(
+                "validate_field_map_for_offline_eval",
+                script,
+            )
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            return module
+    rendered = ", ".join(str(path) for path in candidates)
+    raise FileNotFoundError(f"field-map validator not found; checked: {rendered}")
+
+
+def expected_field_map_paths(workspace: Path, case: dict[str, Any]) -> list[Path]:
+    paths: list[Path] = []
+    for pattern in case.get("expected_files", []) or []:
+        if Path(pattern).name != "field-map.yaml":
+            continue
+        if has_glob(pattern):
+            paths.extend(glob_matches(workspace, pattern))
+        else:
+            path = resolve_workspace_path(workspace, pattern)
+            if path.exists():
+                paths.append(path)
+    return paths
+
+
+def check_field_maps(
+    workspace: Path,
+    dataset: dict[str, Any],
+    case_id: str,
+    case: dict[str, Any],
+    errors: list[str],
+) -> None:
+    field_maps = expected_field_map_paths(workspace, case)
+    if not field_maps:
+        return
+
+    try:
+        validator = load_field_map_validator(workspace, dataset)
+    except (FileNotFoundError, ImportError, OSError) as exc:
+        errors.append(f"{case_id}: field-map validation unavailable: {exc}")
+        return
+
+    for path in field_maps:
+        rel_path = path.relative_to(workspace)
+        try:
+            data = load_yaml(path)
+            validation_errors, _ = validator.validate(data)
+        except (OSError, ValueError) as exc:
+            errors.append(f"{case_id}: field-map validation failed for {rel_path}: {exc}")
+            continue
+        for error in validation_errors:
+            errors.append(f"{case_id}: field-map validation failed for {rel_path}: {error}")
+
+
 def verify_case(workspace: Path, dataset: dict[str, Any], case: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     case_id = case["id"]
@@ -174,6 +237,7 @@ def verify_case(workspace: Path, dataset: dict[str, Any], case: dict[str, Any]) 
     for rule in case.get("text_checks", []) or []:
         check_text_rule(workspace, case_id, rule, errors)
 
+    check_field_maps(workspace, dataset, case_id, case, errors)
     check_generated_output_regex(workspace, dataset, case_id, errors)
     return errors
 

@@ -6,7 +6,7 @@ Classify assets into box 3 categories: banktegoeden, overige_bezittingen, schuld
 Takes a YAML or JSON file as input.
 
 Usage:
-    python classify_box3_assets.py <input_file>
+    python3 classify_box3_assets.py <input_file>
 
 Input format (JSON or YAML-style):
     [
@@ -237,7 +237,7 @@ def load_input(file_path):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python classify_box3_assets.py <input_file>", file=sys.stderr)
+        print("Usage: python3 classify_box3_assets.py <input_file>", file=sys.stderr)
         print("", file=sys.stderr)
         print("Input file should be JSON or simple YAML with a list of assets.", file=sys.stderr)
         print("Each asset: {name, type_hint, value, owner}", file=sys.stderr)

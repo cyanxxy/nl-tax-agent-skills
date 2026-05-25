@@ -1,7 +1,6 @@
 ---
 name: nl-tax-evidence-indexer
-description: Index Dutch tax evidence files into a structured local evidence index without deciding tax treatment.
-argument-hint: "[path-to-upload-folder]"
+description: Use when Dutch tax evidence needs indexing.
 allowed-tools:
   - Read
   - Grep

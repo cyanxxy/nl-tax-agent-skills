@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box1-home
-description: Use when box 1 or own-home notes are needed.
+description: Use when Box 1 or own-home notes are needed.
 user-invocable: false
 allowed-tools:
   - Read

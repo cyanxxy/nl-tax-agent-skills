@@ -22,6 +22,125 @@ def load_module(relative_path, name):
 
 
 class ValidatorSmokeTests(unittest.TestCase):
+    def test_field_map_rejects_empty_fields_and_empty_missing_fields(self):
+        module = load_module(
+            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "validate_field_map_empty",
+        )
+
+        errors, _ = module.validate(
+            {
+                "field_map_version": "1.1",
+                "workflow": "annual_return",
+                "tax_year": 2025,
+                "fields": [],
+                "missing_fields": [],
+            }
+        )
+
+        self.assertTrue(any("fields" in error and "missing_fields" in error for error in errors))
+
+    def test_field_map_rejects_unsupported_workflow_year_combinations(self):
+        module = load_module(
+            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "validate_field_map_workflow_year",
+        )
+
+        cases = [
+            ("annual_return", 2026),
+            ("provisional_assessment", 2025),
+            ("annual", 2025),
+        ]
+        for workflow, tax_year in cases:
+            with self.subTest(workflow=workflow, tax_year=tax_year):
+                errors, _ = module.validate(
+                    {
+                        "field_map_version": "1.1",
+                        "workflow": workflow,
+                        "tax_year": tax_year,
+                        "fields": [
+                            {
+                                "field_id": "personal.naam",
+                                "label": "Naam",
+                                "source": {"type": "baseline"},
+                                "confidence": 0.9,
+                                "manual_review_required": False,
+                            }
+                        ],
+                        "missing_fields": [
+                            {"field_id": "personal.bsn"},
+                        ],
+                    }
+                )
+
+                self.assertTrue(
+                    any("Unsupported workflow/tax_year combination" in error for error in errors),
+                    errors,
+                )
+
+    def test_field_map_requires_required_reference_fields_to_be_represented(self):
+        module = load_module(
+            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "validate_field_map_required_reference_fields",
+        )
+
+        errors, _ = module.validate(
+            {
+                "field_map_version": "1.1",
+                "workflow": "annual_return",
+                "tax_year": 2025,
+                "fields": [
+                    {
+                        "field_id": "personal.naam",
+                        "label": "Naam",
+                        "source": {"type": "baseline"},
+                        "confidence": 0.9,
+                        "manual_review_required": False,
+                    }
+                ],
+                "missing_fields": [
+                    {"field_id": "personal.bsn"},
+                    {"field_id": "personal.adres"},
+                    {"field_id": "personal.geboortedatum"},
+                    {"field_id": "box1.loon"},
+                ],
+            }
+        )
+
+        self.assertTrue(any("box1.loonheffing" in error for error in errors), errors)
+
+    def test_field_map_accepts_required_reference_fields_in_fields_or_missing_fields(self):
+        module = load_module(
+            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "validate_field_map_required_reference_fields_valid",
+        )
+
+        errors, _ = module.validate(
+            {
+                "field_map_version": "1.1",
+                "workflow": "annual_return",
+                "tax_year": 2025,
+                "fields": [
+                    {
+                        "field_id": "box1.loon",
+                        "label": "Loon",
+                        "source": {"type": "evidence", "evidence_id": "ev_001"},
+                        "confidence": 0.9,
+                        "manual_review_required": False,
+                    }
+                ],
+                "missing_fields": [
+                    {"field_id": "personal.bsn"},
+                    {"field_id": "personal.naam"},
+                    {"field_id": "personal.adres"},
+                    {"field_id": "personal.geboortedatum"},
+                    {"field_id": "box1.loonheffing"},
+                ],
+            }
+        )
+
+        self.assertFalse([error for error in errors if "Required reference field" in error], errors)
+
     def test_provisional_field_map_rejects_actual_return_field(self):
         module = load_module(
             "skills/nl-tax-field-mapper/scripts/validate_field_map.py",

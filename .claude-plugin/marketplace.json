@@ -8,11 +8,11 @@
     {
       "name": "nl-tax-agent-skills",
       "source": "./plugins/nl-tax-agent-skills",
-      "description": "LLM-native Dutch individual income-tax Agent Skills for local annual-return and voorlopige-aanslag workpacks.",
+      "description": "Dutch tax skills for local manual-entry workpacks.",
       "author": {
         "name": "Tax Skill Developers"
       },
-      "license": "UNLICENSED",
+      "license": "Apache-2.0",
       "keywords": [
         "tax",
         "dutch-tax",

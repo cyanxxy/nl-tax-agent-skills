@@ -2,7 +2,7 @@
 """Validate fiscal partner allocation splits.
 
 Usage:
-    python validate_allocation.py <path-to-allocations.json>
+    python3 validate_allocation.py <path-to-allocations.json>
 
 Input JSON format:
 [
@@ -83,7 +83,7 @@ def validate_allocations(items):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python validate_allocation.py <path-to-allocations.json>", file=sys.stderr)
+        print("Usage: python3 validate_allocation.py <path-to-allocations.json>", file=sys.stderr)
         sys.exit(1)
 
     path = sys.argv[1]
