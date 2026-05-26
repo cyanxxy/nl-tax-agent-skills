@@ -1,4 +1,4 @@
-taxpayer_profile_version: "1.1"
+taxpayer_profile_version: "1.2"
 workspace_root: ""              # absolute path of the working folder; set once at intake, never changed
 intake_status: "not_started"    # not_started | in_progress | complete
 created_at: ""
@@ -18,11 +18,11 @@ person:
     source: "unknown"
   bsn_present: false
   bsn_storage: "not_stored"
-  date_of_birth_known:
-    value: false
+  date_of_birth:
+    value: null                  # ISO date YYYY-MM-DD; needed for AOW age and jonggehandicaptenkorting trigger
     source: "unknown"
-  aow_status_known:
-    value: false
+  aow_age_in_tax_year:
+    value: null                  # true | false; derived from date_of_birth and tax year, recorded for traceability
     source: "unknown"
 
 residency:
@@ -40,6 +40,28 @@ partner:
     source: "unknown"
   partner_bsn_present: false
   partner_digid_requested: false
+  partner_date_of_birth:
+    value: null                  # ISO date; required when has_fiscal_partner is true
+    source: "unknown"
+  partner_aow_age_in_tax_year:
+    value: null
+    source: "unknown"
+
+household:
+  # Children living at home as of 31 December of the tax year, used to screen
+  # IACK and (when combined with partner status) alleenstaande-ouderenkorting
+  # and other family-status credits. Collect only what is needed for credits
+  # screening; do not store BSN.
+  children_at_home_count:
+    value: null                  # integer, 0 or more
+    source: "unknown"
+  children:
+    # One entry per child counted above. Date of birth determines IACK
+    # eligibility (child under 12 on 1 January of the tax year).
+    []
+  single_parent_status:
+    value: null                  # true | false; relevant for alleenstaande-ouderenkorting eligibility
+    source: "unknown"
 
 workflows:
   annual_2025:

@@ -3,90 +3,108 @@ sources:
   bd_annual_data_checklist_2025:
     content_hash_sha256: 62361bfa48d17645f84c1f35f0f9dbdfa12b817a8334134cab375818260f1eac
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_annual_data_checklist_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte
   bd_annual_deadline_2025:
     content_hash_sha256: e8a18dbb63e2ced4a13fe11e5d17adf9b05d2607781bbe96710d86dcaa9014dc
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_annual_deadline_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen
   bd_annual_extension_2025:
     content_hash_sha256: e8a18dbb63e2ced4a13fe11e5d17adf9b05d2607781bbe96710d86dcaa9014dc
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_annual_extension_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte
   bd_annual_return_4_steps_2025:
     content_hash_sha256: e8a18dbb63e2ced4a13fe11e5d17adf9b05d2607781bbe96710d86dcaa9014dc
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_annual_return_4_steps_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen
   bd_annual_return_landing_2025:
     content_hash_sha256: e8a18dbb63e2ced4a13fe11e5d17adf9b05d2607781bbe96710d86dcaa9014dc
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_annual_return_landing_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/belastingaangifte
+  bd_belastingrente_ib:
+    content_hash_sha256: 1fc5c9633957e7a3555a986c75c231b9b86dd4c4d6ec07f8acdf086a9c2c0dd1
+    review_status: reviewed
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    source_id: bd_belastingrente_ib
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting
+  bd_belastingrente_overview:
+    content_hash_sha256: 1fc5c9633957e7a3555a986c75c231b9b86dd4c4d6ec07f8acdf086a9c2c0dd1
+    review_status: reviewed
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    source_id: bd_belastingrente_overview
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente
   bd_bijtelling_auto_2025:
     content_hash_sha256: 49dd7ae1b0020b802f1fe7f2a98d4a7499755528e18479c14502c26ec6b89cba
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_bijtelling_auto_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-auto-2025
   bd_box1_rates_2025:
     content_hash_sha256: 49dd7ae1b0020b802f1fe7f2a98d4a7499755528e18479c14502c26ec6b89cba
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_box1_rates_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
   bd_deduction_rate_cap_2025:
     content_hash_sha256: e1fc998b116ac551c95b4129d27e62d46c59306106961e4e9655447333fe54e6
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_deduction_rate_cap_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
   bd_fisin_2025_index:
     content_hash_sha256: e8a18dbb63e2ced4a13fe11e5d17adf9b05d2607781bbe96710d86dcaa9014dc
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_fisin_2025_index
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
   bd_general_tax_credit_2025:
     content_hash_sha256: 9ca6cad4621ea4bad8b60a3f87bc31f1bd91bbc45961871cf88238d365bd6703
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_general_tax_credit_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2025
   bd_giften_aftrek_2025:
     content_hash_sha256: e1fc998b116ac551c95b4129d27e62d46c59306106961e4e9655447333fe54e6
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_giften_aftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/aftrekposten/persoonsgebonden-aftrek/giften_aan_goede_doelen/hoeveel_aftrek_krijg_u/
   bd_labour_tax_credit_2025:
     content_hash_sha256: 9ca6cad4621ea4bad8b60a3f87bc31f1bd91bbc45961871cf88238d365bd6703
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_labour_tax_credit_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2025
   bd_own_home_deduction_cap_2025:
     content_hash_sha256: 873c41030d70797f6cba76d032d60c9841cf287490aec9267c909eaa996835c0
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_own_home_deduction_cap_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
   bd_tax_credit_payout_2025:
     content_hash_sha256: 9ca6cad4621ea4bad8b60a3f87bc31f1bd91bbc45961871cf88238d365bd6703
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_tax_credit_payout_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/heffingskortingen-laten-uitbetalen
+  bd_verzuimboete:
+    content_hash_sha256: 1fc5c9633957e7a3555a986c75c231b9b86dd4c4d6ec07f8acdf086a9c2c0dd1
+    review_status: reviewed
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    source_id: bd_verzuimboete
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/boete
   bd_zorgkosten_overzicht_2025:
     content_hash_sha256: e1fc998b116ac551c95b4129d27e62d46c59306106961e4e9655447333fe54e6
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_zorgkosten_overzicht_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/overzicht-zorgkosten-2025

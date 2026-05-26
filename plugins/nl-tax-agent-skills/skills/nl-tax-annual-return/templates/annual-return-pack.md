@@ -1,3 +1,7 @@
+[IF mode == test: prepend the line below verbatim, and repeat `(TEST RUN)` in every section header.]
+
+# TEST RUN -- NOT FOR FILING
+
 # Annual Income-Tax Return Workpack -- 2025
 
 > **Provenance convention.** Every numeric line in this workpack records its source in a `Src` column or inline `Src:` note.
@@ -17,11 +21,13 @@
 - Sources used
 - Taxpayer profile summary
 - Evidence summary
+- Filing status and late-filing exposure
 - Income notes
 - Own-home notes
 - Box 2 notes
 - Box 3 notes
 - Deductions notes
+- Credits screening
 - Fiscal partner notes
 - Field map summary
 - Missing information
@@ -33,6 +39,7 @@
 
 Tax year: 2025
 Workflow: Annual income-tax return (aangifte inkomstenbelasting)
+Mode: [real | test, from session-progress.yaml]
 Taxpayer: [from profile]
 Fiscal partner: [yes/no, from profile]
 Created: [timestamp]
@@ -49,26 +56,10 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ## Sources used
 
-[List of source_ids from source-register.yaml used in this workpack. Example:]
+[Emit exactly the IDs from `workspace/shared/session-progress.yaml` -> `sources_loaded`, one per line. Do not pad with sources that were not consulted, and do not omit sources that were consulted.]
 
-- bd_annual_return_landing_2025
-- bd_annual_return_4_steps_2025
-- bd_annual_data_checklist_2025
-- bd_fisin_2025_index
-- bd_box1_rates_2025
-- bd_general_tax_credit_2025
-- bd_labour_tax_credit_2025
-- bd_own_home_deduction_cap_2025
-- bd_box3_2025_calc
-- bd_box3_2025_actual_return
-- bd_fisin_box3_actual_return_2025
-- bd_digid_machtigen
-- law_wet_inkomstenbelasting_2001
-- law_uitvoeringsregeling_ib_2001
-- law_uitvoeringsbesluit_ib_2001
-- regels_overheid_regelspraak
-
-[Remove any source_ids that were not actually consulted. Add any additional source_ids that were used.]
+- [source_id]
+- [source_id]
 
 ## Taxpayer profile summary
 
@@ -76,10 +67,16 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 - Name: [taxpayer name] -- Src: [F/U/A/?]
 - Date of birth: [date] -- Src: [F/U/A/?]
+- AOW age in 2025: [yes/no] -- Src: [C:dob_vs_aow_age | U]
 - Residency: full-year Dutch resident 2025 -- Src: [F/U/A/?]
 - Primary income type: [employment / pension / benefit / combination] -- Src: [F/U/A/?]
 - Fiscal partner: [yes/no] -- Src: [F/U/A/?]
 - Partner name: [if applicable] -- Src: [F/U/A/?]
+- Partner date of birth: [date or n/a] -- Src: [F/U/A/?]
+- Partner AOW age in 2025: [yes/no/n/a] -- Src: [C/U]
+- Children at home on 31 Dec 2025: [count] -- Src: [U/A/?]
+- Children DOBs (for IACK age test on 1 Jan 2025): [list or n/a] -- Src: [U/A/?]
+- Single-parent status: [yes/no] -- Src: [U/A/?]
 - Address: [municipality, for WOZ reference] -- Src: [F/U/A/?]
 - Special circumstances: [any flags from intake]
 
@@ -96,6 +93,36 @@ If any check is "no", this workpack should not have been generated. Stop and con
   - Other: [count]
 - Items flagged for review: [count]
 - Items with low classification confidence: [count]
+
+## Filing status and late-filing exposure
+
+[From workspace/annual/2025/notes/filing-status.yaml. Emit exactly one of the three subsections below.]
+
+### On time
+
+Filing status: on time. No late-filing exposure.
+
+### Uitstel granted
+
+- Granted uitsteldatum: [YYYY-MM-DD] -- Src: [U/F]
+- Belastingrente still accrues from 1 July 2026 if tax is owed on the eventual aanslag.
+- Belastingrente rate from 1 January 2026: 5% -- Src: bd_belastingrente_overview
+
+### Late (deadline passed, no uitstel)
+
+- Original deadline: 1 May 2026 -- Src: bd_annual_deadline_2025
+- Status: outstanding -- Src: [U]
+- Verzuimboete (penalty for late filing):
+  - First-time late filing: EUR 469 -- Src: bd_verzuimboete
+  - Repeated late filing: up to EUR 6,709 -- Src: bd_verzuimboete
+- Belastingrente:
+  - Starts running 1 July 2026 for any tax owed
+  - Rate from 1 January 2026: 5% -- Src: bd_belastingrente_overview
+- Recommended next steps:
+  - File the prepared return through Mijn Belastingdienst as soon as possible.
+  - Expect a verzuimboete on the aanslag; pay promptly to avoid further follow-up.
+  - Pay the aanslag in full as soon as it is issued to stop belastingrente accrual.
+- The Belastingdienst sets the actual boete and rente on the aanslag. This workpack does not compute final figures.
 
 ## Income notes
 
@@ -198,7 +225,11 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ## Box 2 notes
 
-[If no aanmerkelijk belang: "Not applicable -- no substantial interest (aanmerkelijk belang) reported."]
+[If no aanmerkelijk belang, emit exactly these two lines and skip the rest of this section:
+
+> Not applicable -- no substantial interest (aanmerkelijk belang) reported.
+> box2.has_aanmerkelijk_belang: no
+]
 
 ### Substantial-interest status
 
@@ -414,6 +445,15 @@ Total periodieke giften: EUR [amount] -- Src: C:sum (fully deductible, no thresh
 | **Total persoonsgebonden aftrek** | **EUR [amount]** | C:sum |
 
 Allocation order: box 1 first, then box 3, then box 2.
+
+## Credits screening
+
+[For each of the four credits below, emit one line: either `Triggered: <reason>` (and flag for manual review in Mijn Belastingdienst) or `Not applicable: <reason>`. Read household composition from workspace/taxpayer/profile.yaml. Do not calculate amounts.]
+
+- **IACK (inkomensafhankelijke combinatiekorting)** -- [Triggered: child born [DOB], 12 or under on 1 Jan 2025; verify arbeidsinkomen threshold in Mijn Belastingdienst] | [Not applicable: no child under 12 on 1 Jan 2025] -- Src: [profile.household.children]
+- **Ouderenkorting** -- [Triggered: AOW age reached in 2025; verify amount in Mijn Belastingdienst] | [Not applicable: not AOW age in 2025] -- Src: [profile.person.aow_age_in_tax_year]
+- **Alleenstaande-ouderenkorting** -- [Triggered: AOW age + single_parent_status + no fiscal partner; verify in Mijn Belastingdienst] | [Not applicable: one or more conditions not met] -- Src: [profile.person + profile.household.single_parent_status + profile.partner]
+- **Jonggehandicaptenkorting** -- [Triggered: Wajong / young-disabled status confirmed; verify in Mijn Belastingdienst] | [Not applicable: no Wajong / young-disabled status] -- Src: [U]
 
 ## Fiscal partner notes
 

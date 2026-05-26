@@ -1,15 +1,30 @@
-session_progress_version: "1.1"
+session_progress_version: "1.2"
 workspace_root: ""          # absolute path of the working folder; set once at intake, never changed
 created_at: ""
 updated_at: ""
 active_workflow: "unknown"
 active_skill: ""
-last_question_asked: ""
+
+# Mode discriminates test runs from real preparation. Set once at intake and
+# never changed inside the same workspace. The workpack template branches on
+# this value (TEST RUN banner, filename tag, refusal to be used for filing).
+#   real  -- taxpayer is preparing for a real Mijn Belastingdienst submission
+#   test  -- exercise / demo / dry run; workpack carries TEST RUN markers
+mode: ""                    # real | test
+
+# Source IDs from _shared/source-register.yaml that have actually been read
+# during this session. The annual-return and provisional-assessment skills
+# append to this list when they load a knowledge file. The "Sources used"
+# section of every workpack lists exactly these IDs -- never pad the list.
+sources_loaded: []
 
 # Each section status is one of: not_started | in_progress | complete | deferred.
+# Evidence subsections may also use `chat_only` when the user provided values
+# in chat without uploading any file (an explicit choice, not a gap).
 # A workflow's overall workpack-generation gate is satisfied only when every
-# subsection is either `complete` or `deferred` (with deferred items recorded
-# in workspace/shared/missing-info.md or as confirmed assumptions).
+# subsection is either `complete`, `chat_only`, or `deferred` (with deferred
+# items recorded in workspace/shared/missing-info.md or as confirmed
+# assumptions).
 
 sections:
   intake:
@@ -29,6 +44,10 @@ sections:
         status: "not_started"
         open_questions: []
         answered: []
+      household_composition:
+        status: "not_started"
+        open_questions: []
+        answered: []
 
   evidence:
     status: "not_started"
@@ -36,7 +55,7 @@ sections:
     answered: []
     subsections:
       file_inventory:
-        status: "not_started"
+        status: "not_started"        # not_started | in_progress | complete | chat_only | deferred
         open_questions: []
         answered: []
       classification:
@@ -53,11 +72,19 @@ sections:
     open_questions: []
     answered: []
     subsections:
+      filing_status:
+        status: "not_started"
+        open_questions: []
+        answered: []
       box1:
         status: "not_started"
         open_questions: []
         answered: []
       eigen_woning:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      box2:
         status: "not_started"
         open_questions: []
         answered: []
@@ -70,6 +97,10 @@ sections:
         open_questions: []
         answered: []
       deductions:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      credits_screening:
         status: "not_started"
         open_questions: []
         answered: []

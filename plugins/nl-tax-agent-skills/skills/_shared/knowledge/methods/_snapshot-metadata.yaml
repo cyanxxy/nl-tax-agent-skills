@@ -3,6 +3,6 @@ sources:
   regels_overheid_regelspraak:
     content_hash_sha256: fcbe0dfe310b5e81263f0491688c2f6e40164f526a1736c83bd2561f1c0c7c1b
     review_status: reviewed
-    snapshot_created_at: '2026-05-17T20:29:46.318247+00:00'
+    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: regels_overheid_regelspraak
     source_url: https://regels.overheid.nl/docs/methods/REGELSPRAAK

@@ -1,17 +1,21 @@
 # Annual Return Workpack Generation Flow
 
-Detailed step-by-step flow for generating the 2025 annual income-tax return workpack. Each phase builds on the previous one. If a phase cannot be completed due to missing data, record the gap and proceed to the next phase.
+Authoritative step-by-step flow for generating the 2025 annual income-tax return workpack. Each phase builds on the previous one. If a phase cannot be completed due to missing data, record the gap and proceed to the next phase. `SKILL.md` is the entry-point procedure; this file is the contract for the ordered workflow.
+
+Every time you read a knowledge file or rate sheet, append the matching `source_id` from `_shared/source-register.yaml` to `session-progress.yaml` → `sources_loaded`. Only IDs in that list may appear in the workpack's "Sources used" section.
 
 ---
 
 ## Contents
 
 - Phase 1 — Pre-flight checks
+- Phase 1.5 — Filing status and late-filing exposure
 - Phase 2 — Income compilation
 - Phase 3 — Own-home compilation
 - Phase 3A — Box 2 compilation
 - Phase 4 — Box 3 compilation
 - Phase 5 — Deductions compilation
+- Phase 5.5 — Credits screening
 - Phase 6 — Partner handling
 - Phase 7 — Field map generation
 - Phase 8 — Missing info compilation
@@ -20,7 +24,7 @@ Detailed step-by-step flow for generating the 2025 annual income-tax return work
 
 ## Phase 1 — Pre-flight checks
 
-Before generating any workpack content, verify that all prerequisites are met.
+Before generating any workpack content, verify all prerequisites are met.
 
 ### 1.1 Profile exists
 
@@ -38,15 +42,13 @@ Before generating any workpack content, verify that all prerequisites are met.
 
 - Confirm full-year Dutch residency for 2025
 - Check for `residency: full_year_nl` or equivalent in the profile
-- If part-year or non-resident: stop -- this is an unsupported case (see unsupported-cases.md)
+- If part-year or non-resident: stop -- this is an unsupported case
 
 ### 1.4 Taxpayer type confirmed
 
 - Confirm the taxpayer is an individual with employment/pension/benefit income as primary
 - If IB-onderneming is the primary income source: stop -- unsupported case
-- If IB-onderneming, freelance or side-business income, or resultaat uit
-  overige werkzaamheden appears: route to manual review or unsupported unless a
-  source-backed workflow has been added.
+- If IB-onderneming, freelance or side-business income, or resultaat uit overige werkzaamheden appears: route to manual review or unsupported unless a source-backed workflow has been added.
 
 ### 1.5 Living taxpayer confirmed
 
@@ -58,24 +60,66 @@ Before generating any workpack content, verify that all prerequisites are met.
 - Confirm no immigration or emigration during 2025
 - If M-biljet is required: stop -- unsupported case
 
-### 1.7 Evidence index exists
+### 1.7 Household composition
+
+- Read `profile.yaml` → `person.date_of_birth`, `partner.partner_date_of_birth`, `household.children_at_home_count`, `household.children`, `household.single_parent_status`, `person.aow_age_in_tax_year`, `partner.partner_aow_age_in_tax_year`
+- If any of these are missing or `source: unknown` and the workflow needs them for credits screening (Phase 5.5), ask the user to fill them in now, in one batch of up to 3 questions. Do not ask for BSNs; ask for dates of birth and a yes/no on single-parent status.
+- Persist answers back to `profile.yaml` with `source: user_chat` and a stated_at date. Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml`.
+
+### 1.8 Evidence index exists
 
 - Read `workspace/taxpayer/evidence-index.yaml`
 - If missing: warn the user that no evidence has been indexed -- the workpack will contain more gaps
 - If partially indexed: proceed but flag uncovered categories
 
-### 1.8 Box 2 scope check
+### 1.9 Box 2 scope check
 
 - Standard Box 2 preparation is supported for `annual_2025` when the taxpayer has an aanmerkelijk belang and the facts are straightforward.
 - Keep the case in scope for regular benefits such as dividends, disposal benefits such as share-sale profit, dividend withholding tax credit, loss carry-forward fields, and fiscal-partner allocation of Box 2 income.
 - Route to manual review or unsupported for valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
 
-### 1.9 Knowledge files available
+### 1.10 Knowledge files available
 
-- Verify that the annual 2025 knowledge directory exists and contains expected files
-- Read all files under `_shared/knowledge/years/2025/annual/`
-- Read all files under `_shared/knowledge/years/2025/box3/`
-- Read security knowledge: `digid.md`, `prompt-injection.md`
+Load every file in this list and append its `source_id` to `session-progress.yaml` → `sources_loaded` as you go. If any fails to load, stop and tell the user; do not paraphrase rates from memory.
+
+- `_shared/knowledge/security/digid.md` *(bd_digid_machtigen)*
+- `_shared/knowledge/security/prompt-injection.md`
+- `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025)*
+- `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025)*
+- `_shared/knowledge/years/2025/annual/own-home.md` *(bd_own_home_deduction_cap_2025)*
+- `_shared/knowledge/years/2025/annual/deductions.md` *(bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025)*
+- `_shared/knowledge/years/2025/annual/late-filing.md` *(bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib)*
+- `_shared/knowledge/years/2025/annual/filing-flow.md` *(bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_annual_deadline_2025, bd_annual_extension_2025)*
+- `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
+- `_shared/knowledge/years/2025/box3/fictitious.md` *(bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025)*
+- `_shared/knowledge/years/2025/box3/actual-return.md` *(bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025)*
+- `_shared/knowledge/own-home/eigenwoningforfait.md` *(bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes)*
+- `_shared/knowledge/own-home/hypotheekrenteaftrek.md` *(bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest)*
+- `_shared/knowledge/partners/fiscal-partnership.md` *(bd_fiscal_partnership)*
+
+---
+
+## Phase 1.5 — Filing status and late-filing exposure
+
+Before compiling income, establish where the taxpayer stands on the 1 May 2026 deadline. This drives whether the workpack carries a top-level exposure section (see output contract § Filing status).
+
+### 1.5.1 Determine filing status
+
+Ask the user (one batch, at most 3 questions):
+
+1. Have you already filed the 2025 return? (yes / no)
+2. Did you receive uitstel before 1 May 2026? (yes / no — if yes, what is the granted uitsteldatum?)
+3. If not filed and no uitstel — when do you plan to file?
+
+Record under `workspace/annual/2025/notes/filing-status.yaml` with `source: user_chat`.
+
+### 1.5.2 Surface exposure
+
+- **On time** (filed before 1 May 2026, or before granted uitsteldatum): no exposure. The workpack will say "Filing status: on time."
+- **Uitstel granted, return outstanding**: quote the uitsteldatum and note that belastingrente still accrues from 1 July 2026 if tax is owed. Use the rate from `late-filing.md` (5% from 1 January 2026).
+- **Late (deadline passed, no uitstel)**: surface the verzuimboete (EUR 469 first / EUR 6,709 max) and the belastingrente rate (5% from 1 January 2026). Recommend filing immediately to limit further rente. Cite `bd_verzuimboete` and `bd_belastingrente_overview`.
+
+Do not compute a final boete or rente amount; the Belastingdienst sets these on the aanslag.
 
 ---
 
@@ -89,14 +133,14 @@ Compile all box 1 income from evidence and user-provided data.
 - For each employer: extract gross salary, loonheffing withheld, and employer name
 - Flag if multiple employers are present (may affect tax calculation)
 - Flag if any jaaropgaaf has low classification confidence or is marked for review
-- If no jaaropgaaf is available but the profile indicates employment: add to missing info
+- If no jaaropgaaf is available but the profile indicates employment: ask for the values in chat (subsection then becomes `chat_only`) or mark the item as missing if the user defers
 
 ### 2.2 Pension income
 
 - Match pension jaaroverzicht evidence items
 - For each pension provider: extract gross pension, loonheffing withheld
 - Distinguish between employer pension (pensioenuitkering) and AOW (from SVB)
-- Note whether the taxpayer is at or above AOW age (affects tax rates and credits)
+- Note whether the taxpayer is at or above AOW age (affects tax rates and credits) — use `profile.yaml` → `person.aow_age_in_tax_year`
 
 ### 2.3 Benefit income (uitkeringen)
 
@@ -107,13 +151,9 @@ Compile all box 1 income from evidence and user-provided data.
 
 ### 2.4 Other box 1 income
 
-- Check for income from other activities (resultaat uit overige werkzaamheden)
-  and record it as manual-review data; do not calculate or map it as standard
-  Box 1 support without reviewed sources.
-- Check for alimentatie received (taxable as box 1 income) and route to manual
-  review unless exact reviewed sources and field-map support have been added.
-- Check for any other income sources mentioned in the profile or evidence and
-  keep them out of standard calculations until source-backed.
+- Check for income from other activities (resultaat uit overige werkzaamheden) and record it as manual-review data; do not calculate or map it as standard Box 1 support without reviewed sources.
+- Check for alimentatie received (taxable as box 1 income) and route to manual review unless exact reviewed sources and field-map support have been added.
+- Check for any other income sources mentioned in the profile or evidence and keep them out of standard calculations until source-backed.
 
 ### 2.5 Income summary
 
@@ -136,7 +176,7 @@ Compile the eigen woning section if applicable.
 
 - Extract from WOZ-beschikking evidence item
 - The 2025 return uses the WOZ-waarde with waardepeildatum 1 January 2024
-- If WOZ-beschikking is not in evidence: add to missing info
+- If WOZ-beschikking is not in evidence: ask the user for the value (subsection becomes `chat_only`) or mark missing
 - If the taxpayer filed a bezwaar (objection): use the corrected value
 
 ### 3.3 Mortgage interest (hypotheekrente)
@@ -147,13 +187,24 @@ Compile the eigen woning section if applicable.
 - Verify the mortgage qualifies for deduction (purchased, improved, or maintained the eigen woning)
 - Record outstanding mortgage balance as of 31 December 2025
 
-### 3.4 Eigenwoningforfait calculation
+### 3.4 Tijdelijke twee woningen (verkoopregeling / aankoopregeling)
 
-- Apply the rate from `own-home.md` based on the WOZ-waarde bracket
+If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new home and the old home has not sold):
+
+- Read the "Temporarily two homes" section of `_shared/knowledge/own-home/hypotheekrenteaftrek.md` and apply the verkoopregeling and/or aankoopregeling.
+- The verkoopregeling keeps interest on the **old** home deductible for **the year of moving plus the 3 subsequent calendar years**, provided the home is empty, for sale, not rented out, and was the hoofdverblijf in the year of moving or in one of the 3 preceding years.
+- The aankoopregeling keeps interest on the **new** home deductible before occupancy, provided the home is empty or under construction and the taxpayer will live there in the same year or within the 3 calendar years that follow.
+- Collect, in a single batch of up to 6 questions: move date, old-home address + WOZ + mortgage statement, new-home address + WOZ + mortgage statement, vacancy/listing status of the old home.
+- Compute the deduction window endpoints in absolute dates and record them in the workpack ("interest on [old address] is deductible through 31 December [year + 3]").
+- Only route to manual review when a condition is genuinely ambiguous (partial-year letting, undocumented hoofdverblijf history, treaty/nonresident facts). A clean overlap that satisfies the conditions does NOT need manual review.
+
+### 3.5 Eigenwoningforfait calculation
+
+- Apply the rate from `_shared/knowledge/own-home/eigenwoningforfait.md` based on the WOZ-waarde bracket
 - Most common: 0.35% for WOZ more than EUR 75,000 up to and including EUR 1,330,000
 - Show the calculation explicitly (WOZ-waarde * percentage)
 
-### 3.5 Tariefsaanpassing
+### 3.6 Tariefsaanpassing
 
 - If the taxpayer's box 1 income falls in schijf 3 (above EUR 76,817):
   - Calculate the portion of deductible own-home costs that falls in schijf 3
@@ -161,20 +212,20 @@ Compile the eigen woning section if applicable.
   - Calculate the tariefsaanpassing amount (difference between 49.50% and 37.48%)
 - If income is below schijf 3: no tariefsaanpassing applies
 
-### 3.6 Hillenregeling
+### 3.7 Hillenregeling
 
 - If the eigenwoningforfait exceeds the mortgage interest paid:
   - Apply the Hillenregeling correction (76.667% in 2025)
   - The correction reduces the net positive eigenwoningforfait
 - If mortgage interest exceeds eigenwoningforfait: Hillenregeling does not apply
 
-### 3.7 Net own-home result
+### 3.8 Net own-home result
 
 - Net result = eigenwoningforfait minus mortgage interest (typically negative / a deduction)
 - Adjusted for tariefsaanpassing and Hillenregeling if applicable
 - This amount is added to box 1 income
 
-### 3.8 Partner handling for own home
+### 3.9 Partner handling for own home
 
 - If fiscal partners co-own the property: allocate based on ownership shares (typically 50/50)
 - Note that the net eigen woning result can be allocated differently for tax optimization
@@ -184,7 +235,7 @@ Compile the eigen woning section if applicable.
 
 ## Phase 3A — Box 2 compilation
 
-Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, mark the section not applicable and continue.
+Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, emit the canonical "not applicable" line from the output contract and continue.
 
 ### 3A.1 Substantial-interest status
 
@@ -227,7 +278,7 @@ Compile standard aanmerkelijk-belang data for the annual 2025 return when applic
 
 ## Phase 4 — Box 3 compilation
 
-Compile savings and investment data for box 3. BOTH methods must be covered.
+Compile savings and investment data for box 3. BOTH methods must be covered. Read the rates from `_shared/knowledge/years/2025/box3/fictitious.md` — never paraphrase from memory.
 
 ### 4.1 Assets on peildatum 1 January 2025
 
@@ -351,11 +402,37 @@ Compile all deductible items from evidence and user-provided data.
 - Note the allocation order: box 1 first, then box 3, then box 2
 - If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best
 
-### 5.7 Tax credits requiring manual review
+---
 
-- Add manual-review handling for IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting.
-- Do not show calculated credit amounts unless exact reviewed sources are registered and all required taxpayer facts are available.
-- Record the relevant taxpayer facts and ask the user to verify the official portal result.
+## Phase 5.5 — Credits screening
+
+Use household composition from `profile.yaml` to surface which credits apply. For each of the 4 credits below, emit one line in the workpack: either "Triggered: [reason]" or "Not applicable: [reason in one phrase]".
+
+### 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
+
+Triggered when the taxpayer (or fiscal partner with lower arbeidsinkomen) had at least one child registered at the taxpayer's address who turned 12 or younger on 1 January 2025, AND the taxpayer met the minimum arbeidsinkomen threshold.
+
+- Check `profile.yaml` → `household.children` for DOBs.
+- If at least one child satisfies the age condition, mark IACK as a manual-review item; do not calculate the amount.
+
+### 5.5.2 Ouderenkorting
+
+Triggered when the taxpayer reaches AOW age in 2025.
+
+- Check `profile.yaml` → `person.aow_age_in_tax_year`.
+- If triggered, flag as manual review.
+
+### 5.5.3 Alleenstaande-ouderenkorting
+
+Triggered when the taxpayer reaches AOW age AND has `single_parent_status: true` AND has no fiscal partner.
+
+### 5.5.4 Jonggehandicaptenkorting
+
+Triggered when the taxpayer receives a Wajong-uitkering or holds young-disabled status. Ask the user explicitly; do not infer from age alone.
+
+### 5.5.5 Output
+
+Write the screening results to `workspace/annual/2025/notes/credits.yaml`. The template's Credits screening section emits these results verbatim.
 
 ---
 
@@ -397,7 +474,7 @@ List items that are personal and cannot be allocated:
 
 ### 7.1 Generate field map
 
-Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Write to `workspace/annual/2025/field-map.yaml`.
+Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Write to `workspace/annual/2025/field-map.yaml` (or `field-map.test.yaml` in test mode).
 
 ### 7.2 Separation from provisional
 
@@ -446,27 +523,20 @@ Order questions by impact on the return:
 
 ### 10.1 Use the template
 
-Read the template from `templates/annual-return-pack.md`. Fill in every section with the data compiled in phases 2-9.
+Read the template from `templates/annual-return-pack.md`. Fill in every section with the data compiled in phases 1.5-9. Honor the `mode` field: if `mode: test`, prepend the TEST RUN banner, add `(TEST RUN)` to every section header, and use the `.test.md` filename.
 
-### 10.2 Validate against the output contract
+### 10.2 Run the workpack self-check
 
-Check the completed workpack against `reference/annual-output-contract.md`:
-- All required sections present
-- All amounts have source attribution
-- All assumptions listed
-- Standard Box 2 fields covered or marked not applicable; complex Box 2 facts routed to manual review/unsupported
-- Both box 3 methods covered
-- "Not submission advice" section present
-- No provisional-2026 wording present
+Run every check in `reference/annual-output-contract.md` § "Workpack self-check": structural, content, cross-contamination, and safety. Report each result yes/no in the assembly turn. If any item is "no", do not write the workpack — fix the gap or ask the user, then re-run.
 
 ### 10.3 Write the workpack
 
-Write the completed workpack to `workspace/annual/2025/return-pack.md`.
+Write the completed workpack to `workspace/annual/2025/return-pack.md` (or `return-pack.test.md` in test mode). Write the field map alongside.
 
 ### 10.4 Summary to user
 
 After writing:
-- Confirm the workpack location
+- Confirm the workpack location and mode
 - Report the count of missing information items
 - Report the count of assumptions made
 - Remind the user to review the human review checklist

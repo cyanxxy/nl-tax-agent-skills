@@ -49,11 +49,37 @@ Do not deduct:
 
 ## Temporarily two homes
 
-If the taxpayer moved and the old home is empty and for sale, mortgage interest on the old home can remain deductible for the year of moving plus the following 3 years, provided the home is for sale, empty, and not rented out.
+Two named exceptions extend hypotheekrenteaftrek beyond the moment the taxpayer actually occupies a single home. Apply the one that matches the facts; both can apply at once during a move.
 
-If the taxpayer is moving into a new bought home that is empty or under construction, mortgage interest can be deductible if the taxpayer will live there during the year or in one of the following 3 years.
+### Verkoopregeling (old home)
 
-For an overbruggingshypotheek, the interest is deductible for the maximum term of that bridge loan. The bridge loan does not require mandatory repayment while waiting for the old home to be sold.
+Mortgage interest on the **old** home stays deductible for the **year of moving plus the 3 subsequent calendar years**, provided all of the following hold for that period:
+
+- The home is offered for sale ("staat te koop").
+- The home is empty and is not rented out.
+- The home was the taxpayer's hoofdverblijf in the year of moving or in one of the 3 preceding years.
+
+After the year-of-moving + 3 years window expires, the home (and its mortgage) move to box 3.
+
+### Aankoopregeling (new home)
+
+Mortgage interest on the **new** home is deductible **before** the taxpayer occupies it, provided:
+
+- The home is empty or under construction ("staat leeg of is in aanbouw").
+- The taxpayer will start living there in the same year or within the **3 calendar years that follow**.
+
+### Overbruggingshypotheek (bridge loan)
+
+Interest on a bridge loan tied to the old-to-new transfer is deductible for the maximum term of the bridge loan. The bridge loan does not require mandatory repayment while waiting for the old home to be sold.
+
+### Workpack handling for two-homes cases
+
+When the taxpayer reports two homes during the tax year:
+
+1. Determine which regime applies to each home (verkoopregeling for the old, aankoopregeling for the new). Both can apply concurrently.
+2. Confirm the conditions above against the user's facts (move date, listing status, vacancy, expected move-in date). Record each fact with its `source` and `evidence_id` or `quote`.
+3. Compute the deduction window endpoints in absolute dates so the workpack can state plainly "interest on [address] is deductible through 31 December [year + 3]".
+4. Only route to manual review when one of the conditions is genuinely ambiguous (e.g. partial-year letting, undocumented hoofdverblijf history, treaty/nonresident facts). A clean overlap of a few months that satisfies the conditions does NOT need manual review -- prepare it.
 
 ## Workpack handling
 

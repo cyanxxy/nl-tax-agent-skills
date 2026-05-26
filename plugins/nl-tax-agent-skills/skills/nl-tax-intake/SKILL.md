@@ -64,7 +64,7 @@ Across one or more turns of conversation:
 
 ### Turn 1 - open warmly, then ask the first screening batch
 
-If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD) and ask up to **four short screening questions** in one message:
+If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), then ask whether this is a **real preparation** or a **test / dry run**, and persist the answer to `session-progress.yaml` -> `mode` (`real` or `test`). Then ask up to **four short screening questions** in one message:
 
 1. **Residency** - Were you a Dutch resident for the full of 2025 (and, if relevant, 2026)?
 2. **Taxpayer type** - Are you filing as an individual (not a BV / IB-onderneming as primary case)?
@@ -92,13 +92,25 @@ After each user reply:
        - `provisional_2026_change` / `review` -> "Do you have your current voorlopige aanslag beschikking handy, or shall we reconstruct the baseline together?"
        - `provisional_2026_stopzetten` -> "Are you currently RECEIVING a monthly refund (teruggaaf) or PAYING a monthly amount?"
 
+### Household composition (before closing intake)
+
+If the workflow is `annual_2025` or any `provisional_2026_*` flow, also collect household composition. The annual workpack's credits screening (IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting) depends on these facts. Ask in a single batch of **at most 3 questions**, persisting each answer to `profile.yaml` -> `person`, `partner`, and `household`:
+
+1. **Date of birth** of the taxpayer (and of the fiscal partner if one exists). Persist to `person.date_of_birth` and `partner.partner_date_of_birth`. Derive `aow_age_in_tax_year` from the DOB and the tax year, and store with `source: assumption` (so the user can correct it if AOW age was reached mid-year).
+2. **Children at home on 31 December of the tax year**: count and, for any child under 18, their date of birth (DOBs only -- never BSN). Persist to `household.children_at_home_count` and `household.children`.
+3. **Single-parent status**: yes / no. Persist to `household.single_parent_status`.
+
+Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml` once these are answered. If the user defers, mark `status: deferred` and add the items to `missing-info.md` -- the annual workflow will re-prompt in Phase 1.7.
+
 ### Closing the intake section
 
 Mark `sections.intake.status: complete` only when:
 
+- `session-progress.yaml` -> `mode` is `real` or `test`.
 - Residency, taxpayer type, living status, and workflow are all answered or recorded as `unsupported_reason`.
 - Fiscal-partner status is recorded.
 - The workflow-specific anchor question is answered.
+- Household composition (DOB taxpayer + partner if applicable, children at home, single-parent status) is recorded for `annual_2025` and provisional flows -- or each missing item is in `missing-info.md` and the corresponding subsection is `deferred`.
 
 Before closing intake, assert the resume contract holds. A resuming agent
 relies entirely on these files; if they are not populated it will wrongly
@@ -116,14 +128,15 @@ Once complete, write a one-paragraph summary back to the user and tell them whic
 
 Do NOT auto-invoke the next skill. Wait for the user to continue.
 
-## Two paths for every input
+## Three paths for every input
 
-For every fact you record, the user may either:
+For every fact you record, the user may take one of three paths:
 
-- **Upload a file** to `uploads/` or `evidence/` - the evidence-indexer skill handles this.
-- **State the value in chat** - record it directly with `source: user_chat`.
+- **Upload a file** to `uploads/` or `evidence/` - hand off to the `nl-tax-evidence-indexer` skill. The corresponding subsection in `session-progress.yaml` becomes `complete` once the file is indexed and the value extracted.
+- **State the value in chat only** - record it with `source: user_chat`, a verbatim `quote`, and `stated_at`. Mark the corresponding subsection's `status: chat_only`. This is an explicit choice, not a gap; do not nag for a file the user has declined to upload.
+- **Defer ("I'll send it later")** - record `source: unknown`, mark the subsection's `status: deferred`, add the item to `missing-info.md`, and move on. The downstream workflow skill will re-prompt.
 
-If the user says "I'll send the document later", record the question as deferred (`source: unknown`), add it to `missing-info.md`, and move on. Do not block the conversation.
+`chat_only` and `complete` both count as filled for the workpack generation gate. `deferred` must be resolved or explicitly accepted as missing before the gate opens.
 
 ## Unsupported cases
 

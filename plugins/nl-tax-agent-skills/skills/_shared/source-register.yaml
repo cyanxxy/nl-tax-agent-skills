@@ -219,6 +219,50 @@ sources:
       - nl-tax-annual-return
       - nl-tax-submit-companion
 
+  - id: bd_verzuimboete
+    title: "Boete -- verzuimboete bij niet of niet op tijd aangifte"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/boete"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
+    last_checked: "2026-05-26"
+    freshness_policy: "check annually; verzuimboete amounts are updated in the Belastingdienst boetebeleid"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-submit-companion
+
+  - id: bd_belastingrente_overview
+    title: "Overzicht percentages belastingrente"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
+    last_checked: "2026-05-26"
+    freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-submit-companion
+
+  - id: bd_belastingrente_ib
+    title: "Belastingrente betalen bij inkomstenbelasting"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting"
+    source_type: official_guidance
+    workflow: annual_return
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
+    last_checked: "2026-05-26"
+    freshness_policy: "check after Prinsjesdag and at start of each calendar quarter"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-submit-companion
+
   # ===========================================================================
   #  Annual rates and credits
   # ===========================================================================
