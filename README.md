@@ -566,26 +566,6 @@ There are no standalone `.claude/skills` or `.agents/skills` trees in the cleane
 
 ---
 
-## Release checklist
-
-- [ ] Release artifact contains only the plugin package, license, README, Claude marketplace, and repo-scoped Codex marketplace.
-- [ ] Release artifact excludes `.git/`, `.claude/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, compiled Python files, and local `.agents/` state other than `.agents/plugins/marketplace.json`.
-- [ ] Active reviewed source-backed files pass the knowledge validator without pending or approximate value markers.
-- [ ] Manual-only plugin skills tested in the target Claude Code version.
-
----
-
-## Out of scope
-
-- Backend service, web app, API, or browser automation
-- DigiD login or credential handling
-- Digipoort / ODB submission transport
-- Live VIA retrieval
-- Entrepreneur-first, M-aangifte, deceased-taxpayer, or non-resident-first workflows
-- Automated filing, signing, or submission
-
----
-
 <div align="center">
 
 <sub>
