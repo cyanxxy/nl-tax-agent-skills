@@ -124,6 +124,10 @@ ALLOWED_DOMAINS = {
     "regels.overheid.nl",
     "platform.claude.com",
     "code.claude.com",
+    "svb.nl",
+    "www.svb.nl",
+    "rijksoverheid.nl",
+    "www.rijksoverheid.nl",
 }
 
 # ---------------------------------------------------------------------------

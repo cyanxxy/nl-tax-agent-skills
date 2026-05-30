@@ -1,0 +1,12 @@
+# Codex per-skill configuration.
+#
+# Codex reads only `name` and `description` from SKILL.md; it ignores the Claude
+# frontmatter keys `disable-model-invocation`, `user-invocable`, and
+# `allowed-tools`. This file carries the equivalent invocation policy for Codex.
+#
+# nl-tax-submit-companion is manual-only: it must never be auto-invoked by the
+# model. The user (or an owning workflow) triggers it explicitly. Explicit
+# `$nl-tax-submit-companion` invocation still works when implicit invocation is
+# disabled.
+policy:
+  allow_implicit_invocation: false

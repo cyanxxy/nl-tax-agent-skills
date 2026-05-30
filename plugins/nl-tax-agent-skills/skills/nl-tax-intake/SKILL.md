@@ -1,6 +1,6 @@
 ---
 name: nl-tax-intake
-description: Use when Dutch tax help needs intake.
+description: First skill for any Dutch individual income-tax task — screens scope and routes to the right workflow. Use when the user wants to file the 2025 aangifte (annual return) or request, change, review, or stop a 2026 voorlopige aanslag, or mentions belastingaangifte, aangifte, or voorlopige aanslag.
 allowed-tools:
   - Read
   - Grep
@@ -24,8 +24,10 @@ Open the conversation with the user, figure out which Dutch tax workflow applies
 Bundled paths below are relative to this skill's own directory: `templates/`
 is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`.
 If a path does not resolve from your working directory, run
-`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
-resolve from there.
+`echo "${CLAUDE_PLUGIN_ROOT}"` in Bash to get the plugin root and resolve from
+`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-intake/` (Claude Code and Cowork set
+`CLAUDE_PLUGIN_ROOT`; if it is unset, resolve relative to your working
+directory). `CLAUDE_SKILL_DIR` is not a host-provided variable — do not rely on it.
 
 Before responding to the user, read:
 
@@ -50,6 +52,13 @@ On every later turn, read `workspace_root` back and resolve all `workspace/...`
 paths against it. Once set, never change it and never create a second
 `workspace/` tree. See the **Workspace root** section of
 `_shared/knowledge/methods/interactive-elicitation.md` for the full contract.
+
+On the first turn, also tell the user in plain language which folder you are
+using as the workspace (state its absolute path) and ask them to keep pointing
+the host (Claude Code, Cowork, or Codex) at that same folder — or its parent
+project — when they resume. A later session relies entirely on finding
+`profile.yaml` and `session-progress.yaml` there; if the host is pointed
+somewhere else, the resume guard cannot fire and intake will wrongly restart.
 
 ## What this skill produces
 
@@ -171,3 +180,13 @@ Tell the user:
 1. Which workflow was selected.
 2. Whether anything was deferred to `missing-info.md`.
 3. Which skill they can run next (or that you are ready to continue with the next section in the same conversation).
+
+## Worked example
+
+> **User:** "Hi, I need to do my Dutch taxes."
+>
+> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD; asks whether this is a real run or a test, then the four screening questions (residency, individual filer, living taxpayer, which workflow). Persists `mode` and states the workspace folder it will use.
+>
+> **User:** "Real. Resident all of 2025, just me as an individual, I'm alive 🙂, I want the 2025 return."
+>
+> **Agent (turn 2):** Records all four to `profile.yaml` (`source: user_chat`, with quotes + `stated_at`), marks those `question_id`s answered in `session-progress.yaml`, sets `workflow_candidate: annual_2025`. Asks the two follow-ups (fiscal partner? early Box 2 screen) plus the annual anchor ("documents ready, or collect amounts in chat?"), then household composition (DOBs, children at home, single-parent) in one small batch. Closes intake only when the resume contract holds and tells the user the annual workflow runs next — without auto-invoking it.

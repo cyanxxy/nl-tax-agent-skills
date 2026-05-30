@@ -324,6 +324,51 @@ sources:
       - nl-tax-annual-return
       - nl-tax-partner-deductions
 
+  - id: bd_iack_2025
+    title: "Tabel inkomensafhankelijke combinatiekorting 2025"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/inkomensafhankelijke_combikorting/inkomensafhankelijke-combinatiekorting-2025"
+    source_type: official_rates
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check after Prinsjesdag; IACK maximum, opbouwpercentage, and minimum arbeidsinkomen change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_heffingskortingen_aow_2025_2026
+    title: "Heffingskortingen voor AOW-gerechtigden (ouderenkorting en alleenstaande-ouderenkorting)"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/heffingskortingen_voor_aow_gerechtigden"
+    source_type: official_rates
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check after Prinsjesdag; ouderenkorting amount and phase-out band and alleenstaande-ouderenkorting change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_jonggehandicaptenkorting_2025
+    title: "Jonggehandicaptenkorting"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/jonggehandicaptenkorting"
+    source_type: official_rates
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check after Prinsjesdag; jonggehandicaptenkorting amount changes annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
   - id: bd_own_home_deduction_cap_2025
     title: "Beperking hypotheekrenteaftrek als u een hoog inkomen hebt"
     domain: belastingdienst.nl
@@ -688,6 +733,38 @@ sources:
       - nl-tax-box3
 
   # ===========================================================================
+  #  AOW-leeftijd (state-pension age) — routing for pensioner rates and credits
+  # ===========================================================================
+
+  - id: svb_aow_leeftijd
+    title: "AOW-leeftijd — Uw AOW-leeftijd"
+    domain: svb.nl
+    url: "https://www.svb.nl/nl/aow/aow-leeftijd/uw-aow-leeftijd"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/aow/aow-leeftijd.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check annually after Prinsjesdag; AOW-leeftijd is fixed at least 5 years ahead"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+
+  - id: rijksoverheid_aow_leeftijd
+    title: "AOW-leeftijd 2025-2031"
+    domain: rijksoverheid.nl
+    url: "https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/aow/aow-leeftijd.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check annually after Prinsjesdag; the AOW-leeftijd schedule can shift with CBS life-expectancy updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+
+  # ===========================================================================
   #  Voorlopige aanslag 2026
   # ===========================================================================
 
@@ -780,6 +857,21 @@ sources:
     mandatory_for:
       - nl-tax-provisional-assessment
       - nl-tax-intake
+
+  - id: bd_provisional_refund_timing_2026
+    title: "Voorlopige aanslag 2026 aangevraagd en ik krijg geld terug — hoe en wanneer?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-aangevraagd-hoe-en-wanneer-krijg-ik-mijn-geld"
+    source_type: official_guidance
+    workflow: provisional_assessment
+    tax_year: 2026
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/refund-payment-timing.md"
+    last_checked: "2026-05-30"
+    freshness_policy: "check when provisional assessment season opens (January) and after BD portal or payment-calendar updates"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-submit-companion
 
   # ===========================================================================
   #  Security and authorization

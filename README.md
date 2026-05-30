@@ -146,6 +146,8 @@ plugins/nl-tax-agent-skills/.codex-plugin/plugin.json  # required plugin manifes
 
 The repo-scoped marketplace points Codex at the nested plugin package under `plugins/nl-tax-agent-skills/`. Codex users invoke the bundled skills after discovery; the `commands/` directory contains Claude Code slash-command wrappers and is not documented here as a Codex command surface. Only `.agents/plugins/marketplace.json` is tracked under `.agents/`; other assistant state in `.agents/` remains ignored.
 
+Per-skill **Codex invocation policy** lives in an `agents/openai.yaml` file inside the relevant skill folders. Codex reads only `name`/`description` from `SKILL.md` and ignores the Claude `disable-model-invocation`, `user-invocable`, and `allowed-tools` frontmatter keys, so each manual-only skill (`nl-tax-submit-companion`, `nl-tax-source-refresh`) and each background helper (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-partner-deductions`) carries `policy.allow_implicit_invocation: false` there. Explicit `$skill-name` invocation still works.
+
 <details>
 <summary><strong>ZIP fallback</strong> — if the GitHub-marketplace path is unavailable in your host build</summary>
 
@@ -194,7 +196,7 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
 ## Architecture & data flow
 
 ```text
-  uploads/*  ──▶  nl-tax-evidence-indexer  ──▶  workspace/uploads/evidence-index.yaml
+  uploads/*  ──▶  nl-tax-evidence-indexer  ──▶  workspace/taxpayer/evidence-index.yaml
                                                           │
   (interactive) ──▶  nl-tax-intake          ──▶  workspace/taxpayer/profile.yaml
                                                           │
@@ -205,8 +207,9 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
                        │                                  │
                        │  ── pulls background helpers ──┐
                        │     nl-tax-box1-home           │
-                       │     nl-tax-box3                │  write to
-                       │     nl-tax-partner-deductions  │  workspace/shared/*.md
+                       │     nl-tax-box2                │  write to
+                       │     nl-tax-box3                │  workspace/shared/*.md
+                       │     nl-tax-partner-deductions  │
                        │  ──────────────────────────────┘
                        ▼                                  ▼
         workspace/annual/2025/             workspace/provisional/2026/
@@ -227,7 +230,7 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
                             [you type into Mijn Belastingdienst]
 ```
 
-Skills compose without hidden state: each consumes files written by upstream skills and writes its own outputs to a scoped path. Background helpers (`box1-home`, `box3`, `partner-deductions`) write **only** to `workspace/shared/` — they never touch annual or provisional output paths.
+Skills compose without hidden state: each consumes files written by upstream skills and writes its own outputs to a scoped path. Background helpers (`box1-home`, `box2`, `box3`, `partner-deductions`) write **only** to `workspace/shared/` — they never touch annual or provisional output paths.
 
 Every value in a workpack must be traceable to (a) evidence, (b) profile data, (c) a calculation that cites a `source_id`, or (d) an explicit assumption logged in `assumptions.md`.
 
@@ -280,6 +283,7 @@ Active workflow declarations live in [`supported-workflows.yaml`](plugins/nl-tax
 | `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps and review tables |
 | `nl-tax-submit-companion` | manual-only | Produce a human checklist for official Belastingdienst submission |
 | `nl-tax-box1-home` | background | Summarize box 1 and eigen-woning facts into `workspace/shared/` |
+| `nl-tax-box2` | background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
 | `nl-tax-box3` | background | Classify assets, produce annual/provisional box 3 notes without mixing methods |
 | `nl-tax-partner-deductions` | background | Determine fiscal-partner and allocation notes for the main workpack |
 | `nl-tax-source-refresh` | developer | Validate and refresh local source snapshots and workflow support declarations |
@@ -346,12 +350,12 @@ All taxpayer-specific output is written under `workspace/` (git-ignored):
 workspace/
   taxpayer/
     profile.yaml                    # nl-tax-intake output
-  uploads/
     evidence-index.yaml             # nl-tax-evidence-indexer output
-  shared/                           # background helper notes (box1, box3, partner)
-    box1-notes.md
+  shared/                           # background helper notes (box1, box2, box3, partner)
+    box1-home-notes.md
+    box2-notes.md
     box3-notes.md
-    partner-allocation.md
+    allocation-options.md
   annual/
     2025/
       return-pack.md                # main annual workpack
@@ -532,6 +536,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-annual-return/           # annual 2025 workpack
     nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
     nl-tax-box1-home/               # background helper
+    nl-tax-box2/                    # background helper
     nl-tax-box3/                    # background helper
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box1-home
-description: Use when Box 1 or own-home notes are needed.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — prepares Box 1 income and eigen-woning notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
@@ -59,4 +59,13 @@ Append missing inputs to `workspace/shared/box1-home-open-questions.yaml`:
 
 The calling skill asks these questions, records the answer with `source`, `quote`/`evidence_id`, and timestamp, then re-invokes this helper.
 
-Write only `workspace/shared/box1-home-notes.md`, `workspace/shared/box1-home-open-questions.yaml`, and shared review questions. Do not write workpacks, mix years, store full identifiers, or handle credentials.
+Write only `workspace/shared/box1-home-notes.md`, `workspace/shared/box1-home-open-questions.yaml`, and shared review questions under `workspace/shared/`. Do not write workpacks, mix years, store full identifiers, or handle credentials.
+
+## Must NOT write to
+
+This helper writes only under `workspace/shared/`. It must never write to:
+
+- `workspace/annual/**`
+- `workspace/provisional/**`
+
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.

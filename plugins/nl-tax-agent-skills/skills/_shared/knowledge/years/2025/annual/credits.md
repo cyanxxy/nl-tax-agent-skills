@@ -1,6 +1,6 @@
 # Rule note: Tax credits (heffingskortingen) for 2025
 
-source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025
+source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_iack_2025, bd_heffingskortingen_aow_2025_2026, bd_jonggehandicaptenkorting_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -95,34 +95,58 @@ The following do NOT qualify:
 
 For taxpayers who have the AOW age for the whole year, use the AOW table above. For taxpayers who reach AOW age during 2025, mark the exact amount as a manual-review item in the official form.
 
-## Other heffingskortingen (less common, noted for completeness)
+## Other heffingskortingen
+
+These credits use reviewed 2025 figures and may be calculated in the workpack when the eligibility conditions are met. Show the calculation step by step and require taxpayer review. The Belastingdienst online system applies these automatically; the workpack states the expected amount for verification.
 
 ### Inkomensafhankelijke combinatiekorting (IACK)
 
-- For working parents with a child under 12 in the household
-- Income-dependent; requires minimum arbeidsinkomen
-- Only the partner with the lower income can claim this credit
-- Do not calculate this credit unless a source-register entry for the 2025 IACK table has been added and reviewed.
+source: bd_iack_2025
 
-### Jonggehandicaptenkorting
+For working parents with a child born after 31 December 2012 who is under 12 on 1 January 2025 and belongs to the household for at least 6 months. The taxpayer must have arbeidsinkomen above EUR 6,145 and either (a) no fiscal partner, or a fiscal partner for less than 6 months, or (b) a lower arbeidsinkomen than the fiscal partner.
 
-- For taxpayers who received a Wajong benefit at the start of the calendar year
-- Do not calculate this credit unless a source-register entry for the 2025 jonggehandicaptenkorting amount has been added and reviewed.
+| Arbeidsinkomen (non-AOW-age) | IACK 2025 |
+|---|---:|
+| Up to and including EUR 6,145 | EUR 0 |
+| EUR 6,146 up to and including EUR 32,223 | 11.45% x (arbeidsinkomen - EUR 6,145) |
+| EUR 32,224 or more | EUR 2,986 (maximum) |
+
+- Only the partner with the lower arbeidsinkomen claims the IACK. If both partners' arbeidsinkomen is equal, only the older partner claims it.
+- Payout of the IACK to the least-earning partner was abolished from 2023.
+- Co-ouderschap (co-parenting) has specific day-count conditions (the child stays with each parent in a repeating rhythm). Flag co-parenting cases for manual review rather than auto-calculating.
+- If the taxpayer reaches AOW age during 2025, the adjusted amount is calculated by the Belastingdienst — mark it as a manual-review item.
 
 ### Ouderenkorting
 
-- For taxpayers at or above AOW age
-- Maximum amount phases out above a certain income threshold
-- Income-dependent
+source: bd_heffingskortingen_aow_2025_2026
 
-### Alleenstaande ouderenkorting
+For taxpayers who have reached the AOW age by the end of 2025.
 
-- For single AOW-age taxpayers receiving AOW for a single person
-- Fixed amount
+| Verzamelinkomen | Ouderenkorting 2025 |
+|---|---:|
+| Up to and including EUR 45,308 | EUR 2,035 |
+| EUR 45,309 up to and including EUR 58,874 | EUR 2,035 - 15% x (verzamelinkomen - EUR 45,308) |
+| EUR 58,875 or more | EUR 0 |
+
+### Alleenstaande-ouderenkorting
+
+source: bd_heffingskortingen_aow_2025_2026
+
+- For taxpayers who receive (or are entitled to) an AOW benefit for a single person (alleenstaande).
+- Fixed amount: EUR 531 for 2025 (EUR 540 for 2026).
+- If a couple lives apart because one partner is in a care home, both may be entitled — flag for manual review.
+
+### Jonggehandicaptenkorting
+
+source: bd_jonggehandicaptenkorting_2025
+
+- For taxpayers entitled to a Wajong benefit (or Wajong work support) who do not receive the ouderenkorting.
+- Fixed amount: EUR 909 for 2025 (EUR 923 for 2026).
+- Entitlement is enough; the benefit need not actually be paid out. The taxpayer must actively tick the Wajong question in the online return or the credit is lost — surface this as a review item.
 
 ### Levensloopverlofkorting
 
-- Transitional arrangement for old levensloop savings; largely phased out
+- Transitional arrangement for old levensloop savings; largely phased out. If the user reports an old levensloop balance, flag it for manual review.
 
 ## Applying credits in the workpack
 

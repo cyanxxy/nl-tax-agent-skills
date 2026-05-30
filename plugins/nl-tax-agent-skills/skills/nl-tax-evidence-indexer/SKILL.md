@@ -1,6 +1,6 @@
 ---
 name: nl-tax-evidence-indexer
-description: Use when Dutch tax evidence needs indexing.
+description: Catalog and hash Dutch tax documents (jaaropgaaf, bankafschrift, WOZ-beschikking, hypotheek-jaaroverzicht, beschikking) and chat-stated amounts into an evidence index. Use when the user shares or mentions tax documents, or a workflow needs evidence for a section.
 allowed-tools:
   - Read
   - Grep
@@ -25,8 +25,11 @@ Catalog whatever evidence the user has - files in `uploads/`/`evidence/`, **and 
 Bundled paths below are relative to this skill's own directory: `reference/`
 and `templates/` are subfolders, and `_shared/` is the plugin-shared folder at
 `../_shared/`. If a path does not resolve from your working directory, run
-`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
-resolve from there. Resolve every `workspace/...` path against `workspace_root`
+`echo "${CLAUDE_PLUGIN_ROOT}"` in Bash to get the plugin root and resolve from
+`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-evidence-indexer/` (Claude Code and Cowork
+set `CLAUDE_PLUGIN_ROOT`; if it is unset, resolve relative to your working
+directory; `CLAUDE_SKILL_DIR` is not a host-provided variable). Resolve every
+`workspace/...` path against `workspace_root`
 recorded in `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree.
 

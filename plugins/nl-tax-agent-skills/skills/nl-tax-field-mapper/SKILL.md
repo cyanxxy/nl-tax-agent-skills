@@ -1,6 +1,6 @@
 ---
 name: nl-tax-field-mapper
-description: Use when workpacks need manual-entry field maps.
+description: Convert an annual or provisional workpack into a manual-entry field map for the Mijn Belastingdienst portal, tracing every value to its source. Use after a workpack exists and the user wants to prepare data entry.
 allowed-tools:
   - Read
   - Grep
@@ -28,8 +28,11 @@ If the relevant workpack does not exist, tell the user it must be generated firs
 Bundled paths below are relative to this skill's own directory: `reference/`
 is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`. If
 a path does not resolve from your working directory, run
-`echo "$CLAUDE_SKILL_DIR"` in Bash to get this skill's absolute directory and
-resolve from there. Resolve every `workspace/...` path against `workspace_root`
+`echo "${CLAUDE_PLUGIN_ROOT}"` in Bash to get the plugin root and resolve from
+`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/` (Claude Code and Cowork set
+`CLAUDE_PLUGIN_ROOT`; if it is unset, resolve relative to your working
+directory; `CLAUDE_SKILL_DIR` is not a host-provided variable). Resolve every
+`workspace/...` path against `workspace_root`
 recorded in `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree.
 
@@ -113,23 +116,35 @@ Never map:
 
 ## Validation
 
-After writing the field map, run:
-
-Resolve the validator script from this skill directory and run:
+After writing the field map, validate it. If a Python interpreter is available in
+this environment, run the bundled validator (the path uses the plugin root; if
+`CLAUDE_PLUGIN_ROOT` is unset, substitute this skill's directory):
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/validate_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
 The validator checks required metadata, workflow names, credential and portal-automation fields, confidence range, source provenance rules, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
 
+**If `python3` is not available** (for example a Cowork session without a
+code-execution surface), do not skip validation — verify the field map by hand
+against `reference/mapping-principles.md` and the checks above: every field has a
+valid `source.type`, no credential or portal-automation fields are present, every
+`unknown` field also appears in `missing_fields`, and (for provisional) no
+werkelijk-rendement field exists.
+
 ## Rendering
 
-Resolve the renderer script from this skill directory and run:
+If `python3` is available, render a human-readable preview with the bundled
+renderer:
 
 ```bash
-python3 ${CLAUDE_SKILL_DIR}/scripts/render_field_map.py <path-to-field-map.yaml>
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
+
+If `python3` is not available, present the field map to the user directly from the
+YAML you wrote (field label, the value or a `MISSING - enter manually` marker, and
+the source) instead of running the script.
 
 ## Output Files
 
