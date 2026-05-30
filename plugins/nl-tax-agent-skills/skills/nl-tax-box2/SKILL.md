@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box2
-description: Use when Box 2 substantial-interest notes are needed.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — prepares Box 2 substantial-interest (aanmerkelijk belang) notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
@@ -49,4 +49,13 @@ Use the bundled scripts when structured JSON inputs are available:
 - Do not handle valuation disputes, emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, corporate-tax-heavy DGA cases, inherited or gifted substantial interests, fictive disposal events, or uncertain excessive-borrowing positions without manual review.
 - Do not write field maps, annual/provisional workpack templates, source registers, supported workflow files, or shared eval data.
 
-Write only Box 2 preparation notes or shared review questions when asked by an owning workflow. Do not write workpacks directly.
+Write only Box 2 preparation notes or shared review questions under `workspace/shared/` when asked by an owning workflow. Do not write workpacks directly.
+
+## Must NOT write to
+
+This helper writes only under `workspace/shared/`. It must never write to:
+
+- `workspace/annual/**`
+- `workspace/provisional/**`
+
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.

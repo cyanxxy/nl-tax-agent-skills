@@ -1,0 +1,13 @@
+# Codex per-skill configuration.
+#
+# Codex reads only `name` and `description` from SKILL.md; it ignores the Claude
+# frontmatter keys `user-invocable: false` and `allowed-tools`. This file carries
+# the equivalent invocation policy for Codex.
+#
+# nl-tax-partner-deductions is an INTERNAL helper, invoked only as a sub-step by
+# nl-tax-annual-return or nl-tax-provisional-assessment — not a standalone user
+# workflow. Disabling implicit invocation keeps Codex from routing a user prompt
+# straight to it and bypassing the orchestrating workflow skill. Explicit
+# `$nl-tax-partner-deductions` invocation still works.
+policy:
+  allow_implicit_invocation: false

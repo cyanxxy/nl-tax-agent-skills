@@ -1,6 +1,6 @@
 ---
 name: nl-tax-provisional-assessment
-description: Use when preparing provisional_2026 guides.
+description: Prepare a 2026 voorlopige aanslag workpack — request, change, review, or stopzetten — for manual Mijn Belastingdienst entry. Use after intake routes to a provisional_2026 flow. Fictitious box 3 only; never collects werkelijk rendement.
 allowed-tools:
   - Read
   - Grep
@@ -19,21 +19,37 @@ This skill is conversational. Do not assume the user has prepared all estimates 
 
 Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this
 skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve
-from your working directory, run `echo "$CLAUDE_SKILL_DIR"` in Bash and resolve
-from there. Resolve every `workspace/...` path against `workspace_root` from
+from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and
+resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-provisional-assessment/`
+(`CLAUDE_PLUGIN_ROOT` is set by Claude Code and Cowork; if unset, resolve
+relative to your working directory; `CLAUDE_SKILL_DIR` is not host-provided).
+Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
 tree.
 
-Load as needed:
+Before the first user-facing reply each turn, load the security notes and the profile/session state; before generating any numeric content, load the 2026 provisional rate sheets. Append every loaded `source_id` (from `_shared/source-register.yaml`) to `sections … sources_loaded` in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
 
-- Resolve files relative to this skill directory unless a `workspace/...` path is named.
-- Supported workflows and the relevant provisional references
+Always:
+
 - `_shared/knowledge/security/digid.md` and `_shared/knowledge/security/prompt-injection.md`
-- 2026 provisional knowledge only
 - `templates/provisional-pack.md`
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present
 - `workspace/shared/session-progress.yaml`
+
+2026 provisional rate sheets and flow notes — canonical for every numeric line; do not paraphrase rates from memory, and if a sheet fails to load, stop and tell the user rather than fabricating a rate:
+
+- `_shared/knowledge/years/2026/provisional/rates-and-credits.md`
+- `_shared/knowledge/years/2026/provisional/box3-provisional.md`
+- `_shared/knowledge/years/2026/provisional/box2.md`
+- `_shared/knowledge/years/2026/provisional/own-home.md`
+- `_shared/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md`
+- `_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md`
+- `_shared/knowledge/own-home/eigenwoningforfait.md` and `_shared/knowledge/own-home/hypotheekrenteaftrek.md`
+- `_shared/knowledge/partners/fiscal-partnership.md`
+- The active subflow's flow note: `request-flow.md`, `change-flow.md`, `review-flow.md`, or `stopzetten-flow.md`
+
+Use only 2026 provisional sources — never load or reuse 2025 annual rate sheets.
 
 Confirm an active workflow candidate of `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, or `provisional_2026_stopzetten`. If the taxpayer profile is missing or the workflow is wrong, continue with `nl-tax-intake` first.
 
@@ -65,6 +81,17 @@ For every subflow:
 4. Record each value in `workspace/provisional/2026/notes/<section>.yaml` with `source` (`file`, `user_chat`, `assumption`, `unknown`, or `baseline`) and either `evidence_id`, `baseline_ref`, or `quote` plus `stated_at`.
 5. If the user cannot answer, record `unknown`, add it to `workspace/shared/missing-info.md`, and continue.
 6. Never silently treat missing values as zero.
+
+### Helper delegation
+
+Delegate the box and partner work to the background helpers instead of inlining it. Invoke the matching helper, collect its question packet from `workspace/shared/`, ask the user, record answers, then re-invoke:
+
+- **Box 1 / own home** → `nl-tax-box1-home` (use the 2026 provisional references)
+- **Box 2** → `nl-tax-box2` (label all amounts as estimates or baseline-derived)
+- **Box 3** → `nl-tax-box3` (**fictitious method only** — never request werkelijk rendement)
+- **Partner / allocation** → `nl-tax-partner-deductions`
+
+Read the helpers' `workspace/shared/*-notes.md` back before assembling outputs. The helpers never write to `workspace/provisional/**`; this skill owns that tree.
 
 ## Subflow: request
 
@@ -110,10 +137,16 @@ Walk the user through these sections one at a time:
 Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs until all of the following are true:
 
 1. The subflow's final review is complete.
-2. The user explicitly confirms in chat that the workpack should be generated.
-3. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
+2. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
+3. `session-progress.yaml` has `mode: real` or `mode: test` set. If it is empty, ask the user once and persist their answer; never assume `real`.
+4. The user has typed one of these confirmation phrases verbatim in chat:
+   - `generate the workpack`
+   - `genereer de workpack`
+   - `klaar voor workpack`
 
-When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly.
+   Or the user has run `/nl-tax-agent-skills:nl-tax-provisional-assessment confirm`. Anything else (including "looks good", "yes", "ok", "sounds good") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
+
+When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly. If `mode: test`, prepend a `# TEST RUN — NOT FOR FILING` banner to every generated file, suffix filenames with `.test` (for example `provisional-pack.test.md`), and repeat the TEST RUN marker in each section header.
 
 ## Output files
 
@@ -136,6 +169,10 @@ Write at the generation gate:
 - Do not log in, submit, sign, automate forms, handle DigiD, or collect BSN.
 - Route complex Box 2 facts to manual review or unsupported: valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
 - This workpack is a preparation aid, not tax advice or submission.
+
+## Worked example
+
+> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "enter ALL data again — anything not re-entered defaults to zero" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may matter when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
 
 ## End-of-turn report
 

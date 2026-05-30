@@ -61,7 +61,7 @@ Donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling) and
 - Regular donations committed for at least 5 years via a notarial deed or written agreement (schenkingsovereenkomst).
 - No threshold (drempel) applies.
 - Maximum deductible: EUR 1,500,000 per year, combined for taxpayer and fiscal partner, for 2025 and 2026 (was EUR 250,000 in 2024).
-- Overgangsregeling: periodieke-gift agreements entered into before 4 October 2022 at 16:00 keep the unlimited deduction through tax year 2027.
+- Overgangsregeling: periodieke-gift agreements entered into before 4 October 2022 at 16:00 keep the unlimited deduction up to 2027 ("tot 2027") — that is, the last full year with the unlimited (uncapped) deduction is tax year 2026; from tax year 2027 onward the EUR 1,500,000 maximum applies to these agreements too.
 - Evidence required: notarial deed or written agreement, plus proof of payments.
 
 #### Gewone giften / eenmalige giften (incidental gifts)

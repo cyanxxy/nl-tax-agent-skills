@@ -41,6 +41,9 @@ active_workflows:
       - bd_box1_rates_2025
       - bd_general_tax_credit_2025
       - bd_labour_tax_credit_2025
+      - bd_iack_2025
+      - bd_heffingskortingen_aow_2025_2026
+      - bd_jonggehandicaptenkorting_2025
       - bd_tax_credit_payout_2025
       - bd_own_home_deduction_cap_2025
       - bd_eigenwoningforfait_2025_2026
@@ -62,6 +65,11 @@ active_workflows:
       - bd_zorgkosten_overzicht_2025
       - bd_deduction_rate_cap_2025
       - bd_bijtelling_auto_2025
+      - bd_verzuimboete
+      - bd_belastingrente_overview
+      - bd_belastingrente_ib
+      - svb_aow_leeftijd
+      - rijksoverheid_aow_leeftijd
 
   - id: provisional_2026
     workflow: provisional_assessment
@@ -109,6 +117,10 @@ active_workflows:
       - bd_box2_provisional_2026
       - bd_box3_2026_provisional
       - bd_algoritmeregister_vva_eva
+      - bd_belastingrente_overview
+      - bd_provisional_refund_timing_2026
+      - svb_aow_leeftijd
+      - rijksoverheid_aow_leeftijd
 
 blocked_workflows:
   - id: annual_2025_entrepreneurs_roadmap

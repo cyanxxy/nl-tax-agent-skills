@@ -1,6 +1,6 @@
 ---
 name: nl-tax-partner-deductions
-description: Use when partner or deduction notes are needed.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — determines fiscal-partner status and allocation/deduction notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
@@ -54,3 +54,12 @@ Write only:
 - `workspace/shared/partner-deductions-open-questions.yaml`
 
 Do not write annual/provisional workpacks, ask for partner DigiD, store full BSN/IBAN, or force unsupported partner cases into v1.
+
+## Must NOT write to
+
+This helper writes only under `workspace/shared/`. It must never write to:
+
+- `workspace/annual/**`
+- `workspace/provisional/**`
+
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.

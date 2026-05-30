@@ -13,6 +13,10 @@ wetten.overheid.nl          -- legislation database
 regels.overheid.nl          -- rule methodology
 platform.claude.com         -- Anthropic Agent Skills docs
 code.claude.com             -- Claude Code docs
+svb.nl                      -- SVB state-pension authority
+www.svb.nl                  -- SVB (AOW-leeftijd)
+rijksoverheid.nl            -- central government portal
+www.rijksoverheid.nl        -- Rijksoverheid (AOW-leeftijd schedule)
 ```
 
 ## Rules
@@ -36,3 +40,5 @@ code.claude.com             -- Claude Code docs
 | `regels.overheid.nl`          | Government          | Rule authoring methodology       |
 | `platform.claude.com`        | Anthropic           | Agent Skills documentation       |
 | `code.claude.com`            | Anthropic           | Claude Code documentation        |
+| `www.svb.nl`                  | Government (SVB)    | AOW-leeftijd (state-pension age)  |
+| `www.rijksoverheid.nl`        | Government          | AOW-leeftijd schedule             |
