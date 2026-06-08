@@ -13,7 +13,7 @@ sources:
     source_id: bd_box2_provisional_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
   bd_box3_2026_provisional:
-    content_hash_sha256: a36b68964b1768207f6a655694568776f2e230d0e1d022a9238e0431e787c001
+    content_hash_sha256: 0b180feab5661c8b1607d272a728bf1144b7b0cc7483a9ce1d85486e58c8253d
     review_status: reviewed
     snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
     source_id: bd_box3_2026_provisional

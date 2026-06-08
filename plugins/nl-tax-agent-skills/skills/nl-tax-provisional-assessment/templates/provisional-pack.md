@@ -24,6 +24,7 @@
 - Box 2 provisional estimate
 - Box 3 provisional estimate
 - Deductions estimate
+- Change subflow — full re-entry reminder (change subflow only)
 - Field map summary
 - Missing information
 - Assumptions
@@ -239,6 +240,12 @@ Manual review / unsupported triggers: valuation disputes, emigration, death, res
 | Gifts (giften)                        | [estimate] | [F/U/A/B/?] |
 | Other deductible expenses             | [estimate/manual review] | [F/U/A/B/?] |
 | **Total other deductions**            | [estimate/manual review] | C:sum |
+
+## Change subflow — full re-entry reminder
+
+[For the **change** subflow only. For request / review / stopzetten, replace this section's body with an explicit "N/A — not applicable for this subflow" line; do not omit the heading.]
+
+> When changing your voorlopige aanslag, you must enter ALL data again — not only the items that changed. The new voorlopige aanslag replaces the previous one entirely. Anything not re-entered defaults to zero in the official portal.
 
 ## Field map summary
 

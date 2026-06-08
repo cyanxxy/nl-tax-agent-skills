@@ -14,7 +14,13 @@ evidence/
 *.tiff
 *.xlsx
 *.xls
+*.xlsm
 *.csv
+*.doc
+*.docx
+*.ods
+*.odt
+*.xml
 *.zip
 *.7z
 *.rar

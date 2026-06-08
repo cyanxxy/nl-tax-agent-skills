@@ -17,7 +17,7 @@ Output:
     YAML-formatted list to stdout (or JSON if PyYAML is not available).
 
 Supported file types:
-    PDF, JPG, JPEG, PNG, XLSX, XLS, CSV, MD, TXT, DOCX, XML, ODS
+    PDF, JPG, JPEG, PNG, XLSX, XLS, XLSM, XLTM, XLAM, CSV, MD, TXT, DOCX, XML, ODS
 """
 
 import hashlib
@@ -41,6 +41,8 @@ SUPPORTED_EXTENSIONS = {
     ".docx",
     ".xml",
     ".ods",
+    ".xltm",
+    ".xlam",
 }
 
 # Extensions that warrant a security note

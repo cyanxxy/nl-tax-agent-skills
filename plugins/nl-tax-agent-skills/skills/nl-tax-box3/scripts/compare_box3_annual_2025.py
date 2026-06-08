@@ -28,7 +28,12 @@ from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
 import json
 
 
-# 2025 annual box 3 fictitious return percentages.
+# 2025 annual box 3 fictitious return percentages and thresholds.
+#
+# These values duplicate the canonical knowledge pack so this script can act as a
+# deterministic calculator. The knowledge notes are canonical; keep these in sync
+# with the reviewed rule note and bump them in the same commit it changes:
+#   _shared/knowledge/years/2025/box3/fictitious.md (source bd_box3_2025_calc).
 PERC_BANKTEGOEDEN = 0.0137
 PERC_OVERIGE_BEZITTINGEN = 0.0588
 PERC_SCHULDEN = 0.0270

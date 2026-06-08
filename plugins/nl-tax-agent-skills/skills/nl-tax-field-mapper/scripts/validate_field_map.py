@@ -15,7 +15,6 @@ Checks:
     - source.type = unknown rows are listed in missing_fields
 """
 
-import json
 import os
 import re
 import sys
@@ -44,17 +43,28 @@ PORTAL_AUTOMATION_KEYWORDS = {
     "browser", "session", "submit", "submission", "sign", "signature",
     "onderteken", "verzenden", "indienen",
 }
-WERKELIJK_KEYWORDS = {"werkelijk", "actual_return", "actual-return", "werkelijk_rendement"}
+# Catch every common spelling of "actual return" — Dutch and English, joined and
+# space-separated — so a provisional field cannot smuggle werkelijk rendement past
+# the box-3 fictitious-only guard via a clean field_id plus a prose label.
+WERKELIJK_KEYWORDS = {
+    "werkelijk", "werkelijk rendement", "werkelijk_rendement",
+    "actual_return", "actual-return", "actual return",
+    "actueel rendement", "echt rendement",
+}
 
 
-def load_yaml_or_json(path):
+def load_yaml(path):
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to run this validator "
+            "(python3 -m pip install pyyaml). If PyYAML is unavailable on this host, "
+            "validate the field map by hand per reference/mapping-principles.md."
+        )
+    return yaml.safe_load(content)
 
 
 def _is_provisional(workflow):
@@ -195,8 +205,11 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     validate_sensitive_field_names(fid, label_lower, errors)
 
     confidence = field.get("confidence")
-    if confidence is not None and not (0.0 <= confidence <= 1.0):
-        errors.append(f"Confidence out of range [0,1] for {fid}: {confidence}")
+    if confidence is not None:
+        if not isinstance(confidence, (int, float)) or isinstance(confidence, bool):
+            errors.append(f"Confidence must be a number in [0,1] for {fid}: {confidence!r}")
+        elif not (0.0 <= confidence <= 1.0):
+            errors.append(f"Confidence out of range [0,1] for {fid}: {confidence}")
 
     validate_source(fid, field, missing_field_ids, errors, warnings)
 
@@ -248,7 +261,7 @@ def main():
         print(f"Error: file not found: {path}", file=sys.stderr)
         sys.exit(1)
 
-    data = load_yaml_or_json(path)
+    data = load_yaml(path)
     errors, warnings = validate(data)
 
     if errors:

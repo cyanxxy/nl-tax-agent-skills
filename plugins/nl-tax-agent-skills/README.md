@@ -42,6 +42,7 @@ nl-tax-agent-skills/
     nl-tax-annual-return/           # annual 2025 workpack
     nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
     nl-tax-box1-home/               # background helper
+    nl-tax-box2/                    # background helper
     nl-tax-box3/                    # background helper
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps
@@ -56,7 +57,7 @@ The bundled skills cover:
 - voorlopige aanslag 2026 request, change, review, and stopzetten guidance;
 - source-refresh gated 2027 annual/provisional workflows, blocked until official 2027 sources are registered and validated;
 - evidence indexing with untrusted-content handling;
-- box 1, box 3, partner/deduction, field-map, source-refresh, and manual submission companion workflows.
+- box 1, box 2, box 3, partner/deduction, field-map, source-refresh, and manual submission companion workflows.
 
 The plugin intentionally does not include a backend service, web app, browser automation, DigiD collection, signing, filing, Digipoort transport, or autonomous submission. It helps the taxpayer collect information, review it, and follow step-by-step guidance while filling the official forms manually.
 
@@ -73,6 +74,7 @@ The plugin must not prepare 2027 annual or provisional workpacks from 2025/2026 
 | `nl-tax-field-mapper` | User entry point | Convert workpack findings into manual-entry field maps. |
 | `nl-tax-submit-companion` | Manual-only | Create a manual checklist for official submission. |
 | `nl-tax-box1-home` | Background helper | Summarize box 1 and own-home notes into `workspace/shared/`. |
+| `nl-tax-box2` | Background helper | Prepare Box 2 substantial-interest notes into `workspace/shared/`. |
 | `nl-tax-box3` | Background helper | Classify assets and produce source-backed box 3 notes. |
 | `nl-tax-partner-deductions` | Background helper | Produce fiscal-partner and allocation notes. |
 | `nl-tax-source-refresh` | Developer-only | Validate source registers, knowledge snapshots, and supported workflows. |

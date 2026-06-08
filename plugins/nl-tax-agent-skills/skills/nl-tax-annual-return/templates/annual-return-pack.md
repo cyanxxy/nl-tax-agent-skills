@@ -32,6 +32,7 @@
 - Field map summary
 - Missing information
 - Assumptions
+- User-stated values index
 - Human review checklist
 - Not submission advice
 

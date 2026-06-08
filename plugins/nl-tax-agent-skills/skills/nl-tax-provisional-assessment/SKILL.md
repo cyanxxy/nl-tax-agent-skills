@@ -157,12 +157,12 @@ Write incrementally:
 - `workspace/shared/missing-info.md`
 - `workspace/shared/assumptions.md`
 
-Write at the generation gate:
+Write at the generation gate (per-subflow scope — must match `reference/provisional-output-contract.md`):
 
-- `workspace/provisional/2026/provisional-pack.md`
-- `workspace/provisional/2026/field-map.yaml`
-- `workspace/provisional/2026/delta-summary.md` for change/review
-- `workspace/provisional/2026/review-questions.md`
+- `workspace/provisional/2026/provisional-pack.md` (all subflows)
+- `workspace/provisional/2026/field-map.yaml` (request, change)
+- `workspace/provisional/2026/delta-summary.md` (change only)
+- `workspace/provisional/2026/review-questions.md` (review only)
 
 ## Safety
 
@@ -172,7 +172,7 @@ Write at the generation gate:
 
 ## Worked example
 
-> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "enter ALL data again — anything not re-entered defaults to zero" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may matter when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
+> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "enter ALL data again — anything not re-entered defaults to zero" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
 
 ## End-of-turn report
 

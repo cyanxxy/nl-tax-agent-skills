@@ -48,8 +48,16 @@ to use werkelijk rendement in this provisional workflow.
 
 ## Handling User Questions About Actual Return
 
+Two distinct strings exist — do not conflate them:
+
+- **In-workpack NOTE** (the explanatory line written into the box 3 section of the
+  workpack): `Werkelijk rendement is not part of provisional 2026.` — keep this
+  wording verbatim (see "Actual-Return Boundary" above).
+- **Conversational REDIRECT** (what you say when the user asks a question): use the
+  canonical redirect below.
+
 If the user asks: "What about my actual return for 2026?"
 
-Respond with exactly this note:
+Respond with the canonical redirect:
 
-> Werkelijk rendement is not part of provisional 2026.
+> Werkelijk rendement is not part of the 2026 voorlopige aanslag. It may become relevant when filing the annual 2026 return in 2027.

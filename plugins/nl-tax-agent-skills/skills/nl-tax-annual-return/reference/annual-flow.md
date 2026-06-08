@@ -93,6 +93,9 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
 - `_shared/knowledge/years/2025/box3/fictitious.md` *(bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025)*
 - `_shared/knowledge/years/2025/box3/actual-return.md` *(bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025)*
+- `_shared/knowledge/years/2025/box2/box2-rates.md` *(bd_box2_rates_2025_2026)* — only when the case has an aanmerkelijk belang (`box2.has_aanmerkelijk_belang: yes`)
+- `_shared/knowledge/years/2025/box2/box2-income-guidance.md` *(bd_box2_income_ab_guidance)* — same condition
+- `_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md` *(bd_fisin_aanmerkelijk_belang_2025)* — same condition
 - `_shared/knowledge/own-home/eigenwoningforfait.md` *(bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes)*
 - `_shared/knowledge/own-home/hypotheekrenteaftrek.md` *(bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest)*
 - `_shared/knowledge/partners/fiscal-partnership.md` *(bd_fiscal_partnership)*
@@ -236,6 +239,8 @@ If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new 
 ## Phase 3A — Box 2 compilation
 
 Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, emit the canonical "not applicable" line from the output contract and continue.
+
+When the taxpayer has an aanmerkelijk belang, read the rates from `_shared/knowledge/years/2025/box2/box2-rates.md` — never paraphrase the 24.5% / 31% box 2 bracket from memory — and append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`.
 
 ### 3A.1 Substantial-interest status
 
@@ -400,7 +405,7 @@ Compile all deductible items from evidence and user-provided data.
 
 - Total persoonsgebonden aftrek
 - Note the allocation order: box 1 first, then box 3, then box 2
-- If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best
+- If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best. Partner allocation of these deductions is finalized in Phase 6 via `nl-tax-partner-deductions`.
 
 ---
 
@@ -439,6 +444,8 @@ Write the screening results to `workspace/annual/2025/notes/credits.yaml`. The t
 ## Phase 6 — Partner handling
 
 If the taxpayer has a fiscal partner, compile the partner section.
+
+Delegate the fiscal-partner determination and allocation modelling to the `nl-tax-partner-deductions` helper (matching the Helper delegation contract in `SKILL.md`): invoke it to fold partner status and the deduction-/box-allocation scenarios into `workspace/shared/allocation-options.md`, ask the user the questions it returns, then re-invoke it to finalize. Read `allocation-options.md` back before assembling the partner section. The helper writes only under `workspace/shared/`; this skill owns `workspace/annual/**`.
 
 ### 6.1 Partner status confirmation
 

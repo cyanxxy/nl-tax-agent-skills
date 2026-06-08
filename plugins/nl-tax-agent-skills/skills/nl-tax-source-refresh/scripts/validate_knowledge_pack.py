@@ -26,9 +26,12 @@ def load_yaml_or_json(path):
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to run this validator "
+            "(python3 -m pip install pyyaml)."
+        )
+    return yaml.safe_load(content)
 
 
 def compute_sha256(filepath):
@@ -68,7 +71,7 @@ def check_freshness(last_checked, policy):
         return True, "no last_checked date"
     threshold = FRESHNESS_DAYS.get(policy, 365)
     try:
-        checked = date.fromisoformat(last_checked)
+        checked = date.fromisoformat(str(last_checked))
         age = (date.today() - checked).days
         if age > threshold:
             return True, f"last checked {age} days ago (threshold: {threshold})"

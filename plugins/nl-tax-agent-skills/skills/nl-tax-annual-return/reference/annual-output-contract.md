@@ -38,8 +38,9 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 14. **Field map summary** — reference to the field map file
 15. **Missing information** — all identified data gaps
 16. **Assumptions** — all assumptions made during workpack generation
-17. **Human review checklist** — items requiring human verification before filing, including every `U:` chat-only value
-18. **Not submission advice** — mandatory disclaimer section
+17. **User-stated values index** — cross-index of every `U:` chat-only value so the user can spot-check what was recorded from chat
+18. **Human review checklist** — items requiring human verification before filing, including every `U:` chat-only value
+19. **Not submission advice** — mandatory disclaimer section
 
 ---
 
@@ -209,7 +210,7 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 ### Structural
 
 - [ ] `mode` is `real` or `test` in `session-progress.yaml`
-- [ ] All 18 required sections are present in the template fill
+- [ ] All required sections listed above are present in the template fill
 - [ ] Sections appear in the order listed above
 - [ ] No section is empty (each has content or an explicit "not applicable" line)
 - [ ] Filing status section reflects the user's stated filing situation
