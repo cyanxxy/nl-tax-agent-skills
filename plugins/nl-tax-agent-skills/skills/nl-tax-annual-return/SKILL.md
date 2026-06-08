@@ -45,6 +45,9 @@ Before generating any workpack content (Phase 2 onward in `annual-flow.md`), loa
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md`
 - `_shared/knowledge/years/2025/box3/fictitious.md`
 - `_shared/knowledge/years/2025/box3/actual-return.md`
+- `_shared/knowledge/years/2025/box2/box2-rates.md` (only when the case has an aanmerkelijk belang — `box2.has_aanmerkelijk_belang: yes`)
+- `_shared/knowledge/years/2025/box2/box2-income-guidance.md` (same condition)
+- `_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md` (same condition)
 - `_shared/knowledge/own-home/eigenwoningforfait.md`
 - `_shared/knowledge/own-home/hypotheekrenteaftrek.md`
 - `_shared/knowledge/partners/fiscal-partnership.md`
@@ -95,7 +98,7 @@ A subsection in `chat_only` counts as filled for the generation gate, but the wo
 The box and partner phases delegate to the background helper skills — do not inline their reasoning. In each phase, invoke the matching helper, let it append its question packet under `workspace/shared/`, ask the user those questions, record the answers, then re-invoke the helper to fold them into its notes:
 
 - **Box 1 / own home** → `nl-tax-box1-home` (writes `workspace/shared/box1-home-notes.md`)
-- **Box 2** → `nl-tax-box2` (writes Box 2 notes under `workspace/shared/`)
+- **Box 2** → `nl-tax-box2` (writes Box 2 notes under `workspace/shared/`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang: yes`): load the three box 2 rate sheets listed above first, and — because the helper is Read/Grep-only and cannot update progress — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
 - **Box 3** → `nl-tax-box3` (writes `workspace/shared/box3-notes.md`; annual collects fictitious **and** werkelijk rendement for the comparison)
 - **Partner / deductions** → `nl-tax-partner-deductions` (writes `workspace/shared/allocation-options.md`)
 

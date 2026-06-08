@@ -7,34 +7,45 @@ Usage:
 Outputs Markdown to stdout grouped by section.
 """
 
-import json
 import os
 import sys
 
-def load_yaml_or_json(path):
-    """Load YAML if pyyaml is available, otherwise try JSON."""
+def load_yaml(path):
+    """Load YAML via PyYAML; require it rather than silently mis-parsing."""
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to render the field map "
+            "(python3 -m pip install pyyaml). If PyYAML is unavailable on this host, "
+            "present the field map to the user directly from the YAML you wrote."
+        )
+    return yaml.safe_load(content)
 
 
 def infer_section(field_id):
     """Infer a display section from the field_id."""
     parts = field_id.lower().split(".")
     section_map = {
+        # Canonical field_id first-part prefixes
+        # (reference/annual-field-map.md, reference/provisional-field-map.md).
+        "personal": "Personal",
+        "box1": "Box 1",
+        "box2": "Box 2",
+        "box3": "Box 3",
+        "eigenwoning": "Eigen Woning",
+        "aftrek": "Deductions",
+        "partner": "Partner",
+        # Descriptive aliases (kept for non-canonical or legacy ids).
         "income": "Income",
         "wages": "Income",
         "pension": "Income",
         "benefits": "Income",
         "home": "Eigen Woning",
-        "eigen_woning": "Eigen Woning",
         "mortgage": "Eigen Woning",
         "woz": "Eigen Woning",
-        "box3": "Box 3",
         "bank": "Box 3",
         "assets": "Box 3",
         "schulden": "Box 3",
@@ -43,7 +54,6 @@ def infer_section(field_id):
         "zorgkosten": "Deductions",
         "alimentatie": "Deductions",
         "lijfrente": "Deductions",
-        "partner": "Partner",
     }
     for part in parts:
         if part in section_map:
@@ -123,7 +133,7 @@ def main():
         print(f"Error: file not found: {path}", file=sys.stderr)
         sys.exit(1)
 
-    data = load_yaml_or_json(path)
+    data = load_yaml(path)
     print(render(data))
 
 

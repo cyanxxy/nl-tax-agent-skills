@@ -25,6 +25,11 @@ CENT = Decimal("0.01")
 EURO = Decimal("1")
 ZERO = Decimal("0")
 
+# Box 2 thresholds and rates. These duplicate the canonical knowledge pack so this
+# script can act as a deterministic calculator; the knowledge notes are canonical.
+# Keep them in sync with the reviewed rule note and bump them in the same commit it
+# changes: _shared/knowledge/years/2025/box2/box2-rates.md
+# (source bd_box2_rates_2025_2026).
 BOX2_RATES: dict[int, dict[str, Decimal | str]] = {
     2025: {
         "workflow": "annual_2025",

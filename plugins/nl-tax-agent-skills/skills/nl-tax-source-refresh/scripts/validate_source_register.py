@@ -13,7 +13,6 @@ Checks:
     - mandatory_for references valid skill names
 """
 
-import json
 import os
 import sys
 from datetime import date
@@ -58,9 +57,12 @@ def load_yaml_or_json(path):
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to run this validator "
+            "(python3 -m pip install pyyaml)."
+        )
+    return yaml.safe_load(content)
 
 
 def extract_domain(url):
@@ -108,7 +110,6 @@ def validate(register_path):
         return errors, warnings
 
     seen_ids = set()
-    today = date.today().isoformat()
 
     for i, source in enumerate(sources):
         sid = source.get("id", f"entry[{i}]")
@@ -137,10 +138,16 @@ def validate(register_path):
             if domain not in ALLOWED_DOMAINS:
                 errors.append(f"{sid}: URL domain not on allowlist: {domain}")
 
-        # Future last_checked
+        # Future last_checked (parse to a date so an unquoted YAML date does not crash)
         last_checked = source.get("last_checked", "")
-        if last_checked and last_checked > today:
-            errors.append(f"{sid}: last_checked is in the future: {last_checked}")
+        if last_checked:
+            try:
+                checked_date = date.fromisoformat(str(last_checked))
+            except ValueError:
+                errors.append(f"{sid}: invalid last_checked date: {last_checked}")
+            else:
+                if checked_date > date.today():
+                    errors.append(f"{sid}: last_checked is in the future: {last_checked}")
 
         # Valid skill references
         mandatory_for = source.get("mandatory_for", [])

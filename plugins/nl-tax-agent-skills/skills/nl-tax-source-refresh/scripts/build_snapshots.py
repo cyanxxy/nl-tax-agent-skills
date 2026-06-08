@@ -23,9 +23,12 @@ def load_yaml_or_json(path):
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to build snapshot metadata "
+            "(python3 -m pip install pyyaml)."
+        )
+    return yaml.safe_load(content)
 
 
 def compute_sha256(filepath):
@@ -163,21 +166,32 @@ def main():
             if old_hash and old_hash != current_hash:
                 status = "hash_changed"
 
+        # Preserve the original snapshot_created_at unless the content hash
+        # actually changed, so re-running on an unchanged tree is a no-op.
+        if existing_source_meta and status != "hash_changed":
+            created_at = existing_source_meta.get("snapshot_created_at", now)
+        else:
+            created_at = now
+
         metadata = {
             "source_id": sid,
-            "snapshot_created_at": now,
+            "snapshot_created_at": created_at,
             "source_url": source.get("url", ""),
             "content_hash_sha256": current_hash,
             "review_status": "needs_review" if status == "hash_changed" else "reviewed",
         }
 
+        results[status].append(sid)
+        label = "CHANGED" if status == "hash_changed" else "OK"
+        print(f"  {label:8s} {sid} -> {snapshot_path}")
+
+        # Skip rewriting the directory file when this entry is already identical.
+        if existing_source_meta == metadata:
+            continue
+
         directory_metadata = normalize_directory_metadata(existing_meta)
         directory_metadata["sources"][sid] = metadata
         write_metadata(meta_path, directory_metadata)
-        results[status].append(sid)
-
-        label = "CHANGED" if status == "hash_changed" else "OK"
-        print(f"  {label:8s} {sid} -> {snapshot_path}")
 
     # Summary
     print()

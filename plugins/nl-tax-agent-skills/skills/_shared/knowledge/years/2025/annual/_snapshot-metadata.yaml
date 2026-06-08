@@ -43,13 +43,13 @@ sources:
     source_id: bd_belastingrente_overview
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente
   bd_bijtelling_auto_2025:
-    content_hash_sha256: 49dd7ae1b0020b802f1fe7f2a98d4a7499755528e18479c14502c26ec6b89cba
+    content_hash_sha256: d5af0a3227c6c5e8d1c9829e5ec9843359a9d6e1255db2069fa034cbcde510d2
     review_status: reviewed
     snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
     source_id: bd_bijtelling_auto_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-auto-2025
   bd_box1_rates_2025:
-    content_hash_sha256: 49dd7ae1b0020b802f1fe7f2a98d4a7499755528e18479c14502c26ec6b89cba
+    content_hash_sha256: d5af0a3227c6c5e8d1c9829e5ec9843359a9d6e1255db2069fa034cbcde510d2
     review_status: reviewed
     snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
     source_id: bd_box1_rates_2025

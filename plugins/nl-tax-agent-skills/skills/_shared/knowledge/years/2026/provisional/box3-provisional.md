@@ -100,8 +100,7 @@ When building the workpack for box 3 in the voorlopige aanslag 2026:
 
 1. Collect the value of all assets and debts per category on peildatum 1 January 2026
 2. Use ONLY the fictitious return method
-3. If the user asks about actual return (werkelijk rendement), respond only with:
-   - "Werkelijk rendement is not part of provisional 2026."
+3. If the user asks about actual return (werkelijk rendement), respond with the canonical redirect: "Werkelijk rendement is not part of the 2026 voorlopige aanslag. It may become relevant when filing the annual 2026 return in 2027." (The shorter in-workpack note — "Werkelijk rendement is not part of provisional 2026." — stays as the explanatory line written into the workpack; see line 14 above.)
 4. Separately identify green investments/savings and cash amounts because exemptions can change what is included in banktegoeden or overige bezittingen
 5. Calculate aftrekbare schulden after the debt threshold
 6. Calculate belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in de rendementsgrondslag, box 3 income, and tax

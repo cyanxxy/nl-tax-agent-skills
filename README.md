@@ -382,6 +382,7 @@ Taxpayer-facing skills read a bundled knowledge pack — not live websites:
 ```text
 plugins/nl-tax-agent-skills/skills/_shared/
   knowledge/
+    aow/                 # AOW / state-pension-age reference
     compat/              # Claude/Codex compatibility notes
     laws/                # statutory references
     methods/             # calculation methods (box 3 fictief, werkelijk, …)
@@ -390,6 +391,7 @@ plugins/nl-tax-agent-skills/skills/_shared/
     platform/            # Agent Skills platform docs
     security/            # DigiD, prompt-injection, untrusted evidence
     years/2025/annual/   # year-specific rates, thresholds, field maps
+    years/2025/box2/
     years/2025/box3/
     years/2026/provisional/
   source-register.yaml   # every cited source_id with metadata

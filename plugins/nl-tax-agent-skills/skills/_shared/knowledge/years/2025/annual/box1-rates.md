@@ -79,9 +79,9 @@ Note: the whole-year AOW first-bracket rate (17.92%) consists of the IB componen
 ## Calculation example (non-AOW-age)
 
 For a taxable box 1 income of EUR 60,000:
-- First EUR 38,441 at 35.82% = EUR 13,766
+- First EUR 38,441 at 35.82% = EUR 13,770
 - Remaining EUR 21,559 (EUR 60,000 - EUR 38,441) at 37.48% = EUR 8,080
-- Gross box 1 tax before credits = EUR 21,846
+- Gross box 1 tax before credits = EUR 21,850
 - Heffingskortingen (tax credits) are then subtracted from this amount. See credits.md.
 
 ## Taxable income determination

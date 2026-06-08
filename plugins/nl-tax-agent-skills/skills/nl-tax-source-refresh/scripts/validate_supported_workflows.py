@@ -14,7 +14,6 @@ Checks:
       can be treated as supported.
 """
 
-import json
 import os
 import sys
 
@@ -48,9 +47,12 @@ def load_yaml_or_json(path):
         content = f.read()
     try:
         import yaml
-        return yaml.safe_load(content)
     except ImportError:
-        return json.loads(content)
+        raise SystemExit(
+            "PyYAML is required to run this validator "
+            "(python3 -m pip install pyyaml)."
+        )
+    return yaml.safe_load(content)
 
 
 def find_plugin_root(config_path):

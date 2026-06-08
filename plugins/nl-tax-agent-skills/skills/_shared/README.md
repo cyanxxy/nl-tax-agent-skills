@@ -13,9 +13,13 @@ _shared/
     methods/                 # Rule-authoring methodology (Regelspraak, ALEF)
     security/                # DigiD policy, prompt-injection policy, machtigen guidance
     compat/                  # ODB compatibility references (future awareness only)
+    own-home/                # Eigen woning, hypotheekrenteaftrek, eigenwoningforfait
+    partners/                # Fiscal partnership and allocation
+    aow/                     # AOW-leeftijd / state-pension-age reference
     years/
       2025/
         annual/              # Annual return 2025 knowledge (rates, credits, filing flow, deductions)
+        box2/                # Box 2 2025 substantial-interest (aanmerkelijk belang) knowledge
         box3/                # Box 3 2025 knowledge (fictitious + actual return)
       2026/
         provisional/         # Voorlopige aanslag 2026 knowledge (request, change, review, stopzetten)
