@@ -173,12 +173,20 @@ def main():
         else:
             created_at = now
 
+        # New or changed content always needs human review; an unchanged
+        # snapshot keeps its recorded review_status (this script must never
+        # promote a snapshot to "reviewed" on its own).
+        if status == "hash_changed" or not existing_source_meta:
+            review_status = "needs_review"
+        else:
+            review_status = existing_source_meta.get("review_status", "needs_review")
+
         metadata = {
             "source_id": sid,
             "snapshot_created_at": created_at,
             "source_url": source.get("url", ""),
             "content_hash_sha256": current_hash,
-            "review_status": "needs_review" if status == "hash_changed" else "reviewed",
+            "review_status": review_status,
         }
 
         results[status].append(sid)

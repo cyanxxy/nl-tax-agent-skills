@@ -228,8 +228,8 @@ def load_input(file_path):
             items.append(current_item)
         if items:
             return items
-    except Exception:
-        pass
+    except Exception as exc:
+        print(f"Warning: simple-YAML fallback parse failed: {exc}", file=sys.stderr)
 
     print("Error: Could not parse input file as JSON or simple YAML.", file=sys.stderr)
     sys.exit(1)

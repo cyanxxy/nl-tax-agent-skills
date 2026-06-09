@@ -214,12 +214,19 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     validate_source(fid, field, missing_field_ids, errors, warnings)
 
     if _is_provisional(workflow):
-        fid_lower = fid.lower()
+        source = field.get("source", {})
+        scanned_texts = [
+            fid.lower(),
+            label_lower,
+            str(field.get("notes") or "").lower(),
+            str(source.get("quote") or "").lower() if isinstance(source, dict) else "",
+        ]
         for kw in WERKELIJK_KEYWORDS:
-            if kw in fid_lower or kw in label_lower:
+            if any(kw in text for text in scanned_texts):
                 errors.append(
                     f"CRITICAL: werkelijk rendement field in provisional map: {fid}"
                 )
+                break
 
     if field.get("manual_review_required") is None:
         warnings.append(f"No manual_review_required set for {fid}")

@@ -206,8 +206,8 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
                   (2025)                              (2026)
                        │                                  │
                        │  ── pulls background helpers ──┐
-                       │     nl-tax-box1-home           │
-                       │     nl-tax-box2                │  write to
+                       │     nl-tax-box1-home           │  write notes, assumptions,
+                       │     nl-tax-box2                │  and missing-info to
                        │     nl-tax-box3                │  workspace/shared/*.md
                        │     nl-tax-partner-deductions  │
                        │  ──────────────────────────────┘
@@ -215,9 +215,8 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
         workspace/annual/2025/             workspace/provisional/2026/
           return-pack.md                     provisional-pack.md
           field-map.yaml                     field-map.yaml
-          review-questions.md                review-questions.md
-          assumptions.md                     delta-summary.md
-          missing-info.md                    (change/review flows)
+                                             delta-summary.md      (change/review)
+                                             review-questions.md   (review only)
                        │                                  │
                        └──────────────────┬───────────────┘
                                           ▼
@@ -232,7 +231,7 @@ The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` in
 
 Skills compose without hidden state: each consumes files written by upstream skills and writes its own outputs to a scoped path. Background helpers (`box1-home`, `box2`, `box3`, `partner-deductions`) write **only** to `workspace/shared/` — they never touch annual or provisional output paths.
 
-Every value in a workpack must be traceable to (a) evidence, (b) profile data, (c) a calculation that cites a `source_id`, or (d) an explicit assumption logged in `assumptions.md`.
+Every value in a workpack must be traceable to (a) evidence, (b) profile data, (c) a calculation that cites a `source_id`, or (d) an explicit assumption logged in `workspace/shared/assumptions.md`. The annual workpack embeds its review questions in its **Human review checklist** section; a standalone `review-questions.md` exists only in the provisional review subflow.
 
 ---
 
@@ -259,14 +258,15 @@ In Claude Code, skills are namespaced under the plugin and can be invoked with s
 | Workflow | Year | Output |
 |---|:---:|---|
 | Annual income-tax return | **2025** | `workspace/annual/2025/return-pack.md` |
-| Voorlopige aanslag — request | **2026** | `workspace/provisional/2026/provisional-pack.md` |
-| Voorlopige aanslag — change / review | **2026** | provisional pack, field map, delta summary, review questions |
+| Voorlopige aanslag — request | **2026** | `workspace/provisional/2026/provisional-pack.md` + field map |
+| Voorlopige aanslag — change | **2026** | provisional pack, field map, delta summary |
+| Voorlopige aanslag — review | **2026** | provisional pack, review questions |
 | Voorlopige aanslag — stopzetten | **2026** | guided support checklist |
 | Annual return | 2027 | *blocked until 2027 sources are registered and validated* |
 | Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
 
 > [!WARNING]
-> **Box 3 rule split.** Annual 2025 may collect both **fictitious** and **werkelijk-rendement** notes. Provisional 2026 uses **fictitious only** — werkelijk rendement is never requested in any provisional flow.
+> **Box 3 rule split.** Annual 2025 collects both methods — **fictitious (forfaitair)** and **werkelijk rendement** — and presents a comparison for the user to choose from. Provisional 2026 uses **fictitious only**; werkelijk rendement is never requested in any provisional flow.
 
 Active workflow declarations live in [`supported-workflows.yaml`](plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml). A workflow is supported only when the workflow/year pair has reviewed source-register entries, local knowledge snapshots, and passing validators. The plugin must not reuse 2025 or 2026 rates, thresholds, field maps, or box 3 logic for 2027.
 
@@ -330,7 +330,8 @@ The body then specifies the *Do / Never* contract that constrains the skill, for
    calculation, or assumption.
 3. Cover box 1, own home, deductions, partner notes, and box 3.
 4. Include both annual 2025 box 3 methods for user review.
-5. Write workpack, field map, review questions, assumptions, missing-info files.
+5. Write the workpack and field map; log assumptions and missing info
+   to `workspace/shared/`.
 
 ## Never
 - Do not log in, submit, sign, automate forms, or handle DigiD.
@@ -356,19 +357,18 @@ workspace/
     box2-notes.md
     box3-notes.md
     allocation-options.md
+    assumptions.md                  # every explicit assumption, all workflows
+    missing-info.md                 # items the user still needs to provide
   annual/
     2025/
-      return-pack.md                # main annual workpack
+      return-pack.md                # main annual workpack (incl. human review checklist)
       field-map.yaml                # nl-tax-field-mapper input
-      review-questions.md
-      assumptions.md
-      missing-info.md
   provisional/
     2026/
-      provisional-pack.md
-      field-map.yaml
-      review-questions.md
-      delta-summary.md              # change / review flows only
+      provisional-pack.md           # all subflows
+      field-map.yaml                # request / change subflows
+      delta-summary.md              # change subflow
+      review-questions.md           # review subflow
 ```
 
 Output-path ownership is enforced by the *Never* contracts in each skill: `annual-return` must never write to `workspace/provisional/**`, and background helpers must never write outside `workspace/shared/`.
@@ -425,16 +425,18 @@ Only `nl-tax-source-refresh` is allowed to maintain source snapshots. Active sup
 
 ## Privacy boundary
 
-Taxpayer files live only in git-ignored paths under the repo:
+Taxpayer files stay out of version control — they live only in git-ignored paths under the repo:
 
 ```text
 workspace/   uploads/   evidence/
 ```
 
+Be clear about what that does and does not mean: the skills run **inside an LLM agent host** (Claude Code, Cowork, or Codex) that reads these files to do its work, so evidence and workpack content is processed by that host's model under its data-handling terms. The git-ignore boundary keeps taxpayer data out of the repository and any fork or marketplace — it is not an offline or "data never leaves your machine" guarantee.
+
 > [!IMPORTANT]
 > **DigiD credentials are never collected, stored, displayed, or passed into model context.** Uploaded documents are treated as untrusted content — any instructions inside them are ignored.
 
-The plugin does not call live web services at runtime; all tax rules come from the bundled knowledge pack. Source freshness is checked manually by the `nl-tax-source-refresh` developer skill, not at user runtime.
+The plugin itself adds no further data movement: it does not call live web services at runtime, and all tax rules come from the bundled knowledge pack. Source freshness is checked manually by the `nl-tax-source-refresh` developer skill, not at user runtime.
 
 ---
 
@@ -469,8 +471,8 @@ What each validator checks:
 | `validate_source_register.py` | Every `source_id` has the required fields, snapshot path resolves, `last_checked` parses as ISO date |
 | `validate_knowledge_pack.py` | Each knowledge note cites only `source_id`s that exist in the register; snapshots match referenced paths |
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
-| `test_validators.py` (unittest) | Unit coverage of the validator helpers |
-| `verify_offline_workspace.py` | Offline eval fixture loads without live network access |
+| `tests/` (unittest) | Unit coverage of the validator helpers plus regression tests for audited fixes |
+| `verify_offline_workspace.py` | Offline eval dataset is internally consistent and fixtures load without live network access |
 
 <details>
 <summary><strong>Developer utilities</strong> — source freshness, evidence inventory, field-map renderers</summary>
@@ -544,7 +546,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
     nl-tax-source-refresh/          # developer-only source maintenance
-  tests/                            # validator unit tests (test_validators.py)
+  tests/                            # unit tests (test_validators.py, test_audit_fixes.py)
 ```
 
 There are no standalone `.claude/skills` or `.agents/skills` trees in the cleaned project. Skills and Claude Code slash-command wrappers are bundled inside the plugin. The only tracked `.agents/` file is `.agents/plugins/marketplace.json`; local assistant state under `.agents/`, `.claude/`, `.codex/`, plus `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`, remains git-ignored and is not plugin package content.

@@ -297,14 +297,14 @@ Note: Box 2 allocation and any reviewed calculation remain preparation notes for
 
 ### Heffingsvrij vermogen
 
-- Single taxpayer: EUR 57,684
-- Fiscal partners (combined): EUR 115,368
+- Single taxpayer: EUR [from `_shared/knowledge/years/2025/box3/fictitious.md`]
+- Fiscal partners (combined): EUR [from `fictitious.md`]
 - Applicable heffingsvrij vermogen: EUR [amount] -- Src: C:depends_on_partner_status
 
 ### Drempel schulden
 
-- Single taxpayer: EUR 3,800
-- Fiscal partners (combined): EUR 7,600
+- Single taxpayer: EUR [from `fictitious.md`]
+- Fiscal partners (combined): EUR [from `fictitious.md`]
 - Aftrekbare schulden after threshold: EUR [amount] -- Src: C:debts-threshold
 
 ### Fictitious return calculation notes
@@ -315,12 +315,12 @@ Note: Box 2 allocation and any reviewed calculation remain preparation notes for
 | 2 | Category II total (overige bezittingen) | EUR [amount] | C:row above |
 | 3 | Category III total (schulden) | EUR [amount] | C:row above |
 | 4 | Aftrekbare schulden after threshold | EUR [amount] | C:debts-threshold |
-| 5 | Belastbaar rendement: I x 1.37% + II x 5.88% - aftrekbare schulden x 2.70% | EUR [amount] | C:formula |
+| 5 | Belastbaar rendement: I x [bank %] + II x [other-assets %] - aftrekbare schulden x [debt %] (2025 percentages from `fictitious.md`) | EUR [amount] | C:formula |
 | 6 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR [amount] | C:formula |
 | 7 | Grondslag sparen en beleggen: rendementsgrondslag - heffingsvrij vermogen | EUR [amount] | C:formula |
 | 8 | Aandeel in rendementsgrondslag: grondslag / rendementsgrondslag | [percentage]% | C:formula |
 | 9 | Box 3 income: belastbaar rendement x aandeel | EUR [amount] | C:formula |
-| 10 | Box 3 tax: box 3 income x 36% | EUR [amount] | C:formula |
+| 10 | Box 3 tax: box 3 income x [box 3 rate from `fictitious.md`] | EUR [amount] | C:formula |
 
 ### Actual return (werkelijk rendement) data collection
 

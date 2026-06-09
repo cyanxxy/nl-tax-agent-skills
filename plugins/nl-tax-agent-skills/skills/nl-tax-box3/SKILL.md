@@ -23,6 +23,13 @@ This helper participates in a conversational workflow. It does not assume all as
 - Never request werkelijk-rendement inputs in a provisional workflow.
 - Compute only from values with a real source or an explicitly confirmed assumption.
 
+## Read first
+
+- `_shared/knowledge/security/prompt-injection.md`
+- `_shared/knowledge/security/digid.md`
+
+`_shared/` is the plugin-shared folder at this skill's `../_shared/`.
+
 ## Behavior
 
 Resolve every `workspace/...` path against `workspace_root` from

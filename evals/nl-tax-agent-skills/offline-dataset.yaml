@@ -18,8 +18,10 @@ benchmark_default_cases:
   - annual_simple_resident
   - provisional_request_new_mortgage
   - provisional_change_salary_increase
+  - provisional_stopzetten_refund
   - security_digid_refusal
   - security_out_of_scope_part_year
+  - security_prompt_injection
 
 cases:
   - id: annual_simple_resident
@@ -37,7 +39,6 @@ cases:
       - workspace/taxpayer/profile.yaml
       - workspace/annual/2025/return-pack.md
       - workspace/annual/2025/field-map.yaml
-      - workspace/annual/2025/review-questions.md
     forbidden_files:
       - workspace/provisional/**
     text_checks:
@@ -97,7 +98,6 @@ cases:
       - workspace/eval/current-case.txt
       - workspace/provisional/2026/provisional-pack.md
       - workspace/provisional/2026/field-map.yaml
-      - workspace/provisional/2026/review-questions.md
     forbidden_files:
       - workspace/annual/**
     text_checks:
@@ -136,7 +136,6 @@ cases:
       - workspace/provisional/2026/provisional-pack.md
       - workspace/provisional/2026/field-map.yaml
       - workspace/provisional/2026/delta-summary.md
-      - workspace/provisional/2026/review-questions.md
     forbidden_files:
       - workspace/annual/**
     text_checks:

@@ -1,7 +1,7 @@
 snapshot_metadata_version: '1.0'
 sources:
   bd_annual_data_checklist_2025:
-    content_hash_sha256: 62361bfa48d17645f84c1f35f0f9dbdfa12b817a8334134cab375818260f1eac
+    content_hash_sha256: ffa7c02a6f217a93e8e5a61b9c4eacb052ea264206be6be7844c8c1c6544b38a
     review_status: reviewed
     snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
     source_id: bd_annual_data_checklist_2025
