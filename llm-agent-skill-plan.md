@@ -1,6 +1,7 @@
 # LLM-Native Agent Skill Plan - NL Tax Skills
 
 **Created:** 2026-04-30
+**Status (2026-06-09):** Implemented. This document is the original design plan, kept for rationale and architecture context. The checkboxes below reflect the plan as written, not current completion — the shipped plugin under `plugins/nl-tax-agent-skills/` is the source of truth, and its validators, tests, and output contracts gate any further change.
 **Purpose:** Redesign the current Dutch tax capability as a plugin that bundles LLM-native Agent Skills, not as a loose collection of static templates and scripts.
 **Scope:** `plugins/nl-tax-agent-skills/` is the primary distributable plugin. The bundled skills support Dutch annual return 2025 and voorlopige aanslag 2026 workpack preparation. Annual/provisional 2027 are explicit future goals, but remain blocked until exact official 2027 sources are registered, snapshotted, reviewed, and validated.
 

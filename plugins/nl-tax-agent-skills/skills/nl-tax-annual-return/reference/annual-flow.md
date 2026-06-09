@@ -203,22 +203,21 @@ If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new 
 
 ### 3.5 Eigenwoningforfait calculation
 
-- Apply the rate from `_shared/knowledge/own-home/eigenwoningforfait.md` based on the WOZ-waarde bracket
-- Most common: 0.35% for WOZ more than EUR 75,000 up to and including EUR 1,330,000
+- Apply the rate from `_shared/knowledge/own-home/eigenwoningforfait.md` based on the WOZ-waarde bracket — that file is canonical for the bracket table (the common middle bracket and its rate included)
 - Show the calculation explicitly (WOZ-waarde * percentage)
 
 ### 3.6 Tariefsaanpassing
 
-- If the taxpayer's box 1 income falls in schijf 3 (above EUR 76,817):
-  - Calculate the portion of deductible own-home costs that falls in schijf 3
-  - The effective deduction rate is capped at 37.48%
-  - Calculate the tariefsaanpassing amount (difference between 49.50% and 37.48%)
-- If income is below schijf 3: no tariefsaanpassing applies
+- If the taxpayer's box 1 income falls in the top bracket (threshold per `_shared/knowledge/years/2025/annual/box1-rates.md`):
+  - Calculate the portion of deductible own-home costs that falls in the top bracket
+  - Cap the effective deduction rate at the 2025 deduction-rate cap from `_shared/knowledge/years/2025/annual/deductions.md` (bd_own_home_deduction_cap_2025 / bd_deduction_rate_cap_2025)
+  - Calculate the tariefsaanpassing amount (difference between the top bracket rate and the capped deduction rate)
+- If income is below the top bracket: no tariefsaanpassing applies
 
 ### 3.7 Hillenregeling
 
 - If the eigenwoningforfait exceeds the mortgage interest paid:
-  - Apply the Hillenregeling correction (76.667% in 2025)
+  - Apply the Hillenregeling correction using the 2025 percentage from `_shared/knowledge/own-home/eigenwoningforfait.md`
   - The correction reduces the net positive eigenwoningforfait
 - If mortgage interest exceeds eigenwoningforfait: Hillenregeling does not apply
 

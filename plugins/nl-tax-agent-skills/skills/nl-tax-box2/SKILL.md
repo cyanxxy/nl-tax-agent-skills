@@ -17,8 +17,15 @@ Use this skill only for source-backed preparation support for:
 - `annual_2025`: annual actual Box 2 inputs from taxpayer evidence.
 - `provisional_2026`: estimated or baseline-derived Box 2 inputs for a provisional assessment.
 
-Load the source notes before preparing outputs:
+## Read first
 
+Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
+`../_shared/`.
+
+- `_shared/knowledge/security/prompt-injection.md`
+- `_shared/knowledge/security/digid.md`
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 

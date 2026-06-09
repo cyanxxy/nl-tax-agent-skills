@@ -100,9 +100,16 @@ def _is_internal_knowledge(rel_from_knowledge_dir):
 def find_knowledge_files(knowledge_dir):
     """Find source-backed .md files in the knowledge directory."""
     result = []
-    for root, _, files in os.walk(knowledge_dir):
+    for root, dirs, files in os.walk(knowledge_dir):
         rel = os.path.relpath(root, knowledge_dir)
-        if rel != "." and _is_internal_knowledge(rel):
+        if rel == ".":
+            rel = ""
+        # Prune internal subtrees so the walk never descends into them.
+        dirs[:] = [
+            d for d in dirs
+            if not _is_internal_knowledge(os.path.join(rel, d).replace(os.sep, "/"))
+        ]
+        if rel and _is_internal_knowledge(rel):
             continue
         for f in files:
             if f.endswith(".md") and not f.startswith("_"):
@@ -369,9 +376,15 @@ def collect_knowledge_file_errors(knowledge_dir, skills_dir, project_root, regis
     unreferenced = []
     review_marker_errors = []
     workflow_metadata_errors = []
+    unknown_reference_errors = []
 
     if not os.path.isdir(knowledge_dir):
-        return unreferenced, review_marker_errors, workflow_metadata_errors
+        return (
+            unreferenced,
+            review_marker_errors,
+            workflow_metadata_errors,
+            unknown_reference_errors,
+        )
 
     for kf in source_backed_markdown_files(knowledge_dir, skills_dir):
         refs = extract_source_ids(kf)
@@ -380,8 +393,8 @@ def collect_knowledge_file_errors(knowledge_dir, skills_dir, project_root, regis
             if should_require_source_refs(kf, knowledge_dir):
                 unreferenced.append(rel_path)
         else:
-            for source_id in refs - registered_ids:
-                print(f"  WARNING: {rel_path} references unknown source_id: {source_id}")
+            for source_id in sorted(refs - registered_ids):
+                unknown_reference_errors.append((rel_path, source_id))
 
         status = extract_metadata_value(kf, "status").lower()
         review_status = extract_metadata_value(kf, "review_status").lower()
@@ -399,7 +412,12 @@ def collect_knowledge_file_errors(knowledge_dir, skills_dir, project_root, regis
         for lineno, label, text in find_review_blocking_markers(kf):
             review_marker_errors.append((rel_path, lineno, label, text))
 
-    return unreferenced, review_marker_errors, workflow_metadata_errors
+    return (
+        unreferenced,
+        review_marker_errors,
+        workflow_metadata_errors,
+        unknown_reference_errors,
+    )
 
 
 def print_section(title, rows, formatter):
@@ -483,11 +501,17 @@ def main():
         unreferenced,
         review_marker_errors,
         workflow_metadata_errors,
+        unknown_reference_errors,
     ) = collect_knowledge_file_errors(
         knowledge_dir,
         skills_dir,
         project_root,
         registered_ids,
+    )
+    # Knowledge/reference files are also covered by the skills-wide walk;
+    # merge both passes so an unknown source_id always fails validation.
+    source_reference_errors = sorted(
+        set(source_reference_errors) | set(unknown_reference_errors)
     )
 
     has_errors = bool(

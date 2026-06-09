@@ -47,7 +47,7 @@ Always:
 - `_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md`
 - `_shared/knowledge/own-home/eigenwoningforfait.md` and `_shared/knowledge/own-home/hypotheekrenteaftrek.md`
 - `_shared/knowledge/partners/fiscal-partnership.md`
-- The active subflow's flow note: `request-flow.md`, `change-flow.md`, `review-flow.md`, or `stopzetten-flow.md`
+- The active subflow's flow note: `_shared/knowledge/years/2026/provisional/request-flow.md`, `change-flow.md`, `review-flow.md`, or `stopzetten-flow.md` (all in the same directory)
 
 Use only 2026 provisional sources — never load or reuse 2025 annual rate sheets.
 

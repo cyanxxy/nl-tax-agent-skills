@@ -282,6 +282,7 @@ def main() -> int:
         print("OFFLINE DATASET PASSED")
         return 0
 
+    case_ids: list[str] = []
     try:
         case_ids = selected_case_ids(args, dataset, workspace)
         for case_id in case_ids:

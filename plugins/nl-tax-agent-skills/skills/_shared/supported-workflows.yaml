@@ -118,6 +118,7 @@ active_workflows:
       - bd_box3_2026_provisional
       - bd_algoritmeregister_vva_eva
       - bd_belastingrente_overview
+      - bd_belastingrente_ib
       - bd_provisional_refund_timing_2026
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd

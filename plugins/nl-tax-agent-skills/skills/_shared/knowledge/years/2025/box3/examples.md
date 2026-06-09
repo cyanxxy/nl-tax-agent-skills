@@ -18,7 +18,7 @@ Use these constants for 2025 annual return examples:
 - Schulden: 2.70%
 - Box 3 tax rate: 36%
 - Heffingsvrij vermogen: EUR 57,684 per person
-- Drempel schulden: EUR 3,800 per person
+- Drempel schulden: EUR 3,800 per person (EUR 7,600 combined for fiscal partners)
 
 ---
 

@@ -253,7 +253,6 @@ sources:
     domain: belastingdienst.nl
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting"
     source_type: official_guidance
-    workflow: annual_return
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
     last_checked: "2026-05-26"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter"
@@ -627,6 +626,7 @@ sources:
     domain: belastingdienst.nl
     url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang"
     source_type: official_doctrine
+    workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md"
     last_checked: "2026-05-20"

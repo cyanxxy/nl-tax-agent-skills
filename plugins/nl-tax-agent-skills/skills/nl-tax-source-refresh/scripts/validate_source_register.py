@@ -103,7 +103,12 @@ def validate(register_path):
     project_root = find_content_root(register_path)
 
     data = load_yaml_or_json(register_path)
-    sources = data if isinstance(data, list) else data.get("sources", data.get("entries", []))
+    if isinstance(data, list):
+        sources = data
+    elif isinstance(data, dict):
+        sources = data.get("sources", data.get("entries", []))
+    else:
+        sources = []
 
     if not sources:
         errors.append("Source register is empty or could not be parsed")

@@ -265,17 +265,12 @@ def check_snapshot_exists(source, base_dir):
 
 # ---------------------------------------------------------------------------
 def find_source_register():
-    """Locate source-register.yaml relative to the script or working directory."""
-    candidates = [
-        os.path.join(os.getcwd(), ".claude", "skills", "_shared",
-                     "source-register.yaml"),
-        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
-                     "_shared", "source-register.yaml"),
-    ]
-    for path in candidates:
-        resolved = os.path.normpath(path)
-        if os.path.isfile(resolved):
-            return resolved
+    """Locate source-register.yaml relative to this script."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
+                        "_shared", "source-register.yaml")
+    resolved = os.path.normpath(path)
+    if os.path.isfile(resolved):
+        return resolved
     return None
 
 
@@ -305,7 +300,7 @@ def find_repo_root(register_path):
 
 
 def parse_cli_args(argv):
-    if len(sys.argv) < 2:
+    if len(argv) < 2:
         print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]",
               file=sys.stderr)
         print("", file=sys.stderr)
@@ -435,8 +430,8 @@ def main():
     register_path = find_source_register()
     if register_path is None:
         print("Error: Could not find source-register.yaml.", file=sys.stderr)
-        print("Expected at: skills/_shared/source-register.yaml or "
-              ".claude/skills/_shared/source-register.yaml", file=sys.stderr)
+        print("Expected at: skills/_shared/source-register.yaml",
+              file=sys.stderr)
         sys.exit(1)
 
     repo_root = find_repo_root(register_path)

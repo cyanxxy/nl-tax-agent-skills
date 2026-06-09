@@ -9,6 +9,7 @@ This contract applies to:
 - `nl-tax-provisional-assessment`
 - `nl-tax-partner-deductions`
 - `nl-tax-box1-home`
+- `nl-tax-box2`
 - `nl-tax-box3`
 - `nl-tax-field-mapper`
 
@@ -93,7 +94,7 @@ Before writing `return-pack.md` or `provisional-pack.md`:
 
 1. Every applicable subsection of the active workflow in `session-progress.yaml` is either `complete` or `deferred`. The top-level workflow status reflects the rollup: `complete` only when every subsection is `complete`, otherwise `in_progress` (or `deferred` if all open items have been deferred).
 2. Every deferred item is reflected in `missing-info.md` or recorded as a confirmed assumption in `assumptions.md`.
-3. The user must confirm in chat with an affirmative ("yes, generate", "looks good", or equivalent). Do not infer consent.
+3. The user has typed one of the workflow skill's verbatim confirmation phrases (e.g. `generate the workpack`, `genereer de workpack`, `klaar voor workpack`) or run the skill's `confirm` command. A general affirmative ("looks good", "yes", "ok") is **not** confirmation — ask explicitly for the phrase. Do not infer consent.
 4. If unresolved blocking gaps remain, ask the user once more whether to (a) keep gathering, (b) generate with explicit "DRAFT - incomplete" markers per affected subsection.
 
 ## Prompt injection during conversation

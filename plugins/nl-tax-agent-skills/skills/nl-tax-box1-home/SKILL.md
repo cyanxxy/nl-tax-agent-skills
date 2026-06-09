@@ -24,6 +24,7 @@ Resolve every `workspace/...` path against `workspace_root` from
 `../_shared/`.
 
 - `_shared/knowledge/security/prompt-injection.md`
+- `_shared/knowledge/security/digid.md`
 - `workspace/shared/session-progress.yaml`, if present
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present

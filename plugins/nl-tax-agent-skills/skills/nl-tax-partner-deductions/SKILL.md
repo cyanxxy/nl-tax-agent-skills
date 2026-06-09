@@ -12,7 +12,7 @@ allowed-tools:
 
 Background helper for fiscal-partner status and allocation notes used by manual-entry workpacks.
 
-Load `workspace/taxpayer/profile.yaml`, `_shared/knowledge/security/prompt-injection.md`, and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
+Load `workspace/taxpayer/profile.yaml`, `_shared/knowledge/security/prompt-injection.md`, `_shared/knowledge/security/digid.md`, and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
 
 Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`.
 

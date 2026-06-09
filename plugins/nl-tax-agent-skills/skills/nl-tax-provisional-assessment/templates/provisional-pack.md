@@ -194,16 +194,16 @@ Manual review / unsupported triggers: valuation disputes, emigration, death, res
 
 | Item                                  | Amount            | Src |
 |---------------------------------------|-------------------|-----|
-| Heffingsvrij vermogen (single)        | EUR 59,357        | C:from_2026_table |
-| Heffingsvrij vermogen (partners)      | EUR 118,714       | C:from_2026_table |
+| Heffingsvrij vermogen (single)        | EUR [from `_shared/knowledge/years/2026/provisional/box3-provisional.md`] | C:from_2026_table |
+| Heffingsvrij vermogen (partners)      | EUR [from `box3-provisional.md`] | C:from_2026_table |
 | Applied heffingsvrij vermogen         | EUR               | C:depends_on_partner_status |
 
 ### Drempel schulden
 
 | Item                                  | Amount            | Src |
 |---------------------------------------|-------------------|-----|
-| Drempel schulden (single)             | EUR 3,800         | C:from_2026_table |
-| Drempel schulden (partners)           | EUR 7,600         | C:from_2026_table |
+| Drempel schulden (single)             | EUR [from `box3-provisional.md`] | C:from_2026_table |
+| Drempel schulden (partners)           | EUR [from `box3-provisional.md`] | C:from_2026_table |
 | Aftrekbare schulden after threshold   | EUR               | C:debts-threshold |
 
 ### Provisional fictitious return calculation
@@ -214,12 +214,12 @@ Manual review / unsupported triggers: valuation disputes, emigration, death, res
 | Total Categorie II (overige bezittingen) | EUR            | C:above |
 | Total Categorie III (schulden)        | EUR               | C:above |
 | Aftrekbare schulden after threshold   | EUR               | C:above |
-| Belastbaar rendement: I x 1.28% + II x 6.00% - aftrekbare schulden x 2.70% | EUR | C:formula |
+| Belastbaar rendement: I x [bank %] + II x [other-assets %] - aftrekbare schulden x [debt %] (2026 provisional percentages from `box3-provisional.md`) | EUR | C:formula |
 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR      | C:formula |
 | Grondslag sparen en beleggen          | EUR               | C:formula |
 | Aandeel in rendementsgrondslag        |                   | C:formula |
 | **Box 3 income**                      | EUR (estimate/from-baseline) | C:formula |
-| Box 3 tax rate                        | 36%               | C:from_2026_table |
+| Box 3 tax rate                        | [from `box3-provisional.md`] | C:from_2026_table |
 | **Box 3 tax**                         | EUR (estimate/from-baseline) | C:formula |
 
 ## Deductions estimate
