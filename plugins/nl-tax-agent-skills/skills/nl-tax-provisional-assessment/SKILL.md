@@ -138,7 +138,7 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
 
 1. The subflow's final review is complete.
 2. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
-3. `session-progress.yaml` has `mode: real` or `mode: test` set. If it is empty, ask the user once and persist their answer; never assume `real`.
+3. `session-progress.yaml` has `mode: real` or `mode: test` set. If it is empty, set `mode: real` — unless the user has called this run a test, demo, or dry run, in which case set `mode: test`. Do not ask.
 4. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`

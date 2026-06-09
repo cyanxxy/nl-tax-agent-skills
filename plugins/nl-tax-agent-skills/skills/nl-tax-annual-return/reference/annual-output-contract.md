@@ -194,7 +194,7 @@ This section must not be:
 
 ## Mode marker (test vs real)
 
-`session-progress.yaml` must carry `mode: real` or `mode: test` before the workpack is written.
+`session-progress.yaml` must carry `mode: real` or `mode: test` before the workpack is written. `real` is the default and is set without asking the user; `test` applies only when the user called the run a test, demo, or dry run.
 
 - `mode: real` — the workpack is a real preparation document. Filename: `workspace/annual/2025/return-pack.md`. No TEST RUN marker.
 - `mode: test` — the workpack is a test / demo / dry run. The first line of the workpack must be the banner `# TEST RUN — NOT FOR FILING`. Every section header repeats `(TEST RUN)`. Filename: `workspace/annual/2025/return-pack.test.md`. Field map filename: `field-map.test.yaml`.

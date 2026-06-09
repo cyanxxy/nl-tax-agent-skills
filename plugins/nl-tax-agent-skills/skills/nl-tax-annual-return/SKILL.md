@@ -63,7 +63,7 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 - If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
 - If `profile.yaml` shows `intake_status: complete`, never restart intake — continue the annual workflow from recorded progress.
 - Skip any subsection already marked `complete`, `chat_only`, or `deferred` in `session-progress.yaml`.
-- `session-progress.yaml` must carry `mode: real` or `mode: test`. If it is empty, ask the user once and persist their answer; never assume `real`.
+- `session-progress.yaml` must carry `mode: real` or `mode: test`. If it is empty, set `mode: real` — unless the user has called this run a test, demo, or dry run, in which case set `mode: test`. Do not ask.
 
 ## Workflow
 

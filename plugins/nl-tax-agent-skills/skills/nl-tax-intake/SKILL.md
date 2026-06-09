@@ -73,7 +73,7 @@ Across one or more turns of conversation:
 
 ### Turn 1 - open warmly, then ask the first screening batch
 
-If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), then ask whether this is a **real preparation** or a **test / dry run**, and persist the answer to `session-progress.yaml` -> `mode` (`real` or `test`). Then ask up to **four short screening questions** in one message:
+If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), and set `session-progress.yaml` -> `mode: real` without asking. Only set `mode: test` when the user has called this run a test, demo, or dry run — then acknowledge it in your reply. Then ask up to **four short screening questions** in one message:
 
 1. **Residency** - Were you a Dutch resident for the full of 2025 (and, if relevant, 2026)?
 2. **Taxpayer type** - Are you filing as an individual (not a BV / IB-onderneming as primary case)?
@@ -115,7 +115,7 @@ Mark `sections.intake.subsections.household_composition.status: complete` in `se
 
 Mark `sections.intake.status: complete` only when:
 
-- `session-progress.yaml` -> `mode` is `real` or `test`.
+- `session-progress.yaml` -> `mode` is set (`real` by default; `test` only when the user called the run a test, demo, or dry run).
 - Residency, taxpayer type, living status, and workflow are all answered or recorded as `unsupported_reason`.
 - Fiscal-partner status is recorded.
 - The workflow-specific anchor question is answered.
@@ -185,8 +185,8 @@ Tell the user:
 
 > **User:** "Hi, I need to do my Dutch taxes."
 >
-> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD; asks whether this is a real run or a test, then the four screening questions (residency, individual filer, living taxpayer, which workflow). Persists `mode` and states the workspace folder it will use.
+> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD; sets `mode: real` in `session-progress.yaml` without asking, then asks the four screening questions (residency, individual filer, living taxpayer, which workflow) and states the workspace folder it will use.
 >
-> **User:** "Real. Resident all of 2025, just me as an individual, I'm alive 🙂, I want the 2025 return."
+> **User:** "Resident all of 2025, just me as an individual, I'm alive 🙂, I want the 2025 return."
 >
 > **Agent (turn 2):** Records all four to `profile.yaml` (`source: user_chat`, with quotes + `stated_at`), marks those `question_id`s answered in `session-progress.yaml`, sets `workflow_candidate: annual_2025`. Asks the two follow-ups (fiscal partner? early Box 2 screen) plus the annual anchor ("documents ready, or collect amounts in chat?"), then household composition (DOBs, children at home, single-parent) in one small batch. Closes intake only when the resume contract holds and tells the user the annual workflow runs next — without auto-invoking it.
