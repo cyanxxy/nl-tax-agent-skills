@@ -19,6 +19,8 @@
 </p>
 
 <p>
+  <a href="#how-it-works">How it works</a>
+  &nbsp;·&nbsp;
   <a href="#quickstart">Quickstart</a>
   &nbsp;·&nbsp;
   <a href="#install">Install</a>
@@ -49,14 +51,32 @@ Filing Dutch income tax is a yearly slog of chasing documents, decoding **Mijn B
 
 Off-the-shelf tax software wraps the official forms in its own UI. This plugin keeps you on Mijn Belastingdienst, but handles the gathering, classifying, and field-mapping up to the point of manual entry.
 
-| Step | What the skills do |
-|:---:|---|
-| **1** | **Read** the evidence you provide — attach files in chat (Cowork / Claude Code), drop them into `uploads/`, or state amounts in conversation |
-| **2** | **Classify** them against the 2025 / 2026 Dutch tax rules — every rule citing a source |
-| **3** | **Build** a reviewable workpack — annual return or provisional assessment |
-| **4** | **Map** the result to the exact fields you type into Mijn Belastingdienst |
-
 No autonomous filing. No live web fetches at runtime — all tax rules ship as a bundled, source-cited knowledge pack.
+
+---
+
+## How it works
+
+*No tax or technical background needed — this is the whole idea in four steps:*
+
+<table>
+<tr>
+<td align="center" width="60">📂</td>
+<td><strong>1 &nbsp;Share your documents.</strong><br/>Attach your jaaropgaaf, mortgage statement, bank overview, and similar papers in the chat — or drop them into an <code>uploads/</code> folder. You can also just state amounts in conversation.</td>
+</tr>
+<tr>
+<td align="center">🔎</td>
+<td><strong>2 &nbsp;The assistant reads and sorts them.</strong><br/>It works out what each document is and which part of your tax return it belongs to, using the official 2025 / 2026 Dutch tax rules — every rule backed by a cited source.</td>
+</tr>
+<tr>
+<td align="center">📋</td>
+<td><strong>3 &nbsp;You get a clear, reviewable summary.</strong><br/>A “workpack” lists every amount, where it came from, and any open questions — so you can check the numbers before anything goes near the tax office.</td>
+</tr>
+<tr>
+<td align="center">✅</td>
+<td><strong>4 &nbsp;You type the numbers in yourself.</strong><br/>A final field map tells you exactly which number goes into which field on Mijn Belastingdienst. You stay in control — the plugin never logs in, never files, and never touches DigiD.</td>
+</tr>
+</table>
 
 ---
 
