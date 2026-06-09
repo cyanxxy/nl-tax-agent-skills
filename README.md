@@ -51,7 +51,7 @@ Off-the-shelf tax software wraps the official forms in its own UI. This plugin k
 
 | Step | What the skills do |
 |:---:|---|
-| **1** | **Read** the evidence files you drop into a folder |
+| **1** | **Read** the evidence you provide — attach files in chat (Cowork / Claude Code), drop them into `uploads/`, or state amounts in conversation |
 | **2** | **Classify** them against the 2025 / 2026 Dutch tax rules — every rule citing a source |
 | **3** | **Build** a reviewable workpack — annual return or provisional assessment |
 | **4** | **Map** the result to the exact fields you type into Mijn Belastingdienst |

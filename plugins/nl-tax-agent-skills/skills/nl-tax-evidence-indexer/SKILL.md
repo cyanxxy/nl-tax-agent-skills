@@ -44,6 +44,24 @@ The DigiD and prompt-injection rules are also summarized in **Prompt-injection
 handling** and **Safety** below; a failed read of items 2-3 never excuses
 skipping them.
 
+## How files arrive (folder drop AND host attachments)
+
+`uploads/` and `evidence/` are the canonical evidence locations, but the user
+does not have to put files there by hand. Accept all of these:
+
+- **Folder drop** - files the user placed in `uploads/` or `evidence/` directly.
+- **Host attachment** - files attached in the chat UI (Cowork, Claude Code,
+  Codex). Hosts place these somewhere in the session working directory - often
+  the workspace root or a host-specific attachments path, not `uploads/`.
+- **Stated in chat** - no file at all; record as a `user_chat` item.
+
+When the user mentions attaching or sharing a file and it is not in `uploads/`
+or `evidence/`, look for it in the working directory (and any host attachment
+path visible to you). When found, copy it into `uploads/` with its original
+filename before indexing, tell the user you did so, and index the `uploads/`
+copy. Never ask the user to re-upload a file that is already in the session;
+never treat "it's not in uploads/" as "the user has no evidence".
+
 ## What this skill does
 
 - **Scan** `uploads/` and `evidence/` for new files; classify each one.
@@ -57,9 +75,9 @@ skipping them.
 
 The indexer never tries to do everything in one shot. Its turn-by-turn loop is:
 
-1. **Inventory pass.** List what is currently in `uploads/` and `evidence/`. Diff against existing entries in `evidence-index.yaml`. Add or update items as needed.
+1. **Inventory pass.** List what is currently in `uploads/` and `evidence/`, plus any host-attached files elsewhere in the session (copy those into `uploads/` first - see **How files arrive**). Diff against existing entries in `evidence-index.yaml`. Add or update items as needed.
 2. **Tell the user what was found.** One short sentence per file: "Found `jaaropgaaf-2025.pdf` - looks like a 2025 jaaropgaaf from {employer}, confidence 0.85." Do not paste long extracts.
-3. **Ask only about gaps that are blocking the active workflow.** If the active workflow is `annual_2025` and there is no jaaropgaaf and no employment income recorded, ask: "Do you have a 2025 jaaropgaaf you can drop into `uploads/`, or shall I record your employment amount from chat?"
+3. **Ask only about gaps that are blocking the active workflow.** If the active workflow is `annual_2025` and there is no jaaropgaaf and no employment income recorded, ask: "Do you have a 2025 jaaropgaaf? You can attach it here in the chat, drop it into `uploads/`, or just tell me the amount."
 4. **Accept whichever the user offers** - file or chat - and record it accordingly.
 5. **Defer politely.** If the user can't provide it now, mark `extraction_status: "deferred"`, add to `missing-info.md`, and move on.
 
