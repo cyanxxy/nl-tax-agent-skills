@@ -7,7 +7,7 @@ sources:
     source_id: bd_box2_income_ab_guidance
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang
   bd_box2_rates_2025_2026:
-    content_hash_sha256: 0cd091839ce80666ff533dff8f65f98b5744b9e4651f35097a6e1a2fb48984c8
+    content_hash_sha256: a15dbe64e55b576258d24f0f196030fb71974754e57331ae6099a32b6f17a2ce
     review_status: reviewed
     snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_box2_rates_2025_2026

@@ -26,6 +26,7 @@
 - Deductions estimate
 - Change subflow — full re-entry reminder (change subflow only)
 - Field map summary
+- User-stated values index
 - Missing information
 - Assumptions
 - Human review checklist

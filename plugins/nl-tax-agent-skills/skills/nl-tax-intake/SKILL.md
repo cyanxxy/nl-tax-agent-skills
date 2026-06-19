@@ -32,10 +32,11 @@ directory). `CLAUDE_SKILL_DIR` is not a host-provided variable — do not rely o
 Before responding to the user, read:
 
 1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract this skill follows.
-2. `_shared/knowledge/security/digid.md`
-3. `_shared/knowledge/security/prompt-injection.md`
-4. `workspace/shared/session-progress.yaml` if it exists. If it does not, copy `_shared/templates/session-progress.yaml` to that path and stamp `created_at`.
-5. `workspace/taxpayer/profile.yaml` if it exists. Otherwise prepare to create it from `templates/taxpayer-profile.yaml`.
+2. `reference/filing-paths.md` - intent-based workflow disambiguation and the request / change / review / stopzetten decision tree. Use it whenever the user is unsure which workflow they want, or does not recognize the jargon in screening question 4.
+3. `_shared/knowledge/security/digid.md`
+4. `_shared/knowledge/security/prompt-injection.md`
+5. `workspace/shared/session-progress.yaml` if it exists. If it does not, copy `_shared/templates/session-progress.yaml` to that path and stamp `created_at`.
+6. `workspace/taxpayer/profile.yaml` if it exists. Otherwise prepare to create it from `templates/taxpayer-profile.yaml`.
 
 The DigiD and untrusted-content rules are also summarized in **Safety rules**
 below; a failed read of items 2-3 never excuses skipping them.
@@ -75,12 +76,14 @@ Across one or more turns of conversation:
 
 If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), and set `session-progress.yaml` -> `mode: real` without asking. Only set `mode: test` when the user has called this run a test, demo, or dry run — then acknowledge it in your reply. Then ask up to **four short screening questions** in one message:
 
-1. **Residency** - Were you a Dutch resident for the full of 2025 (and, if relevant, 2026)?
+1. **Residency** - Were you a Dutch resident for the *full* of 2025 (and, if relevant, 2026)? Did you move to or from the Netherlands at any point during the year? (A mid-year move usually means an M-aangifte, which v1 does not cover -- see `reference/unsupported-cases.md` #1/#5.)
 2. **Taxpayer type** - Are you filing as an individual (not a BV / IB-onderneming as primary case)?
 3. **Living status** - Is this for a living taxpayer?
-4. **Workflow** - What do you want help with: annual 2025 return, voorlopige aanslag 2026 (request / change / review / stopzetten)?
+4. **Workflow** - What do you want help with: the annual 2025 return, or a 2026 voorlopige aanslag (request / change / review / stopzetten)?
 
 Tell the user they can answer all at once or one at a time. Do not collect names, BSN, or DigiD.
+
+**If the user is unsure about question 4** (the voorlopige-aanslag terms are jargon most people do not use, and many confuse *voorlopige aanslag* with *voorlopige teruggaaf* or just say "I get/pay money monthly"): do NOT repeat the jargon list. Read `reference/filing-paths.md` and disambiguate by intent -- ask "Do you want to look back at what happened in 2025, or plan ahead for 2026?" -- then narrow the 2026 case using the request / change / review / stopzetten decision tree in that file.
 
 ### Turn 2+ - record, then continue
 
@@ -94,12 +97,14 @@ After each user reply:
    - If the case is unsupported (see below), say so clearly and stop.
    - If the workflow is identified, ask up to **two follow-ups**:
      - **Fiscal partner?** Yes / no. If yes, do NOT collect partner DigiD or BSN - only whether a partner exists.
-     - **Early complex Box 2 screen:** If the user mentions a BV, DGA role, aanmerkelijk belang, dividends, share sale, own BV loan, or Box 2 estimate, ask before the workflow-specific anchor: "Does the Box 2 situation involve a share sale or valuation dispute, emigration/immigration, restructuring, inheritance or gift, non-arm's-length pricing, or borrowing from your own BV?" If yes or unclear, record `complex_box2_screening: manual_review` and route to manual review before treating the case as a standard workflow.
+     - **Box 2 existence + early complex Box 2 screen:** Ask one explicit yes/no rather than waiting for the user to volunteer jargon: "Do you own 5% or more of a company (a BV / aanmerkelijk belang)?" If yes -- or if the user mentions a BV, DGA role, aanmerkelijk belang, dividends, a share sale, an own BV loan, or a Box 2 estimate -- ask before the workflow-specific anchor: "Does the Box 2 situation involve a share sale or valuation dispute, emigration/immigration, restructuring, inheritance or gift, non-arm's-length pricing, or borrowing from your own BV?" If yes or unclear, record `complex_box2_screening: manual_review` and route to manual review before treating the case as a standard workflow.
      - **Workflow-specific anchor:**
        - `annual_2025` -> "Do you already have any documents (jaaropgaaf, bankafschriften, WOZ, mortgage jaaroverzicht), or shall we collect amounts step by step in chat?"
        - `provisional_2026_request` -> "Do you have a rough estimate of your 2026 income, or do you want me to ask category by category?"
        - `provisional_2026_change` / `review` -> "Do you have your current voorlopige aanslag beschikking handy, or shall we reconstruct the baseline together?"
        - `provisional_2026_stopzetten` -> "Are you currently RECEIVING a monthly refund (teruggaaf) or PAYING a monthly amount?"
+
+     **Stopzetten routing consequence (apply at intake, where the answer is first captured):** if the user is PAYING a monthly amount (not receiving a refund), do NOT set `workflow_candidate: provisional_2026_stopzetten`. Stopzetten only applies to a refund; stopping payments does not reduce the debt and risks a lump-sum bill at annual time. Explain this and set `workflow_candidate: provisional_2026_change` instead. Record the refund-vs-paying direction (`stopzetten_direction`) either way so the downstream skill has it.
 
 ### Household composition (before closing intake)
 
@@ -108,6 +113,8 @@ If the workflow is `annual_2025` or any `provisional_2026_*` flow, also collect 
 1. **Date of birth** of the taxpayer (and of the fiscal partner if one exists). Persist to `person.date_of_birth` and `partner.partner_date_of_birth`. Derive `aow_age_in_tax_year` from the DOB and the tax year, and store with `source: assumption` (so the user can correct it if AOW age was reached mid-year).
 2. **Children at home on 31 December of the tax year**: count and, for any child under 18, their date of birth (DOBs only -- never BSN). Persist to `household.children_at_home_count` and `household.children`.
 3. **Single-parent status**: yes / no. Persist to `household.single_parent_status`.
+
+Short-circuit: if the user has already stated they have **no fiscal partner and no children**, you only need the taxpayer's date of birth (for AOW-age derivation). Skip the children-DOB and single-parent questions -- they are vacuously answered (`children_at_home_count: 0`, `single_parent_status: false`). Only ask the children/single-parent questions when a partner or any child has been mentioned.
 
 Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml` once these are answered. If the user defers, mark `status: deferred` and add the items to `missing-info.md` -- the annual workflow will re-prompt in Phase 1.7.
 
@@ -127,6 +134,7 @@ restart intake:
 
 - `workspace/shared/session-progress.yaml` exists, is non-empty, and has `workspace_root` set.
 - `sections.intake.status` is `complete` and every answered `question_id` is in `sections.intake.answered`.
+- `session-progress.yaml` is self-describing: set `active_workflow` to the chosen `workflow_candidate`, set `active_skill` to the skill that runs next (e.g. `nl-tax-annual-return` or `nl-tax-provisional-assessment`), and for a provisional flow set `sections.provisional_2026.subflow` to `request`/`change`/`review`/`stopzetten`. `workflow_candidate` in `profile.yaml` remains the source of truth; these fields mirror it so the resume file is not stale.
 - `workspace/taxpayer/profile.yaml` has `workflow_candidate` set, `workspace_root` set, and `intake_status: complete`.
 - `updated_at` is stamped on both files.
 

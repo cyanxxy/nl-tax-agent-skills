@@ -25,6 +25,16 @@ For tax year 2026:
 - 24.5% on Box 2 income up to and including EUR 68,843
 - 31% on Box 2 income above EUR 68,843
 
+## Fiscal partners
+
+Box 2 income is taxed per return, and each partner's return has its own 24.5%
+bracket up to the individual threshold (EUR 67,804 in 2025 / EUR 68,843 in 2026).
+Across both returns the combined 24.5% bracket therefore covers twice the
+individual threshold (EUR 135,608 in 2025 / EUR 137,686 in 2026), but only when
+the Box 2 income is split across both partners' returns. Allocating 100% to one
+partner does NOT double that return's 24.5% bracket -- the per-return threshold
+still applies. Model the split when partners have substantial Box 2 income.
+
 ## Developer instruction
 
 Use this shared official rate source for both the 2025 annual-return workpack

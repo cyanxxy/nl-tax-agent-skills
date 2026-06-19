@@ -22,7 +22,10 @@ Use this skill only for source-backed preparation support for:
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
-`../_shared/`.
+`../_shared/`. If a bundled path does not resolve from your working directory,
+run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from
+`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box2/` (Claude Code and Cowork set
+`CLAUDE_PLUGIN_ROOT`; `CLAUDE_SKILL_DIR` is not host-provided).
 
 - `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/security/digid.md`
@@ -56,7 +59,7 @@ Use the bundled scripts when structured JSON inputs are available:
 - Do not handle valuation disputes, emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, corporate-tax-heavy DGA cases, inherited or gifted substantial interests, fictive disposal events, or uncertain excessive-borrowing positions without manual review.
 - Do not write field maps, annual/provisional workpack templates, source registers, supported workflow files, or shared eval data.
 
-Write only Box 2 preparation notes or shared review questions under `workspace/shared/` when asked by an owning workflow. Do not write workpacks directly.
+Write only Box 2 preparation notes or shared review questions under `workspace/shared/` when asked by an owning workflow -- the Box 2 notes go to `workspace/shared/box2-notes.md` (matching the sibling helpers' `box1-home-notes.md`, `box3-notes.md`, `allocation-options.md`). Do not write workpacks directly.
 
 ## Must NOT write to
 

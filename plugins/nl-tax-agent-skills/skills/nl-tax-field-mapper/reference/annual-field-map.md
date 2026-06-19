@@ -48,6 +48,12 @@ This reference defines the known fields in the Dutch annual income tax return th
 | `box1.loonheffing` | Ingehouden loonheffing | Withheld wage tax | Box 1 — Werk | required | `jaaropgaaf` |
 | `box1.arbeidskorting_loon` | Loon voor arbeidskorting | Salary for employment tax credit | Box 1 — Werk | optional | `jaaropgaaf` |
 
+> **Entry mode — confirm, don't blind-enter.** `box1.loon`, `box1.loonheffing`, and
+> `box1.arbeidskorting_loon` are normally **pre-filled** in the aangifte from the
+> loonaangifteketen (VIA). The taxpayer's task is to **check that the pre-filled value
+> matches the jaaropgaaf and correct it if wrong**, not to type it into a blank box.
+> Render these as the value to confirm, and note "check it matches the VIA pre-fill".
+
 ### Pension Income (Pensioeninkomen)
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
@@ -119,6 +125,12 @@ do not calculate it as standard support until reviewed sources are added.
 |---|---|---|---|---|---|
 | `box3.banktegoeden` | Banktegoeden op peildatum 1 januari 2025 | Bank balances on reference date | Box 3 — Bezittingen | conditional | `bankafschrift`, `jaaroverzicht_bank` |
 | `box3.overige_bezittingen` | Overige bezittingen op peildatum 1 januari 2025 | Other assets on reference date | Box 3 — Bezittingen | conditional | `jaaroverzicht_beleggingen`, `crypto_overzicht`, `eigendom_bewijs` |
+
+> **Crypto (2025).** Crypto-assets are valued at the market price on 1 January 2025
+> and are part of `box3.overige_bezittingen` (same heffingsvrij vermogen and forfait).
+> Note for the user: new for the 2025 aangifte, the online return has a dedicated
+> **"Cryptobezittingen"** checkbox/section inside box 3 — tick it and enter the crypto
+> value there. The tax treatment is unchanged; only the data-entry location is distinct.
 | `box3.groene_beleggingen_spaartegoeden` | Groene beleggingen en groene spaartegoeden | Green investments and green savings | Box 3 — Vrijstellingen | optional | `jaaroverzicht_groenfonds`, `jaaroverzicht_bank` |
 | `box3.contant_geld` | Contant geld en cadeaubonnen | Cash and gift cards | Box 3 — Bezittingen | optional | User-provided / cash log |
 | `box3.schulden` | Schulden op peildatum 1 januari 2025 | Debts on reference date | Box 3 — Schulden | conditional | `schuld_overzicht` |

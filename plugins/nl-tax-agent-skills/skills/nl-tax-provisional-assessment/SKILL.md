@@ -97,7 +97,7 @@ Read the helpers' `workspace/shared/*-notes.md` back before assembling outputs. 
 
 Walk the user through these sections one at a time:
 
-1. Confirm workflow.
+1. Confirm workflow. First check they have NOT already received a 2026 voorlopige aanslag: if they had a 2025 VA, the Belastingdienst auto-issues a 2026 one (EVA) with payments/refunds already starting in January. If a 2026 beschikking or monthly amount already exists, this is a change/review, not a request — route accordingly and use that beschikking as the baseline.
 2. Estimated 2026 employment income per employer.
 3. Estimated 2026 pension and benefit income.
 4. Estimated 2026 other income.

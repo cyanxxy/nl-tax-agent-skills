@@ -21,7 +21,10 @@ This helper participates in a conversational workflow. It does not assume all in
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
-`../_shared/`.
+`../_shared/`. If a bundled path does not resolve from your working directory,
+run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from
+`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box1-home/` (Claude Code and Cowork set
+`CLAUDE_PLUGIN_ROOT`; `CLAUDE_SKILL_DIR` is not host-provided).
 
 - `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/security/digid.md`

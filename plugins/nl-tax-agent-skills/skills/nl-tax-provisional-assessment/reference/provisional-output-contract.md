@@ -39,6 +39,7 @@ Every provisional workpack (`workspace/provisional/2026/provisional-pack.md`) MU
 | Box 3 provisional estimate  | request, change                           |
 | Deductions estimate         | request, change                           |
 | Field map summary           | request, change                           |
+| User-stated values index    | all                                       |
 | Missing information         | all                                       |
 | Assumptions                 | all                                       |
 | Human review checklist      | all                                       |
@@ -200,7 +201,12 @@ A workpack without this footer is invalid.
 | `workspace/provisional/2026/field-map.yaml`       | request, change  | yes      |
 | `workspace/provisional/2026/delta-summary.md`     | change           | yes      |
 | `workspace/provisional/2026/review-questions.md`  | review           | yes      |
+| `workspace/provisional/2026/notes/<section>.yaml` | all              | working files |
 | `workspace/shared/assumptions.md`                 | all              | yes      |
+
+These are the deliverables and working files this skill writes; the
+`notes/<section>.yaml` files are intermediate per-section working notes under the
+skill's own year directory.
 
 ### Prohibited output locations
 
@@ -214,6 +220,7 @@ A workpack without this footer is invalid.
 Before delivering any workpack, verify:
 
 - [ ] All required sections are present for the applicable subflow
+- [ ] User-stated values index lists every `U:` chat-stated value for spot-checking
 - [ ] All amounts are labeled (estimate or from-baseline)
 - [ ] Box 2 amounts are labeled estimate or from-baseline, when applicable
 - [ ] Box 3 uses fictitious method only, with only the required explanatory note for werkelijk rendement

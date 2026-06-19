@@ -82,10 +82,10 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 
 ### Phase-out status for 2025
 
-- The Hillenregeling is being gradually phased out over 30 years, starting from 2019.
-- In 2025, 76.667% of the difference between the eigenwoningforfait and deductible own-home costs is taken into account.
-- Each year, the correction is reduced by 3.33 percentage points (1/30th per year).
-- By 2048, the Hillenregeling will be fully phased out.
+- The Hillenregeling (aftrek wegens geen of geringe eigenwoningschuld) is being gradually phased out. The phase-out began in 2019 and was accelerated: the annual reduction increased from 3.33 to 4.8 percentage points from 2026 onward.
+- In 2025, 76.667% of the difference between the eigenwoningforfait and deductible own-home costs is taken into account; in 2026 this drops to 71.867%.
+- Because the annual reduction is no longer a constant step, use the stored per-year percentage for each tax year rather than extrapolating a flat 1/30th reduction.
+- From 1 January 2041 the aftrek is fully phased out (the original 2048 end date was brought forward to 2041).
 
 ### When it applies
 

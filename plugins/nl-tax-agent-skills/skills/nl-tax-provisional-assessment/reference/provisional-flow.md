@@ -46,7 +46,8 @@ User enters provisional skill
 
 1. Does the taxpayer profile exist? If not, route back to intake.
 2. Does the profile contain `provisional_2026_request`? If not, route to the correct subflow.
-3. Does the taxpayer have a fiscal partner? If yes, collect partner data and determine box 3 allocation.
+3. **Have they already received any 2026 voorlopige aanslag?** If the taxpayer had a 2025 voorlopige aanslag, the Belastingdienst automatically issues a 2026 one (an EVA -- Eerste Voorlopige Aanslag), with payments/refunds already starting in January 2026. If a 2026 beschikking or monthly amount already exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
+4. Does the taxpayer have a fiscal partner? If yes, collect partner data and determine box 3 allocation.
 
 ### Data collection steps
 

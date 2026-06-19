@@ -9,17 +9,17 @@ review_status: reviewed
 
 ## Rule
 
-An existing voorlopige aanslag for 2026 can be changed through the same Mijn Belastingdienst portal. When changing, the taxpayer must enter ALL data again -- not just the changed items. The new provisional assessment replaces the old one entirely.
+An existing voorlopige aanslag for 2026 is changed through the same "Voorlopige aanslag aanvragen of wijzigen" entry in Mijn Belastingdienst (request and change share one combined flow). When changing, the taxpayer must make sure ALL data is complete and correct -- not just the changed items -- because the new provisional assessment replaces the old one entirely.
 
-## CRITICAL RULE -- Full re-entry required
+## CRITICAL RULE -- Every field must be complete
 
-When changing a voorlopige aanslag, the portal does not carry forward previous entries. The taxpayer must re-enter:
+A change replaces the previous voorlopige aanslag entirely: the new beschikking is calculated only from what is submitted, so any field left blank or wrong becomes the new value (effectively zero if left blank). The portal MAY offer to pre-fill figures from the taxpayer's most recent aangifte (the data from two years prior) when they opt in -- it does not carry forward the figures from the current voorlopige aanslag. Whether the form opens blank or pre-filled, the workpack must prepare, and the taxpayer must verify, the COMPLETE dataset:
 
 - All income sources (employment, pension, benefits, self-employment)
 - All deductions (mortgage interest, alimentatie, premiums, etc.)
 - All box 3 assets and debts
 
-The new voorlopige aanslag replaces the previous one. Official guidance says all data must be filled in again, including data that does not change, so the workpack must prepare the complete dataset.
+Official guidance states that all data must be present in the form, including data that does not change ("Houd er rekening mee dat u alle gegevens moet invullen. Ook de gegevens die niet wijzigen"), so the workpack must always cover the full dataset.
 
 ## Common reasons to change
 
@@ -43,18 +43,18 @@ The new voorlopige aanslag replaces the previous one. Official guidance says all
 ## How to change
 
 1. Log in to Mijn Belastingdienst with DigiD
-2. Navigate to the existing voorlopige aanslag 2026
-3. Select "Wijzigen" (change)
-4. Enter ALL income, deductions, and box 3 data from scratch
+2. Open "Voorlopige aanslag aanvragen of wijzigen" for 2026 (request and change share one combined flow)
+3. Choose to change (wijzigen) the existing 2026 voorlopige aanslag; optionally accept the offer to pre-fill prior-year figures
+4. Verify and complete ALL income, deductions, and box 3 data -- check every field, because anything left blank or wrong becomes the new value
 5. Review the new summary and adjusted monthly amount
-6. Submit the change
+6. Sign and send (ondertekenen en verzenden)
 
 ## Developer instruction
 
 When building a workpack for changing a voorlopige aanslag 2026:
 
-1. Warn the user upfront that ALL data must be re-entered, not just the changed fields
-2. If previous workpack data is available, pre-populate it as a starting point but allow the user to update every field
+1. Warn the user upfront that ALL data must be complete and verified, not just the changed fields, because the change replaces the old beschikking and anything left blank is treated as zero
+2. If previous workpack data is available, pre-populate the workpack as a starting point but have the user confirm every field (note that the portal itself may also offer to pre-fill prior-year figures)
 3. Clearly show what changed between the old and new estimates
 4. Present the delta: old monthly amount vs. new monthly amount
 5. Remind the user that a new beschikking will be sent and payments will be adjusted

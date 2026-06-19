@@ -121,7 +121,7 @@ Fiscal partners can allocate the following deductions between them in the most t
 
 ### High-income deduction-rate cap
 
-For 2025, taxpayers with income in the highest box 1 bracket do not necessarily receive a 49.50% benefit for deductions. The maximum rate for listed aftrekposten in the highest bracket is 37.48%. This cap applies beyond own-home costs and includes, among others, persoonsgebonden aftrek, gifts, specific healthcare costs, paid partneralimentatie, own-home costs, and entrepreneur deductions where applicable.
+For 2025, taxpayers with income in the highest box 1 bracket (verzamelinkomen above EUR 76,817, the start of schijf 3) do not necessarily receive a 49.50% benefit for deductions. The maximum rate for listed aftrekposten in the highest bracket is 37.48% (a tariefsaanpassing of 12.02% = 49.50% - 37.48%). This cap applies beyond own-home costs and includes, among others, persoonsgebonden aftrek, gifts, specific healthcare costs, paid partneralimentatie, own-home costs, and entrepreneur deductions where applicable.
 
 ### Allocation strategy
 
@@ -152,3 +152,4 @@ For 2025, taxpayers with income in the highest box 1 bracket do not necessarily 
 - For the 2025 return, collect all supporting documents as listed in evidence-checklist.md.
 - The Belastingdienst may request proof (bewijsstukken) of deductions up to 5 years after filing. The taxpayer should retain all receipts and documentation.
 - Deductions reduce taxable income, not tax payable directly. The actual tax benefit depends on the marginal rate at which the deduction is applied.
+- Under specifieke zorgkosten, 2025 added a fixed-amount vervoerskosten deduction (forfait) for taxpayers who can prove they cannot independently walk a short distance (about 100 metres). Surface it for manual review when mobility-related healthcare costs are in scope; the exact forfait amount and the zorgkosten drempel must be confirmed against the official 2025 specific-healthcare-costs source before a figure is entered.

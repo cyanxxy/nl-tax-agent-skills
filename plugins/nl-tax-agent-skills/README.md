@@ -48,7 +48,7 @@ nl-tax-agent-skills/
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
     nl-tax-source-refresh/          # developer-only source maintenance
-  tests/                        # validator unit tests (test_validators.py)
+  tests/                        # unit tests (validators, box1/box2 helpers, eval verifier, field-map policy)
 ```
 
 The bundled skills cover:
@@ -158,17 +158,14 @@ Codex users invoke the bundled skills after discovery. The plugin also includes 
 
 ## Update Behavior
 
-The Claude marketplace and Claude plugin manifest intentionally omit a fixed plugin `version`. For GitHub-synced Cowork marketplaces and Claude Code installs, Claude can use the git commit SHA when manifest version metadata is omitted, so each pushed commit is picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
+Both plugin manifests pin a fixed `version` (currently `0.1.1`):
 
-The Codex manifest includes fixed release metadata:
-
-```json
-{
-  "version": "0.1.1"
-}
+```text
+.claude-plugin/plugin.json   # "version": "0.1.1"
+.codex-plugin/plugin.json    # "version": "0.1.1"
 ```
 
-Bump `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` for every Codex plugin release. Do not remove that field unless the target Codex schema no longer requires or uses manifest version metadata.
+Bump **both** for every release so Claude Code, Cowork, and Codex installs pin to semver. Only the marketplace files (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`) omit a version; for those GitHub-synced marketplaces Claude can fall back to the git commit SHA, so a pushed commit is still picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
 ## Release Checks
 

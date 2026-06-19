@@ -8,6 +8,7 @@ Checks:
     - All required metadata fields present
     - No workflow mismatch (annual field in provisional map)
     - No credential/login/browser/submission fields
+    - No BSN/IBAN data-entry field, and no stored BSN (elfproef) or NL IBAN value
     - Confidence values in range 0.0-1.0
     - Source types are valid (v1.1 schema: includes user_chat, assumption, unknown)
     - Per-source-type required fields are present
@@ -39,6 +40,12 @@ CREDENTIAL_KEYWORDS = {
     "digid", "wachtwoord", "password", "inloggegevens",
     "username", "login", "credential", "secret", "pin",
 }
+# BSN and IBAN are the two highest-value Dutch identifiers and must never be
+# stored as a data-entry field value. The portal pre-fills them; the field map
+# lists BSN as a coverage placeholder in missing_fields (no value) only.
+SENSITIVE_IDENTIFIER_KEYWORDS = {"bsn", "burgerservicenummer", "iban"}
+_IBAN_VALUE_RE = re.compile(r"\bNL\d{2}[A-Z]{4}\d{10}\b", re.IGNORECASE)
+_BSN_CANDIDATE_RE = re.compile(r"\b\d{9}\b")
 PORTAL_AUTOMATION_KEYWORDS = {
     "browser", "session", "submit", "submission", "sign", "signature",
     "onderteken", "verzenden", "indienen",
@@ -157,14 +164,42 @@ def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, erro
     return missing_field_ids
 
 
+def _passes_elfproef(digits):
+    """True if a 9-digit string satisfies the Dutch BSN 11-test."""
+    if len(digits) != 9 or not digits.isdigit():
+        return False
+    weights = [9, 8, 7, 6, 5, 4, 3, 2, -1]
+    total = sum(int(d) * w for d, w in zip(digits, weights))
+    return total % 11 == 0
+
+
 def validate_sensitive_field_names(fid, label_lower, errors):
     fid_lower = fid.lower()
     for kw in CREDENTIAL_KEYWORDS:
         if kw in fid_lower or kw in label_lower:
             errors.append(f"Credential/login field detected: {fid}")
+    for kw in SENSITIVE_IDENTIFIER_KEYWORDS:
+        if kw in fid_lower or kw in label_lower:
+            errors.append(
+                "Sensitive identifier field detected (BSN/IBAN must never be a "
+                f"data-entry field; list BSN in missing_fields without a value): {fid}"
+            )
     for kw in PORTAL_AUTOMATION_KEYWORDS:
         if kw in fid_lower or kw in label_lower:
             errors.append(f"Browser/submission automation field detected: {fid}")
+
+
+def validate_sensitive_field_values(fid, field, errors):
+    """Reject a stored BSN (elfproef) or NL IBAN in the value or source.quote."""
+    source = field.get("source", {})
+    quote = source.get("quote") if isinstance(source, dict) else ""
+    for text in (str(field.get("value") or ""), str(quote or "")):
+        if _IBAN_VALUE_RE.search(text):
+            errors.append(f"Sensitive identifier value (NL IBAN) must not be stored: {fid}")
+        for candidate in _BSN_CANDIDATE_RE.findall(text):
+            if _passes_elfproef(candidate):
+                errors.append(f"Sensitive identifier value (BSN) must not be stored: {fid}")
+                break
 
 
 def validate_source(fid, field, missing_field_ids, errors, warnings):
@@ -203,6 +238,7 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     label_lower = (field.get("label") or "").lower()
 
     validate_sensitive_field_names(fid, label_lower, errors)
+    validate_sensitive_field_values(fid, field, errors)
 
     confidence = field.get("confidence")
     if confidence is not None:

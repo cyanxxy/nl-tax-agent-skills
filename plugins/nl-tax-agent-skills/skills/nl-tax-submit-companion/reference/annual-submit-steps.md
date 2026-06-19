@@ -27,7 +27,7 @@
 
 ## Deadline
 
-Typically 1 May 2026. Check the official Belastingdienst website for the exact date.
+Typically 1 May 2026. File on time to get the Belastingdienst's response guarantee; if you file (or request uitstel) before 1 May, you have certainty before 1 July. If you are asked to file and submit after 14 July without approved uitstel, you risk a verzuimboete. Check the official Belastingdienst website for the exact date in your notice.
 
 ## Extension
 

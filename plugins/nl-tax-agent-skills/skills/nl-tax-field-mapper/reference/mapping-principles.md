@@ -142,12 +142,15 @@ Fields that are needed for the return/assessment but have no available data are 
 The field mapper NEVER creates entries for:
 
 - **DigiD credentials** -- username, password, SMS verification codes, or app authentication
-- **BSN for manual entry** -- the BSN is used for portal login via DigiD; it is not a data-entry field. The mapper may note that BSN/DigiD is needed for access, but never stores the BSN value.
 - **Bank login credentials** -- these are for evidence collection, not form submission
 - **Passwords or tokens** of any kind
 - **Session identifiers** or portal navigation state
 
-If the workpack mentions any of these, the mapper skips them silently. If a validation run detects any credential-adjacent fields, it raises an error.
+If the workpack mentions any of these, the mapper omits them entirely (never an entry in `fields` or `missing_fields`). The validator raises an error if a credential-adjacent field appears in `fields`.
+
+### BSN (and IBAN): placeholder, never a value
+
+The BSN is used for portal login via DigiD and is pre-filled by the portal -- it is **not** a data-entry field, and the mapper never stores the BSN value. But because the field reference marks `personal.bsn` (and `partner.bsn` where applicable) as `required`, the mapper lists it in **`missing_fields` as a no-value placeholder** (just `field_id`, with a reason like "login/pre-filled, not stored"). That satisfies reference coverage without storing the value. The same rule applies to any IBAN. The validator enforces both sides: it rejects a BSN/IBAN that appears as a data-entry field in `fields`, and it rejects a stored BSN (elfproef) or NL IBAN value or quote.
 
 ---
 

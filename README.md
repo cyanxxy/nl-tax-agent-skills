@@ -198,16 +198,23 @@ Upload through the same **Browse plugins** modal.
 
 <br/>
 
-The Claude marketplace and Claude plugin manifest intentionally omit a fixed plugin `version` in both:
+Both plugin manifests pin a fixed `version` (currently `0.1.1`):
+
+```text
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.1"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.1"
+```
+
+Bump **both** manifests for every release so Claude Code, Cowork, and Codex installs pin to semver instead of treating each commit as a new version.
+
+Only the two marketplace files omit a version:
 
 ```text
 .claude-plugin/marketplace.json
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json
+.agents/plugins/marketplace.json
 ```
 
-For GitHub-synced marketplaces and Claude Code installs, Claude can use the git commit SHA when manifest version metadata is omitted, so each pushed commit is picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
-
-The Codex manifest at `plugins/nl-tax-agent-skills/.codex-plugin/plugin.json` includes `version: "0.1.1"`. Treat that as Codex release metadata and bump it for every Codex plugin release. Do not remove it unless the target Codex schema no longer requires or uses manifest version metadata.
+For those GitHub-synced marketplaces, Claude can fall back to the git commit SHA when no marketplace-level version is present, so a pushed commit is still picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
 </details>
 
@@ -383,12 +390,14 @@ workspace/
     2025/
       return-pack.md                # main annual workpack (incl. human review checklist)
       field-map.yaml                # nl-tax-field-mapper input
+      notes/                        # per-section working notes (e.g. filing-status.yaml, credits.yaml)
   provisional/
     2026/
       provisional-pack.md           # all subflows
       field-map.yaml                # request / change subflows
       delta-summary.md              # change subflow
       review-questions.md           # review subflow
+      notes/                        # per-section working notes
 ```
 
 Output-path ownership is enforced by the *Never* contracts in each skill: `annual-return` must never write to `workspace/provisional/**`, and background helpers must never write outside `workspace/shared/`.
@@ -479,6 +488,9 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validat
   plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_invocation_policy.py \
+  plugins/nl-tax-agent-skills/skills
+
 python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
 python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
 python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
@@ -491,6 +503,7 @@ What each validator checks:
 | `validate_source_register.py` | Every `source_id` has the required fields, snapshot path resolves, `last_checked` parses as ISO date |
 | `validate_knowledge_pack.py` | Each knowledge note cites only `source_id`s that exist in the register; snapshots match referenced paths |
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
+| `validate_invocation_policy.py` | Every non-user-invocable skill ships an `agents/openai.yaml` with `policy.allow_implicit_invocation: false` (Codex implicit-invocation guard) |
 | `tests/` (unittest) | Unit coverage of the validator helpers plus regression tests for audited fixes |
 | `verify_offline_workspace.py` | Offline eval dataset is internally consistent and fixtures load without live network access |
 

@@ -251,7 +251,7 @@ If any forbidden token appears, fail the self-check.
 
 ## Output file locations
 
-The skill writes to these locations only:
+The skill writes these deliverables (plus the working files noted below):
 
 | File | Path (mode: real) | Path (mode: test) |
 |------|-------------------|-------------------|
@@ -259,5 +259,9 @@ The skill writes to these locations only:
 | Field map | `workspace/annual/2025/field-map.yaml` | `workspace/annual/2025/field-map.test.yaml` |
 | Missing info | `workspace/shared/missing-info.md` | same |
 | Assumptions | `workspace/shared/assumptions.md` | same |
+
+It also writes intermediate per-section working notes under its own year
+directory, `workspace/annual/2025/notes/<section>.yaml` (e.g. `notes/filing-status.yaml`,
+`notes/credits.yaml`), which the template reads back when assembling the workpack.
 
 The skill must NOT write to `workspace/provisional/**`.

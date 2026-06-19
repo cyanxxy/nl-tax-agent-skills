@@ -66,7 +66,7 @@ This skill prepares a workpack containing:
 1. A summary of all income, deductions, and assets to be entered
 2. Verification checkpoints for VIA pre-filled data
 3. Calculations for reference (e.g., box 1 tax, box 3 tax, heffingskortingen)
-4. A section-by-section entry guide matching the online filing form
+4. A section-by-section entry guide organized for preparation (the official online aangifte groups the same data into onderwerpen and lets you complete them in any order, so the workpack order is a preparation order, not a fixed website sequence)
 5. A final submission checklist
 
 The workpack is a preparation tool. The taxpayer retains full responsibility for the accuracy and completeness of the filed return.
