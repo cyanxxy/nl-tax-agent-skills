@@ -159,10 +159,19 @@ def _validate_partner_allocation(
         errors.append("partner allocation percentages must total 100")
         return
 
-    if payload.get("full_year_fiscal_partner") is False:
+    full_year_partner = payload.get("full_year_fiscal_partner")
+    if full_year_partner is False:
         _add_unique(manual_review_flags, "not_full_year_fiscal_partner")
         warnings.append(
             "Box 2 allocation is only standard for full-year fiscal partners."
+        )
+    elif full_year_partner is not True:
+        # Missing/unconfirmed partner status is NOT a supported standard case:
+        # the indicative split must prove full-year fiscal-partner eligibility.
+        _add_unique(manual_review_flags, "partner_status_unconfirmed")
+        warnings.append(
+            "Box 2 allocation requires confirmed full-year fiscal-partner status; "
+            "set full_year_fiscal_partner: true to proceed as a standard case."
         )
 
 

@@ -6,7 +6,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py:*)
 ---
 
 # NL Tax Provisional Assessment
@@ -22,10 +22,14 @@ skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve
 from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and
 resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-provisional-assessment/`
 (`CLAUDE_PLUGIN_ROOT` is set by Claude Code and Cowork; if unset, resolve
-relative to your working directory; `CLAUDE_SKILL_DIR` is not host-provided).
-Resolve every `workspace/...` path against `workspace_root` from
-`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree.
+relative to your working directory). Prefer `${CLAUDE_PLUGIN_ROOT}` for
+cross-host portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the
+skill's own subdirectory) but Codex does not, so do not depend on
+`CLAUDE_SKILL_DIR`. Resolve every `workspace/...` path against `workspace_root`
+from `session-progress.yaml` (or `profile.yaml`); never create a second
+`workspace/` tree.
+
+Safety: only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 Before the first user-facing reply each turn, load the security notes and the profile/session state; before generating any numeric content, load the 2026 provisional rate sheets. Append every loaded `source_id` (from `_shared/source-register.yaml`) to `sections … sources_loaded` in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
 
@@ -147,6 +151,8 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
    Or the user has run `/nl-tax-agent-skills:nl-tax-provisional-assessment confirm`. Anything else (including "looks good", "yes", "ok", "sounds good") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
 
 When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly. If `mode: test`, prepend a `# TEST RUN — NOT FOR FILING` banner to every generated file, suffix filenames with `.test` (for example `provisional-pack.test.md`), and repeat the TEST RUN marker in each section header.
+
+When a `field-map.yaml` is produced (request and change subflows), after writing it run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/provisional-field-map.md`) and use `field_id`s from that reference. The provisional field-map uses the fictitious Box 3 method only — never include werkelijk-rendement fields.
 
 ## Output files
 

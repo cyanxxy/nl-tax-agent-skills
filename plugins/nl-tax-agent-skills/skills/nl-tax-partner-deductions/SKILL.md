@@ -5,7 +5,7 @@ user-invocable: false
 allowed-tools:
   - Read
   - Grep
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-partner-deductions/scripts/*.py:*)
 ---
 
 # NL Tax Partner Deductions
@@ -14,7 +14,9 @@ Background helper for fiscal-partner status and allocation notes used by manual-
 
 Load `workspace/taxpayer/profile.yaml`, `_shared/knowledge/security/prompt-injection.md`, `_shared/knowledge/security/digid.md`, and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
 
-Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. If a bundled path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-partner-deductions/` (Claude Code and Cowork set `CLAUDE_PLUGIN_ROOT`; `CLAUDE_SKILL_DIR` is not host-provided).
+Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. If a bundled path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-partner-deductions/` (Claude Code and Cowork set `CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
+
+Safety: only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume partner data or deduction amounts are pre-staged. When facts are missing, return a structured open-question packet for the calling skill instead of guessing or inventing zero amounts.
 
@@ -62,4 +64,4 @@ This helper writes only under `workspace/shared/`. It must never write to:
 - `workspace/annual/**`
 - `workspace/provisional/**`
 
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.

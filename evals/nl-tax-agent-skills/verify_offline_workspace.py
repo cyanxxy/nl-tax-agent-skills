@@ -158,8 +158,12 @@ def check_generated_output_regex(
 
 def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
     plugin_root = dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
+    # SCRIPT_DIR is evals/nl-tax-agent-skills; parents[1] is the repo root. Anchoring on the
+    # script location keeps the validator discoverable regardless of the current working
+    # directory (e.g. when the suite is run from plugins/nl-tax-agent-skills).
     candidates = [
         workspace / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+        SCRIPT_DIR.parents[1] / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
         Path.cwd() / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
     ]
     for script in candidates:
@@ -195,6 +199,7 @@ def check_field_maps(
     case_id: str,
     case: dict[str, Any],
     errors: list[str],
+    warnings: list[str],
 ) -> None:
     field_maps = expected_field_map_paths(workspace, case)
     if not field_maps:
@@ -210,16 +215,30 @@ def check_field_maps(
         rel_path = path.relative_to(workspace)
         try:
             data = load_yaml(path)
-            validation_errors, _ = validator.validate(data)
+            validation_errors, validation_warnings = validator.validate(data)
         except (OSError, ValueError) as exc:
             errors.append(f"{case_id}: field-map validation failed for {rel_path}: {exc}")
             continue
         for error in validation_errors:
             errors.append(f"{case_id}: field-map validation failed for {rel_path}: {error}")
+        # Warnings are informational only: surfaced for visibility but never fatal.
+        for warning in validation_warnings:
+            warnings.append(f"{case_id}: field-map validation warning for {rel_path}: {warning}")
 
 
-def verify_case(workspace: Path, dataset: dict[str, Any], case: dict[str, Any]) -> list[str]:
+def verify_case(
+    workspace: Path,
+    dataset: dict[str, Any],
+    case: dict[str, Any],
+    warnings: list[str] | None = None,
+) -> list[str]:
     errors: list[str] = []
+    # Warnings are informational only and never affect pass/fail. Callers that
+    # want to surface them pass a list to accumulate into; otherwise they are
+    # collected in a local list and discarded. verify_case's return contract
+    # stays a plain errors list so existing callers/tests are unaffected.
+    if warnings is None:
+        warnings = []
     case_id = case["id"]
 
     for pattern in case.get("expected_files", []) or []:
@@ -237,7 +256,7 @@ def verify_case(workspace: Path, dataset: dict[str, Any], case: dict[str, Any]) 
     for rule in case.get("text_checks", []) or []:
         check_text_rule(workspace, case_id, rule, errors)
 
-    check_field_maps(workspace, dataset, case_id, case, errors)
+    check_field_maps(workspace, dataset, case_id, case, errors, warnings)
     check_generated_output_regex(workspace, dataset, case_id, errors)
     return errors
 
@@ -282,11 +301,14 @@ def main() -> int:
         print("OFFLINE DATASET PASSED")
         return 0
 
+    warnings: list[str] = []
     case_ids: list[str] = []
     try:
         case_ids = selected_case_ids(args, dataset, workspace)
         for case_id in case_ids:
-            errors.extend(verify_case(workspace, dataset, find_case(dataset, case_id)))
+            errors.extend(
+                verify_case(workspace, dataset, find_case(dataset, case_id), warnings)
+            )
     except (KeyError, ValueError) as exc:
         errors.append(str(exc))
 
@@ -294,10 +316,20 @@ def main() -> int:
         print("OFFLINE EVAL FAILED")
         for error in errors:
             print(f"  - {error}")
+        # Warnings are informational and do not affect pass/fail, but surface them
+        # alongside failures for context.
+        if warnings:
+            print("Warnings:")
+            for warning in warnings:
+                print(f"  - {warning}")
         return 1
 
     print("OFFLINE EVAL PASSED")
     print(f"Verified cases: {', '.join(case_ids)}")
+    if warnings:
+        print("Warnings:")
+        for warning in warnings:
+            print(f"  - {warning}")
     return 0
 
 

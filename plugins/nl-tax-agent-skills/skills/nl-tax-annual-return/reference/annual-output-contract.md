@@ -14,6 +14,7 @@ This document defines the required output structure, validation rules, and quali
 - Credits screening requirements
 - Field map requirements
 - Mandatory disclaimer
+- Status banner
 - Mode marker (test vs real)
 - Workpack self-check
 - Output file locations
@@ -174,6 +175,10 @@ The field map must map each major workpack line item to:
 - A human-readable field description
 - The value or range of values from the workpack
 
+### Schema conformance
+
+The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper` (`templates/field-map-template.yaml` + `reference/{annual,provisional}-field-map.md`) and MUST pass `scripts/validate_field_map.py`; `field_id`s must come from the corresponding field reference.
+
 ---
 
 ## Mandatory disclaimer
@@ -191,6 +196,17 @@ This section must not be:
 - Weakened (e.g., by adding language suggesting the workpack is sufficient for filing)
 
 ---
+
+## Status banner
+
+Every workpack MUST open with a deterministic STATUS banner derived from `session-progress.yaml` (not from the model's free-form judgment). Compute it from the rollup of the active workflow's subsections:
+
+- If any applicable subsection is `deferred` or has `unknown`/open blocking items, the banner reads: `STATUS: DRAFT — N deferred section(s)` where `N` is the count of deferred/incomplete subsections.
+- If every applicable subsection is `complete`, the banner reads: `STATUS: COMPLETE DRAFT FOR REVIEW`.
+
+In both cases the banner MUST also state that the workpack is **not for filing** (e.g. append "not for filing — review and submit manually via Mijn Belastingdienst"). The banner is recomputed from disk on every assembly, so it never drifts from the recorded session state.
+
+Optionally, `field-map.yaml` may carry a matching **top-level** `readiness` field (`draft` / `review_ready`) so a downstream consumer can read status without re-parsing the workpack prose. (`validate_field_map.py` accepts `readiness` only as a top-level key with one of those two values.)
 
 ## Mode marker (test vs real)
 

@@ -5,14 +5,14 @@ user-invocable: false
 allowed-tools:
   - Read
   - Grep
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box1-home/scripts/*.py:*)
 ---
 
 # NL Tax Box 1 And Own Home
 
 Background helper for box 1 income and eigen woning notes.
 
-Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts when structured inputs are available.
+Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts when structured inputs are available. Only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (for this skill, `scripts/validate_own_home_inputs.py` and `scripts/summarize_box1_inputs.py`). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume all inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros or treating missing values as not applicable.
 
@@ -24,7 +24,9 @@ Resolve every `workspace/...` path against `workspace_root` from
 `../_shared/`. If a bundled path does not resolve from your working directory,
 run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from
 `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box1-home/` (Claude Code and Cowork set
-`CLAUDE_PLUGIN_ROOT`; `CLAUDE_SKILL_DIR` is not host-provided).
+`CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host
+portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own
+subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
 
 - `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/security/digid.md`
@@ -72,4 +74,4 @@ This helper writes only under `workspace/shared/`. It must never write to:
 - `workspace/annual/**`
 - `workspace/provisional/**`
 
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.

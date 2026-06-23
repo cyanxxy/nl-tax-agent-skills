@@ -9,6 +9,8 @@ review_status: reviewed
 
 This reference defines the known fields in the Dutch annual income tax return that the field mapper produces. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
 
+> **Provenance / freshness.** Labels reflect the 2025 Mijn Belastingdienst aangifte as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
+
 ---
 
 ## Contents
@@ -125,12 +127,6 @@ do not calculate it as standard support until reviewed sources are added.
 |---|---|---|---|---|---|
 | `box3.banktegoeden` | Banktegoeden op peildatum 1 januari 2025 | Bank balances on reference date | Box 3 — Bezittingen | conditional | `bankafschrift`, `jaaroverzicht_bank` |
 | `box3.overige_bezittingen` | Overige bezittingen op peildatum 1 januari 2025 | Other assets on reference date | Box 3 — Bezittingen | conditional | `jaaroverzicht_beleggingen`, `crypto_overzicht`, `eigendom_bewijs` |
-
-> **Crypto (2025).** Crypto-assets are valued at the market price on 1 January 2025
-> and are part of `box3.overige_bezittingen` (same heffingsvrij vermogen and forfait).
-> Note for the user: new for the 2025 aangifte, the online return has a dedicated
-> **"Cryptobezittingen"** checkbox/section inside box 3 — tick it and enter the crypto
-> value there. The tax treatment is unchanged; only the data-entry location is distinct.
 | `box3.groene_beleggingen_spaartegoeden` | Groene beleggingen en groene spaartegoeden | Green investments and green savings | Box 3 — Vrijstellingen | optional | `jaaroverzicht_groenfonds`, `jaaroverzicht_bank` |
 | `box3.contant_geld` | Contant geld en cadeaubonnen | Cash and gift cards | Box 3 — Bezittingen | optional | User-provided / cash log |
 | `box3.schulden` | Schulden op peildatum 1 januari 2025 | Debts on reference date | Box 3 — Schulden | conditional | `schuld_overzicht` |
@@ -140,6 +136,12 @@ do not calculate it as standard support until reviewed sources are added.
 | `box3.werkelijk_rendement_waardeverandering` | Waardeveranderingen (werkelijk rendement) | Value changes (actual return) | Box 3 — Werkelijk rendement | optional | `jaaroverzicht_beleggingen` |
 | `box3.werkelijk_rendement_box3_schuldrente` | Betaalde rente op box 3-schulden | Interest paid on box 3 debts | Box 3 — Werkelijk rendement | optional | `schuld_overzicht`, user-provided |
 | `box3.werkelijk_rendement_woz_investment_correction` | WOZ-investeringcorrectie | Qualifying WOZ-value investment correction | Box 3 — Werkelijk rendement | optional | `woz_beschikking`, user-provided |
+
+> **Crypto (2025).** Crypto-assets are valued at the market price on 1 January 2025
+> and are part of `box3.overige_bezittingen` (same heffingsvrij vermogen and forfait).
+> Note for the user: new for the 2025 aangifte, the online return has a dedicated
+> **"Cryptobezittingen"** checkbox/section inside box 3 — tick it and enter the crypto
+> value there. The tax treatment is unchanged; only the data-entry location is distinct.
 
 ### Notes on box 3 fields
 - Peildatum for 2025 annual return is 1 January 2025.

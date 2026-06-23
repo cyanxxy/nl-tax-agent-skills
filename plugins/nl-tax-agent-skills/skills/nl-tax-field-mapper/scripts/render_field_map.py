@@ -8,7 +8,51 @@ Outputs Markdown to stdout grouped by section.
 """
 
 import os
+import re
 import sys
+
+
+def _cell(value):
+    """Coerce a value into a safe single-line Markdown table cell.
+
+    Presentation-only hardening: untrusted field-map content (which may include
+    evidence quotes or notes) flows into Markdown tables, so escape characters
+    that would break table structure or smuggle markup. Returns an em dash for
+    empty content.
+    """
+    if value is None:
+        return "—"
+    text = str(value)
+    # Collapse newlines/tabs to a single space so a cell stays on one row.
+    text = re.sub(r"[\r\n\t]+", " ", text)
+    # Escape backslash first, then pipe and backtick, then angle brackets.
+    text = text.replace("\\", "\\\\")
+    text = text.replace("|", "\\|")
+    text = text.replace("`", "\\`")
+    text = text.replace("<", "&lt;").replace(">", "&gt;")
+    text = text.strip()
+    return text if text else "—"
+
+
+def _notes(raw):
+    """Render notes that may be a str, a list, or None into one cell."""
+    if raw is None:
+        return _cell(None)
+    if isinstance(raw, (list, tuple)):
+        parts = [str(item) for item in raw if item not in (None, "")]
+        return _cell("; ".join(parts)) if parts else _cell(None)
+    return _cell(raw)
+
+
+def _confidence(raw):
+    """Format a confidence as a percentage, tolerating non-numeric input."""
+    if raw is None:
+        return "—"
+    try:
+        return f"{float(raw):.0%}"
+    except (TypeError, ValueError):
+        return _cell(raw)
+
 
 def load_yaml(path):
     """Load YAML via PyYAML; require it rather than silently mis-parsing."""
@@ -27,7 +71,7 @@ def load_yaml(path):
 
 def infer_section(field_id):
     """Infer a display section from the field_id."""
-    parts = field_id.lower().split(".")
+    parts = str(field_id or "").lower().split(".")
     section_map = {
         # Canonical field_id first-part prefixes
         # (reference/annual-field-map.md, reference/provisional-field-map.md).
@@ -93,16 +137,15 @@ def render(data):
             lines.append("| Field | Value | Source | Confidence | Review | Notes |")
             lines.append("|-------|-------|--------|------------|--------|-------|")
             for f in section_fields:
-                label = f.get("label", f.get("field_id", "—"))
-                value = f.get("value", "—")
-                if value is None:
-                    value = "_missing_"
+                label = _cell(f.get("label", f.get("field_id")))
+                raw_value = f.get("value")
+                value = "_missing_" if raw_value is None else _cell(raw_value)
                 source = f.get("source", {})
-                src_type = source.get("type", "—") if isinstance(source, dict) else str(source)
-                confidence = f.get("confidence")
-                conf_str = f"{confidence:.0%}" if confidence is not None else "—"
+                src_raw = source.get("type") if isinstance(source, dict) else source
+                src_type = _cell(src_raw)
+                conf_str = _confidence(f.get("confidence"))
                 review = "Yes" if f.get("manual_review_required", True) else "No"
-                notes = "; ".join(f.get("notes", [])) or "—"
+                notes = _notes(f.get("notes"))
                 lines.append(f"| {label} | {value} | {src_type} | {conf_str} | {review} | {notes} |")
             lines.append("")
 
@@ -114,8 +157,8 @@ def render(data):
         lines.append("| Field | Reason | Blocking |")
         lines.append("|-------|--------|----------|")
         for m in missing:
-            label = m.get("label", m.get("field_id", "—"))
-            reason = m.get("reason", "—")
+            label = _cell(m.get("label", m.get("field_id")))
+            reason = _cell(m.get("reason"))
             blocking = "Yes" if m.get("blocking", True) else "No"
             lines.append(f"| {label} | {reason} | {blocking} |")
         lines.append("")

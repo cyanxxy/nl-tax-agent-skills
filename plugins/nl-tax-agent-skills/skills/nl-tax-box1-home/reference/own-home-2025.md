@@ -114,11 +114,29 @@ For taxpayers whose box 1 income exceeds the schijf 2 boundary (EUR 76,817 in 20
 
 ### Calculation approach
 
-1. Determine total box 1 income before the eigen woning deduction
-2. If income > EUR 76,817, calculate the tariefsaanpassing:
-   - Tariefsaanpassing = deductible own-home costs x (49.50% - 37.48%)
-   - This amount is recorded as an adjustment that reduces the net tax benefit of the deduction
-3. If income context is not yet available when this skill runs, output a WARNING that tariefsaanpassing may apply and must be checked by the calling skill
+The bundled `scripts/validate_own_home_inputs.py` follows the official
+Belastingdienst grondslag method rather than applying the rate gap directly to the
+own-home costs:
+
+1. Determine belastbaar inkomen uit werk en woning (the box 1 taxable income after
+   the eigen woning deduction, after the Hillenregeling adjustment).
+2. Build the grondslag voor tariefsaanpassing, **capped at the deducted own-home
+   costs** (art. 2.10 lid 2 Wet IB 2001):
+   `grondslag = min(afgetrokken eigenwoningkosten, max(0, belastbaar inkomen + afgetrokken eigenwoningkosten - drempel))`,
+   where the drempel is the schijf boundary (EUR 76,817 in 2025). It applies only
+   when income WITHOUT the deduction (belastbaar inkomen + costs) exceeds the drempel.
+3. The tariefsaanpassing is `grondslag x (schijf 3 rate - cap rate)` =
+   `grondslag x (49.50% - 37.48%)`, recorded as an adjustment that reduces the net
+   tax benefit of the deduction. Because the grondslag is capped at the deducted
+   costs, the correction can never exceed `(49.50% - 37.48%) x deducted costs`. The
+   Belastingdienst computes the definitive figure automatically in the aangifte.
+4. If income context is not yet available when this skill runs, output a WARNING
+   that tariefsaanpassing may apply and must be checked by the calling skill.
+
+Note: the script's structured output renames the post-2013 mortgage-regime field to
+`mortgage_regime_post2013` (formerly `mortgage_qualifies_post2013`), and a
+`--interest-share` / `--debt-share` flag scales the deductible interest and
+eigenwoningschuld to the taxpayer's share when ownership and the loan are split.
 
 ---
 

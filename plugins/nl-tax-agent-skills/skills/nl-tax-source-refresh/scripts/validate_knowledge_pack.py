@@ -11,6 +11,14 @@ Checks:
     - Knowledge files without source_id references are flagged
     - Every source_id reference anywhere in skills/*.md is registered
     - Active reviewed knowledge files do not contain unverified-value markers
+
+Scope and honesty note:
+    These validators verify METADATA consistency only -- ids, snapshot paths,
+    content hashes, review_status flags, and that every cited source_id is
+    registered. A `review_status: reviewed` marker is a HUMAN attestation that a
+    person checked the file; it is NOT machine proof of legal or tax-rate
+    accuracy. Passing this validator means the bookkeeping is internally
+    consistent, not that the underlying numbers or rules are correct.
 """
 
 import json
@@ -52,6 +60,21 @@ FRESHNESS_DAYS = {
     "refresh-on-demand": 730,
 }
 
+# The register also uses free-text prose policies ("check monthly",
+# "after Prinsjesdag", "review each filing season", "on law change", etc.).
+# When a policy is not one of the enum keys above, map it to a threshold by
+# scanning for these keywords (first/smallest match wins). Without this, every
+# prose policy silently fell back to 365 days.
+POLICY_KEYWORD_DAYS = [
+    ("monthly", 31),
+    ("quarter", 92),
+    ("filing season", 90),
+    ("prinsjesdag", 120),
+    ("annual", 365),
+    ("law change", 365),
+    ("on demand", 730),
+]
+
 VALID_KNOWLEDGE_WORKFLOWS = {"all", "annual_return", "provisional_assessment"}
 
 
@@ -69,7 +92,13 @@ REVIEW_BLOCKING_PATTERNS = [
 def check_freshness(last_checked, policy):
     if not last_checked:
         return True, "no last_checked date"
-    threshold = FRESHNESS_DAYS.get(policy, 365)
+    threshold = FRESHNESS_DAYS.get(policy)
+    if threshold is None:
+        lc = str(policy).lower()
+        threshold = min(
+            (days for keyword, days in POLICY_KEYWORD_DAYS if keyword in lc),
+            default=365,
+        )
     try:
         checked = date.fromisoformat(str(last_checked))
         age = (date.today() - checked).days
@@ -80,6 +109,12 @@ def check_freshness(last_checked, policy):
     return False, ""
 
 
+# These subtrees hold authored internal playbooks (methodology, platform/host
+# notes, security guidance, cross-host compat) that are not backed by a single
+# citable external authority. They are EXEMPT from the "every knowledge file
+# must cite a source_id" check. This exemption does not weaken citation rules:
+# any source_id these files DO cite is still validated against the register by
+# the skills-wide reference pass.
 INTERNAL_KNOWLEDGE_PREFIXES = (
     "methods",
     "platform",
@@ -271,7 +306,9 @@ def collect_source_status(sources, project_root):
             source.get("freshness_policy", "refresh-annually"),
         )
         if is_stale:
-            stale_sources.append((sid, reason))
+            mandatory_for = source.get("mandatory_for") or []
+            is_mandatory = bool(mandatory_for)
+            stale_sources.append((sid, reason, is_mandatory))
 
     return registered_ids, missing_snapshots, stale_sources
 
@@ -439,10 +476,18 @@ def print_report(
     workflow_metadata_errors,
     source_reference_errors,
 ):
+    stale_mandatory = [row for row in stale_sources if len(row) > 2 and row[2]]
+    stale_warning = [row for row in stale_sources if not (len(row) > 2 and row[2])]
+
     print_section("MISSING SNAPSHOTS:", missing_snapshots, lambda source_id: source_id)
     print_section(
-        "STALE SOURCES:",
-        stale_sources,
+        "STALE MANDATORY SOURCES (blocking):",
+        stale_mandatory,
+        lambda row: f"{row[0]}: {row[1]}",
+    )
+    print_section(
+        "STALE SOURCES (warning):",
+        stale_warning,
         lambda row: f"{row[0]}: {row[1]}",
     )
     print_section(
@@ -514,12 +559,18 @@ def main():
         set(source_reference_errors) | set(unknown_reference_errors)
     )
 
+    # A stale source that is mandatory_for at least one skill is a blocking
+    # error; non-mandatory staleness stays a warning.
+    stale_mandatory = [row for row in stale_sources if len(row) > 2 and row[2]]
+    stale_warning = [row for row in stale_sources if not (len(row) > 2 and row[2])]
+
     has_errors = bool(
         missing_snapshots
         or snapshot_metadata_errors
         or review_marker_errors
         or workflow_metadata_errors
         or source_reference_errors
+        or stale_mandatory
     )
 
     print_report(
@@ -533,7 +584,7 @@ def main():
         source_reference_errors,
     )
 
-    if not has_errors and not stale_sources:
+    if not has_errors and not stale_warning:
         print("VALIDATION PASSED")
     elif has_errors:
         print("VALIDATION FAILED")

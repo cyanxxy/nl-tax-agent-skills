@@ -85,10 +85,10 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 - `_shared/knowledge/security/digid.md` *(bd_digid_machtigen)*
 - `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025)*
-- `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025)*
+- `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_heffingskortingen_how_2025, bd_arbeidsinkomen_definition_2025)*
 - `_shared/knowledge/years/2025/annual/own-home.md` *(bd_own_home_deduction_cap_2025)*
 - `_shared/knowledge/years/2025/annual/deductions.md` *(bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025)*
-- `_shared/knowledge/years/2025/annual/late-filing.md` *(bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib)*
+- `_shared/knowledge/years/2025/annual/late-filing.md` *(bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib, bd_invorderingsrente)*
 - `_shared/knowledge/years/2025/annual/filing-flow.md` *(bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_annual_deadline_2025, bd_annual_extension_2025)*
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
 - `_shared/knowledge/years/2025/box3/fictitious.md` *(bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025)*
@@ -120,7 +120,7 @@ Record under `workspace/annual/2025/notes/filing-status.yaml` with `source: user
 
 - **On time** (filed before 1 May 2026, or before granted uitsteldatum): no exposure. The workpack will say "Filing status: on time."
 - **Uitstel granted, return outstanding**: quote the uitsteldatum and note that belastingrente still accrues from 1 July 2026 if tax is owed. Use the rate from `late-filing.md` (5% from 1 January 2026).
-- **Late (deadline passed, no uitstel)**: surface the verzuimboete (EUR 469 first / EUR 6,709 max) and the belastingrente rate (5% from 1 January 2026). Recommend filing immediately to limit further rente. Cite `bd_verzuimboete` and `bd_belastingrente_overview`.
+- **Late (deadline passed, no uitstel)**: surface the verzuimboete (EUR 469 first / EUR 6,709 max) and the belastingrente rate (5% from 1 January 2026). Recommend filing as soon as possible to shorten the belastingrente period; pay the eventual aanslag by its betaaltermijn to avoid invorderingsrente. Do not imply that paying the aanslag faster reduces belastingrente — that end date is fixed when the aanslag is issued. Cite `bd_verzuimboete` and `bd_belastingrente_overview`.
 
 Do not compute a final boete or rente amount; the Belastingdienst sets these on the aanslag.
 

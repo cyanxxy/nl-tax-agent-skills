@@ -1,9 +1,10 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Dutch tax skills for local manual-entry workpacks.",
   "author": {
-    "name": "Tax Skill Developers"
+    "name": "Tax Skill Developers",
+    "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -31,8 +32,8 @@
       "Index Dutch tax documents."
     ],
     "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
-    "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills#privacy-boundary",
-    "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills#supported-workflows",
+    "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
     "brandColor": "#1F6FEB",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/logo.png"

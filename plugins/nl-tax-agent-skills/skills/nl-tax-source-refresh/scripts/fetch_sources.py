@@ -2,9 +2,10 @@
 """
 NL Tax Source Refresh -- Fetch Sources
 
-Reads source-register.yaml, filters by scope and year, checks freshness
-against each source's freshness_policy, and reports which sources need a
-manual refresh plan.
+Reads source-register.yaml, filters by scope and year, checks freshness by
+thresholding each source's last_checked date against STALENESS_DAYS keyed by
+its source_type (not by the free-text freshness_policy prose), and reports
+which sources need a manual refresh plan.
 
 Usage:
     python3 fetch_sources.py <scope> [year] [--fetch]
@@ -25,90 +26,36 @@ mode. It reports what would need manual refresh; it does not perform live HTTP
 requests or rewrite source snapshots.
 
 Output:
-    YAML-formatted report to stdout (or JSON fallback).
-
-Standard library only (no pip dependencies).
+    YAML-formatted report to stdout. PyYAML is required; this developer script
+    hard-requires it (matching the validators) so the committed/emitted format
+    never silently switches to JSON depending on the environment.
 """
 
-import hashlib
-import json
 import os
 import sys
 from datetime import datetime, timezone
 
 # ---------------------------------------------------------------------------
-# YAML loader -- try PyYAML, fall back to a minimal inline parser
+# YAML loader -- PyYAML is required (no JSON fallback, so output is stable)
 # ---------------------------------------------------------------------------
 
 try:
     import yaml
-
-    def load_yaml(path):
-        with open(path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
-
-    def dump_output(data):
-        return yaml.dump(data, default_flow_style=False, allow_unicode=True,
-                         sort_keys=False)
 except ImportError:
-    yaml = None
+    raise SystemExit(
+        "PyYAML is required to run fetch_sources "
+        "(python3 -m pip install pyyaml)."
+    )
 
-    def load_yaml(path):
-        """Fallback: parse YAML-subset via json if the file is also valid JSON,
-        otherwise do a best-effort line parse for the fields we need."""
-        with open(path, "r", encoding="utf-8") as f:
-            content = f.read()
-        try:
-            return json.loads(content)
-        except json.JSONDecodeError:
-            return _parse_yaml_subset(content)
 
-    def dump_output(data):
-        return json.dumps(data, indent=2, ensure_ascii=False, default=str)
+def load_yaml(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
-    def _parse_yaml_subset(content):
-        """Minimal YAML-subset parser for source-register.yaml structure."""
-        sources = []
-        current = None
-        current_list_key = None
 
-        for line in content.splitlines():
-            stripped = line.strip()
-            if not stripped or stripped.startswith("#"):
-                continue
-
-            # Detect new list item under 'sources:'
-            if stripped.startswith("- id:"):
-                if current is not None:
-                    sources.append(current)
-                current = {"id": stripped.split(":", 1)[1].strip().strip('"')}
-                current_list_key = None
-                continue
-
-            if current is not None:
-                # Continuation of a list value (e.g., mandatory_for items)
-                if stripped.startswith("- ") and current_list_key:
-                    val = stripped[2:].strip().strip('"')
-                    current.setdefault(current_list_key, []).append(val)
-                    continue
-
-                if ":" in stripped:
-                    key, _, val = stripped.partition(":")
-                    key = key.strip()
-                    val = val.strip().strip('"')
-                    if not val:
-                        current_list_key = key
-                    else:
-                        current_list_key = None
-                        # Parse tax_year as int if numeric
-                        if key == "tax_year" and val.isdigit():
-                            val = int(val)
-                        current[key] = val
-
-        if current is not None:
-            sources.append(current)
-
-        return {"sources": sources}
+def dump_output(data):
+    return yaml.dump(data, default_flow_style=False, allow_unicode=True,
+                     sort_keys=False)
 
 
 # ---------------------------------------------------------------------------

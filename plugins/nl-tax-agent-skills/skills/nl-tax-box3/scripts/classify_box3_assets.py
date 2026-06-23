@@ -19,6 +19,7 @@ Output: classified list with confidence scores, printed as JSON to stdout.
 """
 
 import json
+import math
 import sys
 import os
 import re
@@ -36,12 +37,16 @@ BANKTEGOEDEN_KEYWORDS = [
 ]
 
 OVERIGE_BEZITTINGEN_KEYWORDS = [
-    "aandeel", "aandelen", "shares", "stock",
-    "obligatie", "obligaties", "bonds",
-    "belegging", "beleggingsfonds", "mutual fund", "fund",
+    "aandeel", "aandelen", "aandelenfonds", "aandelenportefeuille",
+    "shares", "stock",
+    "obligatie", "obligaties", "obligatiefonds", "bonds",
+    "belegging", "beleggingsfonds", "beleggingsrekening",
+    "beleggingsportefeuille", "indexfonds", "mutual fund", "fund",
+    "effecten", "effectenrekening", "effectenportefeuille",
     "etf", "exchange-traded",
     "crypto", "cryptocurrency", "bitcoin", "ethereum",
-    "vastgoed", "real estate", "property", "onroerend",
+    "vastgoed", "vastgoedfonds", "vastgoedfondsen",
+    "real estate", "property", "onroerend",
     "lening verstrekt", "vordering", "receivable", "loan given",
     "kunst", "art", "collectibles",
 ]
@@ -104,13 +109,61 @@ BANKTEGOEDEN_EDGE_CASES = [
 
 
 def match_keywords(text, keywords):
-    """Check how many keywords match in the given text. Returns match count."""
+    """Check how many keywords match in the given text. Returns match count.
+
+    Matching is word-boundary based so that, for example, "spaar" does not
+    match inside "Spaarvarken". Multi-word keywords keep their internal spaces.
+    """
     text_lower = text.lower()
     count = 0
     for kw in keywords:
-        if kw.lower() in text_lower:
+        pattern = r"\b" + re.escape(kw.lower()) + r"\b"
+        if re.search(pattern, text_lower):
             count += 1
     return count
+
+
+def _score_categories(text):
+    """Return per-category keyword scores for the given text."""
+    return {
+        "banktegoeden": match_keywords(text, BANKTEGOEDEN_KEYWORDS),
+        "overige_bezittingen": match_keywords(text, OVERIGE_BEZITTINGEN_KEYWORDS),
+        "schulden": match_keywords(text, SCHULDEN_KEYWORDS),
+    }
+
+
+def validate_asset(asset):
+    """Validate a single asset's value and owner fields.
+
+    Returns a list of MANUAL_REVIEW flag strings for any data-quality problem.
+    Does not classify; complements classify_asset.
+    """
+    flags = []
+
+    if "value" not in asset or asset.get("value") is None:
+        alternate = next(
+            (key for key in ("amount", "balance") if asset.get(key) is not None),
+            None,
+        )
+        if alternate is not None:
+            flags.append(
+                f"MANUAL_REVIEW: value missing; found alternate key '{alternate}'"
+            )
+        else:
+            flags.append("MANUAL_REVIEW: value missing")
+    else:
+        value = asset.get("value")
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            flags.append("MANUAL_REVIEW: value is not numeric")
+        elif not math.isfinite(value):
+            flags.append("MANUAL_REVIEW: value is not a finite number")
+        elif value < 0:
+            flags.append("MANUAL_REVIEW: value is negative")
+
+    if not asset.get("owner"):
+        flags.append("MANUAL_REVIEW: owner missing")
+
+    return flags
 
 
 def classify_asset(asset):
@@ -130,7 +183,27 @@ def classify_asset(asset):
     if type_hint:
         hint_lower = type_hint.lower().strip().replace(" ", "_")
         if hint_lower in TYPE_HINT_MAP:
-            return TYPE_HINT_MAP[hint_lower], 0.95, flags
+            hint_category = TYPE_HINT_MAP[hint_lower]
+            # Cross-check the name's keywords against the hint. If a *different*
+            # category scores at least as high as the hint's own category on the
+            # name keywords, the hint may be wrong (e.g. "loan receivable from
+            # friend" + type_hint "loan" — "receivable" points at
+            # overige_bezittingen). Downgrade and flag for manual review.
+            name_scores = _score_categories(name)
+            name_max = max(name_scores.values())
+            if name_max > 0:
+                contradicting = [
+                    cat
+                    for cat, s in name_scores.items()
+                    if cat != hint_category and s >= name_scores[hint_category]
+                ]
+                if contradicting:
+                    flags.append(
+                        f"MANUAL_REVIEW: type_hint '{type_hint}' contradicts "
+                        f"name keywords (name suggests {', '.join(sorted(contradicting))})"
+                    )
+                    return hint_category, 0.5, flags
+            return hint_category, 0.95, flags
 
     # Step 2: Keyword matching on name + type_hint combined
     combined_text = f"{name} {type_hint}"
@@ -141,15 +214,7 @@ def classify_asset(asset):
             flags.append(f"Resolved official banktegoeden edge case: {label}")
             return "banktegoeden", 0.85, flags
 
-    bank_score = match_keywords(combined_text, BANKTEGOEDEN_KEYWORDS)
-    overige_score = match_keywords(combined_text, OVERIGE_BEZITTINGEN_KEYWORDS)
-    schulden_score = match_keywords(combined_text, SCHULDEN_KEYWORDS)
-
-    scores = {
-        "banktegoeden": bank_score,
-        "overige_bezittingen": overige_score,
-        "schulden": schulden_score,
-    }
+    scores = _score_categories(combined_text)
 
     max_score = max(scores.values())
 
@@ -265,6 +330,7 @@ def main():
 
     for asset in assets:
         category, confidence, flags = classify_asset(asset)
+        flags = list(flags) + validate_asset(asset)
         classified = {
             "name": asset.get("name", "unnamed"),
             "value": asset.get("value", 0),
@@ -281,11 +347,17 @@ def main():
 
         results[category].append(classified)
 
-    # Summary totals
+    # Summary totals (skip non-numeric values flagged for manual review)
     for cat in ["banktegoeden", "overige_bezittingen", "schulden", "unknown"]:
         results["summary"][cat] = {
             "count": len(results[cat]),
-            "total_value": sum(item["value"] for item in results[cat]),
+            "total_value": sum(
+                item["value"]
+                for item in results[cat]
+                if isinstance(item["value"], (int, float))
+                and not isinstance(item["value"], bool)
+                and math.isfinite(item["value"])
+            ),
         }
 
     results["summary"]["manual_review_needed"] = len(results["unknown"]) > 0 or any(

@@ -5,7 +5,7 @@
 <h1>NL Tax Agent Skills</h1>
 
 <p>
-  <strong>Turn scattered Dutch tax paperwork into a Belastingdienst-ready workpack.</strong>
+  <strong>Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack for manual Mijn Belastingdienst entry.</strong>
   <br/>
   <sub>An Agent Skills plugin for Claude Code, Cowork, and Codex — annual 2025 &amp; voorlopige aanslag 2026.</sub>
 </p>
@@ -51,7 +51,7 @@ Filing Dutch income tax is a yearly slog of chasing documents, decoding **Mijn B
 
 Off-the-shelf tax software wraps the official forms in its own UI. This plugin keeps you on Mijn Belastingdienst, but handles the gathering, classifying, and field-mapping up to the point of manual entry.
 
-No autonomous filing. No live web fetches at runtime — all tax rules ship as a bundled, source-cited knowledge pack.
+No autonomous filing. By design the skills don't fetch live web pages at runtime — all tax rules ship as a bundled, source-cited knowledge pack. This is a convention of the skills, not a sandbox: the host model may still hold web tools, so deny them via host permission/deny rules if you need to enforce it.
 
 ---
 
@@ -66,7 +66,7 @@ No autonomous filing. No live web fetches at runtime — all tax rules ship as a
 </tr>
 <tr>
 <td align="center">🔎</td>
-<td><strong>2 &nbsp;The assistant reads and sorts them.</strong><br/>It works out what each document is and which part of your tax return it belongs to, using the official 2025 / 2026 Dutch tax rules — every rule backed by a cited source.</td>
+<td><strong>2 &nbsp;The assistant reads and sorts them.</strong><br/>It works out what each document is and which part of your tax return it belongs to, using the official 2025 / 2026 Dutch tax rules — each rule note cites a registered source.</td>
 </tr>
 <tr>
 <td align="center">📋</td>
@@ -74,7 +74,7 @@ No autonomous filing. No live web fetches at runtime — all tax rules ship as a
 </tr>
 <tr>
 <td align="center">✅</td>
-<td><strong>4 &nbsp;You type the numbers in yourself.</strong><br/>A final field map tells you exactly which number goes into which field on Mijn Belastingdienst. You stay in control — the plugin never logs in, never files, and never touches DigiD.</td>
+<td><strong>4 &nbsp;You type the numbers in yourself.</strong><br/>A final field map maps each reviewed amount to its Mijn Belastingdienst field, for you to enter and verify. You stay in control — the plugin never logs in, never files, and never touches DigiD.</td>
 </tr>
 </table>
 
@@ -166,7 +166,7 @@ plugins/nl-tax-agent-skills/.codex-plugin/plugin.json  # required plugin manifes
 
 The repo-scoped marketplace points Codex at the nested plugin package under `plugins/nl-tax-agent-skills/`. Codex users invoke the bundled skills after discovery; the `commands/` directory contains Claude Code slash-command wrappers and is not documented here as a Codex command surface. Only `.agents/plugins/marketplace.json` is tracked under `.agents/`; other assistant state in `.agents/` remains ignored.
 
-Per-skill **Codex invocation policy** lives in an `agents/openai.yaml` file inside the relevant skill folders. Codex reads only `name`/`description` from `SKILL.md` and ignores the Claude `disable-model-invocation`, `user-invocable`, and `allowed-tools` frontmatter keys, so each manual-only skill (`nl-tax-submit-companion`, `nl-tax-source-refresh`) and each background helper (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-partner-deductions`) carries `policy.allow_implicit_invocation: false` there. Explicit `$skill-name` invocation still works.
+Per-skill **Codex invocation policy** lives in an `agents/openai.yaml` file inside the relevant skill folders. Codex indexes `name`/`description`/path up front and loads the full `SKILL.md` when it selects a skill, but it does not honor the Claude `disable-model-invocation`, `user-invocable`, and `allowed-tools` frontmatter keys for invocation or tool control — so each manual-only skill (`nl-tax-submit-companion`, `nl-tax-source-refresh`) and each background helper (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-partner-deductions`) carries `policy.allow_implicit_invocation: false` there. Explicit `$skill-name` invocation still works.
 
 <details>
 <summary><strong>ZIP fallback</strong> — if the GitHub-marketplace path is unavailable in your host build</summary>
@@ -198,14 +198,14 @@ Upload through the same **Browse plugins** modal.
 
 <br/>
 
-Both plugin manifests pin a fixed `version` (currently `0.1.1`):
+Both plugin manifests pin a fixed `version` (currently `0.1.2`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.1"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.1"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.2"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.2"
 ```
 
-Bump **both** manifests for every release so Claude Code, Cowork, and Codex installs pin to semver instead of treating each commit as a new version.
+Bump **both** manifests for every release so Claude Code, Cowork, and Codex installs pin to semver instead of treating each commit as a new version. Each release bumps both manifests **and** adds a `CHANGELOG.md` entry in the same commit.
 
 Only the two marketplace files omit a version:
 
@@ -217,6 +217,16 @@ Only the two marketplace files omit a version:
 For those GitHub-synced marketplaces, Claude can fall back to the git commit SHA when no marketplace-level version is present, so a pushed commit is still picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
 
 </details>
+
+### Host compatibility
+
+| Host | Discovery path | Implicit-invocation control | Status |
+|---|---|---|---|
+| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | `disable-model-invocation` / `user-invocable` frontmatter | Supported |
+| Cowork | Same `.claude-plugin/marketplace.json` (personal or org marketplace) | Same Claude frontmatter | Supported |
+| Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` (`policy.allow_implicit_invocation: false`) | Compatible — see note |
+
+Codex implicit-invocation control is enforced structurally via each non-user-invocable skill's `agents/openai.yaml` and is statically validated by `validate_invocation_policy.py`, but it has not been integration-tested in a live Codex host. Verify manually in your target Codex build before release.
 
 ---
 
@@ -258,7 +268,7 @@ For those GitHub-synced marketplaces, Claude can fall back to the git commit SHA
 
 Skills compose without hidden state: each consumes files written by upstream skills and writes its own outputs to a scoped path. Background helpers (`box1-home`, `box2`, `box3`, `partner-deductions`) write **only** to `workspace/shared/` — they never touch annual or provisional output paths.
 
-Every value in a workpack must be traceable to (a) evidence, (b) profile data, (c) a calculation that cites a `source_id`, or (d) an explicit assumption logged in `workspace/shared/assumptions.md`. The annual workpack embeds its review questions in its **Human review checklist** section; a standalone `review-questions.md` exists only in the provisional review subflow.
+The skills are instructed to trace every value in a workpack to (a) evidence, (b) profile data, (c) a calculation that cites a `source_id`, or (d) an explicit assumption logged in `workspace/shared/assumptions.md` — review the workpack to confirm this before entry. The annual workpack embeds its review questions in its **Human review checklist** section; a standalone `review-questions.md` exists only in the provisional review subflow.
 
 ---
 
@@ -333,7 +343,7 @@ skills/nl-tax-annual-return/
   scripts/             # optional Python helpers (validators, renderers)
 ```
 
-`SKILL.md` opens with frontmatter that the host parses to register the skill and scope its tool permissions:
+`SKILL.md` opens with frontmatter that the host parses to register the skill and pre-approve a tool allowlist (so listed tools run without a per-call prompt on hosts that honor it):
 
 ```yaml
 ---
@@ -347,6 +357,8 @@ allowed-tools:
   - Bash(python3 *.py:*)
 ---
 ```
+
+`allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses prompts for the listed tools but does not deny others, and Codex ignores it. Real capability boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks, and OS-level sandboxing.
 
 The body then specifies the *Do / Never* contract that constrains the skill, for example:
 
@@ -450,6 +462,8 @@ Every rule note in `knowledge/` must cite a `source_id` from the register. An en
 
 Only `nl-tax-source-refresh` is allowed to maintain source snapshots. Active supported pairs are **annual return 2025** and **provisional assessment 2026**; annual and provisional **2027 are blocked** in `supported-workflows.yaml`.
 
+**Tax-content review owner.** Tax-content correctness (rates, thresholds, rules, and their cited sources, registered under `owner: "tax-content"`) is the responsibility of the tax-content owner. Report inaccuracies or suspected stale sources via GitHub Issues, or for sensitive reports follow `SECURITY.md`.
+
 ---
 
 ## Privacy boundary
@@ -465,11 +479,21 @@ Be clear about what that does and does not mean: the skills run **inside an LLM 
 > [!IMPORTANT]
 > **DigiD credentials are never collected, stored, displayed, or passed into model context.** Uploaded documents are treated as untrusted content — any instructions inside them are ignored.
 
-The plugin itself adds no further data movement: it does not call live web services at runtime, and all tax rules come from the bundled knowledge pack. Source freshness is checked manually by the `nl-tax-source-refresh` developer skill, not at user runtime.
+Prompt-injection handling is **model-enforced, not sandboxed**: the skills instruct the model to ignore instructions embedded in evidence, but that is guidance to the model, not a hard boundary. For hard blocks, configure host deny-rules and hooks (and OS-level sandboxing) rather than relying on the model's adherence alone.
+
+The plugin itself adds no further data movement: by design the skills don't call live web services at runtime, and all tax rules come from the bundled knowledge pack. This is a design convention of the skills, not a host sandbox — the host model may still hold web or network tools, so deny them via host permission/deny rules if you need to enforce it. Source freshness is checked manually by the `nl-tax-source-refresh` developer skill, not at user runtime.
+
+### Data retention & cleanup
+
+The plugin writes plaintext files containing sensitive figures (income amounts, asset values, partner data, and similar) under `workspace/`, `uploads/`, and `evidence/`. It **never deletes them** — they persist until you remove them. After you file, delete the contents of those folders yourself.
+
+Git-ignore is not deletion and not isolation: ignored files still sit on disk in plaintext. If the repo lives in iCloud Drive, Dropbox, OneDrive, or any backup target, ignored files may be copied off-device by that sync or backup. Keep the working folder outside synced or backed-up locations if that matters to you.
 
 ---
 
 ## Validation
+
+Requires Python 3.10+ and PyYAML (`pip install -r requirements.txt`).
 
 ```bash
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
@@ -591,7 +615,7 @@ There are no standalone `.claude/skills` or `.agents/skills` trees in the cleane
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "skills": "./skills/",
   "interface": {
     "displayName": "NL Tax Agent Skills",

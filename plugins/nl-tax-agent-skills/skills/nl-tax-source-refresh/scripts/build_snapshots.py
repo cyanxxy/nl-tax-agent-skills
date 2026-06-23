@@ -12,7 +12,6 @@ For each source entry with a snapshot_path:
 """
 
 import hashlib
-import json
 import os
 import sys
 from datetime import datetime, timezone
@@ -49,12 +48,20 @@ def load_existing_metadata(meta_path):
 
 
 def write_metadata(meta_path, metadata):
-    """Write metadata, preserving nested per-source entries."""
+    """Write metadata as YAML, preserving nested per-source entries.
+
+    PyYAML is hard-required (no JSON fallback) so the committed
+    _snapshot-metadata.yaml is never silently rewritten as JSON depending on the
+    environment in which this developer script happens to run.
+    """
     try:
         import yaml
-        rendered = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=True)
     except ImportError:
-        rendered = json.dumps(metadata, indent=2, ensure_ascii=False)
+        raise SystemExit(
+            "PyYAML is required to build snapshot metadata "
+            "(python3 -m pip install pyyaml)."
+        )
+    rendered = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=True)
     with open(meta_path, "w", encoding="utf-8") as f:
         f.write(rendered)
         if not rendered.endswith("\n"):

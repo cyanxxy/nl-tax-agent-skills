@@ -5,7 +5,7 @@ user-invocable: false
 allowed-tools:
   - Read
   - Grep
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box2/scripts/*.py:*)
 ---
 
 # NL Tax Box 2
@@ -25,7 +25,9 @@ Resolve every `workspace/...` path against `workspace_root` from
 `../_shared/`. If a bundled path does not resolve from your working directory,
 run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from
 `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box2/` (Claude Code and Cowork set
-`CLAUDE_PLUGIN_ROOT`; `CLAUDE_SKILL_DIR` is not host-provided).
+`CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host
+portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own
+subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
 
 - `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/security/digid.md`
@@ -38,6 +40,8 @@ Use the bundled scripts when structured JSON inputs are available:
 - `scripts/calculate_box2_tax.py`
 - `scripts/summarize_box2_inputs.py`
 
+Only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (for this skill, the three scripts above). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+
 ## Do
 
 - Prepare standard full-year Dutch resident Box 2 inputs for manual Mijn Belastingdienst entry.
@@ -45,7 +49,7 @@ Use the bundled scripts when structured JSON inputs are available:
 - Distinguish regular benefits, such as dividends, from disposal benefits, such as share-sale gains.
 - Calculate disposal benefit as the official net disposal or transfer price minus acquisition price. If only gross proceeds are available, subtract disposal costs once to derive the net transfer price first.
 - Include Dutch dividend withholding tax as a same-year credit in the indicative calculation.
-- For full-year fiscal partners, support allocation splits that total 100%.
+- For full-year fiscal partners, support allocation splits that total 100%. The `calculate_box2_tax.py` calculator only computes a partner allocation when the payload sets `full_year_fiscal_partner: true`; otherwise it skips the allocation, records `partner_allocation_skipped`, and raises a `partner_status_unconfirmed` manual-review flag. Do not present a partner split until full-year partnership is confirmed.
 - Flag losses, loss setoff, and excessive borrowing from an own BV for manual review.
 - Label all `provisional_2026` amounts as estimates or baseline-derived.
 - Keep outputs suitable for preparation workpacks and review questions.
@@ -68,4 +72,4 @@ This helper writes only under `workspace/shared/`. It must never write to:
 - `workspace/annual/**`
 - `workspace/provisional/**`
 
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which reads only the SKILL.md body), treat this as a hard instruction, not just a tool restriction.
+Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.

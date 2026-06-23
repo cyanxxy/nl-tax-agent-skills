@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Parse plugin and marketplace manifests
+        run: |
+          python -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json > /dev/null
+          python -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json > /dev/null
+          python -m json.tool .claude-plugin/marketplace.json > /dev/null
+          python -m json.tool .agents/plugins/marketplace.json > /dev/null
+          test -d plugins/nl-tax-agent-skills/commands
+
+      - name: Validate source register
+        run: |
+          python plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
+            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+      - name: Validate knowledge pack
+        run: |
+          python plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py \
+            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+      - name: Validate supported workflows
+        run: |
+          python plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_supported_workflows.py \
+            plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
+            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+      - name: Validate cross-host invocation policy
+        run: |
+          python plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_invocation_policy.py \
+            plugins/nl-tax-agent-skills/skills
+
+      - name: Compile-check every skill script
+        run: |
+          python -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
+
+      - name: Run unit tests from repository root
+        run: |
+          python -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
+
+      - name: Run unit tests from plugin directory (cwd-regression guard)
+        working-directory: plugins/nl-tax-agent-skills
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Verify offline eval dataset
+        run: |
+          python evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset

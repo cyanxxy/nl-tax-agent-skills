@@ -6,7 +6,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py:*)
 ---
 
 # NL Tax Annual Return
@@ -17,7 +17,9 @@ This skill is conversational. Do not assume the user has pre-staged a complete f
 
 ## Path resolution
 
-Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-annual-return/` (`CLAUDE_PLUGIN_ROOT` is set by Claude Code and Cowork; if unset, resolve relative to your working directory — `CLAUDE_SKILL_DIR` is not host-provided); if Read fails because the path lives under a runtime mount (for example `.remote-plugins/`), fall back to `cat` via Bash on the absolute path. Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree.
+Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this skill's own directory; `_shared/` is `../_shared/`. If a path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-annual-return/` (`CLAUDE_PLUGIN_ROOT` is set by Claude Code and Cowork; if unset, resolve relative to your working directory). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`. If Read fails because the path lives under a runtime mount (for example `.remote-plugins/`), fall back to `cat` via Bash on the absolute path. Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree.
+
+Safety: only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 ## Read first (mandatory every turn)
 
@@ -152,7 +154,9 @@ When the gate is satisfied:
 - Assemble `workspace/annual/2025/notes/*.yaml` into `templates/annual-return-pack.md`.
 - Preserve source provenance for every numeric line using the `Src` codes from the template.
 - Run the self-check in `reference/annual-output-contract.md` § "Workpack self-check"; report every check yes/no in your end-of-turn message. If any structural, content, cross-contamination, or safety check fails, do not write the file — fix the gap or ask the user, and re-run.
-- Write `workspace/annual/2025/field-map.yaml`.
+- Set the workpack's top-of-file STATUS banner deterministically from `session-progress.yaml`: if any annual subsection is `deferred` or `unknown`, the banner reads `DRAFT`; otherwise it reads `COMPLETE DRAFT FOR REVIEW`. In both cases the banner always says "not for filing". Treat a mismatch between the banner and `session-progress.yaml` as a blocking self-check item.
+- Write `workspace/annual/2025/field-map.yaml`. Optionally record the same readiness state as a **top-level** `readiness` key in `field-map.yaml` (`draft` or `review_ready` — the values `validate_field_map.py` accepts).
+- After writing `field-map.yaml`, run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/annual-field-map.md`) and use `field_id`s from that reference.
 - If `mode: test`, prepend a `# TEST RUN — NOT FOR FILING` banner to the workpack, suffix the filename as `return-pack.test.md`, and repeat the TEST RUN marker in every section header.
 
 ## Output files

@@ -4,10 +4,12 @@
 Usage:
     python3 validate_invocation_policy.py <path-to-skills-dir>
 
-On Codex, the Claude frontmatter keys `disable-model-invocation: true` and
-`user-invocable: false` are ignored, as is `allowed-tools`. The ONLY thing that
-keeps a background helper or manual-only skill from being implicitly invoked on
-Codex is its `agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
+On Codex, the full SKILL.md body is still LOADED on selection (progressive
+disclosure works), but the Claude frontmatter keys `disable-model-invocation:
+true`, `user-invocable: false`, and `allowed-tools` are NOT honored for
+invocation control. The ONLY thing that keeps a background helper or manual-only
+skill from being implicitly invoked on Codex is its `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false`.
 
 This validator fails closed: for every skill whose SKILL.md frontmatter marks it
 non-implicitly-invocable (`disable-model-invocation: true` or

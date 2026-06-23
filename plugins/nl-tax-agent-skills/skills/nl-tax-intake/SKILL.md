@@ -27,7 +27,9 @@ If a path does not resolve from your working directory, run
 `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash to get the plugin root and resolve from
 `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-intake/` (Claude Code and Cowork set
 `CLAUDE_PLUGIN_ROOT`; if it is unset, resolve relative to your working
-directory). `CLAUDE_SKILL_DIR` is not a host-provided variable — do not rely on it.
+directory). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host portability; Claude
+Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own subdirectory) but Codex
+does not, so do not depend on `CLAUDE_SKILL_DIR`.
 
 Before responding to the user, read:
 

@@ -210,6 +210,7 @@ class ValidatorSmokeTests(unittest.TestCase):
             heffingsvrij=0,
             has_partner=True,
             allocation_pct=50,
+            partner_full_year_confirmed=True,
         )
         self.assertEqual(result["aandeel_in_rendementsgrondslag"], 32.65)
         self.assertEqual(result["box3_inkomen"], 5_135)
@@ -243,6 +244,7 @@ class ValidatorSmokeTests(unittest.TestCase):
             heffingsvrij=0,
             has_partner=True,
             allocation_pct=50,
+            partner_full_year_confirmed=True,
         )
         self.assertEqual(result["aandeel_in_rendementsgrondslag"], 32.154)
         self.assertEqual(result["box3_inkomen"], 5_120)
@@ -403,6 +405,231 @@ class ValidatorSmokeTests(unittest.TestCase):
             ),
             errors,
         )
+
+
+class Box3InputHardeningTests(unittest.TestCase):
+    def _compare_module(self):
+        return load_module(
+            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "compare_box3_annual_2025_hardening",
+        )
+
+    def _provisional_module(self):
+        return load_module(
+            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "summarize_box3_provisional_2026_hardening",
+        )
+
+    def test_annual_negative_amount_raises(self):
+        module = self._compare_module()
+        with self.assertRaises(ValueError):
+            module.calculate_fictitious_box3(
+                banktegoeden=-1,
+                overige=275_000,
+                schulden=100_000,
+                heffingsvrij=0,
+                has_partner=False,
+            )
+
+    def test_annual_nan_and_inf_amount_raise(self):
+        module = self._compare_module()
+        for bad in (float("nan"), float("inf")):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    module.calculate_fictitious_box3(
+                        banktegoeden=bad,
+                        overige=275_000,
+                        schulden=100_000,
+                        heffingsvrij=0,
+                        has_partner=False,
+                    )
+
+    def test_provisional_negative_amount_raises(self):
+        module = self._provisional_module()
+        with self.assertRaises(ValueError):
+            module.calculate_provisional_fictitious(
+                banktegoeden=150_000,
+                overige=-5,
+                schulden=100_000,
+                heffingsvrij=0,
+                has_partner=False,
+            )
+
+    def test_provisional_nan_and_inf_amount_raise(self):
+        module = self._provisional_module()
+        for bad in (float("nan"), float("inf")):
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    module.calculate_provisional_fictitious(
+                        banktegoeden=150_000,
+                        overige=275_000,
+                        schulden=bad,
+                        heffingsvrij=0,
+                        has_partner=False,
+                    )
+
+    def test_annual_allocation_pct_out_of_range_raises(self):
+        module = self._compare_module()
+        for pct in (-5, 150):
+            with self.subTest(pct=pct):
+                with self.assertRaises(ValueError):
+                    module.calculate_fictitious_box3(
+                        banktegoeden=150_000,
+                        overige=275_000,
+                        schulden=100_000,
+                        heffingsvrij=0,
+                        has_partner=True,
+                        allocation_pct=pct,
+                        partner_full_year_confirmed=True,
+                    )
+
+    def test_provisional_allocation_pct_out_of_range_raises(self):
+        module = self._provisional_module()
+        for pct in (-5, 150):
+            with self.subTest(pct=pct):
+                with self.assertRaises(ValueError):
+                    module.calculate_provisional_fictitious(
+                        banktegoeden=150_000,
+                        overige=275_000,
+                        schulden=100_000,
+                        heffingsvrij=0,
+                        has_partner=True,
+                        allocation_pct=pct,
+                        partner_full_year_confirmed=True,
+                    )
+
+    def test_annual_partner_without_full_year_confirmation_raises(self):
+        module = self._compare_module()
+        with self.assertRaises(ValueError):
+            module.calculate_fictitious_box3(
+                banktegoeden=150_000,
+                overige=275_000,
+                schulden=100_000,
+                heffingsvrij=0,
+                has_partner=True,
+                allocation_pct=50,
+            )
+
+    def test_annual_negative_allocated_actual_return_floors_to_zero(self):
+        module = self._compare_module()
+        result = module.compare_tax_methods(
+            {"box3_belasting": 1_000},
+            -25_000,
+        )
+        self.assertEqual(result["actual_return_for_tax"], 0)
+        self.assertEqual(result["tax_at_actual"], 0)
+
+
+class ClassifierHardeningTests(unittest.TestCase):
+    def _module(self):
+        return load_module(
+            "skills/nl-tax-box3/scripts/classify_box3_assets.py",
+            "classify_box3_assets_hardening",
+        )
+
+    def test_type_hint_contradicting_name_is_flagged(self):
+        module = self._module()
+        category, confidence, flags = module.classify_asset(
+            {
+                "name": "loan receivable from friend",
+                "type_hint": "loan",
+                "value": 5_000,
+                "owner": "taxpayer",
+            }
+        )
+        self.assertTrue(any("MANUAL_REVIEW" in f for f in flags), flags)
+        self.assertLess(confidence, 0.95)
+
+    def test_amount_key_instead_of_value_is_flagged(self):
+        module = self._module()
+        flags = module.validate_asset(
+            {"name": "Savings", "amount": 5_000, "owner": "taxpayer"}
+        )
+        self.assertTrue(
+            any("MANUAL_REVIEW" in f and "amount" in f for f in flags), flags
+        )
+
+    def test_nan_value_is_flagged(self):
+        module = self._module()
+        flags = module.validate_asset(
+            {"name": "Savings", "value": float("nan"), "owner": "taxpayer"}
+        )
+        self.assertTrue(any("MANUAL_REVIEW" in f for f in flags), flags)
+
+    def test_negative_value_is_flagged(self):
+        module = self._module()
+        flags = module.validate_asset(
+            {"name": "Savings", "value": -100, "owner": "taxpayer"}
+        )
+        self.assertTrue(
+            any("MANUAL_REVIEW" in f and "negative" in f for f in flags), flags
+        )
+
+    def test_spaar_substring_no_longer_false_matches(self):
+        module = self._module()
+        # "Spaarvarken" (piggy bank, a collectible) must not match "spaar".
+        score = module.match_keywords("Spaarvarken", ["spaar"])
+        self.assertEqual(score, 0)
+
+
+class AllocationHardeningTests(unittest.TestCase):
+    def _module(self):
+        return load_module(
+            "skills/nl-tax-partner-deductions/scripts/validate_allocation.py",
+            "validate_allocation_hardening",
+        )
+
+    def test_string_total_does_not_crash_and_reports_error(self):
+        module = self._module()
+        errors, _ = module.validate_allocations(
+            [
+                {
+                    "item": "Box 3 banktegoeden",
+                    "total": "lots",
+                    "partner1_share": 100,
+                    "partner2_share": 0,
+                }
+            ]
+        )
+        self.assertTrue(any("not a number" in e for e in errors), errors)
+
+    def test_nan_and_inf_are_rejected(self):
+        module = self._module()
+        for bad in (float("nan"), float("inf")):
+            with self.subTest(bad=bad):
+                errors, _ = module.validate_allocations(
+                    [
+                        {
+                            "item": "Box 3 banktegoeden",
+                            "total": bad,
+                            "partner1_share": 0,
+                            "partner2_share": 0,
+                        }
+                    ]
+                )
+                self.assertTrue(
+                    any("not a finite number" in e for e in errors), errors
+                )
+
+    def test_duplicate_item_is_flagged(self):
+        module = self._module()
+        _, warnings = module.validate_allocations(
+            [
+                {"item": "Box 3 banktegoeden", "total": 100, "partner1_share": 100, "partner2_share": 0},
+                {"item": "Box 3 banktegoeden", "total": 200, "partner1_share": 200, "partner2_share": 0},
+            ]
+        )
+        self.assertTrue(any("duplicate" in w for w in warnings), warnings)
+
+    def test_partner2_share_without_partner_is_rejected(self):
+        module = self._module()
+        errors, _ = module.validate_allocations(
+            [
+                {"item": "Box 3 banktegoeden", "total": 100, "partner1_share": 60, "partner2_share": 40},
+            ],
+            has_fiscal_partner=False,
+        )
+        self.assertTrue(any("no fiscal partner asserted" in e for e in errors), errors)
 
 
 if __name__ == "__main__":

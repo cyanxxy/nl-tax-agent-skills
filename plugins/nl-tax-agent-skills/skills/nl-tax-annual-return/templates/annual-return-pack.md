@@ -4,6 +4,8 @@
 
 # Annual Income-Tax Return Workpack -- 2025
 
+> **STATUS: {DRAFT — N deferred section(s) | COMPLETE DRAFT FOR REVIEW} — not for filing.** Replace `N` with the number of sections still deferred or carrying `?` rows; use "COMPLETE DRAFT FOR REVIEW" only when no section is deferred. This workpack is never submission advice; filing always happens manually via Mijn Belastingdienst.
+
 > **Provenance convention.** Every numeric line in this workpack records its source in a `Src` column or inline `Src:` note.
 > Source codes:
 > - `F:<evidence_id>` -- value from a file in the evidence index
@@ -122,7 +124,7 @@ Filing status: on time. No late-filing exposure.
 - Recommended next steps:
   - File the prepared return through Mijn Belastingdienst as soon as possible.
   - Expect a verzuimboete on the aanslag; pay promptly to avoid further follow-up.
-  - Pay the aanslag in full as soon as it is issued to stop belastingrente accrual.
+  - Pay the aanslag by its due date (betaaltermijn) to avoid invorderingsrente. Belastingrente is already fixed on the aanslag and is not reduced by paying faster.
 - The Belastingdienst sets the actual boete and rente on the aanslag. This workpack does not compute final figures.
 
 ## Income notes

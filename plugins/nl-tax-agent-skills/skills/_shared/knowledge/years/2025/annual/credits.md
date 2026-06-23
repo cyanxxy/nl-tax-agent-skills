@@ -1,15 +1,15 @@
 # Rule note: Tax credits (heffingskortingen) for 2025
 
-source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_iack_2025, bd_heffingskortingen_aow_2025_2026, bd_jonggehandicaptenkorting_2025
+source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_iack_2025, bd_heffingskortingen_aow_2025_2026, bd_jonggehandicaptenkorting_2025, bd_heffingskortingen_how_2025, bd_arbeidsinkomen_definition_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-06-23"
 review_status: reviewed
 
 ## Rule
 
-Tax credits (heffingskortingen) reduce the amount of income tax payable. They are subtracted from the gross tax calculated on box 1 income. The amounts below are for tax year 2025 and apply to non-AOW-age taxpayers (born after 1957) unless otherwise stated.
+Tax credits (heffingskortingen) reduce the amount payable. They are subtracted from the **gecombineerde heffing** — the combined total of inkomstenbelasting plus premie volksverzekeringen (AOW/Anw/Wlz) — not from box-1 income tax alone. The amounts below are for tax year 2025 and apply to non-AOW-age taxpayers (born after 1957) unless otherwise stated.
 
 These are reference notes for workpack preparation -- not final tax advice.
 
@@ -47,7 +47,7 @@ For taxpayers who have the AOW age for the whole year, use the AOW table above. 
 
 ## Arbeidskorting (labour tax credit)
 
-The arbeidskorting applies to taxpayers with income from employment or self-employment (arbeidsinkomen). It does NOT apply to pension income, social benefits (uitkeringen), or alimentatie.
+The arbeidskorting applies to taxpayers with income from work (arbeidsinkomen): employment, self-employment, and certain work-related uitkeringen. Whether a uitkering counts depends on the situation — see "What qualifies as arbeidsinkomen" below. It does NOT apply to pension income, AOW, WW, WIA/WAO, or alimentatie received. A blanket "no uitkering counts" is wrong: for example a Ziektewet-uitkering can count while the dienstbetrekking still exists.
 
 For taxpayers who do not reach AOW age in 2025:
 
@@ -84,11 +84,16 @@ The arbeidskorting has a multi-step calculation:
 - Gross salary from employment (loon)
 - Profit from enterprise (winst uit onderneming) before ondernemersaftrek
 - Income from other activities (resultaat uit overige werkzaamheden)
+- A **Ziektewet-uitkering** IF the dienstbetrekking still exists at the time of the uitkering
+- A **vrijwillige Ziektewetuitkering** always counts
+- **WAZO** (pregnancy/maternity/calamity leave benefit) while still employed
 
 The following do NOT qualify:
 - Pension income (pensioen)
 - AOW
-- WW, WIA, WAO, or other social benefits
+- WW
+- WIA, WAO
+- A Ziektewet-uitkering from 2020 onward WITHOUT a dienstbetrekking
 - Alimentatie received
 
 ### AOW-age adjustment
@@ -150,18 +155,18 @@ source: bd_jonggehandicaptenkorting_2025
 
 ## Applying credits in the workpack
 
-1. Calculate gross box 1 tax using the rates from box1-rates.md
+1. Calculate the gross gecombineerde heffing (IB + premie volksverzekeringen) using the rates from box1-rates.md
 2. Determine the algemene heffingskorting based on verzamelinkomen, not only box 1 income
 3. Determine the arbeidskorting based on arbeidsinkomen only
 4. Determine any other applicable credits
-5. Net tax = gross tax - total credits (minimum EUR 0; credits cannot create a refund on their own beyond the gross tax amount, but combined with wage tax withholding they can result in a refund)
+5. Net amount due = gross gecombineerde heffing (IB + premie volksverzekeringen) - total credits (minimum EUR 0; credits cannot create a refund on their own beyond the gross gecombineerde heffing, but combined with wage tax withholding they can result in a refund)
 
 ## Fiscal partner allocation
 
 - The algemene heffingskorting is personal and cannot be allocated
 - The arbeidskorting is personal and based on individual arbeidsinkomen
 - Some credits (e.g., IACK) have specific partner allocation rules
-- For the least-earning partner, payout of unused algemene heffingskorting is restricted. In 2025, taxpayers born after 1962 do not receive a payout. Taxpayers born before 1963 may receive up to EUR 3,068, depending on their own income and the partner's tax due. Flag this as a manual-review item rather than assuming payout applies.
+- For the lesser-earning partner, payout of unused algemene heffingskorting requires BOTH: (a) the partner's algemene heffingskorting exceeds their own income tax due (so there is an unused portion), AND (b) the partner was born before 1963. In 2025, taxpayers born after 1962 receive no payout. Taxpayers born before 1963 may receive up to EUR 3,068 (the 2025 maximum), depending on their own income and the partner's tax due. Flag this as a manual-review item rather than assuming payout applies.
 
 ## Notes
 

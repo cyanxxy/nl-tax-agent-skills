@@ -68,6 +68,9 @@ active_workflows:
       - bd_verzuimboete
       - bd_belastingrente_overview
       - bd_belastingrente_ib
+      - bd_invorderingsrente
+      - bd_heffingskortingen_how_2025
+      - bd_arbeidsinkomen_definition_2025
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
 

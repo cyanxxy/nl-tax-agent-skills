@@ -7,15 +7,16 @@ Usage:
 Checks:
     - All required fields present for each entry
     - No duplicate IDs
-    - All snapshot_paths point to existing files
-    - All URLs are on the allowlist
+    - All snapshot_paths point to existing files (error if missing)
+    - All URLs use https, carry no embedded credentials, and are on the allowlist
     - No entry has last_checked in the future
-    - mandatory_for references valid skill names
+    - mandatory_for references valid skill names (error if unknown)
 """
 
 import os
 import sys
 from datetime import date
+from urllib.parse import urlparse
 
 REQUIRED_FIELDS = {
     "id", "title", "url", "source_type", "snapshot_path",
@@ -66,9 +67,17 @@ def load_yaml_or_json(path):
 
 
 def extract_domain(url):
-    """Extract domain from URL without urllib."""
-    url = url.replace("https://", "").replace("http://", "")
-    return url.split("/")[0].split(":")[0]
+    """Parse a URL into (scheme, hostname-lowercased, username).
+
+    Uses urllib.parse so userinfo (user:pass@host) is split out rather than
+    being treated as part of the host, and the scheme is exposed so callers can
+    require https. Returns lowercased hostname (or "" if absent).
+    """
+    parsed = urlparse(url)
+    scheme = (parsed.scheme or "").lower()
+    hostname = (parsed.hostname or "").lower()
+    username = parsed.username
+    return scheme, hostname, username
 
 
 def find_content_root(register_path):
@@ -134,14 +143,18 @@ def validate(register_path):
         if snapshot_path:
             abs_path = os.path.join(project_root, snapshot_path)
             if not os.path.isfile(abs_path):
-                warnings.append(f"{sid}: snapshot file not found: {snapshot_path}")
+                errors.append(f"{sid}: snapshot file not found: {snapshot_path}")
 
-        # URL allowlist
+        # URL: require https, reject embedded credentials, enforce allowlist
         url = source.get("url", "")
         if url:
-            domain = extract_domain(url)
-            if domain not in ALLOWED_DOMAINS:
-                errors.append(f"{sid}: URL domain not on allowlist: {domain}")
+            scheme, hostname, username = extract_domain(url)
+            if scheme != "https":
+                errors.append(f"{sid}: URL scheme must be https, got: {scheme or '(none)'}")
+            if username:
+                errors.append(f"{sid}: URL must not contain embedded credentials")
+            if hostname not in ALLOWED_DOMAINS:
+                errors.append(f"{sid}: URL domain not on allowlist: {hostname}")
 
         # Future last_checked (parse to a date so an unquoted YAML date does not crash)
         last_checked = source.get("last_checked", "")
@@ -159,7 +172,7 @@ def validate(register_path):
         if isinstance(mandatory_for, list):
             for skill in mandatory_for:
                 if skill not in VALID_SKILL_NAMES:
-                    warnings.append(f"{sid}: unknown skill in mandatory_for: {skill}")
+                    errors.append(f"{sid}: unknown skill in mandatory_for: {skill}")
 
     return errors, warnings
 

@@ -26,6 +26,21 @@ Output: JSON with the official Belastingdienst step fields:
 import argparse
 from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
 import json
+import math
+
+
+def _require_finite_non_negative(name, value):
+    """Reject NaN/Inf and negative amounts before any arithmetic runs."""
+    if not math.isfinite(value):
+        raise ValueError(f"{name} must be a finite number")
+    if value < 0:
+        raise ValueError(f"{name} must not be negative")
+
+
+def _require_finite(name, value):
+    """Reject NaN/Inf but allow negative values (e.g. actual_return)."""
+    if not math.isfinite(value):
+        raise ValueError(f"{name} must be a finite number")
 
 
 # 2025 annual box 3 fictitious return percentages and thresholds.
@@ -89,9 +104,20 @@ def calculate_fictitious_box3(
     heffingsvrij,
     has_partner,
     allocation_pct=100.0,
+    partner_full_year_confirmed=False,
 ):
     """Calculate fictitious box 3 income using the official step model."""
+    _require_finite_non_negative("banktegoeden", banktegoeden)
+    _require_finite_non_negative("overige", overige)
+    _require_finite_non_negative("schulden", schulden)
+    _require_finite_non_negative("heffingsvrij", heffingsvrij)
     validate_allocation_pct(allocation_pct)
+    if has_partner and not partner_full_year_confirmed:
+        raise ValueError(
+            "has_partner requires --partner-full-year-confirmed "
+            "(full-year / elected-full-year fiscal partnership) before doubling "
+            "the allowance and debt threshold."
+        )
     drempel = SCHULDEN_DREMPEL_PER_PERSON * (2 if has_partner else 1)
     aftrekbare_schulden = max(0.0, schulden - drempel)
     total_assets = banktegoeden + overige
@@ -139,6 +165,13 @@ def calculate_fictitious_box3(
     }
     if has_partner:
         result["partner_allocation_pct"] = allocation_pct
+        result["partner_eligibility_note"] = (
+            "Doubling of the heffingsvrij vermogen and the schulden drempel "
+            "assumes a confirmed full-year (or elected full-year) fiscal "
+            "partnership. If the partnership did not last the full year and "
+            "full-year partnership was not elected, the doubled allowance and "
+            "threshold do not apply."
+        )
     return result
 
 
@@ -161,6 +194,12 @@ def build_parser():
                         help="Total actual return in EUR after applying only permitted components")
     parser.add_argument("--has_partner", action="store_true",
                         help="Whether taxpayer has a fiscal partner")
+    parser.add_argument("--partner-full-year-confirmed", action="store_true",
+                        help=(
+                            "Confirm a full-year (or elected full-year) fiscal "
+                            "partnership. Required with --has_partner before the "
+                            "allowance and debt threshold are doubled."
+                        ))
     parser.add_argument("--allocation-pct", type=float, default=100.0,
                         help=(
                             "For fiscal partners: taxpayer's share of the "
@@ -220,6 +259,7 @@ def build_output(args, fictitious, actual_return_allocated):
 
 
 def run(args):
+    _require_finite("actual_return", args.actual_return)
     fictitious = calculate_fictitious_box3(
         banktegoeden=args.banktegoeden,
         overige=args.overige,
@@ -227,6 +267,7 @@ def run(args):
         heffingsvrij=args.heffingsvrij,
         has_partner=args.has_partner,
         allocation_pct=args.allocation_pct,
+        partner_full_year_confirmed=args.partner_full_year_confirmed,
     )
     actual_return_allocated = allocated_amount(
         args.actual_return,

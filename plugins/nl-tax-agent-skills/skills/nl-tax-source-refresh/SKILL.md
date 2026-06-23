@@ -7,7 +7,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-source-refresh/scripts/*.py:*)
 ---
 
 # NL Tax Source Refresh
@@ -19,6 +19,14 @@ Use `_shared/source-register.yaml`, `_shared/supported-workflows.yaml`, `referen
 `scripts/fetch_sources.py --fetch` is a dry-run refresh planner. It reports stale allowlisted sources that would need manual refresh. No live HTTP requests are made, and source snapshots are not rewritten.
 
 Only use allowlisted official HTTPS domains. Do not read/write taxpayer workspace data. Do not unlock future years by copying old rates.
+
+Safety: only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (this skill's validators and refresh planners live in `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-source-refresh/scripts/`). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+
+## What the validators check (and what they do not)
+
+- The validators verify **metadata consistency only**: that ids/paths/hashes match, that `review_status` and `source_id` registrations are internally coherent, and that every cited `source_id` is registered. `review_status: reviewed` is a **human attestation** that someone checked the note against the cited official source — it is not machine proof of legal accuracy. A green validator run does not certify that a rate or rule is correct.
+- The must-cite-a-`source_id` check exempts four internal knowledge prefixes — `methods/`, `platform/`, `security/`, and `compat/` — because these are authored internal playbooks rather than restatements of an external authority. Any `source_id` those files *do* cite is still validated against the register.
+- Freshness: prose cadences (for example "check monthly") are now parsed, and a stale source whose `mandatory_for` is non-empty blocks validation. Refresh or re-attest stale mandatory sources before relying on a passing run.
 
 ## Cross-host maintenance
 

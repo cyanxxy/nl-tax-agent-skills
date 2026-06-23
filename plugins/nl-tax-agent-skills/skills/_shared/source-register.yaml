@@ -35,7 +35,7 @@ sources:
     url: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-06-23"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -54,7 +54,7 @@ sources:
     url: "https://code.claude.com/docs/en/skills"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-06-23"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -227,7 +227,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-05-26"
+    last_checked: "2026-06-23"
     freshness_policy: "check annually; verzuimboete amounts are updated in the Belastingdienst boetebeleid"
     owner: "tax-content"
     mandatory_for:
@@ -240,7 +240,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente"
     source_type: official_rates
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-05-26"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
     owner: "tax-content"
     mandatory_for:
@@ -254,12 +254,27 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-05-26"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter"
     owner: "tax-content"
     mandatory_for:
       - nl-tax-annual-return
       - nl-tax-provisional-assessment
+      - nl-tax-submit-companion
+
+  - id: bd_invorderingsrente
+    title: "Invorderingsrente"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/invorderingsrente"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
+    last_checked: "2026-06-23"
+    freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
       - nl-tax-submit-companion
 
   # ===========================================================================
@@ -287,7 +302,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -301,7 +316,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -316,7 +331,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-17"
+    last_checked: "2026-06-23"
     freshness_policy: "check at start of filing season and after Belastingdienst portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -331,7 +346,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-30"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag; IACK maximum, opbouwpercentage, and minimum arbeidsinkomen change annually"
     owner: "tax-content"
     mandatory_for:
@@ -346,7 +361,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-30"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag; ouderenkorting amount and phase-out band and alleenstaande-ouderenkorting change annually"
     owner: "tax-content"
     mandatory_for:
@@ -361,12 +376,40 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-05-30"
+    last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag; jonggehandicaptenkorting amount changes annually"
     owner: "tax-content"
     mandatory_for:
       - nl-tax-annual-return
       - nl-tax-partner-deductions
+
+  - id: bd_heffingskortingen_how_2025
+    title: "Hoe werken heffingskortingen?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/hoe_werken_heffingskortingen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-06-23"
+    freshness_policy: "check after Prinsjesdag and at start of filing season; heffingskortingen mechanics may change with the Belastingplan"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+
+  - id: bd_arbeidsinkomen_definition_2025
+    title: "Arbeidsinkomen (inkomen uit werk voor arbeidskorting)"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/inkomen_uit_werk"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
+    last_checked: "2026-06-23"
+    freshness_policy: "check after Prinsjesdag and at start of filing season; the arbeidsinkomen definition may change with the Belastingplan"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
 
   - id: bd_own_home_deduction_cap_2025
     title: "Beperking hypotheekrenteaftrek als u een hoog inkomen hebt"

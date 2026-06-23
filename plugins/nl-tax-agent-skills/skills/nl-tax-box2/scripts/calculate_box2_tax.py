@@ -330,7 +330,14 @@ def allocate_partner_box2(
     partner_pct: float | int | Decimal,
     dividend_withholding_tax: float | int | Decimal = 0,
 ) -> dict:
-    """Allocate joint Box 2 taxable income between full-year fiscal partners."""
+    """Allocate joint Box 2 taxable income between full-year fiscal partners.
+
+    The indicative split applies the SAME percentages to both the joint taxable
+    income and the withheld dividend tax (coupled, proportional allocation). Any
+    non-proportional dividend-tax allocation (for example, splitting the withheld
+    dividend tax on a different basis than the income) is a manual-review item and
+    is not computed here.
+    """
     _rate_config(tax_year)
     taxpayer_share = _validate_percentage(taxpayer_pct, "taxpayer_pct")
     partner_share = _validate_percentage(partner_pct, "partner_pct")
@@ -415,13 +422,21 @@ def calculate_from_payload(payload: dict[str, Any]) -> dict:
 
     allocation = payload.get("partner_allocation") or payload.get("allocation")
     if allocation:
-        result["partner_allocation"] = allocate_partner_box2(
-            tax_year=result["tax_year"],
-            total_taxable_income=result["taxable_income"],
-            taxpayer_pct=allocation.get("taxpayer_pct"),
-            partner_pct=allocation.get("partner_pct"),
-            dividend_withholding_tax=result["dividend_withholding_credit"],
-        )
+        if payload.get("full_year_fiscal_partner") is True:
+            result["partner_allocation"] = allocate_partner_box2(
+                tax_year=result["tax_year"],
+                total_taxable_income=result["taxable_income"],
+                taxpayer_pct=allocation.get("taxpayer_pct"),
+                partner_pct=allocation.get("partner_pct"),
+                dividend_withholding_tax=result["dividend_withholding_credit"],
+            )
+        else:
+            # Full-year fiscal-partner status is not confirmed: do NOT emit a
+            # computed split. Allocation requires proven eligibility.
+            result["partner_allocation_skipped"] = (
+                "full_year_fiscal_partner not confirmed; allocation not computed"
+            )
+            _add_flag(result["manual_review_flags"], "partner_status_unconfirmed")
 
     return result
 
@@ -451,6 +466,15 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--dividend-withholding-tax", type=float, default=0)
     parser.add_argument("--taxpayer-pct", type=float)
     parser.add_argument("--partner-pct", type=float)
+    parser.add_argument(
+        "--full-year-fiscal-partner",
+        action="store_true",
+        help=(
+            "Confirm full-year (or elected full-year) fiscal partnership. Required "
+            "before a partner allocation is actually computed; without it a supplied "
+            "--taxpayer-pct/--partner-pct split is skipped and flagged for review."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -476,6 +500,7 @@ def main(argv: list[str] | None = None) -> int:
                 ),
                 "loss_setoff": args.loss_setoff,
                 "dividend_withholding_tax": args.dividend_withholding_tax,
+                "full_year_fiscal_partner": args.full_year_fiscal_partner,
             }
             if args.taxpayer_pct is not None or args.partner_pct is not None:
                 payload["partner_allocation"] = {

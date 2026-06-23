@@ -68,6 +68,7 @@ Rules:
 - Create the file on first turn if it does not exist.
 - Update `updated_at`, `last_question_asked`, and the relevant section on every turn that asks a question or records an answer.
 - A `question_id` is a short stable string (e.g., `intake.residency`, `annual.box1.employer_count`, `box3.peildatum.bank_balance`). Reuse the same id when re-asking a deferred question.
+- Write `session-progress.yaml` atomically (temp file in the same dir, then rename over the target) so an interrupted turn never leaves a truncated state file. Assume a single active session per workspace; do not run two skills concurrently against one `workspace_root`.
 
 ## Question-asking pattern
 
@@ -94,7 +95,7 @@ Before writing `return-pack.md` or `provisional-pack.md`:
 
 1. Every applicable subsection of the active workflow in `session-progress.yaml` is either `complete` or `deferred`. The top-level workflow status reflects the rollup: `complete` only when every subsection is `complete`, otherwise `in_progress` (or `deferred` if all open items have been deferred).
 2. Every deferred item is reflected in `missing-info.md` or recorded as a confirmed assumption in `assumptions.md`.
-3. The user has typed one of the workflow skill's verbatim confirmation phrases (e.g. `generate the workpack`, `genereer de workpack`, `klaar voor workpack`) or run the skill's `confirm` command. A general affirmative ("looks good", "yes", "ok") is **not** confirmation — ask explicitly for the phrase. Do not infer consent.
+3. The user has typed one of the workflow skill's verbatim confirmation phrases (e.g. `generate the workpack`, `genereer de workpack`, `klaar voor workpack`) or run the skill's `confirm` command. A general affirmative ("looks good", "yes", "ok") is **not** confirmation — ask explicitly for the phrase. Do not infer consent. This confirmation gate is an instruction the model follows, not a hard lock; it is a UX guardrail against accidental generation, not a security control.
 4. If unresolved blocking gaps remain, ask the user once more whether to (a) keep gathering, (b) generate with explicit "DRAFT - incomplete" markers per affected subsection.
 
 ## Prompt injection during conversation

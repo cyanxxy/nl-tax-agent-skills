@@ -12,17 +12,27 @@ Usage:
         --mortgage-start-year 2018 \\
         [--taxable-income 85000] \\
         [--tax-year 2025] \\
-        [--ownership-share 100]
+        [--ownership-share 100] \\
+        [--interest-share 100]
 
 Options:
     --woz-value VALUE           WOZ-waarde in EUR (required)
     --mortgage-interest VALUE   Annual deductible mortgage interest in EUR (required)
     --mortgage-start-year YEAR  Year the mortgage was taken out (required)
-    --taxable-income VALUE      Estimated box 1 taxable income before eigen woning
-                                deduction.  If omitted, tariefsaanpassing check
-                                outputs a warning instead of a definitive result.
+    --taxable-income VALUE      Estimated box 1 income BEFORE the eigen-woning
+                                result.  The script derives the belastbaar inkomen
+                                internally (income + net eigen-woning result after
+                                Hillen) before checking the tariefsaanpassing.  If
+                                omitted, the tariefsaanpassing check outputs a
+                                warning instead of a definitive result.
     --tax-year YEAR             Tax year for the calculation (default: 2025)
-    --ownership-share PCT       Ownership percentage, 1-100 (default: 100)
+    --ownership-share PCT       Home-ownership percentage, 1-100 (default: 100).
+                                Scales the WOZ-waarde (eigenwoningforfait side).
+    --interest-share PCT        Eigenwoningschuld / deductible-interest share,
+                                1-100 (alias: --debt-share).  Scales the
+                                deductible mortgage interest independently from
+                                ownership.  Defaults to --ownership-share when
+                                omitted.
 
 Uses standard library only.
 """
@@ -32,7 +42,7 @@ from __future__ import annotations
 import json
 import sys
 from dataclasses import dataclass, field
-from decimal import Decimal, ROUND_CEILING
+from decimal import Decimal, ROUND_HALF_UP
 from typing import Optional
 
 
@@ -111,7 +121,7 @@ class OwnHomeResult:
     eigenwoningforfait: float
     mortgage_interest: float
     mortgage_start_year: int
-    mortgage_qualifies_post2013: Optional[bool]
+    mortgage_regime_post2013: Optional[bool]
     net_eigen_woning: float
     tariefsaanpassing_applies: Optional[bool]
     tariefsaanpassing_amount: Optional[float]
@@ -130,7 +140,7 @@ class OwnHomeResult:
             "eigenwoningforfait": self.eigenwoningforfait,
             "mortgage_interest": self.mortgage_interest,
             "mortgage_start_year": self.mortgage_start_year,
-            "mortgage_qualifies_post2013": self.mortgage_qualifies_post2013,
+            "mortgage_regime_post2013": self.mortgage_regime_post2013,
             "net_eigen_woning": self.net_eigen_woning,
             "tariefsaanpassing_applies": self.tariefsaanpassing_applies,
             "tariefsaanpassing_amount": self.tariefsaanpassing_amount,
@@ -169,22 +179,44 @@ def calculate_eigenwoningforfait(woz_value: float, tax_year: int) -> float:
 
 
 def check_mortgage_qualification(start_year: int) -> Optional[bool]:
-    """Check if the mortgage qualifies for interest deduction under post-2013 rules.
+    """Report which eigenwoningschuld REGIME applies based on the start year.
 
-    Returns True if post-2013 rules apply (annuitair/lineair required),
-    False if pre-2013 transitional rules apply, None if unknown.
+    This does not determine whether a specific loan qualifies for interest
+    deduction — only which set of rules governs it. The caller must still
+    verify the loan meets that regime's requirement.
+
+    Returns True if the post-2013 regime applies (annuitair/lineair repayment
+    required), False if the pre-2013 transitional regime applies, None if
+    unknown.
     """
     if start_year >= 2013:
-        return True  # Post-2013: must be annuitair or lineair
-    return False  # Pre-2013: transitional rules, aflossingsvrij may qualify
+        return True  # Post-2013 regime: must be annuitair or lineair
+    return False  # Pre-2013 transitional regime: aflossingsvrij may qualify
 
 
 def calculate_tariefsaanpassing(
     mortgage_interest: float,
-    taxable_income: Optional[float],
+    belastbaar_inkomen: Optional[float],
     tax_year: int,
 ) -> tuple[Optional[bool], Optional[float], list[str]]:
-    """Calculate the tariefsaanpassing (rate adjustment) for high earners.
+    """Calculate the tariefsaanpassing (rate adjustment) for own-home costs.
+
+    Follows the official Belastingdienst grondslag method. ``belastbaar_inkomen``
+    is the belastbaar inkomen uit werk en woning AFTER the eigen-woning result
+    (including the Hillenregeling) — NOT the income before the eigen-woning
+    deduction. The grondslag is:
+
+        grondslag = min(afgetrokken eigenwoningkosten,
+                        belastbaar_inkomen + afgetrokken eigenwoningkosten
+                            - drempelbedrag hoogste schijf)
+        adjustment = round(grondslag * (schijf3_rate - cap_rate), 2)
+
+    The grondslag is capped at the deducted eigen-woning costs (art. 2.10 lid 2
+    Wet IB 2001), so the correction can never exceed rate_diff x the deducted
+    costs. It applies only when income WITHOUT the deduction
+    (belastbaar_inkomen + costs) exceeds the drempel. The deductible eigen-woning
+    costs are the deductible mortgage interest/costs (added back because they were
+    already subtracted to reach belastbaar_inkomen).
 
     Returns (applies, amount, warnings).
     """
@@ -199,37 +231,49 @@ def calculate_tariefsaanpassing(
             ],
         )
 
-    if taxable_income is None:
+    if belastbaar_inkomen is None:
         return (
             None,
             None,
             [
                 "WARNING: Taxable income not provided. Cannot determine if "
-                "tariefsaanpassing applies. If box 1 income before eigen woning "
-                f"deduction exceeds EUR {params['schijf3_threshold']:,.0f}, the "
-                "effective deduction rate for own-home costs is capped at "
+                "tariefsaanpassing applies. If box 1 income BEFORE the own-home "
+                "deduction exceeds EUR "
+                f"{params['schijf3_threshold']:,.0f}, the effective deduction "
+                "rate for own-home costs is capped at "
                 f"{params['cap_rate'] * 100:.2f}%."
             ],
         )
 
     threshold = params["schijf3_threshold"]
-    if taxable_income <= threshold:
-        return (False, 0.0, warnings)
-
-    # Tariefsaanpassing applies
     deductible_costs = max(mortgage_interest, 0.0)
     if deductible_costs == 0:
         return (False, 0.0, warnings)
 
-    schijf3_deduction_portion = min(deductible_costs, taxable_income - threshold)
+    # The tariefsaanpassing applies only when box 1 income WITHOUT the own-home
+    # deduction exceeds the top-bracket drempel. belastbaar_inkomen is the income
+    # AFTER the eigen-woning result, so add the deducted costs back to recover the
+    # income-without-deduction figure the rule tests against.
+    income_without_deduction = belastbaar_inkomen + deductible_costs
+    if income_without_deduction <= threshold:
+        return (False, 0.0, warnings)
+
+    # Statutory grondslag (art. 2.10 lid 2 Wet IB 2001): the deducted own-home
+    # costs, but only to the extent income-without-deduction exceeds the drempel,
+    # and capped at the deducted costs themselves. The correction can therefore
+    # never exceed rate_diff x deductible_costs.
+    base = min(deductible_costs, income_without_deduction - threshold)
     rate_diff = params["schijf3_rate"] - params["cap_rate"]
-    adjustment = round(schijf3_deduction_portion * rate_diff, 2)
+    adjustment = round(base * rate_diff, 2)
     warnings.append(
-        f"Tariefsaanpassing applies: income EUR {taxable_income:,.0f} exceeds "
-        f"schijf 3 threshold EUR {threshold:,.0f}. Own-home deduction "
-        f"benefit is reduced by EUR {adjustment:,.2f} "
-        f"({rate_diff * 100:.2f}% of EUR {schijf3_deduction_portion:,.2f} "
-        "deductible costs falling in schijf 3)."
+        f"Tariefsaanpassing applies: box 1 income without the own-home deduction "
+        f"(EUR {income_without_deduction:,.0f}) exceeds the schijf 3 drempel "
+        f"(EUR {threshold:,.0f}). The own-home deduction benefit is reduced by "
+        f"EUR {adjustment:,.2f} ({rate_diff * 100:.2f}% of grondslag EUR "
+        f"{base:,.2f} — the deductible costs falling in schijf 3, capped at the "
+        f"EUR {deductible_costs:,.2f} deducted). The Belastingdienst computes the "
+        "definitive figure automatically in the aangifte — verify against your "
+        "concept-aanslag."
     )
     return (True, adjustment, warnings)
 
@@ -254,7 +298,7 @@ def calculate_hillenregeling(
     excess = eigenwoningforfait - mortgage_interest
     correction = int(
         (Decimal(str(excess)) * remaining_decimal).quantize(
-            Decimal("1"), rounding=ROUND_CEILING
+            Decimal("1"), rounding=ROUND_HALF_UP
         )
     )
 
@@ -275,6 +319,8 @@ def parse_args(argv: list[str]) -> dict:
         "taxable_income": None,
         "tax_year": 2025,
         "ownership_share": 100,
+        "interest_share": None,
+        "interest_share_provided": False,
     }
 
     i = 0
@@ -297,6 +343,10 @@ def parse_args(argv: list[str]) -> dict:
             i += 2
         elif arg == "--ownership-share" and i + 1 < len(argv):
             result["ownership_share"] = int(argv[i + 1])
+            i += 2
+        elif arg in ("--interest-share", "--debt-share") and i + 1 < len(argv):
+            result["interest_share"] = int(argv[i + 1])
+            result["interest_share_provided"] = True
             i += 2
         elif arg in ("--help", "-h"):
             print(__doc__)
@@ -336,23 +386,57 @@ def main() -> int:
     taxable_income: Optional[float] = args["taxable_income"]
     tax_year: int = args["tax_year"]
     ownership_share: int = args["ownership_share"]
+    interest_share_provided: bool = args["interest_share_provided"]
+    interest_share: int = (
+        args["interest_share"] if interest_share_provided else ownership_share
+    )
 
     all_warnings: list[str] = []
     missing_inputs: list[str] = []
 
-    # --- Ownership share adjustment ---
+    # --- Ownership / interest share adjustment ---
     if ownership_share < 1 or ownership_share > 100:
         print("ERROR: --ownership-share must be between 1 and 100.", file=sys.stderr)
         return 1
+    if interest_share < 1 or interest_share > 100:
+        print(
+            "ERROR: --interest-share (--debt-share) must be between 1 and 100.",
+            file=sys.stderr,
+        )
+        return 1
 
+    # Home-ownership share scales the WOZ (eigenwoningforfait); the
+    # eigenwoningschuld / deductible-interest share scales the interest
+    # independently.
     effective_woz = woz_value * (ownership_share / 100)
-    effective_interest = mortgage_interest * (ownership_share / 100)
+    effective_interest = mortgage_interest * (interest_share / 100)
 
     if ownership_share < 100:
         all_warnings.append(
-            f"Ownership share is {ownership_share}%. Calculations use the "
-            f"taxpayer's share: WOZ EUR {effective_woz:,.0f}, "
-            f"interest EUR {effective_interest:,.2f}."
+            f"Home-ownership share is {ownership_share}%. The eigenwoningforfait "
+            f"uses the taxpayer's share of the WOZ: EUR {effective_woz:,.0f}."
+        )
+    if interest_share < 100:
+        all_warnings.append(
+            f"Deductible-interest / eigenwoningschuld share is {interest_share}%. "
+            f"Calculations use the taxpayer's share of the interest: "
+            f"EUR {effective_interest:,.2f}."
+        )
+
+    # Home-ownership share, eigenwoningschuld share, and who actually paid the
+    # deductible interest can each differ — always flag this for verification.
+    all_warnings.append(
+        "Home-ownership share, eigenwoningschuld (debt) share, and who actually "
+        "PAID the deductible interest can all differ from one another. Each must "
+        "be verified separately against the deed, the mortgage agreement, and the "
+        "payment records before relying on these figures."
+    )
+    if not interest_share_provided:
+        missing_inputs.append(
+            "interest_share: not explicitly provided. Defaulted to the "
+            f"ownership share ({ownership_share}%). Provide --interest-share "
+            "(or --debt-share) if the eigenwoningschuld / deductible-interest "
+            "share differs from the home-ownership share."
         )
 
     # --- Eigenwoningforfait ---
@@ -374,19 +458,9 @@ def main() -> int:
     # --- Net eigen woning (before Hillenregeling) ---
     net_eigen_woning = round(ewf - effective_interest)
 
-    # --- Tariefsaanpassing ---
-    ta_applies, ta_amount, ta_warnings = calculate_tariefsaanpassing(
-        effective_interest, taxable_income, tax_year
-    )
-    all_warnings.extend(ta_warnings)
-
-    if taxable_income is None:
-        missing_inputs.append(
-            "taxable_income: not provided. Cannot determine tariefsaanpassing. "
-            "Provide --taxable-income for a complete calculation."
-        )
-
-    # --- Hillenregeling ---
+    # --- Hillenregeling (computed BEFORE the tariefsaanpassing, because the
+    # tariefsaanpassing grondslag is built on the belastbaar inkomen AFTER the
+    # eigen-woning result, which includes the Hillen correction) ---
     hillen_applies, hillen_correction, hillen_remaining = calculate_hillenregeling(
         ewf, effective_interest, tax_year
     )
@@ -404,6 +478,25 @@ def main() -> int:
     else:
         net_after_hillen = net_eigen_woning
 
+    # --- Tariefsaanpassing ---
+    # belastbaar inkomen uit werk en woning = income (before the eigen-woning
+    # result) + net eigen-woning result after Hillen. Pass that (not the raw
+    # pre-EW income) into the official grondslag method.
+    belastbaar: Optional[float] = (
+        (taxable_income + net_after_hillen) if taxable_income is not None else None
+    )
+    ta_applies, ta_amount, ta_warnings = calculate_tariefsaanpassing(
+        effective_interest, belastbaar, tax_year
+    )
+    all_warnings.extend(ta_warnings)
+
+    if taxable_income is None:
+        missing_inputs.append(
+            "taxable_income: not provided. Cannot determine tariefsaanpassing. "
+            "Provide --taxable-income (box 1 income before the eigen-woning "
+            "result) for a complete calculation."
+        )
+
     # --- Build result ---
     result = OwnHomeResult(
         tax_year=tax_year,
@@ -412,7 +505,7 @@ def main() -> int:
         eigenwoningforfait=ewf,
         mortgage_interest=effective_interest,
         mortgage_start_year=mortgage_start_year,
-        mortgage_qualifies_post2013=qualifies_post2013,
+        mortgage_regime_post2013=qualifies_post2013,
         net_eigen_woning=net_eigen_woning,
         tariefsaanpassing_applies=ta_applies,
         tariefsaanpassing_amount=ta_amount,
@@ -432,11 +525,13 @@ def main() -> int:
     if ownership_share < 100:
         print(f"Ownership share:        {result.ownership_share_pct}%")
         print(f"Effective WOZ:          EUR {effective_woz:,.0f}")
+    if interest_share < 100:
+        print(f"Interest/debt share:    {interest_share}%")
     print(f"Eigenwoningforfait:     EUR {result.eigenwoningforfait:,}")
     print(f"Mortgage interest:      EUR {result.mortgage_interest:,.2f}")
     print(f"Mortgage start year:    {result.mortgage_start_year}")
-    if result.mortgage_qualifies_post2013 is not None:
-        if result.mortgage_qualifies_post2013:
+    if result.mortgage_regime_post2013 is not None:
+        if result.mortgage_regime_post2013:
             label = "post-2013 (annuitair/lineair required)"
         else:
             label = "pre-2013 (transitional rules)"

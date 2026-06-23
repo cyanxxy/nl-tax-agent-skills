@@ -156,13 +156,15 @@ Only `.agents/plugins/marketplace.json` is tracked under `.agents/`; other assis
 
 Codex users invoke the bundled skills after discovery. The plugin also includes `commands/`, but those files are Claude Code slash-command wrappers and should not be treated as the Codex command surface unless a target Codex host explicitly documents support for command files.
 
+Codex uses progressive disclosure: it indexes each skill's `name`, `description`, and path up front, then loads the full `SKILL.md` only when the skill is selected. It does **not** honor the Claude frontmatter keys used for invocation and tool control (`disable-model-invocation`, `user-invocable`, `allowed-tools`). To keep manual-only skills (`nl-tax-submit-companion`, `nl-tax-source-refresh`) and the background helpers (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-partner-deductions`) from being implicitly invoked on Codex, each such skill ships an `agents/openai.yaml` with `policy.allow_implicit_invocation: false`. Explicit `$skill-name` invocation still works.
+
 ## Update Behavior
 
-Both plugin manifests pin a fixed `version` (currently `0.1.1`):
+Both plugin manifests pin a fixed `version` (currently `0.1.2`):
 
 ```text
-.claude-plugin/plugin.json   # "version": "0.1.1"
-.codex-plugin/plugin.json    # "version": "0.1.1"
+.claude-plugin/plugin.json   # "version": "0.1.2"
+.codex-plugin/plugin.json    # "version": "0.1.2"
 ```
 
 Bump **both** for every release so Claude Code, Cowork, and Codex installs pin to semver. Only the marketplace files (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`) omit a version; for those GitHub-synced marketplaces Claude can fall back to the git commit SHA, so a pushed commit is still picked up by the Cowork marketplace **Update** button or by `/plugin update` in Claude Code.
@@ -172,6 +174,7 @@ Bump **both** for every release so Claude Code, Cowork, and Codex installs pin t
 - The release artifact must contain only this plugin package, the repository README, the license, the Claude marketplace, and the repo-scoped Codex marketplace.
 - Do not include `.git/`, `.claude/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces, uploads, evidence files, compiled Python files, or local `.agents/` state other than `.agents/plugins/marketplace.json`.
 - Run source-register, knowledge-pack, and supported-workflows validation before release.
+- Host runtime behavior (skill discovery, invocation policy, frontmatter handling, and slash-command wrappers) is **not** integration-tested by this repository's checks — those run validators, compile checks, and unit/eval tests only. Verify actual behavior in the target host (Claude Code, Cowork, or Codex) before release.
 - Test manual-only skills in the target Claude Code version before release. If `disable-model-invocation: true` is not respected for plugin skills, use permission rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
 
 Run these checks from the repository root:
@@ -201,6 +204,8 @@ python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ## Privacy Boundary
 
 Real taxpayer data belongs only in ignored local workspace paths such as `workspace/`, `uploads/`, and `evidence/`. Do not add real taxpayer files, DigiD credentials, BSNs, IBANs, screenshots, PDFs, or spreadsheets to this plugin package.
+
+The plugin writes plaintext working files and does not auto-delete anything; you are responsible for retention. When a task is done, remove generated working files you no longer need (`workspace/`, `uploads/`, `evidence/`). See the repository [`PRIVACY.md`](../../PRIVACY.md) for retention and cleanup guidance.
 
 ## Source Model
 

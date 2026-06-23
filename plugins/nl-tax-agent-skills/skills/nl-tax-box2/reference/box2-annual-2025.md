@@ -102,6 +102,11 @@ workpacks. Outputs are for manual Mijn Belastingdienst entry and review only.
 
 - Full-year fiscal partners may allocate Box 2 income in any split totaling
   100%.
+- The `calculate_box2_tax.py` calculator only computes an allocation when the
+  payload sets `full_year_fiscal_partner: true`. Without that confirmation it
+  skips the allocation, records `partner_allocation_skipped`, and raises a
+  `partner_status_unconfirmed` manual-review flag — so confirm full-year
+  partnership before presenting a split.
 - Validate the selected percentages before calculation and show each partner's
   allocated income and preparation tax amount separately.
 

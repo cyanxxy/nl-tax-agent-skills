@@ -9,6 +9,8 @@ review_status: reviewed
 
 This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
 
+> **Provenance / freshness.** Labels reflect the 2026 Mijn Belastingdienst voorlopige aanslag as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
+
 ---
 
 ## Contents

@@ -14,8 +14,17 @@ Checks:
     - Per-source-type required fields are present
     - For provisional: no werkelijk rendement field
     - source.type = unknown rows are listed in missing_fields
+    - Structural guards: root must be a mapping; fields/missing_fields must be lists;
+      duplicate field_id detection; non-finite numeric values rejected
+    - Readiness assessment: a map with zero populated fields is never reported as
+      "No issues found." and surfaces an explicit NOT_READY_FOR_ENTRY summary
+
+Exit codes:
+    Default exit stays unchanged (nonzero only on errors). Pass --strict /
+    --require-ready to also exit nonzero when the map is not ready for entry.
 """
 
+import math
 import os
 import re
 import sys
@@ -58,6 +67,14 @@ WERKELIJK_KEYWORDS = {
     "actual_return", "actual-return", "actual return",
     "actueel rendement", "echt rendement",
 }
+# Top-level keys the schema knows about. Anything else is warned on so a typo'd
+# key (e.g. "field" instead of "fields") doesn't silently drop data.
+KNOWN_TOP_LEVEL_KEYS = {
+    "field_map_version", "workflow", "tax_year", "created_at",
+    "fields", "missing_fields", "notes", "readiness",
+}
+# Optional top-level readiness self-declaration (ME-30).
+VALID_READINESS_VALUES = {"draft", "review_ready"}
 
 
 def load_yaml(path):
@@ -168,6 +185,10 @@ def _passes_elfproef(digits):
     """True if a 9-digit string satisfies the Dutch BSN 11-test."""
     if len(digits) != 9 or not digits.isdigit():
         return False
+    # All-identical-digit runs (e.g. "000000000") technically pass the 11-test but
+    # are not issued BSNs — exclude them to avoid flagging filler/placeholder values.
+    if len(set(digits)) == 1:
+        return False
     weights = [9, 8, 7, 6, 5, 4, 3, 2, -1]
     total = sum(int(d) * w for d, w in zip(digits, weights))
     return total % 11 == 0
@@ -189,17 +210,67 @@ def validate_sensitive_field_names(fid, label_lower, errors):
             errors.append(f"Browser/submission automation field detected: {fid}")
 
 
+def _coerce_text_chunks(raw):
+    """Flatten a value/notes/source field into a list of strings to scan.
+
+    Notes may be a list; source is a whole mapping. We serialize each leaf so a
+    sensitive value cannot hide in a nested key the old scan never looked at.
+    """
+    if raw is None:
+        return []
+    if isinstance(raw, str):
+        return [raw]
+    if isinstance(raw, (list, tuple)):
+        chunks = []
+        for item in raw:
+            chunks.extend(_coerce_text_chunks(item))
+        return chunks
+    if isinstance(raw, dict):
+        chunks = []
+        for key, item in raw.items():
+            chunks.append(str(key))
+            chunks.extend(_coerce_text_chunks(item))
+        return chunks
+    return [str(raw)]
+
+
 def validate_sensitive_field_values(fid, field, errors):
-    """Reject a stored BSN (elfproef) or NL IBAN in the value or source.quote."""
-    source = field.get("source", {})
-    quote = source.get("quote") if isinstance(source, dict) else ""
-    for text in (str(field.get("value") or ""), str(quote or "")):
-        if _IBAN_VALUE_RE.search(text):
+    """Reject a stored BSN (elfproef) or NL IBAN.
+
+    Scans the value, notes (str or list), and the entire serialized source
+    mapping (not just source.quote). IBAN matching tolerates spaced grouping
+    (e.g. "NL91 ABNA 0417 1643 00") by normalizing whitespace first; the BSN
+    elfproef gate is preserved so an arbitrary 9-digit number is not flagged.
+    """
+    texts = []
+    texts.extend(_coerce_text_chunks(field.get("value")))
+    texts.extend(_coerce_text_chunks(field.get("notes")))
+    texts.extend(_coerce_text_chunks(field.get("source")))
+
+    iban_flagged = False
+    bsn_flagged = False
+    for text in texts:
+        compact = re.sub(r"\s+", "", text)
+        # IBAN: scan whitespace-collapsed text so a spaced IBAN still matches the
+        # compact NL IBAN pattern.
+        if not iban_flagged and _IBAN_VALUE_RE.search(compact):
             errors.append(f"Sensitive identifier value (NL IBAN) must not be stored: {fid}")
-        for candidate in _BSN_CANDIDATE_RE.findall(text):
-            if _passes_elfproef(candidate):
-                errors.append(f"Sensitive identifier value (BSN) must not be stored: {fid}")
-                break
+            iban_flagged = True
+        # BSN: scan BOTH the original and collapsed forms. Collapsing whitespace
+        # catches a space-grouped BSN, but it can also fuse digits to adjacent
+        # letters and defeat the \b word boundary, so the original text is scanned
+        # too. The elfproef gate keeps this from flagging arbitrary 9-digit runs.
+        if not bsn_flagged:
+            for variant in (text, compact):
+                for candidate in _BSN_CANDIDATE_RE.findall(variant):
+                    if _passes_elfproef(candidate):
+                        errors.append(
+                            f"Sensitive identifier value (BSN) must not be stored: {fid}"
+                        )
+                        bsn_flagged = True
+                        break
+                if bsn_flagged:
+                    break
 
 
 def validate_source(fid, field, missing_field_ids, errors, warnings):
@@ -240,6 +311,14 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     validate_sensitive_field_names(fid, label_lower, errors)
     validate_sensitive_field_values(fid, field, errors)
 
+    value = field.get("value")
+    if (
+        isinstance(value, float)
+        and not isinstance(value, bool)
+        and not math.isfinite(value)
+    ):
+        errors.append(f"Non-finite numeric value (NaN/inf) for {fid}: {value!r}")
+
     confidence = field.get("confidence")
     if confidence is not None:
         if not isinstance(confidence, (int, float)) or isinstance(confidence, bool):
@@ -274,38 +353,227 @@ def validate_missing_fields(missing, warnings):
             warnings.append("Missing field entry without field_id or label")
 
 
+def _is_identifier_field(field_id):
+    """True for BSN/IBAN-class identifiers that the portal pre-fills.
+
+    These are intentionally left blank in the field map, so they must NOT count
+    against readiness as "unpopulated required reference fields".
+    """
+    fid_lower = (field_id or "").lower()
+    return any(kw in fid_lower for kw in SENSITIVE_IDENTIFIER_KEYWORDS)
+
+
+def _has_usable_provenance(field):
+    """A populated field needs a concrete value AND a known, sourced provenance.
+
+    Per ME-23, a value carried by a baseline/calculated source without its
+    baseline_ref/calculated_from has no usable provenance and does not count as
+    populated (even though the missing ref is only a warning by default).
+    """
+    value = field.get("value")
+    if value is None or value == "":
+        return False
+
+    source = field.get("source", {})
+    if not isinstance(source, dict):
+        return False
+    src_type = source.get("type")
+    if src_type in (None, "", "unknown"):
+        return False
+
+    if src_type == "baseline" and not source.get("baseline_ref"):
+        return False
+    if src_type == "calculated" and not source.get("calculated_from"):
+        return False
+
+    return True
+
+
+def portal_prefilled_reference_fields(reference_path):
+    """Required reference fields the portal pre-fills (BRP / DigiD / VIA login).
+
+    These are intentionally left blank in the field map (the taxpayer confirms them
+    in the portal, they are not hand-entered from evidence), so they must not count
+    against readiness. Detected from the reference table by a "pre-fill" / "not
+    manually entered" marker in the row.
+    """
+    prefilled = set()
+    headers = None
+    try:
+        with open(reference_path, "r", encoding="utf-8") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line.startswith("|") or not line.endswith("|"):
+                    headers = None
+                    continue
+                cells = [cell.strip() for cell in line.strip("|").split("|")]
+                normalized = [cell.lower() for cell in cells]
+                if "field_id" in normalized and "required" in normalized:
+                    headers = normalized
+                    continue
+                if headers is None or all(set(cell) <= {"-"} for cell in cells):
+                    continue
+                if "field_id" not in headers:
+                    continue
+                field_index = headers.index("field_id")
+                if len(cells) <= field_index:
+                    continue
+                match = re.search(r"`([^`]+)`", cells[field_index])
+                if not match:
+                    continue
+                row_text = " ".join(normalized)
+                if (
+                    "pre-fill" in row_text
+                    or "prefill" in row_text
+                    or "vooringevuld" in row_text
+                    or "not manually entered" in row_text
+                ):
+                    prefilled.add(match.group(1))
+    except OSError:
+        return set()
+    return prefilled
+
+
+def assess_readiness(fields, missing, workflow, parsed_tax_year):
+    """Assess whether the field map is ready for manual portal entry.
+
+    Returns a dict {ready, populated_count, required_unpopulated}:
+      - populated_count: fields with a non-empty value AND usable provenance
+        (source.type known/not unknown; baseline/calculated carry their ref).
+      - required_unpopulated: required reference field_ids that are not populated,
+        EXCLUDING BSN/IBAN-class identifiers (portal-prefilled, intentionally blank).
+      - ready: at least one populated field AND no required reference field left
+        unpopulated.
+    """
+    populated_ids = {
+        field.get("field_id")
+        for field in fields
+        if isinstance(field, dict)
+        and field.get("field_id")
+        and _has_usable_provenance(field)
+    }
+    populated_count = sum(
+        1 for field in fields if isinstance(field, dict) and _has_usable_provenance(field)
+    )
+
+    reference_path = SUPPORTED_WORKFLOW_YEARS.get((workflow, parsed_tax_year))
+    required_unpopulated = []
+    if reference_path:
+        required = required_reference_fields(reference_path)
+        prefilled = portal_prefilled_reference_fields(reference_path)
+        required_unpopulated = sorted(
+            rid
+            for rid in required
+            if rid not in populated_ids
+            and not _is_identifier_field(rid)
+            and rid not in prefilled
+        )
+
+    ready = populated_count > 0 and not required_unpopulated
+    return {
+        "ready": ready,
+        "populated_count": populated_count,
+        "required_unpopulated": required_unpopulated,
+    }
+
+
 def validate(data):
     errors = []
     warnings = []
 
+    if not isinstance(data, dict):
+        return (["Field map root must be a mapping"], [])
+
+    for key in data:
+        if key not in KNOWN_TOP_LEVEL_KEYS:
+            warnings.append(f"Unknown top-level key: {key}")
+
     workflow, parsed_tax_year = validate_metadata(data, errors)
+
+    readiness_decl = data.get("readiness")
+    if readiness_decl is not None and readiness_decl not in VALID_READINESS_VALUES:
+        errors.append(f"Invalid readiness value: {readiness_decl}")
+
     fields = data.get("fields", []) or []
+    if not isinstance(fields, list):
+        errors.append("fields must be a list")
+        fields = []
     missing = data.get("missing_fields", []) or []
+    if not isinstance(missing, list):
+        errors.append("missing_fields must be a list")
+        missing = []
     if not fields and not missing:
         errors.append("Field map must include at least one entry in fields or missing_fields")
 
-    missing_field_ids = validate_reference_coverage(
-        workflow, parsed_tax_year, fields, missing, errors
-    )
+    clean_fields = []
     for index, field in enumerate(fields):
+        if not isinstance(field, dict):
+            errors.append(f"fields[{index}] must be a mapping")
+            continue
+        clean_fields.append(field)
+
+    seen_field_ids = set()
+    for field in clean_fields:
+        fid = field.get("field_id")
+        if fid:
+            if fid in seen_field_ids:
+                errors.append(f"Duplicate field_id: {fid}")
+            seen_field_ids.add(fid)
+
+    clean_missing = [m for m in missing if isinstance(m, dict)]
+    for index, m in enumerate(missing):
+        if not isinstance(m, dict):
+            errors.append(f"missing_fields[{index}] must be a mapping")
+
+    missing_field_ids = validate_reference_coverage(
+        workflow, parsed_tax_year, clean_fields, clean_missing, errors
+    )
+    for index, field in enumerate(clean_fields):
         validate_field(field, index, workflow, missing_field_ids, errors, warnings)
-    validate_missing_fields(missing, warnings)
+    validate_missing_fields(clean_missing, warnings)
+
+    readiness = assess_readiness(clean_fields, clean_missing, workflow, parsed_tax_year)
+    if readiness_decl == "review_ready" and not readiness["ready"]:
+        warnings.append(
+            "readiness declared review_ready but assess_readiness says NOT ready "
+            f"(populated_count={readiness['populated_count']}, "
+            f"required_unpopulated={len(readiness['required_unpopulated'])})"
+        )
 
     return errors, warnings
 
 
+def _readiness_for(data):
+    """Recompute readiness for output in main() without changing validate()'s
+    2-tuple contract (the test suite asserts on validate()'s return shape)."""
+    if not isinstance(data, dict):
+        return {"ready": False, "populated_count": 0, "required_unpopulated": []}
+    workflow, parsed_tax_year = data.get("workflow"), _parse_tax_year(data.get("tax_year"))
+    fields = data.get("fields", []) or []
+    fields = [f for f in fields if isinstance(f, dict)] if isinstance(fields, list) else []
+    missing = data.get("missing_fields", []) or []
+    missing = [m for m in missing if isinstance(m, dict)] if isinstance(missing, list) else []
+    return assess_readiness(fields, missing, workflow, parsed_tax_year)
+
+
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python3 validate_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    flags = {a for a in sys.argv[1:] if a.startswith("-")}
+    require_ready = bool(flags & {"--require-ready", "--strict"})
+
+    if not args:
+        print("Usage: python3 validate_field_map.py [--strict|--require-ready] "
+              "<path-to-field-map.yaml>", file=sys.stderr)
         sys.exit(1)
 
-    path = sys.argv[1]
+    path = args[0]
     if not os.path.isfile(path):
         print(f"Error: file not found: {path}", file=sys.stderr)
         sys.exit(1)
 
     data = load_yaml(path)
     errors, warnings = validate(data)
+    readiness = _readiness_for(data)
 
     if errors:
         print("VALIDATION FAILED")
@@ -322,10 +590,30 @@ def main():
         for w in warnings:
             print(f"  - {w}")
 
-    if not errors and not warnings:
+    print()
+    if readiness["ready"]:
+        print(
+            f"READINESS: READY_FOR_ENTRY "
+            f"(populated_count={readiness['populated_count']})"
+        )
+    else:
+        print(
+            f"READINESS: NOT_READY_FOR_ENTRY "
+            f"(populated_count={readiness['populated_count']}, "
+            f"required_unpopulated={len(readiness['required_unpopulated'])})"
+        )
+        for rid in readiness["required_unpopulated"]:
+            print(f"  - required field unpopulated: {rid}")
+
+    if not errors and not warnings and readiness["ready"]:
         print("No issues found.")
 
-    sys.exit(1 if errors else 0)
+    exit_code = 0
+    if errors:
+        exit_code = 1
+    elif require_ready and not readiness["ready"]:
+        exit_code = 1
+    sys.exit(exit_code)
 
 
 if __name__ == "__main__":

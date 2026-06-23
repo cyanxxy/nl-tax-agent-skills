@@ -155,6 +155,79 @@ class Box2HelperTests(unittest.TestCase):
         self.assertEqual(result["loss"]["current_year_loss"], 1_000.0)
         self.assertIn("box2_loss", result["manual_review_flags"])
 
+    def test_allocation_without_full_year_fiscal_partner_is_not_standard_case(self):
+        module = load_module(
+            "skills/nl-tax-box2/scripts/validate_box2_inputs.py",
+            "validate_box2_inputs_partner_unconfirmed",
+        )
+
+        result = module.validate_box2_input_payload(
+            {
+                "workflow": "annual_2025",
+                "tax_year": 2025,
+                "substantial_interest_pct": 25,
+                "regular_benefits": 100_000,
+                "partner_allocation": {
+                    "taxpayer_pct": 40,
+                    "partner_pct": 60,
+                },
+            }
+        )
+
+        self.assertEqual(result["errors"], [])
+        self.assertFalse(result["supported_standard_case"])
+        self.assertTrue(result["manual_review_required"])
+        self.assertIn("partner_status_unconfirmed", result["manual_review_flags"])
+
+    def test_calculator_skips_partner_split_without_full_year_fiscal_partner(self):
+        module = load_module(
+            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "calculate_box2_tax_partner_unconfirmed",
+        )
+
+        result = module.calculate_from_payload(
+            {
+                "tax_year": 2025,
+                "regular_benefits": 100_000,
+                "partner_allocation": {
+                    "taxpayer_pct": 40,
+                    "partner_pct": 60,
+                },
+            }
+        )
+
+        self.assertNotIn("partner_allocation", result)
+        self.assertIn("partner_allocation_skipped", result)
+        self.assertIn("not confirmed", result["partner_allocation_skipped"])
+        self.assertIn("partner_status_unconfirmed", result["manual_review_flags"])
+
+    def test_calculator_emits_partner_split_when_full_year_fiscal_partner_true(self):
+        module = load_module(
+            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "calculate_box2_tax_partner_confirmed",
+        )
+
+        result = module.calculate_from_payload(
+            {
+                "tax_year": 2025,
+                "regular_benefits": 100_000,
+                "full_year_fiscal_partner": True,
+                "partner_allocation": {
+                    "taxpayer_pct": 40,
+                    "partner_pct": 60,
+                },
+            }
+        )
+
+        self.assertIn("partner_allocation", result)
+        self.assertNotIn("partner_allocation_skipped", result)
+        self.assertEqual(
+            result["partner_allocation"]["taxpayer"]["taxable_income"], 40_000.0
+        )
+        self.assertEqual(
+            result["partner_allocation"]["partner"]["taxable_income"], 60_000.0
+        )
+
     def test_validator_flags_unsupported_complex_markers_for_manual_review(self):
         module = load_module(
             "skills/nl-tax-box2/scripts/validate_box2_inputs.py",

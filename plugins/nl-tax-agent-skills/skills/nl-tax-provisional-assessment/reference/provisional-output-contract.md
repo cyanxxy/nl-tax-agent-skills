@@ -7,6 +7,7 @@
 - Amount labeling rules
 - Box 3 validation rule — CRITICAL
 - Box 2 validation rule
+- Field map requirements
 - Change subflow validation rules
 - Stopzetten validation rules
 - Sources used section — REQUIRED
@@ -121,6 +122,12 @@ The workpack and field map may include:
 - `partner.verdeling_box2_inkomen`
 
 Every Box 2 amount must be labeled as estimate or from-baseline. Route valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA facts to manual review or unsupported.
+
+---
+
+## Field map requirements
+
+The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper` (`templates/field-map-template.yaml` + `reference/{annual,provisional}-field-map.md`) and MUST pass `scripts/validate_field_map.py`; `field_id`s must come from the corresponding field reference.
 
 ---
 

@@ -105,6 +105,11 @@ manual provisional-assessment entry.
 
 - Full-year fiscal partners may choose an estimated allocation split that totals
   100%.
+- The `calculate_box2_tax.py` calculator only computes the allocation when the
+  payload sets `full_year_fiscal_partner: true`. Otherwise it skips the
+  allocation, records `partner_allocation_skipped`, and raises a
+  `partner_status_unconfirmed` manual-review flag — confirm full-year partnership
+  before estimating a split.
 - Show each partner's estimated allocated income and preparation tax amount separately.
 
 ## Excessive Borrowing Estimate

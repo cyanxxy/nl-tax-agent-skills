@@ -1,7 +1,8 @@
 {
   "name": "nl-tax-agent-skills-marketplace",
   "owner": {
-    "name": "Tax Skill Developers"
+    "name": "Tax Skill Developers",
+    "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
   "description": "Marketplace for the NL Tax Agent Skills plugin.",
   "plugins": [
@@ -10,7 +11,8 @@
       "source": "./plugins/nl-tax-agent-skills",
       "description": "Dutch tax skills for local manual-entry workpacks.",
       "author": {
-        "name": "Tax Skill Developers"
+        "name": "Tax Skill Developers",
+        "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
       },
       "license": "Apache-2.0",
       "keywords": [
