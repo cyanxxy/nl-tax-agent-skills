@@ -39,4 +39,4 @@ helper must flag this for manual review before using an amount.
 
 Use this note for manual provisional workpacks only. Ask for dividend estimates,
 share-transfer evidence, acquisition-price support, and withholding evidence.
-Do not automate portal access, DigiD use, or submission.
+Do not automate portal access or submission.

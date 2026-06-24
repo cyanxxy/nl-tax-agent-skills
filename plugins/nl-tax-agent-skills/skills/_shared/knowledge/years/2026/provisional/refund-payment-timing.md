@@ -26,7 +26,7 @@ Request on 1 May 2026 showing a EUR 7,000 refund: the first payment arrives arou
 
 ## Changing a voorlopige aanslag mid-year
 
-If the user changes the voorlopige aanslag during the year, the recalculated yearly refund is re-spread over the remaining termijnen. The change subflow's "enter ALL data again — anything not re-entered defaults to zero" rule still applies.
+If the user changes the voorlopige aanslag during the year, the recalculated yearly refund is re-spread over the remaining termijnen. The change subflow's rule still applies: enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
 
 ## Developer instruction
 

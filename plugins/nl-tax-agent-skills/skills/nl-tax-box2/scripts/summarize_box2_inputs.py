@@ -142,7 +142,7 @@ def render_markdown_summary(payload: dict[str, Any]) -> tuple[str, int]:
             "",
             "## Notes",
             "",
-            "- Do not use this helper for login, DigiD handling, browser automation, signing, or submission.",
+            "- Do not use this helper for login, browser automation, signing, or submission.",
             "- The official filing environment makes the binding calculation.",
         ]
     )

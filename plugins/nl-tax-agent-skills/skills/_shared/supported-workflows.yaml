@@ -59,6 +59,7 @@ active_workflows:
       - bd_fisin_aanmerkelijk_belang_2025
       - bd_box3_2025_calc
       - bd_box3_2025_actual_return
+      - bd_box3_2025_worked_examples
       - bd_fisin_box3_assets_debts_2025
       - bd_fisin_box3_actual_return_2025
       - bd_giften_aftrek_2025
@@ -125,6 +126,31 @@ active_workflows:
       - bd_provisional_refund_timing_2026
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
+
+terminal_workflows:
+  - id: manual_review
+    status: terminal_manual_review
+    may_prepare_workpack: false
+    profile_candidates:
+      - manual_review
+    case_scope: complex_case_manual_review
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Intake detected facts that should not enter an annual/provisional
+      workpack automatically, such as complex Box 2 valuation, restructuring,
+      treaty/nonresident, death, emigration, informal-capital, non-arm's-length,
+      or corporate-tax-heavy DGA questions.
+
+  - id: unsupported
+    status: terminal_unsupported
+    may_prepare_workpack: false
+    profile_candidates:
+      - unsupported
+    case_scope: generic_out_of_scope
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      Intake detected an out-of-scope case that does not have a more specific
+      blocked roadmap candidate.
 
 blocked_workflows:
   - id: annual_2025_entrepreneurs_roadmap

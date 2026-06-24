@@ -9,6 +9,13 @@ review_status: reviewed
 
 This reference defines how workpack findings are mapped to submission form fields. These principles apply to both annual and provisional field maps.
 
+Workflow skills may create an initial `field-map.yaml` next to their workpack,
+and this field-mapper skill may later refine that same file. The most recently
+validated `field-map.yaml` at the workflow path is authoritative for manual
+entry. Do not create duplicate field-map files; update the workflow-specific path
+and preserve valid sourced entries unless the current workpack/reference makes
+them obsolete.
+
 ---
 
 ## Contents
@@ -135,22 +142,34 @@ Fields that are needed for the return/assessment but have no available data are 
 - **Blocking:** the field is required and the return/assessment will be incomplete or rejected without it. Example: `box1.loon` when the taxpayer has employment income but no jaaropgaaf.
 - **Non-blocking:** the field is optional or the taxpayer's situation may not require it. Example: `aftrek.giften_anbi` when no gift receipts were uploaded but the taxpayer may not have made donations.
 
+Do not use `missing_fields` to satisfy reference coverage for portal-prefilled
+personal/identifier rows such as BSN, name, address, date of birth, or IBAN.
+Those rows are documented in the field reference for portal awareness, but the
+field map omits them because the taxpayer confirms them in the portal rather
+than entering sourced values from the workpack.
+
 ---
 
 ## Credential and login exclusions
 
 The field mapper NEVER creates entries for:
 
-- **DigiD credentials** -- username, password, SMS verification codes, or app authentication
+- **Portal credentials** -- username, password, SMS verification codes, or app authentication
 - **Bank login credentials** -- these are for evidence collection, not form submission
 - **Passwords or tokens** of any kind
 - **Session identifiers** or portal navigation state
+- **Portal-prefilled personal/identifier rows** -- BSN, IBAN, name, address, and date of birth
 
 If the workpack mentions any of these, the mapper omits them entirely (never an entry in `fields` or `missing_fields`). The validator raises an error if a credential-adjacent field appears in `fields`.
 
-### BSN (and IBAN): placeholder, never a value
+### Prefilled personal/identifier fields: omit, never value
 
-The BSN is used for portal login via DigiD and is pre-filled by the portal -- it is **not** a data-entry field, and the mapper never stores the BSN value. But because the field reference marks `personal.bsn` (and `partner.bsn` where applicable) as `required`, the mapper lists it in **`missing_fields` as a no-value placeholder** (just `field_id`, with a reason like "login/pre-filled, not stored"). That satisfies reference coverage without storing the value. The same rule applies to any IBAN. The validator enforces both sides: it rejects a BSN/IBAN that appears as a data-entry field in `fields`, and it rejects a stored BSN (elfproef) or NL IBAN value or quote.
+BSN, IBAN, name, address, and date of birth are not data-entry fields for this
+mapper. The portal pre-fills or confirms them, so the mapper does not create
+`fields` rows or `missing_fields` placeholders for them. The validator exempts
+required portal-prefilled reference rows from coverage while still rejecting a
+BSN/IBAN data-entry field and any stored BSN (elfproef) or NL IBAN value or
+quote.
 
 ---
 

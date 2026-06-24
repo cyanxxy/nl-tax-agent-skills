@@ -7,7 +7,7 @@ status: active
 last_reviewed: "2026-05-15"
 review_status: reviewed
 
-This reference defines the known fields in the Dutch annual income tax return that the field mapper produces. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
+This reference defines the known fields in the Dutch annual income tax return that the field mapper may produce. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
 
 > **Provenance / freshness.** Labels reflect the 2025 Mijn Belastingdienst aangifte as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
 
@@ -34,8 +34,8 @@ This reference defines the known fields in the Dutch annual income tax return th
 | `personal.fiscaal_partner` | Fiscaal partner | Fiscal partner | Persoonsgegevens | conditional | Profile / intake |
 
 ### Notes on personal data fields
-- BSN is pre-filled in the online return after DigiD login. The field mapper notes that BSN is needed but NEVER stores the BSN value itself.
-- Name, address, and date of birth are pre-filled from the BRP (Basisregistratie Personen).
+- BSN is pre-filled in the online return after login. The field mapper omits it entirely and NEVER stores the BSN value itself.
+- Name, address, and date of birth are pre-filled from the BRP (Basisregistratie Personen). The field mapper omits these rows from both `fields` and `missing_fields`; the validator treats them as coverage-exempt.
 - Fiscal partner status must be confirmed by the taxpayer.
 
 ---
@@ -176,7 +176,7 @@ do not calculate it as standard support until reviewed sources are added.
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `partner.bsn` | BSN partner | Partner citizen service number | Partner | conditional | Pre-filled after partner DigiD link; do NOT store |
+| `partner.bsn` | BSN partner | Partner citizen service number | Partner | conditional | Pre-filled by the portal; do NOT store |
 | `partner.inkomen` | Inkomen partner | Partner income | Partner | conditional | Partner `jaaropgaaf` |
 | `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen (percentage) | Box 3 base allocation percentage | Partner | conditional | User choice |
 | `partner.verdeling_box2_inkomen` | Verdeling Box 2 inkomen (percentage) | Box 2 income allocation percentage | Partner | conditional | User choice |
@@ -184,6 +184,6 @@ do not calculate it as standard support until reviewed sources are added.
 | `partner.verdeling_aftrekposten` | Verdeling persoonsgebonden aftrek | Deduction allocation | Partner | conditional | User choice |
 
 ### Notes on partner fields
-- Partner BSN is entered via DigiD partner-link in the portal. The field mapper notes it is needed but NEVER stores the BSN value.
+- Partner BSN is handled through the portal partner-link flow. The field mapper omits it entirely and NEVER stores the BSN value.
 - Allocation choices (verdeling) determine how shared Box 2 income, the joint box 3 base, and deductions are split between partners. Box 2 allocation must total 100% for full-year fiscal partners. The optimal split depends on individual tax positions.
 - Non-allocatable items (arbeidskorting, ondernemersaftrek) cannot be transferred to the partner.

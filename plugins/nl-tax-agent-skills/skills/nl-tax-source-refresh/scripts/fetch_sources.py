@@ -28,12 +28,14 @@ requests or rewrite source snapshots.
 Output:
     YAML-formatted report to stdout. PyYAML is required; this developer script
     hard-requires it (matching the validators) so the committed/emitted format
-    never silently switches to JSON depending on the environment.
+    never silently switches to JSON depending on the environment. Each source
+    entry includes machine-readable `staleness_threshold_days`, `age_days`, and
+    `expires_on` fields derived from `last_checked` and `source_type`.
 """
 
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 # ---------------------------------------------------------------------------
 # YAML loader -- PyYAML is required (no JSON fallback, so output is stable)
@@ -182,20 +184,44 @@ def matches_scope(source, scope, year=None):
     return applies_to_year(source, year)
 
 
-def check_staleness(source, now):
-    """Check if a source is stale based on its last_checked date and source_type."""
+def staleness_metadata(source, now):
+    """Return machine-readable staleness metadata for a source."""
     last_checked = parse_date(source.get("last_checked"))
-    if last_checked is None:
-        return True, "never_checked"
-
     source_type = source.get("source_type", "")
     threshold_days = STALENESS_DAYS.get(source_type, DEFAULT_STALENESS_DAYS)
+
+    if last_checked is None:
+        return {
+            "is_stale": True,
+            "staleness_detail": "never_checked",
+            "staleness_threshold_days": threshold_days,
+            "age_days": None,
+            "expires_on": None,
+        }
+
     age_days = (now - last_checked).days
+    expires_on = (last_checked + timedelta(days=threshold_days)).strftime("%Y-%m-%d")
 
     if age_days > threshold_days:
-        return True, f"last_checked {age_days} days ago (threshold: {threshold_days})"
+        detail = f"last_checked {age_days} days ago (threshold: {threshold_days})"
+        is_stale = True
+    else:
+        detail = f"fresh (checked {age_days} days ago, threshold: {threshold_days})"
+        is_stale = False
 
-    return False, f"fresh (checked {age_days} days ago, threshold: {threshold_days})"
+    return {
+        "is_stale": is_stale,
+        "staleness_detail": detail,
+        "staleness_threshold_days": threshold_days,
+        "age_days": age_days,
+        "expires_on": expires_on,
+    }
+
+
+def check_staleness(source, now):
+    """Check if a source is stale based on its last_checked date and source_type."""
+    metadata = staleness_metadata(source, now)
+    return metadata["is_stale"], metadata["staleness_detail"]
 
 
 def check_snapshot_exists(source, base_dir):
@@ -305,7 +331,7 @@ def empty_report(now, scope, year, fetch_flag, register_path, sources, matched):
 def source_report_entry(source, now, repo_root, fetch_flag):
     source_id = source.get("id", "unknown")
     url = source.get("url", "")
-    is_stale, staleness_reason = check_staleness(source, now)
+    freshness = staleness_metadata(source, now)
     snapshot_exists, _ = check_snapshot_exists(source, repo_root)
     url_allowed = is_url_allowed(url)
 
@@ -315,14 +341,17 @@ def source_report_entry(source, now, repo_root, fetch_flag):
         "url": url,
         "source_type": source.get("source_type", ""),
         "last_checked": source.get("last_checked", ""),
-        "is_stale": is_stale,
-        "staleness_detail": staleness_reason,
+        "is_stale": freshness["is_stale"],
+        "staleness_detail": freshness["staleness_detail"],
+        "staleness_threshold_days": freshness["staleness_threshold_days"],
+        "age_days": freshness["age_days"],
+        "expires_on": freshness["expires_on"],
         "snapshot_exists": snapshot_exists,
         "snapshot_path": source.get("snapshot_path", ""),
         "url_on_allowlist": url_allowed,
     }
 
-    if fetch_flag and is_stale:
+    if fetch_flag and freshness["is_stale"]:
         if url_allowed:
             entry["refresh_action"] = "PLAN_REFRESH (plan-only -- no live HTTP)"
         else:

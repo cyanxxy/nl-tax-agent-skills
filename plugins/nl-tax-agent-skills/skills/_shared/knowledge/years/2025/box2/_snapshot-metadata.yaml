@@ -1,13 +1,13 @@
 snapshot_metadata_version: '1.0'
 sources:
   bd_box2_income_ab_guidance:
-    content_hash_sha256: 1adc7bc1791d35eaa328a5f6394e4a93ac6260e8c216ee79a0e79d51feca9c7c
+    content_hash_sha256: 21ef8d171bfb26b533ff799eff40aa0ab3296329b7eefede9d9eb5a358caeaa0
     review_status: reviewed
     snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_box2_income_ab_guidance
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang
   bd_box2_rates_2025_2026:
-    content_hash_sha256: a15dbe64e55b576258d24f0f196030fb71974754e57331ae6099a32b6f17a2ce
+    content_hash_sha256: 99a2c384adc9add2ee7db123069a04afeea902edaaea62eb8b24dee5b955dc75
     review_status: reviewed
     snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
     source_id: bd_box2_rates_2025_2026

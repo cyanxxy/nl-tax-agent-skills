@@ -78,7 +78,7 @@ The percentages for banktegoeden and schulden are provisional for the 2026 provi
    - If the result is negative or zero, use EUR 0 and no box 3 tax is due
 4. **Bereken het aandeel in de rendementsgrondslag**
    - Aandeel = taxpayer's share of the grondslag sparen en beleggen divided by the rendementsgrondslag
-   - Round the percentage to 3 decimals, following the general official step instruction for provisional 2026
+   - Round the percentage to 3 decimals, following the general official step instruction for provisional 2026. This intentionally differs from the 2025 annual examples, which display a two-decimal truncated percentage; do not reuse the 2025 display rule for the 2026 provisional calculation.
 5. **Bereken het voordeel uit sparen en beleggen**
    - Box 3 income = belastbaar rendement * aandeel in de rendementsgrondslag
 6. **Bereken hoeveel belasting moet worden betaald**

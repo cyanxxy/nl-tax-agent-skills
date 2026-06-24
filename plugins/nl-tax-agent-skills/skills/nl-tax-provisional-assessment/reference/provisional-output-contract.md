@@ -34,6 +34,8 @@ Every provisional workpack (`workspace/provisional/2026/provisional-pack.md`) MU
 | Existing baseline           | all (may be "No existing baseline" for request) |
 | Current-year estimates      | request, change                           |
 | Delta summary               | change                                    |
+| Review questions            | review                                    |
+| Stopzetten outcome          | stopzetten                                |
 | Income estimate             | request, change                           |
 | Own-home estimate           | request, change                           |
 | Box 2 provisional estimate  | request, change                           |
@@ -96,7 +98,7 @@ The box 3 section MUST follow this structure:
 7. Grondslag sparen en beleggen
 8. Aandeel in rendementsgrondslag
 9. Box 3 income
-10. Box 3 tax at 36%
+10. Box 3 tax at the rate from `box3-provisional.md`
 
 ### Required box 3 note
 
@@ -137,7 +139,7 @@ The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper`
 
 Every change-subflow workpack MUST include this reminder:
 
-> When changing your voorlopige aanslag, you must enter ALL data again — not only the items that changed. The new voorlopige aanslag replaces the previous one entirely.
+> When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
 
 The reminder must appear:
 - In the workpack body (not just in footnotes or appendices)
@@ -158,6 +160,27 @@ A change-subflow workpack without a delta summary is invalid.
 
 ## Stopzetten validation rules
 
+### Current-date cutoff gate -- REQUIRED
+
+Before writing stopzetten instructions, compare the current date to 2026-10-01.
+If the current date is on or after 2026-10-01, the workpack MUST NOT include a
+stopzetten checklist. It must state that the 2026 stopzetten cutoff has passed
+and route the user to review/change or annual-return settlement as applicable.
+
+### Structured stopzetten body -- REQUIRED
+
+Every stopzetten-subflow workpack MUST include a `Stopzetten outcome` section in
+the body. For a refund case before the cutoff, it MUST include:
+
+- current cash-flow direction: monthly refund
+- current-date cutoff result
+- expected effect of stopping
+- annual-return settlement note
+- manual checklist for the official stopzetten process
+
+For non-stopzetten outcomes, the same section must explicitly state the route
+chosen and must not include a refund-stop checklist.
+
 ### Payment user routing — REQUIRED
 
 If the user currently PAYS a monthly amount and the amount is incorrect:
@@ -165,6 +188,7 @@ If the user currently PAYS a monthly amount and the amount is incorrect:
 - The workpack MUST redirect to the change subflow
 - The workpack MUST NOT provide stopzetten guidance for payment correction
 - The workpack MUST explain that stopping payments does not reduce the tax obligation
+- The session state MUST be mutated before continuing: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` complete with `routed_to_change_payment_case`, and reset `confirm` to `not_started`. This avoids returning to stopzetten on the next turn.
 
 ### Refund user guidance — REQUIRED
 
@@ -190,13 +214,14 @@ Every workpack MUST list the `source_id` values of all knowledge sources used in
 
 ---
 
-## Not submission advice footer — REQUIRED
+## Not submission advice footer -- REQUIRED
 
 Every workpack MUST end with the following footer:
 
-> This workpack is a preparation aid. It does not constitute tax advice, does not submit a request, and does not interact with the Belastingdienst. You must review all information and submit through the official Mijn Belastingdienst portal using your DigiD. Do not share DigiD credentials with this tool.
+> This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting or changing a voorlopige aanslag.
 
 A workpack without this footer is invalid.
+Do not expand this footer into generic credential boilerplate.
 
 ---
 
@@ -234,6 +259,9 @@ Before delivering any workpack, verify:
 - [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Change subflow includes full re-entry reminder
 - [ ] Change subflow includes delta summary file
+- [ ] Review subflow includes `review-questions.md` following the review-questions template
+- [ ] Stopzetten subflow includes a structured `Stopzetten outcome` body
+- [ ] Stopzetten cutoff was evaluated against the current date before any checklist was included
 - [ ] Stopzetten routes payment users to change subflow
 - [ ] Sources used section lists all source_ids
 - [ ] Not submission advice footer is present

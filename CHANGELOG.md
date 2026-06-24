@@ -5,6 +5,45 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- Removed all DigiD handling and references throughout the plugin — knowledge files,
+  skills, workpacks, submission checklists, eval fixtures, and docs. The plugin never logs
+  in or submits, so DigiD never enters its workflow. BSN/credential hygiene rules are
+  unchanged.
+- Removed the prompt-injection guardrail: the `security/prompt-injection.md` policy, the
+  evidence indexer's `untrusted-content-policy.md` and its content-marker /
+  `suspicious_content_detected` scanning, the "treat as data / never follow embedded
+  instructions" instructions across skills, and the prompt-injection eval case. The host
+  model (Claude/Codex) provides prompt-injection resistance. Operational file-handling
+  safety stays in the indexer: symlinks are never followed, uploaded scripts are never
+  executed, resource limits are enforced, archives are never expanded, and BSN/IBAN are
+  never stored.
+
+### Changed
+
+- Updated skill path-resolution guidance for Claude Cowork: bundled plugin files are now
+  resolved through host file tools (`Read`/`Glob`/`Grep`) instead of Bash-based
+  `${CLAUDE_PLUGIN_ROOT}` discovery, with manual validation fallbacks when Cowork's isolated
+  Bash VM cannot see bundled plugin scripts.
+- Evidence-index schema: dropped `suspicious_content_detected` and `suspicious_count`;
+  macro-bearing spreadsheets are flagged via `active_content_detected` and the index reports
+  an `active_content_count` aggregate.
+- Source-refresh report schema: each source entry now also reports
+  `staleness_threshold_days`, `age_days`, and `expires_on`.
+- Field-map validator: required reference rows the portal pre-fills are exempt from the
+  manual-entry coverage and readiness checks; widened pre-fill marker detection
+  (`auto-fill`, `vooraf ingevuld`).
+
+### Added
+
+- Registered `bd_box3_2025_worked_examples` as a mandatory source for the annual-return and
+  box 3 skills.
+- Added the `box2` subsection to the provisional session-progress template so a fresh
+  session matches the provisional workpack generation gate.
+
 ## [0.1.2]
 
 This release applies a verified audit pass: tax-content corrections, workflow

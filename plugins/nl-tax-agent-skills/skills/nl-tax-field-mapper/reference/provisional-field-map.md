@@ -7,7 +7,7 @@ status: active
 last_reviewed: "2026-05-15"
 review_status: reviewed
 
-This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
+This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
 
 > **Provenance / freshness.** Labels reflect the 2026 Mijn Belastingdienst voorlopige aanslag as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
 
@@ -39,11 +39,12 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `personal.bsn` | BSN (burgerservicenummer) | Citizen service number | Persoonsgegevens | required | Login via DigiD; NOT manually entered; do NOT store |
+| `personal.bsn` | BSN (burgerservicenummer) | Citizen service number | Persoonsgegevens | required | Pre-filled by the portal; NOT manually entered; do NOT store |
 | `personal.adres` | Adres | Address | Persoonsgegevens | required | Pre-filled after login |
 
 ### Notes on personal data
-- BSN is used for portal login only. It is NOT a field the taxpayer enters -- DigiD authentication handles identity. The field mapper must NOT include BSN as a data-entry field.
+- BSN is not a field the taxpayer enters. The field mapper omits it entirely and NEVER stores the BSN value.
+- Address is pre-filled after login. The field mapper omits it from both `fields` and `missing_fields`; the validator treats it as coverage-exempt.
 - The provisional form has minimal personal data fields compared to the annual return.
 
 ---

@@ -104,18 +104,18 @@ Filing status: on time. No late-filing exposure.
 
 - Granted uitsteldatum: [YYYY-MM-DD] -- Src: [U/F]
 - Belastingrente still accrues from 1 July 2026 if tax is owed on the eventual aanslag.
-- Belastingrente rate from 1 January 2026: 5% -- Src: bd_belastingrente_overview
+- Belastingrente rate from 1 January 2026: [rate from `late-filing.md`] -- Src: bd_belastingrente_overview
 
 ### Late (deadline passed, no uitstel)
 
 - Original deadline: 1 May 2026 -- Src: bd_annual_deadline_2025
 - Status: outstanding -- Src: [U]
 - Verzuimboete (penalty for late filing):
-  - First-time late filing: EUR 469 -- Src: bd_verzuimboete
-  - Repeated late filing: up to EUR 6,709 -- Src: bd_verzuimboete
+  - First-time late filing: EUR [amount from `late-filing.md`] -- Src: bd_verzuimboete
+  - Repeated late filing: up to EUR [maximum from `late-filing.md`] -- Src: bd_verzuimboete
 - Belastingrente:
   - Starts running 1 July 2026 for any tax owed
-  - Rate from 1 January 2026: 5% -- Src: bd_belastingrente_overview
+  - Rate from 1 January 2026: [rate from `late-filing.md`] -- Src: bd_belastingrente_overview
 - Recommended next steps:
   - File the prepared return through Mijn Belastingdienst as soon as possible.
   - Expect a verzuimboete on the aanslag; pay promptly to avoid further follow-up.
@@ -191,11 +191,11 @@ Filing status: on time. No late-filing exposure.
 
 ### Tariefsaanpassing
 
-[If taxpayer income is in schijf 3 (above EUR 76,817):]
+[If taxpayer income is in the top bracket above [threshold from `box1-rates.md`]:]
 
 - Portion of deductible own-home costs falling in schijf 3: EUR [amount] -- Src: C:...
-- Tariefsaanpassing: EUR [amount] x (49.50% - 37.48%) = EUR [amount] -- Src: C:...
-- Effective deduction rate for this portion: 37.48%
+- Tariefsaanpassing: EUR [amount] x ([top bracket rate from `box1-rates.md`] - [deduction-rate cap from `deductions.md`]) = EUR [amount] -- Src: C:...
+- Effective deduction rate for this portion: [deduction-rate cap from `deductions.md`]
 
 [If income is below schijf 3: "Not applicable -- income does not exceed the schijf 3 threshold."]
 
@@ -204,7 +204,7 @@ Filing status: on time. No late-filing exposure.
 [If eigenwoningforfait exceeds mortgage interest:]
 
 - Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [interest] = EUR [amount] -- Src: C:...
-- Hillenregeling correction (76.667% in 2025): EUR [amount] x 76.667% = EUR [amount] -- Src: C:...
+- Hillenregeling correction: EUR [amount] x [Hillen percentage from `own-home.md`] = EUR [amount] -- Src: C:...
 - Net eigenwoningforfait after Hillenregeling: EUR [amount] -- Src: C:...
 
 [If mortgage interest exceeds eigenwoningforfait: "Not applicable -- mortgage interest exceeds the eigenwoningforfait."]
@@ -254,7 +254,7 @@ Filing status: on time. No late-filing exposure.
 | Disposal costs used to derive net transfer price (`box2.vervreemdingskosten`) | EUR [amount] | [F/U/A/?] |
 | Disposal benefit (`box2.vervreemdingsvoordeel`) | EUR [amount or "manual review required"] | [C:net-transfer-acquisition / F/U/A/?] |
 
-Standard preparation formula: official net transfer price minus acquisition price. If evidence starts from gross sale proceeds, subtract disposal costs once to derive the net transfer price first. Use manual review instead of a calculated amount when valuation, informal capital, non-arm's-length, restructuring, treaty, nonresident, emigration, death, or corporate-tax-heavy DGA facts are present.
+Standard preparation formula: official net transfer price minus acquisition price. Do not subtract disposal costs from `box2.vervreemdingsprijs`; that field is the official net transfer price. Use `box2.vervreemdingskosten` only to derive net transfer price from gross proceeds, and otherwise keep it as provenance/reconciliation so costs are not deducted twice. Use manual review instead of a calculated amount when valuation, informal capital, non-arm's-length, restructuring, treaty, nonresident, emigration, death, or corporate-tax-heavy DGA facts are present.
 
 ### Loss setoff and partner allocation
 
@@ -340,7 +340,7 @@ Do not deduct custody fees, transaction costs, management fees, maintenance cost
 
 ### Comparison: fictitious vs actual
 
-| Method | Box 3 income | Box 3 tax (at 36%) | Src | Data status |
+| Method | Box 3 income | Box 3 tax (at [box 3 rate from `fictitious.md`]) | Src | Data status |
 |--------|-------------|-------------------|-----|-------------|
 | Fictitious return (forfaitair rendement) | EUR [amount] | EUR [amount] | C:fictitious_rows | Complete |
 | Actual return (werkelijk rendement) | EUR [amount] | EUR [amount] | C:actual_return_rows | [Complete / Partial / Missing] |
@@ -407,9 +407,9 @@ Total periodieke giften: EUR [amount] -- Src: C:sum (fully deductible, no thresh
 | [name] | EUR [amount] | [yes/no] | [F/U/A/?] |
 
 - Total gewone giften: EUR [amount] -- Src: C:sum
-- Cultural ANBI multiplier applied: EUR [amount] (1.25x, max EUR 1,250 additional) -- Src: C:formula
-- Drempel (1% of drempelinkomen, min EUR 60): EUR [amount] -- Src: C:formula
-- Cap (10% of drempelinkomen): EUR [amount] -- Src: C:formula
+- Cultural ANBI multiplier applied: EUR [amount] ([multiplier and maximum from `deductions.md`]) -- Src: C:formula
+- Drempel ([threshold formula and minimum from `deductions.md`]): EUR [amount] -- Src: C:formula
+- Cap ([cap formula from `deductions.md`]): EUR [amount] -- Src: C:formula
 - **Deductible gewone giften:** EUR [amount] -- Src: C:formula
 
 ### Lijfrentepremie
@@ -565,12 +565,4 @@ Before filing through Mijn Belastingdienst, review the following:
 
 ## Not submission advice
 
-This workpack is a preparation aid. It does not constitute tax advice, does not file your return, and does not interact with the Belastingdienst. You must review all information and submit through the official Mijn Belastingdienst portal using your DigiD. Do not share DigiD credentials with this tool.
-
-To file your return:
-1. Log in at mijn.belastingdienst.nl with your DigiD
-2. Check the pre-filled data (vooringevulde aangifte) against this workpack
-3. Add or correct information as identified in this workpack
-4. Review the calculated result, sign, and submit
-
-If someone else is helping you file, they must be authorized through DigiD Machtigen. This tool does not act as your representative and cannot log in, sign, or submit on your behalf.
+This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting.

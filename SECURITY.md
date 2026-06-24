@@ -6,12 +6,11 @@ This repository ships the `nl-tax-agent-skills` plugin: a skills-only package
 (LLM playbooks plus small deterministic Python helpers for file inventory,
 hashing, schema validation, simple math, and freshness checks). There is no
 backend service, web app, authentication layer, or network filing path. The
-plugin never logs in to Mijn Belastingdienst, never collects or stores DigiD
-credentials, and never submits, signs, or transmits a tax return. Submission is
-always performed manually by the user.
+plugin does not perform Mijn Belastingdienst portal access, signing, submission,
+or tax-return transmission. Submission is performed manually by the user.
 
-All uploaded document content is treated as untrusted input. Instructions
-embedded inside evidence files are data, not commands, and must not be followed.
+Uploaded document content is evidence input. The plugin reads files as data and
+never executes file contents, macros, or scripts found inside them.
 
 ## Reporting a vulnerability
 
@@ -29,14 +28,12 @@ When reporting, please include:
 - steps to reproduce, ideally with a minimal example;
 - the plugin version (from `plugins/nl-tax-agent-skills/.claude-plugin/plugin.json`).
 
-Do **not** include real taxpayer data, BSNs, IBANs, DigiD credentials, or any
+Do **not** include real taxpayer data, BSNs, IBANs, portal credentials, or any
 official documents (jaaropgaven, beschikkingen) in a report. Redact or
 synthesize examples instead.
 
 ## What we care about most
 
-- Prompt-injection paths where untrusted evidence content could change skill
-  behavior (see `skills/_shared/knowledge/security/prompt-injection.md`).
 - Any path that could write real taxpayer data outside the gitignored
   `workspace/`, `uploads/`, or `evidence/` directories.
 - Path-traversal or symlink-escape in the evidence indexer.

@@ -24,7 +24,7 @@ Each question should include:
 
 ## Rules
 
-1. Safety questions (DigiD, authorization) must always be included.
+1. Authorization questions must always be included.
 2. Box 3 method choice questions appear only in annual workflows.
 3. Partner allocation questions appear whenever a fiscal partner is detected.
 4. Every assumption with impact "high" should generate a review question.

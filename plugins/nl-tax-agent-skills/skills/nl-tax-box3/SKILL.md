@@ -16,6 +16,8 @@ Annual 2025 must cover fictitious return and werkelijk-rendement data collection
 
 This helper participates in a conversational workflow. It does not assume all asset and debt inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros.
 
+This helper may be called through a Skill/Task tool or inlined by an owning workflow when no such tool exists. The same output contract applies either way.
+
 ## Hard rules
 
 - Annual 2025: collect and compare fictitious return and werkelijk rendement when the user wants the actual-return comparison.
@@ -24,12 +26,18 @@ This helper participates in a conversational workflow. It does not assume all as
 - Compute only from values with a real source or an explicitly confirmed assumption.
 - The bundled scripts require `--partner-full-year-confirmed` alongside `--has_partner` before they double the heffingsvrij vermogen and the schulden drempel; `--has_partner` on its own raises an error. They also reject negative or non-finite amounts. Do not present a doubled allowance until full-year partnership is confirmed.
 
-## Read first
+## Loading bundled files
 
-- `_shared/knowledge/security/prompt-injection.md`
-- `_shared/knowledge/security/digid.md`
+`_shared/` is the plugin-shared folder at this skill's `../_shared/`. Resolve
+bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is
+not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell
+commands run in an isolated VM that may not see the plugin cache even when
+`Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}`
+or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools;
+otherwise search within the loaded plugin/skill tree and resolve relative to
+this skill directory.
 
-`_shared/` is the plugin-shared folder at this skill's `../_shared/`. If a bundled path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box3/` (Claude Code and Cowork set `CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`. Only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (for this skill, `scripts/classify_box3_assets.py`, `scripts/compare_box3_annual_2025.py`, and `scripts/summarize_box3_provisional_2026.py`). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/classify_box3_assets.py`, `scripts/compare_box3_annual_2025.py`, and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 ## Behavior
 

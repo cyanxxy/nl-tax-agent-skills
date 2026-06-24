@@ -61,7 +61,7 @@ The following situations mean the voorlopige aanslag should be checked and poten
 ## If amounts are wrong
 
 - Follow the change procedure described in change-flow.md
-- Remember: when changing, ALL data must be re-entered
+- Remember: when changing, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely
 
 ## Risk of incorrect voorlopige aanslag
 

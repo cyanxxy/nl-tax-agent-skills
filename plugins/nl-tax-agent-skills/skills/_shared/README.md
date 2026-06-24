@@ -11,7 +11,7 @@ _shared/
     platform/                # Claude Code / Agent Skills platform documentation
     laws/                    # Dutch legal backbone (Wet IB 2001, Uitvoeringsregeling, Uitvoeringsbesluit)
     methods/                 # Rule-authoring methodology (Regelspraak, ALEF)
-    security/                # DigiD policy, prompt-injection policy, machtigen guidance
+    security/                # machtigen (authorization) guidance
     compat/                  # ODB compatibility references (future awareness only)
     own-home/                # Eigen woning, hypotheekrenteaftrek, eigenwoningforfait
     partners/                # Fiscal partnership and allocation

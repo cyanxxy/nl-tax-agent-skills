@@ -29,7 +29,6 @@ These items must NOT appear in the evidence index or any output file:
 |---|---|
 | Full BSN (burgerservicenummer) | Note `bsn_present: true` only — never store the number itself |
 | Full IBAN | Note `iban_present: true` only — never store the full number |
-| DigiD credentials | Never extract, never store, never reference. DigiD is NOT evidence |
 | Personal medical details | Extract total amounts only (e.g. `totaal zorgkosten: 1200`), never diagnoses, treatments, or provider names beyond the insurer |
 | Passwords or PINs | Never extract, never store |
 | Photos of identity documents | Note `id_document_present: true` only — do not extract details |

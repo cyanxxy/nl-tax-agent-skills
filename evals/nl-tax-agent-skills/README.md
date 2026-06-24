@@ -2,7 +2,7 @@
 
 This directory contains the repo-local evaluation setup for `nl-tax-agent-skills`.
 It is intentionally offline: benchmark prompts point at local YAML fixtures and
-must not browse, refresh sources, log in, file, or collect DigiD credentials.
+must not browse, refresh sources, log in, file, or collect portal credentials.
 It lives outside the plugin package so development-only benchmark files are not
 shipped to users or counted as plugin support context.
 

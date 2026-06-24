@@ -13,6 +13,14 @@ Stopzetten is available for a voorlopige aanslag where the taxpayer RECEIVES a m
 
 ## When stopzetten is appropriate
 
+### Current-date cutoff gate
+
+Before offering a stopzetten checklist, compare the current date to 2026-10-01.
+If the current date is on or after 2026-10-01, do not generate a stopzetten
+checklist. Record that the cutoff has passed and route the user to review/change
+if estimates are wrong, or to annual-return settlement if no provisional change
+is available.
+
 ### Receiving a monthly refund (teruggaaf)
 
 Stopzetten is the correct action when:
@@ -32,7 +40,7 @@ If the taxpayer currently PAYS a monthly amount and the amount is wrong:
 
 ## How to stop
 
-1. Log in to Mijn Belastingdienst with DigiD
+1. Log in to Mijn Belastingdienst
 2. Navigate to the existing voorlopige aanslag 2026
 3. Select the option to stop (stopzetten) the monthly refund
 4. Confirm the request
@@ -61,12 +69,15 @@ It only means that monthly refunds are stopped. The full tax obligation is deter
 When a user asks about stopping their voorlopige aanslag:
 
 1. First determine whether the user is receiving a refund or making payments
-2. If receiving a refund: explain that refunds will cease and settlement happens at annual return
+2. If receiving a refund: first apply the current-date cutoff gate, then explain that refunds will cease and settlement happens at annual return
 3. If making payments: route to CHANGING the voorlopige aanslag; do not offer stopzetten
    - Explain the risk of a large lump-sum bill at annual return time
+   - Mutate session state before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` complete with `routed_to_change_payment_case`, and reset `confirm` to `not_started`
 4. Warn that stopping a refund does not eliminate the tax obligation
-5. Direct the user to the Mijn Belastingdienst portal for the actual action and note the 1 October 2026 cutoff
+5. Direct the user to the Mijn Belastingdienst portal for the actual action only when the cutoff gate is before 2026-10-01
 
 ## Common failure
 
 Do not conflate stopzetten with "cancelling" the tax obligation. Stopzetten only stops the monthly cash flow. The underlying tax liability remains and will be settled at annual return time. Never suggest that stopping a voorlopige aanslag means the taxpayer no longer owes anything.
+
+Do not leave a payment case in `provisional_2026_stopzetten` after redirecting it. Copy the payment baseline into the change subflow so the change flow can continue from the same beschikking without re-asking the stopzetten direction question.

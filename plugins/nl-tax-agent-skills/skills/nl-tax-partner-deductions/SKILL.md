@@ -12,13 +12,15 @@ allowed-tools:
 
 Background helper for fiscal-partner status and allocation notes used by manual-entry workpacks.
 
-Load `workspace/taxpayer/profile.yaml`, `_shared/knowledge/security/prompt-injection.md`, `_shared/knowledge/security/digid.md`, and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
+Load `workspace/taxpayer/profile.yaml` and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
 
-Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. If a bundled path does not resolve from your working directory, run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from `${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-partner-deductions/` (Claude Code and Cowork set `CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
+Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory.
 
-Safety: only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path, and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume partner data or deduction amounts are pre-staged. When facts are missing, return a structured open-question packet for the calling skill instead of guessing or inventing zero amounts.
+
+This helper may be called through a Skill/Task tool or inlined by an owning workflow when no such tool exists. The same output contract applies either way.
 
 ## Behavior
 
@@ -55,7 +57,7 @@ Write only:
 - `workspace/shared/partner-deduction-review-questions.md`
 - `workspace/shared/partner-deductions-open-questions.yaml`
 
-Do not write annual/provisional workpacks, ask for partner DigiD, store full BSN/IBAN, or force unsupported partner cases into v1.
+Do not write annual/provisional workpacks, store full BSN/IBAN, or force unsupported partner cases into v1.
 
 ## Must NOT write to
 

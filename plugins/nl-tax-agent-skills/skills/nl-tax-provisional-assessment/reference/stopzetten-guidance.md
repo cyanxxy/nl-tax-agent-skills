@@ -32,6 +32,14 @@ This document provides the decision logic for determining whether stopzetten (st
 
 ## Monthly REFUND (teruggaaf) — stopzetten may be appropriate
 
+### Current-date cutoff gate
+
+Before preparing the stopzetten checklist, compare the current date to
+2026-10-01. If the current date is on or after 2026-10-01, do not generate a
+stopzetten checklist. Record that the cutoff has passed and explain that the
+remaining handling is through review/change, if estimates are wrong, or through
+annual-return settlement.
+
 ### When stopzetten is the right action
 
 The taxpayer receives a monthly refund and wants to stop it. This is appropriate when:
@@ -43,7 +51,7 @@ The taxpayer receives a monthly refund and wants to stop it. This is appropriate
 
 ### Process
 
-1. Log in to Mijn Belastingdienst using DigiD
+1. Log in to Mijn Belastingdienst
 2. Navigate to the existing voorlopige aanslag 2026
 3. Select the option to stop (stopzetten) the monthly refunds
 4. Confirm the request
@@ -97,8 +105,15 @@ When a user who pays monthly wants to stop because the amount is wrong:
 1. Explain that stopping will not reduce what they owe
 2. Explain the risk of a large lump-sum bill at annual return time
 3. Recommend changing the voorlopige aanslag instead
-4. If the user agrees, transition to the change subflow
+4. If the user agrees, transition to the change subflow and mutate progress before asking the next question:
+   - set `active_workflow: provisional_2026_change`
+   - set `provisional_2026.subflow: change`
+   - copy the payment baseline into the `baseline` subsection
+   - mark `stopzetten_direction` complete with `routed_to_change_payment_case`
+   - reset `confirm` to `not_started`
 5. If the user still asks to stop a monthly payment case, state that stopzetten is not available for payment cases and continue with the change flow
+
+This state mutation prevents the next turn from re-entering the stopzetten prompt loop.
 
 ---
 
@@ -131,8 +146,8 @@ When stopzetten is the appropriate action, include this checklist:
 - [ ] Confirm you understand that settlement occurs when the annual return for 2026 is filed
 - [ ] If you received refunds that were too high, you may need to repay the excess at annual return time
 - [ ] Confirm you are receiving a monthly refund; if you pay monthly, use wijzigen instead
-- [ ] Confirm it is before 1 October 2026
-- [ ] Log in to Mijn Belastingdienst using your DigiD
+- [ ] Confirm the current-date cutoff gate showed a date before 1 October 2026
+- [ ] Log in to Mijn Belastingdienst
 - [ ] Navigate to your voorlopige aanslag 2026
 - [ ] Select the option to stop (stopzetten)
 - [ ] Confirm the request
@@ -147,4 +162,3 @@ When stopzetten is the appropriate action, include this checklist:
 - Stopzetten does not mean the tax year is closed — the annual return is still required
 - Stopzetten is for monthly refunds only; route monthly payment corrections to wijzigen
 - If the user's situation is complex (multiple income sources, international elements, business income), recommend consulting a tax adviser before stopping
-- Do not share DigiD credentials with this tool

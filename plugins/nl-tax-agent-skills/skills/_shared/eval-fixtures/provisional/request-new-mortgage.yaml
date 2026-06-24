@@ -78,7 +78,7 @@ expected_outputs:
   negative_checks:
     - no_werkelijk_rendement_request: true  # CRITICAL
     - no_annual_wording: true
-    - no_digid_credential_fields: true
+    - no_credential_fields: true
     - all_amounts_labeled_estimate: true
 
 acceptance_criteria:

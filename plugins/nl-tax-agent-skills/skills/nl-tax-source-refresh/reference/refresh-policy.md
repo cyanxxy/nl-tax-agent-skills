@@ -63,6 +63,8 @@ These thresholds define when a source is considered stale based on `source_type`
 | `methodology`        | 365 days                         | Methodologies change infrequently      |
 | `official_algorithm_register` | 365 days              | Algorithm register updated annually    |
 
+`fetch_sources.py` emits machine-readable staleness fields for every checked source: `staleness_threshold_days`, `age_days`, and `expires_on` (the date after which the current `last_checked` attestation is stale for that source type). These fields are generated from the register metadata rather than hand-authored per source.
+
 ## Filing season dates (reference)
 
 | Activity                           | Typical date           |

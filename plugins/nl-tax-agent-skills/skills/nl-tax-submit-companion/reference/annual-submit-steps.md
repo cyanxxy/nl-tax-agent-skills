@@ -12,7 +12,7 @@
 ## Submission steps
 
 1. Go to Mijn Belastingdienst (mijn.belastingdienst.nl)
-2. Log in with DigiD (your own DigiD, or via DigiD Machtigen if authorized)
+2. Log in to Mijn Belastingdienst
 3. Select "Aangifte inkomstenbelasting 2025"
 4. Review pre-filled data (VIA) -- compare with your evidence
 5. Correct or add data using the field map as guide
@@ -21,7 +21,7 @@
    - Eigen woning details (WOZ-waarde, hypotheek, rente)
    - Deductions with supporting evidence (aftrekposten)
 7. Review the complete return
-8. If fiscal partner: partner must also review and sign (with their own DigiD)
+8. If fiscal partner: partner must also review and sign
 9. Submit the return
 10. Save the confirmation/receipt
 

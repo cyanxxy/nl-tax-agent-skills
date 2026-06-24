@@ -17,13 +17,12 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ### Step 1: Prepare (Voorbereiden)
 
-- The taxpayer gathers the required documents and data, including DigiD, rekeningnummer, 2025 jaaropgaven, 2025 bank and investment overviews, crypto exchange overviews if relevant, WOZ-waarde with valuation date 1 January 2024, mortgage annual statement, and evidence for deductions.
-- DigiD is the government's digital identity system. This skill must never collect, store, or process DigiD credentials. See security/digid.md.
-- If filing on behalf of someone else, proper authorization via DigiD Machtigen must be in place first. See security/machtigen.md.
+- The taxpayer gathers the required documents and data, including rekeningnummer, 2025 jaaropgaven, 2025 bank and investment overviews, crypto exchange overviews if relevant, WOZ-waarde with valuation date 1 January 2024, mortgage annual statement, and evidence for deductions.
+- If filing on behalf of someone else, proper authorization must be in place first. See security/machtigen.md.
 
 ### Step 2: Open the return (De aangifte openen)
 
-- The taxpayer logs in at Mijn Belastingdienst using DigiD.
+- The taxpayer logs in at Mijn Belastingdienst.
 - In Mijn Belastingdienst, the taxpayer selects `Inkomstenbelasting` and then the relevant tax year.
 
 ### Step 3: Check pre-filled data (Controleren)
@@ -47,7 +46,7 @@ These are reference notes for workpack preparation -- not final tax advice.
 ### Step 4: Review, sign, and submit (Ondertekenen en versturen)
 
 - The taxpayer reviews the complete return, including the calculated tax result.
-- The return is digitally signed via DigiD and submitted.
+- The return is digitally signed and submitted.
 - After submission, a bevestiging (confirmation) is provided with a timestamp and reference number.
 - The taxpayer should save or print this confirmation.
 - This skill cannot perform this step. The workpack includes a final checklist item: "Log in, enter the prepared data, review the calculated result, and submit."

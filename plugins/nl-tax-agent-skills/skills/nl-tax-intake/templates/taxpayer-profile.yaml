@@ -4,6 +4,9 @@ intake_status: "not_started"    # not_started | in_progress | complete
 created_at: ""
 updated_at: ""
 workflow_candidate: ""
+# Known terminal candidates include `manual_review` and the blocked candidates
+# declared in `_shared/supported-workflows.yaml`; intake must not route those
+# into annual/provisional workpack generation.
 
 # Every fact below carries provenance:
 #   source: file | user_chat | assumption | unknown
@@ -24,6 +27,7 @@ person:
   aow_age_in_tax_year:
     value: null                  # true | false; derived from date_of_birth and tax year, recorded for traceability
     source: "unknown"
+    assumption_id: null          # required when source = assumption
 
 residency:
   full_year_nl_resident:
@@ -39,7 +43,6 @@ partner:
     value: null
     source: "unknown"
   partner_bsn_present: false
-  partner_digid_requested: false
   partner_date_of_birth:
     value: null                  # ISO date; required when has_fiscal_partner is true
     source: "unknown"
@@ -72,6 +75,22 @@ workflows:
     subflow: null
     status: "not_started"
 
+routing:
+  complex_box2_screening:
+    value: "not_screened"        # not_screened | standard | manual_review
+    source: "unknown"
+  blocked_profile_candidate:
+    value: null                  # e.g. annual_2025_migration_m_form
+    source: "unknown"
+
+manual_review:
+  required:
+    value: false
+    source: "unknown"
+  reason: null
+  triggers: []
+  terminal: false
+
 intake_anchor_question:
   asked: false
   answered: false
@@ -81,5 +100,4 @@ intake_anchor_question:
     source: "unknown"
 
 notes:
-  - "No DigiD credentials collected."
   - "No BSN stored."

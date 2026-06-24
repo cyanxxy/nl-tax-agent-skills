@@ -1,6 +1,6 @@
 # Rule note: Authorization and representation (Machtigen)
 
-source_id: bd_digid_machtigen
+source_id: bd_machtigen_authorization
 workflow: all
 tax_year: all
 status: active
@@ -13,11 +13,12 @@ When someone other than the taxpayer is preparing or submitting a tax return or 
 
 ## Authorization routes
 
-### DigiD Machtigen
+### Representative authorization
+
 - A taxpayer can authorize another person to handle tax matters on their behalf
-- This is done through the official DigiD Machtigen service
+- This is done through the official authorization service
 - The authorization must be set up BEFORE the representative can act
-- Skills may inform users about this service but must not automate it
+- Skills may include an authorization check but must not automate it
 
 ### Bewindvoerder / Curator
 - Court-appointed administrators have separate authorization procedures
@@ -30,7 +31,7 @@ When someone other than the taxpayer is preparing or submitting a tax return or 
 
 ## What skills may do
 
-- Inform the user that DigiD Machtigen exists
+- Inform the user that official authorization may be required
 - Explain that authorization must happen through official channels
 - Include "check authorization" as a step in submission checklists
 - Note in the workpack when a representative scenario is detected
@@ -44,4 +45,4 @@ When someone other than the taxpayer is preparing or submitting a tax return or 
 
 ## Developer instruction
 
-If the user mentions they are helping someone else with their taxes, add a note to the workpack about DigiD Machtigen and include an authorization check step in the submission checklist.
+If the user mentions they are helping someone else with their taxes, include an authorization check step in the submission checklist.

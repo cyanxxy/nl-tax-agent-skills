@@ -192,7 +192,6 @@ User enters provisional skill
 - Box 2 amounts must be labeled as estimates or from-baseline.
 - Box 3 uses the provisional fictitious method only. Include only the explanatory note: "Werkelijk rendement is not part of provisional 2026."
 - Every workpack must include the "Not submission advice" footer
-- Every workpack must include the DigiD warning
 - Every workpack must list source_ids for all knowledge sources used
 - Every workpack must include the assumptions section
 - Output files go to `workspace/provisional/2026/` — never to `workspace/annual/`

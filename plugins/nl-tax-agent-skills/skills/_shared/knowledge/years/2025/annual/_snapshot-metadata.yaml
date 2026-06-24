@@ -1,33 +1,33 @@
 snapshot_metadata_version: '1.0'
 sources:
   bd_annual_data_checklist_2025:
-    content_hash_sha256: ffa7c02a6f217a93e8e5a61b9c4eacb052ea264206be6be7844c8c1c6544b38a
+    content_hash_sha256: 91631c668425ba128ccbdb4ee1cab3517578d381447f3ee520e2c3ce51eb8b88
     review_status: reviewed
     snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
     source_id: bd_annual_data_checklist_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte
   bd_annual_deadline_2025:
-    content_hash_sha256: fa69d157946be040af549c97b830d4af36c99a72c159a0a7252a305b944675bd
+    content_hash_sha256: 1e0b048f5108cf59601918851c56383886ab52e5e67f61da75ff09308e667c4d
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-06-24T14:44:17.113559+00:00'
     source_id: bd_annual_deadline_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen
   bd_annual_extension_2025:
-    content_hash_sha256: fa69d157946be040af549c97b830d4af36c99a72c159a0a7252a305b944675bd
+    content_hash_sha256: 1e0b048f5108cf59601918851c56383886ab52e5e67f61da75ff09308e667c4d
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-06-24T14:44:17.113559+00:00'
     source_id: bd_annual_extension_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte
   bd_annual_return_4_steps_2025:
-    content_hash_sha256: fa69d157946be040af549c97b830d4af36c99a72c159a0a7252a305b944675bd
+    content_hash_sha256: 1e0b048f5108cf59601918851c56383886ab52e5e67f61da75ff09308e667c4d
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-06-24T14:44:17.113559+00:00'
     source_id: bd_annual_return_4_steps_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen
   bd_annual_return_landing_2025:
-    content_hash_sha256: fa69d157946be040af549c97b830d4af36c99a72c159a0a7252a305b944675bd
+    content_hash_sha256: 1e0b048f5108cf59601918851c56383886ab52e5e67f61da75ff09308e667c4d
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-06-24T14:44:17.113559+00:00'
     source_id: bd_annual_return_landing_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/belastingaangifte
   bd_arbeidsinkomen_definition_2025:
@@ -67,9 +67,9 @@ sources:
     source_id: bd_deduction_rate_cap_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
   bd_fisin_2025_index:
-    content_hash_sha256: fa69d157946be040af549c97b830d4af36c99a72c159a0a7252a305b944675bd
+    content_hash_sha256: 1e0b048f5108cf59601918851c56383886ab52e5e67f61da75ff09308e667c4d
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-06-24T14:44:17.113559+00:00'
     source_id: bd_fisin_2025_index
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
   bd_general_tax_credit_2025:

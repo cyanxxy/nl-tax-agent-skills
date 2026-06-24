@@ -46,12 +46,12 @@ SUPPORTED_WORKFLOW_YEARS = {
 }
 VALID_WORKFLOWS = {workflow for workflow, _ in SUPPORTED_WORKFLOW_YEARS}
 CREDENTIAL_KEYWORDS = {
-    "digid", "wachtwoord", "password", "inloggegevens",
+    "wachtwoord", "password", "inloggegevens",
     "username", "login", "credential", "secret", "pin",
 }
 # BSN and IBAN are the two highest-value Dutch identifiers and must never be
-# stored as a data-entry field value. The portal pre-fills them; the field map
-# lists BSN as a coverage placeholder in missing_fields (no value) only.
+# stored as data-entry field values. The portal pre-fills identifier/personal
+# rows; current field maps omit them instead of creating placeholder entries.
 SENSITIVE_IDENTIFIER_KEYWORDS = {"bsn", "burgerservicenummer", "iban"}
 _IBAN_VALUE_RE = re.compile(r"\bNL\d{2}[A-Z]{4}\d{10}\b", re.IGNORECASE)
 _BSN_CANDIDATE_RE = re.compile(r"\b\d{9}\b")
@@ -169,9 +169,12 @@ def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, erro
     if not reference_path:
         return missing_field_ids
 
+    prefilled_field_ids = portal_prefilled_reference_fields(reference_path)
     represented_field_ids = field_ids | missing_field_ids
     for required_field_id in sorted(
-        required_reference_fields(reference_path) - represented_field_ids
+        required_reference_fields(reference_path)
+        - prefilled_field_ids
+        - represented_field_ids
     ):
         errors.append(
             "Required reference field not represented in fields or "
@@ -203,7 +206,7 @@ def validate_sensitive_field_names(fid, label_lower, errors):
         if kw in fid_lower or kw in label_lower:
             errors.append(
                 "Sensitive identifier field detected (BSN/IBAN must never be a "
-                f"data-entry field; list BSN in missing_fields without a value): {fid}"
+                f"data-entry field; omit portal-prefilled identifiers): {fid}"
             )
     for kw in PORTAL_AUTOMATION_KEYWORDS:
         if kw in fid_lower or kw in label_lower:
@@ -390,7 +393,7 @@ def _has_usable_provenance(field):
 
 
 def portal_prefilled_reference_fields(reference_path):
-    """Required reference fields the portal pre-fills (BRP / DigiD / VIA login).
+    """Required reference fields the portal pre-fills (BRP / portal / VIA login).
 
     These are intentionally left blank in the field map (the taxpayer confirms them
     in the portal, they are not hand-entered from evidence), so they must not count
@@ -426,6 +429,8 @@ def portal_prefilled_reference_fields(reference_path):
                     "pre-fill" in row_text
                     or "prefill" in row_text
                     or "vooringevuld" in row_text
+                    or "vooraf ingevuld" in row_text
+                    or "auto-fill" in row_text
                     or "not manually entered" in row_text
                 ):
                     prefilled.add(match.group(1))

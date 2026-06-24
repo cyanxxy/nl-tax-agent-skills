@@ -26,9 +26,9 @@ A voorlopige aanslag should be requested when:
 
 Prepare the estimated income, deduction, own-home, and box 3 information for 2026.
 
-### Step 2 -- Log in with DigiD
+### Step 2 -- Log in
 
-Log in to Mijn Belastingdienst using DigiD. The skill does not collect, store, or process DigiD credentials. See security/digid.md for the hard prohibition on credential handling.
+Log in to Mijn Belastingdienst.
 
 ### Step 3 -- Fill in the request
 
@@ -71,7 +71,6 @@ When building a workpack for requesting a voorlopige aanslag 2026:
 4. For box 3, follow the rules in box3-provisional.md -- use only the fictitious return method
 5. Present a summary before the user submits
 6. Remind the user that all amounts are estimates and will be reconciled at annual return time
-7. Do not collect or process DigiD credentials at any point
 
 ## Common failure
 

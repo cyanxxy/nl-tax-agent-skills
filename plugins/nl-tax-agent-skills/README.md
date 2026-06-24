@@ -59,8 +59,8 @@ shared notes only.
 
 ## Scope
 
-The plugin intentionally has **no** backend service, web app, browser automation, DigiD
-collection, signing, filing, Digipoort transport, or autonomous submission. It helps the
+The plugin intentionally has **no** backend service, web app, browser automation,
+signing, filing, Digipoort transport, or autonomous submission. It helps the
 taxpayer collect information, review it, and follow step-by-step guidance while filling the
 official forms manually.
 

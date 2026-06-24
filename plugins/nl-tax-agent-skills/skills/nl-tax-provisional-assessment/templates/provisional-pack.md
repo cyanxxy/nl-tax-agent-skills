@@ -19,6 +19,8 @@
 - Existing baseline, if any
 - Current-year estimates
 - Delta summary
+- Review questions
+- Stopzetten outcome
 - Income estimate
 - Own-home estimate
 - Box 2 provisional estimate
@@ -100,6 +102,51 @@
 [For review: see workspace/provisional/2026/review-questions.md for items requiring verification]
 
 [For stopzetten: "N/A — stopzetten does not require a delta calculation"]
+
+## Review questions
+
+[For review: see workspace/provisional/2026/review-questions.md. Summarize the total counts by status and recommended action here.]
+
+[For request/change/stopzetten: "N/A — not applicable for this subflow"]
+
+## Stopzetten outcome
+
+[For stopzetten only. For request/change/review, replace this section's body with "N/A — not applicable for this subflow"; do not omit the heading.]
+
+### Current-date cutoff gate
+
+| Item | Value | Src |
+|------|-------|-----|
+| Current date used for cutoff | [YYYY-MM-DD] | [system/user] |
+| Stopzetten cutoff | 2026-10-01 | C:bd_provisional_stopzetten_2026 |
+| Cutoff result | [before cutoff / cutoff passed] | C:date_compare |
+
+If the current date is on or after 2026-10-01, do not generate a stopzetten checklist. State that the 2026 stopzetten cutoff has passed and route the user to review/change or annual-return settlement as applicable.
+
+### Cash-flow direction and route
+
+| Item | Value | Src |
+|------|-------|-----|
+| Current monthly direction | [refund / payment / unknown] | [F/U/?] |
+| Route chosen | [stop refund / change VA / no action] | C:decision |
+| Reason | [short reason] | [F/U/C] |
+
+### Refund-stop checklist
+
+[Include only when the taxpayer receives a monthly refund and the current-date cutoff gate is before 2026-10-01.]
+
+- [ ] Confirm the current VA pays a monthly refund
+- [ ] Confirm the current date is before 2026-10-01
+- [ ] Confirm refunds should stop for the rest of 2026
+- [ ] Record that final settlement happens through the 2026 annual return in 2027
+- [ ] Use the official Mijn Belastingdienst stopzetten form for the taxpayer's 2026 monthly refund
+- [ ] Keep the confirmation for records
+
+### Payment-case redirect
+
+[Include only when the taxpayer pays monthly and the amount is wrong.]
+
+Stopping payments does not reduce the tax obligation. Route to the change subflow and carry the payment baseline forward there; do not include the refund-stop checklist.
 
 ## Income estimate
 
@@ -246,12 +293,13 @@ Manual review / unsupported triggers: valuation disputes, emigration, death, res
 
 [For the **change** subflow only. For request / review / stopzetten, replace this section's body with an explicit "N/A — not applicable for this subflow" line; do not omit the heading.]
 
-> When changing your voorlopige aanslag, you must enter ALL data again — not only the items that changed. The new voorlopige aanslag replaces the previous one entirely. Anything not re-entered defaults to zero in the official portal.
+> When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
 
 ## Field map summary
 
 [Reference to workspace/provisional/2026/field-map.yaml]
 [This file maps each collected data point to the corresponding field in the Mijn Belastingdienst portal]
+[For review: reference workspace/provisional/2026/review-questions.md instead. For stopzetten: "N/A — no field map is produced for stopzetten."]
 
 ## Missing information
 
@@ -298,4 +346,4 @@ All amounts are estimates unless explicitly tagged `B:` (baseline/from-baseline)
 
 ## Not submission advice
 
-This workpack is a preparation aid. It does not constitute tax advice, does not submit a request, and does not interact with the Belastingdienst. You must review all information and submit through the official Mijn Belastingdienst portal using your DigiD. Do not share DigiD credentials with this tool.
+This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting or changing a voorlopige aanslag.

@@ -32,7 +32,7 @@ ODB offers technical documentation and specifications for:
 
 - The message type for retrieving pre-filled return data
 - Allows authorized software to retrieve data the Belastingdienst already holds about a taxpayer (employer statements, bank interest reports, WOZ values)
-- Requires proper authorization (DigiD Machtigen or beconnummer)
+- Requires proper authorization
 
 ## Transport layer: Digipoort
 

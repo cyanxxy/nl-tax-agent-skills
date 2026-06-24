@@ -39,5 +39,5 @@ still applies. Model the split when partners have substantial Box 2 income.
 
 Use this shared official rate source for both the 2025 annual-return workpack
 and the 2026 provisional-assessment workpack. Do not substitute Box 1 or Box 3
-rates. Do not automate portal access, DigiD use, or filing submission; prepare
+rates. Do not automate portal access or filing submission; prepare
 manual workpack calculations and evidence prompts only.

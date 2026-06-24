@@ -31,5 +31,5 @@ price before calculating the benefit.
 
 Ask for dividend statements, withholding evidence, share-sale agreements, and
 acquisition-price support where relevant. Keep the output as a manual
-preparation workpack; do not handle DigiD credentials, portal navigation, or
+preparation workpack; do not handle portal navigation or
 submission.

@@ -30,6 +30,8 @@ If the current WOZ beschikking is not available when the provisional assessment 
 
 For 2026, 71.867% of the difference between the eigenwoningforfait and deductible own-home costs is taken into account as the aftrek wegens geen of geringe eigenwoningschuld.
 
+The 2026 percentage reflects the accelerated Hillenregeling phase-out from 2026 onward: the annual reduction increased from 3.33 percentage points to 4.8 percentage points. Do not extrapolate from the older one-thirtieth schedule.
+
 Flag the calculation for manual review if the taxpayer has no mortgage interest or only low mortgage interest.
 
 ## Tariefsaanpassing eigen woning 2026

@@ -3,7 +3,7 @@
 ## Annual Return 2025
 
 - **Direction:** Backward-looking — what happened in 2025
-- **Filing period:** March-April 2026 (with possible extension to September 2026 via uitstel)
+- **Filing period:** The due date is the date in the user's aangiftebrief; for the 2025 annual return this is often 1 May 2026. If the user requests uitstel before 1 May 2026, the standard extension runs to 1 September 2026. If the user did not receive an aangiftebrief but discovers they must file because tax is due, use the voluntary-filing guardrail: submit the 2025 return before 14 July 2026.
 - **What the user needs:** Evidence from 2025 (jaaropgave, WOZ-beschikking, bank statements as of 1 January 2025 and 1 January 2026, mortgage annual statement, health insurance policy, etc.)
 - **Trigger phrases:** "aangifte doen", "belastingaangifte 2025", "file my taxes", "income tax return"
 

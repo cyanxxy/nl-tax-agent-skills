@@ -81,7 +81,12 @@ def extract_domain(url):
 
 
 def find_content_root(register_path):
-    """Find the root that snapshot_path values are relative to."""
+    """Find the repo/plugin root that snapshot_path values are relative to.
+
+    Register paths are serialized from this root (for example
+    skills/_shared/knowledge/...), not from an individual skill directory where
+    the same file may be referenced as _shared/knowledge/...
+    """
     base_dir = os.path.dirname(os.path.abspath(register_path))
     candidates = [
         os.path.abspath(os.path.join(base_dir, "..", "..")),

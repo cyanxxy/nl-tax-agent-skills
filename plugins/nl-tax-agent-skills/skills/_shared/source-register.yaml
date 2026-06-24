@@ -12,7 +12,12 @@
 #   source_type        law | official_guidance | official_rates |
 #                      official_doctrine | official_algorithm_register |
 #                      platform_docs | developer_reference | methodology
-#   snapshot_path      local markdown snapshot relative to repo root
+#   snapshot_path      local markdown snapshot relative to repo root, not
+#                      relative to an individual skill directory. Skill docs may
+#                      refer to the same file with skill-relative paths such as
+#                      `_shared/knowledge/...`; register paths keep the leading
+#                      `skills/` segment so validators can resolve them from the
+#                      plugin/repo root.
 #   last_checked       ISO date of most recent manual verification
 #   freshness_policy   how often / when to re-check
 #   owner              team or role responsible for keeping the snapshot current
@@ -760,6 +765,21 @@ sources:
       - nl-tax-annual-return
       - nl-tax-box3
 
+  - id: bd_box3_2025_worked_examples
+    title: "Box 3 2025 worked examples note"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/box3/examples.md"
+    last_checked: "2026-06-24"
+    freshness_policy: "check at start of filing season when official Box 3 examples or calculation steps change"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box3
+
   - id: bd_box3_2026_provisional
     title: "Hoe is het box 3-inkomen op mijn voorlopige aanslag 2026 berekend?"
     domain: belastingdienst.nl
@@ -920,15 +940,15 @@ sources:
   #  Security and authorization
   # ===========================================================================
 
-  - id: bd_digid_machtigen
-    title: "DigiD Machtigen"
+  - id: bd_machtigen_authorization
+    title: "Representative authorization"
     domain: belastingdienst.nl
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen"
     source_type: official_guidance
     workflow: security
     snapshot_path: "skills/_shared/knowledge/security/machtigen.md"
     last_checked: "2026-04-30"
-    freshness_policy: "check quarterly; DigiD Machtigen procedures may change with platform updates"
+    freshness_policy: "check quarterly; representative authorization procedures may change with platform updates"
     owner: "tax-content"
     mandatory_for:
       - nl-tax-intake

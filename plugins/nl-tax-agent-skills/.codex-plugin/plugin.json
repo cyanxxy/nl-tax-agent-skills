@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",
-    "longDescription": "Local Dutch tax preparation skills for manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, automating the portal, or handling DigiD.",
+    "longDescription": "Local Dutch tax preparation skills for manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, or automating the portal.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",
     "capabilities": [

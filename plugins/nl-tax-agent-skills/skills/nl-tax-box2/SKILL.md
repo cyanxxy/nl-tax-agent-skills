@@ -17,20 +17,21 @@ Use this skill only for source-backed preparation support for:
 - `annual_2025`: annual actual Box 2 inputs from taxpayer evidence.
 - `provisional_2026`: estimated or baseline-derived Box 2 inputs for a provisional assessment.
 
+This helper may be called through a Skill/Task tool or inlined by an owning workflow when no such tool exists. The same output contract applies either way.
+
 ## Read first
 
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
-`../_shared/`. If a bundled path does not resolve from your working directory,
-run `echo "${CLAUDE_PLUGIN_ROOT}"` in Bash and resolve from
-`${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box2/` (Claude Code and Cowork set
-`CLAUDE_PLUGIN_ROOT`). Prefer `${CLAUDE_PLUGIN_ROOT}` for cross-host
-portability; Claude Code also exposes `${CLAUDE_SKILL_DIR}` (the skill's own
-subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
+`../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob`
+or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin
+files: in Cowork, shell commands run in an isolated VM that may not see the
+plugin cache even when `Read` and `Glob` can. If the host has already expanded
+`${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
+for file tools; otherwise search within the loaded plugin/skill tree and resolve
+relative to this skill directory.
 
-- `_shared/knowledge/security/prompt-injection.md`
-- `_shared/knowledge/security/digid.md`
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 
@@ -40,7 +41,7 @@ Run these bundled scripts when structured JSON inputs are available:
 - `scripts/calculate_box2_tax.py`
 - `scripts/summarize_box2_inputs.py`
 
-Only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (for this skill, the three scripts above). Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, the three scripts above), and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 ## Do
 
@@ -53,17 +54,45 @@ Only run Python under `${CLAUDE_PLUGIN_ROOT}/skills/.../scripts/` (for this skil
 - Flag losses, loss setoff, and excessive borrowing from an own BV for manual review.
 - Label all `provisional_2026` amounts as estimates or baseline-derived.
 - Keep outputs suitable for preparation workpacks and review questions.
+- When facts are missing, append a structured question packet to `workspace/shared/box2-open-questions.yaml` instead of inventing zeros.
+
+## Question packet
+
+Append missing inputs to `workspace/shared/box2-open-questions.yaml`:
+
+```yaml
+- question_id: "annual.box2.substantial_interest.status"
+  workflow: "annual_2025"
+  section: "box2.substantial_interest"
+  prompt_for_user: "Did you or your fiscal partner hold a substantial interest (generally 5% or more) in a company in 2025?"
+  acceptable_sources: ["file", "user_chat"]
+  evidence_hint: "shareholder register, dividend statement, or sale agreement"
+- question_id: "annual.box2.disposal.net_transfer_price"
+  workflow: "annual_2025"
+  section: "box2.disposal"
+  prompt_for_user: "What was the official net transfer price for the Box 2 share disposal? If you only have gross proceeds, provide the gross amount and disposal costs separately."
+  acceptable_sources: ["file", "user_chat"]
+  evidence_hint: "share-sale agreement or settlement statement"
+```
+
+The calling skill asks these questions, records the answers with `source`, `quote`/`evidence_id`, and timestamp under its own annual or provisional notes tree, then re-runs this helper contract. Do not write caller-owned notes.
 
 ## Never
 
-- Do not log in, handle DigiD, automate a browser, sign, or submit anything.
+- Do not log in, automate a browser, sign, or submit anything.
 - Do not claim that the helper gives binding tax advice or a final assessment.
 - Do not use annual 2025 final-filing language for provisional 2026 estimates.
 - Do not route complex substantial-interest cases as standard calculations.
 - Do not handle valuation disputes, emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, corporate-tax-heavy DGA cases, inherited or gifted substantial interests, fictive disposal events, or uncertain excessive-borrowing positions without manual review.
 - Do not write field maps, annual/provisional workpack templates, source registers, supported workflow files, or shared eval data.
 
-Write only Box 2 preparation notes or shared review questions under `workspace/shared/` when asked by an owning workflow -- the Box 2 notes go to `workspace/shared/box2-notes.md` (matching the sibling helpers' `box1-home-notes.md`, `box3-notes.md`, `allocation-options.md`). Do not write workpacks directly.
+Write only Box 2 preparation notes, open questions, or shared review questions under `workspace/shared/` when asked by an owning workflow:
+
+- `workspace/shared/box2-notes.md`
+- `workspace/shared/box2-open-questions.yaml`
+- `workspace/shared/box2-review-questions.md`
+
+Do not write workpacks directly.
 
 ## Must NOT write to
 

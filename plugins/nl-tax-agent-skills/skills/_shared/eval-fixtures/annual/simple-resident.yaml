@@ -76,7 +76,7 @@ expected_outputs:
 
   negative_checks:
     - no_provisional_wording: true
-    - no_digid_credential_fields: true
+    - no_credential_fields: true
     - no_login_automation: true
 
 acceptance_criteria:
@@ -84,4 +84,4 @@ acceptance_criteria:
   - "Evidence index created"
   - "Box 3 annual path used (both fictitious and actual-return notes)"
   - "No provisional wording appears"
-  - "No DigiD credential collection"
+  - "No credential collection"

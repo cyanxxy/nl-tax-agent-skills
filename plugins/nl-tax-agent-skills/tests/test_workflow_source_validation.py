@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Focused tests for workflow/source-register coupling."""
 
+import hashlib
 import importlib.util
 import pathlib
 import tempfile
@@ -151,6 +152,34 @@ sources:
         self.assertIn("nl-tax-box2", source.get("mandatory_for", []))
         self.assertEqual(module.collect_snapshot_metadata_errors([source], str(ROOT)), [])
 
+    def test_source_register_documents_snapshot_path_base_conventions(self):
+        register = (ROOT / "skills/_shared/source-register.yaml").read_text(
+            encoding="utf-8"
+        )
+        refresh_skill = (ROOT / "skills/nl-tax-source-refresh/SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        combined = f"{register}\n{refresh_skill}"
+
+        self.assertIn("repo root", combined)
+        self.assertIn("skill-relative", combined)
+        self.assertIn("_shared/", combined)
+
+    def test_box3_examples_have_direct_register_coverage(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py",
+            "validate_knowledge_pack_box3_examples",
+        )
+        register = module.load_yaml_or_json(str(ROOT / "skills/_shared/source-register.yaml"))
+        sources = register.get("sources", [])
+        matching = [
+            source for source in sources
+            if source.get("snapshot_path") == "skills/_shared/knowledge/years/2025/box3/examples.md"
+        ]
+
+        self.assertEqual(len(matching), 1)
+        self.assertEqual(module.collect_snapshot_metadata_errors(matching, str(ROOT)), [])
+
     def test_fetch_flag_reports_refresh_plan_without_live_fetch_language(self):
         module = load_module(
             "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
@@ -184,6 +213,9 @@ sources:
         self.assertEqual(report["operation"], "plan_only_no_live_http")
         self.assertEqual(entry["refresh_action"], "PLAN_REFRESH (plan-only -- no live HTTP)")
         self.assertNotIn("fetch_action", entry)
+        self.assertEqual(entry["staleness_threshold_days"], 180)
+        self.assertEqual(entry["expires_on"], "2025-06-30")
+        self.assertGreater(entry["age_days"], entry["staleness_threshold_days"])
 
     def test_changelog_notes_source_refresh_report_schema_change(self):
         changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
@@ -222,6 +254,37 @@ sources:
                 self.assertEqual(workflow.get("status"), "blocked_pending_official_sources")
                 self.assertIs(workflow.get("may_prepare_workpack"), False)
                 self.assertNotIn("required_source_ids", workflow)
+
+    def test_terminal_workflows_are_validated_for_shape(self):
+        module = load_module(
+            "skills/nl-tax-source-refresh/scripts/validate_supported_workflows.py",
+            "validate_supported_workflows_terminal",
+        )
+        config = module.load_yaml_or_json(str(ROOT / "skills/_shared/supported-workflows.yaml"))
+        terminal_by_id = {
+            workflow.get("id"): workflow
+            for workflow in config.get("terminal_workflows", [])
+        }
+        # The shipped terminal entries are well-formed.
+        for workflow_id in ("manual_review", "unsupported"):
+            with self.subTest(workflow_id=workflow_id):
+                self.assertIn(workflow_id, terminal_by_id)
+                errors, _ = module.validate_terminal_workflow(
+                    terminal_by_id[workflow_id], set()
+                )
+                self.assertEqual(errors, [])
+
+        # A typo in the load-bearing fields is now caught, not silently ignored.
+        bad = {
+            "id": "manual_review",
+            "status": "terminal_manual_review",
+            "may_prepare_workpack": True,
+            "allowed_output": "workspace/annual/2025/return-pack.md",
+            "profile_candidates": ["manual_review"],
+        }
+        errors, _ = module.validate_terminal_workflow(bad, set())
+        self.assertTrue(any("may_prepare_workpack" in e for e in errors), errors)
+        self.assertTrue(any("workspace/shared/" in e for e in errors), errors)
 
     def test_scoped_blocked_workflow_can_share_active_workflow_year(self):
         module = load_module(

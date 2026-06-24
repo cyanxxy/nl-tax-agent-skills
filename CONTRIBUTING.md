@@ -114,6 +114,14 @@ prompts for the listed tools but does not deny others, and Codex ignores it. Rea
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
 
+Do not make Bash the discovery path for bundled plugin files. In Cowork, shell/code
+execution runs in an isolated VM and may not see the plugin cache path even when host
+file tools can read the installed skill resources. Skill bodies should resolve
+`reference/`, `templates/`, `_shared/`, and other bundled files with `Read` plus
+`Glob`/`Grep` fallback. Bundled Python helpers are best-effort: run them only when Bash can
+access the resolved plugin `skills/.../scripts/` path, and otherwise use the manual
+validation path documented in the skill. Never copy bundled scripts into `workspace/`.
+
 The body then specifies the *Do / Never* contract that constrains the skill, for example:
 
 ```markdown
@@ -127,7 +135,7 @@ The body then specifies the *Do / Never* contract that constrains the skill, for
    to `workspace/shared/`.
 
 ## Never
-- Do not log in, submit, sign, automate forms, or handle DigiD.
+- Do not log in, submit, sign, or automate forms.
 - Do not write `workspace/provisional/**`.
 - Do not present output as official advice or a final calculation.
 ```
@@ -324,3 +332,5 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
   Cowork, or Codex) before release. In particular, confirm `disable-model-invocation: true`
   is respected for plugin skills in the target Claude Code version; if not, use permission
   rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
+- In Cowork, verify that bundled references load through `Read`/`Glob` and that workflows
+  still complete when Bash cannot access `${CLAUDE_PLUGIN_ROOT}`.

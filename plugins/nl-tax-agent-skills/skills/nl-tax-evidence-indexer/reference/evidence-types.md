@@ -4,6 +4,8 @@ This reference defines the evidence categories used by the NL Tax Evidence Index
 
 ---
 
+Use these canonical `evidence_type` tokens exactly as headings below. Dutch display labels such as "WOZ-beschikking" or "voorlopige aanslag" may appear in notes, but the index value must stay snake_case (`woz_beschikking`, `voorlopige_aanslag_beschikking`, `definitieve_aanslag`).
+
 ## Contents
 
 - Income & Employment

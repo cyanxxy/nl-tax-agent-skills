@@ -10,6 +10,8 @@ Checks:
       source-register coverage for the exact workflow/year or required shared
       all-year sources.
     - Blocked future workflows cannot produce workpacks.
+    - Terminal routing entries (manual_review / unsupported) never prepare a
+      workpack and only write a shared notes file.
     - Source-register workflow/year pairs are declared as active before they
       can be treated as supported.
 """
@@ -20,6 +22,7 @@ import sys
 
 VALID_WORKFLOWS = {"annual_return", "provisional_assessment"}
 BLOCKED_STATUSES = {"blocked_pending_official_sources"}
+TERMINAL_STATUSES = {"terminal_manual_review", "terminal_unsupported"}
 
 WORKFLOW_SKILLS = {
     "annual_return": "nl-tax-annual-return",
@@ -244,6 +247,45 @@ def validate_blocked_workflow(workflow, blocked_ids, active_pairs):
     return errors, warnings
 
 
+def validate_terminal_workflow(workflow, terminal_ids):
+    """Validate a terminal routing entry (manual_review / unsupported).
+
+    Terminal workflows are intake end-states: they never prepare a workpack and
+    may only write a shared notes file. This guards their shape so a typo in
+    may_prepare_workpack / allowed_output / status is caught instead of silently
+    ignored.
+    """
+    errors = []
+    warnings = []
+    wid = workflow.get("id")
+    if not wid:
+        return ["Terminal workflow without id"], warnings
+    if wid in terminal_ids:
+        errors.append(f"Duplicate terminal workflow id: {wid}")
+    terminal_ids.add(wid)
+
+    if workflow.get("status") not in TERMINAL_STATUSES:
+        errors.append(f"{wid}: invalid terminal status: {workflow.get('status')}")
+    if workflow.get("may_prepare_workpack") is not False:
+        errors.append(f"{wid}: terminal workflow must set may_prepare_workpack: false")
+    if workflow.get("output_paths"):
+        errors.append(f"{wid}: terminal workflow must not define output_paths")
+    if workflow.get("required_source_ids"):
+        errors.append(f"{wid}: terminal workflow must not define required_source_ids")
+    allowed_output = workflow.get("allowed_output")
+    if not allowed_output:
+        errors.append(f"{wid}: terminal workflow must define allowed_output")
+    elif not str(allowed_output).startswith("workspace/shared/"):
+        errors.append(
+            f"{wid}: terminal allowed_output must be under workspace/shared/: {allowed_output}"
+        )
+    if not workflow.get("profile_candidates"):
+        errors.append(f"{wid}: missing profile_candidates")
+    if not workflow.get("reason"):
+        warnings.append(f"{wid}: missing reason")
+    return errors, warnings
+
+
 def validate_source_pairs(sources, active_pairs):
     errors = []
     for source in sources:
@@ -294,6 +336,15 @@ def validate(config_path, register_path):
         )
         errors.extend(blocked_errors)
         warnings.extend(blocked_warnings)
+
+    terminal_ids = set()
+    for workflow in config.get("terminal_workflows", []):
+        terminal_errors, terminal_warnings = validate_terminal_workflow(
+            workflow,
+            terminal_ids,
+        )
+        errors.extend(terminal_errors)
+        warnings.extend(terminal_warnings)
 
     errors.extend(validate_source_pairs(sources, active_pairs))
     return errors, warnings

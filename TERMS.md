@@ -22,7 +22,7 @@ guidance. Do not rely on the plugin's output as the sole basis for a filing.
 ## Submission is always manual
 
 The plugin never logs in, signs, submits, files, or automates Mijn
-Belastingdienst, and never handles DigiD. Every official submission is performed
+Belastingdienst. Every official submission is performed
 manually by you through the official portal. You alone choose what to submit and
 when.
 

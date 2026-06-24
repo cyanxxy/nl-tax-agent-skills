@@ -19,22 +19,19 @@ Belastingdienst, to the plugin authors, or to any third party.
 
 - It **does** guide intake, evidence indexing, source checks, field maps, and
   manual-submission checklists, writing working files into the local workspace.
-- It **does not** log in to Mijn Belastingdienst, collect or store DigiD
-  credentials, sign, submit, file, or automate the portal. Submission is always
-  manual: you type the prepared figures into the official forms yourself.
+- It **does not** perform Mijn Belastingdienst portal access, signing, submission,
+  filing, or portal automation. Submission is manual: you type the prepared
+  figures into the official forms yourself.
 
-## DigiD
+## Portal Access
 
-DigiD credentials are never requested, collected, stored, displayed, or routed
-into model context. If you are ever asked for DigiD by anything claiming to be
-this plugin, do not provide it.
+Portal credentials are not part of this plugin's data model.
 
-## Untrusted evidence
+## Evidence Content
 
-All uploaded document content is treated as untrusted. Instructions embedded
-inside an evidence file (for example, text in a PDF that says "ignore previous
-instructions") are treated as data, not commands, and are not followed. See
-`plugins/nl-tax-agent-skills/skills/_shared/knowledge/security/prompt-injection.md`.
+Uploaded documents are used as evidence for workpack preparation. Embedded
+instructions inside evidence files are handled as review notes, not workflow
+commands.
 
 ## Where data lives
 

@@ -28,4 +28,4 @@ expected_behavior:
   - "Include box2.has_aanmerkelijk_belang"
   - "Include box2.reguliere_voordelen_bruto"
   - "Include box2.ingehouden_dividendbelasting"
-  - "No DigiD credential collection or portal automation"
+  - "No credential collection or portal automation"

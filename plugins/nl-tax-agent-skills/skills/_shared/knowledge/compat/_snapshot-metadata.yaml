@@ -1,9 +1,9 @@
 snapshot_metadata_version: '1.0'
 sources:
   odb_service_developers:
-    content_hash_sha256: 481974d433727de99b0cb9dbee168cf4e0f5199629ff2767ee7fdb76147fec17
+    content_hash_sha256: e5cae36d30733fa92763c050d87c63091a8064a7c5ed268845a8459b43b4450c
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    snapshot_created_at: '2026-06-24T14:14:16.656493+00:00'
     source_id: odb_service_developers
     source_url: https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/
   odb_topics_streams:

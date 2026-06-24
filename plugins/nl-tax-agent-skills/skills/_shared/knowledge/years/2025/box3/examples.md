@@ -1,6 +1,6 @@
 # Rule note: Box 3 worked examples -- fictitious vs actual return 2025
 
-source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return
+source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return, bd_box3_2025_worked_examples
 workflow: annual_return
 tax_year: 2025
 status: active

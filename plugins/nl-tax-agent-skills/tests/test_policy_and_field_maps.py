@@ -120,6 +120,71 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertEqual([], annual_errors)
         self.assertEqual([], provisional_errors)
 
+    def test_field_map_validator_does_not_require_portal_prefilled_personal_fields(self):
+        annual_errors, _ = self.validator.validate(
+            {
+                "field_map_version": "1.1",
+                "workflow": "annual_return",
+                "tax_year": 2025,
+                "fields": [
+                    {
+                        "field_id": "box1.loon",
+                        "label": "Loon",
+                        "value": 64000,
+                        "source": {"type": "evidence", "evidence_id": "ev_jaaropgaaf_001"},
+                        "confidence": 0.95,
+                        "manual_review_required": False,
+                    },
+                    {
+                        "field_id": "box1.loonheffing",
+                        "label": "Ingehouden loonheffing",
+                        "value": 18000,
+                        "source": {"type": "evidence", "evidence_id": "ev_jaaropgaaf_001"},
+                        "confidence": 0.95,
+                        "manual_review_required": False,
+                    },
+                ],
+                "missing_fields": [],
+            }
+        )
+        provisional_errors, _ = self.validator.validate(
+            {
+                "field_map_version": "1.1",
+                "workflow": "provisional_assessment",
+                "tax_year": 2026,
+                "fields": [
+                    {
+                        "field_id": "box1.geschat_loon",
+                        "label": "Geschat inkomen uit werk",
+                        "value": 70000,
+                        "source": {"type": "estimate"},
+                        "confidence": 0.8,
+                        "manual_review_required": False,
+                    }
+                ],
+                "missing_fields": [],
+            }
+        )
+
+        self.assertEqual([], annual_errors)
+        self.assertEqual([], provisional_errors)
+
+    def test_field_map_template_and_docs_require_explicit_tax_year(self):
+        template = read_text("skills/nl-tax-field-mapper/templates/field-map-template.yaml")
+        skill = read_text("skills/nl-tax-field-mapper/SKILL.md")
+
+        self.assertNotIn("tax_year: null", template)
+        self.assertIn("REQUIRED", template)
+        self.assertIn("Set `tax_year` explicitly", skill)
+
+    def test_field_mapper_documents_field_map_precedence_contract(self):
+        skill = read_text("skills/nl-tax-field-mapper/SKILL.md")
+        principles = read_text("skills/nl-tax-field-mapper/reference/mapping-principles.md")
+        combined = f"{skill}\n{principles}"
+
+        self.assertIn("most recently validated", combined)
+        self.assertIn("authoritative", combined)
+
     def test_field_map_validator_rejects_portal_automation_and_submission_fields(self):
         data = {
             "field_map_version": "1.0",
@@ -141,8 +206,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                     "manual_review_required": False,
                 },
                 {
-                    "field_id": "security.digid_username",
-                    "label": "DigiD login username",
+                    "field_id": "security.portal_username",
+                    "label": "Portal login username",
                     "source": {"type": "evidence"},
                     "confidence": 0.9,
                     "manual_review_required": False,
@@ -156,19 +221,106 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertTrue(any("submission" in error.lower() for error in errors))
         self.assertTrue(any("credential/login" in error.lower() for error in errors))
 
-    def test_no_digid_policy_keeps_online_machtigen_boundary_and_no_paper_fallback(self):
-        policy = read_text("skills/nl-tax-submit-companion/reference/no-digid-policy.md")
+    def test_evidence_indexer_uses_canonical_beschikking_tokens(self):
+        skill = read_text("skills/nl-tax-evidence-indexer/SKILL.md")
+        evidence_types = read_text(
+            "skills/nl-tax-evidence-indexer/reference/evidence-types.md"
+        )
+
+        self.assertIn("`woz_beschikking`", skill)
+        self.assertIn("`voorlopige_aanslag_beschikking`", skill)
+        self.assertIn("`hypotheek_jaaroverzicht`", skill)
+        self.assertIn("Use these canonical `evidence_type` tokens", evidence_types)
+        self.assertNotIn("`WOZ-beschikking`", skill)
+        self.assertNotIn("`beschikking-VA`", skill)
+
+    def test_submission_checklist_stays_focused_without_paper_fallback(self):
         checklist = read_text(
             "skills/nl-tax-submit-companion/templates/manual-submission-checklist.md"
         )
-        combined = f"{policy}\n{checklist}"
 
-        self.assertIn("online Mijn Belastingdienst", policy)
-        self.assertIn("DigiD Machtigen", combined)
-        self.assertIn("does **NOT** collect, store, or use DigiD credentials", policy)
-        self.assertIn("Paper filing is outside the supported online workflow", policy)
-        self.assertNotIn("0800-0543", combined)
-        self.assertNotIn("DigiD is required for **ALL** submission paths", policy)
+        self.assertIn("Mijn Belastingdienst", checklist)
+        self.assertNotIn("generic credential warning", checklist)
+        self.assertNotIn("0800-0543", checklist)
+
+    def test_provisional_generation_gate_tracks_box2_in_session_progress(self):
+        skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
+
+        self.assertIn("provisional_2026.subsections.box2", skill)
+        self.assertIn("older session-progress.yaml", skill)
+        self.assertIn("generation gate", skill)
+
+    def test_provisional_review_questions_template_is_concrete_and_wired(self):
+        skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
+        contract = read_text(
+            "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md"
+        )
+        template = read_text(
+            "skills/nl-tax-provisional-assessment/templates/review-questions.md"
+        )
+
+        self.assertIn("templates/review-questions.md", skill)
+        self.assertIn("review-questions.md", contract)
+        for required in (
+            "provisional_2026_review",
+            "Baseline field",
+            "Current 2026 estimate",
+            "Change status",
+            "Recommended action",
+        ):
+            self.assertIn(required, template)
+
+    def test_stopzetten_contract_has_structured_body_date_gate_and_redirect_state(self):
+        skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
+        contract = read_text(
+            "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md"
+        )
+        template = read_text(
+            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md"
+        )
+        guidance = read_text(
+            "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md"
+        )
+        flow = read_text(
+            "skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md"
+        )
+
+        combined = "\n".join([skill, contract, template, guidance, flow])
+        self.assertIn("## Stopzetten outcome", template)
+        self.assertIn("current date", combined)
+        self.assertIn("do not generate a stopzetten checklist", combined)
+        self.assertIn("provisional_2026.subflow: change", combined)
+        self.assertIn("active_workflow: provisional_2026_change", combined)
+        self.assertIn("copy the payment baseline", combined)
+
+    def test_change_reentry_language_is_canonical_across_provisional_notes(self):
+        canonical = (
+            "enter ALL data again; omitted data defaults to zero because the new "
+            "VA replaces the old one entirely"
+        )
+        for relative_path in (
+            "skills/_shared/knowledge/years/2026/provisional/change-flow.md",
+            "skills/_shared/knowledge/years/2026/provisional/refund-payment-timing.md",
+        ):
+            with self.subTest(path=relative_path):
+                self.assertIn(canonical, read_text(relative_path))
+
+    def test_submit_companion_lists_provisional_review_workflow(self):
+        skill = read_text("skills/nl-tax-submit-companion/SKILL.md")
+        checklist = read_text(
+            "skills/nl-tax-submit-companion/templates/manual-submission-checklist.md"
+        )
+
+        self.assertIn("provisional_2026_review", checklist)
+        self.assertIn("review-questions.md", skill)
+
+    def test_provisional_rate_contract_uses_knowledge_placeholders(self):
+        contract = read_text(
+            "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md"
+        )
+
+        self.assertNotIn("Box 3 tax at 36%", contract)
+        self.assertIn("Box 3 tax at the rate from `box3-provisional.md`", contract)
 
     def test_provisional_box3_explanatory_note_allowed_but_collection_fields_forbidden(self):
         allowed_errors, _ = self.validator.validate(
@@ -251,6 +403,99 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             reference,
         )
         self.assertNotIn("bd_fisin_aanmerkelijk_belang_2025", reference)
+
+    def test_annual_skill_section_count_matches_contract(self):
+        skill_sections = section_text(
+            "skills/nl-tax-annual-return/SKILL.md",
+            "## Sections in the workpack",
+        )
+        required_sections = [
+            "Scope",
+            "Unsupported-case checks",
+            "Sources used",
+            "Taxpayer profile summary",
+            "Evidence summary",
+            "Filing status and late-filing exposure",
+            "Income notes",
+            "Own-home notes",
+            "Box 2 notes",
+            "Box 3 notes",
+            "Deductions notes",
+            "Credits screening",
+            "Fiscal partner notes",
+            "Field map summary",
+            "Missing information",
+            "Assumptions",
+            "User-stated values index",
+            "Human review checklist",
+            "Not submission advice",
+        ]
+
+        self.assertIn("requires 19 sections", skill_sections)
+        self.assertNotIn("requires 16 sections", skill_sections)
+        for section in required_sections:
+            with self.subTest(section=section):
+                self.assertIn(section, skill_sections)
+
+    def test_box2_helper_contract_names_notes_and_open_questions(self):
+        annual_skill = read_text("skills/nl-tax-annual-return/SKILL.md")
+        box2_skill = read_text("skills/nl-tax-box2/SKILL.md")
+        combined = f"{annual_skill}\n{box2_skill}"
+
+        self.assertIn("workspace/shared/box2-notes.md", combined)
+        self.assertIn("workspace/shared/box2-open-questions.yaml", combined)
+        self.assertIn("Read `workspace/shared/box2-notes.md`", annual_skill)
+        self.assertIn("workspace/shared/box2-open-questions.yaml", annual_skill)
+
+    def test_annual_helper_delegation_allows_inline_fallback(self):
+        annual_skill = read_text("skills/nl-tax-annual-return/SKILL.md")
+        box2_skill = read_text("skills/nl-tax-box2/SKILL.md")
+        combined = f"{annual_skill}\n{box2_skill}"
+        helper_paths = [
+            "skills/nl-tax-box1-home/SKILL.md",
+            "skills/nl-tax-box2/SKILL.md",
+            "skills/nl-tax-box3/SKILL.md",
+            "skills/nl-tax-partner-deductions/SKILL.md",
+        ]
+
+        self.assertIn("If no Skill/Task tool exists", annual_skill)
+        self.assertIn("inline the helper's SKILL.md instructions", annual_skill)
+        self.assertIn("write the helper-owned `workspace/shared/` files", annual_skill)
+        self.assertIn("called through a Skill/Task tool or inlined by an owning workflow", combined)
+        for helper_path in helper_paths:
+            with self.subTest(helper_path=helper_path):
+                self.assertIn(
+                    "called through a Skill/Task tool or inlined by an owning workflow",
+                    read_text(helper_path),
+                )
+
+    def test_annual_template_uses_knowledge_placeholders_for_rates(self):
+        template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
+
+        forbidden_fixed_rate_text = [
+            "5% -- Src: bd_belastingrente_overview",
+            "49.50% - 37.48%",
+            "Effective deduction rate for this portion: 37.48%",
+            "76.667% in 2025",
+            "Box 3 tax (at 36%)",
+            "1.25x, max EUR 1,250 additional",
+            "1% of drempelinkomen, min EUR 60",
+            "10% of drempelinkomen",
+        ]
+        for text in forbidden_fixed_rate_text:
+            with self.subTest(text=text):
+                self.assertNotIn(text, template)
+
+        self.assertIn("[rate from `late-filing.md`]", template)
+        self.assertIn("[top bracket rate from `box1-rates.md`]", template)
+        self.assertIn("[deduction-rate cap from `deductions.md`]", template)
+        self.assertIn("[box 3 rate from `fictitious.md`]", template)
+
+    def test_annual_template_clarifies_box2_disposal_costs_once(self):
+        template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
+
+        self.assertIn("Do not subtract disposal costs from `box2.vervreemdingsprijs`", template)
+        self.assertIn("Use `box2.vervreemdingskosten` only to derive net transfer price from gross proceeds", template)
 
     def test_box1_other_work_scope_is_manual_review_not_standard_support(self):
         annual_flow = read_text("skills/nl-tax-annual-return/reference/annual-flow.md").lower()
@@ -337,6 +582,15 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 self.assertNotIn("Use the bundled", content)
                 self.assertNotIn("forwarding any arguments", content)
                 self.assertIn("Do not tell the user", content)
+
+    def test_manual_and_dev_only_command_wrappers_state_policy_in_body(self):
+        source_refresh = read_text("commands/nl-tax-source-refresh.md")
+        submit_companion = read_text("commands/nl-tax-submit-companion.md")
+
+        self.assertIn("developer-only maintenance", source_refresh)
+        self.assertIn("not a taxpayer workflow", source_refresh)
+        self.assertIn("manual-only checklist", submit_companion)
+        self.assertIn("only after the user explicitly asks", submit_companion)
 
     def test_user_facing_sections_hide_internal_setup_language(self):
         checks = [

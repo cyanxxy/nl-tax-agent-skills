@@ -65,4 +65,3 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 - The VIA (vooringevulde aangifte) will pre-fill many of these items, but the taxpayer must verify all pre-filled data against source documents. VIA data can be incomplete or delayed.
 - For fiscal partners, collect documents for both partners as they file a joint return with allocation choices.
-- Do not collect DigiD credentials. See security/digid.md.

@@ -82,8 +82,6 @@ Before generating any workpack content, verify all prerequisites are met.
 
 Load every file in this list and append its `source_id` to `session-progress.yaml` → `sources_loaded` as you go. If any fails to load, stop and tell the user; do not paraphrase rates from memory.
 
-- `_shared/knowledge/security/digid.md` *(bd_digid_machtigen)*
-- `_shared/knowledge/security/prompt-injection.md`
 - `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025)*
 - `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_heffingskortingen_how_2025, bd_arbeidsinkomen_definition_2025)*
 - `_shared/knowledge/years/2025/annual/own-home.md` *(bd_own_home_deduction_cap_2025)*
@@ -546,4 +544,4 @@ After writing:
 - Report the count of missing information items
 - Report the count of assumptions made
 - Remind the user to review the human review checklist
-- Remind the user that filing happens through Mijn Belastingdienst with their DigiD
+- Remind the user that filing happens through Mijn Belastingdienst

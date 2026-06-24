@@ -11,9 +11,10 @@ active_skill: ""
 # section of every workpack lists exactly these IDs -- never pad the list.
 sources_loaded: []
 
-# Each section status is one of: not_started | in_progress | complete | deferred.
-# Evidence subsections may also use `chat_only` when the user provided values
-# in chat without uploading any file (an explicit choice, not a gap).
+# Each section/subsection status is one of:
+# not_started | in_progress | complete | chat_only | deferred.
+# `chat_only` means the user provided values in chat without uploading any file
+# (an explicit choice, not a gap).
 # A workflow's overall workpack-generation gate is satisfied only when every
 # subsection is either `complete`, `chat_only`, or `deferred` (with deferred
 # items recorded in workspace/shared/missing-info.md or as confirmed
@@ -129,6 +130,10 @@ sections:
         open_questions: []
         answered: []
       deductions:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      box2:                    # aanmerkelijk belang; mark complete or not applicable
         status: "not_started"
         open_questions: []
         answered: []

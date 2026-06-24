@@ -43,7 +43,7 @@
 <br />
 
 > [!NOTE]
-> This plugin **prepares workpacks for review**. It is not tax advice. Submission to the Belastingdienst is always manual — the plugin never logs in, signs, files, or handles DigiD.
+> This plugin **prepares workpacks for review**. It is not tax advice. Submission to the Belastingdienst is manual.
 
 ---
 
@@ -87,7 +87,7 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
     <td align="center">✅</td>
     <td>
       <strong>4 &nbsp;You enter the numbers yourself</strong><br />
-      A final field map connects each reviewed amount to its Mijn Belastingdienst field for you to enter and verify. You remain in control: the plugin never logs in, never files, and never touches DigiD.
+      A final field map connects each reviewed amount to its Mijn Belastingdienst field for you to enter and verify.
     </td>
   </tr>
 </table>
@@ -157,6 +157,13 @@ Public GitHub repositories are accepted for personal marketplaces — no fork or
 | Claude Code | `.claude-plugin/marketplace.json` → nested plugin | `disable-model-invocation` / `user-invocable` frontmatter | Supported |
 | Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Same Claude frontmatter | Supported |
 | Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | Compatible — see note |
+
+Cowork runs shell/code execution in an isolated local VM. The skills therefore
+resolve bundled plugin files with `Read`/`Glob`-style host file tools, not by
+asking Bash to find the plugin cache path. Bundled Python helpers are
+best-effort in Cowork: if Bash cannot see the resolved plugin script path, the
+skills fall back to manual validation from the same references instead of
+copying scripts into `workspace/`.
 
 Codex implicit-invocation control is enforced structurally through each non-user-invocable skill's `agents/openai.yaml` and statically validated by `validate_invocation_policy.py`. It has not been integration-tested in a live Codex host, so verify it in your target build before release.
 
@@ -291,12 +298,11 @@ Taxpayer files stay out of version control. They live only in git-ignored paths:
 
 Be clear about what this does and does not mean. The skills run **inside an LLM agent host** — Claude Code, Cowork, or Codex — that reads these files to perform its work. Evidence and workpack content is therefore processed by that host's model under its data-handling terms.
 
+In Cowork, shell commands and code run in an isolated VM. That protects the main
+OS boundary, but it is not a privacy guarantee: Claude still has access to the
+local folders you connect and can make real changes there.
+
 The git-ignore boundary keeps taxpayer data out of the repository and any fork or marketplace. It is **not** an offline guarantee or a promise that “data never leaves your machine.” These are plaintext files, and the plugin never deletes them for you.
-
-> [!IMPORTANT]
-> **DigiD credentials are never collected, stored, displayed, or passed into model context.** Uploaded documents are treated as untrusted content, and any instructions inside them are ignored.
-
-Prompt-injection handling is **model-enforced, not sandboxed**. The skills instruct the model to ignore instructions embedded in evidence, but this is guidance rather than a hard boundary.
 
 The “no live web fetch” posture is also a convention of the skills, not a host restriction; the host model may still have web tools. For hard blocks on network access or out-of-scope reads, configure host deny-rules, hooks, and OS-level sandboxing.
 
