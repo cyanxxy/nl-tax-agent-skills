@@ -480,7 +480,7 @@ List items that are personal and cannot be allocated:
 
 ### 7.1 Generate field map
 
-Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Write to `workspace/annual/2025/field-map.yaml` (or `field-map.test.yaml` in test mode).
+Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Write to `workspace/annual/2025/field-map.yaml`.
 
 ### 7.2 Separation from provisional
 
@@ -529,7 +529,7 @@ Order questions by impact on the return:
 
 ### 10.1 Use the template
 
-Read the template from `templates/annual-return-pack.md`. Fill in every section with the data compiled in phases 1.5-9. Honor the `mode` field: if `mode: test`, prepend the TEST RUN banner, add `(TEST RUN)` to every section header, and use the `.test.md` filename.
+Read the template from `templates/annual-return-pack.md`. Fill in every section with the data compiled in phases 1.5-9.
 
 ### 10.2 Run the workpack self-check
 
@@ -537,12 +537,12 @@ Run every check in `reference/annual-output-contract.md` § "Workpack self-check
 
 ### 10.3 Write the workpack
 
-Write the completed workpack to `workspace/annual/2025/return-pack.md` (or `return-pack.test.md` in test mode). Write the field map alongside.
+Write the completed workpack to `workspace/annual/2025/return-pack.md`. Write the field map alongside.
 
 ### 10.4 Summary to user
 
 After writing:
-- Confirm the workpack location and mode
+- Confirm the workpack location
 - Report the count of missing information items
 - Report the count of assumptions made
 - Remind the user to review the human review checklist

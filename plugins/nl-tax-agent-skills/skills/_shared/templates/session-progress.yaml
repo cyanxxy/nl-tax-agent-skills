@@ -5,15 +5,6 @@ updated_at: ""
 active_workflow: "unknown"
 active_skill: ""
 
-# Mode discriminates test runs from real preparation. Defaults to real — never
-# ask the user; set test only when they call the run a test, demo, or dry run.
-# Set once at intake and never changed inside the same workspace. The workpack
-# template branches on this value (TEST RUN banner, filename tag, refusal to
-# be used for filing).
-#   real  -- taxpayer is preparing for a real Mijn Belastingdienst submission (default)
-#   test  -- exercise / demo / dry run; workpack carries TEST RUN markers
-mode: "real"                # real | test
-
 # Source IDs from _shared/source-register.yaml that have actually been read
 # during this session. The annual-return and provisional-assessment skills
 # append to this list when they load a knowledge file. The "Sources used"

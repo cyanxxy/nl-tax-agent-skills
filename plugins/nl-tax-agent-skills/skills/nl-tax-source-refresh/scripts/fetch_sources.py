@@ -21,8 +21,8 @@ Scope:
     box3         -- sources with IDs containing 'box3'
     all          -- every source in the register
 
-The --fetch flag is accepted for compatibility but remains a dry-run planning
-mode. It reports what would need manual refresh; it does not perform live HTTP
+The --fetch flag is accepted for compatibility but remains a plan-only report.
+It reports what would need manual refresh; it does not perform live HTTP
 requests or rewrite source snapshots.
 
 Output:
@@ -253,7 +253,7 @@ def parse_cli_args(argv):
         print("", file=sys.stderr)
         print("Scope: annual | provisional | box3 | all", file=sys.stderr)
         print("Year:  optional tax year filter (e.g., 2025)", file=sys.stderr)
-        print("--fetch: dry-run, plans what would need manual refresh", file=sys.stderr)
+        print("--fetch: plan-only, lists sources needing manual refresh", file=sys.stderr)
         sys.exit(1)
 
     scope = argv[1]
@@ -286,8 +286,7 @@ def empty_report(now, scope, year, fetch_flag, register_path, sources, matched):
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "scope": scope,
         "year_filter": year,
-        "mode": "plan_only_no_live_http" if fetch_flag else "validate_freshness",
-        "dry_run": bool(fetch_flag),
+        "operation": "plan_only_no_live_http" if fetch_flag else "validate_freshness",
         "refresh_plan_requested": fetch_flag,
         "register_path": register_path,
         "total_sources": len(sources),
@@ -325,7 +324,7 @@ def source_report_entry(source, now, repo_root, fetch_flag):
 
     if fetch_flag and is_stale:
         if url_allowed:
-            entry["refresh_action"] = "PLAN_REFRESH (dry-run -- no live HTTP)"
+            entry["refresh_action"] = "PLAN_REFRESH (plan-only -- no live HTTP)"
         else:
             entry["refresh_action"] = "BLOCKED -- URL not on domain allowlist"
 
@@ -368,7 +367,7 @@ def print_summary(results, scope, year, fetch_flag):
     if s["url_not_allowed"] > 0:
         print(f"URLs NOT on allowlist: {s['url_not_allowed']}", file=sys.stderr)
     if fetch_flag:
-        print(f"Refresh plan mode: dry-run (no live HTTP requests performed)",
+        print(f"Refresh plan: plan-only (no live HTTP requests performed)",
               file=sys.stderr)
 
 

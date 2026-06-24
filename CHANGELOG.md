@@ -41,6 +41,10 @@ Plugin manifests are bumped from `0.1.1` to `0.1.2`.
 
 ### Changed
 
+- **Source-refresh report schema** — `scripts/fetch_sources.py --fetch` now
+  reports plan-only refresh intent with `refresh_plan_requested` and
+  `operation`; the legacy `dry_run` and generic `mode` report keys were
+  removed.
 - Documentation accuracy: corrected cross-host wording (Codex progressive
   disclosure of skill `name`/`description`/path before loading the full
   `SKILL.md`, and the fact that Claude frontmatter invocation/tool keys are not

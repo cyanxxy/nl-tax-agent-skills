@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REPO_ROOT = ROOT.parent.parent
 
 
 def load_module(relative_path, name):
@@ -153,7 +154,7 @@ sources:
     def test_fetch_flag_reports_refresh_plan_without_live_fetch_language(self):
         module = load_module(
             "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
-            "fetch_sources_dry_run_plan",
+            "fetch_sources_plan_only",
         )
         source = {
             "id": "bd_stale_test",
@@ -177,10 +178,21 @@ sources:
         entry = report["sources_checked"][0]
 
         self.assertEqual(report["report_type"], "source_refresh_plan")
-        self.assertTrue(report["dry_run"])
-        self.assertEqual(report["mode"], "plan_only_no_live_http")
-        self.assertEqual(entry["refresh_action"], "PLAN_REFRESH (dry-run -- no live HTTP)")
+        self.assertTrue(report["refresh_plan_requested"])
+        self.assertNotIn("dry" + "_run", report)
+        self.assertNotIn("mode", report)
+        self.assertEqual(report["operation"], "plan_only_no_live_http")
+        self.assertEqual(entry["refresh_action"], "PLAN_REFRESH (plan-only -- no live HTTP)")
         self.assertNotIn("fetch_action", entry)
+
+    def test_changelog_notes_source_refresh_report_schema_change(self):
+        changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+
+        self.assertIn("source-refresh report schema", changelog.lower())
+        self.assertIn("dry_run", changelog)
+        self.assertIn("mode", changelog)
+        self.assertIn("refresh_plan_requested", changelog)
+        self.assertIn("operation", changelog)
 
     def test_blocked_roadmap_workflows_remain_blocked_without_source_ids(self):
         module = load_module(

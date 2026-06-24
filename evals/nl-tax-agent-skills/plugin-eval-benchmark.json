@@ -28,7 +28,7 @@
   "notes": [
     "Edit workspace.sourcePath so it points at the repo or template you want Codex to work inside.",
     "Edit the scenarios so they match real tasks instead of generic starter prompts.",
-    "Benchmark means real codex exec runs now. There is no simulated dry-run mode."
+    "Benchmark tasks run through codex exec and must produce verifiable workspace outputs."
   ],
   "setupQuestions": [
     "What are the 3 highest-value real tasks this plugin should help complete inside a workspace?",

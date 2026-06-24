@@ -142,15 +142,14 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
 
 1. The subflow's final review is complete.
 2. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
-3. `session-progress.yaml` has `mode: real` or `mode: test` set. If it is empty, set `mode: real` — unless the user has called this run a test, demo, or dry run, in which case set `mode: test`. Do not ask.
-4. The user has typed one of these confirmation phrases verbatim in chat:
+3. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`
    - `klaar voor workpack`
 
    Or the user has run `/nl-tax-agent-skills:nl-tax-provisional-assessment confirm`. Anything else (including "looks good", "yes", "ok", "sounds good") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
 
-When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly. If `mode: test`, prepend a `# TEST RUN — NOT FOR FILING` banner to every generated file, suffix filenames with `.test` (for example `provisional-pack.test.md`), and repeat the TEST RUN marker in each section header.
+When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly.
 
 When a `field-map.yaml` is produced (request and change subflows), after writing it run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/provisional-field-map.md`) and use `field_id`s from that reference. The provisional field-map uses the fictitious Box 3 method only — never include werkelijk-rendement fields.
 

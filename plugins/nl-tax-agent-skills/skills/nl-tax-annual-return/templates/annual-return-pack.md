@@ -1,7 +1,3 @@
-[IF mode == test: prepend the line below verbatim, and repeat `(TEST RUN)` in every section header.]
-
-# TEST RUN -- NOT FOR FILING
-
 # Annual Income-Tax Return Workpack -- 2025
 
 > **STATUS: {DRAFT — N deferred section(s) | COMPLETE DRAFT FOR REVIEW} — not for filing.** Replace `N` with the number of sections still deferred or carrying `?` rows; use "COMPLETE DRAFT FOR REVIEW" only when no section is deferred. This workpack is never submission advice; filing always happens manually via Mijn Belastingdienst.
@@ -42,7 +38,6 @@
 
 Tax year: 2025
 Workflow: Annual income-tax return (aangifte inkomstenbelasting)
-Mode: [real | test, from session-progress.yaml]
 Taxpayer: [from profile]
 Fiscal partner: [yes/no, from profile]
 Created: [timestamp]

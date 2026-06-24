@@ -65,7 +65,6 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 - If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
 - If `profile.yaml` shows `intake_status: complete`, never restart intake — continue the annual workflow from recorded progress.
 - Skip any subsection already marked `complete`, `chat_only`, or `deferred` in `session-progress.yaml`.
-- `session-progress.yaml` must carry `mode: real` or `mode: test`. If it is empty, set `mode: real` — unless the user has called this run a test, demo, or dry run, in which case set `mode: test`. Do not ask.
 
 ## Workflow
 
@@ -141,13 +140,12 @@ Match this list to `reference/annual-output-contract.md`. If anything diverges, 
 Do not write `workspace/annual/2025/return-pack.md` until **all** of:
 
 1. Every annual subsection in `session-progress.yaml` is `complete`, `chat_only`, or `deferred`.
-2. `session-progress.yaml` has `mode: real` or `mode: test` set.
-3. The user has typed one of these confirmation phrases verbatim in chat:
+2. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`
    - `klaar voor workpack`
 
-   Or the user has run `/nl-tax-agent-skills:nl-tax-annual-return confirm`. Anything else (including "looks good", "yes", "ok let's do it", "test it") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
+   Or the user has run `/nl-tax-agent-skills:nl-tax-annual-return confirm`. Anything else (including "looks good", "yes", "ok let's do it") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
 
 When the gate is satisfied:
 
@@ -157,7 +155,6 @@ When the gate is satisfied:
 - Set the workpack's top-of-file STATUS banner deterministically from `session-progress.yaml`: if any annual subsection is `deferred` or `unknown`, the banner reads `DRAFT`; otherwise it reads `COMPLETE DRAFT FOR REVIEW`. In both cases the banner always says "not for filing". Treat a mismatch between the banner and `session-progress.yaml` as a blocking self-check item.
 - Write `workspace/annual/2025/field-map.yaml`. Optionally record the same readiness state as a **top-level** `readiness` key in `field-map.yaml` (`draft` or `review_ready` — the values `validate_field_map.py` accepts).
 - After writing `field-map.yaml`, run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/annual-field-map.md`) and use `field_id`s from that reference.
-- If `mode: test`, prepend a `# TEST RUN — NOT FOR FILING` banner to the workpack, suffix the filename as `return-pack.test.md`, and repeat the TEST RUN marker in every section header.
 
 ## Output files
 
@@ -170,7 +167,7 @@ Write incrementally:
 
 Write only after the generation gate:
 
-- `workspace/annual/2025/return-pack.md` (or `return-pack.test.md` in test mode)
+- `workspace/annual/2025/return-pack.md`
 - `workspace/annual/2025/field-map.yaml`
 
 Do not write `workspace/provisional/**`.

@@ -3,6 +3,7 @@
 
 import importlib.util
 import pathlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -270,6 +271,44 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("no live http", combined)
         self.assertNotIn("refresh or validate snapshots as requested", command)
         self.assertNotIn("run the scripts in `scripts/` to fetch, rebuild, and validate", skill)
+
+    def test_public_workflow_docs_do_not_expose_run_modes(self):
+        public_workflow_files = sorted(
+            path
+            for path in (ROOT / "skills").rglob("*")
+            if path.is_file()
+            and (
+                path.name == "SKILL.md"
+                or "reference" in path.relative_to(ROOT / "skills").parts
+                or "templates" in path.relative_to(ROOT / "skills").parts
+            )
+        )
+        forbidden_patterns = [
+            r"mode:\s*(real|test)\b",
+            r"real\s*/\s*test",
+            r"real\s*\|\s*test",
+            "TEST" + r"\s+RUN",
+            r"\.test\.(md|ya?ml)\b",
+            r"\bdry[- ]run\b",
+            "dry" + r"_run",
+            r"\breal run\b",
+            r"\btest run\b",
+            r"simulated\s+dry",
+            r"mode marker",
+            r"test\s+vs\s+real",
+            r"test\s*,\s*demo\s*,\s*or\s*dry[- ]run",
+        ]
+
+        self.assertGreater(len(public_workflow_files), 20)
+        for path in public_workflow_files:
+            relative_path = path.relative_to(ROOT)
+            content = path.read_text(encoding="utf-8")
+            for pattern in forbidden_patterns:
+                with self.subTest(path=relative_path, pattern=pattern):
+                    self.assertIsNone(
+                        re.search(pattern, content, flags=re.IGNORECASE),
+                        f"{relative_path} still contains removed run-mode language",
+                    )
 
     def test_intake_screens_complex_box2_before_workflow_anchor(self):
         intake = read_text("skills/nl-tax-intake/SKILL.md")

@@ -76,7 +76,7 @@ Across one or more turns of conversation:
 
 ### Turn 1 - open warmly, then ask the first screening batch
 
-If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), and set `session-progress.yaml` -> `mode: real` without asking. Only set `mode: test` when the user has called this run a test, demo, or dry run — then acknowledge it in your reply. Then ask up to **four short screening questions** in one message:
+If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack - never file, never ask for DigiD), then ask up to **four short screening questions** in one message:
 
 1. **Residency** - Were you a Dutch resident for the *full* of 2025 (and, if relevant, 2026)? Did you move to or from the Netherlands at any point during the year? (A mid-year move usually means an M-aangifte, which v1 does not cover -- see `reference/unsupported-cases.md` #1/#5.)
 2. **Taxpayer type** - Are you filing as an individual (not a BV / IB-onderneming as primary case)?
@@ -124,7 +124,6 @@ Mark `sections.intake.subsections.household_composition.status: complete` in `se
 
 Mark `sections.intake.status: complete` only when:
 
-- `session-progress.yaml` -> `mode` is set (`real` by default; `test` only when the user called the run a test, demo, or dry run).
 - Residency, taxpayer type, living status, and workflow are all answered or recorded as `unsupported_reason`.
 - Fiscal-partner status is recorded.
 - The workflow-specific anchor question is answered.
@@ -195,7 +194,7 @@ Tell the user:
 
 > **User:** "Hi, I need to do my Dutch taxes."
 >
-> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD; sets `mode: real` in `session-progress.yaml` without asking, then asks the four screening questions (residency, individual filer, living taxpayer, which workflow) and states the workspace folder it will use.
+> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD, then asks the four screening questions (residency, individual filer, living taxpayer, which workflow) and states the workspace folder it will use.
 >
 > **User:** "Resident all of 2025, just me as an individual, I'm alive 🙂, I want the 2025 return."
 >
