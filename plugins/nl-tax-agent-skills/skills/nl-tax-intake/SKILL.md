@@ -12,6 +12,10 @@ allowed-tools:
 
 Open the conversation with the user, figure out which Dutch tax workflow applies, and progressively build a taxpayer profile. **This skill is conversational.** The user does not arrive with everything ready - ask one focused thing at a time, persist the answer, and continue.
 
+## User-facing boundary
+
+Keep setup invisible. Do not narrate internal setup steps such as skill selection, rule or template loading, path resolution, local state-file creation, or YAML updates. Create and update local files silently. The first user-facing reply should say only that you prepare a local workpack, never file or ask for DigiD, and then ask the screening questions. If the workflow is already clear and the user has documents ready, ask them to upload the relevant tax files; do not ask them to upload workspace or state files.
+
 ## When to use
 
 - User wants to file a Dutch income tax return
@@ -56,12 +60,11 @@ paths against it. Once set, never change it and never create a second
 `workspace/` tree. See the **Workspace root** section of
 `_shared/knowledge/methods/interactive-elicitation.md` for the full contract.
 
-On the first turn, also tell the user in plain language which folder you are
-using as the workspace (state its absolute path) and ask them to keep pointing
-the host (Claude Code, Cowork, or Codex) at that same folder — or its parent
-project — when they resume. A later session relies entirely on finding
-`profile.yaml` and `session-progress.yaml` there; if the host is pointed
-somewhere else, the resume guard cannot fire and intake will wrongly restart.
+Do not volunteer the folder path in the opening message. State the storage
+location only when the user asks where files are saved or when a later resume
+problem requires it. A later session relies entirely on finding `profile.yaml`
+and `session-progress.yaml`; if the host is pointed somewhere else, the resume
+guard cannot fire and intake will wrongly restart.
 
 ## What this skill produces
 
@@ -188,14 +191,14 @@ Do NOT write to:
 Tell the user:
 1. Which workflow was selected.
 2. Whether anything was deferred to `missing-info.md`.
-3. Which skill they can run next (or that you are ready to continue with the next section in the same conversation).
+3. Which tax topic comes next, or that you are ready to continue in the same conversation.
 
 ## Worked example
 
 > **User:** "Hi, I need to do my Dutch taxes."
 >
-> **Agent (turn 1):** Briefly explains it prepares a local workpack and never files or asks for DigiD, then asks the four screening questions (residency, individual filer, living taxpayer, which workflow) and states the workspace folder it will use.
+> **Agent (turn 1):** "I can help prepare a local workpack. I won't file anything or ask for DigiD. First: were you a Dutch resident for all of 2025, are you filing as an individual, is this for a living taxpayer, and do you want help with the 2025 return or a 2026 voorlopige aanslag?"
 >
 > **User:** "Resident all of 2025, just me as an individual, I'm alive 🙂, I want the 2025 return."
 >
-> **Agent (turn 2):** Records all four to `profile.yaml` (`source: user_chat`, with quotes + `stated_at`), marks those `question_id`s answered in `session-progress.yaml`, sets `workflow_candidate: annual_2025`. Asks the two follow-ups (fiscal partner? early Box 2 screen) plus the annual anchor ("documents ready, or collect amounts in chat?"), then household composition (DOBs, children at home, single-parent) in one small batch. Closes intake only when the resume contract holds and tells the user the annual workflow runs next — without auto-invoking it.
+> **Agent (turn 2):** Stores the answers internally, selects the 2025 annual-return path, then asks the follow-ups: fiscal partner, Box 2 screen, whether documents are ready or amounts should be collected in chat, and the needed household-composition facts. It closes intake only when the saved state can resume cleanly and tells the user the annual-return questions come next.

@@ -10,4 +10,4 @@ allowed-tools:
 
 # NL Tax Intake
 
-Use the bundled `nl-tax-intake` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-intake` workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; start with the intake questions.

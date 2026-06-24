@@ -11,4 +11,4 @@ allowed-tools:
 
 # NL Tax Provisional Assessment
 
-Use the bundled `nl-tax-provisional-assessment` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-provisional-assessment` workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; start with the workflow's user-facing response.

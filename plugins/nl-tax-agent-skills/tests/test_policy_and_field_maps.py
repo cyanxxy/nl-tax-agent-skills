@@ -27,6 +27,15 @@ def load_module(relative_path, name):
     return module
 
 
+def section_text(relative_path, section_heading):
+    content = read_text(relative_path)
+    section_start = content.index(section_heading)
+    next_heading = content.find("\n## ", section_start + len(section_heading))
+    if next_heading == -1:
+        return content[section_start:]
+    return content[section_start:next_heading]
+
+
 class PolicyAndFieldMapTests(unittest.TestCase):
     def setUp(self):
         self.validator = load_module(
@@ -317,6 +326,52 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("own BV", intake)
         self.assertIn("manual review", intake)
         self.assertIn("workflow-specific anchor", intake)
+
+    def test_command_wrappers_do_not_prompt_skill_narration(self):
+        command_files = sorted((ROOT / "commands").glob("nl-tax-*.md"))
+
+        self.assertGreaterEqual(len(command_files), 7)
+        for path in command_files:
+            content = path.read_text(encoding="utf-8")
+            with self.subTest(path=path.relative_to(ROOT)):
+                self.assertNotIn("Use the bundled", content)
+                self.assertNotIn("forwarding any arguments", content)
+                self.assertIn("Do not tell the user", content)
+
+    def test_user_facing_sections_hide_internal_setup_language(self):
+        checks = [
+            (
+                "skills/nl-tax-intake/SKILL.md",
+                "## Workspace location",
+                ["On the first turn, also tell the user", "state its absolute path"],
+            ),
+            (
+                "skills/nl-tax-intake/SKILL.md",
+                "## After intake is complete",
+                ["Which skill"],
+            ),
+            (
+                "skills/nl-tax-intake/SKILL.md",
+                "## Worked example",
+                ["workspace folder", "profile.yaml", "session-progress.yaml"],
+            ),
+            (
+                "skills/nl-tax-annual-return/SKILL.md",
+                "## End-of-turn report",
+                ["phase was covered", "chat_only", "indexed-file"],
+            ),
+            (
+                "skills/nl-tax-provisional-assessment/SKILL.md",
+                "## End-of-turn report",
+                ["subflow and section"],
+            ),
+        ]
+
+        for relative_path, heading, forbidden_terms in checks:
+            section = section_text(relative_path, heading)
+            for term in forbidden_terms:
+                with self.subTest(path=relative_path, heading=heading, term=term):
+                    self.assertNotIn(term, section)
 
     # ------------------------------------------------------------------
     # CR-04 readiness: a map with zero populated fields is never "ready",

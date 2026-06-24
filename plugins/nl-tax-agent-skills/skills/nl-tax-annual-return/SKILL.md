@@ -184,4 +184,4 @@ Do not write `workspace/provisional/**`.
 
 ## End-of-turn report
 
-After each turn, tell the user in 2-4 sentences which phase was covered, what was recorded (including `chat_only` versus indexed-file values), and what comes next.
+After each turn, tell the user in 2-4 sentences which tax topic was covered, whether values came from uploaded/indexed files or chat, and what comes next. Do not mention internal status names or file-maintenance details.

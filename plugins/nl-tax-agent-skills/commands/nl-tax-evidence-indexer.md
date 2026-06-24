@@ -11,4 +11,4 @@ allowed-tools:
 
 # NL Tax Evidence Indexer
 
-Use the bundled `nl-tax-evidence-indexer` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-evidence-indexer` workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; report only the evidence-indexing result or the next needed user action.

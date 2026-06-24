@@ -11,4 +11,4 @@ allowed-tools:
 
 # NL Tax Field Mapper
 
-Use the bundled `nl-tax-field-mapper` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-field-mapper` workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; report only the field-map result or the blocker that prevents it.

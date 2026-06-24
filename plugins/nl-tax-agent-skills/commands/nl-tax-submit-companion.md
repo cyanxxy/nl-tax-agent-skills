@@ -11,4 +11,4 @@ allowed-tools:
 
 # NL Tax Submit Companion
 
-Use the bundled `nl-tax-submit-companion` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-submit-companion` workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; start with the checklist result or the blocker that prevents it.

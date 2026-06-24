@@ -34,7 +34,7 @@ subdirectory) but Codex does not, so do not depend on `CLAUDE_SKILL_DIR`.
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 
-Use the bundled scripts when structured JSON inputs are available:
+Run these bundled scripts when structured JSON inputs are available:
 
 - `scripts/validate_box2_inputs.py`
 - `scripts/calculate_box2_tax.py`

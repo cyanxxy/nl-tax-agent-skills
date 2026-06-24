@@ -12,4 +12,4 @@ allowed-tools:
 
 # NL Tax Source Refresh
 
-Use the bundled `nl-tax-source-refresh` skill, forwarding any arguments: `$ARGUMENTS`
+Follow the bundled `nl-tax-source-refresh` maintenance workflow internally with arguments: `$ARGUMENTS`. Do not tell the user the skill name or command wrapper; report only the maintenance result.

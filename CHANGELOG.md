@@ -51,6 +51,9 @@ Plugin manifests are bumped from `0.1.1` to `0.1.2`.
   honored on Codex), added a retention/cleanup pointer, and noted that host
   runtime behavior is not integration-tested and must be verified in the target
   host before release.
+- Public workflow copy: command wrappers and first-turn intake/reporting
+  instructions now keep skill invocation, workspace setup, and YAML state
+  details out of user-facing responses.
 - Added `author.url` to the Claude and Codex plugin manifests and the
   marketplace manifest, and repointed the Codex `privacyPolicyURL` and
   `termsOfServiceURL` at `PRIVACY.md` and `TERMS.md`.

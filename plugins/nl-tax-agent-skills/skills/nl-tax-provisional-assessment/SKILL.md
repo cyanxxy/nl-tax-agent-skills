@@ -181,4 +181,4 @@ Write at the generation gate (per-subflow scope — must match `reference/provis
 
 ## End-of-turn report
 
-After each turn, tell the user in 2-4 sentences which subflow and section were covered, what was recorded, and what comes next.
+After each turn, tell the user in 2-4 sentences which 2026 voorlopige-aanslag topic was covered, what was recorded in plain language, and what comes next. Do not mention internal status names or file-maintenance details.
