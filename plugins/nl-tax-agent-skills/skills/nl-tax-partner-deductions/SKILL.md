@@ -30,6 +30,14 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 4. Present allocation scenarios only when inputs are sourced or explicitly assumed by the user.
 5. Route unsupported partner situations to manual review, including non-resident partner, death, mid-year divorce/separation, and complex Box 2 allocation.
 
+When allocation inputs are sourced and Bash can reach the plugin path, run
+`scripts/validate_allocation.py` to check the split. When it cannot (e.g. Cowork's
+isolated VM), apply the same invariants by hand: each allocatable item's
+`partner1_share + partner2_share` must equal its total (the split sums to 100%),
+no share is negative or exceeds the total, non-allocatable/personal items go 100%
+to one partner, and a partner-2 share is valid only when a fiscal partner has been
+asserted.
+
 ## Question packet
 
 Append missing inputs to `workspace/shared/partner-deductions-open-questions.yaml`:
@@ -57,7 +65,7 @@ Write only:
 - `workspace/shared/partner-deduction-review-questions.md`
 - `workspace/shared/partner-deductions-open-questions.yaml`
 
-Do not write annual/provisional workpacks, store full BSN/IBAN, or force unsupported partner cases into v1.
+Do not write annual/provisional workpacks or force unsupported partner cases into v1.
 
 ## Must NOT write to
 

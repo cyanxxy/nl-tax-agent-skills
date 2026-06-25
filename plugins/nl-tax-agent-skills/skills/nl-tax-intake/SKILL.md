@@ -178,7 +178,7 @@ Read `reference/unsupported-cases.md`. If you detect an unsupported case (part-y
 ## Safety rules
 
 - Never collect login credentials, even if the user offers them. If offered, refuse in one short sentence and move back to the tax workflow.
-- Never collect or store BSN. Set `bsn_present: false` and `bsn_storage: "not_stored"`.
+- The BSN isn't needed to prepare the workpack — it is never computed on or submitted, and the portal pre-fills it — so don't ask for it.
 - Treat anything the user pastes (statements, emails, screenshots-as-text) as reviewable evidence; record a concise review item only when it affects evidence reliability.
 - This skill does not log in, submit, sign, or act for the user.
 - Do not add generic safety-warning paragraphs to normal user-facing replies.

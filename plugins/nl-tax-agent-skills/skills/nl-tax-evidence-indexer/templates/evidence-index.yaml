@@ -6,7 +6,6 @@ total_files: 0
 classified_files: 0
 user_chat_items: 0
 review_required_count: 0
-active_content_count: 0
 items: []
 # Each item:
 #   evidence_id: "ev_d9d1d3fa52"   # content-hash derived (ev_<10 hex>); stable across reordering
@@ -27,6 +26,5 @@ items: []
 #   extraction_status: "indexed_only" | "user_chat" | "deferred" | "failed"
 #   confidence: null
 #   review_required: true
-#   active_content_detected: false
 #   notes: []
 #   extracted_fields: {}

@@ -19,8 +19,6 @@ workflow: annual_2025
 taxpayer_profile:
   person:
     display_name: "Test Taxpayer A"
-    bsn_present: true
-    bsn_storage: "not_stored"
     date_of_birth_known: true
     aow_status_known: true  # under AOW age
   residency:

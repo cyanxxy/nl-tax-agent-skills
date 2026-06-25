@@ -7,8 +7,7 @@ Usage:
 Checks:
     - All required metadata fields present
     - No workflow mismatch (annual field in provisional map)
-    - No credential/login/browser/submission fields
-    - No BSN/IBAN data-entry field, and no stored BSN (elfproef) or NL IBAN value
+    - No browser/submission (portal-automation) fields (the tool is prep-only)
     - Confidence values in range 0.0-1.0
     - Source types are valid (v1.1 schema: includes user_chat, assumption, unknown)
     - Per-source-type required fields are present
@@ -45,16 +44,12 @@ SUPPORTED_WORKFLOW_YEARS = {
     ("provisional_assessment", 2026): REFERENCE_DIR / "provisional-field-map.md",
 }
 VALID_WORKFLOWS = {workflow for workflow, _ in SUPPORTED_WORKFLOW_YEARS}
-CREDENTIAL_KEYWORDS = {
-    "wachtwoord", "password", "inloggegevens",
-    "username", "login", "credential", "secret", "pin",
-}
-# BSN and IBAN are the two highest-value Dutch identifiers and must never be
-# stored as data-entry field values. The portal pre-fills identifier/personal
-# rows; current field maps omit them instead of creating placeholder entries.
+# BSN/IBAN are portal-prefilled identifiers the taxpayer confirms in the portal,
+# so a field map intentionally omits them; they must not count against readiness
+# as "unpopulated required fields". Used only by the readiness/coverage logic
+# below (_is_identifier_field) — not as a data ban. Sensitive-data handling is the
+# host's responsibility (see CLAUDE.md "Host execution model"), not the plugin's.
 SENSITIVE_IDENTIFIER_KEYWORDS = {"bsn", "burgerservicenummer", "iban"}
-_IBAN_VALUE_RE = re.compile(r"\bNL\d{2}[A-Z]{4}\d{10}\b", re.IGNORECASE)
-_BSN_CANDIDATE_RE = re.compile(r"\b\d{9}\b")
 PORTAL_AUTOMATION_KEYWORDS = {
     "browser", "session", "submit", "submission", "sign", "signature",
     "onderteken", "verzenden", "indienen",
@@ -184,96 +179,17 @@ def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, erro
     return missing_field_ids
 
 
-def _passes_elfproef(digits):
-    """True if a 9-digit string satisfies the Dutch BSN 11-test."""
-    if len(digits) != 9 or not digits.isdigit():
-        return False
-    # All-identical-digit runs (e.g. "000000000") technically pass the 11-test but
-    # are not issued BSNs — exclude them to avoid flagging filler/placeholder values.
-    if len(set(digits)) == 1:
-        return False
-    weights = [9, 8, 7, 6, 5, 4, 3, 2, -1]
-    total = sum(int(d) * w for d, w in zip(digits, weights))
-    return total % 11 == 0
+def validate_portal_automation_fields(fid, label_lower, errors):
+    """Reject browser/login-automation or submission fields.
 
-
-def validate_sensitive_field_names(fid, label_lower, errors):
+    The tool prepares a workpack for manual entry; it never logs in, signs, or
+    submits, so a field that names a portal action is out of scope. This is a
+    product-scope guard (prep-only), not a security control.
+    """
     fid_lower = fid.lower()
-    for kw in CREDENTIAL_KEYWORDS:
-        if kw in fid_lower or kw in label_lower:
-            errors.append(f"Credential/login field detected: {fid}")
-    for kw in SENSITIVE_IDENTIFIER_KEYWORDS:
-        if kw in fid_lower or kw in label_lower:
-            errors.append(
-                "Sensitive identifier field detected (BSN/IBAN must never be a "
-                f"data-entry field; omit portal-prefilled identifiers): {fid}"
-            )
     for kw in PORTAL_AUTOMATION_KEYWORDS:
         if kw in fid_lower or kw in label_lower:
             errors.append(f"Browser/submission automation field detected: {fid}")
-
-
-def _coerce_text_chunks(raw):
-    """Flatten a value/notes/source field into a list of strings to scan.
-
-    Notes may be a list; source is a whole mapping. We serialize each leaf so a
-    sensitive value cannot hide in a nested key the old scan never looked at.
-    """
-    if raw is None:
-        return []
-    if isinstance(raw, str):
-        return [raw]
-    if isinstance(raw, (list, tuple)):
-        chunks = []
-        for item in raw:
-            chunks.extend(_coerce_text_chunks(item))
-        return chunks
-    if isinstance(raw, dict):
-        chunks = []
-        for key, item in raw.items():
-            chunks.append(str(key))
-            chunks.extend(_coerce_text_chunks(item))
-        return chunks
-    return [str(raw)]
-
-
-def validate_sensitive_field_values(fid, field, errors):
-    """Reject a stored BSN (elfproef) or NL IBAN.
-
-    Scans the value, notes (str or list), and the entire serialized source
-    mapping (not just source.quote). IBAN matching tolerates spaced grouping
-    (e.g. "NL91 ABNA 0417 1643 00") by normalizing whitespace first; the BSN
-    elfproef gate is preserved so an arbitrary 9-digit number is not flagged.
-    """
-    texts = []
-    texts.extend(_coerce_text_chunks(field.get("value")))
-    texts.extend(_coerce_text_chunks(field.get("notes")))
-    texts.extend(_coerce_text_chunks(field.get("source")))
-
-    iban_flagged = False
-    bsn_flagged = False
-    for text in texts:
-        compact = re.sub(r"\s+", "", text)
-        # IBAN: scan whitespace-collapsed text so a spaced IBAN still matches the
-        # compact NL IBAN pattern.
-        if not iban_flagged and _IBAN_VALUE_RE.search(compact):
-            errors.append(f"Sensitive identifier value (NL IBAN) must not be stored: {fid}")
-            iban_flagged = True
-        # BSN: scan BOTH the original and collapsed forms. Collapsing whitespace
-        # catches a space-grouped BSN, but it can also fuse digits to adjacent
-        # letters and defeat the \b word boundary, so the original text is scanned
-        # too. The elfproef gate keeps this from flagging arbitrary 9-digit runs.
-        if not bsn_flagged:
-            for variant in (text, compact):
-                for candidate in _BSN_CANDIDATE_RE.findall(variant):
-                    if _passes_elfproef(candidate):
-                        errors.append(
-                            f"Sensitive identifier value (BSN) must not be stored: {fid}"
-                        )
-                        bsn_flagged = True
-                        break
-                if bsn_flagged:
-                    break
 
 
 def validate_source(fid, field, missing_field_ids, errors, warnings):
@@ -311,8 +227,7 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     fid = field.get("field_id", f"field[{index}]")
     label_lower = (field.get("label") or "").lower()
 
-    validate_sensitive_field_names(fid, label_lower, errors)
-    validate_sensitive_field_values(fid, field, errors)
+    validate_portal_automation_fields(fid, label_lower, errors)
 
     value = field.get("value")
     if (

@@ -11,16 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed all DigiD handling and references throughout the plugin — knowledge files,
   skills, workpacks, submission checklists, eval fixtures, and docs. The plugin never logs
-  in or submits, so DigiD never enters its workflow. BSN/credential hygiene rules are
-  unchanged.
+  in or submits, so DigiD never enters its workflow. Repo hygiene and product-scope rules
+  remain: the plugin still does not ask for BSN or credentials, while host-level
+  sensitive-data handling owns enforcement.
 - Removed the prompt-injection guardrail: the `security/prompt-injection.md` policy, the
   evidence indexer's `untrusted-content-policy.md` and its content-marker /
   `suspicious_content_detected` scanning, the "treat as data / never follow embedded
   instructions" instructions across skills, and the prompt-injection eval case. The host
-  model (Claude/Codex) provides prompt-injection resistance. Operational file-handling
-  safety stays in the indexer: symlinks are never followed, uploaded scripts are never
-  executed, resource limits are enforced, archives are never expanded, and BSN/IBAN are
-  never stored.
+  model (Claude/Codex) provides prompt-injection resistance.
+- Removed the remaining in-plugin security/privacy enforcement — the host environment
+  (notably Cowork's sandboxed VM and the host model) owns it. Dropped from
+  `validate_field_map.py` the credential-keyword ban and the BSN/IBAN field-name and
+  stored-value (elfproef / NL-IBAN) scan; dropped from `index_evidence.py` the
+  symlink/real-path containment, file-count/size/depth resource limits, and
+  macro/`active_content` flagging. Their unit tests were removed. What remains is product
+  scope and tax correctness, not security: the tool still never logs in/signs/submits (the
+  field-map validator still rejects browser/submission fields) and provisional 2026 never
+  carries werkelijk rendement.
 
 ### Changed
 
@@ -28,9 +35,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   resolved through host file tools (`Read`/`Glob`/`Grep`) instead of Bash-based
   `${CLAUDE_PLUGIN_ROOT}` discovery, with manual validation fallbacks when Cowork's isolated
   Bash VM cannot see bundled plugin scripts.
-- Evidence-index schema: dropped `suspicious_content_detected` and `suspicious_count`;
-  macro-bearing spreadsheets are flagged via `active_content_detected` and the index reports
-  an `active_content_count` aggregate.
+- Evidence-index schema: dropped `suspicious_content_detected` and `suspicious_count`
+  (and `active_content_detected` / `active_content_count`, with the security-enforcement
+  removal above).
+- Cowork alignment: where the bundled validator/calculator scripts cannot run (the host
+  Bash sandbox cannot reach the plugin package), skills now restate each script's guarantee
+  declaratively — field-map structural checks, partner-allocation invariants, and evidence
+  `file_sha256` via a host hash command or an explicit `null`.
 - Source-refresh report schema: each source entry now also reports
   `staleness_threshold_days`, `age_days`, and `expires_on`.
 - Field-map validator: required reference rows the portal pre-fills are exempt from the
@@ -43,6 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   box 3 skills.
 - Added the `box2` subsection to the provisional session-progress template so a fresh
   session matches the provisional workpack generation gate.
+- Added Box 1 own-home rate-parity tests (eigenwoningforfait brackets, Hillenregeling, and
+  tariefsaanpassing) that guard `validate_own_home_inputs.py` constants against the
+  canonical knowledge notes, matching the existing box 2 / box 3 parity tests.
 
 ## [0.1.2]
 

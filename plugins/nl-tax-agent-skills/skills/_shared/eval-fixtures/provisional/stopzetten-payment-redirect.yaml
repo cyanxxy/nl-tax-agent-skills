@@ -16,8 +16,6 @@ workflow: provisional_2026_stopzetten
 taxpayer_profile:
   person:
     display_name: "Test Taxpayer F"
-    bsn_present: true
-    bsn_storage: "not_stored"
   residency:
     full_year_nl_resident: true
   partner:

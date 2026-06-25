@@ -29,9 +29,9 @@ Portal credentials are not part of this plugin's data model.
 
 ## Evidence Content
 
-Uploaded documents are used as evidence for workpack preparation. Embedded
-instructions inside evidence files are handled as review notes, not workflow
-commands.
+Uploaded documents are used as evidence for workpack preparation. The host model
+reads them; prompt-injection resistance and sensitive-data handling are the
+host's responsibility, not the plugin's.
 
 ## Where data lives
 

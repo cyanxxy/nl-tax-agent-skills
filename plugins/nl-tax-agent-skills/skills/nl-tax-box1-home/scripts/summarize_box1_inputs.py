@@ -39,17 +39,17 @@ def _load_file(path: Path) -> dict | list | None:
     """Load a YAML or JSON file and return parsed content."""
     text = path.read_text(encoding="utf-8")
     if path.suffix in (".yaml", ".yml"):
-        if _yaml_available:
-            return yaml.safe_load(text)
-        # Attempt naive JSON parse as last resort (will fail on pure YAML).
-        try:
-            return json.loads(text)
-        except json.JSONDecodeError:
+        if not _yaml_available:
+            # A real evidence index is genuine YAML (unquoted keys, comments), so
+            # there is no useful JSON fallback here — say so plainly instead of
+            # attempting a json.loads that can only ever fail.
             print(
-                f"ERROR: pyyaml is not installed and {path.name} is not valid JSON.",
+                f"ERROR: pyyaml is not installed; cannot read {path.name}. "
+                "Install pyyaml or provide the evidence index as JSON.",
                 file=sys.stderr,
             )
             return None
+        return yaml.safe_load(text)
     return json.loads(text)
 
 

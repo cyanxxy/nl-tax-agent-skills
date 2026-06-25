@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Regression tests for the full-audit follow-up fixes.
 
-Covers three guards added after the audit:
+Covers:
     - Cross-host invocation policy: every non-user-invocable skill ships an
       agents/openai.yaml with policy.allow_implicit_invocation: false.
-    - Field-map BSN/IBAN deterministic guard.
+    - Field-map identifier-placeholder convention (BSN/IBAN live in
+      missing_fields without a value; the portal pre-fills them).
     - The two marketplace.json files agree on plugin name and path.
+    - Evidence indexer cataloging: hash-failure handling and stable ids.
 """
 
-import hashlib
 import importlib.util
 import json
 import os
@@ -103,43 +104,16 @@ class InvocationPolicyTests(unittest.TestCase):
             self.assertEqual(errors, [])
 
 
-class FieldMapCredentialGuardTests(unittest.TestCase):
+class FieldMapIdentifierPlaceholderTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
             "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
             "validate_field_map_guard",
         )
 
-    def test_bsn_value_in_field_is_rejected(self):
-        errors = []
-        field = {
-            "field_id": "personal.bsn",
-            "label": "BSN",
-            "value": "111222333",  # valid elfproef BSN
-            "source": {"type": "user_chat", "quote": "my bsn is 111222333"},
-        }
-        self.mod.validate_field(field, 0, "annual_return", set(), errors, [])
-        self.assertTrue(any("BSN" in e for e in errors), errors)
-
-    def test_iban_value_in_quote_is_rejected(self):
-        errors = []
-        field = {
-            "field_id": "box3.refund_account",
-            "label": "Rekening",
-            "value": "NL91ABNA0417164300",
-            "source": {"type": "user_chat", "quote": "account NL91ABNA0417164300"},
-        }
-        self.mod.validate_field(field, 0, "annual_return", set(), errors, [])
-        self.assertTrue(any("IBAN" in e for e in errors), errors)
-
-    def test_elfproef_rejects_random_nine_digits(self):
-        # A 9-digit number that fails the 11-test should NOT be flagged as a BSN.
-        self.assertFalse(self.mod._passes_elfproef("123456789"))
-        self.assertTrue(self.mod._passes_elfproef("111222333"))
-
     def test_bsn_placeholder_in_missing_fields_still_passes(self):
         # The established convention: personal.bsn lives in missing_fields with no
-        # value. That path must remain valid (no credential error).
+        # value (the portal pre-fills it). That path must remain valid.
         data = {
             "field_map_version": "1.1",
             "workflow": "provisional_assessment",
@@ -161,7 +135,7 @@ class FieldMapCredentialGuardTests(unittest.TestCase):
         }
         errors, _ = self.mod.validate(data)
         self.assertFalse(
-            any("BSN" in e or "IBAN" in e or "Credential" in e for e in errors),
+            any("bsn" in e.lower() or "iban" in e.lower() for e in errors),
             errors,
         )
 
@@ -192,51 +166,12 @@ class MarketplaceConsistencyTests(unittest.TestCase):
         self.assertEqual(self._source_path(claude), "./plugins/nl-tax-agent-skills")
 
 
-class EvidenceIndexerSecurityTests(unittest.TestCase):
+class EvidenceIndexerTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
             "skills/nl-tax-evidence-indexer/scripts/index_evidence.py",
             "index_evidence",
         )
-
-    def test_symlink_outside_dir_is_not_hashed_or_cataloged(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            scanned = pathlib.Path(tmp) / "scanned"
-            outside = pathlib.Path(tmp) / "outside"
-            scanned.mkdir()
-            outside.mkdir()
-
-            # Secret content lives OUTSIDE the scanned directory.
-            secret = outside / "secret.txt"
-            secret_text = "TOP SECRET payroll data that must never be hashed"
-            secret.write_text(secret_text, encoding="utf-8")
-            secret_digest = hashlib.sha256(
-                secret_text.encode("utf-8")
-            ).hexdigest()
-
-            # A symlink inside the scanned dir points at the outside secret.
-            link = scanned / "link.txt"
-            try:
-                os.symlink(secret, link)
-            except (OSError, NotImplementedError):
-                self.skipTest("symlinks not supported on this platform")
-
-            entries = self.mod.scan_directory(str(scanned))
-
-            # The out-of-dir content must NEVER appear as a hash.
-            hashes = [e.get("file_sha256") for e in entries]
-            self.assertNotIn(secret_digest, hashes)
-
-            # The symlink itself may be cataloged as a skipped/failed item, but
-            # never hashed or followed.
-            for e in entries:
-                if e.get("file_name") == "link.txt":
-                    self.assertIsNone(e.get("file_sha256"))
-                    self.assertEqual(e.get("extraction_status"), "failed")
-                    self.assertTrue(
-                        any("symlink" in n.lower() for n in e.get("notes", [])),
-                        e.get("notes"),
-                    )
 
     def test_hash_failure_yields_none_and_failed_status(self):
         # Unit-level: compute_sha256 returns None (never an error string) on a
@@ -265,28 +200,6 @@ class EvidenceIndexerSecurityTests(unittest.TestCase):
             self.assertIsNone(entry.get("file_sha256"))
             self.assertEqual(entry.get("extraction_status"), "failed")
             self.assertTrue(entry.get("review_required"))
-
-    def test_macro_spreadsheets_flagged_as_active_content(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            scanned = pathlib.Path(tmp)
-            (scanned / "old.xls").write_bytes(b"\xd0\xcf\x11\xe0legacy")
-            (scanned / "macro.xlsm").write_bytes(b"PK\x03\x04macro")
-            entries = self.mod.scan_directory(str(scanned))
-            macro_entries = [
-                e for e in entries if e.get("file_name") in {"old.xls", "macro.xlsm"}
-            ]
-            self.assertEqual(len(macro_entries), 2, entries)
-            for entry in macro_entries:
-                with self.subTest(file_name=entry.get("file_name")):
-                    self.assertTrue(entry.get("active_content_detected"))
-                    self.assertTrue(entry.get("review_required"))
-                    self.assertTrue(
-                        any("macro" in n.lower() for n in entry.get("notes", [])),
-                        entry.get("notes"),
-                    )
-
-            formatted = self.mod.format_output(entries, str(scanned))
-            self.assertIn("active_content_count: 2", formatted)
 
     def test_relative_file_path_and_stable_id(self):
         with tempfile.TemporaryDirectory() as tmp:

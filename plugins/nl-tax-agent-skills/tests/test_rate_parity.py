@@ -11,6 +11,7 @@ mismatches, that is a real drift bug to fix in the calculator, not here.
 import importlib.util
 import pathlib
 import re
+import sys
 import unittest
 
 
@@ -22,6 +23,10 @@ def load_module(relative_path, name):
     module_path = ROOT / relative_path
     spec = importlib.util.spec_from_file_location(name, module_path)
     module = importlib.util.module_from_spec(spec)
+    # Register before exec so @dataclass introspection (Python 3.12+) can resolve
+    # the module via sys.modules[cls.__module__]; scripts with a module-level
+    # dataclass (e.g. validate_own_home_inputs.OwnHomeResult) fail to load otherwise.
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -134,6 +139,74 @@ class Box3ProvisionalRateParityTests(unittest.TestCase):
         self.assertIn(59_357, find_euros(self.box3_md))
         self.assertIn(59_357, find_euros(self.rates_md))
         self.assertEqual(self.module.HEFFINGSVRIJ_PER_PERSON, 59_357)
+
+
+class Box1OwnHomeRateParityTests(unittest.TestCase):
+    """Guard the box1 eigenwoningforfait, Hillen, and tariefsaanpassing constants
+    against their canonical knowledge notes (closes the audit 4.7c residual: the
+    box2/box3 calculators were parity-tested but box1's were not)."""
+
+    def setUp(self):
+        self.module = load_module(
+            "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+            "validate_own_home_inputs_parity",
+        )
+        self.forfait_md = read_md("own-home/eigenwoningforfait.md")
+        self.own_home_2025_md = read_md("years/2025/annual/own-home.md")
+        self.own_home_2026_md = read_md("years/2026/provisional/own-home.md")
+
+    def test_eigenwoningforfait_brackets_match_knowledge(self):
+        pcts = find_percentages(self.forfait_md)
+        euros = find_euros(self.forfait_md)
+        for pct in (0.0010, 0.0020, 0.0025, 0.0035, 0.0235):
+            self.assertIn(pct, pcts)
+        for amount in (12_500, 25_000, 50_000, 75_000,
+                       1_330_000, 4_655, 1_350_000, 4_725):
+            self.assertIn(amount, euros)
+        table = self.module.EIGENWONINGFORFAIT_TABLE
+        self.assertEqual(
+            [row[2] for row in table[2025]],
+            [0.0, 0.0010, 0.0020, 0.0025, 0.0035, 0.0235],
+        )
+        self.assertEqual(table[2025][-1][0], 1_330_000)
+        self.assertEqual(table[2025][-1][3], 4_655)
+        self.assertEqual(
+            [row[2] for row in table[2026]],
+            [0.0, 0.0010, 0.0020, 0.0025, 0.0035, 0.0235],
+        )
+        self.assertEqual(table[2026][-1][0], 1_350_000)
+        self.assertEqual(table[2026][-1][3], 4_725)
+
+    def test_hillenregeling_remaining_matches_knowledge(self):
+        pcts = find_percentages(self.forfait_md)
+        self.assertIn(0.76667, pcts)
+        self.assertIn(0.71867, pcts)
+        self.assertEqual(float(self.module.HILLENREGELING_REMAINING[2025]), 0.76667)
+        self.assertEqual(float(self.module.HILLENREGELING_REMAINING[2026]), 0.71867)
+
+    def test_tariefsaanpassing_2025_matches_knowledge(self):
+        pcts = find_percentages(self.own_home_2025_md)
+        euros = find_euros(self.own_home_2025_md)
+        self.assertIn(0.495, pcts)    # schijf 3 rate 49.50%
+        self.assertIn(0.3748, pcts)   # 2025 cap 37.48%
+        self.assertIn(76_817, euros)  # schijf 3 threshold
+        ta = self.module.TARIEFSAANPASSING[2025]
+        self.assertEqual(ta["schijf3_threshold"], 76_817)
+        self.assertEqual(ta["schijf3_rate"], 0.4950)
+        self.assertEqual(ta["cap_rate"], 0.3748)
+
+    def test_tariefsaanpassing_2026_matches_knowledge(self):
+        pcts = find_percentages(self.own_home_2026_md)
+        euros = find_euros(self.own_home_2026_md)
+        self.assertIn(0.3756, pcts)   # 2026 cap 37.56%
+        self.assertIn(78_426, euros)  # schijf 3 threshold
+        ta = self.module.TARIEFSAANPASSING[2026]
+        self.assertEqual(ta["schijf3_threshold"], 78_426)
+        self.assertEqual(ta["cap_rate"], 0.3756)
+        # The schijf-3 IB rate (49.50%) is shared with 2025; the 2026 note states
+        # it only implicitly (cap 37.56% + tariefsaanpassing 11.94%), so assert the
+        # script constant directly rather than scanning the note for it.
+        self.assertEqual(ta["schijf3_rate"], 0.4950)
 
 
 if __name__ == "__main__":

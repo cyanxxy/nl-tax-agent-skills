@@ -68,7 +68,7 @@ Rules:
 - Create the file on first turn if it does not exist.
 - Update `updated_at`, `last_question_asked`, and the relevant section on every turn that asks a question or records an answer.
 - A `question_id` is a short stable string (e.g., `intake.residency`, `annual.box1.employer_count`, `box3.peildatum.bank_balance`). Reuse the same id when re-asking a deferred question.
-- Write `session-progress.yaml` atomically (temp file in the same dir, then rename over the target) so an interrupted turn never leaves a truncated state file. Assume a single active session per workspace; do not run two skills concurrently against one `workspace_root`.
+- Write `session-progress.yaml` in one operation with the file-write tool — the no-code default on hosts like Cowork. If you have shell access to the workspace folder and want extra safety against an interrupted write, you may instead write a temp file in the same dir and rename it over the target. The state file is re-derivable from `profile.yaml` and the answered lists, so a rare truncated write is recoverable. Assume a single active session per workspace; do not run two skills concurrently against one `workspace_root`.
 
 ## Question-asking pattern
 

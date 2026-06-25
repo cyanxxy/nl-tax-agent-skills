@@ -19,13 +19,9 @@ Output:
 Supported file types:
     PDF, JPG, JPEG, PNG, XLSX, XLS, XLSM, XLTM, XLAM, CSV, MD, TXT, DOCX, XML, ODS
 
-File-handling safety:
-    The catalog gate is extension-based; extensions are NOT a trust signal —
-    type safety must never be inferred from an extension. Symlinks are never
-    followed, files reached outside the scanned directory are skipped, uploaded
-    scripts are never executed, and resource limits cap the number/size/depth of
-    files processed. The indexer reads file content as data and never executes
-    it (macros, embedded scripts, etc.).
+This script catalogs and hashes only; it reads content as data and performs no
+sandboxing or content inspection of its own — the host environment owns
+operational file-handling safety.
 """
 
 import hashlib
@@ -52,18 +48,6 @@ SUPPORTED_EXTENSIONS = {
     ".xltm",
     ".xlam",
 }
-
-# Extensions that warrant an active-content / macro manual-review note.
-# .xls is a legacy binary spreadsheet format that can carry VBA macros, so it
-# is flagged alongside the explicitly macro-enabled OOXML extensions.
-MACRO_EXTENSIONS = {".xlsm", ".xltm", ".xlam", ".xls"}
-
-# Resource limits — on a tripped limit we skip the file with a note, never abort.
-MAX_FILES = 500
-MAX_FILE_BYTES = 50 * 1024 * 1024            # 50 MiB per file
-MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024     # 2 GiB cumulative budget
-MAX_DEPTH = 10                               # directory recursion depth
-
 
 def compute_sha256(file_path: str):
     """Compute the SHA-256 hash of a file, reading in chunks.
@@ -118,47 +102,22 @@ def _make_evidence_id(digest, rel_path: str, seen_ids: set) -> str:
 
 
 def scan_directory(directory: str) -> list:
-    """
-    Scan a directory for supported evidence files.
+    """Scan a directory for supported evidence files.
 
     Returns a list of dicts with relative file_path, file_sha256,
     file_size_bytes, file_extension, and file_name for each supported file.
-
-    Security guarantees:
-        - Symlinks and non-regular files are skipped and never followed.
-        - Files whose real path resolves outside the scanned directory are
-          skipped (no symlink escape via directory components).
-        - Resource limits (file count, per-file size, total bytes, depth) skip
-          offending files with a note rather than aborting the scan.
+    Classification of evidence types is left to the skill/model. This catalogs
+    and hashes only — operational file-handling safety is the host's job.
     """
     if not os.path.isdir(directory):
         print(f"Error: '{directory}' is not a valid directory.", file=sys.stderr)
         sys.exit(1)
 
-    base = os.path.realpath(directory)
     entries = []
     seen_ids = set()
-    file_count = 0
-    total_bytes = 0
-    limit_notes = []
 
-    # Walk the directory tree (including subdirectories). followlinks defaults
-    # to False, so symlinked directories are not descended into.
     for root, dirs, files in sorted(os.walk(directory)):
-        # Enforce recursion depth relative to the scanned directory.
-        rel_root = os.path.relpath(root, directory)
-        depth = 0 if rel_root == "." else rel_root.count(os.sep) + 1
-        if depth >= MAX_DEPTH:
-            # Do not descend further; record once and stop pruning chatter.
-            dirs[:] = []
-            limit_notes.append(
-                f"SECURITY: directory depth limit ({MAX_DEPTH}) reached at "
-                f"'{rel_root}' — deeper files not scanned"
-            )
-            continue
-        # Keep traversal deterministic.
-        dirs.sort()
-
+        dirs.sort()  # deterministic traversal
         for file_name in sorted(files):
             # Skip hidden files and editor/backup temp files.
             if file_name.startswith(".") or file_name.startswith("~"):
@@ -167,75 +126,11 @@ def scan_directory(directory: str) -> list:
             file_path = os.path.join(root, file_name)
             _, ext = os.path.splitext(file_name)
             ext_lower = ext.lower()
-
             if ext_lower not in SUPPORTED_EXTENSIONS:
                 continue
 
-            # --- Symlink / non-regular-file containment (HI-12) ---
-            if os.path.islink(file_path) or not os.path.isfile(file_path):
-                entry = _make_skipped_entry(
-                    directory, file_path, file_name, ext_lower, seen_ids,
-                    "SECURITY: symlink/non-regular file skipped (not followed)",
-                )
-                entries.append(entry)
-                continue
-
-            # Containment: the resolved real path must stay inside base.
-            real = os.path.realpath(file_path)
-            try:
-                if os.path.commonpath([base, real]) != base:
-                    entry = _make_skipped_entry(
-                        directory, file_path, file_name, ext_lower, seen_ids,
-                        "SECURITY: path resolves outside the scanned directory "
-                        "— skipped (not followed)",
-                    )
-                    entries.append(entry)
-                    continue
-            except ValueError:
-                # commonpath raises on paths on different drives (Windows).
-                entry = _make_skipped_entry(
-                    directory, file_path, file_name, ext_lower, seen_ids,
-                    "SECURITY: path resolves to a different drive/root "
-                    "— skipped (not followed)",
-                )
-                entries.append(entry)
-                continue
-
-            # --- Resource limits (ME-18) ---
-            if file_count >= MAX_FILES:
-                limit_notes.append(
-                    f"SECURITY: file count limit ({MAX_FILES}) reached "
-                    f"— '{os.path.relpath(file_path, directory)}' and later "
-                    "files were skipped"
-                )
-                # Stop processing further files entirely.
-                return entries
-
             file_size = get_file_size(file_path)
-            if file_size > MAX_FILE_BYTES:
-                entry = _make_skipped_entry(
-                    directory, file_path, file_name, ext_lower, seen_ids,
-                    f"SECURITY: file size {file_size} bytes exceeds per-file "
-                    f"limit ({MAX_FILE_BYTES}) — skipped (not hashed)",
-                )
-                entries.append(entry)
-                continue
-
-            if file_size >= 0 and total_bytes + file_size > MAX_TOTAL_BYTES:
-                entry = _make_skipped_entry(
-                    directory, file_path, file_name, ext_lower, seen_ids,
-                    f"SECURITY: cumulative byte budget ({MAX_TOTAL_BYTES}) "
-                    "would be exceeded — skipped (not hashed)",
-                )
-                entries.append(entry)
-                continue
-
-            # --- Hash + catalog ---
             file_hash = compute_sha256(file_path)
-            file_count += 1
-            if file_size >= 0:
-                total_bytes += file_size
-
             rel_path = os.path.relpath(file_path, directory)
             evidence_id = _make_evidence_id(file_hash, rel_path, seen_ids)
 
@@ -244,42 +139,18 @@ def scan_directory(directory: str) -> list:
             )
 
             if file_hash is None:
-                # Hash failure (ME-19): never store an error string in the hash.
+                # Hash failure: never store an error string in the hash field.
                 entry["file_sha256"] = None
                 entry["extraction_status"] = "failed"
                 entry["review_required"] = True
                 entry["notes"].append(
-                    "SECURITY: file could not be read/hashed — extraction "
-                    "marked failed; verify the file manually"
+                    "file could not be read/hashed — extraction marked failed; "
+                    "verify the file manually"
                 )
-
-            # Flag macro-enabled / active-content files: a macro-capable
-            # spreadsheet needs care before opening in Excel. Informational note
-            # only — the indexer reads data and never executes macros.
-            if ext_lower in MACRO_EXTENSIONS:
-                if ext_lower == ".xls":
-                    entry["notes"].append(
-                        "SECURITY: legacy .xls binary spreadsheet may contain "
-                        "VBA macros — review before opening outside this tool"
-                    )
-                else:
-                    entry["notes"].append(
-                        f"SECURITY: File has macro-enabled extension "
-                        f"({ext_lower}) — review before opening outside this tool"
-                    )
-                entry["active_content_detected"] = True
 
             entries.append(entry)
 
-    # Attach any directory-level limit notes to a synthetic note carrier so the
-    # information is not lost. We surface them via stderr in main(); also leave
-    # them discoverable by stashing on the function attribute for callers.
-    scan_directory.last_limit_notes = limit_notes
     return entries
-
-
-# Default attribute so callers can read it even before a scan runs.
-scan_directory.last_limit_notes = []
 
 
 def _new_entry(evidence_id, rel_path, file_name, ext_lower, file_hash, file_size):
@@ -300,25 +171,9 @@ def _new_entry(evidence_id, rel_path, file_name, ext_lower, file_hash, file_size
         "extraction_status": "indexed_only",
         "confidence": None,
         "review_required": True,
-        "active_content_detected": False,
         "notes": [],
         "extracted_fields": {},
     }
-
-
-def _make_skipped_entry(directory, file_path, file_name, ext_lower, seen_ids, note):
-    """Build a cataloged-but-skipped entry (no hash, not processed).
-
-    Used for symlinks/non-regular files, containment failures, and tripped
-    resource limits. The id is derived from the relative path so it is stable
-    and never collides with content-hash ids.
-    """
-    rel_path = os.path.relpath(file_path, directory)
-    evidence_id = _make_evidence_id(None, rel_path, seen_ids)
-    entry = _new_entry(evidence_id, rel_path, file_name, ext_lower, None, -1)
-    entry["extraction_status"] = "failed"
-    entry["notes"].append(note)
-    return entry
 
 
 def format_output(entries: list, directory: str) -> str:
@@ -339,9 +194,6 @@ def format_output(entries: list, directory: str) -> str:
         "classified_files": 0,
         "user_chat_items": 0,
         "review_required_count": sum(1 for e in entries if e["review_required"]),
-        "active_content_count": sum(
-            1 for e in entries if e.get("active_content_detected")
-        ),
         "items": entries,
     }
 
@@ -400,11 +252,6 @@ def main():
     print(f"\n--- Summary ---", file=sys.stderr)
     print(f"Directory: {os.path.abspath(directory)}", file=sys.stderr)
     print(f"Files found: {len(entries)}", file=sys.stderr)
-    active = sum(1 for e in entries if e.get("active_content_detected"))
-    if active:
-        print(f"Active-content files: {active}", file=sys.stderr)
-    for note in getattr(scan_directory, "last_limit_notes", []):
-        print(note, file=sys.stderr)
     print(f"Output format: {'YAML' if 'yaml' in sys.modules else 'JSON'}",
           file=sys.stderr)
 

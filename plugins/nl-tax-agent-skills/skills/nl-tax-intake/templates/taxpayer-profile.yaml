@@ -19,8 +19,6 @@ person:
   display_name:
     value: null
     source: "unknown"
-  bsn_present: false
-  bsn_storage: "not_stored"
   date_of_birth:
     value: null                  # ISO date YYYY-MM-DD; needed for AOW age and jonggehandicaptenkorting trigger
     source: "unknown"
@@ -42,7 +40,6 @@ partner:
   has_fiscal_partner:
     value: null
     source: "unknown"
-  partner_bsn_present: false
   partner_date_of_birth:
     value: null                  # ISO date; required when has_fiscal_partner is true
     source: "unknown"
@@ -54,7 +51,7 @@ household:
   # Children living at home as of 31 December of the tax year, used to screen
   # IACK and (when combined with partner status) alleenstaande-ouderenkorting
   # and other family-status credits. Collect only what is needed for credits
-  # screening; do not store BSN.
+  # screening.
   children_at_home_count:
     value: null                  # integer, 0 or more
     source: "unknown"
@@ -99,5 +96,4 @@ intake_anchor_question:
     value: null
     source: "unknown"
 
-notes:
-  - "No BSN stored."
+notes: []

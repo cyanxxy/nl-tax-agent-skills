@@ -19,6 +19,10 @@ def read_text(relative_path):
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
+def read_repo_text(relative_path):
+    return (ROOT.parents[1] / relative_path).read_text(encoding="utf-8")
+
+
 def load_module(relative_path, name):
     module_path = ROOT / relative_path
     spec = importlib.util.spec_from_file_location(name, module_path)
@@ -185,6 +189,26 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("most recently validated", combined)
         self.assertIn("authoritative", combined)
 
+    def test_repo_hygiene_ignores_identifier_artifact_files(self):
+        gitignore = read_repo_text(".gitignore")
+
+        self.assertIn("*.bsn", gitignore)
+        self.assertIn("*.iban", gitignore)
+
+    def test_changelog_does_not_claim_removed_hygiene_rules_are_unchanged(self):
+        changelog = read_repo_text("CHANGELOG.md")
+
+        self.assertIsNone(
+            re.search(r"BSN/credential hygiene rules\s+are\s+unchanged", changelog)
+        )
+        self.assertIn("host environment", changelog)
+
+    def test_field_mapper_docs_match_validator_scope(self):
+        principles = read_text("skills/nl-tax-field-mapper/reference/mapping-principles.md")
+
+        self.assertNotIn("browser/login/submission", principles)
+        self.assertIn("browser/session/submission", principles)
+
     def test_field_map_validator_rejects_portal_automation_and_submission_fields(self):
         data = {
             "field_map_version": "1.0",
@@ -205,13 +229,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                     "confidence": 0.9,
                     "manual_review_required": False,
                 },
-                {
-                    "field_id": "security.portal_username",
-                    "label": "Portal login username",
-                    "source": {"type": "evidence"},
-                    "confidence": 0.9,
-                    "manual_review_required": False,
-                },
             ],
         }
 
@@ -219,7 +236,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
 
         self.assertTrue(any("browser" in error.lower() for error in errors))
         self.assertTrue(any("submission" in error.lower() for error in errors))
-        self.assertTrue(any("credential/login" in error.lower() for error in errors))
 
     def test_evidence_indexer_uses_canonical_beschikking_tokens(self):
         skill = read_text("skills/nl-tax-evidence-indexer/SKILL.md")
@@ -716,41 +732,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         fields[0]["source"]["baseline_ref"] = "prior_year_2024"
         readiness2 = self.validator.assess_readiness(fields, [], "annual_return", 2025)
         self.assertEqual(1, readiness2["populated_count"])
-
-    # ------------------------------------------------------------------
-    # ME-24 sensitive scan: spaced IBAN in value, elfproef BSN in notes.
-    # ------------------------------------------------------------------
-    def test_spaced_iban_in_value_is_rejected(self):
-        field = {
-            "field_id": "box3.rekening",
-            "value": "NL91 ABNA 0417 1643 00",
-            "source": {"type": "evidence", "evidence_id": "ev1"},
-        }
-        errors = []
-        self.validator.validate_sensitive_field_values("box3.rekening", field, errors)
-        self.assertTrue(any("iban" in e.lower() for e in errors))
-
-    def test_elfproef_bsn_in_notes_is_rejected(self):
-        # 123456782 satisfies the Dutch BSN elfproef.
-        field = {
-            "field_id": "box1.note",
-            "notes": ["client mentioned 123456782 in chat"],
-            "source": {"type": "user_chat", "quote": "x"},
-        }
-        errors = []
-        self.validator.validate_sensitive_field_values("box1.note", field, errors)
-        self.assertTrue(any("bsn" in e.lower() for e in errors))
-
-    def test_non_bsn_nine_digits_not_flagged(self):
-        # An arbitrary 9-digit number that fails elfproef must not be flagged.
-        field = {
-            "field_id": "box1.note",
-            "notes": ["invoice 123456789 paid"],
-            "source": {"type": "estimate"},
-        }
-        errors = []
-        self.validator.validate_sensitive_field_values("box1.note", field, errors)
-        self.assertEqual([], errors)
 
     # ------------------------------------------------------------------
     # ME-22 structural guards.

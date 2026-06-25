@@ -43,8 +43,8 @@ create a second `workspace/` tree.
 4. The relevant field reference: `reference/annual-field-map.md` or `reference/provisional-field-map.md`.
 5. `reference/mapping-principles.md`.
 
-The credential rules are also summarized in **Credential Exclusion**
-and **Safety** below.
+The field-map rules are also summarized in **Fields to omit** and
+**Safety** below.
 
 ## Workflow
 
@@ -108,9 +108,11 @@ When required fields have no sourced value, append to `workspace/shared/field-ma
 
 Tell the user about open questions before finalizing the field map. Offer two paths: provide the value now, or leave blank with a clear `MISSING - enter manually` marker on that row.
 
-## Credential Exclusion
+## Fields to omit
 
-Never map:
+The tool never logs in, signs, or submits, and the portal pre-fills identity
+rows — so these never become field-map entries (this is mapping scope, not a
+security control; sensitive-data handling is the host's responsibility):
 
 - Portal credentials: username, password, SMS codes.
 - BSN, IBAN, or portal-prefilled personal identity rows such as name, address, or date of birth.
@@ -127,14 +129,18 @@ bundled validator:
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
-The validator checks required metadata, workflow names, credential and portal-automation fields, confidence range, source provenance rules, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
+The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, readiness, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
 
 **If `python3` is not available or Bash cannot see the plugin script path** (for
 example in Cowork's isolated VM), do not skip validation - verify the field map
 by hand against `reference/mapping-principles.md` and the checks above: every
-field has a valid `source.type`, no credential or portal-automation fields are
-present, every `unknown` field also appears in `missing_fields`, and (for
-provisional) no werkelijk-rendement field exists. Never copy bundled scripts into
+field has a valid `source.type` with its required sub-fields; no browser/submission
+(portal-automation) fields; no duplicate `field_id`s and no non-finite (NaN/inf)
+values; every required reference field other than portal-prefilled identifiers
+appears in `fields` or `missing_fields`; every `unknown` field also appears in
+`missing_fields`; and (for provisional) no werkelijk-rendement field exists. The
+map is ready for entry only when at least one field is populated-and-sourced and
+no required reference field is left unpopulated. Never copy bundled scripts into
 `workspace/` to make them executable.
 
 ## Rendering

@@ -18,8 +18,6 @@ workflow: annual_2025
 taxpayer_profile:
   person:
     display_name: "Test Taxpayer B"
-    bsn_present: true
-    bsn_storage: "not_stored"
     date_of_birth_known: true
     aow_status_known: true
   residency:
@@ -27,7 +25,6 @@ taxpayer_profile:
     part_year_resident: false
   partner:
     has_fiscal_partner: true
-    partner_bsn_present: true
 
 evidence_files:
   - file: "jaaropgaaf-2025-taxpayer.pdf"

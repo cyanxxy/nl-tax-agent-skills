@@ -24,7 +24,7 @@ them obsolete.
 - Confidence scoring
 - Source tracking
 - Missing fields
-- Credential and login exclusions
+- Fields the mapper omits
 - Review flagging rules
 - Workflow-specific rules
 
@@ -150,9 +150,10 @@ than entering sourced values from the workpack.
 
 ---
 
-## Credential and login exclusions
+## Fields the mapper omits
 
-The field mapper NEVER creates entries for:
+The tool never logs in, signs, or submits, and the portal pre-fills identity
+rows, so the mapper NEVER creates entries (in `fields` or `missing_fields`) for:
 
 - **Portal credentials** -- username, password, SMS verification codes, or app authentication
 - **Bank login credentials** -- these are for evidence collection, not form submission
@@ -160,16 +161,18 @@ The field mapper NEVER creates entries for:
 - **Session identifiers** or portal navigation state
 - **Portal-prefilled personal/identifier rows** -- BSN, IBAN, name, address, and date of birth
 
-If the workpack mentions any of these, the mapper omits them entirely (never an entry in `fields` or `missing_fields`). The validator raises an error if a credential-adjacent field appears in `fields`.
+This is mapping scope, not a security control — the host environment owns
+sensitive-data handling. The validator does still flag a browser/session/submission
+(portal-automation) field if one slips into `fields`, because the tool is
+prep-only.
 
 ### Prefilled personal/identifier fields: omit, never value
 
 BSN, IBAN, name, address, and date of birth are not data-entry fields for this
 mapper. The portal pre-fills or confirms them, so the mapper does not create
 `fields` rows or `missing_fields` placeholders for them. The validator exempts
-required portal-prefilled reference rows from coverage while still rejecting a
-BSN/IBAN data-entry field and any stored BSN (elfproef) or NL IBAN value or
-quote.
+required portal-prefilled reference rows from coverage so they do not count as
+unpopulated.
 
 ---
 

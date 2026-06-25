@@ -112,17 +112,15 @@ The indexer MUST NOT:
 - Decide tax treatment (deductible vs not).
 - Compute tax amounts.
 - Override user-provided values with file-derived ones without surfacing the conflict.
-- Echo or store a BSN. A jaaropgaaf or beschikking the model reads will contain a
-  BSN; redact it on sight — never copy it into the index, a note, or a workpack
-  (set `bsn_present: false`, `bsn_storage: "not_stored"`).
+- Extract or store the BSN or similar identity numbers — workpack preparation does
+  not need them; record document type, year, institution, and amounts instead.
 
 If a file value and a user-stated value disagree, do NOT silently pick one. Add a `review_required: true` note and ask the user which to use.
 
 ## Safety
 
-- Never collect BSN.
 - This skill does not log in, submit, or sign anything.
-- Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/index_evidence.py`), and only if Bash can access that path. If Bash cannot see the plugin path, keep indexing manually from the file inventory and never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+- Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/index_evidence.py`), and only if Bash can access that path. If Bash cannot see the plugin path, keep indexing manually from the file inventory: `uploads/` and `evidence/` live in the working folder, so you may compute `file_sha256` with a host hash command (e.g. `shasum -a 256 <file>` or `sha256sum <file>`); if no hash tool is reachable, set `file_sha256: null` (the schema permits a null hash) and continue — cataloging and classification do not depend on the hash. Never copy bundled scripts into `workspace/`, and never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 - Do not add generic safety-warning paragraphs to normal user-facing replies.
 
 ## Output files

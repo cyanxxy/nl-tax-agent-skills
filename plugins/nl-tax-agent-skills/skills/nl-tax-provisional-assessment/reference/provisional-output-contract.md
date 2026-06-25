@@ -129,7 +129,7 @@ Every Box 2 amount must be labeled as estimate or from-baseline. Route valuation
 
 ## Field map requirements
 
-The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper` (`templates/field-map-template.yaml` + `reference/{annual,provisional}-field-map.md`) and MUST pass `scripts/validate_field_map.py`; `field_id`s must come from the corresponding field reference.
+The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper` (`templates/field-map-template.yaml` + `reference/{annual,provisional}-field-map.md`); `field_id`s must come from the corresponding field reference. Where Bash can reach the plugin path, confirm conformance by running `scripts/validate_field_map.py`; where it cannot (e.g. Cowork's isolated VM), verify it by hand against `nl-tax-field-mapper/reference/mapping-principles.md`. The script is the convenience check, not the only way to satisfy the contract.
 
 ---
 

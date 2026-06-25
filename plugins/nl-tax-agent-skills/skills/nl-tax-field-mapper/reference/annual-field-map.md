@@ -34,7 +34,7 @@ This reference defines the known fields in the Dutch annual income tax return th
 | `personal.fiscaal_partner` | Fiscaal partner | Fiscal partner | Persoonsgegevens | conditional | Profile / intake |
 
 ### Notes on personal data fields
-- BSN is pre-filled in the online return after login. The field mapper omits it entirely and NEVER stores the BSN value itself.
+- BSN is pre-filled in the online return after login. The field mapper omits it entirely — it is not a data-entry field.
 - Name, address, and date of birth are pre-filled from the BRP (Basisregistratie Personen). The field mapper omits these rows from both `fields` and `missing_fields`; the validator treats them as coverage-exempt.
 - Fiscal partner status must be confirmed by the taxpayer.
 
@@ -184,6 +184,6 @@ do not calculate it as standard support until reviewed sources are added.
 | `partner.verdeling_aftrekposten` | Verdeling persoonsgebonden aftrek | Deduction allocation | Partner | conditional | User choice |
 
 ### Notes on partner fields
-- Partner BSN is handled through the portal partner-link flow. The field mapper omits it entirely and NEVER stores the BSN value.
+- Partner BSN is handled through the portal partner-link flow. The field mapper omits it entirely — it is not a data-entry field.
 - Allocation choices (verdeling) determine how shared Box 2 income, the joint box 3 base, and deductions are split between partners. Box 2 allocation must total 100% for full-year fiscal partners. The optimal split depends on individual tax positions.
 - Non-allocatable items (arbeidskorting, ondernemersaftrek) cannot be transferred to the partner.
