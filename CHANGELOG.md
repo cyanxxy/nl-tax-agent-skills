@@ -5,7 +5,46 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.3] — 2026-07-01
+
+This release removes the in-plugin security enforcement now owned by the host
+environment, aligns the skills with Cowork's execution model, and applies a
+second developer-audit pass (helper write contracts, script robustness,
+documentation accuracy, and a source-freshness refresh). Plugin manifests are
+bumped from `0.1.2` to `0.1.3`.
+
+### Fixed
+
+- **Helper write contracts** — the four background helpers (`nl-tax-box1-home`,
+  `nl-tax-box2`, `nl-tax-box3`, `nl-tax-partner-deductions`) now declare `Write`
+  and `Edit` in `allowed-tools`, matching the `workspace/shared/` notes files
+  their contracts require them to write; clarified that helpers never update
+  `session-progress.yaml` (the owning workflow skill owns session state).
+- **Command wrappers** — all seven slash-command descriptions now match their
+  SKILL.md descriptions, removing divergent duplicate registrations.
+- **Permission patterns** — normalized `Bash(python3 …*.py:*)` mid-pattern
+  globs (which never match under prefix-match permission rules) to
+  `Bash(python3:*)` across skills and commands.
+- **Taxpayer profile** — template v1.3 adds `box2.has_aanmerkelijk_belang`
+  (the field the annual workflow and field mapper gate on); intake now records
+  the Box 2 yes/no answer there with provenance.
+- **Documentation accuracy** — annual SKILL phase count corrected to the 13
+  phases of `annual-flow.md`; `sources_loaded` correctly described as a
+  top-level `session-progress.yaml` key; intake may keep a volunteered
+  `display_name` as an unverified label but never asks for names or BSN;
+  deferred evidence provenance unified on `source: unknown` +
+  `extraction_status: deferred`; `refresh-policy.md` rewritten to document the
+  real freshness mechanism (free-text policy prose, cadence-keyword thresholds
+  in the blocking validator, `source_type` thresholds in the fetch planner).
+- **Script robustness** — `--help` on all manually-parsed scripts; clear
+  errors instead of tracebacks on invalid YAML, non-numeric inputs, and
+  read-only installs; absolute-path diagnostics in `summarize_box1_inputs.py`;
+  `test_eval_verifier.py` skips gracefully when the offline verifier is not
+  shipped with the package.
+- **Packaging** — dropped the trailing slash in both manifests' `skills` path;
+  bundled the Apache-2.0 `LICENSE` in the plugin package; made the package
+  README self-contained (no repo-relative links) with a not-tax-advice
+  disclaimer; removed the orphaned `methods/alef.md` knowledge note.
 
 ### Removed
 
@@ -57,6 +96,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Box 1 own-home rate-parity tests (eigenwoningforfait brackets, Hillenregeling, and
   tariefsaanpassing) that guard `validate_own_home_inputs.py` constants against the
   canonical knowledge notes, matching the existing box 2 / box 3 parity tests.
+- Wired the `_shared/templates/` missing-info, assumptions, and
+  review-questions registers into the annual and provisional flows as seeds.
+- `evidence_files` for the partner Box 2 allocation eval fixture and a new
+  `test_fixture_schema.py` suite enforcing one fixture shape and a documented
+  workflow-label vocabulary.
+- Source refresh pass (2026-07-01): re-verified 16 registered sources online
+  and bumped `last_checked`; `regels_overheid_regelspraak` was unreachable and
+  keeps its previous attestation.
 
 ## [0.1.2]
 
