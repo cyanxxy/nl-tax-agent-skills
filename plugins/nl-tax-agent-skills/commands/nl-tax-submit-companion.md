@@ -1,5 +1,5 @@
 ---
-description: Create a manual submission checklist for Dutch annual return or voorlopige aanslag workflows without logging in, signing, or submitting.
+description: Build a manual Mijn Belastingdienst submission checklist from an existing workpack and field map — blockers first, then step-by-step entry.
 argument-hint: "[annual|provisional] [2025|2026]"
 disable-model-invocation: true
 allowed-tools:

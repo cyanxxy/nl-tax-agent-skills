@@ -212,6 +212,11 @@ def format_output(entries: list, directory: str) -> str:
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("index_evidence.py — catalog a directory of tax evidence into a YAML/JSON index")
+        print("Usage: python3 index_evidence.py <directory_path>")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print("Usage: python3 index_evidence.py <directory_path>", file=sys.stderr)
         print("", file=sys.stderr)

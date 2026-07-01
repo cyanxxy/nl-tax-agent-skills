@@ -248,6 +248,37 @@ def classify_asset(asset):
     return category, confidence, flags
 
 
+def _coerce_scalar(val):
+    """Coerce a simple-YAML scalar string to a number when it is numeric.
+
+    Handles plain integers/decimals and comma thousand separators (e.g.
+    "50,000" -> 50000, "1.234.567" -> 1234567, Dutch "50.000,50" -> 50000.5).
+    Genuinely non-numeric text is returned unchanged; downstream validate_asset
+    then flags it for manual review rather than crashing on arithmetic.
+    """
+    try:
+        return int(val)
+    except ValueError:
+        pass
+    try:
+        return float(val)
+    except ValueError:
+        pass
+    stripped = val.strip()
+    # Plain comma thousand separators: 50,000 / 1,234,567
+    if re.fullmatch(r"-?\d{1,3}(,\d{3})+", stripped):
+        return int(stripped.replace(",", ""))
+    # Dot thousand separators: 50.000 / 1.234.567
+    if re.fullmatch(r"-?\d{1,3}(\.\d{3})+", stripped):
+        return int(stripped.replace(".", ""))
+    # Dutch locale with decimal comma: 50.000,50 or 50000,50
+    if re.fullmatch(r"-?\d{1,3}(\.\d{3})*,\d+", stripped) or re.fullmatch(
+        r"-?\d+,\d+", stripped
+    ):
+        return float(stripped.replace(".", "").replace(",", "."))
+    return val
+
+
 def load_input(file_path):
     """Load input from a JSON or YAML-style file."""
     with open(file_path, "r", encoding="utf-8") as f:
@@ -280,14 +311,9 @@ def load_input(file_path):
                 key, _, val = line.partition(":")
                 key = key.strip().strip('"').strip("'")
                 val = val.strip().strip('"').strip("'")
-                # Try to parse numeric values
-                try:
-                    val = int(val)
-                except ValueError:
-                    try:
-                        val = float(val)
-                    except ValueError:
-                        pass
+                # Coerce numeric values (incl. thousand separators); leave
+                # non-numeric text as-is for downstream manual-review flagging.
+                val = _coerce_scalar(val)
                 current_item[key] = val
         if current_item:
             items.append(current_item)
@@ -301,6 +327,11 @@ def load_input(file_path):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("classify_box3_assets.py — classify assets into box 3 categories")
+        print("Usage: python3 classify_box3_assets.py <input_file>  (JSON or simple YAML list)")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print("Usage: python3 classify_box3_assets.py <input_file>", file=sys.stderr)
         print("", file=sys.stderr)

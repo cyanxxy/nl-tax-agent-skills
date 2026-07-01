@@ -351,6 +351,11 @@ def validate(config_path, register_path):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("validate_supported_workflows.py — validate the supported-workflows gate against the register")
+        print("Usage: python3 validate_supported_workflows.py <supported-workflows.yaml> <source-register.yaml>")
+        sys.exit(0)
+
     if len(sys.argv) != 3:
         print(
             "Usage: python3 validate_supported_workflows.py "

@@ -152,6 +152,10 @@ def render_markdown_summary(payload: dict[str, Any]) -> tuple[str, int]:
 
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
+    if "-h" in args or "--help" in args:
+        print("summarize_box2_inputs.py — render a box 2 inputs JSON as a Markdown summary")
+        print("Usage: python3 summarize_box2_inputs.py input.json")
+        return 0
     if len(args) != 1:
         print("Usage: python3 summarize_box2_inputs.py input.json", file=sys.stderr)
         return 1

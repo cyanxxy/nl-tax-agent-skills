@@ -6,7 +6,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-evidence-indexer/scripts/*.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Evidence Indexer
@@ -87,7 +87,7 @@ Each item in `evidence-index.yaml` carries a `source` field:
 
 - `file` - a real file in `uploads/` or `evidence/`.
 - `user_chat` - a value the user stated. Includes `quote` (verbatim user text) and `stated_at`.
-- `deferred` - promised but not yet provided.
+- `unknown` - promised but not yet provided (deferred). Set `extraction_status: "deferred"`; this matches the `source: unknown` + deferred-status provenance used in `profile.yaml` and the workflow skills.
 
 For `user_chat` items, set `file_path: null`, `file_sha256: null`, `extraction_status: "user_chat"`, and put the stated amounts under `extracted_fields` with a clear key (e.g., `gross_employment_income_eur`).
 

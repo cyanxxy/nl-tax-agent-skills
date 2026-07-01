@@ -300,6 +300,10 @@ def validate_json_file(path: Path) -> dict:
 
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
+    if "-h" in args or "--help" in args:
+        print("validate_box2_inputs.py — validate a box 2 inputs JSON payload")
+        print("Usage: python3 validate_box2_inputs.py input.json")
+        return 0
     if len(args) != 1:
         print("Usage: python3 validate_box2_inputs.py input.json", file=sys.stderr)
         return 1

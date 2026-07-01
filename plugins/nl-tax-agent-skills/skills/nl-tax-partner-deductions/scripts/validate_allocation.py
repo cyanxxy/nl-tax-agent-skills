@@ -53,17 +53,32 @@ NON_ALLOCATABLE_KEYWORDS = {
 def _num(value, name, field, errors):
     """Coerce an input to a finite number or record an error and return None.
 
-    Rejects booleans, non-numeric types (strings, None, lists), and NaN/Inf so
-    downstream arithmetic cannot crash with a TypeError or silently propagate a
-    non-finite value.
+    Accepts ints/floats and plain numeric strings (e.g. "50000", "50000.50").
+    Rejects booleans, other types, non-numeric text, locale-formatted strings
+    (e.g. "50.000,00"), and NaN/Inf so downstream arithmetic cannot crash with a
+    TypeError or silently propagate a non-finite value.
     """
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
+    if isinstance(value, bool):
         errors.append(f"{name}: {field} is not a number ({value!r})")
         return None
-    if not math.isfinite(value):
-        errors.append(f"{name}: {field} is not a finite number ({value})")
+    if isinstance(value, (int, float)):
+        number = value
+    elif isinstance(value, str) and value.strip():
+        try:
+            number = float(value.strip())
+        except ValueError:
+            errors.append(
+                f"{name}: {field} is not a number ({value!r}); provide plain "
+                "numbers like 50000 or 50000.50, not locale strings like '50.000,00'"
+            )
+            return None
+    else:
+        errors.append(f"{name}: {field} is not a number ({value!r})")
         return None
-    return value
+    if not math.isfinite(number):
+        errors.append(f"{name}: {field} is not a finite number ({number})")
+        return None
+    return number
 
 
 def validate_allocations(items, has_fiscal_partner=True):
@@ -145,6 +160,10 @@ def validate_allocations(items, has_fiscal_partner=True):
 
 def main():
     argv = sys.argv[1:]
+    if "-h" in argv or "--help" in argv:
+        print("validate_allocation.py — check fiscal-partner allocation splits")
+        print("Usage: python3 validate_allocation.py [--no-partner] <path-to-allocations.json>")
+        sys.exit(0)
     no_partner = False
     if "--no-partner" in argv:
         no_partner = True

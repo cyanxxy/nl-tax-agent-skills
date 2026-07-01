@@ -1,12 +1,12 @@
 ---
-description: Prepare a Dutch voorlopige aanslag 2026 request, change, review, or stopzetten guidance package.
+description: Prepare a 2026 voorlopige aanslag workpack — request, change, review, or stopzetten — for manual Mijn Belastingdienst entry. Use after intake routes to a provisional_2026 flow. Fictitious box 3 only; never collects werkelijk rendement.
 argument-hint: "[2026] [request|change|review|stopzetten]"
 allowed-tools:
   - Read
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Provisional Assessment

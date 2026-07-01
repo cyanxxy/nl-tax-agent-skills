@@ -1,5 +1,5 @@
 ---
-description: Validate or plan official Dutch tax source snapshot refreshes. Developer-only.
+description: Developer-only maintenance — validate Dutch tax source registers and supported-workflow gates, rebuild reviewed snapshot metadata, and plan official-source refreshes. Not a taxpayer workflow; never reads or writes workspace/uploads/evidence.
 argument-hint: "[annual|provisional|box3|all] [year]"
 disable-model-invocation: true
 allowed-tools:
@@ -7,7 +7,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Source Refresh

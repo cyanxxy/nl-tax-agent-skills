@@ -1,12 +1,12 @@
 ---
-description: Index Dutch tax evidence files into a structured local evidence index without deciding tax treatment.
+description: Catalog and hash Dutch tax documents (`jaaropgaaf`, `bankafschrift`, `woz_beschikking`, `hypotheek_jaaroverzicht`, `voorlopige_aanslag_beschikking`) and chat-stated amounts into an evidence index. Use when the user shares or mentions tax documents, or a workflow needs evidence for a section.
 argument-hint: "[path-to-upload-folder]"
 allowed-tools:
   - Read
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Evidence Indexer

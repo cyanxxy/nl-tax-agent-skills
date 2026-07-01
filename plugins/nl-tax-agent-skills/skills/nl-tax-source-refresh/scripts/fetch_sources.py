@@ -273,6 +273,12 @@ def find_repo_root(register_path):
 
 
 def parse_cli_args(argv):
+    if "-h" in argv[1:] or "--help" in argv[1:]:
+        print("fetch_sources.py — report which registered sources need a manual refresh")
+        print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]")
+        print("Scope: annual | provisional | box3 | all")
+        sys.exit(0)
+
     if len(argv) < 2:
         print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]",
               file=sys.stderr)

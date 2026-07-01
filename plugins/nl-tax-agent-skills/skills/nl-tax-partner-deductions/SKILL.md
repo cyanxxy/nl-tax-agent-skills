@@ -5,7 +5,9 @@ user-invocable: false
 allowed-tools:
   - Read
   - Grep
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-partner-deductions/scripts/*.py:*)
+  - Write
+  - Edit
+  - Bash(python3:*)
 ---
 
 # NL Tax Partner Deductions

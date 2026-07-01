@@ -5,7 +5,9 @@ user-invocable: false
 allowed-tools:
   - Read
   - Grep
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-box1-home/scripts/*.py:*)
+  - Write
+  - Edit
+  - Bash(python3:*)
 ---
 
 # NL Tax Box 1 And Own Home

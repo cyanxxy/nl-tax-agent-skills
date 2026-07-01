@@ -498,7 +498,7 @@ Review every section for data gaps:
 
 ### 8.2 Write missing info
 
-Write or update `workspace/shared/missing-info.md`:
+Write or update `workspace/shared/missing-info.md` (seed from `_shared/templates/missing-info.md` on first write):
 - Each item tagged with `workflow: annual_2025`
 - Each item has a priority: critical (blocks filing), important (affects accuracy), nice-to-have
 - Each item describes what is needed and where the taxpayer can obtain it
@@ -509,7 +509,7 @@ Write or update `workspace/shared/missing-info.md`:
 
 ### 9.1 Generate review questions
 
-Create questions for each area of uncertainty:
+Use the entry format from `_shared/templates/review-questions.md`. Create questions for each area of uncertainty:
 - "Can you confirm the WOZ-waarde on your beschikking is EUR [amount]?"
 - "Did you receive any income from other sources not yet mentioned?"
 - "Do you have the actual interest statements from your bank for 2025?"

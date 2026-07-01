@@ -1,5 +1,5 @@
 ---
-description: Determine the correct Dutch tax workflow and create a taxpayer profile for annual return 2025 or voorlopige aanslag 2026.
+description: First skill for any Dutch individual income-tax task — screens scope and routes to the right workflow. Use when the user wants to file the 2025 aangifte (annual return) or request, change, review, or stop a 2026 voorlopige aanslag, or mentions belastingaangifte, aangifte, or voorlopige aanslag.
 argument-hint: "[annual|provisional|review|stopzetten]"
 allowed-tools:
   - Read

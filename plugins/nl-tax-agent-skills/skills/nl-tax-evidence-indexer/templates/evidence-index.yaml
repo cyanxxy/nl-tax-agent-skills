@@ -9,7 +9,7 @@ review_required_count: 0
 items: []
 # Each item:
 #   evidence_id: "ev_d9d1d3fa52"   # content-hash derived (ev_<10 hex>); stable across reordering
-#   source: "file" | "user_chat" | "deferred"
+#   source: "file" | "user_chat" | "unknown"   # deferred items use source: unknown + extraction_status: deferred
 #   # When source = file:
 #   file_path: "uploads/example.pdf"   # relative to the scanned directory
 #   file_sha256: ""   # null when the file could not be hashed (see extraction_status: failed)

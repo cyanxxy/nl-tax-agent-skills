@@ -14,7 +14,7 @@
     "workpacks",
     "voorlopige-aanslag"
   ],
-  "skills": "./skills/",
+  "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",

@@ -183,6 +183,11 @@ def validate(register_path):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("validate_source_register.py — validate the source register schema and references")
+        print("Usage: python3 validate_source_register.py <path-to-source-register.yaml>")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print("Usage: python3 validate_source_register.py <path-to-source-register.yaml>",
               file=sys.stderr)

@@ -6,7 +6,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Field Mapper

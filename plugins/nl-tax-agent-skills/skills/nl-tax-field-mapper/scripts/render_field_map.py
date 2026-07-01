@@ -66,7 +66,10 @@ def load_yaml(path):
             "(python3 -m pip install pyyaml). If PyYAML is unavailable on this host, "
             "present the field map to the user directly from the YAML you wrote."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
 
 
 def infer_section(field_id):
@@ -167,6 +170,11 @@ def render(data):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("render_field_map.py — render a field-map.yaml as a Markdown table")
+        print("Usage: python3 render_field_map.py <path-to-field-map.yaml>")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print("Usage: python3 render_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
         sys.exit(1)

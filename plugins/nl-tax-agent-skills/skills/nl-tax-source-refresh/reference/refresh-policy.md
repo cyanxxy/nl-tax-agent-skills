@@ -13,26 +13,40 @@ validators.
 
 ## Freshness policies
 
-Each source in `source-register.yaml` carries a `freshness_policy` field. The refresh pipeline interprets these policies as follows:
+Each source in `source-register.yaml` carries a `freshness_policy` field. It is
+**free-text developer guidance** describing when to re-verify the source (for
+example `"check after Prinsjesdag; rates are fixed for the calendar year once
+published"` or `"check monthly; platform docs may change with new releases"`).
 
-### refresh-before-1-dec-and-before-filing-season
+Machine enforcement happens in two places, and they interpret the register
+differently — both are intentional:
 
-Must be refreshed at two checkpoints per year:
+1. **`validate_knowledge_pack.py` (blocking gate).** Derives a staleness
+   threshold from the `freshness_policy` text itself. It first checks the
+   canonical tokens below, then falls back to keyword scanning of prose
+   policies (first/smallest match wins): `monthly` → 31 days, `quarter` → 92,
+   `filing season` → 90, `prinsjesdag` → 120, `annual` / `law change` → 365,
+   `on demand` → 730, anything else → 365. A mandatory source whose
+   `last_checked` exceeds its threshold FAILS validation.
+2. **`fetch_sources.py` (refresh planner).** Thresholds by `source_type`
+   (table under "Staleness thresholds" below), not by the policy text. It
+   reports which sources a developer should re-verify; it does not block.
 
-1. **Before 1 December** -- when provisional rates are typically published for the upcoming year. This ensures that provisional assessment skills have current rates before taxpayers begin requesting voorlopige aanslagen.
-2. **Before filing season starts (March)** -- when the Belastingdienst opens the annual return portal. This ensures annual return skills have the final published rates.
+When writing a `freshness_policy`, include one of the recognized cadence
+keywords so the blocking gate derives the intended threshold rather than the
+365-day default.
 
-### refresh-annually
+### Canonical policy tokens
 
-Must be refreshed at least once per calendar year. Suitable for sources that change infrequently but should be re-verified yearly (e.g., legislative texts that only change via Staatsblad publication).
+These fixed tokens are also accepted in `freshness_policy` (they map to
+explicit thresholds in `validate_knowledge_pack.py`):
 
-### refresh-on-law-change
-
-Refresh when the underlying law is amended. The trigger is a new publication in the Staatsblad or a Koninklijk Besluit on wetten.overheid.nl. This policy applies to legislative sources like the Wet IB 2001 and its uitvoeringsregelingen.
-
-### refresh-on-demand
-
-Only refreshed when explicitly requested by a developer. Used for sources that rarely change or where automated checking adds no value.
+| Token | Threshold | Meaning |
+|-------|-----------|---------|
+| `refresh-before-1-dec-and-before-filing-season` | 90 days | Re-verify before 1 December (provisional rates published) and before filing season opens (March). |
+| `refresh-annually` | 365 days | Re-verify at least once per calendar year (e.g., legislative texts). |
+| `refresh-on-law-change` | 365 days | Refresh when the underlying law is amended (Staatsblad / Koninklijk Besluit publication). |
+| `refresh-on-demand` | 730 days | Only refreshed when a developer explicitly requests it. |
 
 ## Refresh triggers
 

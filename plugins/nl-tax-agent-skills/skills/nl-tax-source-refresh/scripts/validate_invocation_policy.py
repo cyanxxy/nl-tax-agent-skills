@@ -102,6 +102,11 @@ def collect_errors(skills_dir):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("validate_invocation_policy.py — check cross-host invocation policy for bundled skills")
+        print("Usage: python3 validate_invocation_policy.py <path-to-skills-dir>")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print(
             "Usage: python3 validate_invocation_policy.py <path-to-skills-dir>",

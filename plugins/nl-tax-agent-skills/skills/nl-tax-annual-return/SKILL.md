@@ -6,7 +6,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/*.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Annual Return
@@ -23,11 +23,11 @@ Safety: only run Python under an already-resolved plugin `skills/.../scripts/` p
 
 ## Read first (mandatory every turn)
 
-Before the first user-facing reply on each turn, load these files. Append every loaded `source_id` (from `_shared/source-register.yaml`) to `sections … sources_loaded` in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
+Before the first user-facing reply on each turn, load these files. Append every loaded `source_id` (from `_shared/source-register.yaml`) to the top-level `sources_loaded` list in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
 
 Always:
 
-1. `reference/annual-flow.md` — the 10 numbered phases this skill follows
+1. `reference/annual-flow.md` — the 13 numbered phases this skill follows
 2. `reference/annual-output-contract.md` — the structural and safety rules for the workpack
 3. `templates/annual-return-pack.md` — the workpack template
 4. `workspace/taxpayer/profile.yaml`
@@ -66,7 +66,7 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 
 ## Workflow
 
-`reference/annual-flow.md` is authoritative. It defines 10 phases (Pre-flight → Income → Own home → Box 2 → Box 3 → Deductions → Partner → Field map → Missing info → Review questions → Assembly). Follow them in order, and within each phase apply the conversational contract below.
+`reference/annual-flow.md` is authoritative. It defines 13 phases (Pre-flight → Filing status → Income → Own home → Box 2 → Box 3 → Deductions → Credits screening → Partner → Field map → Missing info → Review questions → Assembly; numbered 1, 1.5, 2, 3, 3A, 4, 5, 5.5, 6, 7, 8, 9, 10 there). Follow them in order, and within each phase apply the conversational contract below.
 
 ### Conversational contract
 
@@ -99,7 +99,7 @@ The box and partner phases use the background helper contracts. Prefer a direct 
 In each phase, invoke or inline the matching helper, let it append its question packet under `workspace/shared/`, ask the user those questions, record the answers, then re-invoke/re-run the helper contract to fold them into its notes:
 
 - **Box 1 / own home** → `nl-tax-box1-home` (writes `workspace/shared/box1-home-notes.md` and `workspace/shared/box1-home-open-questions.yaml`)
-- **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md` and `workspace/shared/box2-open-questions.yaml`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang: yes`): load the three box 2 rate sheets listed above first, and — because the helper cannot update annual progress — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
+- **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md` and `workspace/shared/box2-open-questions.yaml`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang: yes`): load the three box 2 rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
 - **Box 3** → `nl-tax-box3` (writes `workspace/shared/box3-notes.md`, `workspace/shared/box3-open-questions.yaml`, and `workspace/shared/box3-review-questions.md`; annual collects fictitious **and** werkelijk rendement for the comparison)
 - **Partner / deductions** → `nl-tax-partner-deductions` (writes `workspace/shared/allocation-options.md`, `workspace/shared/partner-deductions-open-questions.yaml`, and `workspace/shared/partner-deduction-review-questions.md`)
 
@@ -170,8 +170,8 @@ Write incrementally:
 
 - `workspace/annual/2025/notes/<section>.yaml`
 - `workspace/shared/session-progress.yaml`
-- `workspace/shared/missing-info.md`
-- `workspace/shared/assumptions.md`
+- `workspace/shared/missing-info.md` (seed from `_shared/templates/missing-info.md` on first write)
+- `workspace/shared/assumptions.md` (seed from `_shared/templates/assumptions.md` on first write)
 
 Write only after the generation gate:
 

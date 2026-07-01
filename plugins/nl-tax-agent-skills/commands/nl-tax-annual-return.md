@@ -1,12 +1,12 @@
 ---
-description: Prepare a Dutch annual income-tax return 2025 workpack from taxpayer profile, evidence index, and local annual tax knowledge.
+description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, own home, box 2, box 3, deductions, partner allocation, and credits.
 argument-hint: "[2025]"
 allowed-tools:
   - Read
   - Grep
   - Write
   - Edit
-  - Bash(python3 *.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Annual Return

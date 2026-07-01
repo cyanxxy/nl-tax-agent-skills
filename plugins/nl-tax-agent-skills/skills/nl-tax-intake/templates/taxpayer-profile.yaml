@@ -1,4 +1,4 @@
-taxpayer_profile_version: "1.2"
+taxpayer_profile_version: "1.3"
 workspace_root: ""              # absolute path of the working folder; set once at intake, never changed
 intake_status: "not_started"    # not_started | in_progress | complete
 created_at: ""
@@ -61,6 +61,15 @@ household:
     []
   single_parent_status:
     value: null                  # true | false; relevant for alleenstaande-ouderenkorting eligibility
+    source: "unknown"
+
+box2:
+  # Answer to the intake question "Do you own 5% or more of a company
+  # (a BV / aanmerkelijk belang)?". The annual workflow and field mapper
+  # gate the Box 2 phases on this field. Complex-case screening lives in
+  # routing.complex_box2_screening below.
+  has_aanmerkelijk_belang:
+    value: null                  # true | false
     source: "unknown"
 
 workflows:

@@ -4,15 +4,21 @@ This directory is the product package for **NL Tax Agent Skills**: a skills-only
 Skills plugin that prepares Dutch individual income-tax workpacks and manual Mijn
 Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026).
 
-> **Install, usage, workflows, architecture, and privacy live in the repository
-> [README](../../README.md).** This file only orients you inside the package.
-> Contributor/maintainer reference (skill internals, validation, source schema, release
-> process) is in [CONTRIBUTING.md](../../CONTRIBUTING.md). Data handling is in
-> [PRIVACY.md](../../PRIVACY.md). Licensed under Apache-2.0 (repo root `LICENSE`).
+> **Not tax advice.** This plugin prepares local workpacks and manual-entry
+> guidance only. It never logs in, signs, or submits anything, and its output is
+> not official advice or a final calculation — the taxpayer reviews everything
+> and enters it manually in Mijn Belastingdienst.
 
-The repository root holds the marketplace manifests that point at this package:
-`.claude-plugin/marketplace.json` (Claude) and `.agents/plugins/marketplace.json`
-(repo-scoped Codex).
+> **Install, usage, workflows, architecture, and privacy live in the repository
+> docs** at <https://github.com/cyanxxy/nl-tax-agent-skills> (`README.md`,
+> `CONTRIBUTING.md`, `PRIVACY.md`). This file only orients you inside the
+> package. Licensed under Apache-2.0 — see the bundled [`LICENSE`](LICENSE)
+> file (also declared in both plugin manifests).
+
+In the development repository, the repository root additionally holds the
+marketplace manifests that point at this package: `.claude-plugin/marketplace.json`
+(Claude) and `.agents/plugins/marketplace.json` (repo-scoped Codex). Neither
+ships inside this package.
 
 ## Package contents
 
@@ -20,6 +26,7 @@ The repository root holds the marketplace manifests that point at this package:
 nl-tax-agent-skills/
   .claude-plugin/plugin.json    # Claude Code plugin manifest
   .codex-plugin/plugin.json     # Codex plugin manifest
+  LICENSE                       # Apache-2.0 license text
   assets/                       # icon.png, logo.png
   commands/                     # Claude Code slash-command wrappers (one per user skill)
   skills/

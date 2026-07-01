@@ -9,6 +9,11 @@ import unittest
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
+# The offline eval verifier lives in the dev repo under evals/ but is not part of
+# the shipped plugin package. When this test module runs from a standalone plugin
+# copy, evals/ is absent — skip rather than error on the missing file.
+VERIFIER_PATH = REPO_ROOT / "evals/nl-tax-agent-skills/verify_offline_workspace.py"
+
 
 def load_module(relative_path, name):
     module_path = REPO_ROOT / relative_path
@@ -18,6 +23,10 @@ def load_module(relative_path, name):
     return module
 
 
+@unittest.skipUnless(
+    VERIFIER_PATH.is_file(),
+    f"offline eval verifier not present ({VERIFIER_PATH}) — standalone package run",
+)
 class OfflineVerifierTests(unittest.TestCase):
     def test_offline_verifier_validates_generated_field_maps(self):
         verifier = load_module(

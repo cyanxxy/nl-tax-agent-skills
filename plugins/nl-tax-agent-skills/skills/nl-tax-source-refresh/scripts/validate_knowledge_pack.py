@@ -277,6 +277,11 @@ def find_review_blocking_markers(filepath):
 
 
 def parse_args(argv):
+    if "-h" in argv[1:] or "--help" in argv[1:]:
+        print("validate_knowledge_pack.py — validate knowledge-pack snapshots and freshness")
+        print("Usage: python3 validate_knowledge_pack.py <path-to-source-register.yaml>")
+        sys.exit(0)
+
     if len(argv) < 2:
         print(
             "Usage: python3 validate_knowledge_pack.py <path-to-source-register.yaml>",

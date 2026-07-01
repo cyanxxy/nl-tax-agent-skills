@@ -19,6 +19,13 @@ taxpayer_profile:
       taxpayer_pct: 60
       partner_pct: 40
 
+evidence_files:
+  - file: "dividendstatement-bv-2025.pdf"
+    evidence_type: dividend_statement
+    tax_year: 2025
+    extracted_fields:
+      reguliere_voordelen_bruto: 20000.00
+
 expected_behavior:
   - "Include partner.verdeling_box2_inkomen"
   - "Verify allocation totals 100%"

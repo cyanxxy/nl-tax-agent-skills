@@ -83,7 +83,10 @@ def load_yaml(path):
             "(python3 -m pip install pyyaml). If PyYAML is unavailable on this host, "
             "validate the field map by hand per reference/mapping-principles.md."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
 
 
 def _is_provisional(workflow):
@@ -477,6 +480,11 @@ def _readiness_for(data):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("validate_field_map.py — validate a field-map.yaml for correctness and policy")
+        print("Usage: python3 validate_field_map.py [--strict|--require-ready] <path-to-field-map.yaml>")
+        sys.exit(0)
+
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     flags = {a for a in sys.argv[1:] if a.startswith("-")}
     require_ready = bool(flags & {"--require-ready", "--strict"})

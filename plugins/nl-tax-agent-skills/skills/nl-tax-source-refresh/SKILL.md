@@ -7,7 +7,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-source-refresh/scripts/*.py:*)
+  - Bash(python3:*)
 ---
 
 # NL Tax Source Refresh

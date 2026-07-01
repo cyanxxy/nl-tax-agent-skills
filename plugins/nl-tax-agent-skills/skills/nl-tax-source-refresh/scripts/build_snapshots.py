@@ -27,7 +27,10 @@ def load_yaml_or_json(path):
             "PyYAML is required to build snapshot metadata "
             "(python3 -m pip install pyyaml)."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
 
 
 def compute_sha256(filepath):
@@ -62,10 +65,17 @@ def write_metadata(meta_path, metadata):
             "(python3 -m pip install pyyaml)."
         )
     rendered = yaml.safe_dump(metadata, allow_unicode=True, sort_keys=True)
-    with open(meta_path, "w", encoding="utf-8") as f:
-        f.write(rendered)
-        if not rendered.endswith("\n"):
-            f.write("\n")
+    try:
+        with open(meta_path, "w", encoding="utf-8") as f:
+            f.write(rendered)
+            if not rendered.endswith("\n"):
+                f.write("\n")
+    except OSError as exc:
+        raise SystemExit(
+            f"Error: cannot write snapshot metadata to {meta_path}: {exc}\n"
+            "(read-only install?) — run this developer script from a writable "
+            "clone of the repo."
+        )
 
 
 def normalize_directory_metadata(existing_meta):
@@ -134,6 +144,11 @@ def find_content_root(register_path):
 
 
 def main():
+    if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
+        print("build_snapshots.py — recompute snapshot hashes/metadata for the source register")
+        print("Usage: python3 build_snapshots.py <path-to-source-register.yaml>")
+        sys.exit(0)
+
     if len(sys.argv) < 2:
         print("Usage: python3 build_snapshots.py <path-to-source-register.yaml>",
               file=sys.stderr)

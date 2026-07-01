@@ -194,9 +194,16 @@ def format_gaps(gaps: list[str]) -> str:
 
 def main() -> int:
     # Parse arguments
+    args = sys.argv[1:]
+    if "-h" in args or "--help" in args:
+        print("summarize_box1_inputs.py — summarise box 1 / own-home evidence from the evidence index")
+        print("Usage: python3 summarize_box1_inputs.py [--evidence-dir PATH]  (default: workspace/taxpayer)")
+        return 0
+
+    # Default is cwd-relative; resolve to an absolute path so a wrong-cwd
+    # invocation is diagnosable from the output.
     evidence_dir = Path("workspace/taxpayer")
 
-    args = sys.argv[1:]
     i = 0
     while i < len(args):
         if args[i] == "--evidence-dir" and i + 1 < len(args):
@@ -205,6 +212,16 @@ def main() -> int:
         else:
             print(f"Unknown argument: {args[i]}", file=sys.stderr)
             return 1
+
+    evidence_dir = evidence_dir.resolve()
+
+    if not evidence_dir.is_dir():
+        print(
+            f"ERROR: evidence directory does not exist: {evidence_dir} "
+            "(pass --evidence-dir PATH or run from the workspace root).",
+            file=sys.stderr,
+        )
+        return 1
 
     # Locate evidence index
     index_path = find_evidence_index(evidence_dir)
