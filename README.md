@@ -16,29 +16,29 @@
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" /></a>
 <a href="https://claude.com/claude-code"><img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-supported-D97757" /></a>
 <a href="https://claude.ai"><img alt="Cowork" src="https://img.shields.io/badge/Cowork-supported-6E56CF" /></a>
-<a href="#install"><img alt="Codex" src="https://img.shields.io/badge/Codex-compatible-111111" /></a>
-<a href="#supported-workflows"><img alt="Years" src="https://img.shields.io/badge/Years-2025%20annual%20%C2%B7%202026%20provisional-2EA44F" /></a>
+<a href="#-install"><img alt="Codex" src="https://img.shields.io/badge/Codex-compatible-111111" /></a>
+<a href="#-supported-workflows"><img alt="Years" src="https://img.shields.io/badge/Years-2025%20annual%20%C2%B7%202026%20provisional-2EA44F" /></a>
 
 <br />
 <br />
 
-<a href="#what-it-does">What it does</a>
+<a href="#-what-it-does">What it does</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#how-it-works">How it works</a>
+<a href="#-how-it-works">How it works</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#quickstart">Quickstart</a>
+<a href="#-quickstart">Quickstart</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#install">Install</a>
+<a href="#-install">Install</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#supported-workflows">Workflows</a>
+<a href="#-supported-workflows">Workflows</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#architecture--data-flow">Architecture</a>
+<a href="#-architecture--data-flow">Architecture</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#skill-inventory">Skills</a>
+<a href="#-skill-inventory">Skills</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#privacy">Privacy</a>
+<a href="#-privacy">Privacy</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#evals--tests">Evals</a>
+<a href="#-evals--tests">Evals</a>
 
 </div>
 
@@ -49,7 +49,7 @@
 
 ---
 
-## What it does
+## 🎯 What it does
 
 Filing Dutch income tax means a yearly slog of chasing documents, decoding **Mijn Belastingdienst** fields, and keeping track of box 3 rules that change every year — only to repeat the process months later for the voorlopige aanslag.
 
@@ -59,7 +59,7 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
 
 ---
 
-## How it works
+## 🪜 How it works
 
 *No tax or technical background is needed — the entire workflow comes down to four steps.*
 
@@ -96,9 +96,9 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
 
 ---
 
-## Quickstart
+## 🚀 Quickstart
 
-Once the plugin is [installed](#install), the workflow is a short chain of slash commands. Each skill consumes the previous skill's output and writes its own output to a scoped path under `workspace/`.
+Once the plugin is [installed](#-install), the workflow is a short chain of slash commands. Each skill consumes the previous skill's output and writes its own output to a scoped path under `workspace/`.
 
 ### Annual return — 2025
 
@@ -125,7 +125,7 @@ In Claude Code, the plugin's skills are directly slash-invokable. If a skill and
 
 ---
 
-## Install
+## 📦 Install
 
 ### Claude Code
 
@@ -156,9 +156,9 @@ Public GitHub repositories are accepted for personal marketplaces — no fork or
 
 | Host | Discovery path | Implicit-invocation control | Status |
 |---|---|---|---|
-| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | `disable-model-invocation` / `user-invocable` frontmatter | Supported |
-| Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Same Claude frontmatter | Supported |
-| Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | Compatible — see note |
+| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | `disable-model-invocation` / `user-invocable` frontmatter | ✅ Supported |
+| Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Same Claude frontmatter | ✅ Supported |
+| Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | ⚠️ Compatible — see note |
 
 Cowork runs shell/code execution in an isolated local VM. The skills therefore
 resolve bundled plugin files with `Read`/`Glob`-style host file tools, not by
@@ -210,17 +210,17 @@ Upload the ZIP through the same **Browse plugins** modal. Versioning and release
 
 ---
 
-## Supported workflows
+## 🗓️ Supported workflows
 
 | Workflow | Year | Output |
 |---|:---:|---|
-| Annual income-tax return | **2025** | `workspace/annual/2025/return-pack.md` |
-| Voorlopige aanslag — request | **2026** | `workspace/provisional/2026/provisional-pack.md` + field map |
-| Voorlopige aanslag — change | **2026** | provisional pack, field map, delta summary |
-| Voorlopige aanslag — review | **2026** | provisional pack, review questions |
-| Voorlopige aanslag — stopzetten | **2026** | guided support checklist |
-| Annual income-tax return | 2026 | *blocked — filed in 2027; only the provisional 2026 flows are active for tax year 2026* |
-| Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
+| ✅ Annual income-tax return | **2025** | `workspace/annual/2025/return-pack.md` |
+| ✅ Voorlopige aanslag — request | **2026** | `workspace/provisional/2026/provisional-pack.md` + field map |
+| ✅ Voorlopige aanslag — change | **2026** | provisional pack, field map, delta summary |
+| ✅ Voorlopige aanslag — review | **2026** | provisional pack, review questions |
+| ✅ Voorlopige aanslag — stopzetten | **2026** | guided support checklist |
+| 🚫 Annual income-tax return | 2026 | *blocked — filed in 2027; only the provisional 2026 flows are active for tax year 2026* |
+| 🚫 Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
 
 > [!WARNING]
 > **Box 3 rule split.** Annual 2025 collects both methods — **fictitious (forfaitair)** and **werkelijk rendement** — and presents a comparison for the user to choose from. Provisional 2026 uses **fictitious only**; werkelijk rendement is never requested in any provisional flow.
@@ -231,7 +231,7 @@ The plugin must not reuse rates, thresholds, field maps, or box 3 logic across t
 
 ---
 
-## Architecture & data flow
+## 🧩 Architecture & data flow
 
 ```mermaid
 flowchart TB
@@ -278,33 +278,33 @@ The full annotated `workspace/` tree and skill-authoring internals are documente
 
 ---
 
-## Skill inventory
+## 🧰 Skill inventory
 
 | Skill | Type | Responsibility |
-|---|---|---|
-| `nl-tax-intake` | user entry | Screen scope, route to a supported workflow, write `workspace/taxpayer/profile.yaml` |
-| `nl-tax-evidence-indexer` | user entry | Hash and index local evidence files, classify without deciding tax treatment |
-| `nl-tax-annual-return` | user entry | Prepare `workspace/annual/2025/return-pack.md` and an annual field map |
-| `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, and stopzetten packages |
-| `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps and review tables |
-| `nl-tax-submit-companion` | manual-only | Produce a human checklist for official Belastingdienst submission |
-| `nl-tax-box1-home` | background | Summarize box 1 and eigen-woning facts into `workspace/shared/` |
-| `nl-tax-box2` | background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
-| `nl-tax-box3` | background | Classify assets and produce annual/provisional box 3 notes without mixing methods |
-| `nl-tax-partner-deductions` | background | Determine fiscal-partner and allocation notes for the main workpack |
-| `nl-tax-source-refresh` | developer | Validate and refresh local source snapshots and workflow declarations |
+|---|:---:|---|
+| `nl-tax-intake` | 🙋 user entry | Screen scope, route to a supported workflow, write `workspace/taxpayer/profile.yaml` |
+| `nl-tax-evidence-indexer` | 🙋 user entry | Hash and index local evidence files, classify without deciding tax treatment |
+| `nl-tax-annual-return` | 🙋 user entry | Prepare `workspace/annual/2025/return-pack.md` and an annual field map |
+| `nl-tax-provisional-assessment` | 🙋 user entry | Prepare 2026 request, change, review, and stopzetten packages |
+| `nl-tax-field-mapper` | 🙋 user entry | Convert workpack findings into manual-entry field maps and review tables |
+| `nl-tax-submit-companion` | 🔒 manual-only | Produce a human checklist for official Belastingdienst submission |
+| `nl-tax-box1-home` | ⚙️ background | Summarize box 1 and eigen-woning facts into `workspace/shared/` |
+| `nl-tax-box2` | ⚙️ background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
+| `nl-tax-box3` | ⚙️ background | Classify assets and produce annual/provisional box 3 notes without mixing methods |
+| `nl-tax-partner-deductions` | ⚙️ background | Determine fiscal-partner and allocation notes for the main workpack |
+| `nl-tax-source-refresh` | 🛠️ developer | Validate and refresh local source snapshots and workflow declarations |
 
 Top-level workflow skills own `workspace/annual/**` and `workspace/provisional/**`. Background helpers write only to `workspace/shared/`.
 
 ---
 
-## Privacy
+## 🔒 Privacy
 
 Taxpayer files live only in git-ignored paths — `workspace/`, `uploads/`, `evidence/` — so they never enter the repository, forks, or marketplaces. The skills run inside an agent host (Claude Code, Cowork, or Codex) that reads those files to do its work under that host's data-handling terms; the git-ignore boundary is not an offline guarantee. For hard limits on network or file access, use your host's deny-rules and sandboxing. See [PRIVACY.md](PRIVACY.md) for retention and cleanup, and [SECURITY.md](SECURITY.md) to report a sensitive issue.
 
 ---
 
-## Source register & knowledge pack
+## 📚 Source register & knowledge pack
 
 Taxpayer-facing skills read a bundled knowledge pack — not live websites — under `plugins/nl-tax-agent-skills/skills/_shared/`:
 
@@ -324,7 +324,7 @@ The register schema, freshness gate, and process for adding a source are documen
 
 ---
 
-## Evals & tests
+## 🧪 Evals & tests
 
 Behavior is pinned down at three layers, all offline — no live web access, no portal logins:
 
@@ -346,7 +346,7 @@ Behavior is pinned down at three layers, all offline — no live web access, no 
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
 Skill-authoring internals, the full validation gate, package layout, and release process are documented in [**CONTRIBUTING.md**](CONTRIBUTING.md).
 
