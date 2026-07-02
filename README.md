@@ -36,7 +36,7 @@
 &nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#skill-inventory">Skills</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
-<a href="#privacy-boundary">Privacy</a>
+<a href="#privacy">Privacy</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#evals--tests">Evals</a>
 
@@ -233,38 +233,41 @@ The plugin must not reuse rates, thresholds, field maps, or box 3 logic across t
 
 ## Architecture & data flow
 
-```text
-  uploads/*  ──▶  nl-tax-evidence-indexer  ──▶  workspace/taxpayer/evidence-index.yaml
-                                                          │
-  (interactive) ──▶  nl-tax-intake          ──▶  workspace/taxpayer/profile.yaml
-                                                          │
-                       ┌──────────────────────────────────┤
-                       ▼                                  ▼
-              nl-tax-annual-return            nl-tax-provisional-assessment
-                  (2025)                              (2026)
-                       │                                  │
-                       │  ── pulls background helpers ──┐
-                       │     nl-tax-box1-home           │  write notes, assumptions,
-                       │     nl-tax-box2                │  and missing-info to
-                       │     nl-tax-box3                │  workspace/shared/*.md
-                       │     nl-tax-partner-deductions  │
-                       │  ──────────────────────────────┘
-                       ▼                                  ▼
-        workspace/annual/2025/             workspace/provisional/2026/
-          return-pack.md                     provisional-pack.md
-          field-map.yaml                     field-map.yaml        (request/change)
-                                             delta-summary.md      (change only)
-                                             review-questions.md   (review only)
-                       │                                  │
-                       └──────────────────┬───────────────┘
-                                          ▼
-                              nl-tax-field-mapper  ──▶  rendered manual-entry table
-                                          │
-                                          ▼
-                            nl-tax-submit-companion  ──▶  human submit checklist
-                                          │
-                                          ▼
-                            [you type into Mijn Belastingdienst]
+```mermaid
+flowchart TB
+    chat(["💬 interactive chat"]) --> intake["nl-tax-intake"]
+    docs[("📂 uploads/ · evidence/")] --> indexer["nl-tax-evidence-indexer"]
+    intake --> profile[/"taxpayer/profile.yaml"/]
+    indexer --> evidx[/"taxpayer/evidence-index.yaml"/]
+
+    profile --> annual["nl-tax-annual-return · 2025"]
+    profile --> prov["nl-tax-provisional-assessment · 2026"]
+    evidx --> annual
+    evidx --> prov
+
+    subgraph helpers ["background helpers → workspace/shared/"]
+        direction LR
+        b1["box1-home"] ~~~ b2["box2"] ~~~ b3["box3"] ~~~ pd["partner-deductions"]
+    end
+    annual <-.-> helpers
+    prov <-.-> helpers
+
+    annual --> apack[/"annual/2025/<br/>return-pack.md · field-map.yaml"/]
+    prov --> ppack[/"provisional/2026/<br/>provisional-pack.md · field-map.yaml (request/change)<br/>delta-summary.md (change) · review-questions.md (review)"/]
+
+    apack --> mapper["nl-tax-field-mapper"]
+    ppack --> mapper
+    mapper --> submit["nl-tax-submit-companion"]
+    submit --> portal(["✅ you type into Mijn Belastingdienst"])
+
+    classDef skill fill:#D97757,stroke:#B85C3E,color:#fff
+    classDef file fill:#F6F1EB,stroke:#C9BBA8,color:#3B3B3B
+    classDef endpoint fill:#2EA44F,stroke:#22863A,color:#fff
+    classDef input fill:#6E56CF,stroke:#5A45B0,color:#fff
+    class intake,indexer,annual,prov,mapper,submit,b1,b2,b3,pd skill
+    class profile,evidx,apack,ppack file
+    class portal endpoint
+    class chat,docs input
 ```
 
 Skills compose without hidden state: each one consumes upstream files and writes to a scoped path. Background helpers — `box1-home`, `box2`, `box3`, and `partner-deductions` — write **only** to `workspace/shared/`.
@@ -295,23 +298,9 @@ Top-level workflow skills own `workspace/annual/**` and `workspace/provisional/*
 
 ---
 
-## Privacy boundary
+## Privacy
 
-Taxpayer files stay out of version control. They live only in git-ignored paths: `workspace/`, `uploads/`, and `evidence/`.
-
-Be clear about what this does and does not mean. The skills run **inside an LLM agent host** — Claude Code, Cowork, or Codex — that reads these files to perform its work. Evidence and workpack content is therefore processed by that host's model under its data-handling terms.
-
-In Cowork, shell commands and code run in an isolated VM. That protects the main
-OS boundary, but it is not a privacy guarantee: Claude still has access to the
-local folders you connect and can make real changes there.
-
-The git-ignore boundary keeps taxpayer data out of the repository and any fork or marketplace. It is **not** an offline guarantee or a promise that “data never leaves your machine.” These are plaintext files, and the plugin never deletes them for you.
-
-The “no live web fetch” posture is also a convention of the skills, not a host restriction; the host model may still have web tools. For hard blocks on network access or out-of-scope reads, configure host deny-rules, hooks, and OS-level sandboxing.
-
-See [PRIVACY.md](PRIVACY.md) for data retention, cleanup, and sync/backup guidance. See [SECURITY.md](SECURITY.md) to report a sensitive issue.
-
-Tax-content correctness — including rates, thresholds, rules, and cited sources — is owned by the tax-content owner. Report suspected inaccuracies or stale sources through GitHub Issues.
+Taxpayer files live only in git-ignored paths — `workspace/`, `uploads/`, `evidence/` — so they never enter the repository, forks, or marketplaces. The skills run inside an agent host (Claude Code, Cowork, or Codex) that reads those files to do its work under that host's data-handling terms; the git-ignore boundary is not an offline guarantee. For hard limits on network or file access, use your host's deny-rules and sandboxing. See [PRIVACY.md](PRIVACY.md) for retention and cleanup, and [SECURITY.md](SECURITY.md) to report a sensitive issue.
 
 ---
 
@@ -362,6 +351,8 @@ Behavior is pinned down at three layers, all offline — no live web access, no 
 Skill-authoring internals, the full validation gate, package layout, and release process are documented in [**CONTRIBUTING.md**](CONTRIBUTING.md).
 
 CI runs the full gate on every push and pull request.
+
+Tax-content correctness — rates, thresholds, rules, and cited sources — is owned by the tax-content owner. Report suspected inaccuracies or stale sources through GitHub Issues.
 
 ---
 
