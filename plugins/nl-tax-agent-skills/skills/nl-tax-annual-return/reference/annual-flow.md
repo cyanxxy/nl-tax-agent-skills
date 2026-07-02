@@ -2,7 +2,7 @@
 
 Authoritative step-by-step flow for generating the 2025 annual income-tax return workpack. Each phase builds on the previous one. If a phase cannot be completed due to missing data, record the gap and proceed to the next phase. `SKILL.md` is the entry-point procedure; this file is the contract for the ordered workflow.
 
-Every time you read a knowledge file or rate sheet, append the matching `source_id` from `_shared/source-register.yaml` to `session-progress.yaml` → `sources_loaded`. Only IDs in that list may appear in the workpack's "Sources used" section.
+Every time you read a knowledge file or rate sheet, record the matching `source_id` from `_shared/source-register.yaml` in `session-progress.yaml` → `sources_loaded` — once per ID; never append a duplicate on a re-read. Only IDs in that list may appear in the workpack's "Sources used" section, and that section lists each ID exactly once.
 
 ---
 
@@ -91,7 +91,7 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
 - `_shared/knowledge/years/2025/box3/fictitious.md` *(bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025)*
 - `_shared/knowledge/years/2025/box3/actual-return.md` *(bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025)*
-- `_shared/knowledge/years/2025/box2/box2-rates.md` *(bd_box2_rates_2025_2026)* — only when the case has an aanmerkelijk belang (`box2.has_aanmerkelijk_belang: yes`)
+- `_shared/knowledge/years/2025/box2/box2-rates.md` *(bd_box2_rates_2025_2026)* — only when the case has an aanmerkelijk belang (`box2.has_aanmerkelijk_belang` value `true`)
 - `_shared/knowledge/years/2025/box2/box2-income-guidance.md` *(bd_box2_income_ab_guidance)* — same condition
 - `_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md` *(bd_fisin_aanmerkelijk_belang_2025)* — same condition
 - `_shared/knowledge/own-home/eigenwoningforfait.md` *(bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes)*
@@ -243,7 +243,7 @@ When the taxpayer has an aanmerkelijk belang, read the rates from `_shared/knowl
 
 - Confirm whether the taxpayer has an aanmerkelijk belang.
 - Standard threshold: generally 5%, assessed together with the fiscal partner where applicable.
-- Map `box2.has_aanmerkelijk_belang` as yes/no/manual review.
+- Record `box2.has_aanmerkelijk_belang` as `true`/`false` in the profile (the template's boolean enum); route to manual review when the status is unclear.
 
 ### 3A.2 Regular benefits
 
@@ -478,7 +478,7 @@ List items that are personal and cannot be allocated:
 
 ### 7.1 Generate field map
 
-Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Write to `workspace/annual/2025/field-map.yaml`.
+Map each workpack line item to the corresponding field or section in the Belastingdienst online return form. Prepare the field-map content in this phase, but do NOT write `workspace/annual/2025/field-map.yaml` yet: that file is written together with `return-pack.md` in Phase 10.3, and only after the workpack generation gate in `SKILL.md` is satisfied (every annual subsection `complete`/`chat_only`/`deferred` plus the user's verbatim confirmation phrase). Until then, keep the prepared mappings in the phase notes.
 
 ### 7.2 Separation from provisional
 
@@ -535,7 +535,7 @@ Run every check in `reference/annual-output-contract.md` § "Workpack self-check
 
 ### 10.3 Write the workpack
 
-Write the completed workpack to `workspace/annual/2025/return-pack.md`. Write the field map alongside.
+Write the completed workpack to `workspace/annual/2025/return-pack.md`. Write the field map (prepared in Phase 7) alongside as `workspace/annual/2025/field-map.yaml`. Both files sit behind the same generation gate in `SKILL.md`; neither is written before the gate opens.
 
 ### 10.4 Summary to user
 

@@ -4,7 +4,7 @@ source_ids: bd_provisional_landing_2026, bd_provisional_request_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

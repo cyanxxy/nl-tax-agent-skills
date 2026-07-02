@@ -4,6 +4,7 @@ description: Internal helper for nl-tax-annual-return and nl-tax-provisional-ass
 user-invocable: false
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -37,7 +38,7 @@ relative to this skill directory.
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 
-Run these bundled scripts when structured JSON inputs are available:
+Run these bundled scripts when structured inputs are available. Each accepts either CLI flags or a JSON payload file (`calculate_box2_tax.py input.json`) with the keys documented in its docstring — `tax_year` (or `workflow`: `annual_2025` / `provisional_2026`), `regular_benefits`, `regular_costs`, `disposal_price` (or `gross_disposal_price` + `disposal_costs`), `acquisition_price`, `fictitious_regular_benefit_bv_loan`, `loss_setoff`, `dividend_withholding_tax`, and optional `partner_allocation` with `full_year_fiscal_partner: true`. Build the payload from values already collected in the box 2 notes; never invent inputs:
 
 - `scripts/validate_box2_inputs.py`
 - `scripts/calculate_box2_tax.py`

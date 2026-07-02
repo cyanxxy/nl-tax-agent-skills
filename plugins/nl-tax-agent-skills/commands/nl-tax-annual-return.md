@@ -1,8 +1,9 @@
 ---
 description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, own home, box 2, box 3, deductions, partner allocation, and credits.
-argument-hint: "[2025]"
+argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit

@@ -80,6 +80,12 @@ workflows:
     requested: false
     subflow: null
     status: "not_started"
+    stopzetten_direction:
+      value: null                # receiving_refund | paying_monthly; captured at intake.
+                                 # A paying_monthly answer routes to the change subflow
+                                 # (stopzetten applies only to refunds); the value is kept
+                                 # here either way so the downstream skill sees it.
+      source: "unknown"
 
 routing:
   complex_box2_screening:

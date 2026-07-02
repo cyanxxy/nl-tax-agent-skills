@@ -23,8 +23,9 @@ class IntakeContractTests(unittest.TestCase):
         template = load_yaml("skills/_shared/templates/session-progress.yaml")
         contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
 
-        self.assertEqual(template["session_progress_version"], "1.2")
-        self.assertIn("Schema (v1.2", contract)
+        self.assertEqual(template["session_progress_version"], "1.3")
+        self.assertIn("Schema (v1.3", contract)
+        self.assertIn("last_question_asked", template)
         self.assertIn("not_started | in_progress | complete | chat_only | deferred", contract)
         self.assertIn("`complete`, `chat_only`, or `deferred`", contract)
 

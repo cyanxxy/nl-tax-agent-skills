@@ -12,6 +12,7 @@ import unittest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REPO_ROOT = ROOT.parents[1]
 VALIDATOR_SCRIPT = ROOT / "skills/nl-tax-field-mapper/scripts/validate_field_map.py"
 
 
@@ -189,12 +190,20 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("most recently validated", combined)
         self.assertIn("authoritative", combined)
 
+    @unittest.skipUnless(
+        (pathlib.Path(__file__).resolve().parents[3] / ".gitignore").is_file(),
+        "dev-repo .gitignore not present — standalone package run",
+    )
     def test_repo_hygiene_ignores_identifier_artifact_files(self):
         gitignore = read_repo_text(".gitignore")
 
         self.assertIn("*.bsn", gitignore)
         self.assertIn("*.iban", gitignore)
 
+    @unittest.skipUnless(
+        (pathlib.Path(__file__).resolve().parents[3] / "CHANGELOG.md").is_file(),
+        "dev-repo CHANGELOG.md not present — standalone package run",
+    )
     def test_changelog_does_not_claim_removed_hygiene_rules_are_unchanged(self):
         changelog = read_repo_text("CHANGELOG.md")
 

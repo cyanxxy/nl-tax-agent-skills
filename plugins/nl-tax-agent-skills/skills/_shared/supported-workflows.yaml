@@ -1,5 +1,5 @@
 version: 1
-last_reviewed: "2026-05-20"
+last_reviewed: "2026-07-02"
 
 policy:
   source_backed_only: true
@@ -17,8 +17,13 @@ active_workflows:
     profile_candidates:
       - annual_2025
     knowledge_dirs:
+      - skills/_shared/knowledge/aow
+      - skills/_shared/knowledge/laws
+      - skills/_shared/knowledge/methods
       - skills/_shared/knowledge/own-home
       - skills/_shared/knowledge/partners
+      - skills/_shared/knowledge/platform
+      - skills/_shared/knowledge/security
       - skills/_shared/knowledge/years/2025/annual
       - skills/_shared/knowledge/years/2025/box2
       - skills/_shared/knowledge/years/2025/box3
@@ -72,6 +77,7 @@ active_workflows:
       - bd_invorderingsrente
       - bd_heffingskortingen_how_2025
       - bd_arbeidsinkomen_definition_2025
+      - bd_machtigen_authorization
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
 
@@ -85,9 +91,22 @@ active_workflows:
       - provisional_2026_review
       - provisional_2026_stopzetten
     knowledge_dirs:
+      - skills/_shared/knowledge/aow
+      - skills/_shared/knowledge/laws
+      - skills/_shared/knowledge/methods
       - skills/_shared/knowledge/own-home
       - skills/_shared/knowledge/partners
+      - skills/_shared/knowledge/platform
+      - skills/_shared/knowledge/security
       - skills/_shared/knowledge/years/2026/provisional
+      # The next two 2025 directories host all-year snapshots this workflow's
+      # required sources point at (bd_box2_rates_2025_2026 and
+      # bd_box2_income_ab_guidance under years/2025/box2, and the belastingrente
+      # notes in years/2025/annual/late-filing.md). They are listed so every
+      # required snapshot is reachable; the provisional workflow still uses only
+      # 2026 provisional rates and never reuses 2025 annual rate sheets.
+      - skills/_shared/knowledge/years/2025/box2
+      - skills/_shared/knowledge/years/2025/annual
     output_paths:
       - workspace/provisional/2026/provisional-pack.md
       - workspace/provisional/2026/field-map.yaml
@@ -123,7 +142,9 @@ active_workflows:
       - bd_algoritmeregister_vva_eva
       - bd_belastingrente_overview
       - bd_belastingrente_ib
+      - bd_invorderingsrente
       - bd_provisional_refund_timing_2026
+      - bd_machtigen_authorization
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
 
@@ -233,6 +254,23 @@ blocked_workflows:
     unlock_condition: >-
       Add reviewed foreign-income and treaty sources, local snapshots, field
       maps, and validation tests before enabling workpack preparation.
+
+  - id: annual_2026
+    workflow: annual_return
+    tax_year: 2026
+    status: blocked_pending_official_sources
+    may_prepare_workpack: false
+    allowed_output: workspace/shared/missing-info.md
+    reason: >-
+      The annual return 2026 is filed in 2027; no reviewed annual-return 2026
+      source-register entries or local knowledge snapshots exist yet. Do not
+      prepare a 2026 annual-return workpack and do not substitute 2025 annual
+      or 2026 provisional values. Only the 2026 voorlopige aanslag flows are
+      active for tax year 2026.
+    unlock_condition: >-
+      Add official Belastingdienst/wetten.overheid.nl 2026 annual sources when
+      the 2026 filing season opens, update the source register and knowledge
+      snapshots, then pass validation.
 
   - id: annual_2027
     workflow: annual_return

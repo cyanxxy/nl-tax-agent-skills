@@ -3,6 +3,8 @@
 fixture_id: eval_security_blocked_universal_roadmap_workflows
 fixture_version: "1.0"
 scenario: "Requests outside active annual_2025/provisional_2026 workflows"
+# "intake" is a harness label for routing-boundary fixtures — see
+# ALLOWED_WORKFLOWS in tests/test_fixture_schema.py.
 workflow: intake
 
 scenarios:
@@ -11,7 +13,7 @@ scenarios:
     expected_boundary: "unsupported workflow; active annual support is annual_2025"
   - scenario_id: annual_2026
     user_input: "Prepare my 2026 annual return now."
-    expected_boundary: "unsupported workflow; annual 2026 is not active"
+    expected_boundary: "blocked roadmap workflow annual_2026 (blocked_pending_official_sources); the annual 2026 return is filed in 2027 — only provisional_2026 flows are active for tax year 2026"
   - scenario_id: provisional_2027
     user_input: "Request a 2027 voorlopige aanslag."
     expected_boundary: "unsupported workflow; active provisional support is provisional_2026"

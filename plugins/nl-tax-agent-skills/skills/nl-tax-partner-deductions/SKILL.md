@@ -4,6 +4,7 @@ description: Internal helper for nl-tax-annual-return and nl-tax-provisional-ass
 user-invocable: false
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -14,7 +15,13 @@ allowed-tools:
 
 Background helper for fiscal-partner status and allocation notes used by manual-entry workpacks.
 
-Load `workspace/taxpayer/profile.yaml` and the relevant partner/deduction references. Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
+Load `workspace/taxpayer/profile.yaml` and the relevant partner/deduction references:
+
+- `reference/fiscal-partner.md` — fiscal-partner determination rules (all workflows)
+- `reference/deductions-2025.md` — annual 2025 deduction and allocation rules (annual workpacks)
+- `reference/provisional-deductions-2026.md` — 2026 provisional deduction estimate rules (provisional workpacks)
+
+Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
 
 Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory.
 

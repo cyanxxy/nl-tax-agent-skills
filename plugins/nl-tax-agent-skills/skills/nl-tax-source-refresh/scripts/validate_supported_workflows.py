@@ -18,9 +18,13 @@ Checks:
 
 import os
 import sys
+from datetime import date
 
 
 VALID_WORKFLOWS = {"annual_return", "provisional_assessment"}
+# The workflow gate itself must carry a valid, reasonably fresh attestation —
+# it decides what the plugin is allowed to prepare.
+LAST_REVIEWED_MAX_AGE_DAYS = 365
 BLOCKED_STATUSES = {"blocked_pending_official_sources"}
 TERMINAL_STATUSES = {"terminal_manual_review", "terminal_unsupported"}
 
@@ -77,6 +81,12 @@ def find_plugin_root(config_path):
 def source_scope_matches(source, workflow, tax_year):
     source_workflow = source.get("workflow")
     source_year = source.get("tax_year")
+
+    # workflow: security marks an all-workflow authorization/guidance source
+    # (e.g. machtigen); it applies to every taxpayer-facing workflow rather
+    # than being scoped to one of them.
+    if source_workflow == "security":
+        source_workflow = None
 
     if source_workflow and source_workflow != workflow:
         return False, f"workflow mismatch: {source_workflow} != {workflow}"
@@ -197,8 +207,9 @@ def validate_required_sources(workflow, wid, wf, tax_year, source_by_id, plugin_
         matching_skills = sorted(mandatory_for.intersection(inferred_skills))
         if not matching_skills:
             continue
-        # Security/authorization sources intentionally keep workflow: security
-        # and do not define annual/provisional tax coverage.
+        # Security/authorization sources (workflow: security) are treated as
+        # all-workflow by source_scope_matches, so a mandatory authorization
+        # source must appear in every active workflow's required_source_ids.
         matches, _ = source_scope_matches(source, wf, tax_year)
         if not matches:
             continue
@@ -305,6 +316,28 @@ def validate_source_pairs(sources, active_pairs):
     return errors
 
 
+def validate_config_review_date(config):
+    errors = []
+    warnings = []
+    last_reviewed = config.get("last_reviewed")
+    if not last_reviewed:
+        errors.append("supported-workflows: missing last_reviewed")
+        return errors, warnings
+    try:
+        reviewed = date.fromisoformat(str(last_reviewed))
+    except ValueError:
+        errors.append(f"supported-workflows: invalid last_reviewed date: {last_reviewed}")
+        return errors, warnings
+    if reviewed > date.today():
+        errors.append(f"supported-workflows: last_reviewed is in the future: {last_reviewed}")
+    elif (date.today() - reviewed).days > LAST_REVIEWED_MAX_AGE_DAYS:
+        warnings.append(
+            f"supported-workflows: last_reviewed {last_reviewed} is older than "
+            f"{LAST_REVIEWED_MAX_AGE_DAYS} days — re-review the workflow gate"
+        )
+    return errors, warnings
+
+
 def validate(config_path, register_path):
     config = load_yaml_or_json(config_path)
     register = load_yaml_or_json(register_path)
@@ -316,6 +349,10 @@ def validate(config_path, register_path):
     blocked_ids = set()
     errors = []
     warnings = []
+
+    review_errors, review_warnings = validate_config_review_date(config)
+    errors.extend(review_errors)
+    warnings.extend(review_warnings)
 
     for workflow in config.get("active_workflows", []):
         errors.extend(

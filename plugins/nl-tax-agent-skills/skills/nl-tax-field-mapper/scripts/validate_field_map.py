@@ -64,9 +64,10 @@ WERKELIJK_KEYWORDS = {
 }
 # Top-level keys the schema knows about. Anything else is warned on so a typo'd
 # key (e.g. "field" instead of "fields") doesn't silently drop data.
+# Keep this set in sync with templates/field-map-template.yaml.
 KNOWN_TOP_LEVEL_KEYS = {
-    "field_map_version", "workflow", "tax_year", "created_at",
-    "fields", "missing_fields", "notes", "readiness",
+    "field_map_version", "workflow", "tax_year", "created_at", "updated_at",
+    "fields", "missing_fields", "user_chat_values_index", "notes", "readiness",
 }
 # Optional top-level readiness self-declaration (ME-30).
 VALID_READINESS_VALUES = {"draft", "review_ready"}
@@ -167,10 +168,19 @@ def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, erro
     if not reference_path:
         return missing_field_ids
 
+    try:
+        required_ids = required_reference_fields(reference_path)
+    except OSError as exc:
+        errors.append(
+            f"Cannot read field reference {reference_path.name}: {exc} "
+            "(reference coverage not checked)"
+        )
+        return missing_field_ids
+
     prefilled_field_ids = portal_prefilled_reference_fields(reference_path)
     represented_field_ids = field_ids | missing_field_ids
     for required_field_id in sorted(
-        required_reference_fields(reference_path)
+        required_ids
         - prefilled_field_ids
         - represented_field_ids
     ):
@@ -382,7 +392,10 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year):
     reference_path = SUPPORTED_WORKFLOW_YEARS.get((workflow, parsed_tax_year))
     required_unpopulated = []
     if reference_path:
-        required = required_reference_fields(reference_path)
+        try:
+            required = required_reference_fields(reference_path)
+        except OSError:
+            required = set()
         prefilled = portal_prefilled_reference_fields(reference_path)
         required_unpopulated = sorted(
             rid

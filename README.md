@@ -37,6 +37,8 @@
 <a href="#skill-inventory">Skills</a>
 &nbsp;&nbsp;·&nbsp;&nbsp;
 <a href="#privacy-boundary">Privacy</a>
+&nbsp;&nbsp;·&nbsp;&nbsp;
+<a href="#evals--tests">Evals</a>
 
 </div>
 
@@ -217,6 +219,7 @@ Upload the ZIP through the same **Browse plugins** modal. Versioning and release
 | Voorlopige aanslag — change | **2026** | provisional pack, field map, delta summary |
 | Voorlopige aanslag — review | **2026** | provisional pack, review questions |
 | Voorlopige aanslag — stopzetten | **2026** | guided support checklist |
+| Annual income-tax return | 2026 | *blocked — filed in 2027; only the provisional 2026 flows are active for tax year 2026* |
 | Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
 
 > [!WARNING]
@@ -224,7 +227,7 @@ Upload the ZIP through the same **Browse plugins** modal. Versioning and release
 
 Active declarations live in [`supported-workflows.yaml`](plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml). A workflow is supported only when its workflow/year pair has reviewed source-register entries, local knowledge snapshots, and passing validators.
 
-The plugin must not reuse 2025/2026 rates, thresholds, field maps, or box 3 logic for 2027.
+The plugin must not reuse rates, thresholds, field maps, or box 3 logic across tax years — not 2025 annual values for the 2026 annual return, and not 2025/2026 values for 2027.
 
 ---
 
@@ -249,8 +252,8 @@ The plugin must not reuse 2025/2026 rates, thresholds, field maps, or box 3 logi
                        ▼                                  ▼
         workspace/annual/2025/             workspace/provisional/2026/
           return-pack.md                     provisional-pack.md
-          field-map.yaml                     field-map.yaml
-                                             delta-summary.md      (change/review)
+          field-map.yaml                     field-map.yaml        (request/change)
+                                             delta-summary.md      (change only)
                                              review-questions.md   (review only)
                        │                                  │
                        └──────────────────┬───────────────┘
@@ -324,9 +327,33 @@ supported-workflows.yaml
 
 Every rule note must cite a `source_id` registered in [`source-register.yaml`](plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml). Only `nl-tax-source-refresh` maintains snapshots.
 
+At runtime the workflow skills check the register's `last_checked` dates against each source's re-check cadence. A stale source pack produces a one-line warning to the user (naming the stale `source_id`s) and a note in the workpack's review checklist — it never blocks workpack generation.
+
 The active supported pairs are **annual return 2025** and **provisional assessment 2026**. **2027 is blocked** until official sources are registered and validated.
 
 The register schema, freshness gate, and process for adding a source are documented in [CONTRIBUTING.md](CONTRIBUTING.md#source-register--knowledge-pack).
+
+---
+
+## Evals & tests
+
+Behavior is pinned down at three layers, all offline — no live web access, no portal logins:
+
+- **Eval fixtures** — [`skills/_shared/eval-fixtures/`](plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/) ships scenario fixtures (annual, provisional, and routing/boundary cases) describing the expected behavior for each supported workflow: what routes where, which files get created, and what a workpack must and must not contain.
+- **Offline eval harness** — [`evals/nl-tax-agent-skills/`](evals/nl-tax-agent-skills/) (repo-level, not shipped in the plugin package) defines benchmark cases over those fixtures plus a verifier for generated `workspace/**` outputs:
+
+  ```bash
+  python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
+  ```
+
+  See [`evals/nl-tax-agent-skills/README.md`](evals/nl-tax-agent-skills/README.md) for the case list and the Plugin Eval benchmark run.
+- **Unit tests** — `plugins/nl-tax-agent-skills/tests/` covers the validators, box helpers, rate parity between knowledge pack and scripts, fixture schema, and cross-host invocation policy:
+
+  ```bash
+  python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
+  ```
+
+  The suite also passes when run from the shipped plugin package alone; repo-only checks (marketplace manifests, changelog) skip themselves cleanly.
 
 ---
 

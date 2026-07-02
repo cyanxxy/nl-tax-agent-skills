@@ -1,9 +1,10 @@
 ---
-description: Build a manual Mijn Belastingdienst submission checklist from an existing workpack and field map — blockers first, then step-by-step entry.
+description: Build a manual Mijn Belastingdienst submission checklist from an existing workpack and field map — blockers first, then step-by-step entry. Use only when the user explicitly asks for a submission checklist (manual-only skill; never auto-invoked).
 argument-hint: "[annual|provisional] [2025|2026]"
 disable-model-invocation: true
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit

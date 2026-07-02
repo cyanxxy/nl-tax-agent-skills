@@ -3,6 +3,7 @@ description: Catalog and hash Dutch tax documents (`jaaropgaaf`, `bankafschrift`
 argument-hint: "[path-to-upload-folder]"
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit

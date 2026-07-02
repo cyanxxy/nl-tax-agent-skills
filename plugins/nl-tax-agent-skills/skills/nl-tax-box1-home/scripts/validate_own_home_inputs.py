@@ -310,6 +310,16 @@ def calculate_hillenregeling(
 # ---------------------------------------------------------------------------
 
 
+def _parse_value(flag: str, raw: str, converter):
+    """Convert a CLI value, exiting with a clean error instead of a traceback."""
+    try:
+        return converter(raw)
+    except ValueError:
+        kind = "an integer" if converter is int else "a number"
+        print(f"ERROR: {flag} expects {kind}, got: {raw!r}", file=sys.stderr)
+        sys.exit(1)
+
+
 def parse_args(argv: list[str]) -> dict:
     """Parse command-line arguments into a dict."""
     result: dict = {
@@ -327,25 +337,25 @@ def parse_args(argv: list[str]) -> dict:
     while i < len(argv):
         arg = argv[i]
         if arg == "--woz-value" and i + 1 < len(argv):
-            result["woz_value"] = float(argv[i + 1])
+            result["woz_value"] = _parse_value("--woz-value", argv[i + 1], float)
             i += 2
         elif arg == "--mortgage-interest" and i + 1 < len(argv):
-            result["mortgage_interest"] = float(argv[i + 1])
+            result["mortgage_interest"] = _parse_value("--mortgage-interest", argv[i + 1], float)
             i += 2
         elif arg == "--mortgage-start-year" and i + 1 < len(argv):
-            result["mortgage_start_year"] = int(argv[i + 1])
+            result["mortgage_start_year"] = _parse_value("--mortgage-start-year", argv[i + 1], int)
             i += 2
         elif arg == "--taxable-income" and i + 1 < len(argv):
-            result["taxable_income"] = float(argv[i + 1])
+            result["taxable_income"] = _parse_value("--taxable-income", argv[i + 1], float)
             i += 2
         elif arg == "--tax-year" and i + 1 < len(argv):
-            result["tax_year"] = int(argv[i + 1])
+            result["tax_year"] = _parse_value("--tax-year", argv[i + 1], int)
             i += 2
         elif arg == "--ownership-share" and i + 1 < len(argv):
-            result["ownership_share"] = int(argv[i + 1])
+            result["ownership_share"] = _parse_value("--ownership-share", argv[i + 1], int)
             i += 2
         elif arg in ("--interest-share", "--debt-share") and i + 1 < len(argv):
-            result["interest_share"] = int(argv[i + 1])
+            result["interest_share"] = _parse_value(arg, argv[i + 1], int)
             result["interest_share_provided"] = True
             i += 2
         elif arg in ("--help", "-h"):
@@ -359,14 +369,23 @@ def parse_args(argv: list[str]) -> dict:
 
 
 def validate_required(args: dict) -> list[str]:
-    """Validate that required arguments are present. Return list of errors."""
+    """Validate that required arguments are present and sane. Return list of errors."""
     errors: list[str] = []
     if args["woz_value"] is None:
         errors.append("--woz-value is required")
+    elif args["woz_value"] < 0:
+        errors.append("--woz-value must not be negative")
     if args["mortgage_interest"] is None:
         errors.append("--mortgage-interest is required")
+    elif args["mortgage_interest"] < 0:
+        errors.append(
+            "--mortgage-interest must not be negative (a negative interest "
+            "amount makes the Hillen comparison meaningless)"
+        )
     if args["mortgage_start_year"] is None:
         errors.append("--mortgage-start-year is required")
+    if args["taxable_income"] is not None and args["taxable_income"] < 0:
+        errors.append("--taxable-income must not be negative")
     return errors
 
 

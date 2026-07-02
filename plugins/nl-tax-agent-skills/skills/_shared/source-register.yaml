@@ -40,7 +40,7 @@ sources:
     url: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -59,7 +59,7 @@ sources:
     url: "https://code.claude.com/docs/en/skills"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -136,7 +136,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -152,7 +152,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -168,7 +168,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/evidence-checklist.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -184,7 +184,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -200,7 +200,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -216,7 +216,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season (March) and after any BD portal update"
     owner: "tax-content"
     mandatory_for:
@@ -272,14 +272,15 @@ sources:
     domain: belastingdienst.nl
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/invorderingsrente"
     source_type: official_guidance
-    workflow: annual_return
-    tax_year: 2025
+    # All-year guidance (like the two belastingrente sources sharing this
+    # snapshot): no workflow/tax_year scoping.
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/late-filing.md"
     last_checked: "2026-06-23"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
     owner: "tax-content"
     mandatory_for:
       - nl-tax-annual-return
+      - nl-tax-provisional-assessment
       - nl-tax-submit-companion
 
   # ===========================================================================
@@ -293,7 +294,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -307,7 +308,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -321,7 +322,7 @@ sources:
     source_type: official_rates
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -336,7 +337,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after Belastingdienst portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -351,7 +352,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; IACK maximum, opbouwpercentage, and minimum arbeidsinkomen change annually"
     owner: "tax-content"
     mandatory_for:
@@ -366,7 +367,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; ouderenkorting amount and phase-out band and alleenstaande-ouderenkorting change annually"
     owner: "tax-content"
     mandatory_for:
@@ -381,7 +382,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; jonggehandicaptenkorting amount changes annually"
     owner: "tax-content"
     mandatory_for:
@@ -396,7 +397,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and at start of filing season; heffingskortingen mechanics may change with the Belastingplan"
     owner: "tax-content"
     mandatory_for:
@@ -410,7 +411,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/credits.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and at start of filing season; the arbeidsinkomen definition may change with the Belastingplan"
     owner: "tax-content"
     mandatory_for:
@@ -423,7 +424,7 @@ sources:
     source_type: official_guidance
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/own-home.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -438,7 +439,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/own-home.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
     owner: "tax-content"
     mandatory_for:
@@ -453,7 +454,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
-    last_checked: "2026-05-17"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and at start of filing season"
     owner: "tax-content"
     mandatory_for:
@@ -466,7 +467,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hoe-werkt-eigenwoningforfait"
     source_type: official_rates
     snapshot_path: "skills/_shared/knowledge/own-home/eigenwoningforfait.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; eigenwoningforfait thresholds and Hillen phase-out can change annually"
     owner: "tax-content"
     mandatory_for:
@@ -481,7 +482,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/own-home/eigenwoningforfait.md"
-    last_checked: "2026-05-17"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after Belastingdienst portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -494,7 +495,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -508,7 +509,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -522,7 +523,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/own-home/hypotheekrenteaftrek.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -538,7 +539,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
-    last_checked: "2026-05-16"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag and at start of filing season"
     owner: "tax-content"
     mandatory_for:
@@ -553,7 +554,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
-    last_checked: "2026-05-16"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; threshold and kilometer rate may change with the Belastingplan"
     owner: "tax-content"
     mandatory_for:
@@ -568,7 +569,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
-    last_checked: "2026-05-16"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; bijtelling percentages and zero-emission cap change annually"
     owner: "tax-content"
     mandatory_for:
@@ -585,7 +586,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -600,7 +601,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -613,7 +614,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/partners/fiscal-partnership.md"
-    last_checked: "2026-05-10"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -630,7 +631,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2"
     source_type: official_rates
     snapshot_path: "skills/_shared/knowledge/years/2025/box2/box2-rates.md"
-    last_checked: "2026-05-20"
+    last_checked: "2026-07-02"
     freshness_policy: "check after Prinsjesdag; Box 2 brackets can change annually"
     owner: "tax-content"
     mandatory_for:
@@ -645,7 +646,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/years/2025/box2/box2-income-guidance.md"
-    last_checked: "2026-05-20"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season and after Belastingdienst Box 2 guidance updates"
     owner: "tax-content"
     mandatory_for:
@@ -662,7 +663,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md"
-    last_checked: "2026-05-20"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; FISIN doctrine is year-specific"
     owner: "tax-content"
     mandatory_for:
@@ -677,7 +678,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md"
-    last_checked: "2026-05-20"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; FISIN doctrine is year-specific"
     owner: "tax-content"
     mandatory_for:
@@ -693,7 +694,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/box2.md"
-    last_checked: "2026-05-20"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens and after Box 2 guidance or rate updates"
     owner: "tax-content"
     mandatory_for:
@@ -713,7 +714,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/fictitious.md"
-    last_checked: "2026-05-04"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -728,7 +729,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
-    last_checked: "2026-05-04"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -743,7 +744,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/fictitious.md"
-    last_checked: "2026-05-17"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -758,7 +759,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/_shared/knowledge/years/2025/box3/actual-return.md"
-    last_checked: "2026-05-04"
+    last_checked: "2026-07-02"
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     owner: "tax-content"
     mandatory_for:
@@ -788,7 +789,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/box3-provisional.md"
-    last_checked: "2026-05-04"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after legislative changes"
     owner: "tax-content"
     mandatory_for:
@@ -805,7 +806,7 @@ sources:
     url: "https://www.svb.nl/nl/aow/aow-leeftijd/uw-aow-leeftijd"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/aow/aow-leeftijd.md"
-    last_checked: "2026-05-30"
+    last_checked: "2026-07-02"
     freshness_policy: "check annually after Prinsjesdag; AOW-leeftijd is fixed at least 5 years ahead"
     owner: "tax-content"
     mandatory_for:
@@ -819,7 +820,7 @@ sources:
     url: "https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd"
     source_type: official_guidance
     snapshot_path: "skills/_shared/knowledge/aow/aow-leeftijd.md"
-    last_checked: "2026-05-30"
+    last_checked: "2026-07-02"
     freshness_policy: "check annually after Prinsjesdag; the AOW-leeftijd schedule can shift with CBS life-expectancy updates"
     owner: "tax-content"
     mandatory_for:
@@ -839,7 +840,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/request-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -854,7 +855,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/request-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -869,7 +870,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/change-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -899,7 +900,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -914,7 +915,7 @@ sources:
     workflow: provisional_assessment
     tax_year: 2026
     snapshot_path: "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
-    last_checked: "2026-05-04"
+    last_checked: "2026-07-02"
     freshness_policy: "check when provisional assessment season opens (January) and after BD portal updates"
     owner: "tax-content"
     mandatory_for:
@@ -985,8 +986,8 @@ sources:
     domain: odb.belastingdienst.nl
     url: "https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/"
     source_type: developer_reference
-    snapshot_path: "skills/_shared/knowledge/compat/odb-topics.md"
-    last_checked: "2026-07-01"
+    snapshot_path: "skills/_shared/knowledge/compat/odb-service-developers.md"
+    last_checked: "2026-07-02"
     freshness_policy: "check quarterly; ODB specifications may change with new filing seasons"
     owner: "tax-content"
     mandatory_for:
@@ -997,8 +998,8 @@ sources:
     domain: odb.belastingdienst.nl
     url: "https://odb.belastingdienst.nl/dienstverlening-aan-softwareontwikkelaars-en-gegevensleveranciers/overzicht-van-alle-onderwerpen-en-berichtstromen/"
     source_type: developer_reference
-    snapshot_path: "skills/_shared/knowledge/compat/odb-productoverzichten.md"
-    last_checked: "2026-07-01"
+    snapshot_path: "skills/_shared/knowledge/compat/odb-topics-streams.md"
+    last_checked: "2026-07-02"
     freshness_policy: "check quarterly; ODB specifications may change with new filing seasons"
     owner: "tax-content"
     mandatory_for:
@@ -1014,7 +1015,7 @@ sources:
     url: "https://regels.overheid.nl/docs/methods/REGELSPRAAK"
     source_type: methodology
     snapshot_path: "skills/_shared/knowledge/methods/regelspraak.md"
-    last_checked: "2026-04-30"
+    last_checked: "2026-07-02"
     freshness_policy: "check when regels.overheid.nl publishes a new Regelspraak version"
     owner: "tax-content"
     mandatory_for:

@@ -4,7 +4,7 @@ source_id: bd_box3_2026_provisional
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

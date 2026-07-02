@@ -3,6 +3,7 @@ name: nl-tax-annual-return
 description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, own home, box 2, box 3, deductions, partner allocation, and credits.
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -19,22 +20,25 @@ This skill is conversational. Do not assume the user has pre-staged a complete f
 
 Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this skill's own directory; `_shared/` is `../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory. Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. When a script takes a workspace file as an argument (e.g. the field-map validator), the same shell must also see the workspace path — translate `workspace_root` to the path the shell actually mounts (in Cowork the working folder, not the host path) before invoking, and if script and workspace file are not co-visible from one shell, use the manual fallback instead. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
-## Read first (mandatory every turn)
+## Read first
 
-Before the first user-facing reply on each turn, load these files. Append every loaded `source_id` (from `_shared/source-register.yaml`) to the top-level `sources_loaded` list in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
+Two different read cadences apply. Record every loaded knowledge file's `source_id` (from `_shared/source-register.yaml`) in the top-level `sources_loaded` list in `session-progress.yaml` — add each ID once, the first time its file is loaded; never append duplicates. Only those IDs may appear in the workpack's "Sources used" section.
 
-Always:
+**Workspace state — re-read before the first user-facing reply on every turn** (it may have changed since the last turn):
+
+1. `workspace/taxpayer/profile.yaml`
+2. `workspace/shared/session-progress.yaml`
+3. `workspace/taxpayer/evidence-index.yaml` if it exists
+
+**Bundled references — load once when this skill becomes active**, and re-read them only when resuming a session from disk or when a self-check needs the exact wording (they do not change mid-conversation; keeping them loaded in context satisfies this rule):
 
 1. `reference/annual-flow.md` — the 13 numbered phases this skill follows
 2. `reference/annual-output-contract.md` — the structural and safety rules for the workpack
 3. `templates/annual-return-pack.md` — the workpack template
-4. `workspace/taxpayer/profile.yaml`
-5. `workspace/shared/session-progress.yaml`
-6. `workspace/taxpayer/evidence-index.yaml` if it exists
 
-Before generating any workpack content (Phase 2 onward in `annual-flow.md`), load the 2025 rate sheets. These are canonical for every numeric line the workpack will reference — do not paraphrase rates from memory.
+Before generating content for a phase (Phase 2 onward in `annual-flow.md`), load the 2025 rate sheets that phase relies on — each sheet once, when its phase first needs it, re-read on resume. These are canonical for every numeric line the workpack will reference — do not paraphrase rates from memory or from an earlier paraphrase.
 
 - `_shared/knowledge/years/2025/annual/box1-rates.md`
 - `_shared/knowledge/years/2025/annual/credits.md`
@@ -45,7 +49,7 @@ Before generating any workpack content (Phase 2 onward in `annual-flow.md`), loa
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md`
 - `_shared/knowledge/years/2025/box3/fictitious.md`
 - `_shared/knowledge/years/2025/box3/actual-return.md`
-- `_shared/knowledge/years/2025/box2/box2-rates.md` (only when the case has an aanmerkelijk belang — `box2.has_aanmerkelijk_belang: yes`)
+- `_shared/knowledge/years/2025/box2/box2-rates.md` (only when the case has an aanmerkelijk belang — `box2.has_aanmerkelijk_belang` value `true` in the profile)
 - `_shared/knowledge/years/2025/box2/box2-income-guidance.md` (same condition)
 - `_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md` (same condition)
 - `_shared/knowledge/own-home/eigenwoningforfait.md`
@@ -53,6 +57,8 @@ Before generating any workpack content (Phase 2 onward in `annual-flow.md`), loa
 - `_shared/knowledge/partners/fiscal-partnership.md`
 
 If a rate sheet fails to load, stop and tell the user — do not fabricate a rate.
+
+**Source-pack staleness check (warn, don't block):** the first time knowledge files are loaded in a session, compare each loaded source's `last_checked` in `_shared/source-register.yaml` against its `freshness_policy` cadence and today's date. If any source required by this workflow is past its cadence, tell the user once, in one sentence, that the source pack may be stale (name the stale `source_id`s) and that the values should be double-checked in Mijn Belastingdienst before filing. Staleness never blocks workpack generation; list the stale `source_id`s in the workpack's Human review checklist instead.
 
 Confirm `workflow_candidate: annual_2025`. If the profile is missing or the workflow is unsupported, hand control back to `nl-tax-intake`.
 
@@ -99,11 +105,11 @@ The box and partner phases use the background helper contracts. Prefer a direct 
 In each phase, invoke or inline the matching helper, let it append its question packet under `workspace/shared/`, ask the user those questions, record the answers, then re-invoke/re-run the helper contract to fold them into its notes:
 
 - **Box 1 / own home** → `nl-tax-box1-home` (writes `workspace/shared/box1-home-notes.md` and `workspace/shared/box1-home-open-questions.yaml`)
-- **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md` and `workspace/shared/box2-open-questions.yaml`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang: yes`): load the three box 2 rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
+- **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang` value `true`): load the three box 2 rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
 - **Box 3** → `nl-tax-box3` (writes `workspace/shared/box3-notes.md`, `workspace/shared/box3-open-questions.yaml`, and `workspace/shared/box3-review-questions.md`; annual collects fictitious **and** werkelijk rendement for the comparison)
 - **Partner / deductions** → `nl-tax-partner-deductions` (writes `workspace/shared/allocation-options.md`, `workspace/shared/partner-deductions-open-questions.yaml`, and `workspace/shared/partner-deduction-review-questions.md`)
 
-Read `workspace/shared/box2-notes.md` and `workspace/shared/box2-open-questions.yaml` back before assembling the Box 2 section. Read the sibling helpers' named notes/open-question artifacts back before assembling their sections. The helpers never write to `workspace/annual/**`; this skill owns that tree.
+Read `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md` back before assembling the Box 2 section (the review questions feed the Human review checklist). Read the sibling helpers' named notes/open-question artifacts back before assembling their sections. The helpers never write to `workspace/annual/**`; this skill owns that tree.
 
 ## Sections in the workpack
 

@@ -4,6 +4,7 @@ argument-hint: "[annual|provisional|box3|all] [year]"
 disable-model-invocation: true
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit

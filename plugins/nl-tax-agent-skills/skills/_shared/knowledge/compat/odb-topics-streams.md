@@ -1,10 +1,10 @@
-# Rule note: ODB product overview (future reference only)
+# Rule note: ODB topics and message streams (berichtstromen) overview (future reference only)
 
-source_id: odb_topics_streams
+source_ids: odb_topics_streams
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

@@ -4,7 +4,7 @@ source_ids: bd_annual_data_checklist_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

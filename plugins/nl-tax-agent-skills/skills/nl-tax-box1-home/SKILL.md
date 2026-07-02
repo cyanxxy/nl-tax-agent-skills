@@ -4,6 +4,7 @@ description: Internal helper for nl-tax-annual-return and nl-tax-provisional-ass
 user-invocable: false
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -14,7 +15,7 @@ allowed-tools:
 
 Background helper for box 1 income and eigen woning notes.
 
-Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts when structured inputs are available and Bash can access the resolved plugin script path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts (`scripts/summarize_box1_inputs.py` and `scripts/validate_own_home_inputs.py`) when structured inputs are available and Bash can access the resolved plugin script path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume all inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros or treating missing values as not applicable.
 
@@ -32,6 +33,14 @@ plugin cache even when `Read` and `Glob` can. If the host has already expanded
 `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
 for file tools; otherwise search within the loaded plugin/skill tree and resolve
 relative to this skill directory.
+
+Bundled references — read the ones matching the active workflow before computing any line:
+
+- `reference/box1-2025.md` — annual 2025 box 1 income rules (annual workpacks)
+- `reference/own-home-2025.md` — annual 2025 eigen-woning rules (annual workpacks)
+- `reference/box1-2026-provisional.md` — 2026 provisional box 1 and own-home estimate rules (provisional workpacks; this is the "2026 provisional references" file the provisional workflow points at)
+
+Workspace state:
 
 - `workspace/shared/session-progress.yaml`, if present
 - `workspace/taxpayer/profile.yaml`

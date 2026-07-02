@@ -1,6 +1,6 @@
 # Rule note: Claude Code Agent Skills design patterns
 
-source_id: anthropic_agent_skills_overview, claude_code_skills
+source_ids: anthropic_agent_skills_overview, claude_code_skills
 workflow: all
 tax_year: all
 status: active

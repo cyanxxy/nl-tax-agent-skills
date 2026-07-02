@@ -4,7 +4,7 @@ source_ids: bd_eigenwoningforfait_2025_2026, bd_own_home_deduction_cap_2026, bd_
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

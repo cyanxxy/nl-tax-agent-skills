@@ -3,6 +3,7 @@ name: nl-tax-intake
 description: First skill for any Dutch individual income-tax task — screens scope and routes to the right workflow. Use when the user wants to file the 2025 aangifte (annual return) or request, change, review, or stop a 2026 voorlopige aanslag, or mentions belastingaangifte, aangifte, or voorlopige aanslag.
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -108,7 +109,7 @@ After each user reply:
        - `provisional_2026_change` / `review` -> "Do you have your current voorlopige aanslag beschikking handy, or shall we reconstruct the baseline together?"
        - `provisional_2026_stopzetten` -> "Are you currently RECEIVING a monthly refund (teruggaaf) or PAYING a monthly amount?"
 
-     **Stopzetten routing consequence (apply at intake, where the answer is first captured):** if the user is PAYING a monthly amount (not receiving a refund), do NOT set `workflow_candidate: provisional_2026_stopzetten`. Stopzetten only applies to a refund; stopping payments does not reduce the debt and risks a lump-sum bill at annual time. Explain this and set `workflow_candidate: provisional_2026_change` instead. Record the refund-vs-paying direction (`stopzetten_direction`) either way so the downstream skill has it.
+     **Stopzetten routing consequence (apply at intake, where the answer is first captured):** if the user is PAYING a monthly amount (not receiving a refund), do NOT set `workflow_candidate: provisional_2026_stopzetten`. Stopzetten only applies to a refund; stopping payments does not reduce the debt and risks a lump-sum bill at annual time. Explain this and set `workflow_candidate: provisional_2026_change` instead. Record the refund-vs-paying direction either way in `profile.yaml` → `workflows.provisional_2026.stopzetten_direction` (value `receiving_refund` or `paying_monthly`, with `source`/`quote`/`stated_at` provenance) so the downstream skill has it.
 
 ### Household composition (before closing intake)
 
@@ -171,7 +172,7 @@ Read `reference/unsupported-cases.md`. If you detect an unsupported case (part-y
    - `annual_2025_deceased_f_form` for deceased-taxpayer F-biljet cases
    - `annual_2025_foreign_treaty_heavy` for treaty-heavy foreign income, foreign pensions, or residence tie-breaker cases
    If no specific candidate applies, set `workflow_candidate: unsupported`.
-3. Set `residency.unsupported_reason` or the appropriate profile field, mirror the terminal candidate into `active_workflow`, leave `active_skill` empty, and set both `intake_status: complete` and `sections.intake.status: complete` so resume guards do not restart intake.
+3. Set `residency.unsupported_reason` or the appropriate profile field; when a blocked roadmap candidate applies, also record it in `routing.blocked_profile_candidate`. Mirror the terminal candidate into `active_workflow`, leave `active_skill` empty, and set both `intake_status: complete` and `sections.intake.status: complete` so resume guards do not restart intake.
 4. Suggest a tax adviser or the official Belastingdienst portal.
 5. Do NOT continue collecting data and do NOT call downstream skills.
 

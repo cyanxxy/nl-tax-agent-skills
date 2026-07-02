@@ -75,6 +75,12 @@ POLICY_KEYWORD_DAYS = [
     ("on demand", 730),
 ]
 
+# Season-opening policies ("check when provisional assessment season opens
+# (January)") are calendar events, not rolling cadences: the source needs one
+# re-attestation after each January 1, then stays fresh for the rest of the
+# year. Handled by date logic in check_freshness(), not by a day threshold.
+SEASON_POLICY_KEYWORDS = ("provisional assessment season", "january")
+
 VALID_KNOWLEDGE_WORKFLOWS = {"all", "annual_return", "provisional_assessment"}
 
 
@@ -92,20 +98,34 @@ REVIEW_BLOCKING_PATTERNS = [
 def check_freshness(last_checked, policy):
     if not last_checked:
         return True, "no last_checked date"
+    try:
+        checked = date.fromisoformat(str(last_checked))
+    except ValueError:
+        return True, f"invalid date format: {last_checked}"
+
+    lc = str(policy).lower()
     threshold = FRESHNESS_DAYS.get(policy)
+
+    # Season-opening policies: stale only when last_checked predates the most
+    # recent season opening (January 1), i.e. one re-attestation per year at
+    # the moment the developer already knows matters.
+    if threshold is None and any(kw in lc for kw in SEASON_POLICY_KEYWORDS):
+        season_open = date(date.today().year, 1, 1)
+        if checked < season_open:
+            return True, (
+                f"last checked {last_checked}, before the season opened on "
+                f"{season_open.isoformat()}"
+            )
+        return False, ""
+
     if threshold is None:
-        lc = str(policy).lower()
         threshold = min(
             (days for keyword, days in POLICY_KEYWORD_DAYS if keyword in lc),
             default=365,
         )
-    try:
-        checked = date.fromisoformat(str(last_checked))
-        age = (date.today() - checked).days
-        if age > threshold:
-            return True, f"last checked {age} days ago (threshold: {threshold})"
-    except ValueError:
-        return True, f"invalid date format: {last_checked}"
+    age = (date.today() - checked).days
+    if age > threshold:
+        return True, f"last checked {age} days ago (threshold: {threshold})"
     return False, ""
 
 

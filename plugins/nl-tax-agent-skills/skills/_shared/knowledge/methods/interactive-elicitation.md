@@ -1,5 +1,14 @@
 # Interactive Elicitation Contract
 
+workflow: all
+tax_year: all
+status: active
+last_reviewed: "2026-07-02"
+review_status: reviewed
+# Internal methodology contract (no external source_id — this file is authored
+# in-repo, like the other methods/ playbooks, and is exempt from the
+# source-citation rule; see validate_knowledge_pack.py INTERNAL_KNOWLEDGE_PREFIXES).
+
 All taxpayer-facing NL tax skills are **conversational**. The user does not pre-stage a folder of evidence and then run a skill once. They chat with the model, and the skill drives a turn-by-turn dialogue, asking only what is needed at each step and persisting state between turns.
 
 This contract applies to:
@@ -57,7 +66,7 @@ Path: `workspace/shared/session-progress.yaml`
 
 Purpose: a small, append-friendly state file that any skill can read at the start of a turn to know where the conversation is.
 
-Schema (v1.2 - see `_shared/templates/session-progress.yaml` for the canonical template):
+Schema (v1.3 - see `_shared/templates/session-progress.yaml` for the canonical template):
 
 - Each top-level section (`intake`, `evidence`, `annual_2025`, `provisional_2026`) has a status, an `open_questions` list, an `answered` list, and a `subsections` map.
 - Subsection status values: `not_started | in_progress | complete | chat_only | deferred`.

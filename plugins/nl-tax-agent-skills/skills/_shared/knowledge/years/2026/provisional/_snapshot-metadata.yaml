@@ -13,9 +13,9 @@ sources:
     source_id: bd_box2_provisional_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
   bd_box3_2026_provisional:
-    content_hash_sha256: a1a4b3f26b7c1ce06dd1916726b8b70e028482485b1819ea272bf59d9d020308
+    content_hash_sha256: 3cc6c0e2a348ab48e488ea28c03bcee0fc3b7d2f44947b8c0c75ea104280b1b7
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:33:42.148461+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_box3_2026_provisional
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026
   bd_fisin_aanmerkelijk_belang_2026:
@@ -25,21 +25,21 @@ sources:
     source_id: bd_fisin_aanmerkelijk_belang_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
   bd_own_home_deduction_cap_2026:
-    content_hash_sha256: 327ecd3ca2ea70bbe6deac3d12612bf59f4cbb8d5c8f5606e36d26526fad403f
+    content_hash_sha256: b382142b6de0c37a3039b0f55c2c91985354f50852d6c2a2c8c8621e780f013b
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:33:42.148461+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_own_home_deduction_cap_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
   bd_provisional_change_2026:
-    content_hash_sha256: 7ea4f345bd953929060ca1d5ffb63edeaef87832dfbf6556bee18f63aee2cf01
+    content_hash_sha256: 9335d49dffbb460cf6b6c8047c59d305a39ea73979aba518263344d265d7f45e
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:43:09.942248+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_provisional_change_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen
   bd_provisional_landing_2026:
-    content_hash_sha256: 4c2c957a4e487a83b482cc50528e2439d83c23941f29ffa62475ca8a2984f7f2
+    content_hash_sha256: 72712400a33a774afc13eeefa8163a2a28b8be0723099c15d59fdeba595d26a0
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:43:09.942248+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_provisional_landing_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/voorlopige-aanslag
   bd_provisional_rates_2026:
@@ -55,9 +55,9 @@ sources:
     source_id: bd_provisional_refund_timing_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-aangevraagd-hoe-en-wanneer-krijg-ik-mijn-geld
   bd_provisional_request_2026:
-    content_hash_sha256: 4c2c957a4e487a83b482cc50528e2439d83c23941f29ffa62475ca8a2984f7f2
+    content_hash_sha256: 72712400a33a774afc13eeefa8163a2a28b8be0723099c15d59fdeba595d26a0
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:43:09.942248+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_provisional_request_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-4-stappen-zelf-voorlopige-aanslag-aanvragen
   bd_provisional_review_2026:
@@ -67,8 +67,8 @@ sources:
     source_id: bd_provisional_review_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen
   bd_provisional_stopzetten_2026:
-    content_hash_sha256: 5319fb1866d73e5d14bf8e478b55230100f2931dadf103a9eddd728a7bab4d41
+    content_hash_sha256: 30a68b73853ebbab7027445a9ded87d106a529ac12d526864f3f1ac9fc2788c2
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:43:09.942248+00:00'
+    snapshot_created_at: '2026-07-02T12:00:00+00:00'
     source_id: bd_provisional_stopzetten_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-stoppen

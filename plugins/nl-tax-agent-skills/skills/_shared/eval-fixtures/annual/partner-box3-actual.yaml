@@ -69,8 +69,12 @@ box3_scenario:
   total_banktegoeden: 45000.00
   total_overige_bezittingen: 205000.00  # investments + crypto
   total_schulden: 0.00
-  combined_heffingsvrij_vermogen: 114000.00  # partners
-  actual_return_total: -4650.00  # 650 interest + 3200 dividends - 8500 losses = negative
+  combined_heffingsvrij_vermogen: 115368.00  # 2 x EUR 57,684 (2025, fiscal partners) — see years/2025/box3/fictitious.md
+  # Actual return counts income AND value changes (actual-return.md):
+  #   +650 interest +3,200 dividends -8,500 realized losses on disposed positions
+  #   -15,000 unrealized decline on retained investments (180,000 -> 165,000)
+  #   -7,000 unrealized decline on retained crypto (25,000 -> 18,000)
+  actual_return_total: -26650.00
   fictitious_favorable: false
   actual_return_favorable: true  # actual return is negative, much lower than fictitious
 
@@ -78,8 +82,7 @@ expected_outputs:
   workpack_checks:
     - section: "Box 3 notes"
       contains: "fictitious"
-      contains_also: "werkelijk rendement"
-      contains_also: "actual return"
+      contains_also: ["werkelijk rendement", "actual return"]
     - section: "Box 3 notes"
       contains: "comparison"
     - section: "Fiscal partner notes"

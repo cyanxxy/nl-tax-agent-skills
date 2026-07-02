@@ -4,7 +4,7 @@ source_id: bd_provisional_stopzetten_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule

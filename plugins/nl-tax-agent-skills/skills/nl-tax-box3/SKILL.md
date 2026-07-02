@@ -4,6 +4,7 @@ description: Internal helper for nl-tax-annual-return and nl-tax-provisional-ass
 user-invocable: false
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -38,6 +39,14 @@ commands run in an isolated VM that may not see the plugin cache even when
 or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools;
 otherwise search within the loaded plugin/skill tree and resolve relative to
 this skill directory.
+
+Bundled references — read the ones matching the active workflow before computing or asking anything:
+
+- `reference/box3-annual-2025.md` — annual 2025 fictitious-method rules and rates
+- `reference/box3-actual-2025.md` — annual 2025 werkelijk-rendement (actual return) data rules, for the annual comparison only
+- `reference/box3-provisional-2026.md` — 2026 provisional fictitious-method rules (the only box 3 reference a provisional flow may use)
+
+The knowledge files those references point at (`_shared/knowledge/years/2025/box3/*.md`, `_shared/knowledge/years/2026/provisional/box3-provisional.md`) stay canonical for every numeric value.
 
 Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/classify_box3_assets.py`, `scripts/compare_box3_annual_2025.py`, and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 

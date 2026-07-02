@@ -157,6 +157,11 @@ class MarketplaceConsistencyTests(unittest.TestCase):
             return source.get("path")
         return None
 
+    @unittest.skipUnless(
+        (REPO_ROOT / ".claude-plugin" / "marketplace.json").is_file()
+        and (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").is_file(),
+        "dev-repo marketplace manifests not present — standalone package run",
+    )
     def test_marketplaces_agree_on_name_and_path(self):
         claude = self._plugin_entry(REPO_ROOT / ".claude-plugin" / "marketplace.json")
         agents = self._plugin_entry(REPO_ROOT / ".agents" / "plugins" / "marketplace.json")

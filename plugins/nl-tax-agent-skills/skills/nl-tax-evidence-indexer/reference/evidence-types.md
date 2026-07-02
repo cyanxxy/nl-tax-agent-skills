@@ -11,6 +11,7 @@ Use these canonical `evidence_type` tokens exactly as headings below. Dutch disp
 - Income & Employment
 - Banking & Savings
 - Investments & Crypto
+- Box 2 / Substantial Interest
 - Property & Housing
 - Deductions & Gifts
 - Debts & Liabilities
@@ -68,6 +69,22 @@ Use these canonical `evidence_type` tokens exactly as headings below. Dutch disp
 - **Typical fields:** platform/exchange, crypto activa, waarde in EUR op peildatum, aantal eenheden, tax year.
 - **Workflow:** annual
 - **Common naming patterns:** `crypto*.pdf`, `crypto*.csv`, `bitcoin*.pdf`, `binance*.pdf`, `bitvavo*.pdf`
+
+---
+
+## Box 2 / Substantial Interest
+
+### dividend_statement
+- **Description:** Dividend statement from a company in which the taxpayer holds a substantial interest (aanmerkelijk belang) — gross regular benefit and withheld dividend tax for Box 2.
+- **Typical fields:** vennootschap (company name), reguliere_voordelen_bruto (gross dividend), ingehouden dividendbelasting, uitkeringsdatum, tax year.
+- **Workflow:** annual / provisional (both)
+- **Common naming patterns:** `dividend*.pdf`, `dividendstatement*.pdf`, `dividendnota*.pdf`, `uitkering_bv*.pdf`
+
+### share_sale_agreement
+- **Description:** Share-sale or transfer agreement for a substantial-interest disposal — the source for Box 2 disposal-benefit fields.
+- **Typical fields:** vennootschap, vervreemdingsprijs (net transfer price), verkrijgingsprijs (acquisition price), vervreemdingskosten, overdrachtsdatum, tax year.
+- **Workflow:** annual
+- **Common naming patterns:** `share*sale*.pdf`, `koopovereenkomst_aandelen*.pdf`, `verkoop_aandelen*.pdf`, `aandelenoverdracht*.pdf`
 
 ---
 

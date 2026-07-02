@@ -3,6 +3,7 @@ description: Convert an annual or provisional workpack into a manual-entry field
 argument-hint: "[annual|provisional] [year]"
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit

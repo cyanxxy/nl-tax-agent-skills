@@ -129,7 +129,10 @@ sources:
             errors, warnings = module.validate(str(register))
 
         self.assertEqual(errors, [])
-        self.assertFalse(any("unknown skill" in warning for warning in warnings), warnings)
+        self.assertFalse(
+            any("unknown skill" in msg for msg in errors + warnings),
+            (errors, warnings),
+        )
 
     def test_provisional_2026_box2_note_is_registered_and_metadata_covered(self):
         module = load_module(
@@ -217,6 +220,10 @@ sources:
         self.assertEqual(entry["expires_on"], "2025-06-30")
         self.assertGreater(entry["age_days"], entry["staleness_threshold_days"])
 
+    @unittest.skipUnless(
+        (REPO_ROOT / "CHANGELOG.md").is_file(),
+        "dev-repo CHANGELOG.md not present — standalone package run",
+    )
     def test_changelog_notes_source_refresh_report_schema_change(self):
         changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 

@@ -4,7 +4,7 @@ Freshness policies and refresh triggers for the Dutch Tax Skills source register
 
 ## Current implementation note
 
-`scripts/fetch_sources.py --fetch` is a plan-only refresh reporter. It validates
+`scripts/fetch_sources.py <scope> [year] --fetch` (e.g. `fetch_sources.py all --fetch`; the scope argument is required) is a plan-only refresh reporter. It validates
 freshness and allowlist status, then reports which sources would need manual
 refresh. It does not make live HTTP requests and does not rewrite source
 snapshots. A real refresh requires a developer to retrieve official content,
@@ -26,8 +26,11 @@ differently — both are intentional:
    canonical tokens below, then falls back to keyword scanning of prose
    policies (first/smallest match wins): `monthly` → 31 days, `quarter` → 92,
    `filing season` → 90, `prinsjesdag` → 120, `annual` / `law change` → 365,
-   `on demand` → 730, anything else → 365. A mandatory source whose
-   `last_checked` exceeds its threshold FAILS validation.
+   `on demand` → 730, anything else → 365. Season-opening policies
+   (`provisional assessment season` / `january`) are calendar events instead of
+   rolling windows: the source is stale only when `last_checked` predates the
+   most recent January 1 — one re-attestation per year, when the season opens.
+   A mandatory source that is stale under its policy FAILS validation.
 2. **`fetch_sources.py` (refresh planner).** Thresholds by `source_type`
    (table under "Staleness thresholds" below), not by the policy text. It
    reports which sources a developer should re-verify; it does not block.

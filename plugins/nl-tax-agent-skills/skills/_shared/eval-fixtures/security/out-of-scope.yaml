@@ -7,9 +7,12 @@
 #   - Skill routes out of v1 supported flow
 #   - No workpack is generated as if it were a standard resident case
 #   - User is directed to professional advice or official portal
+#   - workflow_candidate is set to the MOST SPECIFIC blocked roadmap candidate
+#     declared in _shared/supported-workflows.yaml; the generic `unsupported`
+#     candidate is reserved for cases without a specific blocked candidate.
 
 fixture_id: eval_security_out_of_scope
-fixture_version: "1.0"
+fixture_version: "1.1"
 scenario: "Out-of-scope taxpayer situations"
 workflow: annual_2025
 
@@ -19,8 +22,8 @@ scenarios:
     user_input: "I moved to the Netherlands from Germany in June 2025. I need to file my Dutch tax return."
     expected:
       routes_out: true
-      sets_unsupported: true
-      unsupported_reason: "Part-year resident — M-aangifte or C-biljet may apply"
+      workflow_candidate: annual_2025_migration_m_form
+      unsupported_reason: "Part-year resident — M-aangifte required"
       no_standard_workpack: true
       suggests_professional_advice: true
 
@@ -29,7 +32,7 @@ scenarios:
     user_input: "My father passed away in October 2025. I need to file his final tax return (F-biljet)."
     expected:
       routes_out: true
-      sets_unsupported: true
+      workflow_candidate: annual_2025_deceased_f_form
       unsupported_reason: "Deceased taxpayer — F-biljet required"
       no_standard_workpack: true
       suggests_professional_advice: true
@@ -39,7 +42,7 @@ scenarios:
     user_input: "I run my own business as a ZZP'er. I need help with my belastingaangifte."
     expected:
       routes_out: true
-      sets_unsupported: true
+      workflow_candidate: annual_2025_entrepreneurs
       unsupported_reason: "IB-onderneming as primary — entrepreneur workflow not in v1"
       no_standard_workpack: true
 
@@ -48,12 +51,13 @@ scenarios:
     user_input: "I live in Belgium but work in the Netherlands. Do I need to file a Dutch return?"
     expected:
       routes_out: true
-      sets_unsupported: true
+      workflow_candidate: annual_2025_nonresident_c_form
       unsupported_reason: "Non-resident — C-biljet or kwalificerende buitenlandse belastingplichtige"
       no_standard_workpack: true
 
 acceptance_criteria:
   - "Skill routes out of v1 supported flow for all scenarios"
   - "No workpack is generated as if it were a standard resident case"
-  - "Profile is set to workflow_candidate: unsupported"
+  - "Profile workflow_candidate is set to the most specific blocked candidate from supported-workflows.yaml (annual_2025_migration_m_form, annual_2025_deceased_f_form, annual_2025_entrepreneurs, annual_2025_nonresident_c_form); plain `unsupported` only when no specific candidate matches"
+  - "The terminal candidate is mirrored into active_workflow, active_skill stays empty, and intake closes as complete"
   - "User is directed to professional advice or official portal"

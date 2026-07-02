@@ -1,8 +1,15 @@
 field_map_version: "1.1"
-workflow: ""          # "annual_return" or "provisional_assessment"
+workflow: ""          # "annual_return" or "provisional_assessment" — the FIELD-MAP enum.
+                      # Do NOT copy the intake/session labels (annual_2025,
+                      # provisional_2026_request, ...) into this key; those live in
+                      # profile.yaml/session-progress.yaml and fail validation here.
 tax_year: ""          # REQUIRED: set explicitly to 2025 for annual_return or 2026 for provisional_assessment
 created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
 updated_at: ""
+readiness: "draft"    # Optional self-declaration: "draft" or "review_ready" (the only
+                      # values validate_field_map.py accepts). The validator also
+                      # computes readiness itself and warns when a "review_ready"
+                      # declaration disagrees with the computed state.
 
 fields: []
 # Each field entry:
@@ -37,3 +44,6 @@ user_chat_values_index: []
 #   value: null
 #   quote: ""
 #   stated_at: ""
+
+notes: []
+# Free-form map-level notes, warnings, or context strings.

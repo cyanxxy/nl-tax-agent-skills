@@ -8,7 +8,7 @@ Each question should include:
 
 - **ID:** question number (e.g., Q001)
 - **Category:** income / deduction / box3 / partner / own-home / evidence / safety / other
-- **Workflow:** annual_2025 / provisional_2026_request / provisional_2026_change / provisional_2026_stopzetten
+- **Workflow:** annual_2025 / provisional_2026_request / provisional_2026_change / provisional_2026_review / provisional_2026_stopzetten
 - **Question:** the question requiring human judgment
 - **Context:** why this question matters
 - **Options:** possible answers and their implications

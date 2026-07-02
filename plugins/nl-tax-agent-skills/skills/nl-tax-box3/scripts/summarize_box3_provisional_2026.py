@@ -210,7 +210,13 @@ def main():
     parser.add_argument("--schulden", type=float, required=True,
                         help="Estimated box 3 debts as of 1 Jan 2026 in EUR")
     parser.add_argument("--heffingsvrij", type=float, default=0,
-                        help="Heffingsvrij vermogen in EUR (default: 59357 per person)")
+                        help=(
+                            "Heffingsvrij vermogen override in EUR. 0 or omitted = "
+                            "statutory default (EUR 59,357 per person, doubled for a "
+                            "confirmed full-year fiscal partner). Note: an explicit "
+                            "zero allowance cannot be expressed — 0 always means the "
+                            "statutory default."
+                        ))
     parser.add_argument("--has_partner", action="store_true",
                         help="Whether taxpayer has a fiscal partner")
     parser.add_argument("--partner-full-year-confirmed", action="store_true",
@@ -259,8 +265,10 @@ def main():
     }
 
     if args.has_partner:
+        applied_hvv = result["details"]["heffingsvrij_vermogen"]
         output["partner_note"] = (
-            "Combined heffingsvrij vermogen of EUR 118,714 applied. "
+            f"Combined heffingsvrij vermogen of EUR {applied_hvv:,.0f} applied"
+            f"{' (override via --heffingsvrij)' if args.heffingsvrij > 0 else ''}. "
             f"Taxpayer allocation percentage is {args.allocation_pct:.2f}% of the "
             "joint grondslag sparen en beleggen."
         )

@@ -3,6 +3,7 @@ name: nl-tax-provisional-assessment
 description: Prepare a 2026 voorlopige aanslag workpack — request, change, review, or stopzetten — for manual Mijn Belastingdienst entry. Use after intake routes to a provisional_2026 flow. Fictitious box 3 only; never collects werkelijk rendement.
 allowed-tools:
   - Read
+  - Glob
   - Grep
   - Write
   - Edit
@@ -29,17 +30,27 @@ directory. Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
 tree.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. When a script takes a workspace file as an argument (e.g. the field-map validator), the same shell must also see the workspace path — translate `workspace_root` to the path the shell actually mounts (in Cowork the working folder, not the host path) before invoking, and if script and workspace file are not co-visible from one shell, use the manual fallback instead. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
-Before the first user-facing reply each turn, load the profile/session state; before generating any numeric content, load the 2026 provisional rate sheets. Append every loaded `source_id` (from `_shared/source-register.yaml`) to the top-level `sources_loaded` list in `session-progress.yaml`; only those IDs may appear in the workpack's "Sources used" section.
+Before the first user-facing reply each turn, load the profile/session state; before generating any numeric content, load the 2026 provisional rate sheets (each sheet once, when first needed — re-read on resume). Record every loaded `source_id` (from `_shared/source-register.yaml`) in the top-level `sources_loaded` list in `session-progress.yaml` — once per ID, never appending duplicates on a re-read; only those IDs may appear in the workpack's "Sources used" section.
 
-Always:
+**Source-pack staleness check (warn, don't block):** the first time knowledge files are loaded in a session, compare each loaded source's `last_checked` in `_shared/source-register.yaml` against its `freshness_policy` cadence and today's date. If any source required by this workflow is past its cadence, tell the user once, in one sentence, that the source pack may be stale (name the stale `source_id`s) and that values should be double-checked in Mijn Belastingdienst. Staleness never blocks workpack generation; record the stale `source_id`s in the workpack's review items instead.
 
-- `templates/provisional-pack.md`
-- `templates/review-questions.md` when the active subflow is `provisional_2026_review`
+Workspace state — re-read every turn:
+
 - `workspace/taxpayer/profile.yaml`
 - `workspace/taxpayer/evidence-index.yaml`, if present
 - `workspace/shared/session-progress.yaml`
+
+Bundled references and templates — load once when this skill becomes active, and re-read them when resuming a session from disk or when the subflow changes (they do not change mid-conversation):
+
+- `reference/provisional-flow.md` — the ordered subflow procedure this skill follows
+- `reference/provisional-output-contract.md` — the structural and safety rules for every output
+- `reference/delta-rules.md` — baseline-vs-current delta rules (change subflow)
+- `reference/stopzetten-guidance.md` — refund-vs-payment routing and cutoff guidance (stopzetten subflow)
+- `templates/provisional-pack.md`
+- `templates/delta-summary.md` when the active subflow is `provisional_2026_change`
+- `templates/review-questions.md` when the active subflow is `provisional_2026_review`
 
 2026 provisional rate sheets and flow notes — canonical for every numeric line; do not paraphrase rates from memory, and if a sheet fails to load, stop and tell the user rather than fabricating a rate:
 
@@ -144,7 +155,7 @@ Walk the user through these sections one at a time:
 2. Compare the current date with the stopzetten cutoff before asking for a manual checkbox. If the current date is on or after 2026-10-01, do not generate a stopzetten checklist; record the cutoff as passed and explain that the annual return or a change/review flow is the remaining route.
 3. Ask whether the user is receiving a monthly refund or paying a monthly amount.
 4. If the user receives a refund, it is before 2026-10-01, and the user wants to stop, generate structured stopzetten guidance in the workpack's `Stopzetten outcome` section after confirmation.
-5. If the user pays monthly and the amount is wrong, redirect to change; stopping payments does not reduce the debt. To avoid a stopzetten loop, mutate progress before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` as `complete` with `answered: ["routed_to_change_payment_case"]`, and reset `confirm` to `not_started`.
+5. If the user pays monthly and the amount is wrong, redirect to change; stopping payments does not reduce the debt. To avoid a stopzetten loop, mutate progress before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, record the known payment baseline (monthly amount, beschikking details if stated) in `workspace/provisional/2026/notes/baseline.yaml` with provenance and mark the `baseline` subsection `in_progress`, mark `stopzetten_direction` as `complete` with `answered: ["routed_to_change_payment_case"]`, and reset `confirm` to `not_started`.
 6. If the user pays monthly and the amount is correct, confirm no action is needed.
 
 ## Workpack generation gate

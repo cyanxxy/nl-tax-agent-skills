@@ -4,7 +4,7 @@ source_ids: svb_aow_leeftijd, rijksoverheid_aow_leeftijd
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-05-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule
@@ -15,7 +15,7 @@ The AOW-leeftijd (Dutch state-pension age) determines whether a taxpayer reaches
 
 - **2025: 67 years.**
 - **2026: 67 years.**
-- The AOW age does **not** rise in 2027 (it stays 67). It rises to **67 years and 3 months in 2028**.
+- The AOW age does **not** rise in 2027 (it stays 67). It rises to **67 years and 3 months in 2028** and stays 67 years and 3 months through **2031**.
 - The AOW age is fixed for everyone born **before 1 October 1964**; for later birth dates it is provisional and follows CBS life-expectancy figures, set at least 5 years in advance.
 - A person's exact AOW date depends on their date of birth (the SVB publishes the personal date and pays AOW monthly, around the 23rd).
 
@@ -32,4 +32,4 @@ Intake derives `aow_age_in_tax_year` from the date of birth and stores it with `
 
 ## Common failure
 
-Do not assume a fixed age of 67 for future years — the AOW age is only fixed through 2027 and rises afterward. For tax years 2025 and 2026 specifically it is 67.
+Do not assume a fixed age of 67 for future years — 67 applies only through 2027; for 2028-2031 the AOW age is fixed at 67 years and 3 months, and beyond 2031 it is provisional. For tax years 2025 and 2026 specifically it is 67.

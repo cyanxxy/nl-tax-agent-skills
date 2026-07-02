@@ -4,12 +4,12 @@ source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-06-23"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule
 
-Tax credits (heffingskortingen) reduce the amount payable. They are subtracted from the **gecombineerde heffing** — the combined total of inkomstenbelasting plus premie volksverzekeringen (AOW/Anw/Wlz) — not from box-1 income tax alone. The amounts below are for tax year 2025 and apply to non-AOW-age taxpayers (born after 1957) unless otherwise stated.
+Tax credits (heffingskortingen) reduce the amount payable. They are subtracted from the **gecombineerde heffing** — the combined total of inkomstenbelasting plus premie volksverzekeringen (AOW/Anw/Wlz) — not from box-1 income tax alone. The amounts below are for tax year 2025 and apply to taxpayers who do not reach AOW age (67) at any point in 2025 — that is, born on or after 1 January 1959; taxpayers born in 1958 reach AOW age during 2025 and need the transitional treatment flagged for manual review — unless otherwise stated.
 
 These are reference notes for workpack preparation -- not final tax advice.
 

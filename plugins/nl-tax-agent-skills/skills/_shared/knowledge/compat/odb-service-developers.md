@@ -1,15 +1,15 @@
-# Rule note: ODB compatibility awareness (future only, not v1)
+# Rule note: ODB developer-services compatibility awareness (future only, not v1)
 
-source_id: odb_service_developers
+source_ids: odb_service_developers
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-02"
 review_status: reviewed
 
 ## Rule
 
-ODB (Omgevingsloket Data Belastingdienst) is the developer service portal operated by the Dutch Tax and Customs Administration. It provides technical specifications for software developers building tax filing software. This project does NOT implement ODB integration in v1, but this file exists for future compatibility awareness.
+ODB (Ondersteuning Digitaal Berichtenverkeer, the Belastingdienst's digital-messaging support portal at odb.belastingdienst.nl) is the developer service portal operated by the Dutch Tax and Customs Administration. It provides technical specifications for software developers building tax filing software. This project does NOT implement ODB integration in v1, but this file exists for future compatibility awareness.
 
 ## What ODB provides
 

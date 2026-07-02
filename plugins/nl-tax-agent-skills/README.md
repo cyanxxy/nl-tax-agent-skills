@@ -45,6 +45,12 @@ nl-tax-agent-skills/
   tests/                        # unit tests (validators, box helpers, eval verifier, field-map policy)
 ```
 
+The test suite runs standalone from this package (`python3 -m unittest discover -s tests -p 'test_*.py'`); repo-only checks skip themselves. Scenario eval fixtures ship in `skills/_shared/eval-fixtures/`; the offline eval harness that runs benchmark cases against them lives at repo level under `evals/nl-tax-agent-skills/` and is deliberately not shipped in this package.
+
+### Optional script prerequisites
+
+The bundled Python scripts are best-effort accelerators, not the primary mechanism: every skill carries a declarative fallback the model applies from the knowledge files. Where scripts do run, they need Python 3.8+ and — for the validators and register tooling — PyYAML (`python3 -m pip install pyyaml`). On hosts without PyYAML the scripts exit with a clear message and the manual fallbacks in each SKILL.md apply.
+
 ## Skill inventory
 
 | Skill | Type | Main responsibility |

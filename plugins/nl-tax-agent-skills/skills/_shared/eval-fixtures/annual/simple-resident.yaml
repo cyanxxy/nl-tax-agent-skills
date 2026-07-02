@@ -49,7 +49,9 @@ expected_outputs:
     - workspace/taxpayer/evidence-index.yaml
     - workspace/annual/2025/return-pack.md
     - workspace/annual/2025/field-map.yaml
-    - workspace/annual/2025/review-questions.md
+    # Annual review questions live inside return-pack.md (Human review checklist
+    # section) — no separate review-questions.md file; see annual_2025.output_paths
+    # in _shared/supported-workflows.yaml.
     - workspace/shared/assumptions.md
     - workspace/shared/missing-info.md
 
