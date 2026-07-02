@@ -5,6 +5,106 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] — 2026-07-02
+
+This release resolves a full third-party review of v0.1.3 (4 critical, 16
+major, 30 minor findings): tool-policy and cross-layer contract drift, register
+and eval-fixture inconsistencies, script robustness, and a source re-attestation
+verified against the official pages. Plugin manifests are bumped from `0.1.3`
+to `0.1.4`.
+
+### Fixed
+
+- **`Glob` tool policy** — every SKILL.md body instructed `Glob`-based
+  discovery while all 11 skills and 7 commands omitted `Glob` from
+  `allowed-tools`, silently breaking bundled-file resolution on hosts that
+  enforce the list. `Glob` is now allowed everywhere it is instructed.
+- **Bundled-file discoverability** — `nl-tax-box1-home`, `nl-tax-box2`,
+  `nl-tax-box3`, `nl-tax-partner-deductions`, and
+  `nl-tax-provisional-assessment` now name their own `reference/` files and
+  scripts explicitly instead of pointing at "the relevant references".
+- **Annual field-map write timing** — `annual-flow.md` Phase 7 prepared AND
+  wrote `field-map.yaml` while `SKILL.md` gated the same file behind the
+  generation gate; Phase 7 now prepares only, and the write happens with
+  `return-pack.md` in Phase 10 behind the gate.
+- **Out-of-scope eval fixture** — now expects the specific blocked candidates
+  (`annual_2025_migration_m_form`, `annual_2025_deceased_f_form`,
+  `annual_2025_entrepreneurs`, `annual_2025_nonresident_c_form`) instead of
+  contradicting the routing config with a generic `unsupported`.
+- **`partner-box3-actual` fixture** — corrected the combined heffingsvrij
+  vermogen to EUR 115,368, recomputed the actual-return total to include the
+  fixture's own unrealized value declines, and removed a duplicate YAML key
+  that silently dropped an assertion.
+- **`source-staleness` fixture** — replaced the self-contradicting
+  `does_not_block_workpack: false` with `blocks_workpack: false` and switched
+  the setup to a production prose freshness policy.
+- **Evidence taxonomy** — added `dividend_statement` and
+  `share_sale_agreement`, the two types the Box 2 fixtures already used.
+- **Knowledge notes** — AOW note no longer contradicts itself on how far the
+  AOW age is fixed (67 through 2027; 67y3m for 2028–2031); credits note's
+  non-AOW boundary corrected from "born after 1957" to born in 1959 or later,
+  with 1958-born taxpayers flagged for transitional review; ODB compat files
+  renamed to match their sources and the incorrect "Omgevingsloket" expansion
+  corrected to Ondersteuning Digitaal Berichtenverkeer; multi-source
+  `source_id:` headers normalized to `source_ids:`.
+- **Gating literals** — `box2.has_aanmerkelijk_belang` condition unified to
+  the profile template's `true`/`false`; the review-questions template
+  workflow enum gains `provisional_2026_review`; the simple-resident fixture
+  no longer expects a standalone annual `review-questions.md`.
+- **Scripts** — `validate_own_home_inputs.py` reports clean CLI errors on
+  malformed values and rejects negative amounts; `validate_field_map.py`
+  recognizes the template's `updated_at`/`user_chat_values_index` keys and
+  reports an unreadable field reference as a validation error instead of a
+  traceback; `summarize_box3_provisional_2026.py`'s partner note reports the
+  allowance actually applied and documents the `--heffingsvrij 0` semantics;
+  `fetch_sources.py` usage docs show the required scope positional.
+- **Shipped test suite** — the four tests reading dev-repo-only files
+  (marketplace manifests, `.gitignore`, `CHANGELOG.md`) now skip cleanly in a
+  standalone package run; a dead unknown-skill assertion now checks the
+  stream the validator actually emits on.
+
+### Added
+
+- **Register coverage** — `bd_machtigen_authorization` is required by both
+  active workflows (the workflows validator now treats `workflow: security`
+  sources as all-workflow and enforces their presence); `knowledge_dirs`
+  cover every required snapshot; `bd_invorderingsrente` is scoped all-year
+  and required by the provisional workflow.
+- **Blocked `annual_2026` workflow** — the most likely near-future request now
+  has an explicit roadmap entry instead of falling through to generic
+  `unsupported`.
+- **Cross-skill state** — `stopzetten_direction` has a home in the taxpayer
+  profile (`workflows.provisional_2026.stopzetten_direction`);
+  `last_question_asked` added to the session-progress template (schema v1.3).
+- **Runtime staleness warning** — annual and provisional skills warn once
+  (naming stale `source_id`s) when the source pack is past its re-check
+  cadence; staleness never blocks workpack generation.
+- **Season-aware freshness gate** — "provisional assessment season (January)"
+  policies are treated as calendar events: stale only when `last_checked`
+  predates the most recent 1 January, instead of a 365-day fallback.
+- **Workflow-gate attestation** — `supported-workflows.yaml`'s
+  `last_reviewed` is now validated (missing/invalid/future = error).
+- **Docs** — both READMEs document the eval fixtures, the repo-level offline
+  eval harness, standalone test runs, script prerequisites (Python 3.8+,
+  PyYAML), and the annual-2026 blocked workflow.
+
+### Changed
+
+- **Read cadence** — workpack skills re-read workspace state every turn but
+  load bundled references and rate sheets once (re-read on resume), replacing
+  the unrealistic mandatory-every-turn full reload; `sources_loaded` is
+  deduplicated so the workpack's Sources Used section can list IDs exactly
+  once.
+- **Evidence intake** — host attachments are copied byte-faithfully via
+  allowed tooling only, with an explicit index-in-place fallback when no
+  faithful copy is possible; hashing uses an inline `python3 -c hashlib`
+  command permitted by the skill's tool policy.
+- **Source re-attestation** — all sources whose `last_checked` predated their
+  snapshot's creation were re-verified against the official pages (box 1/2/3
+  rates 2025 and 2026, heffingsvrij vermogen, belastingrente,
+  invorderingsrente, AOW-leeftijd schedule) and re-attested at 2026-07-02;
+  snapshot hashes and metadata rebuilt.
+
 ## [0.1.3] — 2026-07-01
 
 This release removes the in-plugin security enforcement now owned by the host
