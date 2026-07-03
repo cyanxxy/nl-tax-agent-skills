@@ -94,6 +94,16 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
   </tr>
 </table>
 
+<br />
+
+<div align="center">
+
+<img src="plugins/nl-tax-agent-skills/assets/cowork-annual-return.png" alt="The annual-return flow running in Claude Cowork: the intake skill asks screening questions before preparing the 2025 workpack" width="900" />
+
+<sub><em>The annual 2025 flow in Claude Cowork — intake screening before the workpack is prepared.</em></sub>
+
+</div>
+
 ---
 
 ## 🚀 Quickstart
@@ -328,7 +338,7 @@ The register schema, freshness gate, and process for adding a source are documen
 
 Behavior is pinned down at three layers, all offline — no live web access, no portal logins:
 
-- **Eval fixtures** — [`skills/_shared/eval-fixtures/`](plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/) ships scenario fixtures (annual, provisional, and routing/boundary cases) describing the expected behavior for each supported workflow: what routes where, which files get created, and what a workpack must and must not contain.
+- **Eval fixtures** — [`skills/_shared/eval-fixtures/`](plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/) ships scenario fixtures (`annual/`, `provisional/`, and `security/` routing/boundary cases) describing the expected behavior for each supported workflow: what routes where, which files get created, and what a workpack must and must not contain.
 - **Offline eval harness** — [`evals/nl-tax-agent-skills/`](evals/nl-tax-agent-skills/) (repo-level, not shipped in the plugin package) defines benchmark cases over those fixtures plus a verifier for generated `workspace/**` outputs:
 
   ```bash
