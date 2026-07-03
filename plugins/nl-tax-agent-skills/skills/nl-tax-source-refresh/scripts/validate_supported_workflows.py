@@ -59,7 +59,10 @@ def load_yaml_or_json(path):
             "PyYAML is required to run this validator "
             "(python3 -m pip install pyyaml)."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
 
 
 def find_plugin_root(config_path):
@@ -73,6 +76,16 @@ def find_plugin_root(config_path):
         if (
             os.path.isdir(os.path.join(candidate, ".claude-plugin"))
             or os.path.isdir(os.path.join(candidate, ".codex-plugin"))
+        ):
+            return candidate
+    # Second tier like the sibling find_content_root implementations: a git
+    # checkout marker (an install may strip the plugin dot-dirs). Final
+    # fallback stays candidates[0] — the plugin root — because knowledge_dirs
+    # paths in the config are serialized relative to the plugin root.
+    for candidate in candidates:
+        if (
+            os.path.isdir(os.path.join(candidate, ".git"))
+            or os.path.isfile(os.path.join(candidate, ".gitignore"))
         ):
             return candidate
     return candidates[0]
@@ -115,7 +128,7 @@ def validate_active_workflow(workflow, active_ids, active_pairs, source_by_id, p
 
     if wf not in VALID_WORKFLOWS:
         errors.append(f"{wid}: invalid workflow: {wf}")
-    if not isinstance(tax_year, int):
+    if not isinstance(tax_year, int) or isinstance(tax_year, bool):
         errors.append(f"{wid}: tax_year must be an integer")
         return errors
 
@@ -162,7 +175,11 @@ def infer_required_skills(workflow, plugin_root):
         candidates = [rel_path.replace(os.sep, "/").lower()]
         abs_path = os.path.join(plugin_root, rel_path)
         if os.path.isdir(abs_path):
-            for child in os.listdir(abs_path):
+            try:
+                children = os.listdir(abs_path)
+            except OSError:
+                children = []
+            for child in children:
                 candidates.append(child.lower())
         knowledge_text = "/".join(candidates)
         for hint, skill in KNOWLEDGE_SKILL_HINTS:
@@ -236,7 +253,7 @@ def validate_blocked_workflow(workflow, blocked_ids, active_pairs):
 
     if wf not in VALID_WORKFLOWS:
         errors.append(f"{wid}: invalid workflow: {wf}")
-    if not isinstance(tax_year, int):
+    if not isinstance(tax_year, int) or isinstance(tax_year, bool):
         errors.append(f"{wid}: tax_year must be an integer")
         return errors, warnings
 
@@ -340,21 +357,41 @@ def validate_config_review_date(config):
 
 def validate(config_path, register_path):
     config = load_yaml_or_json(config_path)
+    if not isinstance(config, dict):
+        return ["supported-workflows file is empty or not a mapping"], []
     register = load_yaml_or_json(register_path)
-    sources = register if isinstance(register, list) else register.get("sources", [])
-    source_by_id = {source.get("id"): source for source in sources}
+    if isinstance(register, list):
+        sources = register
+    elif isinstance(register, dict):
+        sources = register.get("sources", [])
+    else:
+        return ["source register is empty or not a mapping/list"], []
+    sources = [s for s in sources if isinstance(s, dict)]
+    source_by_id = {}
+    duplicate_source_ids = []
+    for source in sources:
+        sid = source.get("id")
+        if sid in source_by_id:
+            # This validator runs standalone; do not rely on
+            # validate_source_register.py having caught the duplicate first.
+            duplicate_source_ids.append(f"duplicate source id in register: {sid}")
+        source_by_id[sid] = source
     plugin_root = find_plugin_root(config_path)
     active_pairs = set()
     active_ids = set()
     blocked_ids = set()
     errors = []
     warnings = []
+    errors.extend(duplicate_source_ids)
 
     review_errors, review_warnings = validate_config_review_date(config)
     errors.extend(review_errors)
     warnings.extend(review_warnings)
 
-    for workflow in config.get("active_workflows", []):
+    for index, workflow in enumerate(config.get("active_workflows", []) or []):
+        if not isinstance(workflow, dict):
+            errors.append(f"active_workflows[{index}] must be a mapping, got: {workflow!r}")
+            continue
         errors.extend(
             validate_active_workflow(
                 workflow,
@@ -365,7 +402,10 @@ def validate(config_path, register_path):
             )
         )
 
-    for workflow in config.get("blocked_workflows", []):
+    for index, workflow in enumerate(config.get("blocked_workflows", []) or []):
+        if not isinstance(workflow, dict):
+            errors.append(f"blocked_workflows[{index}] must be a mapping, got: {workflow!r}")
+            continue
         blocked_errors, blocked_warnings = validate_blocked_workflow(
             workflow,
             blocked_ids,
@@ -375,7 +415,10 @@ def validate(config_path, register_path):
         warnings.extend(blocked_warnings)
 
     terminal_ids = set()
-    for workflow in config.get("terminal_workflows", []):
+    for index, workflow in enumerate(config.get("terminal_workflows", []) or []):
+        if not isinstance(workflow, dict):
+            errors.append(f"terminal_workflows[{index}] must be a mapping, got: {workflow!r}")
+            continue
         terminal_errors, terminal_warnings = validate_terminal_workflow(
             workflow,
             terminal_ids,

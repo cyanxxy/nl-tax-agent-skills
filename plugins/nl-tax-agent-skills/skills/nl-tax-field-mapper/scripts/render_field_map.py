@@ -7,6 +7,7 @@ Usage:
 Outputs Markdown to stdout grouped by section.
 """
 
+import math
 import os
 import re
 import sys
@@ -46,10 +47,13 @@ def _notes(raw):
 
 def _confidence(raw):
     """Format a confidence as a percentage, tolerating non-numeric input."""
-    if raw is None:
+    if raw is None or isinstance(raw, bool):
         return "—"
     try:
-        return f"{float(raw):.0%}"
+        value = float(raw)
+        if not math.isfinite(value):
+            return "—"
+        return f"{value:.0%}"
     except (TypeError, ValueError):
         return _cell(raw)
 
@@ -110,6 +114,11 @@ def infer_section(field_id):
 
 def render(data):
     """Render field map data as Markdown."""
+    if not isinstance(data, dict):
+        raise SystemExit(
+            "Error: field map must be a YAML mapping at the top level "
+            f"(got {type(data).__name__})."
+        )
     workflow = data.get("workflow", "unknown")
     tax_year = data.get("tax_year", "unknown")
     created = data.get("created_at", "unknown")
@@ -123,6 +132,9 @@ def render(data):
     lines.append("")
 
     fields = data.get("fields", [])
+    if not isinstance(fields, list):
+        fields = []
+    fields = [f for f in fields if isinstance(f, dict)]
     if not fields:
         lines.append("_No fields mapped._")
     else:
@@ -154,6 +166,9 @@ def render(data):
 
     # Missing fields
     missing = data.get("missing_fields", [])
+    if not isinstance(missing, list):
+        missing = []
+    missing = [m for m in missing if isinstance(m, dict)]
     if missing:
         lines.append("## Missing Fields")
         lines.append("")

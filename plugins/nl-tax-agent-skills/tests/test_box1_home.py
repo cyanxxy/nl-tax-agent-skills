@@ -76,7 +76,7 @@ class Box1OwnHomeTests(unittest.TestCase):
         # adjustment = round(3500 x (0.4950 - 0.3756), 2) = 417.90
         # (The correction can never exceed rate_diff x deducted costs = 417.90.)
         applies, adjustment, warnings = module.calculate_tariefsaanpassing(
-            mortgage_interest=3_500,
+            deductible_costs=3_500,
             belastbaar_inkomen=80_141,
             tax_year=2026,
         )
@@ -89,7 +89,7 @@ class Box1OwnHomeTests(unittest.TestCase):
         # Very high income: the cap binds, so adjustment = rate_diff x deductible,
         # never the (much larger) income-over-drempel amount.
         applies, adjustment, _ = module.calculate_tariefsaanpassing(
-            mortgage_interest=4_000,
+            deductible_costs=4_000,
             belastbaar_inkomen=200_000,
             tax_year=2026,
         )
@@ -102,7 +102,7 @@ class Box1OwnHomeTests(unittest.TestCase):
         # deduction (76000 + 4000 = 80000) exceeds it, so the rule still applies.
         # grondslag = min(4000, 80000 - 78426 = 1574) = 1574 -> 187.94.
         applies, adjustment, _ = module.calculate_tariefsaanpassing(
-            mortgage_interest=4_000,
+            deductible_costs=4_000,
             belastbaar_inkomen=76_000,
             tax_year=2026,
         )
@@ -113,7 +113,7 @@ class Box1OwnHomeTests(unittest.TestCase):
         module = _load()
         # income without deduction = 50000 + 3500 = 53500 < 78426 -> no adjustment.
         applies, adjustment, _ = module.calculate_tariefsaanpassing(
-            mortgage_interest=3_500,
+            deductible_costs=3_500,
             belastbaar_inkomen=50_000,
             tax_year=2026,
         )
@@ -142,12 +142,15 @@ class Box1OwnHomeTests(unittest.TestCase):
         belastbaar = income_before_ew + net_after_hillen
         self.assertEqual(belastbaar, 80_141)
 
+        # Official Belastingdienst Hillen example: the tariefsaanpassing
+        # applies to the GROSS aftrekbare kosten (art. 2.10 lid 2), even
+        # though Hillen leaves a positive eigen-woning result. Grondslag =
+        # min(3500, 80141 + 3500 - 78426 = 5215) = 3500 -> 3500 x
+        # (0.4950 - 0.3756) = 417.90.
         ta_applies, ta_amount, _ = module.calculate_tariefsaanpassing(
             interest, belastbaar, tax_year
         )
         self.assertTrue(ta_applies)
-        # grondslag capped at the deducted costs: min(3500, 80141+3500-78426=5215)
-        # = 3500 -> 3500 x 0.1194 = 417.90 (statutory ceiling).
         self.assertEqual(ta_amount, 417.90)
 
     # --- Renamed field (mortgage_regime_post2013) ---

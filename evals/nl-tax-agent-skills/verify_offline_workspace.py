@@ -39,7 +39,11 @@ def has_glob(pattern: str) -> bool:
 
 
 def glob_matches(workspace: Path, pattern: str) -> list[Path]:
-    return [Path(match) for match in glob.glob(str(workspace / pattern), recursive=True)]
+    # Escape the workspace prefix: a workspace path containing glob
+    # metacharacters (e.g. "~/Projects [2026]/run1") must not silently match
+    # nothing and fail every expected-files check.
+    full_pattern = glob.escape(str(workspace)) + os.sep + pattern
+    return [Path(match) for match in glob.glob(full_pattern, recursive=True)]
 
 
 def path_exists(workspace: Path, pattern: str) -> bool:
@@ -135,6 +139,27 @@ def check_text_rule(workspace: Path, case_id: str, rule: dict[str, Any], errors:
             errors.append(f"{case_id}: {rule['path']} contains forbidden text: {needle!r}")
 
 
+# Memo for the forbidden-regex sweep: the output tree is static during a
+# verification run, so scan it once per (root, patterns) instead of once per
+# case when --all or a multi-case marker is used.
+_generated_output_scan_cache: dict[tuple, list[tuple[str, str]]] = {}
+
+
+def _scan_generated_output(workspace: Path, output_root: Path, patterns: list[str]) -> list[tuple[str, str]]:
+    key = (str(output_root), tuple(patterns))
+    if key not in _generated_output_scan_cache:
+        hits: list[tuple[str, str]] = []
+        compiled = [(pattern, re.compile(pattern)) for pattern in patterns]
+        for path in iter_text_files(output_root):
+            text = read_text(path)
+            rel_path = str(path.relative_to(workspace))
+            for pattern, regex in compiled:
+                if regex.search(text):
+                    hits.append((rel_path, pattern))
+        _generated_output_scan_cache[key] = hits
+    return _generated_output_scan_cache[key]
+
+
 def check_generated_output_regex(
     workspace: Path,
     dataset: dict[str, Any],
@@ -147,13 +172,8 @@ def check_generated_output_regex(
     if not patterns:
         return
 
-    compiled = [(pattern, re.compile(pattern)) for pattern in patterns]
-    for path in iter_text_files(output_root):
-        text = read_text(path)
-        rel_path = path.relative_to(workspace)
-        for pattern, regex in compiled:
-            if regex.search(text):
-                errors.append(f"{case_id}: {rel_path} matches forbidden generated-output regex: {pattern}")
+    for rel_path, pattern in _scan_generated_output(workspace, output_root, patterns):
+        errors.append(f"{case_id}: {rel_path} matches forbidden generated-output regex: {pattern}")
 
 
 def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
@@ -173,7 +193,10 @@ def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
                 script,
             )
             module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
+            try:
+                spec.loader.exec_module(module)
+            except Exception as exc:  # a SyntaxError in the validator must not crash the eval
+                raise ImportError(f"field-map validator failed to load from {script}: {exc}") from exc
             return module
     rendered = ", ".join(str(path) for path in candidates)
     raise FileNotFoundError(f"field-map validator not found; checked: {rendered}")
@@ -262,8 +285,15 @@ def verify_case(
 
 
 def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[str]:
-    workspace_root = Path.cwd()
-    plugin_root = workspace_root / dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
+    plugin_root_rel = dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
+    # Anchor on the script location first (like load_field_map_validator), so
+    # --check-dataset works when invoked from any working directory; fall back
+    # to cwd for relocated layouts.
+    candidates = [
+        SCRIPT_DIR.parents[1] / plugin_root_rel,
+        Path.cwd() / plugin_root_rel,
+    ]
+    plugin_root = next((c for c in candidates if c.is_dir()), candidates[0])
     errors: list[str] = []
     for case in dataset.get("cases", []) or []:
         fixture = case.get("fixture")
@@ -310,7 +340,8 @@ def main() -> int:
                 verify_case(workspace, dataset, find_case(dataset, case_id), warnings)
             )
     except (KeyError, ValueError) as exc:
-        errors.append(str(exc))
+        # KeyError renders its message with extra quotes; unwrap it.
+        errors.append(exc.args[0] if exc.args else str(exc))
 
     if errors:
         print("OFFLINE EVAL FAILED")

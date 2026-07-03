@@ -145,7 +145,8 @@ class MarketplaceConsistencyTests(unittest.TestCase):
     def _plugin_entry(path):
         data = json.loads(path.read_text(encoding="utf-8"))
         plugins = data.get("plugins", [])
-        assert plugins, f"no plugins in {path}"
+        if not plugins:
+            raise AssertionError(f"no plugins in {path}")
         return plugins[0]
 
     @staticmethod
@@ -188,7 +189,7 @@ class EvidenceIndexerTests(unittest.TestCase):
         # hash and extraction_status "failed".
         if getattr(os, "geteuid", lambda: 1)() == 0:
             # Running as root bypasses chmod 000, so only assert the unit case.
-            return
+            self.skipTest("running as root: chmod 000 does not block reads")
         with tempfile.TemporaryDirectory() as tmp:
             scanned = pathlib.Path(tmp)
             unreadable = scanned / "locked.txt"

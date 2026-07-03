@@ -63,9 +63,14 @@ def _decimal(value: Any, field_name: str) -> Decimal:
     if value is None or value == "":
         return ZERO
     try:
-        return Decimal(str(value))
+        result = Decimal(str(value))
     except (InvalidOperation, ValueError) as exc:
         raise ValueError(f"{field_name} must be numeric") from exc
+    if not result.is_finite():
+        # NaN/inf would otherwise raise InvalidOperation deep inside the
+        # comparisons/quantize instead of a clean input error.
+        raise ValueError(f"{field_name} must be a finite number")
+    return result
 
 
 def _ensure_non_negative(value: Decimal, field_name: str) -> None:
@@ -251,7 +256,14 @@ def calculate_box2_tax(
     )
     warnings: list[str] = []
     if explicit_disposal_benefit is not None:
-        net_disposal_price = amounts["disposal_price"]
+        # Keep the components block coherent when a gross price accompanies an
+        # explicit benefit: report the derived net price, not a misleading 0.
+        if amounts["gross_disposal_price"] > ZERO:
+            net_disposal_price = (
+                amounts["gross_disposal_price"] - amounts["disposal_costs"]
+            )
+        else:
+            net_disposal_price = amounts["disposal_price"]
         computed_disposal_benefit = explicit_disposal_benefit
     elif amounts["gross_disposal_price"] > ZERO:
         net_disposal_price = amounts["gross_disposal_price"] - amounts["disposal_costs"]
@@ -389,6 +401,52 @@ def allocate_partner_box2(
     }
 
 
+# Payload keys this calculator consumes, plus keys legitimately present for the
+# sibling validator/summarizer (markers, boundary flags, allocation blocks).
+_KNOWN_PAYLOAD_KEYS = {
+    "tax_year",
+    "workflow",
+    "regular_benefits",
+    "regular_costs",
+    "disposal_price",
+    "gross_disposal_price",
+    "acquisition_price",
+    "disposal_costs",
+    "disposal_benefit",
+    "fictitious_regular_benefit_bv_loan",
+    "loss_setoff",
+    "dividend_withholding_tax",
+    "bv_loan_balance",
+    "substantial_interest_pct",
+    "partner_allocation",
+    "allocation",
+    "full_year_fiscal_partner",
+    "complex_markers",
+    "resident_full_year",
+    "standard_ab_case",
+    "valuation_dispute",
+    "emigration",
+    "death",
+    "restructurings",
+    "treaty_nonresident_issues",
+    "informal_capital",
+    "non_arm_length_transfers",
+    "corporate_tax_heavy_dga_cases",
+    "inherited_gifted_ab",
+    "fictive_disposal",
+    "excessive_borrowing_uncertainty",
+}
+
+
+def unknown_payload_keys(payload: dict[str, Any]) -> list[str]:
+    """Keys the calculator would silently ignore — typically typos.
+
+    A typo'd amount key (e.g. "regular_benefit") would otherwise default to 0
+    and produce a confident wrong result.
+    """
+    return sorted(set(payload) - _KNOWN_PAYLOAD_KEYS)
+
+
 def _payload_to_calculation_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
     tax_year = payload.get("tax_year")
     if tax_year is None:
@@ -419,6 +477,12 @@ def _payload_to_calculation_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
 def calculate_from_payload(payload: dict[str, Any]) -> dict:
     """Calculate Box 2 tax and optional partner allocation from a JSON payload."""
     result = calculate_box2_tax(**_payload_to_calculation_kwargs(payload))
+
+    unknown = unknown_payload_keys(payload)
+    if unknown:
+        result.setdefault("warnings", []).append(
+            "Ignored unknown payload key(s) (typo?): " + ", ".join(unknown)
+        )
 
     allocation = payload.get("partner_allocation") or payload.get("allocation")
     if allocation:
@@ -503,9 +567,17 @@ def main(argv: list[str] | None = None) -> int:
                 "full_year_fiscal_partner": args.full_year_fiscal_partner,
             }
             if args.taxpayer_pct is not None or args.partner_pct is not None:
+                # Derive the missing side so `--taxpayer-pct 60` alone works
+                # instead of failing "must total 100" via a None->0 coercion.
+                taxpayer_pct = args.taxpayer_pct
+                partner_pct = args.partner_pct
+                if partner_pct is None and taxpayer_pct is not None:
+                    partner_pct = 100 - taxpayer_pct
+                elif taxpayer_pct is None and partner_pct is not None:
+                    taxpayer_pct = 100 - partner_pct
                 payload["partner_allocation"] = {
-                    "taxpayer_pct": args.taxpayer_pct,
-                    "partner_pct": args.partner_pct,
+                    "taxpayer_pct": taxpayer_pct,
+                    "partner_pct": partner_pct,
                 }
 
         print(json.dumps(calculate_from_payload(payload), indent=2, sort_keys=True))

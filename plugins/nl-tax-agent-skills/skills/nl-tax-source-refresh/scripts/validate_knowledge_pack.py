@@ -21,7 +21,6 @@ Scope and honesty note:
     consistent, not that the underlying numbers or rules are correct.
 """
 
-import json
 import hashlib
 import os
 import re
@@ -39,7 +38,12 @@ def load_yaml_or_json(path):
             "PyYAML is required to run this validator "
             "(python3 -m pip install pyyaml)."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        # Normalize to ValueError so callers can catch parse failures without
+        # importing yaml themselves.
+        raise ValueError(f"invalid YAML in {path}: {exc}") from exc
 
 
 def compute_sha256(filepath):
@@ -240,6 +244,7 @@ def extract_source_ids(filepath):
         with open(filepath, "r", encoding="utf-8") as f:
             lines = f.readlines()
         in_code_block = False
+        in_source_ids_block = False
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("```"):
@@ -247,9 +252,23 @@ def extract_source_ids(filepath):
                 continue
             if in_code_block:
                 continue
-            match = re.match(r"source_ids?:\s*(.+)", stripped)
+            # Block-style YAML list continuation:
+            #   source_ids:
+            #     - some_source
+            if in_source_ids_block:
+                item = re.match(r"-\s*(.+)", stripped)
+                if item:
+                    sid = item.group(1).strip().strip('"').strip("'")
+                    if sid and not sid.startswith("#") and not sid.startswith("<"):
+                        ids.add(sid)
+                    continue
+                in_source_ids_block = False
+            match = re.match(r"source_ids?:\s*(.*)", stripped)
             if match:
                 raw = match.group(1).strip()
+                if not raw:
+                    in_source_ids_block = True
+                    continue
                 for sid in re.split(r"[,\s]+", raw):
                     sid = sid.strip().strip("-").strip().strip('"').strip("'")
                     if sid and not sid.startswith("#") and not sid.startswith("<"):
@@ -380,7 +399,7 @@ def collect_snapshot_metadata_errors(sources, project_root):
 
         try:
             metadata = load_yaml_or_json(meta_path)
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
+        except (OSError, ValueError) as exc:
             errors.append((sid, f"unreadable snapshot metadata: {exc}", rel_meta_path))
             continue
 
@@ -560,7 +579,13 @@ def main():
     skills_dir = os.path.dirname(base_dir)
 
     data = load_yaml_or_json(register_path)
-    sources = data if isinstance(data, list) else data.get("sources", data.get("entries", []))
+    if isinstance(data, list):
+        sources = data
+    elif isinstance(data, dict):
+        sources = data.get("sources", data.get("entries", []))
+    else:
+        print(f"VALIDATION FAILED\n\nRegister is empty or not a mapping/list: {register_path}")
+        sys.exit(1)
 
     registered_ids, missing_snapshots, stale_sources = collect_source_status(
         sources,
@@ -614,12 +639,12 @@ def main():
         source_reference_errors,
     )
 
-    if not has_errors and not stale_warning:
-        print("VALIDATION PASSED")
-    elif has_errors:
+    if has_errors:
         print("VALIDATION FAILED")
-    else:
+    elif stale_warning or unreferenced:
         print("VALIDATION PASSED WITH WARNINGS")
+    else:
+        print("VALIDATION PASSED")
 
     sys.exit(1 if has_errors else 0)
 

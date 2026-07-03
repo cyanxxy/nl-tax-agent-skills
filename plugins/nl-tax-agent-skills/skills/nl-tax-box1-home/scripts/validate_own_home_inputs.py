@@ -40,10 +40,21 @@ Uses standard library only.
 from __future__ import annotations
 
 import json
+import math
 import sys
 from dataclasses import dataclass, field
 from decimal import Decimal, ROUND_HALF_UP
 from typing import Optional
+
+
+def _euro(value: float) -> int:
+    """Round to whole euros, half up (Belastingdienst convention)."""
+    return int(Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+
+
+def _cents(value) -> float:
+    """Round to cents, half up (Belastingdienst convention)."""
+    return float(Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
 
 
 # ---------------------------------------------------------------------------
@@ -169,11 +180,11 @@ def calculate_eigenwoningforfait(woz_value: float, tax_year: int) -> float:
     for lower, upper, pct, fixed_base in table:
         if fixed_base is not None:
             if woz_value > lower:
-                return round(fixed_base + (woz_value - lower) * pct)
+                return _euro(fixed_base + (woz_value - lower) * pct)
             continue
 
         if (lower == 0 and 0 <= woz_value <= upper) or (lower < woz_value <= upper):
-            return round(woz_value * pct)
+            return _euro(woz_value * pct)
 
     raise ValueError(f"WOZ value EUR {woz_value:,.2f} is outside the reviewed table.")
 
@@ -195,28 +206,32 @@ def check_mortgage_qualification(start_year: int) -> Optional[bool]:
 
 
 def calculate_tariefsaanpassing(
-    mortgage_interest: float,
+    deductible_costs: float,
     belastbaar_inkomen: Optional[float],
     tax_year: int,
 ) -> tuple[Optional[bool], Optional[float], list[str]]:
     """Calculate the tariefsaanpassing (rate adjustment) for own-home costs.
 
-    Follows the official Belastingdienst grondslag method. ``belastbaar_inkomen``
-    is the belastbaar inkomen uit werk en woning AFTER the eigen-woning result
-    (including the Hillenregeling) — NOT the income before the eigen-woning
-    deduction. The grondslag is:
+    Follows the official Belastingdienst grondslag method. ``deductible_costs``
+    is the aftrekbare kosten eigen woning (art. 3.120: the gross deductible
+    mortgage interest/costs) — NOT the net eigen-woning saldo. Art. 2.10 lid 2
+    applies the correction to these deductible costs, so it can apply even when
+    the Hillenregeling leaves a positive eigen-woning result: the official
+    Hillen example computes the grondslag as belastbaar inkomen + aftrekbare
+    kosten - drempel with the gross costs added back.
+    ``belastbaar_inkomen`` is the belastbaar inkomen uit werk en woning AFTER
+    the eigen-woning result (including the Hillenregeling) — NOT the income
+    before the eigen-woning deduction. The grondslag is:
 
         grondslag = min(afgetrokken eigenwoningkosten,
                         belastbaar_inkomen + afgetrokken eigenwoningkosten
                             - drempelbedrag hoogste schijf)
         adjustment = round(grondslag * (schijf3_rate - cap_rate), 2)
 
-    The grondslag is capped at the deducted eigen-woning costs (art. 2.10 lid 2
-    Wet IB 2001), so the correction can never exceed rate_diff x the deducted
-    costs. It applies only when income WITHOUT the deduction
-    (belastbaar_inkomen + costs) exceeds the drempel. The deductible eigen-woning
-    costs are the deductible mortgage interest/costs (added back because they were
-    already subtracted to reach belastbaar_inkomen).
+    The grondslag is capped at the deductible eigen-woning costs (art. 2.10
+    lid 2 Wet IB 2001), so the correction can never exceed rate_diff x the
+    deductible costs. It applies only when income WITHOUT the deduction
+    (belastbaar_inkomen + costs) exceeds the drempel.
 
     Returns (applies, amount, warnings).
     """
@@ -230,6 +245,12 @@ def calculate_tariefsaanpassing(
                 f"No reviewed tariefsaanpassing parameters are available for {tax_year}."
             ],
         )
+
+    deductible_costs = max(deductible_costs, 0.0)
+    if deductible_costs == 0:
+        # No deductible eigen-woning costs, so there is nothing for the rate
+        # adjustment to correct — regardless of income.
+        return (False, 0.0, warnings)
 
     if belastbaar_inkomen is None:
         return (
@@ -246,9 +267,6 @@ def calculate_tariefsaanpassing(
         )
 
     threshold = params["schijf3_threshold"]
-    deductible_costs = max(mortgage_interest, 0.0)
-    if deductible_costs == 0:
-        return (False, 0.0, warnings)
 
     # The tariefsaanpassing applies only when box 1 income WITHOUT the own-home
     # deduction exceeds the top-bracket drempel. belastbaar_inkomen is the income
@@ -263,8 +281,9 @@ def calculate_tariefsaanpassing(
     # and capped at the deducted costs themselves. The correction can therefore
     # never exceed rate_diff x deductible_costs.
     base = min(deductible_costs, income_without_deduction - threshold)
-    rate_diff = params["schijf3_rate"] - params["cap_rate"]
-    adjustment = round(base * rate_diff, 2)
+    rate_diff_dec = Decimal(str(params["schijf3_rate"])) - Decimal(str(params["cap_rate"]))
+    rate_diff = float(rate_diff_dec)
+    adjustment = _cents(Decimal(str(base)) * rate_diff_dec)
     warnings.append(
         f"Tariefsaanpassing applies: box 1 income without the own-home deduction "
         f"(EUR {income_without_deduction:,.0f}) exceeds the schijf 3 drempel "
@@ -313,9 +332,12 @@ def calculate_hillenregeling(
 def _parse_value(flag: str, raw: str, converter):
     """Convert a CLI value, exiting with a clean error instead of a traceback."""
     try:
-        return converter(raw)
+        value = converter(raw)
+        if converter is float and not math.isfinite(value):
+            raise ValueError(raw)
+        return value
     except ValueError:
-        kind = "an integer" if converter is int else "a number"
+        kind = "an integer" if converter is int else "a finite number"
         print(f"ERROR: {flag} expects {kind}, got: {raw!r}", file=sys.stderr)
         sys.exit(1)
 
@@ -475,7 +497,7 @@ def main() -> int:
         )
 
     # --- Net eigen woning (before Hillenregeling) ---
-    net_eigen_woning = round(ewf - effective_interest)
+    net_eigen_woning = _euro(ewf - effective_interest)
 
     # --- Hillenregeling (computed BEFORE the tariefsaanpassing, because the
     # tariefsaanpassing grondslag is built on the belastbaar inkomen AFTER the
@@ -487,7 +509,7 @@ def main() -> int:
     # Net after Hillenregeling
     if hillen_applies:
         # The correction reduces the effective eigenwoningforfait
-        net_after_hillen = round((ewf - hillen_correction) - effective_interest)
+        net_after_hillen = _euro((ewf - hillen_correction) - effective_interest)
         all_warnings.append(
             f"Hillenregeling applies: eigenwoningforfait (EUR {ewf:,}) exceeds "
             f"mortgage interest (EUR {effective_interest:,.2f}). "
@@ -500,7 +522,10 @@ def main() -> int:
     # --- Tariefsaanpassing ---
     # belastbaar inkomen uit werk en woning = income (before the eigen-woning
     # result) + net eigen-woning result after Hillen. Pass that (not the raw
-    # pre-EW income) into the official grondslag method.
+    # pre-EW income) into the official grondslag method, together with the
+    # GROSS aftrekbare kosten (art. 2.10 lid 2 targets the deductible costs,
+    # not the net eigen-woning saldo — the official Hillen example adds the
+    # gross costs back even when Hillen leaves a positive result).
     belastbaar: Optional[float] = (
         (taxable_income + net_after_hillen) if taxable_income is not None else None
     )

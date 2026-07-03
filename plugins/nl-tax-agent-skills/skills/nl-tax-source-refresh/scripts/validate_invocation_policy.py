@@ -20,6 +20,7 @@ suite, and silently make the helper implicitly invocable on Codex.
 """
 
 import os
+import re
 import sys
 
 
@@ -35,17 +36,29 @@ def _require_yaml():
 
 
 def parse_frontmatter(skill_md_path):
-    """Return the parsed YAML frontmatter block of a SKILL.md (or {})."""
+    """Return (frontmatter_dict, error) for a SKILL.md.
+
+    Splits on fence LINES (a line that is exactly ``---``), not on the literal
+    substring: a ``---`` inside a frontmatter value must not truncate the block,
+    because a truncated parse could silently drop ``disable-model-invocation``
+    and make this validator fail open. Unparseable frontmatter is reported as an
+    error (fail closed), never skipped.
+    """
     yaml = _require_yaml()
     with open(skill_md_path, "r", encoding="utf-8") as f:
         text = f.read()
     if not text.startswith("---"):
-        return {}
-    parts = text.split("---", 2)
+        return {}, None
+    parts = re.split(r"^---[ \t]*$", text, maxsplit=2, flags=re.MULTILINE)
     if len(parts) < 3:
-        return {}
-    data = yaml.safe_load(parts[1])
-    return data if isinstance(data, dict) else {}
+        return {}, "unterminated frontmatter block"
+    try:
+        data = yaml.safe_load(parts[1])
+    except yaml.YAMLError as exc:
+        return {}, f"invalid YAML frontmatter: {exc}"
+    if not isinstance(data, dict):
+        return {}, "frontmatter is not a mapping"
+    return data, None
 
 
 def _as_bool(value):
@@ -72,7 +85,10 @@ def openai_policy_ok(openai_yaml_path):
         return False, "missing agents/openai.yaml"
     yaml = _require_yaml()
     with open(openai_yaml_path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+        try:
+            data = yaml.safe_load(f)
+        except yaml.YAMLError as exc:
+            return False, f"agents/openai.yaml is invalid YAML: {exc}"
     if not isinstance(data, dict):
         return False, "agents/openai.yaml is not a mapping"
     policy = data.get("policy")
@@ -91,7 +107,12 @@ def collect_errors(skills_dir):
         skill_md = os.path.join(skill_dir, "SKILL.md")
         if not os.path.isfile(skill_md):
             continue
-        frontmatter = parse_frontmatter(skill_md)
+        frontmatter, fm_error = parse_frontmatter(skill_md)
+        if fm_error is not None:
+            # Fail closed: a SKILL.md we cannot parse might hide an invocation
+            # restriction, so it is an error, not a skip.
+            errors.append((name, f"SKILL.md frontmatter unreadable ({fm_error})"))
+            continue
         if not is_non_user_invocable(frontmatter):
             continue
         checked.append(name)

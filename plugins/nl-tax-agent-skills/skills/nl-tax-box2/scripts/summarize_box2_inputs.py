@@ -134,7 +134,13 @@ def render_markdown_summary(payload: dict[str, Any]) -> tuple[str, int]:
         lines.extend(["", "## Manual review", ""])
         for flag in flags:
             lines.append(f"- Flag: `{flag}`")
+        seen_warnings = set()
         for warning in validation["warnings"] + result["warnings"]:
+            # The validator and calculator emit some identical warnings
+            # (e.g. the disposal_price/net-transfer-price note) — print once.
+            if warning in seen_warnings:
+                continue
+            seen_warnings.add(warning)
             lines.append(f"- {warning}")
 
     lines.extend(

@@ -93,13 +93,13 @@ class Box3AnnualRateParityTests(unittest.TestCase):
         self.assertIn(0.0137, pcts)
         self.assertIn(0.0588, pcts)
         self.assertIn(0.027, pcts)
-        self.assertEqual(self.module.PERC_BANKTEGOEDEN, 0.0137)
-        self.assertEqual(self.module.PERC_OVERIGE_BEZITTINGEN, 0.0588)
-        self.assertEqual(self.module.PERC_SCHULDEN, 0.0270)
+        self.assertEqual(float(self.module.PERC_BANKTEGOEDEN), 0.0137)
+        self.assertEqual(float(self.module.PERC_OVERIGE_BEZITTINGEN), 0.0588)
+        self.assertEqual(float(self.module.PERC_SCHULDEN), 0.0270)
 
     def test_tax_rate_matches_knowledge(self):
         self.assertIn(0.36, find_percentages(self.md))
-        self.assertEqual(self.module.TAX_RATE, 0.36)
+        self.assertEqual(float(self.module.TAX_RATE), 0.36)
 
     def test_heffingsvrij_matches_knowledge(self):
         self.assertIn(57_684, find_euros(self.md))
@@ -120,9 +120,9 @@ class Box3ProvisionalRateParityTests(unittest.TestCase):
         self.assertIn(0.0128, pcts)
         self.assertIn(0.06, pcts)
         self.assertIn(0.027, pcts)
-        self.assertEqual(self.module.PERC_BANKTEGOEDEN, 0.0128)
-        self.assertEqual(self.module.PERC_OVERIGE_BEZITTINGEN, 0.0600)
-        self.assertEqual(self.module.PERC_SCHULDEN, 0.0270)
+        self.assertEqual(float(self.module.PERC_BANKTEGOEDEN), 0.0128)
+        self.assertEqual(float(self.module.PERC_OVERIGE_BEZITTINGEN), 0.0600)
+        self.assertEqual(float(self.module.PERC_SCHULDEN), 0.0270)
 
     def test_return_percentages_match_rates_and_credits_note(self):
         pcts = find_percentages(self.rates_md)
@@ -133,7 +133,7 @@ class Box3ProvisionalRateParityTests(unittest.TestCase):
     def test_tax_rate_matches_knowledge(self):
         self.assertIn(0.36, find_percentages(self.box3_md))
         self.assertIn(0.36, find_percentages(self.rates_md))
-        self.assertEqual(self.module.TAX_RATE, 0.36)
+        self.assertEqual(float(self.module.TAX_RATE), 0.36)
 
     def test_heffingsvrij_matches_knowledge(self):
         self.assertIn(59_357, find_euros(self.box3_md))

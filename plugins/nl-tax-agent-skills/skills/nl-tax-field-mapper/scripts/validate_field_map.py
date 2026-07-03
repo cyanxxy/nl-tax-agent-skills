@@ -278,10 +278,61 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
         warnings.append(f"No manual_review_required set for {fid}")
 
 
-def validate_missing_fields(missing, warnings):
+def validate_missing_fields(missing, workflow, errors, warnings):
     for m in missing:
         if not m.get("field_id") and not m.get("label"):
             warnings.append("Missing field entry without field_id or label")
+        if _is_provisional(workflow):
+            # A missing_fields entry is an instruction to go COLLECT the data,
+            # so the werkelijk-rendement ban applies here just as hard as it
+            # does to populated fields.
+            fid = m.get("field_id") or m.get("label") or "missing_fields entry"
+            scanned_texts = [
+                str(m.get("field_id") or "").lower(),
+                str(m.get("label") or "").lower(),
+                str(m.get("reason") or "").lower(),
+                str(m.get("notes") or "").lower(),
+            ]
+            for kw in WERKELIJK_KEYWORDS:
+                if any(kw in text for text in scanned_texts):
+                    errors.append(
+                        "CRITICAL: werkelijk rendement in provisional map "
+                        f"missing_fields: {fid}"
+                    )
+                    break
+
+
+# Top-level notes MAY mention werkelijk rendement as an explanation/redirect
+# ("Werkelijk rendement is not part of provisional 2026."). Only notes that
+# lack such a negation are treated as collection instructions and rejected.
+_WERKELIJK_NOTE_NEGATIONS = (
+    "not part of",
+    "no part of",
+    "may become relevant",
+    "niet van toepassing",
+    "geen onderdeel",
+)
+
+
+def validate_top_level_notes(data, workflow, errors):
+    """Scan top-level notes for werkelijk rendement in provisional maps."""
+    if not _is_provisional(workflow):
+        return
+    notes = data.get("notes")
+    if isinstance(notes, list):
+        texts = [str(n).lower() for n in notes]
+    elif notes is None:
+        texts = []
+    else:
+        texts = [str(notes).lower()]
+    for text in texts:
+        if any(kw in text for kw in WERKELIJK_KEYWORDS) and not any(
+            neg in text for neg in _WERKELIJK_NOTE_NEGATIONS
+        ):
+            errors.append(
+                "CRITICAL: werkelijk rendement in provisional map top-level notes"
+            )
+            break
 
 
 def _is_identifier_field(field_id):
@@ -466,7 +517,8 @@ def validate(data):
     )
     for index, field in enumerate(clean_fields):
         validate_field(field, index, workflow, missing_field_ids, errors, warnings)
-    validate_missing_fields(clean_missing, warnings)
+    validate_missing_fields(clean_missing, workflow, errors, warnings)
+    validate_top_level_notes(data, workflow, errors)
 
     readiness = assess_readiness(clean_fields, clean_missing, workflow, parsed_tax_year)
     if readiness_decl == "review_ready" and not readiness["ready"]:
@@ -500,7 +552,17 @@ def main():
 
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
     flags = {a for a in sys.argv[1:] if a.startswith("-")}
-    require_ready = bool(flags & {"--require-ready", "--strict"})
+    known_flags = {"--require-ready", "--strict"}
+    unknown_flags = flags - known_flags
+    if unknown_flags:
+        # A typo'd --require-readi must not silently disable strict mode in CI.
+        print(
+            f"Error: unknown flag(s): {', '.join(sorted(unknown_flags))}. "
+            "Known flags: --strict, --require-ready",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    require_ready = bool(flags & known_flags)
 
     if not args:
         print("Usage: python3 validate_field_map.py [--strict|--require-ready] "

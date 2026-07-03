@@ -87,6 +87,9 @@ def validate_allocations(items, has_fiscal_partner=True):
     seen_names = {}
 
     for i, item in enumerate(items):
+        if not isinstance(item, dict):
+            errors.append(f"item[{i}]: must be a mapping, got: {item!r}")
+            continue
         name = item.get("item", f"item[{i}]")
 
         # Duplicate detection (key on item name)

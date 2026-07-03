@@ -55,14 +55,38 @@ STANDARD_BOUNDARY_FLAGS = {
     "standard_ab_case": "Substantial-interest position is not marked as a standard case.",
 }
 
+# Every payload key this validator (or the sibling calculator) consumes. Keys
+# outside this set are silently ignored downstream — usually a typo'd amount
+# field that would default to 0 — so flag them.
+KNOWN_PAYLOAD_KEYS = (
+    MONETARY_NON_NEGATIVE_FIELDS
+    | set(COMPLEX_MARKERS)
+    | set(STANDARD_BOUNDARY_FLAGS)
+    | {
+        "workflow",
+        "tax_year",
+        "disposal_benefit",
+        "substantial_interest_pct",
+        "partner_allocation",
+        "allocation",
+        "full_year_fiscal_partner",
+        "complex_markers",
+    }
+)
+
 
 def _decimal(value: Any, field_name: str) -> Decimal | None:
     if value is None or value == "":
         return None
     try:
-        return Decimal(str(value))
+        result = Decimal(str(value))
     except (InvalidOperation, ValueError):
         raise ValueError(f"{field_name} must be numeric")
+    if not result.is_finite():
+        # NaN/inf would raise InvalidOperation inside later comparisons
+        # instead of a clean validation error.
+        raise ValueError(f"{field_name} must be a finite number")
+    return result
 
 
 def _money(value: Decimal) -> Decimal:
@@ -74,14 +98,24 @@ def _add_unique(values: list[str], value: str) -> None:
         values.append(value)
 
 
+def _is_truthy_flag(value: Any) -> bool:
+    """Interpret a marker flag: strings like "no"/"false" must not count as set."""
+    if isinstance(value, str):
+        return value.strip().lower() in {"true", "yes", "ja", "1"}
+    return bool(value)
+
+
 def _workflow_year(payload: dict[str, Any], errors: list[str]) -> tuple[str | None, int | None]:
     workflow = payload.get("workflow")
     tax_year = payload.get("tax_year")
 
     if workflow is None:
         errors.append("workflow is required: annual_2025 or provisional_2026")
-    elif workflow not in SUPPORTED_WORKFLOWS:
+    elif not isinstance(workflow, str) or workflow not in SUPPORTED_WORKFLOWS:
+        # isinstance guard: an unhashable value (YAML list) must produce a
+        # validation error, not a TypeError traceback.
         errors.append("workflow must be annual_2025 or provisional_2026")
+        workflow = None
 
     parsed_year: int | None = None
     if tax_year is None:
@@ -194,6 +228,13 @@ def validate_box2_input_payload(payload: dict[str, Any]) -> dict:
     workflow, tax_year = _workflow_year(payload, errors)
     amounts = _validate_money_fields(payload, errors)
 
+    unknown_keys = sorted(set(payload) - KNOWN_PAYLOAD_KEYS)
+    if unknown_keys:
+        warnings.append(
+            "Unknown payload key(s) ignored by the Box 2 scripts (typo?): "
+            + ", ".join(unknown_keys)
+        )
+
     if "substantial_interest_pct" not in payload:
         errors.append("substantial_interest_pct is required for Box 2 preparation")
     else:
@@ -211,7 +252,15 @@ def validate_box2_input_payload(payload: dict[str, Any]) -> dict:
                         "Declared interest is below 5%; confirm whether Box 2 applies."
                     )
 
-    if "disposal_price" in amounts and "gross_disposal_price" in amounts:
+    # Presence = a NONZERO amount, matching calculate_box2_tax.py (which tests
+    # `> ZERO`): an explicit `disposal_price: 0` must not trigger "not both" or
+    # the acquisition-price requirement here while the calculator ignores it.
+    zero = Decimal("0")
+
+    def _present(field_name: str) -> bool:
+        return amounts.get(field_name, zero) != zero
+
+    if _present("disposal_price") and _present("gross_disposal_price"):
         errors.append("provide either disposal_price or gross_disposal_price, not both")
 
     disposal_component_names = {
@@ -220,18 +269,20 @@ def validate_box2_input_payload(payload: dict[str, Any]) -> dict:
         "acquisition_price",
         "disposal_costs",
     }
-    disposal_components_present = disposal_component_names & amounts.keys()
+    disposal_components_present = {
+        name for name in disposal_component_names if _present(name)
+    }
     has_any_disposal_price = (
-        "disposal_price" in amounts or "gross_disposal_price" in amounts
+        _present("disposal_price") or _present("gross_disposal_price")
     )
     if disposal_components_present and not has_any_disposal_price:
         errors.append(
             "disposal_price or gross_disposal_price is required when acquisition price "
             "or disposal costs are provided"
         )
-    if disposal_components_present and "acquisition_price" not in amounts:
+    if disposal_components_present and not _present("acquisition_price"):
         errors.append("acquisition_price is required when disposal components are provided")
-    if "disposal_price" in amounts and "disposal_costs" in amounts:
+    if _present("disposal_price") and _present("disposal_costs"):
         warnings.append(
             "disposal_price is treated as the official net transfer price; "
             "disposal_costs are retained for evidence and are not deducted again."
@@ -242,7 +293,7 @@ def validate_box2_input_payload(payload: dict[str, Any]) -> dict:
         errors.append("complex_markers must be an object")
         markers = {}
     for marker, description in COMPLEX_MARKERS.items():
-        if markers.get(marker) or payload.get(marker):
+        if _is_truthy_flag(markers.get(marker)) or _is_truthy_flag(payload.get(marker)):
             _add_unique(manual_review_flags, marker)
             warnings.append(f"Manual review required: {description}")
 

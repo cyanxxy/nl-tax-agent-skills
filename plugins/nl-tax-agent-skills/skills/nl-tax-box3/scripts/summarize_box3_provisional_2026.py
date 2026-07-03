@@ -43,11 +43,13 @@ def _require_finite_non_negative(name, value):
 # with the reviewed rule note and bump them in the same commit it changes:
 #   _shared/knowledge/years/2026/provisional/box3-provisional.md
 #   (source bd_box3_2026_provisional).
-PERC_BANKTEGOEDEN = 0.0128
-PERC_OVERIGE_BEZITTINGEN = 0.0600
-PERC_SCHULDEN = 0.0270
+# Decimal constants: all money math below runs in Decimal end-to-end so that
+# rounding happens exactly once per output figure (no binary-float drift).
+PERC_BANKTEGOEDEN = Decimal("0.0128")
+PERC_OVERIGE_BEZITTINGEN = Decimal("0.0600")
+PERC_SCHULDEN = Decimal("0.0270")
 
-TAX_RATE = 0.36
+TAX_RATE = Decimal("0.36")
 HEFFINGSVRIJ_PER_PERSON = 59_357
 SCHULDEN_DREMPEL_PER_PERSON = 3_800
 
@@ -111,9 +113,10 @@ def allocated_amount(total, has_partner, allocation_pct):
     validate_allocation_pct(allocation_pct)
     if not has_partner and allocation_pct != 100:
         raise ValueError("allocation_pct can only differ from 100 when has_partner is true")
+    total = Decimal(str(total))
     if not has_partner:
         return total
-    return total * (allocation_pct / 100)
+    return total * Decimal(str(allocation_pct)) / Decimal("100")
 
 
 def calculate_provisional_fictitious(
@@ -137,8 +140,13 @@ def calculate_provisional_fictitious(
             "(full-year / elected-full-year fiscal partnership) before doubling "
             "the allowance and debt threshold."
         )
+    banktegoeden = Decimal(str(banktegoeden))
+    overige = Decimal(str(overige))
+    schulden = Decimal(str(schulden))
+    heffingsvrij = Decimal(str(heffingsvrij))
+
     drempel = SCHULDEN_DREMPEL_PER_PERSON * (2 if has_partner else 1)
-    aftrekbare_schulden = max(0.0, schulden - drempel)
+    aftrekbare_schulden = max(Decimal("0"), schulden - drempel)
     total_assets = banktegoeden + overige
 
     rendement_bank = banktegoeden * PERC_BANKTEGOEDEN
@@ -147,8 +155,10 @@ def calculate_provisional_fictitious(
     belastbaar_rendement = rendement_bank + rendement_overige - rendement_schulden
 
     rendementsgrondslag = total_assets - aftrekbare_schulden
-    hvv = heffingsvrij if heffingsvrij > 0 else HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
-    grondslag_sparen_en_beleggen = max(0.0, rendementsgrondslag - hvv)
+    hvv = heffingsvrij if heffingsvrij > 0 else Decimal(
+        HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
+    )
+    grondslag_sparen_en_beleggen = max(Decimal("0"), rendementsgrondslag - hvv)
     allocated_grondslag = allocated_amount(
         grondslag_sparen_en_beleggen,
         has_partner,
@@ -156,7 +166,7 @@ def calculate_provisional_fictitious(
     )
 
     aandeel_pct = aandeel_percentage(allocated_grondslag, rendementsgrondslag)
-    aandeel_fraction = aandeel_pct / 100
+    aandeel_fraction = Decimal(str(aandeel_pct)) / Decimal("100")
 
     belastbaar_rendement_eur = nearest_euro(belastbaar_rendement)
     box3_inkomen = max(0, floor_euro(belastbaar_rendement_eur * aandeel_fraction))
@@ -254,11 +264,11 @@ def main():
         **result,
         "fictitious_return": result["box3_inkomen"],
         "estimated_tax": result["box3_belasting"],
-        "tax_rate": TAX_RATE,
+        "tax_rate": float(TAX_RATE),
         "percentages_used": {
-            "banktegoeden": PERC_BANKTEGOEDEN,
-            "overige_bezittingen": PERC_OVERIGE_BEZITTINGEN,
-            "schulden": PERC_SCHULDEN,
+            "banktegoeden": float(PERC_BANKTEGOEDEN),
+            "overige_bezittingen": float(PERC_OVERIGE_BEZITTINGEN),
+            "schulden": float(PERC_SCHULDEN),
         },
         "box3_provisional_actual_return_note": "Werkelijk rendement is not part of provisional 2026.",
         "rounding_note": "Displayed amounts use portal-style whole-euro rounding.",

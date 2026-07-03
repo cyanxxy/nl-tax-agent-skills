@@ -116,8 +116,11 @@ def scan_directory(directory: str) -> list:
     entries = []
     seen_ids = set()
 
-    for root, dirs, files in sorted(os.walk(directory)):
-        dirs.sort()  # deterministic traversal
+    for root, dirs, files in os.walk(directory):
+        # In-place edits steer os.walk: sort for deterministic traversal and
+        # prune hidden directories (e.g. .stversions, .backup) to match the
+        # hidden-file skip below.
+        dirs[:] = sorted(d for d in dirs if not d.startswith("."))
         for file_name in sorted(files):
             # Skip hidden files and editor/backup temp files.
             if file_name.startswith(".") or file_name.startswith("~"):

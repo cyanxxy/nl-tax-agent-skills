@@ -36,8 +36,12 @@ except ImportError:
 
 
 def _load_file(path: Path) -> dict | list | None:
-    """Load a YAML or JSON file and return parsed content."""
-    text = path.read_text(encoding="utf-8")
+    """Load a YAML or JSON file; return None (with an ERROR line) on failure."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"ERROR: cannot read {path.name}: {exc}", file=sys.stderr)
+        return None
     if path.suffix in (".yaml", ".yml"):
         if not _yaml_available:
             # A real evidence index is genuine YAML (unquoted keys, comments), so
@@ -49,8 +53,16 @@ def _load_file(path: Path) -> dict | list | None:
                 file=sys.stderr,
             )
             return None
-        return yaml.safe_load(text)
-    return json.loads(text)
+        try:
+            return yaml.safe_load(text)
+        except yaml.YAMLError as exc:
+            print(f"ERROR: invalid YAML in {path.name}: {exc}", file=sys.stderr)
+            return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as exc:
+        print(f"ERROR: invalid JSON in {path.name}: {exc}", file=sys.stderr)
+        return None
 
 
 # ---------------------------------------------------------------------------

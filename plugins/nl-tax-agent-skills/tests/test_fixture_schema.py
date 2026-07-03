@@ -73,7 +73,9 @@ class FixtureSchemaTests(unittest.TestCase):
                     f"{path} declares neither expected_behavior nor acceptance_criteria",
                 )
 
-    def test_fixture_ids_unique_and_match_filenames(self):
+    def test_fixture_ids_unique(self):
+        # Note: fixture_id follows eval_<scope>_<slug> and is NOT required to
+        # match the filename; only uniqueness is enforced.
         seen = {}
         for path in iter_fixture_paths():
             data = yaml.safe_load(path.read_text(encoding="utf-8"))

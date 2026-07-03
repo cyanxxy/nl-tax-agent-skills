@@ -260,11 +260,10 @@ def _coerce_scalar(val):
         return int(val)
     except ValueError:
         pass
-    try:
-        return float(val)
-    except ValueError:
-        pass
     stripped = val.strip()
+    # Separator formats MUST be tried before the bare float() fallback:
+    # float("50.000") happily parses as 50.0, silently shrinking a Dutch
+    # dot-thousands amount (fifty thousand euros) a thousandfold.
     # Plain comma thousand separators: 50,000 / 1,234,567
     if re.fullmatch(r"-?\d{1,3}(,\d{3})+", stripped):
         return int(stripped.replace(",", ""))
@@ -276,6 +275,10 @@ def _coerce_scalar(val):
         r"-?\d+,\d+", stripped
     ):
         return float(stripped.replace(".", "").replace(",", "."))
+    try:
+        return float(val)
+    except ValueError:
+        pass
     return val
 
 

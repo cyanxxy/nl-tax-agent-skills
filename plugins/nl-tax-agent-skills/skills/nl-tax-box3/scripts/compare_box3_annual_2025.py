@@ -49,11 +49,13 @@ def _require_finite(name, value):
 # deterministic calculator. The knowledge notes are canonical; keep these in sync
 # with the reviewed rule note and bump them in the same commit it changes:
 #   _shared/knowledge/years/2025/box3/fictitious.md (source bd_box3_2025_calc).
-PERC_BANKTEGOEDEN = 0.0137
-PERC_OVERIGE_BEZITTINGEN = 0.0588
-PERC_SCHULDEN = 0.0270
+# Decimal constants: all money math below runs in Decimal end-to-end so that
+# rounding happens exactly once per output figure (no binary-float drift).
+PERC_BANKTEGOEDEN = Decimal("0.0137")
+PERC_OVERIGE_BEZITTINGEN = Decimal("0.0588")
+PERC_SCHULDEN = Decimal("0.0270")
 
-TAX_RATE = 0.36
+TAX_RATE = Decimal("0.36")
 HEFFINGSVRIJ_PER_PERSON = 57_684
 SCHULDEN_DREMPEL_PER_PERSON = 3_800
 
@@ -92,9 +94,10 @@ def allocated_amount(total, has_partner, allocation_pct):
     validate_allocation_pct(allocation_pct)
     if not has_partner and allocation_pct != 100:
         raise ValueError("allocation_pct can only differ from 100 when has_partner is true")
+    total = Decimal(str(total))
     if not has_partner:
         return total
-    return total * (allocation_pct / 100)
+    return total * Decimal(str(allocation_pct)) / Decimal("100")
 
 
 def calculate_fictitious_box3(
@@ -118,8 +121,13 @@ def calculate_fictitious_box3(
             "(full-year / elected-full-year fiscal partnership) before doubling "
             "the allowance and debt threshold."
         )
+    banktegoeden = Decimal(str(banktegoeden))
+    overige = Decimal(str(overige))
+    schulden = Decimal(str(schulden))
+    heffingsvrij = Decimal(str(heffingsvrij))
+
     drempel = SCHULDEN_DREMPEL_PER_PERSON * (2 if has_partner else 1)
-    aftrekbare_schulden = max(0.0, schulden - drempel)
+    aftrekbare_schulden = max(Decimal("0"), schulden - drempel)
     total_assets = banktegoeden + overige
 
     rendement_bank = banktegoeden * PERC_BANKTEGOEDEN
@@ -128,8 +136,10 @@ def calculate_fictitious_box3(
     belastbaar_rendement = rendement_bank + rendement_overige - rendement_schulden
 
     rendementsgrondslag = total_assets - aftrekbare_schulden
-    hvv = heffingsvrij if heffingsvrij > 0 else HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
-    grondslag_sparen_en_beleggen = max(0.0, rendementsgrondslag - hvv)
+    hvv = heffingsvrij if heffingsvrij > 0 else Decimal(
+        HEFFINGSVRIJ_PER_PERSON * (2 if has_partner else 1)
+    )
+    grondslag_sparen_en_beleggen = max(Decimal("0"), rendementsgrondslag - hvv)
     allocated_grondslag = allocated_amount(
         grondslag_sparen_en_beleggen,
         has_partner,
@@ -137,7 +147,7 @@ def calculate_fictitious_box3(
     )
 
     aandeel_pct = aandeel_percentage(allocated_grondslag, rendementsgrondslag)
-    aandeel_fraction = aandeel_pct / 100
+    aandeel_fraction = Decimal(str(aandeel_pct)) / Decimal("100")
 
     belastbaar_rendement_eur = nearest_euro(belastbaar_rendement)
     box3_inkomen = max(0, floor_euro(belastbaar_rendement_eur * aandeel_fraction))
@@ -189,7 +199,11 @@ def build_parser():
     parser.add_argument("--schulden", type=float, required=True,
                         help="Total box 3 debts in EUR on 1 January 2025")
     parser.add_argument("--heffingsvrij", type=float, default=0,
-                        help="Heffingsvrij vermogen in EUR (default: 57684 per person)")
+                        help=(
+                            "Heffingsvrij vermogen in EUR (default: 57684 per "
+                            "person). 0 means 'use the statutory default'; an "
+                            "explicit zero allowance cannot be expressed."
+                        ))
     parser.add_argument("--actual_return", type=float, required=True,
                         help="Total actual return in EUR after applying only permitted components")
     parser.add_argument("--has_partner", action="store_true",
@@ -209,7 +223,7 @@ def build_parser():
 
 
 def compare_tax_methods(fictitious, actual_return_allocated):
-    actual_return_for_tax = max(0.0, actual_return_allocated)
+    actual_return_for_tax = max(Decimal("0"), Decimal(str(actual_return_allocated)))
     actual_return_for_tax_eur = floor_euro(actual_return_for_tax)
     tax_at_actual = floor_euro(actual_return_for_tax_eur * TAX_RATE)
     tax_at_fictitious = fictitious["box3_belasting"]
@@ -222,7 +236,7 @@ def compare_tax_methods(fictitious, actual_return_allocated):
         savings = tax_at_actual - tax_at_fictitious
     else:
         favorable = "equal"
-        savings = 0.0
+        savings = 0
 
     return {
         "actual_return_for_tax": actual_return_for_tax_eur,
@@ -242,11 +256,11 @@ def build_output(args, fictitious, actual_return_allocated):
         "actual_return_reported": nearest_euro(args.actual_return),
         "actual_return_allocated": nearest_euro(actual_return_allocated),
         **comparison,
-        "tax_rate": TAX_RATE,
+        "tax_rate": float(TAX_RATE),
         "percentages_used": {
-            "banktegoeden": PERC_BANKTEGOEDEN,
-            "overige_bezittingen": PERC_OVERIGE_BEZITTINGEN,
-            "schulden": PERC_SCHULDEN,
+            "banktegoeden": float(PERC_BANKTEGOEDEN),
+            "overige_bezittingen": float(PERC_OVERIGE_BEZITTINGEN),
+            "schulden": float(PERC_SCHULDEN),
         },
         "note": (
             "Actual return is set to EUR 0 for tax comparison if the allocated amount is negative. "

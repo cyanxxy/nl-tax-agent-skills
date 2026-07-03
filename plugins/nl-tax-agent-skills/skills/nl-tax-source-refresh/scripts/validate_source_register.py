@@ -63,7 +63,10 @@ def load_yaml_or_json(path):
             "PyYAML is required to run this validator "
             "(python3 -m pip install pyyaml)."
         )
-    return yaml.safe_load(content)
+    try:
+        return yaml.safe_load(content)
+    except yaml.YAMLError as exc:
+        raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
 
 
 def extract_domain(url):
@@ -71,12 +74,17 @@ def extract_domain(url):
 
     Uses urllib.parse so userinfo (user:pass@host) is split out rather than
     being treated as part of the host, and the scheme is exposed so callers can
-    require https. Returns lowercased hostname (or "" if absent).
+    require https. Returns lowercased hostname (or "" if absent). Malformed
+    URLs (e.g. an invalid IPv6 literal) parse as (\"\", \"\", None) instead of
+    crashing the validator.
     """
-    parsed = urlparse(url)
-    scheme = (parsed.scheme or "").lower()
-    hostname = (parsed.hostname or "").lower()
-    username = parsed.username
+    try:
+        parsed = urlparse(url)
+        scheme = (parsed.scheme or "").lower()
+        hostname = (parsed.hostname or "").lower()
+        username = parsed.username
+    except ValueError:
+        return "", "", None
     return scheme, hostname, username
 
 
@@ -131,6 +139,9 @@ def validate(register_path):
     seen_ids = set()
 
     for i, source in enumerate(sources):
+        if not isinstance(source, dict):
+            errors.append(f"entry[{i}]: source entry must be a mapping, got: {source!r}")
+            continue
         sid = source.get("id", f"entry[{i}]")
 
         # Required fields
@@ -172,12 +183,20 @@ def validate(register_path):
                 if checked_date > date.today():
                     errors.append(f"{sid}: last_checked is in the future: {last_checked}")
 
-        # Valid skill references
+        # Valid skill references. Accept the string shorthand fetch_sources.py
+        # accepts, so a typo'd skill name in string form is validated too.
         mandatory_for = source.get("mandatory_for", [])
+        if isinstance(mandatory_for, str):
+            mandatory_for = [mandatory_for]
         if isinstance(mandatory_for, list):
             for skill in mandatory_for:
                 if skill not in VALID_SKILL_NAMES:
                     errors.append(f"{sid}: unknown skill in mandatory_for: {skill}")
+        elif mandatory_for is not None:
+            errors.append(
+                f"{sid}: mandatory_for must be a list of skill names "
+                f"(or a single name), got: {mandatory_for!r}"
+            )
 
     return errors, warnings
 

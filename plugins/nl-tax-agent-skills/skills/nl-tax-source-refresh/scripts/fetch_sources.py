@@ -36,6 +36,7 @@ Output:
 import os
 import sys
 from datetime import datetime, timedelta, timezone
+from urllib.parse import urlparse
 
 # ---------------------------------------------------------------------------
 # YAML loader -- PyYAML is required (no JSON fallback, so output is stable)
@@ -114,17 +115,22 @@ def parse_date(date_str):
 
 
 def is_url_allowed(url):
-    """Check if a URL is on the domain allowlist."""
+    """Check if a URL is HTTPS and its host is on the domain allowlist.
+
+    Uses urlparse (like validate_source_register.py) rather than manual string
+    splitting: a hand-rolled split resolves userinfo tricks like
+    ``https://allowed.nl:pw@evil.com/`` to the allowed host.
+    """
     if not url:
         return False
-    # Extract domain from URL
     try:
-        # Remove protocol
-        after_proto = url.split("://", 1)[-1]
-        domain = after_proto.split("/", 1)[0].split(":")[0].lower()
-        return domain in ALLOWED_DOMAINS
-    except (IndexError, AttributeError):
+        parsed = urlparse(str(url).strip())
+    except ValueError:
         return False
+    if parsed.scheme != "https":
+        return False
+    host = (parsed.hostname or "").lower()
+    return host in ALLOWED_DOMAINS
 
 
 def has_mandatory_for(source, skill_name):
@@ -175,7 +181,7 @@ def matches_scope(source, scope, year=None):
         match = "box3" in source.get("id", "").lower()
     else:
         print(f"Error: Unknown scope '{scope}'. "
-              f"Use: annual, provisional, box3, all", file=sys.stderr)
+              "Use: annual, provisional, box3, all", file=sys.stderr)
         sys.exit(1)
 
     if not match:
@@ -216,12 +222,6 @@ def staleness_metadata(source, now):
         "age_days": age_days,
         "expires_on": expires_on,
     }
-
-
-def check_staleness(source, now):
-    """Check if a source is stale based on its last_checked date and source_type."""
-    metadata = staleness_metadata(source, now)
-    return metadata["is_stale"], metadata["staleness_detail"]
 
 
 def check_snapshot_exists(source, base_dir):
@@ -304,15 +304,19 @@ def parse_cli_args(argv):
 
 
 def load_sources(register_path):
-    data = load_yaml(register_path)
-    sources = data.get("sources", [])
+    try:
+        data = load_yaml(register_path)
+    except yaml.YAMLError as exc:
+        print(f"Error: source-register.yaml is invalid YAML: {exc}", file=sys.stderr)
+        sys.exit(1)
+    sources = data.get("sources", []) if isinstance(data, dict) else []
     if not sources:
         print("Error: No sources found in source-register.yaml.", file=sys.stderr)
         sys.exit(1)
     return sources
 
 
-def empty_report(now, scope, year, fetch_flag, register_path, sources, matched):
+def base_report(now, scope, year, fetch_flag, register_path, sources, matched):
     return {
         "report_type": "source_refresh_plan" if fetch_flag else "source_freshness_check",
         "generated_at": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -381,7 +385,7 @@ def add_entry_to_summary(results, entry):
 
 
 def build_report(sources, matched, now, repo_root, register_path, scope, year, fetch_flag):
-    results = empty_report(now, scope, year, fetch_flag, register_path, sources, matched)
+    results = base_report(now, scope, year, fetch_flag, register_path, sources, matched)
     for source in matched:
         entry = source_report_entry(source, now, repo_root, fetch_flag)
         results["sources_checked"].append(entry)
@@ -391,7 +395,7 @@ def build_report(sources, matched, now, repo_root, register_path, scope, year, f
 
 def print_summary(results, scope, year, fetch_flag):
     s = results["summary"]
-    print(f"\n--- Freshness Check Summary ---", file=sys.stderr)
+    print("\n--- Freshness Check Summary ---", file=sys.stderr)
     print(f"Scope: {scope}"
           f"{f' (year={year})' if year else ''}", file=sys.stderr)
     print(f"Sources matched: {results['matched_sources']} / {results['total_sources']}",
@@ -402,7 +406,7 @@ def print_summary(results, scope, year, fetch_flag):
     if s["url_not_allowed"] > 0:
         print(f"URLs NOT on allowlist: {s['url_not_allowed']}", file=sys.stderr)
     if fetch_flag:
-        print(f"Refresh plan: plan-only (no live HTTP requests performed)",
+        print("Refresh plan: plan-only (no live HTTP requests performed)",
               file=sys.stderr)
 
 

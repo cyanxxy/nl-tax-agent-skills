@@ -162,9 +162,17 @@ def main():
     project_root = find_content_root(register_path)
 
     data = load_yaml_or_json(register_path)
-    sources = data if isinstance(data, list) else data.get("sources", data.get("entries", []))
+    if isinstance(data, list):
+        sources = data
+    elif isinstance(data, dict):
+        sources = data.get("sources", data.get("entries", []))
+    else:
+        sources = None
+    if not sources:
+        print(f"Error: no sources found in register: {register_path}", file=sys.stderr)
+        sys.exit(1)
 
-    results = {"present": [], "missing": [], "hash_changed": [], "errors": []}
+    results = {"present": [], "missing": [], "hash_changed": []}
     now = datetime.now(timezone.utc).isoformat()
 
     for source in sources:
@@ -240,6 +248,14 @@ def main():
         print("Missing snapshots:")
         for s in results["missing"]:
             print(f"  - {s}")
+
+    if results["hash_changed"]:
+        print()
+        print(
+            "Note: changed snapshots were demoted to review_status: needs_review. "
+            "Exit code 0 covers both no-op and changed runs; check the CHANGED "
+            "lines above."
+        )
 
     sys.exit(1 if results["missing"] else 0)
 

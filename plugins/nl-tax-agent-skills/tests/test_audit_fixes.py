@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Regression tests for fixes from the full-codebase audit."""
 
+import contextlib
 import hashlib
+import io
 import importlib.util
 import os
 import pathlib
@@ -212,8 +214,10 @@ class FetchSourcesCliTests(unittest.TestCase):
     def test_parse_cli_args_exits_on_missing_scope(self):
         # Regression: the length check must inspect the argv parameter,
         # not the interpreter-level sys.argv of the calling process.
-        with self.assertRaises(SystemExit):
-            self.module.parse_cli_args(["fetch_sources.py"])
+        # Capture the usage text so suite output stays clean.
+        with contextlib.redirect_stderr(io.StringIO()):
+            with self.assertRaises(SystemExit):
+                self.module.parse_cli_args(["fetch_sources.py"])
 
     def test_parse_cli_args_parses_scope_year_and_fetch_flag(self):
         scope, year, fetch_flag = self.module.parse_cli_args(
