@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Dutch tax skills for local manual-entry workpacks.",
   "author": {
     "name": "Tax Skill Developers",

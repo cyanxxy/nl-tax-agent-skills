@@ -5,6 +5,49 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] — 2026-07-03
+
+Bug fixes from a two-model code review (Claude + Codex) of all Python scripts,
+with the encoded tax rules re-verified against belastingdienst.nl and
+wetten.overheid.nl. Plugin manifests are bumped from `0.1.4` to `0.1.5`.
+
+### Fixed
+
+- **Box 3 asset parsing** — Dutch dot-thousands amounts (`50.000`) were parsed
+  as `50.0` by the bare `float()` fallback, undervaluing assets 1000-fold;
+  separator formats are now tried first.
+- **Money math** — the box 3 annual and provisional calculators now compute in
+  `Decimal` end-to-end; the box 1 own-home script rounds ROUND_HALF_UP via
+  `Decimal` and rejects NaN/inf inputs. The tariefsaanpassing grondslag stays
+  the gross aftrekbare kosten per art. 2.10 lid 2 (confirmed against the
+  official Hillen example) and is now definitively "no" with zero deductible
+  costs.
+- **Fail-closed invocation-policy validator** — frontmatter is split on fence
+  lines and unparseable frontmatter is an error, so a skill can no longer be
+  silently dropped from the Codex-policy check.
+- **Source-refresh allowlist** — `fetch_sources.py` now uses `urlparse` and
+  requires HTTPS, rejecting userinfo tricks like
+  `https://allowed.nl:pw@evil.com`.
+- **Werkelijk-rendement gate** — the field-map validator now also scans
+  `missing_fields` and top-level notes in provisional maps (explanatory
+  redirect notes stay allowed); unknown CLI flags are rejected.
+- **Box 2 hardening** — NaN/inf inputs raise clean errors, typo'd payload keys
+  are flagged instead of silently defaulting to 0, the explicit-zero presence
+  rule matches between validator and calculator, duplicate warnings are
+  deduplicated, and `--taxpayer-pct` alone derives the partner percentage.
+- **Robustness** — empty/malformed YAML and non-mapping entries now produce
+  clean validation errors instead of tracebacks across the validators,
+  `build_snapshots.py`, `render_field_map.py`, `validate_allocation.py`, and
+  `summarize_box1_inputs.py`; the evidence indexer prunes hidden directories;
+  the offline eval verifier escapes glob metacharacters, works from any
+  working directory, and scans the output tree once per run.
+
+### Added
+
+- `tests/test_review_fixes.py` regression suite pinning every fix above,
+  including the official 2026 Hillen/tariefsaanpassing example; the suite
+  grows from 152 to 174 tests.
+
 ## [0.1.4] — 2026-07-02
 
 This release resolves a full third-party review of v0.1.3 (4 critical, 16
