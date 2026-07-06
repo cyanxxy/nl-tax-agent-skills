@@ -38,6 +38,7 @@ nl-tax-agent-skills/
     nl-tax-box1-home/               # background helper
     nl-tax-box2/                    # background helper
     nl-tax-box3/                    # background helper
+    nl-tax-winst/                   # background helper (winst uit onderneming)
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
@@ -57,13 +58,14 @@ The bundled Python scripts are best-effort accelerators, not the primary mechani
 |---|---|---|
 | `nl-tax-intake` | user entry | Screen scope, select a supported workflow, create `workspace/taxpayer/profile.yaml` |
 | `nl-tax-evidence-indexer` | user entry | Index local evidence files, compute hashes, produce review questions |
-| `nl-tax-annual-return` | user entry | Prepare the annual 2025 return workpack and field map |
+| `nl-tax-annual-return` | user entry | Prepare the annual 2025 return workpack and field map (incl. winst uit onderneming for an eenmanszaak / ZZP) |
 | `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, or stopzetten packages |
 | `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps |
 | `nl-tax-submit-companion` | manual-only | Create a manual checklist for official submission |
 | `nl-tax-box1-home` | background | Summarize box 1 and own-home notes into `workspace/shared/` |
 | `nl-tax-box2` | background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
 | `nl-tax-box3` | background | Classify assets and produce source-backed box 3 notes (no method mixing) |
+| `nl-tax-winst` | background | Prepare winst uit onderneming notes for an eenmanszaak / ZZP (annual 2025 only) |
 | `nl-tax-partner-deductions` | background | Produce fiscal-partner and allocation notes |
 | `nl-tax-source-refresh` | developer | Validate source registers, knowledge snapshots, and supported workflows |
 

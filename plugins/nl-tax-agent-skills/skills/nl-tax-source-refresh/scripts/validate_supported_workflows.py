@@ -45,6 +45,8 @@ KNOWLEDGE_SKILL_HINTS = (
     ("own-home", "nl-tax-box1-home"),
     ("box2", "nl-tax-box2"),
     ("box3", "nl-tax-box3"),
+    ("entrepreneur", "nl-tax-winst"),
+    ("winst", "nl-tax-winst"),
     ("partner", "nl-tax-partner-deductions"),
 )
 

@@ -1,0 +1,95 @@
+# Eval fixture: Annual entrepreneur (eenmanszaak / ZZP)
+#
+# Scenario: Full-year Dutch resident, no fiscal partner, one eenmanszaak with
+#            winst uit onderneming, meets the urencriterium, no own home.
+#
+# Expected behavior:
+#   - Case is SUPPORTED and routes into annual_2025 (NOT out of scope)
+#   - business.has_onderneming is set true; winst uit onderneming is prepared
+#     in Phase 2A via the nl-tax-winst helper
+#   - Ondernemersaftrek (zelfstandigenaftrek), MKB-winstvrijstelling, and KIA
+#     amounts are read from the entrepreneur knowledge notes, not paraphrased
+#   - No provisional wording appears in output; winst is annual-only
+
+fixture_id: eval_annual_entrepreneur_zzp
+fixture_version: "1.0"
+scenario: "Annual entrepreneur — eenmanszaak / ZZP with winst uit onderneming"
+tax_year: 2025
+workflow: annual_2025
+
+taxpayer_profile:
+  person:
+    display_name: "Test Taxpayer E"
+    date_of_birth_known: true
+    aow_status_known: true  # under AOW age
+  residency:
+    full_year_nl_resident: true
+    part_year_resident: false
+  partner:
+    has_fiscal_partner: false
+  business:
+    has_onderneming: true
+    legal_form: eenmanszaak
+    urencriterium_met: true
+    starter_status: false
+
+evidence_files:
+  - file: "winst-verlies-rekening-2025.pdf"
+    evidence_type: winst_verlies_rekening
+    tax_year: 2025
+    extracted_fields:
+      omzet: 62000.00
+      zakelijke_kosten: 14000.00
+      winst_voor_ondernemersaftrek: 48000.00
+  - file: "urenadministratie-2025.xlsx"
+    evidence_type: urenadministratie
+    tax_year: 2025
+    extracted_fields:
+      totaal_uren: 1600
+  - file: "investering-laptop-2025.pdf"
+    evidence_type: investering_factuur
+    tax_year: 2025
+    extracted_fields:
+      aanschafwaarde: 3200.00
+
+expected_outputs:
+  files_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/taxpayer/evidence-index.yaml
+    - workspace/annual/2025/return-pack.md
+    - workspace/annual/2025/field-map.yaml
+    - workspace/shared/assumptions.md
+    - workspace/shared/missing-info.md
+
+  files_not_created:
+    - workspace/provisional/**
+
+  workpack_checks:
+    - section: "Winst uit onderneming notes"
+      present: true
+      contains: "zelfstandigenaftrek"
+      contains_also: "MKB-winstvrijstelling"
+    - section: "Scope"
+      contains: "2025"
+      not_contains: "2026"
+    - section: "Not submission advice"
+      present: true
+
+  field_map_checks:
+    - workflow: "annual_return"
+    - tax_year: 2025
+    - contains_field_prefix: "onderneming."
+
+  negative_checks:
+    - no_provisional_wording: true
+    - no_credential_fields: true
+    - no_login_automation: true
+    - routes_out: false   # eenmanszaak / ZZP is supported, not out of scope
+
+acceptance_criteria:
+  - "Case routes into annual_2025 (supported), not out of scope"
+  - "Winst uit onderneming section is prepared with ondernemersaftrek and MKB-winstvrijstelling"
+  - "Entrepreneur amounts are read from the knowledge notes, not paraphrased"
+  - "Complex business forms would route to manual review; a plain eenmanszaak does not"
+  - "No provisional wording appears; winst uit onderneming is annual-only"
+  - "No credential collection or login automation"

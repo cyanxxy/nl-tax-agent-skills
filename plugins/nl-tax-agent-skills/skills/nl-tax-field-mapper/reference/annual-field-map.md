@@ -1,10 +1,10 @@
 # Annual Income Tax Return Field Reference (Aangifte Inkomstenbelasting 2025)
 
-source_ids: bd_annual_data_checklist_2025, bd_box3_2025_calc, bd_box3_2025_actual_return, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_fiscal_partnership
+source_ids: bd_annual_data_checklist_2025, bd_box3_2025_calc, bd_box3_2025_actual_return, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_fiscal_partnership, bd_ondernemersaftrek_2025, bd_startersaftrek_2025, bd_mkb_winstvrijstelling_2025, bd_kia_2025, bd_zakelijke_kosten_2025, bd_aangifte_ondernemers_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-06"
 review_status: reviewed
 
 This reference defines the known fields in the Dutch annual income tax return that the field mapper may produce. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
@@ -17,6 +17,7 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 - Personal Data (Persoonsgegevens)
 - Box 1 — Income from Work and Home (Inkomen uit werk en woning)
+- Winst uit onderneming (Profit from enterprise) — Box 1
 - Own Home (Eigen woning) — Box 1 Deduction
 - Box 2 — Substantial Interest (Aanmerkelijk belang)
 - Box 3 — Savings and Investments (Sparen en beleggen)
@@ -78,6 +79,34 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 Resultaat uit overige werkzaamheden is a manual-review marker in this workflow;
 do not calculate it as standard support until reviewed sources are added.
+
+---
+
+## Winst uit onderneming (Profit from enterprise) — Box 1
+
+Supported for the standard IB-ondernemer with an eenmanszaak (the usual ZZP legal
+form). Amounts are read from the reviewed knowledge notes under
+`_shared/knowledge/years/2025/entrepreneur/`. Partnerships (VOF, maatschap, CV),
+DGA/BV winst, agrarisch, zeevarenden, and cessation events stay manual review.
+
+| field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
+|---|---|---|---|---|---|
+| `business.has_onderneming` | Heeft onderneming | Has enterprise | Winst uit onderneming | conditional | `kvk_uittreksel` / user-provided |
+| `onderneming.omzet` | Omzet | Turnover | Winst uit onderneming | conditional | `winst_verlies_rekening` |
+| `onderneming.kosten` | Zakelijke kosten | Business costs | Winst uit onderneming | conditional | `winst_verlies_rekening` |
+| `onderneming.winst_voor_ondernemersaftrek` | Winst voor ondernemersaftrek | Profit before entrepreneur deduction | Winst uit onderneming | conditional | Calculated |
+| `onderneming.zelfstandigenaftrek` | Zelfstandigenaftrek | Self-employed deduction | Winst uit onderneming | conditional | Calculated from knowledge note |
+| `onderneming.startersaftrek` | Startersaftrek | Starter deduction | Winst uit onderneming | conditional | Calculated from knowledge note |
+| `onderneming.ondernemersaftrek_totaal` | Ondernemersaftrek totaal | Total entrepreneur deduction | Winst uit onderneming | conditional | Calculated |
+| `onderneming.mkb_winstvrijstelling` | MKB-winstvrijstelling | SME profit exemption | Winst uit onderneming | conditional | Calculated from knowledge note |
+| `onderneming.kleinschaligheidsinvesteringsaftrek` | Kleinschaligheidsinvesteringsaftrek (KIA) | Small-scale investment deduction | Winst uit onderneming | conditional | `investering_factuur` |
+| `onderneming.belastbare_winst` | Belastbare winst uit onderneming | Taxable profit from enterprise | Winst uit onderneming | conditional | Calculated |
+
+### Notes on winst uit onderneming fields
+- Prepare figures in order: winst (turnover minus deductible costs), minus investeringsaftrek such as KIA, minus the ondernemersaftrek, then the MKB-winstvrijstelling on the result.
+- The zelfstandigenaftrek and most ondernemersaftrek components require the urencriterium (at least 1,225 hours). The MKB-winstvrijstelling needs no urencriterium.
+- The ondernemersaftrek and MKB-winstvrijstelling are personal to the ondernemer and are not allocated between fiscal partners.
+- No row is `required`: an entrepreneur workpack sets `business.has_onderneming` (the same profile key and canonical not-applicable hook the workpack uses) and the applicable `onderneming.*` rows; a non-entrepreneur workpack leaves the whole section out via the "not applicable" hook. Never mark a row `required`, or every non-entrepreneur field map fails validation.
 
 ---
 

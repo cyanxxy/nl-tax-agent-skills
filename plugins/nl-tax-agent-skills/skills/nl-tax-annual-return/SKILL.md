@@ -1,6 +1,6 @@
 ---
 name: nl-tax-annual-return
-description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, own home, box 2, box 3, deductions, partner allocation, and credits.
+description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, winst uit onderneming (eenmanszaak / ZZP), own home, box 2, box 3, deductions, partner allocation, and credits.
 allowed-tools:
   - Read
   - Glob
@@ -34,7 +34,7 @@ Two different read cadences apply. Record every loaded knowledge file's `source_
 
 **Bundled references — load once when this skill becomes active**, and re-read them only when resuming a session from disk or when a self-check needs the exact wording (they do not change mid-conversation; keeping them loaded in context satisfies this rule):
 
-1. `reference/annual-flow.md` — the 13 numbered phases this skill follows
+1. `reference/annual-flow.md` — the 14 numbered phases this skill follows
 2. `reference/annual-output-contract.md` — the structural and safety rules for the workpack
 3. `templates/annual-return-pack.md` — the workpack template
 
@@ -47,6 +47,12 @@ Before generating content for a phase (Phase 2 onward in `annual-flow.md`), load
 - `_shared/knowledge/years/2025/annual/late-filing.md`
 - `_shared/knowledge/years/2025/annual/filing-flow.md`
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md`
+- `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` (only when the case has winst uit onderneming — `business.has_onderneming` value `true` in the profile)
+- `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` (same condition)
+- `_shared/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md` (same condition)
+- `_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md` (same condition)
+- `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` (same condition)
+- `_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md` (same condition)
 - `_shared/knowledge/years/2025/box3/fictitious.md`
 - `_shared/knowledge/years/2025/box3/actual-return.md`
 - `_shared/knowledge/years/2025/box2/box2-rates.md` (only when the case has an aanmerkelijk belang — `box2.has_aanmerkelijk_belang` value `true` in the profile)
@@ -72,7 +78,7 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 
 ## Workflow
 
-`reference/annual-flow.md` is authoritative. It defines 13 phases (Pre-flight → Filing status → Income → Own home → Box 2 → Box 3 → Deductions → Credits screening → Partner → Field map → Missing info → Review questions → Assembly; numbered 1, 1.5, 2, 3, 3A, 4, 5, 5.5, 6, 7, 8, 9, 10 there). Follow them in order, and within each phase apply the conversational contract below.
+`reference/annual-flow.md` is authoritative. It defines 14 phases (Pre-flight → Filing status → Income → Winst uit onderneming → Own home → Box 2 → Box 3 → Deductions → Credits screening → Partner → Field map → Missing info → Review questions → Assembly; numbered 1, 1.5, 2, 2A, 3, 3A, 4, 5, 5.5, 6, 7, 8, 9, 10 there). Follow them in order, and within each phase apply the conversational contract below.
 
 ### Conversational contract
 
@@ -105,15 +111,16 @@ The box and partner phases use the background helper contracts. Prefer a direct 
 In each phase, invoke or inline the matching helper, let it append its question packet under `workspace/shared/`, ask the user those questions, record the answers, then re-invoke/re-run the helper contract to fold them into its notes:
 
 - **Box 1 / own home** → `nl-tax-box1-home` (writes `workspace/shared/box1-home-notes.md` and `workspace/shared/box1-home-open-questions.yaml`)
+- **Winst uit onderneming** → `nl-tax-winst` (writes `workspace/shared/winst-notes.md`, `workspace/shared/winst-open-questions.yaml`, and `workspace/shared/winst-review-questions.md`). Only when the case has winst uit onderneming (`business.has_onderneming` value `true`): load the six entrepreneur rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_ondernemer_criteria_2025`, `bd_ondernemerscheck_2025`, `bd_urencriterium_2025`, `bd_ondernemersaftrek_2025`, `bd_zelfstandigenaftrek_2025`, `bd_startersaftrek_ao_2025`, `bd_startersaftrek_2025`, `bd_meewerkaftrek_2025`, `bd_stakingsaftrek_2025`, `bd_so_aftrek_2025`, `bd_mkb_winstvrijstelling_2025`, `bd_kia_2025`, `bd_eia_2025`, `bd_eia_mia_vamil_2025`, `bd_zakelijke_kosten_2025`, `bd_beperkt_aftrekbare_kosten_2025`, `bd_werkruimte_2025`, `bd_privevervoermiddel_2025`, `bd_oudedagsreserve_2025`, `bd_administratie_bewaren_2025`, `bd_aangifte_ondernemers_2025`, `bd_ondernemer_cijfers_aangifte_2025`, and `bd_ondernemer_voorbereiden_2025` to `session-progress.yaml` → `sources_loaded` as their notes are loaded, so the workpack's Sources Used section matches the winst facts it cites.
 - **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang` value `true`): load the three box 2 rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
 - **Box 3** → `nl-tax-box3` (writes `workspace/shared/box3-notes.md`, `workspace/shared/box3-open-questions.yaml`, and `workspace/shared/box3-review-questions.md`; annual collects fictitious **and** werkelijk rendement for the comparison)
 - **Partner / deductions** → `nl-tax-partner-deductions` (writes `workspace/shared/allocation-options.md`, `workspace/shared/partner-deductions-open-questions.yaml`, and `workspace/shared/partner-deduction-review-questions.md`)
 
-Read `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md` back before assembling the Box 2 section (the review questions feed the Human review checklist). Read the sibling helpers' named notes/open-question artifacts back before assembling their sections. The helpers never write to `workspace/annual/**`; this skill owns that tree.
+Read `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md` back before assembling the Box 2 section (the review questions feed the Human review checklist). Read `workspace/shared/winst-notes.md`, `workspace/shared/winst-open-questions.yaml`, and `workspace/shared/winst-review-questions.md` back before assembling the Winst uit onderneming section. Read the sibling helpers' named notes/open-question artifacts back before assembling their sections. The helpers never write to `workspace/annual/**`; this skill owns that tree.
 
 ## Sections in the workpack
 
-The output contract requires 19 sections in order. Don't confuse "sections the user is asked about" with "sections the workpack emits". The emitted workpack sections are:
+The output contract requires 20 sections in order. Don't confuse "sections the user is asked about" with "sections the workpack emits". The emitted workpack sections are:
 
 1. Scope
 2. Unsupported-case checks
@@ -122,30 +129,32 @@ The output contract requires 19 sections in order. Don't confuse "sections the u
 5. Evidence summary
 6. Filing status and late-filing exposure
 7. Income notes
-8. Own-home notes
-9. Box 2 notes
-10. Box 3 notes
-11. Deductions notes
-12. Credits screening
-13. Fiscal partner notes
-14. Field map summary
-15. Missing information
-16. Assumptions
-17. User-stated values index
-18. Human review checklist
-19. Not submission advice
+8. Winst uit onderneming notes
+9. Own-home notes
+10. Box 2 notes
+11. Box 3 notes
+12. Deductions notes
+13. Credits screening
+14. Fiscal partner notes
+15. Field map summary
+16. Missing information
+17. Assumptions
+18. User-stated values index
+19. Human review checklist
+20. Not submission advice
 
 **User-facing question groups (you ask the user about these):**
 
 1. Filing status (on-time, uitstel, or late — drives late-filing exposure)
 2. Box 1 employment / pension / benefit / other income
-3. Own home — WOZ, mortgage interest, mortgage type, tariefsaanpassing, Hillenregeling, two-homes if applicable
-4. Box 2 — substantial-interest status and standard fields, or "not applicable"
-5. Box 3 peildatum (1 January 2025) values; box 3 actual-return data for the comparison
-6. Deductions — alimentatie, zorgkosten, giften, lijfrentepremie, other
-7. Credits screening — IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting triggers based on household composition (already in `profile.yaml`)
-8. Fiscal partner status and allocation choices
-9. Final review and confirmation
+3. Winst uit onderneming — ondernemer status, urencriterium, winst, ondernemersaftrek, MKB-winstvrijstelling, investeringsaftrek (only when the taxpayer has an eenmanszaak / ZZP), or "not applicable"
+4. Own home — WOZ, mortgage interest, mortgage type, tariefsaanpassing, Hillenregeling, two-homes if applicable
+5. Box 2 — substantial-interest status and standard fields, or "not applicable"
+6. Box 3 peildatum (1 January 2025) values; box 3 actual-return data for the comparison
+7. Deductions — alimentatie, zorgkosten, giften, lijfrentepremie, other
+8. Credits screening — IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting triggers based on household composition (already in `profile.yaml`)
+9. Fiscal partner status and allocation choices
+10. Final review and confirmation
 
 Match this list to `reference/annual-output-contract.md`. If anything diverges, the contract wins.
 

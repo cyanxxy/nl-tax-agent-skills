@@ -20,6 +20,7 @@
    - Box 3 values on peildatum (1 January 2025)
    - Eigen woning details (WOZ-waarde, hypotheek, rente)
    - Deductions with supporting evidence (aftrekposten)
+   - Winst uit onderneming (if you have an eenmanszaak / ZZP): the zakelijk deel (balans and winst-en-verliesrekening), the urencriterium answer, and the ondernemersaftrek / MKB-winstvrijstelling / kleinschaligheidsinvesteringsaftrek figures. The income-tax return, including the winst section, is filed via Mijn Belastingdienst — not Mijn Belastingdienst Zakelijk.
 7. Review the complete return
 8. If fiscal partner: partner must also review and sign
 9. Submit the return

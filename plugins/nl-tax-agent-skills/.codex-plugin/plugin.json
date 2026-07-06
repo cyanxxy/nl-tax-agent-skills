@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Dutch tax skills for local manual-entry workpacks.",
   "author": {
     "name": "Tax Skill Developers",
@@ -12,7 +12,9 @@
     "dutch-tax",
     "agent-skills",
     "workpacks",
-    "voorlopige-aanslag"
+    "voorlopige-aanslag",
+    "zzp",
+    "winst-uit-onderneming"
   ],
   "skills": "./skills",
   "interface": {

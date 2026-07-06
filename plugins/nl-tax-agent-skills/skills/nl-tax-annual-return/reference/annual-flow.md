@@ -11,6 +11,7 @@ Every time you read a knowledge file or rate sheet, record the matching `source_
 - Phase 1 — Pre-flight checks
 - Phase 1.5 — Filing status and late-filing exposure
 - Phase 2 — Income compilation
+- Phase 2A — Winst uit onderneming compilation
 - Phase 3 — Own-home compilation
 - Phase 3A — Box 2 compilation
 - Phase 4 — Box 3 compilation
@@ -46,9 +47,10 @@ Before generating any workpack content, verify all prerequisites are met.
 
 ### 1.4 Taxpayer type confirmed
 
-- Confirm the taxpayer is an individual with employment/pension/benefit income as primary
-- If IB-onderneming is the primary income source: stop -- unsupported case
-- If IB-onderneming, freelance or side-business income, or resultaat uit overige werkzaamheden appears: route to manual review or unsupported unless a source-backed workflow has been added.
+- Confirm the taxpayer is an individual filing an income-tax return.
+- **Winst uit onderneming (eenmanszaak / ZZP) is supported.** If the taxpayer is an IB-ondernemer with an eenmanszaak, set `business.has_onderneming: true` in the profile and prepare the winst in Phase 2A. This does not stop the flow.
+- Route to manual review or unsupported (do not prepare a standard winst section) for the complex business forms outside standard scope: partnerships (VOF, maatschap, CV) and profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische ondernemingen (landbouwvrijstelling), zeevarenden, and business-cessation events (staking, herinvesteringsreserve, oudedagsreserve wind-down). These keep the blocked `annual_2025_entrepreneurs` candidate.
+- Resultaat uit overige werkzaamheden is not winst uit onderneming: keep it as manual-review data (see Phase 2.4); do not calculate it as a standard entrepreneur case.
 
 ### 1.5 Living taxpayer confirmed
 
@@ -89,6 +91,12 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 - `_shared/knowledge/years/2025/annual/late-filing.md` *(bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib, bd_invorderingsrente)*
 - `_shared/knowledge/years/2025/annual/filing-flow.md` *(bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_annual_deadline_2025, bd_annual_extension_2025)*
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
+- `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` *(bd_ondernemer_criteria_2025, bd_ondernemerscheck_2025, bd_urencriterium_2025)* — only when the case has winst uit onderneming (`business.has_onderneming` value `true`)
+- `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` *(bd_ondernemersaftrek_2025, bd_zelfstandigenaftrek_2025, bd_startersaftrek_ao_2025, bd_startersaftrek_2025, bd_meewerkaftrek_2025, bd_stakingsaftrek_2025, bd_so_aftrek_2025)* — same condition
+- `_shared/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md` *(bd_mkb_winstvrijstelling_2025)* — same condition
+- `_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md` *(bd_kia_2025, bd_eia_2025, bd_eia_mia_vamil_2025)* — same condition
+- `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` *(bd_zakelijke_kosten_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werkruimte_2025, bd_privevervoermiddel_2025, bd_oudedagsreserve_2025, bd_administratie_bewaren_2025)* — same condition
+- `_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md` *(bd_aangifte_ondernemers_2025, bd_ondernemer_cijfers_aangifte_2025, bd_ondernemer_voorbereiden_2025)* — same condition
 - `_shared/knowledge/years/2025/box3/fictitious.md` *(bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025)*
 - `_shared/knowledge/years/2025/box3/actual-return.md` *(bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025)*
 - `_shared/knowledge/years/2025/box2/box2-rates.md` *(bd_box2_rates_2025_2026)* — only when the case has an aanmerkelijk belang (`box2.has_aanmerkelijk_belang` value `true`)
@@ -152,15 +160,60 @@ Compile all box 1 income from evidence and user-provided data.
 
 ### 2.4 Other box 1 income
 
+- Check for **winst uit onderneming** (eenmanszaak / ZZP). If present, set `business.has_onderneming: true` and prepare it in Phase 2A, not here. Distinguish it from resultaat uit overige werkzaamheden: winst uit onderneming is the ondernemer case; resultaat uit overige werkzaamheden is the residual freelance case.
 - Check for income from other activities (resultaat uit overige werkzaamheden) and record it as manual-review data; do not calculate or map it as standard Box 1 support without reviewed sources.
 - Check for alimentatie received (taxable as box 1 income) and route to manual review unless exact reviewed sources and field-map support have been added.
 - Check for any other income sources mentioned in the profile or evidence and keep them out of standard calculations until source-backed.
 
 ### 2.5 Income summary
 
-- Total all box 1 income sources
+- Total all box 1 income sources (the winst uit onderneming total from Phase 2A feeds this once it is prepared)
 - Total all loonheffing withheld (this determines whether the taxpayer gets a refund or owes additional tax)
 - Note any income items without supporting evidence
+
+---
+
+## Phase 2A — Winst uit onderneming compilation
+
+Compile standard winst uit onderneming for the annual 2025 return when the taxpayer is an IB-ondernemer with an eenmanszaak (the usual ZZP legal form). If the taxpayer has no onderneming, emit the canonical "not applicable" line from the output contract and continue.
+
+When the taxpayer has winst uit onderneming, invoke or inline `nl-tax-winst`, read the amounts from the entrepreneur knowledge notes under `_shared/knowledge/years/2025/entrepreneur/` — never paraphrase a rate, amount, or threshold from memory — and append the entrepreneur `source_id`s to `session-progress.yaml` → `sources_loaded` as their notes are loaded (this skill owns session state; the helper does not).
+
+### 2A.1 Ondernemer status and urencriterium
+
+- Confirm the taxpayer is an ondernemer voor de inkomstenbelasting with an eenmanszaak; a KvK registration or btw-ondernemerschap alone is not enough (see `ondernemer-criteria.md`).
+- Record `business.has_onderneming` as `true`/`false` in the profile (the template's boolean enum); route to manual review when the status is unclear or when the income looks like resultaat uit overige werkzaamheden.
+- Record whether the urencriterium (or, for the startersaftrek bij arbeidsongeschiktheid, the verlaagd urencriterium) is met; it gates the zelfstandigenaftrek and related components.
+
+### 2A.2 Winst uit onderneming
+
+- Collect turnover (omzet), total deductible business costs, and qualifying KIA investments. Apply the kleinschaligheidsinvesteringsaftrek from `investeringsaftrek.md` as an investeringsaftrek that reduces the winst before ondernemersaftrek.
+- Apply the beperkt-aftrekbare-kosten threshold or the alternative percentage election (never both), and note werkruimte, business-car bijtelling, and the private-vehicle kilometre deduction where they apply, from `winst-en-kosten.md`.
+- Map:
+  - `onderneming.omzet`
+  - `onderneming.kosten`
+  - `onderneming.kleinschaligheidsinvesteringsaftrek`
+  - `onderneming.winst_voor_ondernemersaftrek`
+
+### 2A.3 Ondernemersaftrek
+
+- Prepare only the components the case qualifies for: zelfstandigenaftrek (plus the startersaftrek increase where the starter conditions are met), aftrek voor speur- en ontwikkelingswerk, meewerkaftrek, and the startersaftrek bij arbeidsongeschiktheid. Read the 2025 amounts and conditions from `ondernemersaftrek.md`.
+- Map:
+  - `onderneming.zelfstandigenaftrek`
+  - `onderneming.startersaftrek`
+  - `onderneming.ondernemersaftrek_totaal`
+
+### 2A.4 MKB-winstvrijstelling and belastbare winst
+
+- Apply the MKB-winstvrijstelling to the winst after investeringsaftrek and ondernemersaftrek (`mkb-winstvrijstelling.md`).
+- Map:
+  - `onderneming.mkb_winstvrijstelling`
+  - `onderneming.belastbare_winst`
+
+### 2A.5 Manual-review triggers
+
+- Require manual review for partnerships (VOF, maatschap, CV) and profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische ondernemingen, zeevarenden, staking/cessation events, herinvesteringsreserve, oudedagsreserve wind-down, and resultaat uit overige werkzaamheden.
+- Do not calculate these complex positions; record the facts and ask for professional review. The MKB-winstvrijstelling and ondernemersaftrek are personal to the ondernemer and are not allocated between fiscal partners (see Phase 6.3).
 
 ---
 

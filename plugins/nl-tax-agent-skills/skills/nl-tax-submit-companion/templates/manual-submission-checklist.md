@@ -32,7 +32,7 @@ Use this checklist while completing the official Mijn Belastingdienst steps. Res
 - [ ] Note the submission date
 - [ ] If annual: expect definitieve aanslag within [timeframe]
 - [ ] If provisional: note the response timing shown in Mijn Belastingdienst or the confirmation
-- [ ] Keep evidence files for your records (typically 5 years)
+- [ ] Keep evidence files for your records; if you have winst uit onderneming, follow the fiscale bewaarplicht in `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md`
 
 ## Authorization check
 

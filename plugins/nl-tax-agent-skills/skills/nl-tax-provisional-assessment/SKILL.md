@@ -84,8 +84,11 @@ Confirm an active workflow candidate of `provisional_2026_request`, `provisional
 - Do not request, calculate, or offer method choices for werkelijk rendement in provisional 2026.
 - Use only the provisional fictitious Box 3 method.
 - Do not write `workspace/annual/**`.
+- Do not prepare winst uit onderneming (eenmanszaak / ZZP: ondernemersaftrek, zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, investeringsaftrek, urencriterium) in any provisional 2026 flow. The entrepreneur unlock is annual 2025 only; those reviewed sources do not exist for the 2026 voorlopige aanslag. Estimate expected business profit only as a plain box 1 income figure the user supplies, without applying entrepreneur deductions or calling `nl-tax-winst`.
 
 If the user asks about werkelijk rendement, respond: "Werkelijk rendement is not part of the 2026 voorlopige aanslag. It may become relevant when filing the annual 2026 return in 2027."
+
+If the user asks about entrepreneur deductions (zelfstandigenaftrek, MKB-winstvrijstelling, and the like) for the voorlopige aanslag, respond: "Entrepreneur deductions are prepared for the annual 2025 return, not the 2026 voorlopige aanslag; for the provisional I can only use your own estimate of expected business profit."
 
 ## Conversational behavior
 

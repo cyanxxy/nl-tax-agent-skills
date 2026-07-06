@@ -1,4 +1,4 @@
-taxpayer_profile_version: "1.3"
+taxpayer_profile_version: "1.4"
 workspace_root: ""              # absolute path of the working folder; set once at intake, never changed
 intake_status: "not_started"    # not_started | in_progress | complete
 created_at: ""
@@ -72,6 +72,27 @@ box2:
     value: null                  # true | false
     source: "unknown"
 
+business:
+  # Winst uit onderneming (eenmanszaak / ZZP) is supported in annual_2025.
+  # The annual workflow gates the Winst uit onderneming phase (2A) on
+  # has_onderneming, the way box2.has_aanmerkelijk_belang gates the Box 2 phase.
+  # Only a straightforward eenmanszaak is in standard scope; complex business
+  # forms are screened to manual review via routing.complex_business_screening.
+  has_onderneming:
+    value: null                  # true | false
+    source: "unknown"
+  legal_form:
+    value: null                  # eenmanszaak | vof | maatschap | cv | bv | other
+                                 # (only eenmanszaak is standard scope; the rest
+                                 # route to manual review / the blocked candidate)
+    source: "unknown"
+  urencriterium_met:
+    value: null                  # true | false; urencriterium per entrepreneur knowledge note -- gates zelfstandigenaftrek
+    source: "unknown"
+  starter_status:
+    value: null                  # true | false; derived from startersaftrek conditions collected by the winst helper
+    source: "unknown"
+
 workflows:
   annual_2025:
     requested: false
@@ -89,6 +110,9 @@ workflows:
 
 routing:
   complex_box2_screening:
+    value: "not_screened"        # not_screened | standard | manual_review
+    source: "unknown"
+  complex_business_screening:
     value: "not_screened"        # not_screened | standard | manual_review
     source: "unknown"
   blocked_profile_candidate:

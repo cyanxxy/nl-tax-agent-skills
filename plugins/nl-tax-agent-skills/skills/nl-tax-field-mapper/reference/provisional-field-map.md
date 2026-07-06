@@ -4,7 +4,7 @@ source_ids: bd_provisional_request_2026, bd_box3_2026_provisional, bd_provisiona
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-06"
 review_status: reviewed
 
 This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
@@ -61,6 +61,7 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 ### Notes on income estimates
 - These are the taxpayer's best estimates for the full year 2026. They may be based on current employment contracts, recent jaaropgaven, or known upcoming changes.
 - The portal asks for total amounts, not per-employer breakdowns.
+- **Business profit (winst uit onderneming) estimate:** a self-employed taxpayer's expected 2026 profit is entered here as a plain income estimate via `box1.geschat_overig_inkomen`. The provisional flow never applies entrepreneur deductions (zelfstandigenaftrek, MKB-winstvrijstelling, KIA, etc.) — those are annual-2025-only. Do NOT use the annual `onderneming.*` field ids in a provisional map.
 
 ---
 
@@ -159,6 +160,8 @@ The following annual return fields have no equivalent in the provisional assessm
 | Annual field_id | Reason not in provisional |
 |---|---|
 | `box3.werkelijk_rendement_*` | Werkelijk rendement is not part of provisional 2026 |
+| `onderneming.*` (winst uit onderneming) | Entrepreneur winst and its deductions are annual-2025 only; a plain 2026 profit estimate goes in `box1.geschat_overig_inkomen` |
+| `onderneming.zelfstandigenaftrek` / `onderneming.startersaftrek` / `onderneming.ondernemersaftrek_totaal` / `onderneming.mkb_winstvrijstelling` / `onderneming.kleinschaligheidsinvesteringsaftrek` | Entrepreneur deductions are annual-2025 only; never applied in a provisional estimate |
 | `aftrek.zorgkosten` | Rolled into general estimated deductions |
 | `aftrek.giften_anbi` | Rolled into general estimated deductions |
 | `aftrek.giften_cultureel` | Rolled into general estimated deductions |

@@ -442,6 +442,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "Evidence summary",
             "Filing status and late-filing exposure",
             "Income notes",
+            "Winst uit onderneming notes",
             "Own-home notes",
             "Box 2 notes",
             "Box 3 notes",
@@ -456,7 +457,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "Not submission advice",
         ]
 
-        self.assertIn("requires 19 sections", skill_sections)
+        self.assertIn("requires 20 sections", skill_sections)
+        self.assertNotIn("requires 19 sections", skill_sections)
         self.assertNotIn("requires 16 sections", skill_sections)
         for section in required_sections:
             with self.subTest(section=section):
@@ -480,6 +482,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-box1-home/SKILL.md",
             "skills/nl-tax-box2/SKILL.md",
             "skills/nl-tax-box3/SKILL.md",
+            "skills/nl-tax-winst/SKILL.md",
             "skills/nl-tax-partner-deductions/SKILL.md",
         ]
 

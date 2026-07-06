@@ -86,6 +86,8 @@ def infer_section(field_id):
         "box1": "Box 1",
         "box2": "Box 2",
         "box3": "Box 3",
+        "onderneming": "Winst uit onderneming",
+        "business": "Winst uit onderneming",
         "eigenwoning": "Eigen Woning",
         "aftrek": "Deductions",
         "partner": "Partner",

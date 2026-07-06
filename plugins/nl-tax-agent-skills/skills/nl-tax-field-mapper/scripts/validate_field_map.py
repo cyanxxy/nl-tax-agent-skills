@@ -62,6 +62,21 @@ WERKELIJK_KEYWORDS = {
     "actual_return", "actual-return", "actual return",
     "actueel rendement", "echt rendement",
 }
+# Winst uit onderneming (eenmanszaak / ZZP) is an annual-2025-only capability;
+# the 2026 voorlopige aanslag may take a plain estimate of expected business
+# profit but never applies entrepreneur DEDUCTIONS. So a provisional field map
+# must not carry the annual `onderneming.` field namespace or any entrepreneur
+# deduction term. The dotted "onderneming." targets the annual field prefix
+# specifically, so a plain estimate label like "geschatte winst uit onderneming"
+# (no trailing dot, no deduction term) is still allowed.
+ENTREPRENEUR_KEYWORDS = {
+    "onderneming.", "zelfstandigenaftrek", "startersaftrek",
+    "mkb-winstvrijstelling", "mkb_winstvrijstelling", "ondernemersaftrek",
+    "investeringsaftrek", "kleinschaligheidsinvesteringsaftrek",
+}
+ENTREPRENEUR_TOKEN_PATTERNS = (
+    re.compile(r"\bkia\b"),
+)
 # Top-level keys the schema knows about. Anything else is warned on so a typo'd
 # key (e.g. "field" instead of "fields") doesn't silently drop data.
 # Keep this set in sync with templates/field-map-template.yaml.
@@ -236,6 +251,14 @@ def validate_source(fid, field, missing_field_ids, errors, warnings):
             errors.append(f"source.type=unknown requires entry in missing_fields ({fid})")
 
 
+def contains_entrepreneur_keyword(scanned_texts):
+    return any(
+        any(kw in text for kw in ENTREPRENEUR_KEYWORDS)
+        or any(pattern.search(text) for pattern in ENTREPRENEUR_TOKEN_PATTERNS)
+        for text in scanned_texts
+    )
+
+
 def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     fid = field.get("field_id", f"field[{index}]")
     label_lower = (field.get("label") or "").lower()
@@ -273,6 +296,11 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
                     f"CRITICAL: werkelijk rendement field in provisional map: {fid}"
                 )
                 break
+        if contains_entrepreneur_keyword(scanned_texts):
+            errors.append(
+                f"CRITICAL: entrepreneur (winst uit onderneming) deduction field "
+                f"in provisional map: {fid} — winst deductions are annual 2025 only"
+            )
 
     if field.get("manual_review_required") is None:
         warnings.append(f"No manual_review_required set for {fid}")
@@ -300,6 +328,11 @@ def validate_missing_fields(missing, workflow, errors, warnings):
                         f"missing_fields: {fid}"
                     )
                     break
+            if contains_entrepreneur_keyword(scanned_texts):
+                errors.append(
+                    "CRITICAL: entrepreneur (winst uit onderneming) deduction in "
+                    f"provisional map missing_fields: {fid} — annual 2025 only"
+                )
 
 
 # Top-level notes MAY mention werkelijk rendement as an explanation/redirect

@@ -21,6 +21,7 @@
 - Evidence summary
 - Filing status and late-filing exposure
 - Income notes
+- Winst uit onderneming notes
 - Own-home notes
 - Box 2 notes
 - Box 3 notes
@@ -45,9 +46,10 @@ Created: [timestamp]
 ## Unsupported-case checks
 
 - [ ] Full-year Dutch resident: [yes/no]
-- [ ] Individual taxpayer (not business): [yes/no]
+- [ ] Individual taxpayer -- supported IB-ondernemer (eenmanszaak / ZZP) or non-business individual, not a complex business form: [yes/no]
 - [ ] Living taxpayer: [yes/no]
 - [ ] No M-biljet required: [yes/no]
+- [ ] No complex business manual-review trigger (partnership, DGA/BV winst, agrarisch, zeevarende, staking, resultaat uit overige werkzaamheden) blocking standard preparation: [yes/no/not applicable]
 - [ ] No complex Box 2 manual-review trigger blocking standard preparation: [yes/no/not applicable]
 
 If any check is "no", this workpack should not have been generated. Stop and consult the intake skill.
@@ -152,9 +154,9 @@ Filing status: on time. No late-filing exposure.
 
 | Description | Amount | Src |
 |-------------|--------|-----|
-| [e.g., alimentatie received, freelance income] | EUR [amount] | [F/U/A/?] |
+| [e.g., alimentatie received] | EUR [amount] | [F/U/A/?] |
 
-[If no other income, state "Not applicable."]
+[If no other income, state "Not applicable." Winst uit onderneming (eenmanszaak / ZZP) is NOT recorded here -- it has its own "Winst uit onderneming notes" section below. Resultaat uit overige werkzaamheden stays a manual-review item.]
 
 ### Box 1 income total
 
@@ -163,9 +165,54 @@ Filing status: on time. No late-filing exposure.
 | Total gross employment income | EUR [amount] | C:sum(employment.gross) |
 | Total gross pension income | EUR [amount] | C:sum(pension.gross) |
 | Total gross benefit income | EUR [amount] | C:sum(benefit.gross) |
+| Belastbare winst uit onderneming (from Winst uit onderneming notes) | EUR [amount] | C:onderneming.belastbare_winst |
 | Total other box 1 income | EUR [amount] | C:sum(other) |
 | **Total box 1 income (before deductions)** | **EUR [amount]** | C:sum(rows above) |
 | Total loonheffing withheld | EUR [amount] | C:sum(loonheffing) |
+
+## Winst uit onderneming notes
+
+[If no onderneming, emit exactly these two lines and skip the rest of this section:
+
+> Not applicable -- no winst uit onderneming reported.
+> business.has_onderneming: no
+]
+
+Amounts, percentages, and thresholds in this section are read from the reviewed knowledge notes under `_shared/knowledge/years/2025/entrepreneur/`; never paraphrase a rate from memory.
+
+### Ondernemer status
+
+- Ondernemer voor de inkomstenbelasting (eenmanszaak / ZZP): [yes/no/manual review] -- Src: [F/U/A/?]
+- Urencriterium met (at least 1,225 hours): [yes/no] -- Src: [F/U/A/?]
+- Complex-case review: [none / partnership (VOF/maatschap/CV) / medegerechtigde / DGA or BV winst / agrarisch / zeevarende / staking or cessation / resultaat uit overige werkzaamheden]
+
+### Winst
+
+| Item | Amount | Src |
+|------|--------|-----|
+| Turnover (`onderneming.omzet`) | EUR [amount] | [F/U/A/?] |
+| Deductible business costs (`onderneming.kosten`) | EUR [amount] | [F/U/A/?] |
+| Kleinschaligheidsinvesteringsaftrek (`onderneming.kleinschaligheidsinvesteringsaftrek`) | EUR [amount from KIA table] | C:knowledge |
+| Winst before ondernemersaftrek (`onderneming.winst_voor_ondernemersaftrek`) | EUR [amount] | C:omzet-kosten-kia |
+
+### Ondernemersaftrek
+
+| Item | Amount | Src |
+|------|--------|-----|
+| Zelfstandigenaftrek (`onderneming.zelfstandigenaftrek`) | EUR [amount from `ondernemersaftrek.md`] | C:knowledge |
+| Startersaftrek if applicable (`onderneming.startersaftrek`) | EUR [amount from `ondernemersaftrek.md`] | C:knowledge |
+| Total ondernemersaftrek (`onderneming.ondernemersaftrek_totaal`) | EUR [amount] | C:sum(components) |
+
+[The zelfstandigenaftrek and most components require the urencriterium. The tax benefit is capped at the deduction-rate cap from `deductions.md`. Meewerkaftrek, S&O-aftrek, stakingsaftrek, and startersaftrek bij arbeidsongeschiktheid are added here when they apply, with amounts read from `ondernemersaftrek.md`.]
+
+### MKB-winstvrijstelling and belastbare winst
+
+| Item | Amount | Src |
+|------|--------|-----|
+| MKB-winstvrijstelling (`onderneming.mkb_winstvrijstelling`) | EUR [amount] | C:pct*(winst_voor_ondernemersaftrek-ondernemersaftrek) |
+| **Belastbare winst uit onderneming** (`onderneming.belastbare_winst`) | **EUR [amount]** | C:winst_voor_ondernemersaftrek-ondernemersaftrek-mkbvrijstelling |
+
+The KIA is deducted when determining the winst before ondernemersaftrek. The MKB-winstvrijstelling percentage applies to the winst after KIA and ondernemersaftrek. The MKB-winstvrijstelling and ondernemersaftrek are personal to the ondernemer and are not allocated between fiscal partners. Route staking, herinvesteringsreserve, oudedagsreserve wind-down, EIA/MIA/Vamil eligibility, and any partnership to manual review.
 
 ## Own-home notes
 
@@ -548,6 +595,9 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] Evidence matches reported amounts -- no unexplained discrepancies
 - [ ] Box 3 peildatum values verified against bank/broker statements
 - [ ] Box 3 method choice reviewed (fictitious vs actual return)
+- [ ] Winst uit onderneming reviewed if applicable: ondernemer status, urencriterium evidence (urenadministratie), and the zelfstandigenaftrek / startersaftrek / MKB-winstvrijstelling / KIA amounts verified in Mijn Belastingdienst against the entrepreneur knowledge notes
+- [ ] Complex business facts (partnership, DGA/BV winst, agrarisch, zeevarende, staking, resultaat uit overige werkzaamheden) routed to manual review or professional advice
+- [ ] Business administration retained for at least 7 years (fiscale bewaarplicht) if you have winst uit onderneming
 - [ ] Box 2 dividends, share-sale data, withholding tax, loss setoff, and partner allocation reviewed if applicable
 - [ ] Complex Box 2 facts routed to manual review or professional advice
 - [ ] Partner allocation reviewed and agreed with fiscal partner

@@ -31,13 +31,13 @@ The following taxpayer situations are not supported in version 1 of the Dutch ta
 - **Why unsupported:** Requires F-biljet, estate considerations, and often involves executor/heir authorization
 - **Advice:** Contact the Belastingdienst directly or consult a tax adviser or notaris
 
-## 4. IB-Onderneming as Primary Income
+## 4. Complex Business Forms (Winst uit onderneming)
 
-- **Description:** The taxpayer's primary income is from an unincorporated business (eenmanszaak, vof, maatschap) and the core workflow involves zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, or FOR
+- **Supported standard preparation:** A full-year resident individual with an **eenmanszaak** (the usual ZZP legal form) is SUPPORTED in the active `annual_2025` workflow. Standard winst uit onderneming is prepared, including the ondernemersaftrek (zelfstandigenaftrek, startersaftrek), the MKB-winstvrijstelling, and the kleinschaligheidsinvesteringsaftrek. Route these cases to `annual_2025` with `business.has_onderneming: true` — do not treat them as unsupported.
 - **Profile candidate:** `annual_2025_entrepreneurs`
-- **Why unsupported:** Requires detailed profit calculations, entrepreneurial deductions, and business-specific tax treatment that goes beyond v1 scope
-- **Advice:** Use accounting software (e.g., Exact, Moneybird) with tax filing integration, or consult a boekhouder/belastingadviseur
-- **Note:** Employed individuals who have a small side business may still be in scope if employment is the primary income source — assess on a case-by-case basis
+- **Manual review / unsupported boundary:** Route the case to the blocked candidate (or manual review) when the business form or event is outside standard scope: partnerships (VOF, maatschap, CV) and their profit-share allocation, medegerechtigdheid, DGA / BV winst, agrarische ondernemingen (landbouwvrijstelling), zeevarenden, and business-cessation events (staking, herinvesteringsreserve, oudedagsreserve wind-down). Resultaat uit overige werkzaamheden (a freelancer who is not an ondernemer for the inkomstenbelasting) is also a manual-review item, not standard winst uit onderneming.
+- **Why the boundary:** the complex forms need dedicated official sources, profit-allocation rules, and field maps that are not yet reviewed; the standard eenmanszaak deductions are.
+- **Advice:** For complex business cases, use accounting software (e.g., Exact, Moneybird) with tax-filing integration, or consult a boekhouder / belastingadviseur.
 
 ## 5. M-Aangifte (Migration Return)
 

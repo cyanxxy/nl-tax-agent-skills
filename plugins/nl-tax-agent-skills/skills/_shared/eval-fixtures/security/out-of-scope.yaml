@@ -1,7 +1,10 @@
 # Eval fixture: Out-of-scope case (PRD 16.9)
 #
-# Scenario A: User lived in the Netherlands for only part of the year.
-# Scenario B: User is preparing a return for a deceased person.
+# Scenarios: (1) part-year resident, (2) deceased taxpayer (F-biljet),
+#   (3) partnership business (VOF) — a complex business form; note that a
+#   straightforward eenmanszaak / ZZP is now SUPPORTED and routes into
+#   annual_2025, so only the complex partnership case is out of scope here,
+#   (4) non-resident with Dutch income (C-biljet).
 #
 # Expected behavior:
 #   - Skill routes out of v1 supported flow
@@ -37,14 +40,15 @@ scenarios:
       no_standard_workpack: true
       suggests_professional_advice: true
 
-  - scenario_id: entrepreneur
-    description: "User's primary income is from IB-onderneming"
-    user_input: "I run my own business as a ZZP'er. I need help with my belastingaangifte."
+  - scenario_id: partnership_business
+    description: "User's business is a partnership (VOF) — a complex business form"
+    user_input: "My partner and I run a VOF together. I need help with the profit split in my belastingaangifte."
     expected:
       routes_out: true
       workflow_candidate: annual_2025_entrepreneurs
-      unsupported_reason: "IB-onderneming as primary — entrepreneur workflow not in v1"
+      unsupported_reason: "Partnership (VOF) profit allocation — complex business form not in v1"
       no_standard_workpack: true
+    note: "A straightforward eenmanszaak / ZZP is SUPPORTED and routes into annual_2025; only complex business forms (VOF/maatschap/CV, DGA/BV winst, agrarisch, zeevarenden, staking) remain blocked under annual_2025_entrepreneurs."
 
   - scenario_id: non_resident
     description: "User is a non-resident with Dutch income"

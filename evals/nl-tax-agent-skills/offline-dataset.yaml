@@ -54,6 +54,41 @@ cases:
           - "password"
           - "wachtwoord"
 
+  - id: annual_entrepreneur_zzp
+    fixture: skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml
+    skill: nl-tax-annual-return
+    purpose: Annual 2025 eenmanszaak / ZZP with winst uit onderneming, ondernemersaftrek, and KIA.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml.
+      Prepare the annual 2025 local workpack from that offline fixture only. The taxpayer
+      has an eenmanszaak (ZZP) with winst uit onderneming — a supported case, not out of scope.
+      Do not browse, fetch live sources, log in, file, or ask for portal credentials.
+      Write workspace/eval/current-case.txt containing exactly annual_entrepreneur_zzp.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/taxpayer/profile.yaml
+      - workspace/annual/2025/return-pack.md
+      - workspace/annual/2025/field-map.yaml
+    forbidden_files:
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/annual/2025/return-pack.md
+        all:
+          - "2025"
+        any:
+          - ["winst uit onderneming", "zelfstandigenaftrek"]
+          - ["MKB-winstvrijstelling", "ondernemersaftrek"]
+        none:
+          - "voorlopige aanslag"
+      - path: workspace/annual/2025/field-map.yaml
+        all:
+          - "annual_return"
+          - "onderneming."
+        none:
+          - "password"
+          - "wachtwoord"
+
   - id: annual_partner_box3_actual
     fixture: skills/_shared/eval-fixtures/annual/partner-box3-actual.yaml
     skill: nl-tax-annual-return

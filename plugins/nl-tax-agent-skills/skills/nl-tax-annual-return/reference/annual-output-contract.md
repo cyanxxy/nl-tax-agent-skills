@@ -9,6 +9,7 @@ This document defines the required output structure, validation rules, and quali
 - Required sections
 - Source attribution rules
 - Filing status and late-filing exposure
+- Winst uit onderneming requirements
 - Box 2 requirements
 - Box 3 requirements
 - Credits screening requirements
@@ -29,18 +30,19 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 5. **Evidence summary** — summary of the evidence index used, including any `chat_only` values
 6. **Filing status and late-filing exposure** — on-time / uitstel / late, plus quoted verzuimboete and belastingrente when applicable
 7. **Income notes** — all box 1 income categories (employment, pension, benefits, other)
-8. **Own-home notes** — WOZ, mortgage interest, eigenwoningforfait, tariefsaanpassing, Hillenregeling, plus verkoopregeling / aankoopregeling when applicable
-9. **Box 2 notes** — substantial-interest status, regular benefits, disposal benefits, dividend withholding tax credit, loss setoff, partner allocation, manual-review triggers
-10. **Box 3 notes** — assets, debts, fictitious return, actual return data, comparison, partner allocation
-11. **Deductions notes** — alimentatie, zorgkosten, giften, lijfrentepremie, other
-12. **Credits screening** — IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting triggers based on household composition
-13. **Fiscal partner notes** — partner status, allocation options, review points
-14. **Field map summary** — reference to the field map file
-15. **Missing information** — all identified data gaps
-16. **Assumptions** — all assumptions made during workpack generation
-17. **User-stated values index** — cross-index of every `U:` chat-only value so the user can spot-check what was recorded from chat
-18. **Human review checklist** — items requiring human verification before filing, including every `U:` chat-only value
-19. **Not submission advice** — mandatory disclaimer section
+8. **Winst uit onderneming notes** — ondernemer status, urencriterium, winst, ondernemersaftrek, MKB-winstvrijstelling, kleinschaligheidsinvesteringsaftrek, manual-review triggers
+9. **Own-home notes** — WOZ, mortgage interest, eigenwoningforfait, tariefsaanpassing, Hillenregeling, plus verkoopregeling / aankoopregeling when applicable
+10. **Box 2 notes** — substantial-interest status, regular benefits, disposal benefits, dividend withholding tax credit, loss setoff, partner allocation, manual-review triggers
+11. **Box 3 notes** — assets, debts, fictitious return, actual return data, comparison, partner allocation
+12. **Deductions notes** — alimentatie, zorgkosten, giften, lijfrentepremie, other
+13. **Credits screening** — IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting triggers based on household composition
+14. **Fiscal partner notes** — partner status, allocation options, review points
+15. **Field map summary** — reference to the field map file
+16. **Missing information** — all identified data gaps
+17. **Assumptions** — all assumptions made during workpack generation
+18. **User-stated values index** — cross-index of every `U:` chat-only value so the user can spot-check what was recorded from chat
+19. **Human review checklist** — items requiring human verification before filing, including every `U:` chat-only value
+20. **Not submission advice** — mandatory disclaimer section
 
 ---
 
@@ -78,6 +80,42 @@ The "Filing status and late-filing exposure" section MUST appear in every workpa
 - **Late (deadline passed, no uitstel)** — quote both the verzuimboete amounts (EUR 469 first / EUR 6,709 max) and the belastingrente rate that applies after 1 July 2026, with citations to `bd_verzuimboete` and `bd_belastingrente_overview`. Do not compute a final boete or rente figure.
 
 In all three cases, do not present the section as legal advice. The Belastingdienst sets the actual boete and rente on the aanslag.
+
+---
+
+## Winst uit onderneming requirements
+
+### Standard winst uit onderneming preparation
+
+The Winst uit onderneming section MUST be present.
+
+**When it does not apply** (the taxpayer has no onderneming), emit exactly:
+
+```
+Not applicable — no winst uit onderneming reported.
+business.has_onderneming: no
+```
+
+Do not enumerate the other fields. The single `business.has_onderneming: no` line is the canonical hook for the field map.
+
+**When it applies** (an IB-ondernemer with an eenmanszaak / ZZP), include standard preparation fields for:
+
+- `business.has_onderneming`
+- `onderneming.omzet`
+- `onderneming.kosten`
+- `onderneming.kleinschaligheidsinvesteringsaftrek`
+- `onderneming.winst_voor_ondernemersaftrek`
+- `onderneming.zelfstandigenaftrek`
+- `onderneming.startersaftrek`
+- `onderneming.ondernemersaftrek_totaal`
+- `onderneming.mkb_winstvrijstelling`
+- `onderneming.belastbare_winst`
+
+Prepare the figures in order: turnover minus deductible business costs, minus the investeringsaftrek that comes ten laste van de winst (including KIA), minus the ondernemersaftrek, then the MKB-winstvrijstelling on that result. `onderneming.winst_voor_ondernemersaftrek` is therefore the winst after investeringsaftrek but before ondernemersaftrek, and `onderneming.belastbare_winst` is that amount minus `onderneming.ondernemersaftrek_totaal` and `onderneming.mkb_winstvrijstelling`. Read every amount, percentage, and threshold from the reviewed knowledge notes under `_shared/knowledge/years/2025/entrepreneur/`; never paraphrase a rate from memory. The zelfstandigenaftrek and most ondernemersaftrek components require the urencriterium; record whether it is met.
+
+### Winst uit onderneming manual-review routing
+
+The workpack MUST route winst uit onderneming to manual review or unsupported when the case involves partnerships (VOF, maatschap, CV) or profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische ondernemingen, zeevarenden, staking or cessation events, herinvesteringsreserve, oudedagsreserve wind-down, or resultaat uit overige werkzaamheden. The ondernemersaftrek and MKB-winstvrijstelling are personal to the ondernemer and are not allocated between fiscal partners.
 
 ---
 
@@ -225,12 +263,15 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Every `assumption_id` referenced in the body appears in the Assumptions section
 - [ ] Every `evidence_id` referenced in the body exists in `workspace/taxpayer/evidence-index.yaml`
 - [ ] The Sources Used section lists exactly the IDs in `session-progress.yaml` → `sources_loaded`
+- [ ] Winst uit onderneming section uses the canonical "not applicable" line or the standard field set, with amounts read from the entrepreneur knowledge notes
+- [ ] Complex business facts (partnerships, DGA/BV winst, agrarisch, zeevarenden, staking, resultaat uit overige werkzaamheden) are routed to manual review or unsupported
 - [ ] Box 2 section uses the canonical "not applicable" line or the full 11-field set
 - [ ] Complex Box 2 facts are routed to manual review or unsupported
 - [ ] Box 3 section includes both fictitious and actual return notes, with rates quoted from the knowledge file
 - [ ] Credits screening lists each of the 4 credits with trigger result
 - [ ] Partner allocation is addressed (even if no partner — state "not applicable")
 - [ ] IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
+- [ ] Winst uit onderneming amounts (zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, KIA, urencriterium) are read from the entrepreneur knowledge notes, not paraphrased, and complex business forms are routed to manual review
 
 ### Cross-contamination
 

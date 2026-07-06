@@ -27,6 +27,7 @@ active_workflows:
       - skills/_shared/knowledge/years/2025/annual
       - skills/_shared/knowledge/years/2025/box2
       - skills/_shared/knowledge/years/2025/box3
+      - skills/_shared/knowledge/years/2025/entrepreneur
     output_paths:
       - workspace/annual/2025/return-pack.md
       - workspace/annual/2025/field-map.yaml
@@ -67,6 +68,29 @@ active_workflows:
       - bd_box3_2025_worked_examples
       - bd_fisin_box3_assets_debts_2025
       - bd_fisin_box3_actual_return_2025
+      - bd_ondernemer_criteria_2025
+      - bd_ondernemerscheck_2025
+      - bd_urencriterium_2025
+      - bd_ondernemersaftrek_2025
+      - bd_zelfstandigenaftrek_2025
+      - bd_startersaftrek_ao_2025
+      - bd_startersaftrek_2025
+      - bd_meewerkaftrek_2025
+      - bd_stakingsaftrek_2025
+      - bd_so_aftrek_2025
+      - bd_mkb_winstvrijstelling_2025
+      - bd_kia_2025
+      - bd_eia_2025
+      - bd_eia_mia_vamil_2025
+      - bd_zakelijke_kosten_2025
+      - bd_beperkt_aftrekbare_kosten_2025
+      - bd_werkruimte_2025
+      - bd_privevervoermiddel_2025
+      - bd_oudedagsreserve_2025
+      - bd_administratie_bewaren_2025
+      - bd_aangifte_ondernemers_2025
+      - bd_ondernemer_cijfers_aangifte_2025
+      - bd_ondernemer_voorbereiden_2025
       - bd_giften_aftrek_2025
       - bd_zorgkosten_overzicht_2025
       - bd_deduction_rate_cap_2025
@@ -181,15 +205,26 @@ blocked_workflows:
     may_prepare_workpack: false
     profile_candidates:
       - annual_2025_entrepreneurs
-    case_scope: entrepreneurs_and_business_profit
+    case_scope: complex_business_profit
     allowed_output: workspace/shared/missing-info.md
     reason: >-
-      Entrepreneur and business-profit cases need dedicated official sources,
-      local knowledge snapshots, field maps, and tests before a workpack can be
-      prepared.
+      Standard winst uit onderneming for an eenmanszaak/ZZP is now supported in
+      the active annual_2025 workflow (zelfstandigenaftrek, startersaftrek,
+      MKB-winstvrijstelling, kleinschaligheidsinvesteringsaftrek). This blocked
+      candidate is narrowed to the complex business forms that still need
+      dedicated official sources, snapshots, field maps, and tests before a
+      workpack can be prepared: partnerships (VOF, maatschap, CV) and their
+      profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische
+      ondernemingen (landbouwvrijstelling), zeevarenden, and complex-event
+      calculations such as staking, herinvesteringsreserve, and oudedagsreserve
+      wind-down. (The supported eenmanszaak flow still loads
+      bd_oudedagsreserve_2025 to explain to the user that FOR build-up was
+      abolished in 2023; only an actual reserve wind-down calculation is routed
+      to manual review.)
     unlock_condition: >-
-      Add reviewed Belastingdienst/wetten.overheid.nl entrepreneur sources,
-      update knowledge snapshots and field maps, then pass validation.
+      Add reviewed Belastingdienst/wetten.overheid.nl sources for partnership
+      profit allocation, DGA/agrarisch/zeevarenden regimes, and business-cessation
+      events, update knowledge snapshots and field maps, then pass validation.
 
   - id: annual_2025_nonresidents_c_form_roadmap
     workflow: annual_return

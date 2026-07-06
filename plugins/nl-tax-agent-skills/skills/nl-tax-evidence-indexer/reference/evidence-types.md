@@ -9,6 +9,7 @@ Use these canonical `evidence_type` tokens exactly as headings below. Dutch disp
 ## Contents
 
 - Income & Employment
+- Business / Enterprise (Winst uit onderneming)
 - Banking & Savings
 - Investments & Crypto
 - Box 2 / Substantial Interest
@@ -37,6 +38,50 @@ Use these canonical `evidence_type` tokens exactly as headings below. Dutch disp
 - **Typical fields:** uitkeringsinstantie (benefit provider: UWV, SVB, gemeente), soort uitkering (benefit type), bruto uitkering, ingehouden loonheffing, tax year.
 - **Workflow:** annual / provisional (both)
 - **Common naming patterns:** `uitkering*.pdf`, `uwv*.pdf`, `svb*.pdf`, `aow*.pdf`, `ww_*.pdf`, `wia_*.pdf`, `bijstand*.pdf`
+
+---
+
+## Business / Enterprise (Winst uit onderneming)
+
+Evidence for an IB-ondernemer with an eenmanszaak / ZZP. Used by the annual
+`nl-tax-winst` helper (Phase 2A). Collect only what the winst section needs; never
+gather the BSN.
+
+### winst_verlies_rekening
+- **Description:** Profit-and-loss statement (winst-en-verliesrekening) for the enterprise, usually from a boekhoudprogramma; the basis for winst uit onderneming.
+- **Typical fields:** omzet (turnover), inkoopwaarde, zakelijke kosten by category, afschrijvingen, resultaat (winst/verlies), tax year.
+- **Workflow:** annual
+- **Common naming patterns:** `winst*verlies*.pdf`, `resultatenrekening*.pdf`, `w&v*.pdf`, `p&l*.pdf`, `jaarrekening*.pdf`
+
+### balans
+- **Description:** Balance sheet (balans) for the enterprise: activa and passiva at year-end.
+- **Typical fields:** vaste activa, voorraden, vorderingen, liquide middelen, ondernemingsvermogen, voorzieningen, langlopende en kortlopende schulden, tax year.
+- **Workflow:** annual
+- **Common naming patterns:** `balans*.pdf`, `balance*sheet*.pdf`, `jaarrekening*.pdf`
+
+### factuur
+- **Description:** Sales or purchase invoice (factuur) supporting turnover or a deductible business cost.
+- **Typical fields:** factuurdatum, bedrag excl. btw, btw, bedrag incl. btw, tegenpartij, omschrijving.
+- **Workflow:** annual
+- **Common naming patterns:** `factuur*.pdf`, `invoice*.pdf`, `verkoop*.pdf`, `inkoop*.pdf`
+
+### urenadministratie
+- **Description:** Hours administration supporting the urencriterium for the zelfstandigenaftrek and related deductions; use the threshold in `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`.
+- **Typical fields:** date, hours, activity (direct and indirect business hours), running total.
+- **Workflow:** annual
+- **Common naming patterns:** `uren*.xlsx`, `uren*.csv`, `urenregistratie*.pdf`, `hours*.xlsx`
+
+### investering_factuur
+- **Description:** Purchase invoice for a bedrijfsmiddel, used for depreciation and the kleinschaligheidsinvesteringsaftrek (KIA).
+- **Typical fields:** aanschafdatum, aanschafwaarde, restwaarde, gebruiksduur, omschrijving bedrijfsmiddel.
+- **Workflow:** annual
+- **Common naming patterns:** `investering*.pdf`, `aanschaf*.pdf`, `activa*.pdf`
+
+### kvk_uittreksel
+- **Description:** KvK (Chamber of Commerce) extract confirming the registered eenmanszaak. Supports ondernemer status; it does not by itself make the taxpayer an ondernemer for the inkomstenbelasting.
+- **Typical fields:** KvK-nummer, handelsnaam, rechtsvorm (eenmanszaak), startdatum, activiteiten (SBI).
+- **Workflow:** annual
+- **Common naming patterns:** `kvk*.pdf`, `uittreksel*.pdf`, `handelsregister*.pdf`
 
 ---
 

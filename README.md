@@ -225,10 +225,12 @@ Upload the ZIP through the same **Browse plugins** modal. Versioning and release
 | Workflow | Year | Output |
 |---|:---:|---|
 | ✅ Annual income-tax return | **2025** | `workspace/annual/2025/return-pack.md` |
+| ✅ Winst uit onderneming (eenmanszaak / ZZP), within the annual return | **2025** | winst uit onderneming section of `workspace/annual/2025/return-pack.md` |
 | ✅ Voorlopige aanslag — request | **2026** | `workspace/provisional/2026/provisional-pack.md` + field map |
 | ✅ Voorlopige aanslag — change | **2026** | provisional pack, field map, delta summary |
 | ✅ Voorlopige aanslag — review | **2026** | provisional pack, review questions |
 | ✅ Voorlopige aanslag — stopzetten | **2026** | guided support checklist |
+| 🚫 Complex business forms (VOF / maatschap / CV, DGA / BV winst, agrarisch, zeevarenden, staking) | 2025 | *blocked — routed to manual review; only a straightforward eenmanszaak / ZZP is supported* |
 | 🚫 Annual income-tax return | 2026 | *blocked — filed in 2027; only the provisional 2026 flows are active for tax year 2026* |
 | 🚫 Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
 
@@ -257,7 +259,7 @@ flowchart TB
 
     subgraph helpers ["background helpers → workspace/shared/"]
         direction LR
-        b1["box1-home"] ~~~ b2["box2"] ~~~ b3["box3"] ~~~ pd["partner-deductions"]
+        b1["box1-home"] ~~~ b2["box2"] ~~~ b3["box3"] ~~~ wn["winst"] ~~~ pd["partner-deductions"]
     end
     annual <-.-> helpers
     prov <-.-> helpers
@@ -274,13 +276,13 @@ flowchart TB
     classDef file fill:#F6F1EB,stroke:#C9BBA8,color:#3B3B3B
     classDef endpoint fill:#2EA44F,stroke:#22863A,color:#fff
     classDef input fill:#6E56CF,stroke:#5A45B0,color:#fff
-    class intake,indexer,annual,prov,mapper,submit,b1,b2,b3,pd skill
+    class intake,indexer,annual,prov,mapper,submit,b1,b2,b3,wn,pd skill
     class profile,evidx,apack,ppack file
     class portal endpoint
     class chat,docs input
 ```
 
-Skills compose without hidden state: each one consumes upstream files and writes to a scoped path. Background helpers — `box1-home`, `box2`, `box3`, and `partner-deductions` — write **only** to `workspace/shared/`.
+Skills compose without hidden state: each one consumes upstream files and writes to a scoped path. Background helpers — `box1-home`, `box2`, `box3`, `winst`, and `partner-deductions` — write **only** to `workspace/shared/`.
 
 The skills are instructed to trace every value in a workpack to evidence, profile data, a calculation that cites a `source_id`, or a logged assumption. Review the workpack to confirm this before entry.
 
@@ -294,13 +296,14 @@ The full annotated `workspace/` tree and skill-authoring internals are documente
 |---|:---:|---|
 | `nl-tax-intake` | 🙋 user entry | Screen scope, route to a supported workflow, write `workspace/taxpayer/profile.yaml` |
 | `nl-tax-evidence-indexer` | 🙋 user entry | Hash and index local evidence files, classify without deciding tax treatment |
-| `nl-tax-annual-return` | 🙋 user entry | Prepare `workspace/annual/2025/return-pack.md` and an annual field map |
+| `nl-tax-annual-return` | 🙋 user entry | Prepare `workspace/annual/2025/return-pack.md` and an annual field map (incl. winst uit onderneming for an eenmanszaak / ZZP) |
 | `nl-tax-provisional-assessment` | 🙋 user entry | Prepare 2026 request, change, review, and stopzetten packages |
 | `nl-tax-field-mapper` | 🙋 user entry | Convert workpack findings into manual-entry field maps and review tables |
 | `nl-tax-submit-companion` | 🔒 manual-only | Produce a human checklist for official Belastingdienst submission |
 | `nl-tax-box1-home` | ⚙️ background | Summarize box 1 and eigen-woning facts into `workspace/shared/` |
 | `nl-tax-box2` | ⚙️ background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
 | `nl-tax-box3` | ⚙️ background | Classify assets and produce annual/provisional box 3 notes without mixing methods |
+| `nl-tax-winst` | ⚙️ background | Prepare winst uit onderneming notes for an eenmanszaak / ZZP into `workspace/shared/` (annual 2025 only) |
 | `nl-tax-partner-deductions` | ⚙️ background | Determine fiscal-partner and allocation notes for the main workpack |
 | `nl-tax-source-refresh` | 🛠️ developer | Validate and refresh local source snapshots and workflow declarations |
 

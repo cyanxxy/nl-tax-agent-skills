@@ -21,6 +21,7 @@ _shared/
         annual/              # Annual return 2025 knowledge (rates, credits, filing flow, deductions)
         box2/                # Box 2 2025 substantial-interest (aanmerkelijk belang) knowledge
         box3/                # Box 3 2025 knowledge (fictitious + actual return)
+        entrepreneur/        # Winst uit onderneming 2025 (eenmanszaak / ZZP: ondernemersaftrek, MKB-winstvrijstelling, investeringsaftrek)
       2026/
         provisional/         # Voorlopige aanslag 2026 knowledge (request, change, review, stopzetten)
   templates/                 # Shared output templates

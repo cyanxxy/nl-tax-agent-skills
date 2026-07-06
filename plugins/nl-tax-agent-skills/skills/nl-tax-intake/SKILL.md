@@ -82,7 +82,7 @@ Across one or more turns of conversation:
 If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack), then ask up to **four short screening questions** in one message:
 
 1. **Residency** - Were you a Dutch resident for the *full* of 2025 (and, if relevant, 2026)? Did you move to or from the Netherlands at any point during the year? (A mid-year move usually means an M-aangifte, which v1 does not cover -- see `reference/unsupported-cases.md` #1/#5.)
-2. **Taxpayer type** - Are you filing as an individual (not a BV / IB-onderneming as primary case)?
+2. **Taxpayer type** - Are you filing as an individual? Do you have income from your own business, and if so what legal form (eenmanszaak / ZZP, or a VOF / maatschap / BV)? (An eenmanszaak / ZZP is supported; partnerships and BVs route to a specialist.)
 3. **Living status** - Is this for a living taxpayer?
 4. **Workflow** - What do you want help with: the annual 2025 return, or a 2026 voorlopige aanslag (request / change / review / stopzetten)?
 
@@ -100,8 +100,9 @@ After each user reply:
 4. Decide the next thing to ask:
    - If any of the four screening answers are still missing, ask only those.
    - If the case is unsupported or terminal manual review (see below), say so clearly, close intake as terminal, and stop.
-   - If the workflow is identified, ask up to **two follow-ups**:
+   - If the workflow is identified, ask a short batch of follow-ups:
      - **Fiscal partner?** Yes / no. If yes, do NOT collect partner BSN - only whether a partner exists.
+     - **Winst uit onderneming + business-form screen (annual_2025 only):** If the user reports income from their own business, record it in the `business:` section. If the legal form is an **eenmanszaak / ZZP**, set `business.has_onderneming.value: true`, record `business.legal_form.value: eenmanszaak` and (when stated) `business.urencriterium_met` and `business.starter_status`, keep `workflow_candidate: annual_2025`, and continue intake -- the Winst uit onderneming phase (2A) prepares it. If the form is a **partnership (VOF / maatschap / CV), a BV / DGA-winst, an agrarische onderneming, or the taxpayer is a zeevarende**, if the income looks like **resultaat uit overige werkzaamheden** (a freelancer who is not an ondernemer voor de inkomstenbelasting), or if the case involves staking/cessation, herinvesteringsreserve, or oudedagsreserve wind-down: record `routing.complex_business_screening.value: manual_review`, set `manual_review.required.value: true`, record the trigger(s), set `workflow_candidate: annual_2025_entrepreneurs` (the blocked candidate) or `manual_review`, record it in `routing.blocked_profile_candidate`, set `intake_status: complete`, set `sections.intake.status: complete`, mirror the terminal candidate into `active_workflow`, leave `active_skill` empty, and stop. Winst uit onderneming is annual-only; never route it into a provisional flow.
      - **Box 2 existence + early complex Box 2 screen:** Ask one explicit yes/no rather than waiting for the user to volunteer jargon: "Do you own 5% or more of a company (a BV / aanmerkelijk belang)?" Record the yes/no answer in `box2.has_aanmerkelijk_belang` with provenance. If yes -- or if the user mentions a BV, DGA role, aanmerkelijk belang, dividends, a share sale, an own BV loan, or a Box 2 estimate -- ask before the workflow-specific anchor: "Does the Box 2 situation involve a share sale or valuation dispute, emigration/immigration, restructuring, inheritance or gift, non-arm's-length pricing, or borrowing from your own BV?" If yes or unclear, record `routing.complex_box2_screening.value: manual_review`, set `manual_review.required.value: true`, record the trigger(s), set `workflow_candidate: manual_review`, set `intake_status: complete`, set `sections.intake.status: complete`, set `active_workflow: manual_review`, leave `active_skill` empty, and stop. `manual_review` is terminal: do not call annual/provisional workflows and do not leave it as an unknown workflow candidate.
      - **Workflow-specific anchor:**
        - `annual_2025` -> "Do you already have any documents (jaaropgaaf, bankafschriften, WOZ, mortgage jaaroverzicht), or shall we collect amounts step by step in chat?"
@@ -162,11 +163,11 @@ For every fact you record, the user may take one of three paths:
 
 ## Unsupported cases
 
-Read `reference/unsupported-cases.md`. If you detect an unsupported case (part-year resident, IB-onderneming as primary, deceased taxpayer, M-biljet required, etc.):
+Read `reference/unsupported-cases.md`. If you detect an unsupported case (part-year resident, a complex business form, deceased taxpayer, M-biljet required, etc.) — note that a standard eenmanszaak / ZZP is supported and is NOT an unsupported case:
 
 1. Tell the user clearly and kindly that v1 does not cover their case.
 2. Set the most specific terminal or blocked profile candidate in `workflow_candidate` when one matches the case:
-   - `annual_2025_entrepreneurs` for IB-onderneming / entrepreneur profit cases
+   - `annual_2025_entrepreneurs` for complex business-profit cases only — partnerships (VOF / maatschap / CV), DGA / BV winst, agrarische ondernemingen, zeevarenden, and staking/cessation events. A straightforward eenmanszaak / ZZP is supported: route it to `annual_2025` with `business.has_onderneming: true`, not here.
    - `annual_2025_nonresident_c_form` for nonresident C-biljet cases
    - `annual_2025_migration_m_form` for immigration/emigration or M-aangifte cases
    - `annual_2025_deceased_f_form` for deceased-taxpayer F-biljet cases

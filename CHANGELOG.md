@@ -5,6 +5,46 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] — 2026-07-04
+
+Entrepreneur (winst uit onderneming) support for the 2025 annual return. A
+straightforward IB-ondernemer with an eenmanszaak (the usual ZZP legal form) is
+now a supported `annual_2025` case; complex business forms remain out of scope.
+Every 2025 figure was researched and adversarially verified against
+belastingdienst.nl and wetten.overheid.nl. Plugin manifests are bumped from
+`0.1.5` to `0.1.6`.
+
+### Added
+
+- **Winst uit onderneming knowledge pack** — new `_shared/knowledge/years/2025/
+  entrepreneur/` directory with six reviewed rule notes (ondernemer criteria and
+  urencriterium, ondernemersaftrek, MKB-winstvrijstelling, investeringsaftrek,
+  winst/kosten/administratie, and the entrepreneur aangifte), backed by 23 new
+  Belastingdienst source-register entries.
+- **`nl-tax-winst` background helper** — internal, annual-only helper that
+  prepares the winst uit onderneming section (turnover → investeringsaftrek
+  such as the KIA → ondernemersaftrek → MKB-winstvrijstelling), mirroring the
+  box2/box3 helper contract.
+- **Annual workflow** — new Phase 2A (Winst uit onderneming compilation), a new
+  "Winst uit onderneming notes" output section (the workpack now has 20 required
+  sections), and a `Winst uit onderneming` section in the annual field-map
+  reference (`onderneming.*` fields, all conditional).
+- **Intake routing** — a `business` profile section and a business-form screen
+  that routes an eenmanszaak / ZZP into `annual_2025` while keeping partnerships
+  (VOF/maatschap/CV), DGA/BV winst, agrarisch, zeevarenden, and cessation events
+  on the narrowed blocked `annual_2025_entrepreneurs` candidate.
+- **Evidence types** — a Business / Enterprise category (winst-en-verliesrekening,
+  balans, factuur, urenadministratie, investering-factuur, KvK-uittreksel).
+- **Tests and eval** — `tests/test_entrepreneur_unlock.py` plus a positive
+  `annual/entrepreneur-zzp` fixture and offline-dataset case.
+
+### Changed
+
+- **Provisional guard** — `nl-tax-provisional-assessment` now explicitly refuses
+  to prepare winst uit onderneming; entrepreneur support is annual-2025 only.
+- **Blocked roadmap** — `annual_2025_entrepreneurs_roadmap` is narrowed from all
+  business profit to complex business forms only.
+
 ## [0.1.5] — 2026-07-03
 
 Bug fixes from a two-model code review (Claude + Codex) of all Python scripts,

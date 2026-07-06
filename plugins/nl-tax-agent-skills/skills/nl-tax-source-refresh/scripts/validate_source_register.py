@@ -31,6 +31,7 @@ VALID_SKILL_NAMES = {
     "nl-tax-box1-home",
     "nl-tax-box2",
     "nl-tax-box3",
+    "nl-tax-winst",
     "nl-tax-partner-deductions",
     "nl-tax-field-mapper",
     "nl-tax-submit-companion",
