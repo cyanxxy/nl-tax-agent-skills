@@ -58,10 +58,15 @@ The LLM owns:
 - workpack assembly and field-map preparation;
 - explaining what the taxpayer must review.
 
-Python helpers remain deterministic. They may hash, validate schemas, normalize
-already-classified input, or check arithmetic. They do not decide eligibility,
-classify ambiguous tax treatment, invent missing values, optimize allocations,
-or claim that an output matches a live portal.
+Python is optional at runtime. The complete conversational workflow, workpack,
+and field map must remain usable when Cowork exposes no Python interpreter or
+cannot mount bundled scripts into the shell environment.
+
+Retained Python helpers are deterministic post-write checks. They may hash,
+validate schemas, normalize already-classified input, or recompute simple
+source-pinned arithmetic. They do not decide eligibility, classify ambiguous
+tax treatment, invent missing values, optimize allocations, generate the
+workpack, or claim that an output matches a live portal.
 
 The taxpayer or an authorized representative alone opens Mijn Belastingdienst,
 enters values, reviews the live calculation, signs, and submits. The
@@ -120,9 +125,9 @@ Use progressive disclosure:
 Documentation describes both current local and remote Cowork sessions. It does
 not claim that Cowork is always a local Apple VM, that Cowork is no-code, that
 bundled scripts are unsupported, or that plugin-cache visibility follows an
-undocumented rule. Python helpers are optional and require Python 3.10 or newer;
-the LLM workflow continues with documented manual checks when they are
-unavailable.
+undocumented rule. Optional Python helpers require Python 3.10 or newer; their
+absence never blocks the LLM workflow. The output records either
+`checked_by_script` or `checked_by_agent` so the review trail is explicit.
 
 Cowork is labeled supported only for behavior verified by first-party Claude
 validation plus the repository's behavioral cases. Exact attachment mounts,
@@ -221,7 +226,35 @@ Zvw, cessation profit, or final tax.
 
 Primary source: <https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting>
 
-## Deterministic-helper correctness
+## Optional Python tooling
+
+The current 18-script surface is reduced conceptually to four optional
+components:
+
+1. evidence file inventory and hashing;
+2. field-map validation and human-readable rendering;
+3. small, source-pinned arithmetic checks for supported Box 1/2/3 and partner
+   cases;
+4. developer-only source/workflow consistency checks.
+
+Remove the heuristic `summarize_box1_inputs.py`, `summarize_box2_inputs.py`, and
+`classify_box3_assets.py` runtime roles. Evidence interpretation, missing-item
+reasoning, and Box 3 classification belong to the LLM. Compatibility shims are
+unnecessary because these scripts are internal and the public skill/output
+contracts remain stable.
+
+Fold Box 2 input validation into the Box 2 arithmetic checker so calculation
+cannot bypass normalization. Keep separate arithmetic modules only where tax
+year or method separation makes a single module harder to audit. Developer
+source validators may remain separate files but are one maintenance component,
+not taxpayer workflow dependencies.
+
+When Python is unavailable, each skill follows a concise equivalent checklist
+from its reference contract. It does not ask the user to install Python and does
+not downgrade an otherwise complete workpack solely because a script could not
+run.
+
+### Deterministic correctness requirements
 
 - Box 3 trusted totals include only accepted, unambiguous, finite,
   non-negative rows. A generic loan is `unknown` until the LLM establishes
@@ -236,7 +269,8 @@ Primary source: <https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaang
   facts are present.
 - Box 1 completeness counts only reviewed, successfully extracted evidence for
   the correct tax year. Failed, deferred, indexed-only, or wrong-year records
-  remain gaps.
+  remain gaps. This decision is made by the LLM from the evidence index after
+  the heuristic summarizer is removed.
 - Validators return clear errors for ordinary malformed artifact shapes touched
   by these tax-correctness paths. Security/resource-hardening cases listed in
   the excluded scope are not expanded.
@@ -275,6 +309,8 @@ Required corrections include:
   `cd` in the ZIP instructions;
 - remove legacy-command precedence claims;
 - align Python documentation and CI with Python 3.10+;
+- state throughout that Python is optional in Cowork and is never a prerequisite
+  for completing a taxpayer workflow;
 - add winst to contributor layout and remove stale 0.1.2 examples;
 - mark `llm-agent-skill-plan.md` as historical and provide an accurate current
   completion/status matrix;
@@ -307,7 +343,11 @@ Required deterministic tests:
 - Box 3 rejected-row totals and ambiguous-loan behavior;
 - strict partner booleans;
 - Box 2 validated-calculator contract;
-- Box 1 evidence status/year completeness;
+- Box 1 evidence status/year completeness through LLM workflow contracts rather
+  than a summarizer script;
+- absence of the three retired heuristic script roles and references;
+- parity between scripted and documented manual checks for retained optional
+  validators;
 - source metadata field semantics and legal attribution;
 - Python 3.10 compilation and documentation parity;
 - fixture, offline-dataset, and behavioral-benchmark case-set equality;
