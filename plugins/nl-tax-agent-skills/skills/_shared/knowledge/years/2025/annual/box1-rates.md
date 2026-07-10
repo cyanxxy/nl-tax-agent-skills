@@ -1,10 +1,10 @@
 # Rule note: Box 1 income tax rates for 2025
 
-source_ids: bd_box1_rates_2025, bd_bijtelling_auto_2025
+source_ids: bd_box1_rates_2025, bd_bijtelling_auto_2025, bd_stock_options_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
@@ -100,7 +100,13 @@ Box 1 taxable income includes:
 
 If a taxpayer privately uses a company car or a car that belongs to business
 assets, a private-use addition may be included in taxable Box 1 income unless
-the taxpayer can show no more than 500 private kilometres for the year.
+the taxpayer can show **500 private kilometres or fewer** for the year.
+
+Before presenting any company-car rate in a taxpayer workpack, confirm the date
+of first admission, vehicle regime, emissions/fuel facts, catalogue value, and
+private-use evidence. If those facts are not known, withhold the rate and mark
+the company-car outcome as manual review. The percentages below are reference
+rules for cars first admitted in 2025, not a default for an unidentified car.
 
 For cars first admitted in 2025, the reviewed official percentages are:
 
@@ -115,6 +121,19 @@ For cars first admitted in 2025, the reviewed official percentages are:
 In standard employee cases this amount is normally already included in the
 jaaropgaaf taxable wage. If it appears missing, disputed, or not supported by
 the employer statement, flag it for manual review.
+
+## Stock options and tradability
+
+Claim-specific provenance: `bd_stock_options_2025`, the official Belastingdienst
+*Handboek Loonheffingen 2025*, version March 2025, section on aandelenopties
+([official PDF](https://download.belastingdienst.nl/belastingdienst/docs/handboek-loonheffingen-lh0221t51d.pdf)).
+
+For employee stock options, tradability is the default tax point under the
+reviewed rule: by default, taxation follows when the acquired shares become
+tradable. Immediate-tradability cases and an election to use exercise as the
+tax point require the agent to collect the employer statement and mark the
+result for manual review. Do not infer the tax point merely from an exercise
+date.
 
 ## Notes
 

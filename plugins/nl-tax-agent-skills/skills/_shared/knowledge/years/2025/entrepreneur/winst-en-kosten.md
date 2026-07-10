@@ -4,7 +4,7 @@ source_ids: bd_zakelijke_kosten_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werk
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-06"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
@@ -62,13 +62,24 @@ when BOTH tests are met:
 ## Privegebruik auto van de zaak (art. 3.20)
 
 When a car in the ondernemingsvermogen is also available privately, add a
-bijtelling to the winst. For 2025 the standard bijtelling is **22%** of the
+bijtelling to the winst unless a rittenregistratie shows **500 private kilometres or fewer** in the year; commuting counts as business. Before the
+agent presents any company-car rate, confirm the date of first admission,
+vehicle regime, emissions/fuel facts, catalogue value, and private-use
+evidence. If those facts are not known, withhold the rate and mark the outcome
+as manual review. For a car confirmed as first admitted in 2025, the standard bijtelling is **22%** of the
 cataloguswaarde, with a **17%** rate for zero-emission cars up to a cataloguswaarde
 of EUR 30,000 (22% above that; no cap for hydrogen or solar-cell cars). A
 youngtimer (first registered more than 15 years ago) uses **35% of the economic
-value** instead of the catalogue value. There is no bijtelling only if a
-rittenregistratie shows 500 km or less private use in the year; commuting counts
-as business. See bd_bijtelling_auto_2025 for the full rules.
+value** instead of the catalogue value. See bd_bijtelling_auto_2025 for the full
+rules.
+
+## AOV premiums
+
+A qualifying private AOV (arbeidsongeschiktheidsverzekering) belongs to the
+**private income-provision category**, **not ordinary business costs**. The
+agent must not subtract the premium in the winst computation. Inventory the
+policy and insurer's annual statement; ambiguous policy types and exact
+deductibility remain manual review in Mijn Belastingdienst.
 
 ## Private vehicle used for business
 

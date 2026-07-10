@@ -136,6 +136,10 @@ Filing status: on time. No late-filing exposure.
 
 ### Pension income
 
+[Use the **payment-year pension statement** for gross taxable pension and
+withholding. A UPO is **accrual or projection context only** and is not
+payment-year evidence.]
+
 | Provider | Type | Gross pension | Loonheffing withheld | Src (gross) | Src (loonheffing) |
 |----------|------|---------------|----------------------|-------------|-------------------|
 | [name]   | [employer pension / AOW] | EUR [amount] | EUR [amount] | [F/U/A/?] | [F/U/A/?] |
@@ -144,11 +148,35 @@ Filing status: on time. No late-filing exposure.
 
 ### Benefit income (uitkeringen)
 
+[AKW is **not taxable box 1 income**; if relevant, record it as household
+context outside the taxable total. For ZW (Ziektewet) and WAZO, the
+arbeidskorting outcome is **conditional** and depends on the employment
+relationship (dienstbetrekking). Ask whether the taxpayer was still employed
+and mark unresolved cases for manual review.]
+
 | Provider | Benefit type | Gross amount | Loonheffing withheld | Src (gross) | Src (loonheffing) |
 |----------|--------------|--------------|----------------------|-------------|-------------------|
-| [UWV/SVB] | [WW/WIA/WAO/ZW/Anw/AKW] | EUR [amount] | EUR [amount] | [F/U/A/?] | [F/U/A/?] |
+| [UWV/SVB] | [WW/WIA/WAO/ZW/Anw] | EUR [amount] | EUR [amount] | [F/U/A/?] | [F/U/A/?] |
 
 [Add rows for each benefit. If no benefit income, state "Not applicable."]
+
+Non-taxable household context — AKW (kinderbijslag): [received/not received/not
+relevant] -- Src: [F/U/A/?]. Do not include this line in taxable benefit or box
+1 totals.
+
+### Company car and stock options review
+
+- Company car (auto van de zaak / bijtelling): [yes/no]
+- Evidence of **500 private kilometres or fewer**: [confirmed/not confirmed]
+- Date of first admission and vehicle regime: [confirmed facts/missing]
+- Rate handling: [only show after the first-admission, regime, emissions/fuel,
+  catalogue-value, and private-use facts are confirmed; otherwise withhold the
+  rate and mark manual review]
+- Stock options: [yes/no]
+- Tradability/default tax point: [date/evidence/manual review]. **Tradability**
+  is the **default tax point**; by default, taxation follows when acquired
+  shares become tradable. Immediate-tradability cases and any election to use
+  exercise require the employer statement and manual review.
 
 ### Other box 1 income
 
@@ -383,7 +411,10 @@ Note: Box 2 allocation and any reviewed calculation remain preparation notes for
 
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
-[If all data is missing: "Actual return data not yet available. The fictitious method will apply by default. To evaluate the actual return option, provide the data listed above."]
+[Actual-return subsection status: `complete` when all required evidence is
+available; otherwise `deferred/manual review`. If deferred, retain both method
+explanations and list the evidence needed above. Do not imply that both
+calculations were completed.]
 
 ### Comparison: fictitious vs actual
 
@@ -426,13 +457,19 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
 [If not applicable: "Not applicable -- no qualifying medical expenses claimed."]
 
+Inventory potentially qualifying evidence only. Reimbursed costs, premiums,
+and the statutory excess are excluded. **Wheelchair: not deductible**; scooters
+and home modifications are also excluded for 2025. Do not treat the inventory
+as a finished deduction calculation.
+
 | Expense type | Gross amount | Reimbursed by insurance | Net qualifying amount | Src |
 |-------------|-------------|------------------------|----------------------|-----|
 | [type] | EUR [amount] | EUR [amount] | EUR [amount] | [F/U/A/?] |
 
 - Total qualifying expenses: EUR [amount] -- Src: C:sum
 - Drempelinkomen (combined): EUR [amount] -- Src: C:from_income
-- Zorgkosten threshold manual review: [required unless the exact reviewed 2025 threshold table is registered and all required inputs are present]
+- Zorgkosten **threshold: manual review** [required unless the complete reviewed
+  2025 threshold and multiplier table is registered and all inputs are present]
 - Deductible zorgkosten result: [manual review required / EUR amount with source-backed calculation] -- Src: C:threshold_calc
 
 ### Giften (charitable donations)
@@ -445,7 +482,11 @@ Note: Kinderalimentatie (child maintenance) is NOT deductible.
 |-------------------|--------------|----------------|-----|
 | [name] | EUR [amount] | [notarial deed / written agreement] | [F/U/A/?] |
 
-Total periodieke giften: EUR [amount] -- Src: C:sum (fully deductible, no threshold or cap)
+Total periodieke giften before the annual maximum/transition review: EUR [amount] -- Src: C:sum
+
+- Periodic-gift maximum for 2025: **EUR 1.5 million**, subject to the reviewed
+  **transition** rule.
+- Agreement date and transition outcome: [date / reviewed / manual review]
 
 #### Gewone giften (incidental)
 
@@ -478,6 +519,10 @@ Total periodieke giften: EUR [amount] -- Src: C:sum (fully deductible, no thresh
 |-----------|--------|-----|
 | [e.g., restant persoonsgebonden aftrek prior years] | EUR [amount] | [F/U/A/?] |
 
+- AOV: [policy type / insurer statement / manual review]. A qualifying private
+  AOV premium belongs to the **private income-provision category**, **not ordinary business costs**. Do not subtract it from business profit; ambiguous
+  policy types and exact deductibility remain manual review.
+
 ### Deductions total
 
 | Deduction category | Amount | Src |
@@ -495,9 +540,11 @@ Allocation order: box 1 first, then box 3, then box 2.
 
 [For each of the four credits below, emit one line: either `Triggered: <reason>` (and flag for manual review in Mijn Belastingdienst) or `Not applicable: <reason>`. Read household composition from workspace/taxpayer/profile.yaml. Do not calculate amounts.]
 
-- **IACK (inkomensafhankelijke combinatiekorting)** -- [Triggered: child born [DOB], 12 or under on 1 Jan 2025; verify arbeidsinkomen threshold in Mijn Belastingdienst] | [Not applicable: no child under 12 on 1 Jan 2025] -- Src: [profile.household.children]
+- **IACK (inkomensafhankelijke combinatiekorting)** -- [Triggered: child born [DOB], younger than 12 on 1 January 2025; verify arbeidsinkomen threshold in Mijn Belastingdienst] | [Not applicable: no child younger than 12 on 1 January 2025] -- Src: [profile.household.children]
 - **Ouderenkorting** -- [Triggered: AOW age reached in 2025; verify amount in Mijn Belastingdienst] | [Not applicable: not AOW age in 2025] -- Src: [profile.person.aow_age_in_tax_year]
-- **Alleenstaande-ouderenkorting** -- [Triggered: AOW age + single_parent_status + no fiscal partner; verify in Mijn Belastingdienst] | [Not applicable: one or more conditions not met] -- Src: [profile.person + profile.household.single_parent_status + profile.partner]
+- **Alleenstaande-ouderenkorting** -- [Triggered: entitled to an AOW benefit for
+  a single person; verify in Mijn Belastingdienst] | [Not applicable: no such AOW
+  entitlement] -- Src: [payment-year AOW entitlement evidence / U]
 - **Jonggehandicaptenkorting** -- [Triggered: Wajong / young-disabled status confirmed; verify in Mijn Belastingdienst] | [Not applicable: no Wajong / young-disabled status] -- Src: [U]
 
 ## Fiscal partner notes

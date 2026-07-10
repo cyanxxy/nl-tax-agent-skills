@@ -64,8 +64,8 @@ Before generating any workpack content, verify all prerequisites are met.
 
 ### 1.7 Household composition
 
-- Read `profile.yaml` → `person.date_of_birth`, `partner.partner_date_of_birth`, `household.children_at_home_count`, `household.children`, `household.single_parent_status`, `person.aow_age_in_tax_year`, `partner.partner_aow_age_in_tax_year`
-- If any of these are missing or `source: unknown` and the workflow needs them for credits screening (Phase 5.5), ask the user to fill them in now, in one batch of up to 3 questions. Do not ask for BSNs; ask for dates of birth and a yes/no on single-parent status.
+- Read `profile.yaml` → `person.date_of_birth`, `partner.partner_date_of_birth`, `household.children_at_home_count`, `household.children`, `person.aow_age_in_tax_year`, `partner.partner_aow_age_in_tax_year`
+- If any of these are missing or `source: unknown` and the workflow needs them for credits screening (Phase 5.5), ask the user to fill them in now, in one batch of up to 3 questions. Do not ask for BSNs.
 - Persist answers back to `profile.yaml` with `source: user_chat` and a stated_at date. Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml`.
 
 ### 1.8 Evidence index exists
@@ -84,7 +84,7 @@ Before generating any workpack content, verify all prerequisites are met.
 
 Load every file in this list and append its `source_id` to `session-progress.yaml` → `sources_loaded` as you go. If any fails to load, stop and tell the user; do not paraphrase rates from memory.
 
-- `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025)*
+- `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025, bd_bijtelling_auto_2025, bd_stock_options_2025)*
 - `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_heffingskortingen_how_2025, bd_arbeidsinkomen_definition_2025)*
 - `_shared/knowledge/years/2025/annual/own-home.md` *(bd_own_home_deduction_cap_2025)*
 - `_shared/knowledge/years/2025/annual/deductions.md` *(bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025)*
@@ -146,7 +146,9 @@ Compile all box 1 income from evidence and user-provided data.
 
 ### 2.2 Pension income
 
-- Match pension jaaroverzicht evidence items
+- Match the **payment-year pension statement** showing taxable pension paid and
+  withholding. A UPO is **accrual or projection context only** and must not be
+  used as payment or withholding evidence.
 - For each pension provider: extract gross pension, loonheffing withheld
 - Distinguish between employer pension (pensioenuitkering) and AOW (from SVB)
 - Note whether the taxpayer is at or above AOW age (affects tax rates and credits) — use `profile.yaml` → `person.aow_age_in_tax_year`
@@ -154,9 +156,25 @@ Compile all box 1 income from evidence and user-provided data.
 ### 2.3 Benefit income (uitkeringen)
 
 - Match UWV and SVB jaaropgaven evidence items
-- Identify benefit type: WW, WIA/WAO, ZW, Anw, AKW
+- Identify benefit type: WW, WIA/WAO, ZW, Anw, AKW. AKW is **not taxable box 1 income**; retain it only as household context and exclude it from taxable
+  totals.
 - Extract gross benefit amount and loonheffing withheld
-- Note that benefit income qualifies for the algemene heffingskorting but NOT the arbeidskorting
+- Do not apply a blanket arbeidskorting rule to benefits. For ZW (Ziektewet) and
+  WAZO, eligibility is **conditional** and depends on the employment
+  relationship (dienstbetrekking). Ask whether the taxpayer was still employed
+  when the benefit was received; unresolved cases remain manual review.
+
+### 2.3A Company car and stock options
+
+- For a company car (auto van de zaak / bijtelling), record whether the taxpayer
+  can substantiate **500 private kilometres or fewer**. Confirm the date of
+  first admission, vehicle regime, emissions/fuel facts, catalogue value, and
+  private-use evidence. If these are not known, withhold the rate and keep the
+  outcome as manual review; do not present a default rate.
+- For stock options, **tradability** is the **default tax point**. By default,
+  taxation follows when acquired shares become tradable. Immediate-tradability
+  cases and any election to use exercise as the tax point require the employer
+  statement and manual review.
 
 ### 2.4 Other box 1 income
 
@@ -378,6 +396,10 @@ Common failure: do NOT apply heffingsvrij vermogen before calculating belastbaar
 
 ### 4.4 Actual return data collection
 
+Always explain the actual return (werkelijk rendement) alongside the fictitious
+(forfaitair) method and offer to collect the evidence below. The actual-return
+subsection is never silently omitted.
+
 Follow the data requirements from `actual-return.md`:
 1. Actual interest received on bank accounts during 2025
 2. Dividends received (before dividend withholding tax)
@@ -391,7 +413,11 @@ Do not deduct custody fees, transaction costs, management fees, maintenance cost
 
 Do not deduct heffingsvrij vermogen from actual return. If fiscal partners choose a box 3 allocation, apply the same allocation percentage to actual return for the comparison.
 
-If the taxpayer cannot provide actual return data: note that the fictitious method will apply by default.
+If the taxpayer provides the complete evidence, mark the actual-return
+subsection `complete` and compare both methods. If the taxpayer declines or the
+facts remain missing, record that subsection as `deferred/manual review` while
+retaining both method explanations. Do not claim that both calculations were
+completed when one was deferred.
 
 ### 4.5 Comparison: fictitious vs actual
 
@@ -422,8 +448,11 @@ Compile all deductible items from evidence and user-provided data.
 
 ### 5.2 Specifieke zorgkosten (medical expenses)
 
-- Collect qualifying medical expenses not reimbursed by insurance
-- Apply the zorgkosten drempel only if the exact reviewed 2025 table has been added to the source pack; otherwise flag the deductible amount for manual review
+- Inventory potentially qualifying medical expenses. Reimbursed costs,
+  premiums, and the statutory excess are excluded. **Wheelchair: not deductible**; scooters and home modifications are also not deductible
+  healthcare costs for 2025.
+- Apply the zorgkosten drempel and any multiplier only if the complete reviewed
+  2025 table and all inputs are present; otherwise record **threshold: manual review** and do not calculate a deductible result.
 - Drempelinkomen = combined income of both partners before persoonsgebonden aftrek
 - Only the amount above the drempel is deductible
 - Note the multiplier for certain specific zorgkosten categories
@@ -431,8 +460,11 @@ Compile all deductible items from evidence and user-provided data.
 
 ### 5.3 Giften (charitable donations)
 
-- Distinguish between periodieke giften (no threshold, no cap) and gewone giften (with threshold and cap)
-- Periodieke giften: verify notarial deed or written agreement for 5+ years
+- Distinguish between periodieke giften (no threshold; **EUR 1.5 million** 2025
+  cap subject to the reviewed **transition** rule) and gewone giften (with
+  threshold and cap).
+- Periodieke giften: verify the notarial deed or written agreement for 5+ years,
+  record its date, and route uncertain transition-rule facts to manual review.
 - Gewone giften: threshold 1% of drempelinkomen (min EUR 60), cap 10% of drempelinkomen
 - Cultural ANBI multiplier: 1.25x up to EUR 1,250 additional
 - Verify ANBI registration of recipient organizations
@@ -447,6 +479,9 @@ Compile all deductible items from evidence and user-provided data.
 
 ### 5.5 Other deductions
 
+- A qualifying private AOV premium belongs to the **private income-provision category**, **not ordinary business costs**. Inventory the policy and annual
+  insurer statement; ambiguous policy types and exact deductibility are manual
+  review. Do not reduce business profit by the AOV premium.
 - Studiekosten / scholingsuitgaven: collect only as a manual-review item unless a reviewed official source is added
 - Restant persoonsgebonden aftrek from prior years
 - Any other qualifying deductions from the profile or evidence
@@ -465,7 +500,7 @@ Use household composition from `profile.yaml` to surface which credits apply. Fo
 
 ### 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
 
-Triggered when the taxpayer (or fiscal partner with lower arbeidsinkomen) had at least one child registered at the taxpayer's address who turned 12 or younger on 1 January 2025, AND the taxpayer met the minimum arbeidsinkomen threshold.
+Triggered when the taxpayer (or fiscal partner with lower arbeidsinkomen) had at least one child registered at the taxpayer's address who was **younger than 12 on 1 January 2025**, AND the taxpayer met the minimum arbeidsinkomen threshold.
 
 - Check `profile.yaml` → `household.children` for DOBs.
 - If at least one child satisfies the age condition, mark IACK as a manual-review item; do not calculate the amount.
@@ -479,7 +514,10 @@ Triggered when the taxpayer reaches AOW age in 2025.
 
 ### 5.5.3 Alleenstaande-ouderenkorting
 
-Triggered when the taxpayer reaches AOW age AND has `single_parent_status: true` AND has no fiscal partner.
+Triggered only when the taxpayer is **entitled to an AOW benefit for a single
+person**. Do not derive this from a household profile flag, living arrangement, or
+fiscal-partner status; ask for the AOW entitlement and keep uncertain cases as
+manual review.
 
 ### 5.5.4 Jonggehandicaptenkorting
 

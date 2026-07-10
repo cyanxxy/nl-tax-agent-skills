@@ -43,7 +43,12 @@ The persoonsgebonden aftrek is freely allocatable between fiscal partners, but i
 
 ### Giften (charitable donations)
 
-- **Periodieke giften (periodic gifts):** require a qualifying notarial deed or written agreement. For whole-year fiscal partners, treat gifts as allocatable unless the official form indicates otherwise.
+- **Periodieke giften (periodic gifts):** require a qualifying notarial deed or
+  written agreement. For 2025 the combined maximum is **EUR 1.5 million**,
+  subject to the reviewed **transition** rule for qualifying older agreements.
+  Record the agreement date and route uncertain transition facts to manual
+  review. For whole-year fiscal partners, treat gifts as allocatable unless the
+  official form indicates otherwise.
 - **Gewone giften / eenmalige giften (incidental gifts):** can be allocated freely between whole-year fiscal partners.
 - The drempel (1% of drempelinkomen) and maximum (10% of drempelinkomen) for incidental gifts are calculated on the combined drempelinkomen of both partners.
 - Cultural ANBI multiplier (1.25x, max EUR 1,250 increase) applies before the drempel and cap calculation.

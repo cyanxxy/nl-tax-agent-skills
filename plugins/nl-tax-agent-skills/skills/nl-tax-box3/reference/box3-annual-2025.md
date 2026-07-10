@@ -4,7 +4,7 @@ source_ids: bd_box3_2025_calc, bd_box3_2025_actual_return, bd_fisin_box3_actual_
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Asset Classification
@@ -58,3 +58,14 @@ review_status: reviewed
 - The annual return allows choosing between the fictitious return method and the actual return method (werkelijk rendement)
 - Werkelijk rendement is calculated without heffingsvrij vermogen and follows the same partner allocation percentage as the joint grondslag sparen en beleggen
 - Fictitious-return workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
+
+## Required two-method workpack treatment
+
+Every annual 2025 workpack explains both the fictitious (forfaitair) method and
+the actual return (werkelijk rendement) method, and offers to collect the
+actual-return evidence needed for comparison. If the taxpayer provides the
+complete evidence, mark the actual-return subsection `complete` and show the
+comparison. If the taxpayer declines or the facts remain missing, keep the
+fictitious explanation and record the actual-return subsection as
+`deferred/manual review`; do not silently omit it or claim that both methods
+were completed.

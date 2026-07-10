@@ -81,6 +81,10 @@ Prepare the figures in this order and show each step:
 - Werkruimte in a private-asset home, the private-use-of-a-business-car
   bijtelling, and the private-vehicle kilometre deduction are prepared from the
   knowledge notes; flag anything ambiguous for manual review.
+- For a company car, record whether the taxpayer can substantiate **500 private kilometres or fewer**. Confirm the date of first admission, vehicle regime,
+  emissions/fuel facts, catalogue value, and private-use evidence before
+  showing a rate. When these are not known, withhold the rate and keep the
+  bijtelling as manual review.
 
 ## Evidence
 

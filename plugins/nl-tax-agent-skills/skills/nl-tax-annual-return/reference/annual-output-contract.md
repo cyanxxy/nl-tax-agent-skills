@@ -167,7 +167,11 @@ The box 3 section MUST include notes for BOTH methods:
 1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, aftrekbare schulden, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax amount. Use the rates from `_shared/knowledge/years/2025/box3/fictitious.md` — never paraphrase from memory.
 2. **Actual return (werkelijk rendement) data collection:** Data gathered or gaps identified for interest, dividends, rental income, capital gains/losses, unrealized value changes, interest paid on box 3 debts, and qualifying WOZ-value investment correction.
 
-If the taxpayer has no actual return data available, the workpack must still include the actual return section with a note that the fictitious method will apply by default and a list of data that would be needed to evaluate the actual return option.
+If all required actual-return evidence is available, the workpack records that
+subsection as `complete`. If the taxpayer declines or evidence is missing, the
+workpack still includes both method explanations, lists the evidence needed,
+and records the actual-return subsection as `deferred/manual review`. It must
+not imply that both calculations were completed.
 
 ### Comparison section
 
@@ -186,9 +190,11 @@ If fiscal partners are present, the box 3 section must include:
 
 The Credits screening section MUST list, for each of the four manual-review credits, whether the taxpayer's household composition triggers the credit. Compute the trigger from `profile.yaml` → `person`, `partner`, and `household`:
 
-- **IACK (inkomensafhankelijke combinatiekorting)** — triggered when the taxpayer (or their partner with lower arbeidsinkomen) has at least one child under 12 on 1 January of the tax year and meets the arbeidsinkomen threshold.
+- **IACK (inkomensafhankelijke combinatiekorting)** — triggered when the taxpayer (or their partner with lower arbeidsinkomen) has at least one child younger than 12 on 1 January 2025 and meets the arbeidsinkomen threshold.
 - **Ouderenkorting** — triggered when the taxpayer reaches AOW age in the tax year.
-- **Alleenstaande-ouderenkorting** — triggered when the taxpayer reaches AOW age AND has `single_parent_status: true` AND has no fiscal partner.
+- **Alleenstaande-ouderenkorting** — triggered only when the taxpayer is entitled
+  to an AOW benefit for a single person; ask for the AOW entitlement and do not
+  infer it from household or fiscal-partner fields.
 - **Jonggehandicaptenkorting** — triggered when the taxpayer receives a Wajong-uitkering or has a young-disabled status; ask the user, do not infer from age alone.
 
 For each triggered credit, list the trigger that fired and instruct the user to verify the calculated amount in Mijn Belastingdienst. Do not compute the credit amount unless an exact reviewed 2025 source is registered and all inputs are present.

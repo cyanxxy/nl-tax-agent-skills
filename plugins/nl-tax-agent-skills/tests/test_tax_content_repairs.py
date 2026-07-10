@@ -245,7 +245,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
-        self.assert_official_source("bd_box1_rates_2025", 2025, relatives)
+        self.assert_official_source("bd_stock_options_2025", 2025, relatives)
         for relative in relatives:
             with self.subTest(relative=relative):
                 self.assert_scoped_contract(

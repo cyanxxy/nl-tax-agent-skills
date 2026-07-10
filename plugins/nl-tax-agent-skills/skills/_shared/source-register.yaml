@@ -301,6 +301,21 @@ sources:
       - nl-tax-annual-return
       - nl-tax-box1-home
 
+  - id: bd_stock_options_2025
+    title: "Handboek Loonheffingen 2025 (aandelenopties)"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/handboek-loonheffingen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/box1-rates.md"
+    last_checked: "2026-07-10"
+    freshness_policy: "check when a new 2025 Handboek Loonheffingen revision is published; verify the aandelenopties section before changing the tax-point rule"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-box1-home
+
   - id: bd_general_tax_credit_2025
     title: "Tabel algemene heffingskorting 2025"
     domain: belastingdienst.nl

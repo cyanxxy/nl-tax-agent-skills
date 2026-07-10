@@ -4,7 +4,7 @@ source_ids: bd_annual_data_checklist_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
@@ -23,9 +23,14 @@ These are reference notes for workpack preparation -- not final tax advice.
 ## Income from employment and benefits (inkomen uit werk en uitkeringen) -- required
 
 - Jaaropgaaf (annual salary statement) from each employer: shows gross salary, wage tax withheld (loonheffing), and social contributions. Collect one per employer if the taxpayer had multiple jobs.
-- Pension statements (pensioenuitkering jaaroverzicht): annual summary from pension provider showing gross pension income and tax withheld.
+- For pension received in 2025, request the **payment-year pension statement**
+  (pensioenuitkering jaaroverzicht) showing gross taxable pension and tax
+  withheld. A UPO is **accrual or projection context only**; it is not evidence
+  of pension payments or withholding for the return year.
 - Benefit statements from UWV: for WW (unemployment), WIA/WAO (disability), ZW (sickness). The UWV jaaropgaaf shows amounts and withholdings.
-- Benefit statements from SVB: for AOW (state pension), Anw (survivor pension), or AKW (child benefit). The SVB jaaropgaaf is needed.
+- Benefit statements from SVB: for AOW (state pension) and Anw (survivor
+  pension), use the payment-year statement. AKW (child benefit) is **not taxable box 1 income**; collect it only when useful for household context, not as a
+  taxable-income statement.
 - Freelance / self-employment income records (winst uit onderneming): profit and loss statement, balance sheet, hours administration for zelfstandigenaftrek (requires 1,225+ hours). Relevant for IB-ondernemers.
 - Income from other activities (resultaat uit overige werkzaamheden): e.g., freelance work not qualifying as onderneming, board member fees.
 
@@ -47,7 +52,11 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Deductions (aftrekposten) -- conditional
 
-- Healthcare costs (specifieke zorgkosten): receipts and summaries for medical expenses not reimbursed by insurance, including prescribed medications, medical aids, travel costs to medical facilities, dietary costs on medical prescription.
+- Healthcare costs (specifieke zorgkosten): receipts and summaries for
+  potentially qualifying costs not reimbursed by insurance. Wheelchair: not
+  deductible; scooters and home modifications are also excluded. Inventory the
+  evidence without calculating the threshold or multiplier unless a complete
+  reviewed table and all inputs are present.
 - Gifts (giften): receipts or bank statements for donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling). Distinguish between periodic gifts (periodieke giften via notarial deed or written agreement) and incidental gifts (with threshold).
 - Study costs (studiekosten / scholingsuitgaven): do not treat as deductible from this source pack. If reported, collect evidence only as a manual-review item until a reviewed official source is added.
 - Alimentatie (maintenance payments): documentation of alimony paid to ex-partner (partneralimentatie is deductible; kinderalimentatie is not). Court order or notarial deed showing the obligation.

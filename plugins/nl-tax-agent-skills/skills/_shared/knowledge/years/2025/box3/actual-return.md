@@ -93,7 +93,11 @@ When building the workpack for box 3 with actual return data:
 4. Include a comparison summary showing which method is lower
 5. Add a note that the final election happens in the official filing environment
 6. Never present the actual return option in a voorlopige aanslag workpack
-7. If the taxpayer has no actual return data available, note that the fictitious method will apply by default
+7. If the taxpayer provides all required actual-return evidence, record the
+   actual-return subsection as `complete`. If evidence is declined or missing,
+   list the evidence needed and record the subsection as `deferred/manual
+   review`; retain both method explanations and do not claim both calculations
+   were completed.
 8. For fiscal partners, apply the same allocation percentage to actual return as to the joint grondslag sparen en beleggen
 
 ## Common failure

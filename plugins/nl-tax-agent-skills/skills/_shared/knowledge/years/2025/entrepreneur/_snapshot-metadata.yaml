@@ -7,15 +7,15 @@ sources:
     source_id: bd_aangifte_ondernemers_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
   bd_administratie_bewaren_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_administratie_bewaren_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/administratie_bewaren
   bd_beperkt_aftrekbare_kosten_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_beperkt_aftrekbare_kosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
   bd_eia_2025:
@@ -79,15 +79,15 @@ sources:
     source_id: bd_ondernemerscheck_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/checken-of-ik-ondernemer-ben-voor-de-inkomstenbelasting
   bd_oudedagsreserve_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_oudedagsreserve_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve
   bd_privevervoermiddel_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_privevervoermiddel_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/zakelijk-gebruik-privevervoermiddel-2025
   bd_so_aftrek_2025:
@@ -121,15 +121,15 @@ sources:
     source_id: bd_urencriterium_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
   bd_werkruimte_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_werkruimte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/werkruimte_in_de_woning
   bd_zakelijke_kosten_2025:
-    content_hash_sha256: 466aa548105d8808c4870a7ee07f7f0588cb7aa3701a0a40d918b701a579ef63
+    content_hash_sha256: 35b04ed38511671b984f3a9045a878f6c5835c847378ab952f39613f1018fe70
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T13:51:12.435374+00:00'
     source_id: bd_zakelijke_kosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/zakelijke_kosten
   bd_zelfstandigenaftrek_2025:

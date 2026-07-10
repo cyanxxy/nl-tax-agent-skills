@@ -4,7 +4,7 @@ source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
@@ -81,6 +81,11 @@ The arbeidskorting has a multi-step calculation:
 
 ### What qualifies as arbeidsinkomen
 
+For arbeidskorting, the ZW/WAZO outcome is **conditional**: it depends on the
+employment relationship (dienstbetrekking). The agent must establish whether
+the taxpayer was still employed when the benefit was received before treating
+it as arbeidsinkomen.
+
 - Gross salary from employment (loon)
 - Profit from enterprise (winst uit onderneming) before ondernemersaftrek
 - Income from other activities (resultaat uit overige werkzaamheden)
@@ -108,7 +113,7 @@ These credits use reviewed 2025 figures and may be calculated in the workpack wh
 
 source: bd_iack_2025
 
-For working parents with a child born after 31 December 2012 who is under 12 on 1 January 2025 and belongs to the household for at least 6 months. The taxpayer must have arbeidsinkomen above EUR 6,145 and either (a) no fiscal partner, or a fiscal partner for less than 6 months, or (b) a lower arbeidsinkomen than the fiscal partner.
+For working parents with a child born after 31 December 2012 who is under 12 on 1 January 2025 and belongs to the household for at least 6 months. The child test is therefore **younger than 12 on 1 January 2025**, not "12 or younger." The taxpayer must have arbeidsinkomen above EUR 6,145 and either (a) no fiscal partner, or a fiscal partner for less than 6 months, or (b) a lower arbeidsinkomen than the fiscal partner.
 
 | Arbeidsinkomen (non-AOW-age) | IACK 2025 |
 |---|---:|
@@ -137,7 +142,9 @@ For taxpayers who have reached the AOW age by the end of 2025.
 
 source: bd_heffingskortingen_aow_2025_2026
 
-- For taxpayers who receive (or are entitled to) an AOW benefit for a single person (alleenstaande).
+- Eligibility follows entitlement: the taxpayer must be **entitled to an AOW
+  benefit for a single person** (alleenstaande). Do not substitute household or
+  single-parent status for this AOW entitlement test.
 - Fixed amount: EUR 531 for 2025 (EUR 540 for 2026).
 - If a couple lives apart because one partner is in a care home, both may be entitled — flag for manual review.
 
@@ -154,6 +161,10 @@ source: bd_jonggehandicaptenkorting_2025
 - Transitional arrangement for old levensloop savings; largely phased out. If the user reports an old levensloop balance, flag it for manual review.
 
 ## Applying credits in the workpack
+
+AKW (kinderbijslag) is **not taxable box 1 income**. It may be recorded as
+household context, but the agent must not add it to taxable benefits or tax it
+as employment income.
 
 1. Calculate the gross gecombineerde heffing (IB + premie volksverzekeringen) using the rates from box1-rates.md
 2. Determine the algemene heffingskorting based on verzamelinkomen, not only box 1 income
