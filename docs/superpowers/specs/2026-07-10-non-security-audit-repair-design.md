@@ -249,6 +249,11 @@ year or method separation makes a single module harder to audit. Developer
 source validators may remain separate files but are one maintenance component,
 not taxpayer workflow dependencies.
 
+Rename the misleading plan-only `fetch_sources.py` to
+`plan_source_refresh.py`. It reports what requires retrieval or human review and
+never claims that it fetched an official page. No compatibility shim is
+required for this internal developer script.
+
 When Python is unavailable, each skill follows a concise equivalent checklist
 from its reference contract. It does not ask the user to install Python and does
 not downgrade an otherwise complete workpack solely because a script could not
