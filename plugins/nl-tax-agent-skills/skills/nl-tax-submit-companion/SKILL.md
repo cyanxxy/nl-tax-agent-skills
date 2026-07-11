@@ -1,6 +1,6 @@
 ---
 name: nl-tax-submit-companion
-description: Build a manual Mijn Belastingdienst submission checklist from an existing workpack and field map — blockers first, then step-by-step entry. Use only when the user explicitly asks for a submission checklist (manual-only skill; never auto-invoked).
+description: Use only when the user explicitly wants to create a Manual-entry checklist from an existing annual or provisional workpack and field map; list blockers first and never auto-invoke or submit.
 argument-hint: "[annual|provisional] [2025|2026]"
 disable-model-invocation: true
 allowed-tools:
@@ -11,11 +11,11 @@ allowed-tools:
   - Edit
 ---
 
-# NL Tax Submit Companion
+# Manual-entry checklist
 
-Create a step-by-step checklist from an existing workpack and field map. The taxpayer or an authorized representative performs every official action manually in Mijn Belastingdienst.
+Create a Manual-entry checklist from an existing workpack and field map. The taxpayer or an authorized representative performs every official action manually in Mijn Belastingdienst.
 
-This skill is manual-only (`disable-model-invocation: true`; on Codex the same is set via `agents/openai.yaml`). Run it only when the user explicitly asks for a submission checklist.
+This skill is manual-only (`disable-model-invocation: true`; on Codex the same is set via `agents/openai.yaml`). Run it only when the user explicitly asks for a Manual-entry checklist.
 
 ## Read first
 
@@ -44,7 +44,7 @@ If the workpack or field map is incomplete, do not refuse. Produce the checklist
 
 ## Worked example (brief)
 
-User: "Give me the submission checklist for my 2025 return." → Read `return-pack.md` + `field-map.yaml`; find two `MISSING - enter manually` rows (WOZ-waarde, one giften amount) and one `manual_review_required` (tariefsaanpassing). Write the checklist with those three under **Blockers**, then pre-flight, then the box-by-box entry steps keyed to the field map, then the final-review list. End: "2 missing values and 1 review item block filing — resolve these first, then follow steps 1-9."
+User: "Give me the Manual-entry checklist for my 2025 return." → Read `return-pack.md` + `field-map.yaml`; find two `MISSING - enter manually` rows (WOZ-waarde, one giften amount) and one `manual_review_required` (tariefsaanpassing). Write the checklist with those three under **Blockers**, then pre-flight, then the box-by-box entry steps keyed to the field map, then the final-review list. End: "2 missing values and 1 review item block filing — resolve these first, then follow steps 1-9."
 
 ## Safety
 

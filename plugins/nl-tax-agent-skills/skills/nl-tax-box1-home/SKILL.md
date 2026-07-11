@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box1-home
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 1 and eigen-woning facts and questions. Not a standalone workflow; invoked as a sub-step.
+description: Background helper that returns sourced Box 1 and own-home facts and questions; use annual 2025 evidence for annual workpacks and labeled 2026 estimates for provisional workpacks.
 user-invocable: false
 allowed-tools:
   - Read

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-annual-return
-description: Prepare a 2025 Dutch annual income-tax (aangifte IB) workpack for manual Mijn Belastingdienst entry. Use after intake routes to annual_2025 — walks box 1, winst uit onderneming (eenmanszaak / ZZP), own home, box 2, box 3, deductions, partner allocation, and credits.
+description: Use when the user explicitly wants to prepare or review a 2025 Dutch annual income-tax workpack for manual entry, including standard business preparation and Boxes 1–3.
 argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
@@ -38,11 +38,31 @@ Two different read cadences apply. Record every loaded knowledge file's `source_
 2. `workspace/shared/session-progress.yaml`
 3. `workspace/taxpayer/evidence-index.yaml` if it exists
 
-**Bundled references — load once when this skill becomes active**, and re-read them only when resuming a session from disk or when a self-check needs the exact wording (they do not change mid-conversation; keeping them loaded in context satisfies this rule):
+**Bundled workflow references — load progressively.** Load
+`reference/annual-flow.md` when this skill becomes active. Then load exactly
+one active phase file immediately before performing that phase; re-read the
+active file only when resuming from disk or when its exact wording is needed.
+Do not preload later phases:
 
-1. `reference/annual-flow.md` — the 14 numbered phases this skill follows
-2. `reference/annual-output-contract.md` — the structural and safety rules for the workpack
-3. `templates/annual-return-pack.md` — the workpack template
+1. `reference/phases/01-preflight.md`
+2. `reference/phases/01-5-filing-status.md`
+3. `reference/phases/02-income.md`
+4. `reference/phases/02a-winst.md`
+5. `reference/phases/03-own-home.md`
+6. `reference/phases/03a-box2.md`
+7. `reference/phases/04-box3.md`
+8. `reference/phases/05-deductions.md`
+9. `reference/phases/05-5-credits.md`
+10. `reference/phases/06-partner.md`
+11. `reference/phases/07-field-map.md`
+12. `reference/phases/08-missing-info.md`
+13. `reference/phases/09-review-questions.md`
+14. `reference/phases/10-assembly.md`
+
+Do not load `reference/annual-output-contract.md` or
+`templates/annual-return-pack.md` during collection. Load `annual-return-pack.md` only after
+the workpack generation gate opens, together
+with `annual-output-contract.md` for the final self-check.
 
 Before generating content for a phase (Phase 2 onward in `annual-flow.md`), load the 2025 rate sheets that phase relies on — each sheet once, when its phase first needs it, re-read on resume. These are canonical for every numeric line the workpack will reference — do not paraphrase rates from memory or from an earlier paraphrase.
 
@@ -90,7 +110,9 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 
 ## Workflow
 
-`reference/annual-flow.md` is authoritative. It defines 14 phases (Pre-flight → Filing status → Income → Winst uit onderneming → Own home → Box 2 → Box 3 → Deductions → Credits screening → Partner → Field map → Missing info → Review questions → Assembly; numbered 1, 1.5, 2, 2A, 3, 3A, 4, 5, 5.5, 6, 7, 8, 9, 10 there). Follow them in order, and within each phase apply the conversational contract below.
+`reference/annual-flow.md` is the authoritative ordered index. Follow its 14
+directly linked phases in order, loading exactly one active phase at a time,
+and within each phase apply the conversational contract below.
 
 ### Conversational contract
 
@@ -201,6 +223,8 @@ Do not write `workspace/annual/2025/return-pack.md` until **all** of:
 
 When the gate is satisfied:
 
+- Load `reference/annual-output-contract.md` and
+  `templates/annual-return-pack.md` now; neither belongs in collection context.
 - Assemble `workspace/annual/2025/notes/*.yaml` into `templates/annual-return-pack.md`.
 - Preserve source provenance for every numeric line using the `Src` codes from the template.
 - Run the self-check in `reference/annual-output-contract.md` § "Workpack self-check"; report every check yes/no in your end-of-turn message. If any structural, content, cross-contamination, or safety check fails, do not write the file — fix the gap or ask the user, and re-run.

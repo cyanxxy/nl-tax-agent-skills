@@ -47,6 +47,12 @@ def frontmatter(path):
 
 
 class SkillDiscoveryAndLoadingTests(unittest.TestCase):
+    def test_all_skill_descriptions_fit_claude_metadata_limit(self):
+        for path in SKILLS.glob("*/SKILL.md"):
+            description = frontmatter(path)["description"]
+            with self.subTest(skill=path.parent.name):
+                self.assertLessEqual(len(description), 200)
+
     def test_public_triggers_require_preparation_intent(self):
         intake = frontmatter(SKILLS / "nl-tax-intake/SKILL.md")[
             "description"
@@ -92,10 +98,15 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertEqual(
             {path.name for path in phases_dir.glob("*.md")}, set(ANNUAL_PHASES)
         )
+        positions = []
         for filename in ANNUAL_PHASES:
             with self.subTest(phase=filename):
                 reference = f"reference/phases/{filename}"
-                self.assertIn(reference, skill + index)
+                self.assertIn(reference, skill)
+                index_reference = f"phases/{filename}"
+                self.assertIn(index_reference, index)
+                positions.append(index.index(index_reference))
+        self.assertEqual(positions, sorted(positions))
 
     def test_provisional_subflows_exist_and_are_directly_selectable(self):
         skill = read_skill("nl-tax-provisional-assessment")
@@ -111,7 +122,8 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         for filename in PROVISIONAL_SUBFLOWS:
             with self.subTest(subflow=filename):
                 reference = f"reference/subflows/{filename}"
-                self.assertIn(reference, skill + index)
+                self.assertIn(reference, skill)
+                self.assertIn(f"subflows/{filename}", index)
         self.assertIn("exactly one", (skill + index).lower())
 
     def test_workflow_skills_use_explicit_sibling_mapper_paths(self):

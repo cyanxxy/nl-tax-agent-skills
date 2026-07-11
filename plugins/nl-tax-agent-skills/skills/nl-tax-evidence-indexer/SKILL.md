@@ -1,6 +1,6 @@
 ---
 name: nl-tax-evidence-indexer
-description: Catalog and hash Dutch tax documents (`jaaropgaaf`, `bankafschrift`, `woz_beschikking`, `hypotheek_jaaroverzicht`, `voorlopige_aanslag_beschikking`) and chat-stated amounts into an evidence index. Use when the user shares or mentions tax documents, or a workflow needs evidence for a section.
+description: Use when the user explicitly wants to index or organize Dutch tax documents and chat-stated amounts into an evidence index for an annual or provisional preparation workflow.
 argument-hint: "[path-to-upload-folder]"
 allowed-tools:
   - Read

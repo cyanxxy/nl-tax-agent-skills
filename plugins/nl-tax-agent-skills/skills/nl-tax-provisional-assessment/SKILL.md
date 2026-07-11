@@ -1,6 +1,6 @@
 ---
 name: nl-tax-provisional-assessment
-description: Prepare a 2026 voorlopige aanslag workpack — request, change, review, or stopzetten — for manual Mijn Belastingdienst entry. Use after intake routes to a provisional_2026 flow. Fictitious box 3 only; never collects werkelijk rendement.
+description: Use when the user explicitly wants to prepare or review a 2026 provisional request, change, review, or stopzetten workpack; Box 3 uses only the fictitious method.
 argument-hint: "[2026] [request|change|review|stopzetten|confirm]"
 allowed-tools:
   - Read
@@ -48,15 +48,21 @@ Workspace state — re-read every turn:
 - `workspace/taxpayer/evidence-index.yaml`, if present
 - `workspace/shared/session-progress.yaml`
 
-Bundled references and templates — load once when this skill becomes active, and re-read them when resuming a session from disk or when the subflow changes (they do not change mid-conversation):
+Bundled workflow references load progressively:
 
-- `reference/provisional-flow.md` — the ordered subflow procedure this skill follows
-- `reference/provisional-output-contract.md` — the structural and safety rules for every output
-- `reference/delta-rules.md` — baseline-vs-current delta rules (change subflow)
-- `reference/stopzetten-guidance.md` — refund-vs-payment routing and cutoff guidance (stopzetten subflow)
-- `templates/provisional-pack.md`
-- `templates/delta-summary.md` when the active subflow is `provisional_2026_change`
-- `templates/review-questions.md` when the active subflow is `provisional_2026_review`
+- Load `reference/provisional-flow.md` when this skill becomes active.
+- Route from the profile, then load exactly one active subflow:
+  `reference/subflows/request.md`, `reference/subflows/change.md`,
+  `reference/subflows/review.md`, or `reference/subflows/stopzetten.md`.
+- For change, load `reference/delta-rules.md` only while that subflow is active.
+- For stopzetten, load `reference/stopzetten-guidance.md` only while that
+  subflow is active.
+
+Do not preload output contracts or templates. Load `provisional-pack.md` only after
+the workpack generation gate opens, together with
+`reference/provisional-output-contract.md` and only the active subflow's
+additional template (`templates/delta-summary.md` for change or
+`templates/review-questions.md` for review).
 
 2026 provisional rate sheets and flow notes — canonical for every numeric line; do not paraphrase rates from memory, and if a sheet fails to load, stop and tell the user rather than fabricating a rate:
 
@@ -145,50 +151,13 @@ workflow-owned provisional notes before continuing. This skill owns session
 state, provisional notes, and provisional workpacks; helpers own no persisted
 artifact.
 
-## Subflow: request
+## Active subflow
 
-Walk the user through these sections one at a time:
-
-1. Confirm workflow. A later unsolicited 2026 voorlopige aanslag may be issued
-   from earlier data, but it is not guaranteed. Check whether a current 2026
-   beschikking or monthly amount already exists. If it does, this is a
-   change/review rather than a request; route accordingly and use that
-   beschikking as the baseline.
-2. Estimated 2026 employment income per employer.
-3. Estimated 2026 pension and benefit income.
-4. Estimated 2026 other income.
-5. Expected 2026 profit from enterprise, when applicable: one sourced and user-reviewed `onderneming.geschatte_winst` forecast only.
-6. Estimated deductions, including own home, alimony, lijfrente/AOV, gifts, and other expenses.
-7. Standard Box 2 estimates where applicable: regular benefits/dividends, disposal benefits, costs, withholding tax, BV lending fictitious benefit, and partner allocation.
-8. Box 3 assets and debts on 1 January 2026 using the fictitious method only.
-9. Fiscal partner and allocation.
-10. Final review and confirmation.
-
-## Subflow: change
-
-1. Confirm `provisional_2026_change`.
-2. Establish the baseline from the current beschikking or from chat.
-3. Re-collect all current estimates, not just changed items. Remind the user every turn until confirmed: "Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item."
-4. Generate a delta summary comparing baseline and current estimates.
-5. Ask for final confirmation before generating the workpack.
-
-## Subflow: review
-
-1. Confirm `provisional_2026_review`.
-2. Collect the current VA baseline by file or chat.
-3. Walk category by category and ask whether each item has changed since the VA was issued.
-4. Record changes incrementally.
-5. Generate `workspace/provisional/2026/review-questions.md` from `templates/review-questions.md` and recommend the change subflow if significant changes are found.
-6. Ask for final confirmation before generating outputs.
-
-## Subflow: stopzetten
-
-1. Confirm `provisional_2026_stopzetten`.
-2. Compare the current date with the stopzetten cutoff before asking for a manual checkbox. If the current date is on or after 2026-10-01, do not generate a stopzetten checklist; record the cutoff as passed and explain that the annual return or a change/review flow is the remaining route.
-3. Ask whether the user is receiving a monthly refund or paying a monthly amount.
-4. If the user receives a refund, it is before 2026-10-01, and the user wants to stop, generate structured stopzetten guidance in the workpack's `Stopzetten outcome` section after confirmation.
-5. If the user pays monthly and the amount is wrong, redirect to change; stopping payments does not reduce the debt. To avoid a stopzetten loop, mutate progress before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, record the known payment baseline (monthly amount, beschikking details if stated) in `workspace/provisional/2026/notes/baseline.yaml` with provenance and mark the `baseline` subsection `in_progress`, mark `stopzetten_direction` as `complete` with `answered: ["routed_to_change_payment_case"]`, and reset `confirm` to `not_started`.
-6. If the user pays monthly and the amount is correct, confirm no action is needed.
+Use `reference/provisional-flow.md` to route, then follow exactly one directly
+linked file under `reference/subflows/`. Do not load or combine inactive
+subflows. If stopzetten redirects a payment case to change, persist the routing
+and baseline changes required by `reference/subflows/stopzetten.md`, stop using
+that file, and load exactly `reference/subflows/change.md`.
 
 ## Workpack generation gate
 
@@ -212,6 +181,11 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
    Or the user has run `/nl-tax-agent-skills:nl-tax-provisional-assessment confirm`. Anything else (including "looks good", "yes", "ok", "sounds good") is **not** confirmation — ask explicitly: "Type 'generate the workpack' when you want me to assemble it."
 
 When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly.
+
+At this point, load `reference/provisional-output-contract.md` and
+`templates/provisional-pack.md`. Load `templates/delta-summary.md` only for an
+active change subflow and `templates/review-questions.md` only for an active
+review subflow. Do not load an inactive subflow's output template.
 
 For request and change subflows, after the confirmed workpack is written,
 invoke `nl-tax-field-mapper`. Pass it the workpack and workflow context; it

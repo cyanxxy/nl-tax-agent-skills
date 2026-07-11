@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box3
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 3 facts and questions (annual = fictitious and werkelijk rendement; provisional = fictitious only). Not a standalone workflow; invoked as a sub-step.
+description: Background helper that returns Box 3 facts and questions; annual 2025 compares fictitious and actual return, while provisional 2026 uses the fictitious method only.
 user-invocable: false
 allowed-tools:
   - Read

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-winst
-description: Internal helper for annual business-section preparation and a provisional expected-profit forecast — returns sourced facts and questions, never a completed business return or final tax result.
+description: "Background helper with two narrow modes: organize annual 2025 business-section evidence without calculating final taxable profit, or return one sourced 2026 provisional expected-profit forecast."
 user-invocable: false
 allowed-tools:
   - Read

@@ -1,14 +1,6 @@
 # Provisional Flow — Subflow Routing and Generation
 
-## Contents
-
-- Overview
-- Subflow routing
-- Request subflow
-- Change subflow
-- Review subflow
-- Stopzetten subflow
-- Common rules across all subflows
+This is the common routing and output contract for the 2026 provisional-assessment workflow. Load this index when the workflow starts, then load exactly one active subflow file. If routing changes, stop using the old subflow and load exactly one newly active subflow.
 
 ## Overview
 
@@ -42,152 +34,14 @@ User enters provisional skill
 
 ---
 
-## Request subflow
+## Direct subflow links
 
-### Decision points
+- [Request subflow](subflows/request.md) — only when no 2026 provisional assessment exists yet.
+- [Change subflow](subflows/change.md) — rebuild and verify the complete current dataset against a baseline.
+- [Review subflow](subflows/review.md) — compare a current assessment with present facts.
+- [Stopzetten subflow](subflows/stopzetten.md) — apply refund/payment routing and the cutoff rule.
 
-1. Does the taxpayer profile exist? If not, route back to intake.
-2. Does the profile contain `provisional_2026_request`? If not, route to the correct subflow.
-3. **Have they already received any 2026 voorlopige aanslag?** A later unsolicited VA based on earlier data may be issued, but is not guaranteed. If a 2026 beschikking or monthly amount actually exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
-4. Does the taxpayer have a fiscal partner? If yes, collect partner data and determine box 3 allocation.
-
-### Data collection steps
-
-1. **Employment income estimate** — gross annual salary, holiday allowance, bonuses expected in 2026
-2. **Pension/benefit income estimate** — AOW, pension, WW, WIA, bijstand expected in 2026
-3. **Other income estimate** — non-business rental, foreign, or other income expected in 2026
-4. **Winst uit onderneming forecast** — if applicable, invoke or inline `nl-tax-winst`; record only the sourced, user-reviewed full-year forecast as `onderneming.geschatte_winst` with manual review. Never put business profit in a generic other-income field and never apply annual deductions, Zvw, cessation profit, or final tax.
-5. **Own-home deduction estimate** — mortgage interest (hypotheekrente) for 2026, eigenwoningforfait based on WOZ-waarde
-6. **Other deductions estimate** — alimentatie, lijfrentepremie, arbeidsongeschiktheidsverzekering, specific care costs, gifts. Treat zorgkosten thresholds and lijfrente limits as manual-review items unless exact reviewed sources and all required inputs are present.
-7. **Box 2 estimate** — standard aanmerkelijk-belang estimates:
-   - Estimated regular benefits, including dividends
-   - Estimated disposal benefits from share sales
-   - Estimated related costs and dividend withholding tax
-   - Estimated fictitious regular benefit from BV lending, if applicable
-   - Fiscal-partner Box 2 allocation, if applicable
-   - Route valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA facts to manual review or unsupported
-8. **Box 3 data** — assets and debts as of peildatum 1 January 2026:
-   - Categorie I: Banktegoeden
-   - Categorie II: Overige bezittingen
-   - Categorie III: Schulden (excluding eigenwoningschuld)
-   - Heffingsvrij vermogen deduction
-   - FICTITIOUS METHOD ONLY
-
-### Output generation
-
-1. Generate `workspace/provisional/2026/provisional-pack.md` using the template
-2. Generate `workspace/provisional/2026/field-map.yaml` with all collected fields mapped to Belastingdienst portal fields
-3. Update `workspace/shared/assumptions.md` with all assumptions made
-4. Label all amounts as estimates
-
----
-
-## Change subflow
-
-### Decision points
-
-1. Does the taxpayer profile exist and contain `provisional_2026_change`?
-2. Is there a baseline available?
-   - From evidence index (beschikking indexed by the evidence-indexer skill)
-   - From user input (user provides current voorlopige aanslag details)
-   - If no baseline at all: ask user to provide the current monthly amount and key figures from their beschikking
-3. Does the taxpayer have a fiscal partner? Has partner status changed?
-
-### Data collection steps
-
-1. **Baseline capture** — record the existing voorlopige aanslag details:
-   - Monthly payment or refund amount
-   - Income categories as submitted
-   - Deductions as submitted
-   - Box 3 data as submitted
-2. **Full re-entry of all current estimates** (CRITICAL — not just changes):
-   - All income categories (employment, pension/benefit, other, and the dedicated expected-profit forecast when applicable)
-   - All deductions (own-home, alimentatie, premiums, other)
-   - All standard Box 2 estimates (regular benefits, disposal benefits, costs, withholding tax, partner allocation)
-   - All box 3 data (assets and debts as of 1 January 2026, fictitious method only)
-3. **Delta calculation** — compare baseline to current estimates:
-   - Per-category: income (up/down), deductions (up/down), box 3 (up/down), partner changes
-   - Expected impact on monthly payment or refund
-
-### Output generation
-
-1. Generate `workspace/provisional/2026/provisional-pack.md` with change context
-2. Generate `workspace/provisional/2026/field-map.yaml` with all fields
-3. Generate `workspace/provisional/2026/delta-summary.md` — baseline vs forecast comparison
-4. Update `workspace/shared/assumptions.md`
-5. Include the full-re-entry reminder in the workpack
-
----
-
-## Review subflow
-
-### Decision points
-
-1. Does the taxpayer profile exist and contain `provisional_2026_review`?
-2. Is there a current voorlopige aanslag available to review?
-   - From evidence index
-   - From user input
-3. Was the current voorlopige aanslag issued without a taxpayer request (EVA) or user-submitted (VVA)?
-   - EVA: especially important to verify, as it is based on prior-year data that may be outdated
-4. Have any life events occurred since the voorlopige aanslag was issued?
-
-### Data collection steps
-
-1. **Current voorlopige aanslag capture** — record all key figures:
-   - Monthly payment or refund amount
-   - Income figures used
-   - Deductions used
-   - Box 3 data used
-2. **Life event screening** — ask about changes in each category:
-   - Income: new job, salary change, retirement, job loss, started/stopped benefits
-   - Housing: new mortgage, sold home, refinanced, paid off mortgage
-   - Partner: marriage, separation, divorce, partner income changes
-   - Deductions: started/stopped alimentatie, changed premiums, other
-   - Credits: IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting facts requiring manual review
-   - Box 2: expected dividends, share sales, costs, dividend withholding tax, or partner allocation changed
-   - Box 3: corrections to the estimated asset or debt values on 1 January 2026; later-year changes do not change the 2026 box 3 peildatum
-3. **Comparison** — for each category, note whether the current voorlopige aanslag figure still matches reality
-
-### Output generation
-
-1. Generate `workspace/provisional/2026/provisional-pack.md` with review context
-2. Generate `workspace/provisional/2026/review-questions.md` — items flagged for user verification
-3. Update `workspace/shared/assumptions.md`
-4. If changes are needed: explicitly recommend running the change subflow and explain what would change
-
----
-
-## Stopzetten subflow
-
-### Decision points
-
-1. Does the taxpayer profile exist and contain `provisional_2026_stopzetten`?
-2. Is the user receiving a monthly refund (teruggaaf) or paying a monthly amount (betaling)?
-   - **Refund → stopzetten may be appropriate until 1 October 2026**
-   - **Payment + amount is wrong → REDIRECT to change subflow**
-   - **Payment + amount is correct → no action needed**
-3. Why does the user want to stop?
-   - Deductions no longer apply → stopzetten appropriate
-   - Situation changed → review whether change or stopzetten is better
-   - Wants to avoid repayment risk → stopzetten appropriate
-   - Will file early and settle then → explain that the annual return handles this; stopzetten is only available if the user receives a monthly refund
-
-### Data collection steps
-
-1. **Current voorlopige aanslag type** — receiving refund or making payments
-2. **Current monthly amount** — how much per month
-3. **Reason for wanting to stop** — to determine correct routing
-4. **If redirecting to change:** collect all estimates as per the change subflow
-
-### Output generation
-
-1. Generate `workspace/provisional/2026/provisional-pack.md` with stopzetten context
-2. Update `workspace/shared/assumptions.md`
-3. If stopzetten is appropriate: include manual checklist for the Mijn Belastingdienst stopzetten process
-4. If redirecting to change: generate change subflow output instead
-5. Do NOT calculate final tax consequences unless all assumptions are explicit and confirmed
-
----
+Do not load multiple subflow files for comparison. Route first and load exactly one active file. A stopzetten payment case that redirects to change must update the workflow state before loading `subflows/change.md`.
 
 ## Common rules across all subflows
 

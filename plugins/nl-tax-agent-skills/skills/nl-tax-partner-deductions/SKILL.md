@@ -1,6 +1,6 @@
 ---
 name: nl-tax-partner-deductions
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns fiscal-partner and allocation/deduction facts and questions. Not a standalone workflow; invoked as a sub-step.
+description: Background helper that returns fiscal-partner, deduction, and allocation facts and review scenarios for annual 2025 or provisional 2026 preparation.
 user-invocable: false
 allowed-tools:
   - Read

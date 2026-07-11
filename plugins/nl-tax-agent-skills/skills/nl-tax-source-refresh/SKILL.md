@@ -1,6 +1,6 @@
 ---
 name: nl-tax-source-refresh
-description: Developer-only maintenance — validate Dutch tax source registers and supported-workflow gates, rebuild reviewed snapshot metadata, and plan official-source refreshes. Not a taxpayer workflow; never reads or writes workspace/uploads/evidence.
+description: Use when a developer explicitly wants to validate tax sources and workflow gates, rebuild reviewed-note metadata, or plan an official-source refresh. Never use for taxpayer work.
 argument-hint: "[annual|provisional|box3|all] [year]"
 disable-model-invocation: true
 allowed-tools:

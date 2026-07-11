@@ -8,6 +8,7 @@ workflow contract, the field map, intake routing, and the provisional guard.
 
 import importlib.util
 import pathlib
+import re
 import unittest
 
 import yaml
@@ -52,7 +53,25 @@ ENTREPRENEUR_SOURCE_IDS = {
 
 
 def read_text(relative_path):
-    return (ROOT / relative_path).read_text(encoding="utf-8")
+    path = ROOT / relative_path
+    text = path.read_text(encoding="utf-8")
+    if relative_path == "skills/nl-tax-annual-return/reference/annual-flow.md":
+        links = re.findall(r"\]\((phases/[^)]+\.md)\)", text)
+        text += "\n".join(
+            (path.parent / link).read_text(encoding="utf-8") for link in links
+        )
+    elif relative_path == "skills/nl-tax-provisional-assessment/SKILL.md":
+        index_path = (
+            ROOT
+            / "skills/nl-tax-provisional-assessment/reference/provisional-flow.md"
+        )
+        index = index_path.read_text(encoding="utf-8")
+        links = re.findall(r"\]\((subflows/[^)]+\.md)\)", index)
+        text += "\n" + index + "\n".join(
+            (index_path.parent / link).read_text(encoding="utf-8")
+            for link in links
+        )
+    return text
 
 
 def load_yaml(relative_path):

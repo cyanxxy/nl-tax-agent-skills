@@ -1,6 +1,6 @@
 ---
 name: nl-tax-intake
-description: First skill for any Dutch individual income-tax task — screens scope and routes to the right workflow. Use when the user wants to file the 2025 aangifte (annual return) or request, change, review, or stop a 2026 voorlopige aanslag, or mentions belastingaangifte, aangifte, or voorlopige aanslag.
+description: Use when the user explicitly wants to start or organize a 2025 Dutch annual-return or 2026 provisional-assessment workflow. Do not use for informational tax questions.
 argument-hint: "[annual|request|change|review|stopzetten]"
 allowed-tools:
   - Read

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-box2
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 2 facts and questions. Not a standalone workflow; invoked as a sub-step.
+description: Background helper that returns standard Box 2 facts and questions; use reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for provisional workpacks.
 user-invocable: false
 allowed-tools:
   - Read
