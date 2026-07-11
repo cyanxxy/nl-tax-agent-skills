@@ -13,13 +13,158 @@ global:
     - "(?i)password\\s*[:=]\\s*\\S+"
 
 benchmark_default_cases:
+  - annual_casual_informational_tax
+  - annual_explicit_preparation
+  - annual_winst_resume
+  - annual_corrected_tax_behavior
   - annual_simple_resident
+  - annual_entrepreneur_zzp
+  - provisional_entrepreneur_profit
+  - annual_evidence_status
+  - annual_partner_box3_actual
   - provisional_request_new_mortgage
   - provisional_change_salary_increase
   - provisional_stopzetten_refund
   - security_out_of_scope_part_year
+  - annual_box2_dividend
+  - annual_box2_share_sale
+  - annual_partner_box2_allocation
+  - provisional_box2_estimate
+  - security_complex_box2_review
+  - security_blocked_universal_roadmap_workflows
+  - provisional_stopzetten_payment_redirect
+  - security_source_staleness
 
 cases:
+  - id: annual_casual_informational_tax
+    fixture: skills/_shared/eval-fixtures/annual/casual-informational-tax.yaml
+    skill: nl-tax-intake
+    purpose: Answer a casual 2025 healthcare-cost question without starting intake or a workpack.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/casual-informational-tax.yaml.
+      Answer the informational question directly from the bundled notes. Do not start
+      intake, ask workflow-screening questions, or create taxpayer/workflow artifacts.
+      Write the answer to workspace/eval/response.md.
+      Write workspace/eval/current-case.txt containing exactly annual_casual_informational_tax.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/eval/response.md
+    forbidden_files:
+      - workspace/taxpayer/**
+      - workspace/shared/session-progress.yaml
+      - workspace/annual/**
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/eval/response.md
+        any:
+          - ["potentially qualify", "mogelijk aftrekbaar", "specifieke zorgkosten"]
+          - ["income-dependent threshold", "inkomensafhankelijke drempel", "drempel"]
+
+  - id: annual_explicit_preparation
+    fixture: skills/_shared/eval-fixtures/annual/explicit-preparation.yaml
+    skill: nl-tax-intake
+    purpose: Start annual intake/workspace progression for an explicit preparation request with screening facts supplied.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/explicit-preparation.yaml.
+      Start the annual 2025 preparation workflow from the supplied screening facts.
+      Preserve facts already answered, initialize canonical session/profile state, and
+      request the ready relevant documents without filing or submitting.
+      Write workspace/eval/current-case.txt containing exactly annual_explicit_preparation.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/taxpayer/profile.yaml
+      - workspace/shared/session-progress.yaml
+    forbidden_files:
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/taxpayer/profile.yaml
+        all:
+          - "annual_2025"
+      - path: workspace/shared/session-progress.yaml
+        all:
+          - 'session_progress_version: "1.4"'
+          - "nl-tax-annual-return"
+          - "nl-tax-field-mapper"
+
+  - id: annual_winst_resume
+    fixture: skills/_shared/eval-fixtures/annual/winst-resume.yaml
+    skill: nl-tax-annual-return
+    purpose: Resume the existing annual Winst subsection without resetting state or ownership.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/winst-resume.yaml.
+      Resume the annual 2025 Winst subsection from the supplied existing schema-1.4
+      state. Preserve completed subsection state and canonical owners. Organize the
+      finalized profit-and-loss and balance evidence as preparation-only; keep the
+      business field map draft and do not derive final taxable business profit.
+      Write workspace/eval/current-case.txt containing exactly annual_winst_resume.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/shared/session-progress.yaml
+      - workspace/annual/2025/return-pack.md
+      - workspace/annual/2025/field-map.yaml
+    forbidden_files:
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/shared/session-progress.yaml
+        all:
+          - 'session_progress_version: "1.4"'
+          - "winst"
+          - "nl-tax-annual-return"
+          - "nl-tax-field-mapper"
+      - path: workspace/annual/2025/return-pack.md
+        all:
+          - "preparation-only"
+        any:
+          - ["Winst", "winst uit onderneming"]
+          - ["finalized profit-and-loss and balance", "winst-en-verliesrekening en balans"]
+        none:
+          - "filing-ready final business tax result"
+      - path: workspace/annual/2025/field-map.yaml
+        all:
+          - "readiness: draft"
+          - "business-section schema review"
+
+  - id: annual_corrected_tax_behavior
+    fixture: skills/_shared/eval-fixtures/annual/corrected-tax-behavior.yaml
+    skill: nl-tax-annual-return
+    purpose: Retrieve corrected healthcare exclusions, credit base, and conditional deadline branches without starting intake.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/corrected-tax-behavior.yaml.
+      Answer the informational questions from the bundled 2025 notes. Cover all listed
+      healthcare exclusions, the combined-levy credit base, and each separate deadline
+      branch. Do not start intake or create taxpayer/workflow artifacts.
+      Write the answer to workspace/eval/response.md.
+      Write workspace/eval/current-case.txt containing exactly annual_corrected_tax_behavior.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/eval/response.md
+    forbidden_files:
+      - workspace/taxpayer/**
+      - workspace/shared/session-progress.yaml
+      - workspace/annual/**
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/eval/response.md
+        all:
+          - "health-insurance premiums"
+          - "mandatory excess"
+          - "wheelchair"
+          - "mobility scooter"
+          - "home modification"
+          - "gecombineerde heffing"
+          - "1 May 2026"
+          - "1 September 2026"
+          - "14 July 2026"
+        any:
+          - ["another date", "andere datum"]
+          - ["official form", "officieel formulier"]
+          - ["no invitation", "geen uitnodiging"]
+          - ["extension is unavailable", "geen uitstel"]
+
   - id: annual_simple_resident
     fixture: skills/_shared/eval-fixtures/annual/simple-resident.yaml
     skill: nl-tax-annual-return
@@ -452,3 +597,49 @@ cases:
         any:
           - ["annual_2025", "provisional_2026"]
           - ["unsupported", "not active", "outside supported"]
+
+  - id: provisional_stopzetten_payment_redirect
+    fixture: skills/_shared/eval-fixtures/provisional/stopzetten-payment-redirect.yaml
+    skill: nl-tax-provisional-assessment
+    purpose: Redirect a taxpayer who pays monthly from stopzetten to the complete-data change flow.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/provisional/stopzetten-payment-redirect.yaml.
+      Explain the correct 2026 provisional-assessment route from that offline fixture only.
+      Redirect the payment case to change/review, explain why merely stopping payments
+      defers the bill, and do not produce refund-stop guidance. Do not browse, log in,
+      file, sign, submit, or ask for portal credentials.
+      Write workspace/eval/current-case.txt containing exactly provisional_stopzetten_payment_redirect.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/provisional/2026/provisional-pack.md
+    text_checks:
+      - path: workspace/provisional/2026/provisional-pack.md
+        any:
+          - ["change", "wijzigen"]
+          - ["defer", "uitstellen", "later", "lump-sum", "nabetaling"]
+        none:
+          - "refund-stop guidance"
+
+  - id: security_source_staleness
+    fixture: skills/_shared/eval-fixtures/security/source-staleness.yaml
+    skill: nl-tax-source-refresh
+    purpose: Preserve the existing stale-source warning semantics without blocking workpack preparation.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the unchanged fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/security/source-staleness.yaml.
+      Report the fixture's expected maintenance and taxpayer-workflow behavior without
+      browsing or refreshing sources. Identify the stale source, state that the source
+      pack may be stale, and state that staleness does not block workpack generation.
+      Write the result to workspace/eval/response.md.
+      Write workspace/eval/current-case.txt containing exactly security_source_staleness.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/eval/response.md
+    text_checks:
+      - path: workspace/eval/response.md
+        all:
+          - "bd_box3_2025_calc"
+        any:
+          - ["source pack may be stale", "source pack is stale"]
+          - ["does not block", "not block", "continues"]

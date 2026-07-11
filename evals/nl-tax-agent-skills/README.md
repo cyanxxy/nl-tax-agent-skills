@@ -14,6 +14,13 @@ shipped to users or counted as plugin support context.
   the case written to `workspace/eval/current-case.txt`.
 - `plugin-eval-benchmark.json` is the Plugin Eval benchmark config that
   runs real Codex CLI scenarios against the offline cases.
+- `../claude/cowork-*/` contains first-party Claude prose evals for Cowork
+  routing, entrepreneur scope, provisional Winst mapping, and corrected tax
+  rules.
+
+The shipped fixture paths, dataset cases, `benchmark_default_cases`, and
+benchmark `datasetCaseId` values are intentionally identical sets. Each fixture
+has exactly one dataset case and one benchmark scenario.
 
 ## Local Checks
 
@@ -28,6 +35,10 @@ Validate that every dataset fixture path still exists:
 ```bash
 python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ```
+
+This check also rejects duplicate ids or fixtures and any mismatch between the
+shipped fixture set, dataset, and default-case set. The unit verifier additionally
+checks one-to-one benchmark coverage.
 
 The `--all` command verifies generated outputs for every case, so it is mainly
 useful inside a prepared workspace containing all expected `workspace/**`
@@ -47,6 +58,17 @@ Run the static Plugin Eval report:
 ```bash
 plugin-eval analyze plugins/nl-tax-agent-skills \
   --format markdown
+```
+
+Run the first-party Claude Cowork behavior cases when `plugin eval` is enabled
+in the installed Claude Code build:
+
+```bash
+claude plugin eval plugins/nl-tax-agent-skills \
+  --case 'cowork-*' \
+  --runs 1 \
+  --threshold 0.8 \
+  --output-dir evals/results/0.1.7
 ```
 
 If `plugin-eval` is not on `PATH`, locate the bundled script dynamically instead of pinning a cache hash:

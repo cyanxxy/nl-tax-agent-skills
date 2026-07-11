@@ -1,0 +1,59 @@
+# Eval fixture: Corrected 2025 healthcare, credit, and deadline rules
+
+fixture_id: eval_annual_corrected_tax_behavior
+fixture_version: "1.0"
+scenario: "Retrieve corrected healthcare exclusions, credit base, and deadline branches"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  explicitly_requests_preparation: false
+  asks_about:
+    - healthcare_cost_exclusions
+    - heffingskorting_base
+    - filing_and_extension_deadlines
+
+facts_to_evaluate:
+  healthcare_costs:
+    - health_insurance_premium
+    - statutory_mandatory_excess
+    - wheelchair
+    - mobility_scooter
+    - home_modification
+  deadline_branches:
+    - standard_invitation
+    - invitation_with_other_date
+    - no_invitation_tax_due
+
+expected_outputs:
+  files_not_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/shared/session-progress.yaml
+    - workspace/annual/**
+    - workspace/provisional/**
+  response_checks:
+    healthcare_excluded:
+      - health_insurance_premium
+      - statutory_mandatory_excess
+      - wheelchair
+      - mobility_scooter
+      - home_modification
+    credit_reduces: gecombineerde_heffing
+    standard_extension_request_before: "2026-05-01"
+    standard_extended_date: "2026-09-01"
+    other_letter_date_uses_official_form: true
+    no_invitation_extension_available: false
+    no_invitation_tax_due_guardrail_before: "2026-07-14"
+
+expected_behavior:
+  - "State all five healthcare items are excluded"
+  - "State credits reduce income tax plus national-insurance contributions, not box-1 income tax alone"
+  - "Keep the standard, other-letter-date, and no-invitation deadline branches separate"
+  - "Do not start intake for this informational request"
+
+acceptance_criteria:
+  - "All corrected healthcare exclusions are retrieved from the bundled notes"
+  - "Heffingskortingen are applied to the gecombineerde heffing"
+  - "Standard extension is requested before 1 May 2026 and normally runs to 1 September 2026"
+  - "Another invitation date uses that date and the official form route"
+  - "No invitation means no extension; 14 July 2026 is only the tax-due guardrail"

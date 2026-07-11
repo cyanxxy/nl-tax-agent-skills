@@ -1,0 +1,60 @@
+# Eval fixture: Resume an existing annual Winst subsection
+
+fixture_id: eval_annual_winst_resume
+fixture_version: "1.0"
+scenario: "Resume annual Winst preparation without resetting state or ownership"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: "Continue my 2025 ZZP return workpack from the Winst section."
+  explicitly_requests_preparation: true
+
+existing_state:
+  session_progress_version: "1.4"
+  active_workflow: annual_2025
+  annual_2025:
+    status: in_progress
+    current_subsection: winst
+    subsections:
+      intake: complete
+      evidence: complete
+      box1: complete
+      winst: in_progress
+  ownership:
+    workpack_owner: nl-tax-annual-return
+    field_map_owner: nl-tax-field-mapper
+  existing_profile: true
+  existing_evidence_index: true
+  finalized_business_evidence:
+    - winst_verlies_rekening_2025
+    - balans_2025
+
+expected_outputs:
+  files_updated:
+    - workspace/shared/session-progress.yaml
+    - workspace/annual/2025/return-pack.md
+    - workspace/annual/2025/field-map.yaml
+  files_not_created:
+    - workspace/provisional/**
+  workpack_checks:
+    - contains: "Winst"
+    - contains: "preparation-only"
+    - contains: "finalized profit-and-loss and balance"
+  field_map_checks:
+    - readiness: "draft"
+    - contains_blocker: "business-section schema review"
+
+expected_state:
+  session_progress_version: "1.4"
+  annual_2025_subsection: winst
+  preserves_completed_subsections: true
+  resets_profile_or_session: false
+  workpack_owner: nl-tax-annual-return
+  field_map_owner: nl-tax-field-mapper
+
+acceptance_criteria:
+  - "Resume at the existing annual Winst subsection without restarting intake"
+  - "Preserve schema 1.4, completed subsection state, and canonical owners"
+  - "Keep entrepreneur output preparation-only and the business field map draft"
+  - "Do not derive final taxable business profit or a complete filing-ready business return"

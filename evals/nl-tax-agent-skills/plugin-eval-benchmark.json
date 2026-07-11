@@ -1,7 +1,7 @@
 {
   "kind": "plugin-eval-benchmark",
   "schemaVersion": 2,
-  "version": 2,
+  "version": 3,
   "targetKind": "plugin",
   "targetName": "nl-tax-agent-skills",
   "runner": {
@@ -26,72 +26,185 @@
     ]
   },
   "notes": [
-    "Edit workspace.sourcePath so it points at the repo or template you want Codex to work inside.",
-    "Edit the scenarios so they match real tasks instead of generic starter prompts.",
-    "Benchmark tasks run through codex exec and must produce verifiable workspace outputs."
+    "Every scenario is an offline Dutch tax task backed by one shipped fixture.",
+    "The dataset, default-case list, and benchmark scenarios intentionally have exact one-to-one coverage.",
+    "Generated artifacts are preparation workpacks for manual entry; the plugin does not file or submit."
   ],
   "setupQuestions": [
-    "What are the 3 highest-value real tasks this plugin should help complete inside a workspace?",
-    "Which scenario is the must-pass end-to-end task for this plugin?",
-    "What output should exist on disk if the scenario succeeds?",
-    "Which verification command would tell you the result is actually usable?",
-    "What boundary case should this plugin narrow, refuse, or hand off instead of overreaching on?"
+    "Does each Dutch tax fixture still represent a supported annual 2025, provisional 2026, or explicit boundary behavior?",
+    "Does each scenario produce the files and tax-year wording required by its offline dataset case?",
+    "Do annual and provisional outputs remain separate, including the annual-only actual-return comparison?",
+    "Do entrepreneur cases preserve preparation-only annual scope and expected-profit-only provisional scope?",
+    "Do source and workflow boundary cases preserve their existing warning or routing semantics?"
   ],
   "scenarios": [
     {
+      "id": "annual-casual-informational-tax",
+      "datasetCaseId": "annual_casual_informational_tax",
+      "title": "Casual informational tax question",
+      "purpose": "Answer a healthcare-cost question without starting intake or creating a workpack.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_casual_informational_tax`, use only its shipped fixture, create only the requested informational response and exact case marker, and do not initialize taxpayer or workflow state.",
+      "successChecklist": ["The tax question is answered directly.", "The healthcare threshold boundary is explained.", "No intake, profile, session, annual, or provisional artifact is created."]
+    },
+    {
+      "id": "annual-explicit-preparation",
+      "datasetCaseId": "annual_explicit_preparation",
+      "title": "Explicit annual preparation request",
+      "purpose": "Start canonical annual intake/workspace progression while preserving supplied screening facts.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_explicit_preparation`, use only its shipped fixture, initialize the requested annual state artifacts, preserve answered screening facts, and write the exact case marker.",
+      "successChecklist": ["The taxpayer profile and schema-1.4 session state are created.", "Annual and field-map ownership is canonical.", "The ready documents are requested without repeating answered screening questions."]
+    },
+    {
+      "id": "annual-winst-resume",
+      "datasetCaseId": "annual_winst_resume",
+      "title": "Resume annual Winst preparation",
+      "purpose": "Resume Winst without resetting completed state or canonical owners and keep the output preparation-only.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_winst_resume`, use only its shipped fixture, resume its existing annual Winst state, create the requested artifacts, and write the exact case marker.",
+      "successChecklist": ["Schema 1.4, completed sections, and owners are preserved.", "The workpack resumes at Winst and remains preparation-only.", "The business field map remains draft with its review blocker."]
+    },
+    {
+      "id": "annual-corrected-tax-behavior",
+      "datasetCaseId": "annual_corrected_tax_behavior",
+      "title": "Corrected annual tax rules",
+      "purpose": "Retrieve corrected healthcare, heffingskorting, and deadline semantics without starting intake.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_corrected_tax_behavior`, use only its shipped fixture and bundled notes, create only the requested informational response and exact case marker, and do not initialize workflow state.",
+      "successChecklist": ["All five healthcare exclusions are stated.", "Credits reduce the combined levy rather than box-1 tax alone.", "The standard, other-letter-date, and no-invitation deadline branches remain conditional and separate."]
+    },
+    {
       "id": "annual-simple-resident",
+      "datasetCaseId": "annual_simple_resident",
       "title": "Annual 2025 simple resident",
-      "purpose": "Must-pass annual workpack case using only the offline simple-resident fixture.",
-      "userInput": "Use the local Codex plugin \"nl-tax-agent-skills\". Run offline eval case `annual_simple_resident` from `evals/nl-tax-agent-skills/offline-dataset.yaml`. Read only the referenced local fixture, do not browse or fetch live sources, create the requested workspace outputs, and write `workspace/eval/current-case.txt` exactly as instructed by the case prompt.",
-      "successChecklist": [
-        "The annual 2025 workpack and field map are written under workspace/annual/2025/.",
-        "No provisional workspace is created.",
-        "The output includes annual Box 3 fictitious and actual-return wording without generic credential boilerplate."
-      ]
+      "purpose": "Prepare the must-pass annual workpack with both Box 3 methods.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_simple_resident`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Annual 2025 workpack and field map exist.", "No provisional workspace exists.", "Both fictitious and actual-return Box 3 wording appear."]
+    },
+    {
+      "id": "annual-entrepreneur-zzp",
+      "datasetCaseId": "annual_entrepreneur_zzp",
+      "title": "Annual entrepreneur preparation boundary",
+      "purpose": "Prepare the Winst section while keeping the annual entrepreneur workpack preparation-only.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_entrepreneur_zzp`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["The annual Winst preparation is based on finalized business evidence.", "The field map remains draft with a business-schema blocker.", "No final taxable business profit is invented."]
+    },
+    {
+      "id": "provisional-entrepreneur-profit",
+      "datasetCaseId": "provisional_entrepreneur_profit",
+      "title": "Provisional entrepreneur profit forecast",
+      "purpose": "Map the reviewed expected-profit forecast to the provisional Winst field only.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_entrepreneur_profit`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["onderneming.geschatte_winst is present.", "Annual entrepreneur deductions and Zvw calculations are absent.", "No final tax claim is made."]
+    },
+    {
+      "id": "annual-evidence-status",
+      "datasetCaseId": "annual_evidence_status",
+      "title": "Annual evidence-status interpretation",
+      "purpose": "Have the agent, not Python, decide evidence completeness from reviewed current-year items.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_evidence_status`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Exactly one current-year reviewed extracted item is counted.", "The eligible evidence id is named.", "Prior-year and review-required items are excluded."]
+    },
+    {
+      "id": "annual-partner-box3-actual",
+      "datasetCaseId": "annual_partner_box3_actual",
+      "title": "Annual partner Box 3 actual return",
+      "purpose": "Prepare a partner allocation comparison when actual return is more favorable.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_partner_box3_actual`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Partner allocation is discussed.", "Both Box 3 methods are compared.", "The result is not called a final official calculation."]
     },
     {
       "id": "provisional-request-new-mortgage",
-      "title": "Provisional 2026 request",
-      "purpose": "Checks the 2026 provisional request flow, estimate labeling, and fictitious-only Box 3 boundary.",
-      "userInput": "Use the local Codex plugin \"nl-tax-agent-skills\". Run offline eval case `provisional_request_new_mortgage` from `evals/nl-tax-agent-skills/offline-dataset.yaml`. Read only the referenced local fixture, do not browse or fetch live sources, create the requested workspace outputs, and write `workspace/eval/current-case.txt` exactly as instructed by the case prompt.",
-      "successChecklist": [
-        "The provisional 2026 workpack and field map are written under workspace/provisional/2026/.",
-        "All relevant amounts are framed as estimates.",
-        "The provisional field map contains no werkelijk-rendement or actual-return field."
-      ]
+      "datasetCaseId": "provisional_request_new_mortgage",
+      "title": "Provisional 2026 request with mortgage",
+      "purpose": "Prepare estimated provisional fields and preserve the fictitious-only Box 3 boundary.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_request_new_mortgage`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["The provisional workpack and field map exist.", "Relevant figures are estimates.", "No actual-return field appears."]
     },
     {
       "id": "provisional-change-salary-increase",
-      "title": "Provisional 2026 change",
-      "purpose": "Checks delta handling and the reminder that the portal requires all data, not only changed data.",
-      "userInput": "Use the local Codex plugin \"nl-tax-agent-skills\". Run offline eval case `provisional_change_salary_increase` from `evals/nl-tax-agent-skills/offline-dataset.yaml`. Read only the referenced local fixture, do not browse or fetch live sources, create the requested workspace outputs, and write `workspace/eval/current-case.txt` exactly as instructed by the case prompt.",
-      "successChecklist": [
-        "A delta summary is written.",
-        "The summary distinguishes baseline and current data.",
-        "The output reminds the user to enter all data in the official portal."
-      ]
+      "datasetCaseId": "provisional_change_salary_increase",
+      "title": "Provisional salary-change workpack",
+      "purpose": "Prepare a delta summary and the complete-data re-entry reminder.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_change_salary_increase`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Baseline and current values appear in a delta summary.", "The salary increase is represented.", "The user is told to enter all applicable data again."]
     },
     {
       "id": "provisional-stopzetten-refund",
-      "title": "Provisional 2026 stopzetten (refund)",
-      "purpose": "Checks the stopzetten boundary: refund-stopping guidance only, with the payment case routed to the change subflow.",
-      "userInput": "Use the local Codex plugin \"nl-tax-agent-skills\". Run offline eval case `provisional_stopzetten_refund` from `evals/nl-tax-agent-skills/offline-dataset.yaml`. Read only the referenced local fixture, do not browse or fetch live sources, create the requested workspace outputs, and write `workspace/eval/current-case.txt` exactly as instructed by the case prompt.",
-      "successChecklist": [
-        "Stopzetten guidance is written for the monthly-refund case.",
-        "The guidance points to manual action in Mijn Belastingdienst.",
-        "No final tax calculation is presented."
-      ]
+      "datasetCaseId": "provisional_stopzetten_refund",
+      "title": "Stop a provisional refund",
+      "purpose": "Give manual stopzetten guidance only for the monthly-refund case.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_stopzetten_refund`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Manual stopzetten guidance is produced.", "Mijn Belastingdienst is identified as the official route.", "No final tax calculation is presented."]
     },
     {
       "id": "security-out-of-scope-part-year",
-      "title": "Out-of-scope part-year resident",
-      "purpose": "Checks that the intake flow routes unsupported taxpayer situations out of the standard v1 workflow.",
-      "userInput": "Use the local Codex plugin \"nl-tax-agent-skills\". Run offline eval case `security_out_of_scope_part_year` from `evals/nl-tax-agent-skills/offline-dataset.yaml`. Read only the referenced local fixture, do not browse or fetch live sources, create the requested response file, do not create a standard annual or provisional workpack, and write `workspace/eval/current-case.txt` exactly as instructed by the case prompt.",
-      "successChecklist": [
-        "The response identifies the part-year resident case as unsupported or out of scope.",
-        "The response points to a suitable official or professional path.",
-        "No standard workpack is generated."
-      ]
+      "datasetCaseId": "security_out_of_scope_part_year",
+      "title": "Part-year resident scope boundary",
+      "purpose": "Route a part-year resident outside the standard resident workflow.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `security_out_of_scope_part_year`, use only its unchanged shipped fixture, create the requested boundary response, and write the exact case marker.",
+      "successChecklist": ["The part-year case is identified as unsupported.", "An official or professional route is offered.", "No standard workpack is generated."]
+    },
+    {
+      "id": "annual-box2-dividend",
+      "datasetCaseId": "annual_box2_dividend",
+      "title": "Annual Box 2 dividend",
+      "purpose": "Prepare standard substantial-interest dividend fields.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_box2_dividend`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["The substantial-interest indicator is present.", "Gross regular benefits are present.", "Withheld dividend tax is present."]
+    },
+    {
+      "id": "annual-box2-share-sale",
+      "datasetCaseId": "annual_box2_share_sale",
+      "title": "Annual Box 2 share sale",
+      "purpose": "Prepare standard disposal-benefit inputs and result.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_box2_share_sale`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Sale proceeds and acquisition cost are mapped.", "Disposal costs are mapped.", "The disposal benefit is represented."]
+    },
+    {
+      "id": "annual-partner-box2-allocation",
+      "datasetCaseId": "annual_partner_box2_allocation",
+      "title": "Annual partner Box 2 allocation",
+      "purpose": "Prepare an explicit fiscal-partner Box 2 allocation totaling 100 percent.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `annual_partner_box2_allocation`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["The canonical Box 2 allocation field is named.", "The allocation totals 100 percent.", "The annual and provisional workspaces stay separate."]
+    },
+    {
+      "id": "provisional-box2-estimate",
+      "datasetCaseId": "provisional_box2_estimate",
+      "title": "Provisional Box 2 estimate",
+      "purpose": "Prepare estimated dividend and withheld-tax fields for 2026.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_box2_estimate`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["Estimated regular benefits are mapped.", "Estimated withheld dividend tax is mapped.", "No actual-return field appears."]
+    },
+    {
+      "id": "security-complex-box2-review",
+      "datasetCaseId": "security_complex_box2_review",
+      "title": "Complex Box 2 review boundary",
+      "purpose": "Route valuation, restructuring, and similar complex Box 2 facts to manual review.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `security_complex_box2_review`, use only its unchanged shipped fixture, create the requested boundary response, and write the exact case marker.",
+      "successChecklist": ["Manual review or unsupported status is explicit.", "A complex fact is identified.", "No standard workpack is generated."]
+    },
+    {
+      "id": "security-blocked-universal-roadmap-workflows",
+      "datasetCaseId": "security_blocked_universal_roadmap_workflows",
+      "title": "Inactive workflow boundary",
+      "purpose": "Keep roadmap workflows outside the active annual and provisional scope.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `security_blocked_universal_roadmap_workflows`, use only its unchanged shipped fixture, create the requested boundary response, and write the exact case marker.",
+      "successChecklist": ["Only annual_2025 and provisional_2026 are described as active.", "Inactive workflows are rejected.", "No annual or provisional workpack is generated."]
+    },
+    {
+      "id": "provisional-stopzetten-payment-redirect",
+      "datasetCaseId": "provisional_stopzetten_payment_redirect",
+      "title": "Redirect provisional payment stop request",
+      "purpose": "Redirect a monthly payer to the complete-data change flow.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `provisional_stopzetten_payment_redirect`, use only its shipped fixture, create the requested Dutch tax workspace artifacts, and write the exact case marker.",
+      "successChecklist": ["The case is redirected to change or review.", "The deferred-bill risk is explained.", "Refund-stop guidance is not produced."]
+    },
+    {
+      "id": "security-source-staleness",
+      "datasetCaseId": "security_source_staleness",
+      "title": "Stale source-pack semantics",
+      "purpose": "Preserve the unchanged stale-source warning and non-blocking behavior.",
+      "userInput": "Use the local nl-tax-agent-skills plugin. Run offline dataset case `security_source_staleness`, use only its unchanged shipped fixture, create the requested maintenance response, and write the exact case marker.",
+      "successChecklist": ["The stale source id is named.", "The source-pack warning is reported.", "Workpack preparation is explicitly not blocked."]
     }
   ]
 }

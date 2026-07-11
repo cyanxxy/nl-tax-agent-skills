@@ -120,6 +120,23 @@ class FixtureSchemaTests(unittest.TestCase):
         self.assertEqual(len(case_ids), len(set(case_ids)))
         self.assertEqual(set(case_ids), set(dataset["benchmark_default_cases"]))
 
+    @unittest.skipUnless(
+        DATASET_PATH.is_file(),
+        "repo-only offline dataset is absent from standalone plugin package",
+    )
+    def test_dataset_includes_payment_redirect_and_staleness_fixtures(self):
+        dataset = yaml.safe_load(DATASET_PATH.read_text(encoding="utf-8"))
+        fixtures = {case["id"]: case["fixture"] for case in dataset["cases"]}
+
+        self.assertEqual(
+            fixtures["provisional_stopzetten_payment_redirect"],
+            "skills/_shared/eval-fixtures/provisional/stopzetten-payment-redirect.yaml",
+        )
+        self.assertEqual(
+            fixtures["security_source_staleness"],
+            "skills/_shared/eval-fixtures/security/source-staleness.yaml",
+        )
+
     def test_annual_entrepreneur_fixture_keeps_field_map_draft(self):
         data = load_fixture("annual/entrepreneur-zzp.yaml")
         state = data["expected_state"]
@@ -133,6 +150,35 @@ class FixtureSchemaTests(unittest.TestCase):
         self.assertEqual(state["annual_2025_subsection"], "winst")
         self.assertEqual(state["workpack_owner"], "nl-tax-annual-return")
         self.assertEqual(state["field_map_owner"], "nl-tax-field-mapper")
+
+    def test_cowork_behavior_fixtures_preserve_routing_and_resume_contracts(self):
+        casual = load_fixture("annual/casual-informational-tax.yaml")
+        explicit = load_fixture("annual/explicit-preparation.yaml")
+        resume = load_fixture("annual/winst-resume.yaml")
+        corrected = load_fixture("annual/corrected-tax-behavior.yaml")
+
+        self.assertFalse(casual["user_request"]["explicitly_requests_preparation"])
+        self.assertIn(
+            "workspace/taxpayer/profile.yaml",
+            casual["expected_outputs"]["files_not_created"],
+        )
+
+        self.assertTrue(explicit["user_request"]["explicitly_requests_preparation"])
+        self.assertEqual(
+            explicit["expected_state"]["session_progress_version"], "1.4"
+        )
+
+        resume_state = resume["expected_state"]
+        self.assertEqual(resume_state["annual_2025_subsection"], "winst")
+        self.assertTrue(resume_state["preserves_completed_subsections"])
+        self.assertFalse(resume_state["resets_profile_or_session"])
+        self.assertEqual(resume_state["workpack_owner"], "nl-tax-annual-return")
+        self.assertEqual(resume_state["field_map_owner"], "nl-tax-field-mapper")
+
+        corrected_checks = corrected["expected_outputs"]["response_checks"]
+        self.assertEqual(len(corrected_checks["healthcare_excluded"]), 5)
+        self.assertEqual(corrected_checks["credit_reduces"], "gecombineerde_heffing")
+        self.assertFalse(corrected_checks["no_invitation_extension_available"])
 
     def test_provisional_entrepreneur_fixture_maps_only_expected_profit(self):
         data = load_fixture("provisional/entrepreneur-profit.yaml")

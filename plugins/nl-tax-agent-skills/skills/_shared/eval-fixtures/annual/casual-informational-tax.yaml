@@ -1,0 +1,32 @@
+# Eval fixture: Casual informational annual-tax question
+
+fixture_id: eval_annual_casual_informational_tax
+fixture_version: "1.0"
+scenario: "Casual healthcare-cost question does not start intake"
+tax_year: 2025
+workflow: intake
+
+user_request:
+  text: "Can unreimbursed prescribed medicine be deductible on my Dutch 2025 return?"
+  explicitly_requests_preparation: false
+
+expected_outputs:
+  response_checks:
+    - answers_question_directly: true
+    - states_potentially_qualifying: true
+    - mentions_income_dependent_threshold: true
+  files_not_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/shared/session-progress.yaml
+    - workspace/annual/**
+    - workspace/provisional/**
+
+expected_behavior:
+  - "Answer the informational question directly"
+  - "Do not start intake or ask the annual/provisional screening questions"
+  - "Do not create taxpayer, session, annual, or provisional workflow files"
+
+acceptance_criteria:
+  - "Unreimbursed prescribed medicine is described as potentially qualifying healthcare cost"
+  - "The income-dependent threshold and manual-review calculation boundary are mentioned"
+  - "No intake interview or workpack is started"

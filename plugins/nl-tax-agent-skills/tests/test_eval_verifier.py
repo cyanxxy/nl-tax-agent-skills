@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests for offline benchmark workspace verification."""
 
+import hashlib
 import importlib.util
 import json
 import pathlib
@@ -65,6 +66,10 @@ class OfflineVerifierTests(unittest.TestCase):
         dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
         cases = {case["id"]: case for case in dataset["cases"]}
         expected = {
+            "annual_casual_informational_tax": "skills/_shared/eval-fixtures/annual/casual-informational-tax.yaml",
+            "annual_explicit_preparation": "skills/_shared/eval-fixtures/annual/explicit-preparation.yaml",
+            "annual_winst_resume": "skills/_shared/eval-fixtures/annual/winst-resume.yaml",
+            "annual_corrected_tax_behavior": "skills/_shared/eval-fixtures/annual/corrected-tax-behavior.yaml",
             "annual_entrepreneur_zzp": "skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml",
             "provisional_entrepreneur_profit": "skills/_shared/eval-fixtures/provisional/entrepreneur-profit.yaml",
             "annual_evidence_status": "skills/_shared/eval-fixtures/annual/evidence-status.yaml",
@@ -113,6 +118,57 @@ class OfflineVerifierTests(unittest.TestCase):
             if rule["path"] == "workspace/annual/2025/return-pack.md"
         )
         self.assertIn("Eligible reviewed current-year evidence: 1", evidence_pack["all"])
+
+    def test_omitted_shipped_fixtures_are_wired_without_replacing_security_fixture(self):
+        dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
+        dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
+        fixtures = {case["id"]: case["fixture"] for case in dataset["cases"]}
+
+        self.assertEqual(
+            fixtures.get("provisional_stopzetten_payment_redirect"),
+            "skills/_shared/eval-fixtures/provisional/stopzetten-payment-redirect.yaml",
+        )
+        self.assertEqual(
+            fixtures.get("security_source_staleness"),
+            "skills/_shared/eval-fixtures/security/source-staleness.yaml",
+        )
+
+        security_fixture = (
+            REPO_ROOT
+            / "plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/security/source-staleness.yaml"
+        )
+        self.assertEqual(
+            hashlib.sha256(security_fixture.read_bytes()).hexdigest(),
+            "2fbba317ea782b13f100731e4c52b37cd5eef44d18a26d8242d146dccf995218",
+        )
+
+    def test_first_party_cowork_cases_use_native_prose_format(self):
+        case_names = {
+            "cowork-casual-tax-question",
+            "cowork-explicit-annual-preparation",
+            "cowork-annual-entrepreneur-boundary",
+            "cowork-provisional-entrepreneur-profit",
+            "cowork-corrected-tax-rules",
+        }
+        eval_root = REPO_ROOT / "evals/claude"
+
+        for case_name in case_names:
+            with self.subTest(case=case_name):
+                prompt = eval_root / case_name / "prompt.md"
+                criteria = eval_root / case_name / "graders/criteria.md"
+                self.assertTrue(prompt.is_file(), prompt)
+                self.assertTrue(criteria.is_file(), criteria)
+                self.assertIn('schema_version: "1.1"', prompt.read_text(encoding="utf-8"))
+                self.assertIn("type: llm", criteria.read_text(encoding="utf-8"))
+
+    def test_benchmark_contains_tax_specific_copy_only(self):
+        benchmark_path = REPO_ROOT / "evals/nl-tax-agent-skills/plugin-eval-benchmark.json"
+        benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+        rendered = json.dumps(benchmark)
+
+        self.assertNotIn("Edit workspace.sourcePath", rendered)
+        self.assertNotIn("What are the 3 highest-value real tasks", rendered)
+        self.assertIn("Dutch tax", rendered)
 
     def test_offline_verifier_validates_generated_field_maps(self):
         verifier = load_module(

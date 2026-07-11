@@ -1,0 +1,42 @@
+# Eval fixture: Explicit annual-return preparation request
+
+fixture_id: eval_annual_explicit_preparation
+fixture_version: "1.0"
+scenario: "Explicit annual 2025 preparation request starts intake progression"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: "Help me prepare my Dutch 2025 income-tax return."
+  explicitly_requests_preparation: true
+
+known_screening_facts:
+  full_year_nl_resident: true
+  filing_as_individual: true
+  living_taxpayer: true
+  workflow_candidate: annual_2025
+  documents_ready:
+    - jaaropgave_2025
+    - bank_year_statement_2025
+
+expected_outputs:
+  files_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/shared/session-progress.yaml
+  files_not_created:
+    - workspace/provisional/**
+  response_checks:
+    - offers_local_workpack_preparation: true
+    - asks_for_ready_relevant_documents: true
+    - does_not_repeat_answered_screening_questions: true
+
+expected_state:
+  session_progress_version: "1.4"
+  workflow: annual_2025
+  workpack_owner: nl-tax-annual-return
+  field_map_owner: nl-tax-field-mapper
+
+acceptance_criteria:
+  - "The explicit request starts annual_2025 intake/workspace progression"
+  - "Already supplied screening facts are preserved rather than asked again"
+  - "The agent requests the ready relevant documents and does not file the return"

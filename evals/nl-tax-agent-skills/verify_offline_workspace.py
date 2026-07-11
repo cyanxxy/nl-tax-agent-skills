@@ -295,7 +295,38 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
     ]
     plugin_root = next((c for c in candidates if c.is_dir()), candidates[0])
     errors: list[str] = []
-    for case in dataset.get("cases", []) or []:
+    cases = dataset.get("cases", []) or []
+    case_ids = [case.get("id") for case in cases]
+    fixture_paths = [case.get("fixture") for case in cases]
+    default_ids = dataset.get("benchmark_default_cases", []) or []
+
+    if len(case_ids) != len(set(case_ids)):
+        errors.append("dataset case ids must be unique")
+    if len(default_ids) != len(set(default_ids)):
+        errors.append("benchmark_default_cases must not contain duplicates")
+    if set(default_ids) != set(case_ids):
+        missing = sorted(set(case_ids) - set(default_ids))
+        extra = sorted(set(default_ids) - set(case_ids))
+        errors.append(
+            "benchmark_default_cases must equal dataset case ids "
+            f"(missing={missing}, extra={extra})"
+        )
+    if len(fixture_paths) != len(set(fixture_paths)):
+        errors.append("each dataset case must reference a unique fixture path")
+
+    fixture_root = plugin_root / "skills/_shared/eval-fixtures"
+    shipped = {
+        path.relative_to(plugin_root).as_posix()
+        for path in fixture_root.glob("*/*.yaml")
+    }
+    referenced = {path for path in fixture_paths if isinstance(path, str)}
+    if referenced != shipped:
+        errors.append(
+            "dataset fixture paths must equal shipped fixture paths "
+            f"(missing={sorted(shipped - referenced)}, extra={sorted(referenced - shipped)})"
+        )
+
+    for case in cases:
         fixture = case.get("fixture")
         if fixture and not (plugin_root / fixture).is_file():
             errors.append(f"{case.get('id', '<unknown>')}: fixture does not exist: {fixture}")
