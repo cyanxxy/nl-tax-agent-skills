@@ -111,17 +111,19 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
         self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.8'", text)
 
-    def test_architecture_docs_match_artifact_ownership(self):
+    def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
         contributing = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        combined = readme + "\n" + contributing
 
         self.assertNotIn("background helpers → workspace/shared/", readme)
         self.assertNotIn("background helper notes", contributing)
         self.assertNotIn("field-map.yaml                # nl-tax-field-mapper input", contributing)
         self.assertIn("canonical nl-tax-field-mapper output", contributing)
-        self.assertIn("background helpers persist nothing", combined)
-        self.assertIn("mapper alone writes the canonical", combined)
+        self.assertIn(
+            "background helpers return facts/questions without persisting files",
+            contributing,
+        )
+        self.assertIn("field mapper alone writes canonical", contributing)
 
 
 if __name__ == "__main__":
