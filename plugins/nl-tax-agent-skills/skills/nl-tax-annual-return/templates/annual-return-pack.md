@@ -246,14 +246,22 @@ The KIA is deducted when determining the winst before ondernemersaftrek. The MKB
 
 [If no own home: "Not applicable -- the taxpayer does not own a primary residence. Skip to Box 3 notes."]
 
+One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review. For those cases list the collected dates, addresses, use, occupancy, listing/rental status, WOZ evidence, and mortgage evidence; do not complete the standard calculation below.
+
 ### WOZ-waarde
 
 - WOZ-waarde (waardepeildatum 1 January 2024): EUR [amount] -- Src: [F/U/A/?]
 - Bezwaar filed: [yes/no] -- Src: [F/U/A/?]
 
-### Hypotheekrente
+### Deductible own-home costs
 
-- Total mortgage interest paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Mortgage interest paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Qualifying financing costs paid in 2025: EUR [amount] -- Src: [F/U/A/?]
+- Periodic erfpacht payments: EUR [amount] -- Src: [F/U/A/?]
+- Periodic opstal payments: EUR [amount] -- Src: [F/U/A/?]
+- Periodic beklemming payments: EUR [amount] -- Src: [F/U/A/?]
+- `total_deductible_own_home_costs`: EUR [sum of mortgage interest, qualifying financing costs, and periodic erfpacht/opstal/beklemming] -- Src: C:cost-sum
+- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
 - Mortgage type: [annuitair / lineair / aflossingsvrij (pre-2013)] -- Src: [F/U/A/?]
 - Outstanding balance 31 December 2025: EUR [amount] -- Src: [F/U/A/?]
 - Deduction qualification: [confirmed / requires review]
@@ -266,6 +274,8 @@ The KIA is deducted when determining the winst before ondernemersaftrek. The MKB
 
 ### Tariefsaanpassing
 
+Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and is never added to taxable Box 1 income.
+
 [If taxpayer income is in the top bracket above [threshold from `box1-rates.md`]:]
 
 - Portion of deductible own-home costs falling in schijf 3: EUR [amount] -- Src: C:...
@@ -276,25 +286,34 @@ The KIA is deducted when determining the winst before ondernemersaftrek. The MKB
 
 ### Hillenregeling
 
-[If eigenwoningforfait exceeds mortgage interest:]
+[If eigenwoningforfait exceeds `total_deductible_own_home_costs`:]
 
-- Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [interest] = EUR [amount] -- Src: C:...
+- Excess eigenwoningforfait: EUR [eigenwoningforfait] - EUR [`total_deductible_own_home_costs`] = EUR [amount] -- Src: C:...
 - Hillenregeling correction: EUR [amount] x [Hillen percentage from `own-home.md`] = EUR [amount] -- Src: C:...
-- Net eigenwoningforfait after Hillenregeling: EUR [amount] -- Src: C:...
+- `hillen_deduction`: EUR [amount] -- Src: C:...
 
-[If mortgage interest exceeds eigenwoningforfait: "Not applicable -- mortgage interest exceeds the eigenwoningforfait."]
+[If total deductible own-home costs equal or exceed eigenwoningforfait: "Not applicable -- total deductible own-home costs equal or exceed the eigenwoningforfait."]
 
 ### Net own-home result
 
 | Item | Amount | Src |
 |------|--------|-----|
 | Eigenwoningforfait | EUR [amount] | C:above |
-| Minus: mortgage interest | EUR [amount] | [F/U/A/?] |
-| Plus: tariefsaanpassing (if applicable) | EUR [amount] | C:above |
-| Minus: Hillenregeling correction (if applicable) | EUR [amount] | C:above |
-| **Net own-home result** | **EUR [amount]** | C:sum |
+| Minus: `total_deductible_own_home_costs` | EUR [amount] | C:cost-sum |
+| Minus: `hillen_deduction` (if applicable) | EUR [amount] | C:above |
+| **`box1_own_home_balance`** | **EUR [amount]** | C:sum |
 
-[A negative result reduces box 1 taxable income.]
+`box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
+
+[A negative balance reduces box 1 taxable income. Verify optional helper output against the cited evidence; if any cost qualification or complex-home fact is unresolved, preserve it as manual review.]
+
+### Separate tax-benefit adjustment review
+
+| Item | Amount | Src |
+|------|--------|-----|
+| Tariefsaanpassing (if applicable) | EUR [amount] | C:above |
+
+[This review adjustment affects the tax benefit only and is not included in `box1_own_home_balance`.]
 
 ## Box 2 notes
 

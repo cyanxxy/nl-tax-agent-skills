@@ -4,14 +4,24 @@ source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
 
-The eigen woning (owner-occupied home) is taxed in box 1 through the eigenwoningforfait (deemed rental value) and the deduction of mortgage interest (hypotheekrenteaftrek). The net result (forfait minus interest) is added to box 1 income, which is typically negative (a deduction) when mortgage interest exceeds the forfait.
+The eigen woning (owner-occupied home) is taxed in box 1 through the eigenwoningforfait and all qualifying deductible own-home costs. The workpack separates the taxable own-home balance from the tax-benefit rate adjustment.
 
 These are reference notes for workpack preparation -- not final tax advice.
+
+### Calculation and review contract
+
+- `total_deductible_own_home_costs = mortgage interest + qualifying financing costs + periodic erfpacht/opstal/beklemming`.
+- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+- Hillen uses `total_deductible_own_home_costs`, not mortgage interest alone.
+- `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
+- Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and must never be added to taxable Box 1 income.
+- Optional helper fields are review inputs only. The agent verifies the cited evidence and retains incomplete or uncertain qualifications as manual review.
+- One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
 
 ## Eigenwoningforfait (deemed rental value)
 
@@ -51,6 +61,7 @@ Mortgage interest paid on the eigen woning loan is deductible in box 1.
 
 - Mortgage interest (hypotheekrente) paid during the calendar year
 - Qualifying one-off mortgage financing costs (e.g., notarial costs for the mortgage deed, appraisal fees for obtaining the loan, NHG application costs) -- deductible at once in the year paid
+- Periodic payments for erfpacht, opstal, or beklemming
 - Penalty interest (boeterente) for early repayment in certain situations
 
 ### What is NOT deductible
@@ -68,17 +79,19 @@ For taxpayers with box 1 income in the highest bracket (schijf 3, above EUR 76,8
 - In 2025, deductible own-home costs are effectively limited to 37.48% (the schijf 2 rate).
 - This means that for high-income taxpayers, the portion of own-home costs that would otherwise be deductible at 49.50% is only deductible at 37.48%.
 - The difference (49.50% - 37.48% = 12.02% of the deductible own-home costs falling in schijf 3) is added back as a tariefsaanpassing, reducing the tax benefit.
+- Keep this adjustment in its own review table; it does not change the taxable own-home balance.
 
 ### Calculation in the workpack
 
 1. Calculate the gross eigenwoningforfait based on WOZ-waarde
-2. Determine total deductible mortgage interest
-3. Calculate the net eigen woning result (forfait minus interest)
-4. If the taxpayer's income falls in schijf 3, calculate the tariefsaanpassing and note the reduced benefit
+2. Determine `total_deductible_own_home_costs`, including mortgage interest, qualifying financing costs, and periodic erfpacht/opstal/beklemming
+3. Calculate Hillen against that total when applicable
+4. Calculate `box1_own_home_balance` using the contract above
+5. If the taxpayer's income falls in schijf 3, record the tariefsaanpassing separately and note the reduced tax benefit
 
 ## Hillenregeling (aftrek geen of geringe eigenwoningschuld)
 
-The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or little mortgage debt. Historically, if the eigenwoningforfait exceeded the mortgage interest paid, the excess forfait was eliminated via this correction.
+The Hillenregeling reduces a positive own-home balance when a homeowner has no or low qualifying deductible own-home costs. The comparison uses the total of mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
 
 ### Phase-out status for 2025
 
@@ -100,10 +113,9 @@ The Hillenregeling reduces the eigenwoningforfait when a homeowner has no or lit
 
 ## Moving during 2025
 
-- If the taxpayer bought, sold, or moved during 2025, calculate eigenwoningforfait for the period the taxpayer was registered at the address as their main residence.
-- For periods when the former home is empty and for sale, or the new home is empty/under construction before occupancy, the eigenwoningforfait can be EUR 0 under the official moving-home rules.
-- There may be a period of double own-home costs (verhuisregeling) when the old home is for sale and the new home is already purchased. Under certain conditions, interest on both homes remains deductible for the year of moving plus the following 3 calendar years.
-- The workpack should capture registration/move dates, sale/listing status, vacancy/rental status, and determine the correct period amounts.
+- The workpack may prepare a review estimate only for one ordinary main residence.
+- For two homes, sale/purchase overlap, temporary double-home deductions, divorce use, or another complex case, collect registration/move dates, both addresses, sale/listing and vacancy/rental status, expected occupancy, mortgage evidence, and use arrangements.
+- Route the qualification and period calculation to manual review rather than determining a standard filing amount.
 
 ## Notes
 

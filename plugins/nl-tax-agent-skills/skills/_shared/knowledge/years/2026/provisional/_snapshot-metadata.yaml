@@ -25,9 +25,9 @@ sources:
     source_id: bd_fisin_aanmerkelijk_belang_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
   bd_own_home_deduction_cap_2026:
-    content_hash_sha256: b382142b6de0c37a3039b0f55c2c91985354f50852d6c2a2c8c8621e780f013b
+    content_hash_sha256: 6da610b521194c8ba436a2ebb3577c67fbcbde777126a60a7382f3770ebf014b
     review_status: reviewed
-    snapshot_created_at: '2026-07-02T12:00:00+00:00'
+    snapshot_created_at: '2026-07-10T14:12:38.963065+00:00'
     source_id: bd_own_home_deduction_cap_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
   bd_provisional_change_2026:

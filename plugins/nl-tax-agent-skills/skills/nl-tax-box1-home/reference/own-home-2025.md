@@ -4,7 +4,7 @@ source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Contents
@@ -23,6 +23,16 @@ review_status: reviewed
 This reference describes the detailed eigen woning rules for the annual return 2025. It covers eigenwoningforfait calculation, hypotheekrenteaftrek, tariefsaanpassing, Hillenregeling, and edge cases for property changes during the year.
 
 These are reference notes for workpack preparation -- not final tax advice.
+
+## Own-home calculation contract
+
+- `total_deductible_own_home_costs = mortgage interest + qualifying financing costs + periodic erfpacht/opstal/beklemming`.
+- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+- Hillen compares eigenwoningforfait with `total_deductible_own_home_costs`, not mortgage interest alone.
+- `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
+- Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and must not be added to taxable Box 1 income.
+- Optional helper fields are review inputs. The agent verifies them against the evidence and keeps missing or uncertain qualification facts visible for manual review.
+- One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
 
 ---
 
@@ -101,6 +111,7 @@ For taxpayers whose box 1 income exceeds the schijf 2 boundary (EUR 76,817 in 20
 - The maximum effective deduction rate for own-home deductible costs is capped at 37.48% (the schijf 2 rate)
 - Taxpayers in schijf 3 (49.50%) do not get the full 49.50% tax benefit on those costs
 - The tariefsaanpassing adds back the difference: (49.50% - 37.48%) = 12.02% of the deductible own-home costs that fall within the schijf 3 portion of income
+- Record the amount only in a separate tax-benefit-adjustment review table; it does not change `box1_own_home_balance`.
 
 ### When tariefsaanpassing applies
 
@@ -142,7 +153,7 @@ eigenwoningschuld to the taxpayer's share when ownership and the loan are split.
 
 ## Hillenregeling (aftrek wegens geen of geringe eigenwoningschuld)
 
-The Hillenregeling provides relief for homeowners who have paid off their mortgage (fully or substantially). It reduces the eigenwoningforfait when the forfait exceeds the deductible mortgage interest.
+The Hillenregeling provides relief for homeowners who have paid off their mortgage fully or substantially. It reduces the positive own-home balance when the eigenwoningforfait is greater than all qualifying deductible own-home costs.
 
 ### Phase-out status for 2025
 
@@ -151,34 +162,35 @@ For 2025, 76.667% of the difference between the eigenwoningforfait and deductibl
 ### When the Hillenregeling applies
 
 The Hillenregeling applies when:
-- Eigenwoningforfait > deductible mortgage interest (including the case of zero mortgage interest)
-- The excess forfait (eigenwoningforfait minus mortgage interest) would otherwise be added to box 1 income
+- Eigenwoningforfait > `total_deductible_own_home_costs`, including when those costs are zero
+- The excess after mortgage interest, qualifying financing costs, and periodic erfpacht/opstal/beklemming would otherwise remain in box 1 income
 
 ### Calculation
 
 1. Determine eigenwoningforfait (A)
-2. Determine deductible mortgage interest (B)
+2. Determine `total_deductible_own_home_costs` (B): mortgage interest plus qualifying financing costs plus periodic erfpacht, opstal, or beklemming
 3. If A > B, the excess = A - B
-4. Hillenregeling correction = excess x 76.667% (for 2025)
-5. Net eigenwoningforfait after Hillenregeling = A - Hillenregeling correction
-6. The remaining net amount is added to box 1 income
+4. `hillen_deduction` = excess x 76.667% (for 2025)
+5. `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
+6. Add only `box1_own_home_balance` to box 1 income; keep any tariefsaanpassing separate
 
 ### Practical effect
 
 - For a homeowner with NO mortgage: the eigenwoningforfait is reduced by 76.667%, so 23.333% of it remains before other box 1 effects
-- For a homeowner with a small mortgage where forfait > interest: partial benefit applies
-- For a homeowner whose mortgage interest exceeds the forfait (the common case): the Hillenregeling does not apply, and the net result remains a deduction
+- For a homeowner with low total deductible own-home costs: partial benefit may apply
+- When total deductible own-home costs equal or exceed the forfait: the Hillenregeling does not apply, and the own-home balance remains zero or negative
 
 ---
 
 ## Multiple own-home situations
 
+This section identifies facts to collect, not cases for a standard calculation. One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
+
 ### Sold and bought in the same year
 
 - If the taxpayer sold one home and bought another during 2025:
-  - Eigenwoningforfait is calculated for the period the taxpayer was registered at each address as their main residence
-  - Mortgage interest is deductible only for the period each loan was active
-  - Both properties must be the taxpayer's primary residence during their respective periods
+  - Collect registration, sale, purchase, mortgage, and use dates for both addresses
+  - Record the evidence and route the period allocation and qualification outcome to manual review
 
 ### Temporary double housing (verhuisregeling)
 
@@ -186,12 +198,13 @@ The Hillenregeling applies when:
 - Under the verhuisregeling, mortgage interest on the old home remains deductible for the year of moving plus the following 3 calendar years, provided it is for sale, empty, and not rented out
 - The eigenwoningforfait for the old home is EUR 0 while it is empty and for sale
 - Collect: move/registration date, date old home listed for sale, vacancy/rental status, date old home sold
+- Do not apply the exception automatically; route the collected facts and possible temporary double-home deduction to manual review
 
 ### Partial year ownership
 
 - If the eigen woning was owned for only part of 2025 (purchased or sold during the year):
-  - Eigenwoningforfait is calculated for the period the taxpayer was registered there as their main residence, not simply by ownership days
-  - Mortgage interest deduction applies only for the period the mortgage was active
+  - Collect the registration, ownership, use, and mortgage dates
+  - Route the period calculation to manual review
 
 ---
 

@@ -44,6 +44,18 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 19. **Human review checklist** — items requiring human verification before filing, including every `U:` chat-only value
 20. **Not submission advice** — mandatory disclaimer section
 
+### Own-home calculation and review boundary
+
+The own-home section must itemize mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming. Their sum is `total_deductible_own_home_costs`, and Hillen uses that total rather than mortgage interest alone.
+
+Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+
+`box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
+
+Tariefsaanpassing is separate from box1_own_home_balance. Show it in a separate review table as a tax-benefit adjustment and never add it to taxable Box 1 income. Optional helper fields are review inputs only: the agent verifies their evidence and keeps unresolved qualification or amount questions visible as manual review.
+
+One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
+
 ---
 
 ## Source attribution rules
@@ -276,6 +288,7 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Box 3 section includes both fictitious and actual return notes, with rates quoted from the knowledge file
 - [ ] Credits screening lists each of the 4 credits with trigger result
 - [ ] Partner allocation is addressed (even if no partner — state "not applicable")
+- [ ] Own-home notes use `total_deductible_own_home_costs` for Hillen, keep `tariefsaanpassing` separate, and route every complex home case to manual review
 - [ ] IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Winst uit onderneming amounts (zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, KIA, urencriterium) are read from the entrepreneur knowledge notes, not paraphrased, and complex business forms are routed to manual review
 

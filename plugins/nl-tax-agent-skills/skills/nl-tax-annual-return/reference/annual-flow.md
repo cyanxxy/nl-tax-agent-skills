@@ -254,21 +254,16 @@ Compile the eigen woning section if applicable.
 ### 3.3 Mortgage interest (hypotheekrente)
 
 - Extract from jaaroverzicht hypotheek evidence item
-- Record total deductible interest paid during 2025
+- Record mortgage interest paid during 2025
+- Itemize qualifying one-off financing costs and periodic erfpacht, opstal, or beklemming payments
+- Set `total_deductible_own_home_costs` to mortgage interest plus qualifying financing costs plus periodic erfpacht/opstal/beklemming; do not use mortgage interest alone for Hillen
 - Check mortgage type: annuitair/lineair (post-2013) or aflossingsvrij (pre-2013 transitional)
 - Verify the mortgage qualifies for deduction (purchased, improved, or maintained the eigen woning)
 - Record outstanding mortgage balance as of 31 December 2025
 
 ### 3.4 Tijdelijke twee woningen (verkoopregeling / aankoopregeling)
 
-If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new home and the old home has not sold):
-
-- Read the "Temporarily two homes" section of `_shared/knowledge/own-home/hypotheekrenteaftrek.md` and apply the verkoopregeling and/or aankoopregeling.
-- The verkoopregeling keeps interest on the **old** home deductible for **the year of moving plus the 3 subsequent calendar years**, provided the home is empty, for sale, not rented out, and was the hoofdverblijf in the year of moving or in one of the 3 preceding years.
-- The aankoopregeling keeps interest on the **new** home deductible before occupancy, provided the home is empty or under construction and the taxpayer will live there in the same year or within the 3 calendar years that follow.
-- Collect, in a single batch of up to 6 questions: move date, old-home address + WOZ + mortgage statement, new-home address + WOZ + mortgage statement, vacancy/listing status of the old home.
-- Compute the deduction window endpoints in absolute dates and record them in the workpack ("interest on [old address] is deductible through 31 December [year + 3]").
-- Only route to manual review when a condition is genuinely ambiguous (partial-year letting, undocumented hoofdverblijf history, treaty/nonresident facts). A clean overlap that satisfies the conditions does NOT need manual review.
+One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review. Collect the move and registration dates, both addresses, WOZ evidence, mortgage statements, sale/listing and vacancy/rental status, expected occupancy, and any divorce-use arrangement; do not calculate or present a standard filing result for these cases.
 
 ### 3.5 Eigenwoningforfait calculation
 
@@ -277,6 +272,7 @@ If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new 
 
 ### 3.6 Tariefsaanpassing
 
+- Treat `tariefsaanpassing` as a separate tax-benefit adjustment; it is never part of `box1_own_home_balance` and is not added to taxable Box 1 income.
 - If the taxpayer's box 1 income falls in the top bracket (threshold per `_shared/knowledge/years/2025/annual/box1-rates.md`):
   - Calculate the portion of deductible own-home costs that falls in the top bracket
   - Cap the effective deduction rate at the 2025 deduction-rate cap from `_shared/knowledge/years/2025/annual/deductions.md` (bd_own_home_deduction_cap_2025 / bd_deduction_rate_cap_2025)
@@ -285,16 +281,18 @@ If the taxpayer had two homes during 2025 (sold/bought in-year, or owns the new 
 
 ### 3.7 Hillenregeling
 
-- If the eigenwoningforfait exceeds the mortgage interest paid:
+- If the eigenwoningforfait exceeds `total_deductible_own_home_costs`:
   - Apply the Hillenregeling correction using the 2025 percentage from `_shared/knowledge/own-home/eigenwoningforfait.md`
   - The correction reduces the net positive eigenwoningforfait
-- If mortgage interest exceeds eigenwoningforfait: Hillenregeling does not apply
+- If total deductible own-home costs equal or exceed eigenwoningforfait: Hillenregeling does not apply
 
 ### 3.8 Net own-home result
 
-- Net result = eigenwoningforfait minus mortgage interest (typically negative / a deduction)
-- Adjusted for tariefsaanpassing and Hillenregeling if applicable
-- This amount is added to box 1 income
+- `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
+- `total_deductible_own_home_costs` includes mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+- Use the verified optional helper fields `total_deductible_own_home_costs`, `hillen_deduction`, and `box1_own_home_balance` when available. Otherwise the agent derives the review estimate from cited evidence and records missing or uncertain qualification facts for manual review.
+- Add only `box1_own_home_balance` to taxable Box 1 income. Tariefsaanpassing is separate from box1_own_home_balance: keep it in a separate review table as a tax-benefit adjustment.
 
 ### 3.9 Partner handling for own home
 
@@ -543,7 +541,7 @@ Delegate the fiscal-partner determination and allocation modelling to the `nl-ta
 ### 6.2 Allocatable items
 
 List all items that can be freely allocated between partners:
-- Eigen woning result (net forfait minus interest)
+- Eigen woning result (`box1_own_home_balance`, after all qualifying deductible own-home costs and Hillen)
 - Box 2 income from aanmerkelijk belang, when full-year fiscal partner allocation applies
 - Box 3 grondslag (assets minus debts)
 - Persoonsgebonden aftrek components (alimentatie, zorgkosten, giften, etc.)

@@ -121,9 +121,9 @@ sources:
     source_id: bd_labour_tax_credit_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2025
   bd_own_home_deduction_cap_2025:
-    content_hash_sha256: 4c1be22a04af9ab94f17f8d442cc5fb203bb832d954c56d74e72b2ba319819c9
+    content_hash_sha256: 33643bbcc60f734de01689ac3efe5df10fadeb39de4310c5f8b9a94cbccf7d72
     review_status: reviewed
-    snapshot_created_at: '2026-05-30T10:38:51.138867+00:00'
+    snapshot_created_at: '2026-07-10T14:12:38.963065+00:00'
     source_id: bd_own_home_deduction_cap_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
   bd_stock_options_2025:

@@ -4,12 +4,22 @@ source_ids: bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-10"
 review_status: reviewed
 
 ## Rule
 
 Mortgage interest and certain own-home costs are deductible only when they relate to the eigenwoningschuld for the taxpayer's own home. The official filing environment performs the binding calculation; the workpack prepares source-backed notes and missing-info flags.
+
+## Own-home calculation contract
+
+- `total_deductible_own_home_costs = mortgage interest + qualifying financing costs + periodic erfpacht/opstal/beklemming`.
+- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
+- Hillen uses `total_deductible_own_home_costs`, not mortgage interest alone.
+- `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
+- Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and must not be added to taxable Box 1 income.
+- Optional helper facts remain subject to agent verification. Missing evidence or uncertain qualification stays visible as manual review.
+- One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
 
 ## Mortgage interest conditions
 
@@ -49,7 +59,7 @@ Do not deduct:
 
 ## Temporarily two homes
 
-Two named exceptions extend hypotheekrenteaftrek beyond the moment the taxpayer actually occupies a single home. Apply the one that matches the facts; both can apply at once during a move.
+Two named exceptions can extend hypotheekrenteaftrek beyond the moment the taxpayer actually occupies a single home. The following conditions identify facts to collect; the workpack does not apply either exception automatically.
 
 ### Verkoopregeling (old home)
 
@@ -76,14 +86,14 @@ Interest on a bridge loan tied to the old-to-new transfer is deductible for the 
 
 When the taxpayer reports two homes during the tax year:
 
-1. Determine which regime applies to each home (verkoopregeling for the old, aankoopregeling for the new). Both can apply concurrently.
-2. Confirm the conditions above against the user's facts (move date, listing status, vacancy, expected move-in date). Record each fact with its `source` and `evidence_id` or `quote`.
-3. Compute the deduction window endpoints in absolute dates so the workpack can state plainly "interest on [address] is deductible through 31 December [year + 3]".
-4. Only route to manual review when one of the conditions is genuinely ambiguous (e.g. partial-year letting, undocumented hoofdverblijf history, treaty/nonresident facts). A clean overlap of a few months that satisfies the conditions does NOT need manual review -- prepare it.
+1. Collect which regime may apply to each home (verkoopregeling for the old, aankoopregeling for the new).
+2. Collect move date, listing status, vacancy or rental status, expected move-in date, both mortgage statements, and any divorce-use arrangement. Record each fact with its `source` and `evidence_id` or `quote`.
+3. Record possible deduction-window endpoints as review questions, not final filing conclusions.
+4. Route every two-home, sale/purchase overlap, temporary double-home deduction, divorce-use, or other complex own-home outcome to manual review.
 
 ## Workpack handling
 
 - Ask for the mortgage annual statement and, when relevant, the mortgage deed or amended loan agreement.
 - Flag post-2013 mortgages for manual confirmation of linear or annuity repayment.
-- For two-home situations, collect move date, old-home sale/listing status, vacancy/rental status, and expected move-in date for the new home.
+- For two-home situations, collect move date, old-home sale/listing status, vacancy/rental status, expected move-in date for the new home, and any divorce-use facts; route the result to manual review.
 - Do not calculate a final filing value when qualification facts are missing; mark the item as missing or manual review.

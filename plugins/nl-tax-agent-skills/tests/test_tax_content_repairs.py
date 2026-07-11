@@ -149,6 +149,9 @@ class TaxContentRepairTests(unittest.TestCase):
     def test_own_home_balance_excludes_tariefsaanpassing(self):
         relatives = (
             "_shared/knowledge/years/2025/annual/own-home.md",
+            "_shared/knowledge/own-home/eigenwoningforfait.md",
+            "_shared/knowledge/own-home/hypotheekrenteaftrek.md",
+            "_shared/knowledge/years/2026/provisional/own-home.md",
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
@@ -157,6 +160,10 @@ class TaxContentRepairTests(unittest.TestCase):
         self.assert_official_source(
             "bd_own_home_deduction_cap_2025", 2025, relatives
         )
+        self.assert_official_reference(
+            "bd_eigenwoningforfait_multiple_homes", relatives
+        )
+        self.assert_official_reference("bd_temporary_two_homes_interest", relatives)
         equation = (
             "box1_own_home_balance = eigenwoningforfait - "
             "total_deductible_own_home_costs - hillen_deduction"
@@ -166,7 +173,16 @@ class TaxContentRepairTests(unittest.TestCase):
                 self.assert_normalized_equation(relative, equation)
                 self.assert_text_contract(
                     relative,
-                    required=("tariefsaanpassing",),
+                    required=(
+                        "tariefsaanpassing",
+                        "one ordinary main residence",
+                        "two homes",
+                        "sale/purchase overlap",
+                        "temporary double-home deductions",
+                        "divorce use",
+                        "collect facts",
+                        "manual review",
+                    ),
                     required_any=(
                         (
                             "separate from box1_own_home_balance",
@@ -185,6 +201,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "_shared/knowledge/years/2026/provisional/own-home.md",
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-annual-return/reference/annual-output-contract.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
         self.assert_official_source(
