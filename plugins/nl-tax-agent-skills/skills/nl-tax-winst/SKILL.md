@@ -37,10 +37,13 @@ or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwis
 search within the loaded plugin/skill tree and resolve relative to this skill
 directory.
 
-Read the reviewed 2025 knowledge notes — they are canonical for every rate,
-amount, and threshold. Never paraphrase a figure from memory; read it from these
-files and return each `source_id` to the owning workflow so that workflow can
-append it to `session-progress.yaml` → `sources_loaded`:
+Select the owning workflow's mode before loading mode-specific material. Never
+load both modes for comparison.
+
+For **annual 2025 preparation-only**, read the reviewed 2025 knowledge notes
+below. They are canonical for every rate, amount, and threshold. Never
+paraphrase a figure from memory; return each loaded `source_id` to the owning
+workflow so it can append the ID to `session-progress.yaml` → `sources_loaded`:
 
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`
@@ -49,7 +52,11 @@ append it to `session-progress.yaml` → `sources_loaded`:
 - `../_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md`
 - `../_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md`
 - `reference/winst-2025.md` — how the pieces fit together for the workpack
-- `reference/winst-2026-provisional.md` — bounded expected-profit forecast
+
+For **provisional 2026 expected-profit forecast**, load only
+`reference/winst-2026-provisional.md`. Do not load the annual 2025 entrepreneur
+notes or `reference/winst-2025.md`; this mode needs a sourced, user-reviewed
+forecast, not annual rates, deductions, or accounts.
 
 There are no bundled calculators for this helper. Its job is classification and
 question generation, not completing the taxpayer's accounts or tax computation.

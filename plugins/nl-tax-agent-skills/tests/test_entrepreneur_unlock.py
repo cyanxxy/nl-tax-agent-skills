@@ -203,6 +203,21 @@ class WinstHelperTests(unittest.TestCase):
         self.assertIn("expected-profit forecast", skill)
         self.assertNotIn("calculate final taxable business profit", skill)
 
+    def test_winst_helper_loads_only_the_active_mode(self):
+        skill = read_text("skills/nl-tax-winst/SKILL.md").lower()
+        annual = skill.split("for **annual 2025 preparation-only**", 1)[1].split(
+            "for **provisional 2026 expected-profit forecast**", 1
+        )[0]
+        provisional = skill.split(
+            "for **provisional 2026 expected-profit forecast**", 1
+        )[1].split("there are no bundled calculators", 1)[0]
+        self.assertIn("years/2025/entrepreneur", annual)
+        self.assertNotIn("winst-2026-provisional", annual)
+        self.assertIn("winst-2026-provisional", provisional)
+        self.assertNotIn("years/2025/entrepreneur", provisional)
+        self.assertIn("do not load the annual 2025", provisional)
+        self.assertIn("or `reference/winst-2025.md`", provisional)
+
 
 class AnnualWorkflowTests(unittest.TestCase):
     def test_annual_skill_delegates_to_winst_helper(self):

@@ -83,25 +83,27 @@ the agent-driven manual checks in each `SKILL.md` apply.
 |---|---|---|
 | `nl-tax-intake` | user entry | Screen scope, select a supported workflow, create `workspace/taxpayer/profile.yaml` |
 | `nl-tax-evidence-indexer` | user entry | Index local evidence files, compute hashes, produce review questions |
-| `nl-tax-annual-return` | user entry | Prepare the annual 2025 return workpack and field map (incl. winst uit onderneming for an eenmanszaak / ZZP) |
+| `nl-tax-annual-return` | user entry | Prepare the annual 2025 workpack and invoke the mapper for its field map (incl. preparation-only winst) |
 | `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, or stopzetten packages |
 | `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps |
 | `nl-tax-submit-companion` | manual-only | Create a manual checklist for official submission |
-| `nl-tax-box1-home` | background | Summarize box 1 and own-home notes into `workspace/shared/` |
-| `nl-tax-box2` | background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
-| `nl-tax-box3` | background | Classify assets and produce source-backed box 3 notes (no method mixing) |
-| `nl-tax-winst` | background | Prepare winst uit onderneming notes for an eenmanszaak / ZZP (annual 2025 only) |
-| `nl-tax-partner-deductions` | background | Produce fiscal-partner and allocation notes |
+| `nl-tax-box1-home` | background | Return sourced Box 1 and own-home facts/questions to the owning workflow |
+| `nl-tax-box2` | background | Return standard Box 2 facts/questions to the owning workflow |
+| `nl-tax-box3` | background | Return trusted-row, method-specific Box 3 facts without method mixing |
+| `nl-tax-winst` | background | Return annual-2025 preparation facts or one sourced provisional-2026 expected-profit forecast |
+| `nl-tax-partner-deductions` | background | Return fiscal-partner, deduction, and allocation facts/questions |
 | `nl-tax-source-refresh` | developer | Validate source registers, knowledge snapshots, and supported workflows |
 
-Only the annual and provisional workflow skills write main workpacks; helper skills write
-shared notes only.
+Only the annual and provisional workflow skills write main workpacks. Intake
+creates taxpayer/session state, the field mapper alone writes canonical field
+maps, and background helpers write no artifacts.
 
 The annual workflow is phase-based (intake gate, evidence review, Box 1/own home,
 optional winst, Box 2, Box 3, partner allocations, field mapping, and final review).
 The provisional workflow has four separate subflows: request, change, review, and
-stopzetten. `nl-tax-winst` supports only straightforward annual-2025 eenmanszaak/ZZP
-preparation; it is not a provisional tax engine.
+stopzetten. `nl-tax-winst` supports straightforward annual-2025 preparation and
+the single bounded provisional field `onderneming.geschatte_winst`; it is not a
+provisional tax engine or final business-tax calculator.
 
 The package passes manifest and discovery checks, including first-party Claude validation
 when the CLI capability is installed. Those checks do not replace a human Cowork UI smoke

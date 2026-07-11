@@ -42,7 +42,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-box1-home/               # background helper
     nl-tax-box2/                    # background helper
     nl-tax-box3/                    # background helper
-    nl-tax-winst/                   # annual-2025 eenmanszaak/ZZP preparation helper
+    nl-tax-winst/                   # annual-2025 preparation / provisional-2026 forecast helper
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
@@ -134,8 +134,8 @@ The body then specifies the *Do / Never* contract that constrains the skill, for
    calculation, or assumption.
 3. Cover box 1, own home, deductions, partner notes, and box 3.
 4. Include both annual 2025 box 3 methods for user review.
-5. Write the workpack and field map; log assumptions and missing info
-   to `workspace/shared/`.
+5. Write the workpack, invoke the field mapper for the canonical map, and log
+   assumptions and missing info to `workspace/shared/`.
 
 ## Never
 - Do not log in, submit, sign, or automate forms.
@@ -166,22 +166,19 @@ workspace/
   taxpayer/
     profile.yaml                    # nl-tax-intake output
     evidence-index.yaml             # nl-tax-evidence-indexer output
-  shared/                           # background helper notes (box1, box2, box3, partner)
-    box1-home-notes.md
-    box2-notes.md
-    box3-notes.md
-    allocation-options.md
+  shared/                           # workflow-owned cross-cutting state
+    session-progress.yaml           # created only by nl-tax-intake
     assumptions.md                  # every explicit assumption, all workflows
     missing-info.md                 # items the user still needs to provide
   annual/
     2025/
       return-pack.md                # main annual workpack (incl. human review checklist)
-      field-map.yaml                # nl-tax-field-mapper input
+      field-map.yaml                # canonical nl-tax-field-mapper output
       notes/                        # per-section working notes
   provisional/
     2026/
       provisional-pack.md           # all subflows
-      field-map.yaml                # request / change subflows
+      field-map.yaml                # canonical mapper output for request/change
       delta-summary.md              # change subflow
       review-questions.md           # review subflow
       notes/                        # per-section working notes
@@ -193,9 +190,10 @@ review. The provisional playbook keeps `request`, `change`, `review`, and `stopz
 separate subflows. Winst preparation is confined to a straightforward annual-2025
 eenmanszaak/ZZP; provisional 2026 records only the supported estimated-profit input.
 
-Output-path ownership is enforced by the *Never* contracts in each skill: `annual-return`
-must never write to `workspace/provisional/**`, and background helpers must never write
-outside `workspace/shared/`.
+Output-path ownership is enforced by the *Never* contracts in each skill:
+`annual-return` must never write to `workspace/provisional/**`; intake alone
+creates taxpayer/session state; the field mapper alone writes canonical field
+maps; and background helpers return facts/questions without persisting files.
 
 ---
 

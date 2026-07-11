@@ -1,6 +1,6 @@
 ---
 name: nl-tax-intake
-description: Use when the user explicitly wants to start or organize a 2025 Dutch annual-return or 2026 provisional-assessment workflow. Do not use for informational tax questions.
+description: Use when the user explicitly wants to start a supported 2025/2026 Dutch tax workflow or asks an informational question about bundled rules. Information never starts intake.
 argument-hint: "[annual|request|change|review|stopzetten]"
 allowed-tools:
   - Read
@@ -13,6 +13,27 @@ allowed-tools:
 # NL Tax Intake
 
 Open the conversation with the user, figure out which Dutch tax workflow applies, and progressively build a taxpayer profile. **This skill is conversational.** The user does not arrive with everything ready - ask one focused thing at a time, persist the answer, and continue.
+
+## Informational fast path — no intake state
+
+Before creating or reading taxpayer/session files, decide whether the user is
+asking only for information. If they do not explicitly ask to prepare,
+organize, request, change, review, or stop a workpack:
+
+1. Do not create or update `profile.yaml`, `session-progress.yaml`, workpacks,
+   field maps, assumptions, or missing-info files.
+2. Identify the supported year/topic and load only the directly relevant
+   reviewed note(s) under `_shared/knowledge/`. Read each note's `source_ids`,
+   then search `_shared/source-register.yaml` for only those matching entries;
+   do not read the complete register. Answer from the note and matched source
+   entries, not model memory.
+3. Keep annual and provisional rules distinct and state any manual-review or
+   unsupported boundary from the loaded note.
+4. Answer the question directly. A short offer to start preparation later is
+   fine, but do not ask screening questions unless the user then explicitly
+   requests preparation.
+
+The remaining intake instructions apply only after explicit preparation intent.
 
 This skill is the sole creator of `workspace/shared/session-progress.yaml`.
 Downstream workflows update the state created here, but never create or
@@ -30,7 +51,8 @@ may only accelerate mechanical checks when the host already supports them.
 
 - User wants to file a Dutch income tax return
 - User wants to request, change, review, or stop a voorlopige aanslag
-- User mentions Dutch taxes, belastingaangifte, aangifte, or voorlopige aanslag
+- User asks an informational question about a bundled annual-2025 or
+  provisional-2026 rule; use the fast path and create no state
 - First contact for any Dutch tax preparation task
 
 ## Read first (every turn)
@@ -45,7 +67,7 @@ even when `Read` and `Glob` can. If the host has already expanded
 for file tools; otherwise search within the loaded plugin/skill tree and resolve
 relative to this skill directory.
 
-Before responding to the user, read:
+For explicit preparation only, before responding to the user, read:
 
 1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract this skill follows.
 2. `reference/filing-paths.md` - intent-based workflow disambiguation and the request / change / review / stopzetten decision tree. Use it whenever the user is unsure which workflow they want, or does not recognize the jargon in screening question 4.

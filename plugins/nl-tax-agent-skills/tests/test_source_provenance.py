@@ -41,7 +41,10 @@ class SourceProvenanceTests(unittest.TestCase):
                     "reviewed_note_hash_sha256",
                     "reviewed_note_hash_recorded_at",
                 }
-                forbidden = {"content_hash_sha256", "snapshot_created_at"}
+                forbidden = {
+                    "content_" + "hash_sha256",
+                    "snapshot_" + "created_at",
+                }
                 if not required <= item.keys() or forbidden & item.keys():
                     violations.append(f"{source_id}: legacy or missing hash keys")
                 if item.get("review_status") != "reviewed":

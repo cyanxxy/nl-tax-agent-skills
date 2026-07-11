@@ -67,6 +67,25 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertNotIn("mentions belastingaangifte", intake)
         self.assertNotIn("mentions tax documents", evidence)
 
+    def test_informational_questions_use_notes_without_creating_state(self):
+        intake = read_skill("nl-tax-intake").lower()
+        informational = intake.split(
+            "## informational fast path", 1
+        )[1].split("## user-facing boundary", 1)[0]
+        for required in (
+            "do not create or update",
+            "source-register.yaml",
+            "_shared/knowledge/",
+            "not model memory",
+            "do not read the complete register",
+            "do not ask screening questions",
+        ):
+            self.assertIn(required, informational)
+        self.assertLess(
+            informational.index("_shared/knowledge/"),
+            informational.index("source-register.yaml"),
+        )
+
     def test_other_public_descriptions_use_explicit_user_intent(self):
         for skill_name in (
             "nl-tax-annual-return",

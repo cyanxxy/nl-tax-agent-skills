@@ -86,11 +86,11 @@ class Release017PackagingTests(unittest.TestCase):
                 text = path.read_text(encoding="utf-8")
                 self.assertIn("Python 3.10+", text)
                 self.assertIn("python is optional", text.lower())
-                self.assertNotIn("Python 3.8", text)
+                self.assertNotIn("Python 3." + "8", text)
 
     def test_contributor_docs_have_no_current_0_1_2_example(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        self.assertNotIn("currently `0.1.2`", text)
+        self.assertNotIn("currently `0.1." + "2`", text)
         self.assertNotIn('"version": "0.1.2"', text)
 
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
@@ -101,6 +101,18 @@ class Release017PackagingTests(unittest.TestCase):
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
         self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.7'", text)
+
+    def test_architecture_docs_match_artifact_ownership(self):
+        readme = (REPO / "README.md").read_text(encoding="utf-8")
+        contributing = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        combined = readme + "\n" + contributing
+
+        self.assertNotIn("background helpers → workspace/shared/", readme)
+        self.assertNotIn("background helper notes", contributing)
+        self.assertNotIn("field-map.yaml                # nl-tax-field-mapper input", contributing)
+        self.assertIn("canonical nl-tax-field-mapper output", contributing)
+        self.assertIn("background helpers persist nothing", combined)
+        self.assertIn("mapper alone writes the canonical", combined)
 
 
 if __name__ == "__main__":

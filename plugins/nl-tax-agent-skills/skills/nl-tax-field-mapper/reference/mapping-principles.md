@@ -9,12 +9,12 @@ review_status: reviewed
 
 This reference defines how workpack findings are mapped to submission form fields. These principles apply to both annual and provisional field maps.
 
-Workflow skills may create an initial `field-map.yaml` next to their workpack,
-and this field-mapper skill may later refine that same file. The most recently
-validated `field-map.yaml` at the workflow path is authoritative for manual
-entry. Do not create duplicate field-map files; update the workflow-specific path
-and preserve valid sourced entries unless the current workpack/reference makes
-them obsolete.
+Only `nl-tax-field-mapper` creates or updates the canonical `field-map.yaml`
+next to an annual or provisional workpack. Owning workflow skills pass their
+workpack and context to the mapper; they never seed or rewrite the map. The most
+recent mapper-validated file at the canonical workflow path is authoritative
+for manual entry. Do not create duplicate field-map files, and preserve valid
+sourced entries unless the current workpack/reference makes them obsolete.
 
 ---
 

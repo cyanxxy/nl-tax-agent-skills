@@ -670,8 +670,13 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         annual = read_text("skills/nl-tax-annual-return/SKILL.md")
         provisional = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
         mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
+        principles = read_text(
+            "skills/nl-tax-field-mapper/reference/mapping-principles.md"
+        )
 
         self.assertIn("sole writer of both canonical field-map artifacts", mapper)
+        self.assertIn("Only `nl-tax-field-mapper` creates or updates", principles)
+        self.assertNotIn("Workflow skills may create an initial", principles)
         self.assertIn("`workspace/annual/2025/field-map.yaml`", mapper)
         self.assertIn("`workspace/provisional/2026/field-map.yaml`", mapper)
         for workflow in (annual, provisional):

@@ -278,19 +278,20 @@ flowchart TB
     evidx --> annual
     evidx --> prov
 
-    subgraph helpers ["background helpers → workspace/shared/"]
+    subgraph helpers ["background helpers → facts and questions returned to caller"]
         direction LR
         b1["box1-home"] ~~~ b2["box2"] ~~~ b3["box3"] ~~~ wn["winst"] ~~~ pd["partner-deductions"]
     end
     annual <-.-> helpers
     prov <-.-> helpers
 
-    annual --> apack[/"annual/2025/<br/>return-pack.md · field-map.yaml"/]
-    prov --> ppack[/"provisional/2026/<br/>provisional-pack.md · field-map.yaml (request/change)<br/>delta-summary.md (change) · review-questions.md (review)"/]
+    annual --> apack[/"annual/2025/<br/>return-pack.md"/]
+    prov --> ppack[/"provisional/2026/<br/>provisional-pack.md<br/>delta-summary.md (change) · review-questions.md (review)"/]
 
     apack --> mapper["nl-tax-field-mapper"]
     ppack --> mapper
-    mapper --> submit["nl-tax-submit-companion"]
+    mapper --> maps[/"canonical annual/provisional<br/>field-map.yaml"/]
+    maps --> submit["nl-tax-submit-companion"]
     submit --> portal(["✅ you type into Mijn Belastingdienst"])
 
     classDef skill fill:#D97757,stroke:#B85C3E,color:#fff
@@ -298,12 +299,16 @@ flowchart TB
     classDef endpoint fill:#2EA44F,stroke:#22863A,color:#fff
     classDef input fill:#6E56CF,stroke:#5A45B0,color:#fff
     class intake,indexer,annual,prov,mapper,submit,b1,b2,b3,wn,pd skill
-    class profile,evidx,apack,ppack file
+    class profile,evidx,apack,ppack,maps file
     class portal endpoint
     class chat,docs input
 ```
 
-Skills compose without hidden state: each one consumes upstream files and writes to a scoped path. Background helpers — `box1-home`, `box2`, `box3`, `winst`, and `partner-deductions` — write **only** to `workspace/shared/`.
+Skills compose without hidden state. Owning workflow skills persist taxpayer,
+session, annual, and provisional artifacts. Background helpers — `box1-home`,
+`box2`, `box3`, `winst`, and `partner-deductions` — return structured facts,
+questions, and review notes to the caller and write no artifacts. The field
+mapper alone writes the canonical annual/provisional field map.
 
 The skills are instructed to trace every value in a workpack to evidence, profile data, a calculation that cites a `source_id`, or a logged assumption. Review the workpack to confirm this before entry.
 
@@ -317,18 +322,20 @@ The full annotated `workspace/` tree and skill-authoring internals are documente
 |---|:---:|---|
 | `nl-tax-intake` | 🙋 user entry | Screen scope, route to a supported workflow, write `workspace/taxpayer/profile.yaml` |
 | `nl-tax-evidence-indexer` | 🙋 user entry | Hash and index local evidence files, classify without deciding tax treatment |
-| `nl-tax-annual-return` | 🙋 user entry | Prepare `workspace/annual/2025/return-pack.md` and an annual field map (incl. winst uit onderneming for an eenmanszaak / ZZP) |
+| `nl-tax-annual-return` | 🙋 user entry | Prepare `workspace/annual/2025/return-pack.md`; invoke the mapper for its field map (incl. preparation-only winst for an eenmanszaak / ZZP) |
 | `nl-tax-provisional-assessment` | 🙋 user entry | Prepare 2026 request, change, review, and stopzetten packages |
 | `nl-tax-field-mapper` | 🙋 user entry | Convert workpack findings into manual-entry field maps and review tables |
 | `nl-tax-submit-companion` | 🔒 manual-only | Produce a human checklist for official Belastingdienst submission |
-| `nl-tax-box1-home` | ⚙️ background | Summarize box 1 and eigen-woning facts into `workspace/shared/` |
-| `nl-tax-box2` | ⚙️ background | Prepare Box 2 substantial-interest notes into `workspace/shared/` |
-| `nl-tax-box3` | ⚙️ background | Classify assets and produce annual/provisional box 3 notes without mixing methods |
-| `nl-tax-winst` | ⚙️ background | Prepare winst uit onderneming notes for an eenmanszaak / ZZP into `workspace/shared/` (annual 2025 only) |
-| `nl-tax-partner-deductions` | ⚙️ background | Determine fiscal-partner and allocation notes for the main workpack |
+| `nl-tax-box1-home` | ⚙️ background | Return sourced Box 1/eigen-woning facts and questions to the owning workflow |
+| `nl-tax-box2` | ⚙️ background | Return standard Box 2 facts and questions to the owning workflow |
+| `nl-tax-box3` | ⚙️ background | Return classified-row review and method-specific Box 3 facts without mixing methods |
+| `nl-tax-winst` | ⚙️ background | Return annual-2025 preparation facts or one sourced provisional-2026 expected-profit forecast |
+| `nl-tax-partner-deductions` | ⚙️ background | Return fiscal-partner, allocation, and deduction facts and questions |
 | `nl-tax-source-refresh` | 🛠️ developer | Validate and refresh local source snapshots and workflow declarations |
 
-Top-level workflow skills own `workspace/annual/**` and `workspace/provisional/**`. Background helpers write only to `workspace/shared/`.
+Top-level workflow skills own `workspace/annual/**` and
+`workspace/provisional/**`. Intake owns taxpayer/session creation, the field
+mapper owns canonical field maps, and background helpers persist nothing.
 
 ---
 
