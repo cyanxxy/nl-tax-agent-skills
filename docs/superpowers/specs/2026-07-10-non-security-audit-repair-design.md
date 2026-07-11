@@ -1,8 +1,8 @@
 # NL Tax Agent Skills Non-Security Audit Repair Design
 
-**Date:** 2026-07-10  
-**Target release:** 0.1.7  
-**Primary host:** Claude Cowork  
+**Date:** 2026-07-10
+**Target release:** 0.1.7
+**Primary host:** Claude Cowork
 **Secondary hosts:** Claude Code and Codex
 
 ## Objective
