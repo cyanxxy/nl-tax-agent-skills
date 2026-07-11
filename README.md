@@ -177,6 +177,13 @@ best-effort in Cowork: if Bash cannot see the resolved plugin script path, the
 skills fall back to manual validation from the same references instead of
 copying scripts into `workspace/`.
 
+Python is optional at runtime; do not ask a taxpayer to install it. For hosts
+and maintainers that already provide Python 3.10+, the 14 mechanical helpers
+belong to four conceptual components: evidence inventory/hash, field-map
+checks, source-pinned arithmetic checks, and developer consistency/source
+maintenance. The LLM agent still owns interpretation, evidence sufficiency,
+workflow decisions, and the workpack.
+
 Codex implicit-invocation control is enforced structurally through each non-user-invocable skill's `agents/openai.yaml` and statically validated by `validate_invocation_policy.py`. It has not been integration-tested in a live Codex host, so verify it in your target build before release.
 
 <details>

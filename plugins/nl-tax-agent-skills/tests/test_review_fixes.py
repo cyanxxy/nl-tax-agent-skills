@@ -108,11 +108,11 @@ class InvocationPolicyFrontmatterTests(unittest.TestCase):
         self.assertEqual(checked, ["helper-c"])
 
 
-class FetchSourcesUrlAllowlistTests(unittest.TestCase):
+class PlanSourceRefreshUrlAllowlistTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
-            "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
-            "fetch_sources_review",
+            "skills/nl-tax-source-refresh/scripts/plan_source_refresh.py",
+            "plan_source_refresh_review",
         )
 
     def test_userinfo_trick_is_rejected(self):

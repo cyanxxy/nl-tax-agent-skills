@@ -4,10 +4,11 @@ This is the maintainer/contributor reference for **NL Tax Agent Skills**. For wh
 plugin does, how to install it, and how to use it, see the [README](README.md).
 
 The product is a skills-only Agent Skills plugin under `plugins/nl-tax-agent-skills/` —
-no backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks;
-Python scripts stay small and deterministic (file inventory, hashing, schema validation,
-simple math, freshness checks). When extending behavior, prefer adding to a `SKILL.md`
-over adding script logic.
+no backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks.
+Python is optional and its small deterministic helpers are limited to four conceptual
+components: evidence inventory/hash, field-map checks, source-pinned arithmetic checks,
+and developer consistency/source maintenance. When extending behavior, prefer adding to
+a `SKILL.md` over adding script logic.
 
 ---
 
@@ -241,7 +242,9 @@ rates, thresholds, field maps, or box 3 logic for a future year.
 
 ## Validation
 
-Requires Python 3.10+ and PyYAML (`pip install -r requirements.txt`). Run from the repo root.
+Maintainer checks use Python 3.10+ and PyYAML (`pip install -r requirements.txt`).
+Python remains optional for taxpayer workflows because every runtime check has an
+agent-executable manual path. Run the following commands from the repo root.
 CI (`.github/workflows/ci.yml`) runs the full gate on every push/PR, from both the repo root
 and the plugin directory.
 
@@ -283,8 +286,8 @@ python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 
 ```bash
 # Report source freshness without live HTTP fetching
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/fetch_sources.py all
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/fetch_sources.py provisional 2026
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/plan_source_refresh.py all
+python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/plan_source_refresh.py provisional 2026
 
 # Recompute snapshot metadata after source updates
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/build_snapshots.py \

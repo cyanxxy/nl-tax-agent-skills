@@ -53,10 +53,12 @@ The test suite runs standalone from this package (`python3 -m unittest discover 
 Python is optional at runtime. Do not ask the taxpayer to install Python: the
 agent applies the same explicit checks from the bundled knowledge and skill
 instructions. The bundled scripts are best-effort mechanical accelerators, not
-the primary mechanism. When a maintainer chooses to run them, they need Python
-3.8+ and — for the validators and register tooling — PyYAML (`python3 -m pip
-install pyyaml`). On hosts without PyYAML the scripts exit with a clear message
-and the agent-driven fallbacks in each SKILL.md apply.
+the primary mechanism. They form four conceptual components: evidence
+inventory/hash, field-map checks, source-pinned arithmetic checks, and
+developer consistency/source maintenance. When a maintainer chooses to run
+them, they need Python 3.10+ and — for the validators and register tooling —
+PyYAML (`python3 -m pip install pyyaml`). On hosts without Python or PyYAML,
+the agent-driven manual checks in each `SKILL.md` apply.
 
 ## Skill inventory
 

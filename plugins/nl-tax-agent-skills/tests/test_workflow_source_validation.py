@@ -185,8 +185,8 @@ sources:
 
     def test_fetch_flag_reports_refresh_plan_without_live_fetch_language(self):
         module = load_module(
-            "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
-            "fetch_sources_plan_only",
+            "skills/nl-tax-source-refresh/scripts/plan_source_refresh.py",
+            "plan_source_refresh_plan_only",
         )
         source = {
             "id": "bd_stale_test",

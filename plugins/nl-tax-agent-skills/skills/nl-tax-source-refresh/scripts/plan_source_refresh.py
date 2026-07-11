@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NL Tax Source Refresh -- Fetch Sources
+NL Tax Source Refresh -- Plan Source Refresh
 
 Reads source-register.yaml, filters by scope and year, checks freshness by
 thresholding each source's last_checked date against STALENESS_DAYS keyed by
@@ -8,12 +8,12 @@ its source_type (not by the free-text freshness_policy prose), and reports
 which sources need a manual refresh plan.
 
 Usage:
-    python3 fetch_sources.py <scope> [year] [--fetch]
-    python3 fetch_sources.py annual
-    python3 fetch_sources.py provisional 2026
-    python3 fetch_sources.py box3 2025
-    python3 fetch_sources.py all
-    python3 fetch_sources.py all --fetch
+    python3 plan_source_refresh.py <scope> [year] [--fetch]
+    python3 plan_source_refresh.py annual
+    python3 plan_source_refresh.py provisional 2026
+    python3 plan_source_refresh.py box3 2025
+    python3 plan_source_refresh.py all
+    python3 plan_source_refresh.py all --fetch
 
 Scope:
     annual       -- sources with workflow: annual_return
@@ -46,7 +46,7 @@ try:
     import yaml
 except ImportError:
     raise SystemExit(
-        "PyYAML is required to run fetch_sources "
+        "PyYAML is required to run plan_source_refresh "
         "(python3 -m pip install pyyaml)."
     )
 
@@ -274,13 +274,13 @@ def find_repo_root(register_path):
 
 def parse_cli_args(argv):
     if "-h" in argv[1:] or "--help" in argv[1:]:
-        print("fetch_sources.py — report which registered sources need a manual refresh")
-        print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]")
+        print("plan_source_refresh.py — report which registered sources need a manual refresh")
+        print("Usage: python3 plan_source_refresh.py <scope> [year] [--fetch]")
         print("Scope: annual | provisional | box3 | all")
         sys.exit(0)
 
     if len(argv) < 2:
-        print("Usage: python3 fetch_sources.py <scope> [year] [--fetch]",
+        print("Usage: python3 plan_source_refresh.py <scope> [year] [--fetch]",
               file=sys.stderr)
         print("", file=sys.stderr)
         print("Scope: annual | provisional | box3 | all", file=sys.stderr)

@@ -19,7 +19,7 @@ Use `_shared/source-register.yaml`, `_shared/supported-workflows.yaml`, `referen
 
 Path convention: `source-register.yaml` `snapshot_path` values are repo-root/plugin-root relative and include the leading `skills/` segment. Skill instructions often use skill-relative paths such as `_shared/knowledge/...`; those refer to the same files after resolving from the loaded skill tree, but they are not the register serialization format.
 
-`scripts/fetch_sources.py <scope> [year] --fetch` — scope is a required positional (`annual | provisional | box3 | all`), e.g. `fetch_sources.py all --fetch` — is a plan-only refresh reporter. It reports stale allowlisted sources that would need manual refresh. No live HTTP requests are made, and source snapshots are not rewritten.
+`scripts/plan_source_refresh.py <scope> [year] --fetch` — scope is a required positional (`annual | provisional | box3 | all`), e.g. `plan_source_refresh.py all --fetch` — is a plan-only refresh reporter. It reports stale allowlisted sources that would need manual refresh. No live HTTP requests are made, and source snapshots are not rewritten.
 
 Only use allowlisted official HTTPS domains. Do not read/write taxpayer workspace data. Do not unlock future years by copying old rates.
 

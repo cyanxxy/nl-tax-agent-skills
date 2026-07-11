@@ -50,11 +50,11 @@ class OptionalPythonContractTests(unittest.TestCase):
 
     def test_retired_heuristics_have_no_runtime_references(self):
         retired = {
-            "summarize_box1_inputs.py",
-            "summarize_box2_inputs.py",
-            "validate_box2_inputs.py",
-            "classify_box3_assets.py",
-            "fetch_sources.py",
+            "summarize_" + "box1_inputs.py",
+            "summarize_" + "box2_inputs.py",
+            "validate_" + "box2_inputs.py",
+            "classify_" + "box3_assets.py",
+            "fetch_" + "sources.py",
         }
         shipped = "\n".join(
             path.read_text(encoding="utf-8")

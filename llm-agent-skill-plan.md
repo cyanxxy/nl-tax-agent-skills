@@ -34,13 +34,17 @@ The LLM should do the high-value work:
 - map facts to manual-entry field maps;
 - keep annual return and provisional assessment paths separate.
 
-Scripts should stay small and deterministic:
+Python is optional at runtime and, when present, its small deterministic helpers
+fall into four conceptual components:
 
-- hash and list files;
-- validate schemas and output contracts;
-- run simple calculations;
-- detect obvious invalid fields;
-- report source-pack freshness and snapshot consistency.
+- evidence inventory and hashing;
+- field-map checks and rendering;
+- source-pinned arithmetic checks;
+- developer consistency and source maintenance.
+
+Python 3.10+ is the supported maintainer runtime. The LLM still performs each
+documented manual check when Python is unavailable and remains responsible for
+interpretation, evidence sufficiency, workflow decisions, and workpack writing.
 
 The plugin is the product. Its bundled skills are the agent-facing workflow layer and must read like operating playbooks for an LLM agent.
 
@@ -66,8 +70,8 @@ Before the LLM redesign, fix the contract bugs found in review.
 
 ### 2.3 Source refresh path handling
 
-- [x] Fix `fetch_sources.py` repo-root derivation.
-- [x] Verify `fetch_sources.py all` reports existing snapshots correctly.
+- [x] Fix the source-refresh planner's repo-root derivation (now `plan_source_refresh.py`).
+- [x] Verify `plan_source_refresh.py all` reports existing snapshots correctly.
 - [ ] Keep source refresh scoped to official source-register URLs only.
 
 ### 2.4 Snapshot metadata model
@@ -87,7 +91,8 @@ Before the LLM redesign, fix the contract bugs found in review.
 
 ### 2.6 Box 1 gap detection
 
-- [x] Fix `summarize_box1_inputs.py` to pass `identify_gaps(box1_items)` into `format_gaps()`.
+- [x] Fix the former Box 1 summarizer's gap-reporting contract before retiring
+  that helper in favor of agent-owned evidence review.
 - [ ] Add a no-evidence smoke case proving missing evidence is reported.
 
 ---

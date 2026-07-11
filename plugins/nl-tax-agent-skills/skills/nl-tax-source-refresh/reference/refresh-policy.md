@@ -4,7 +4,7 @@ Freshness policies and refresh triggers for the Dutch Tax Skills source register
 
 ## Current implementation note
 
-`scripts/fetch_sources.py <scope> [year] --fetch` (e.g. `fetch_sources.py all --fetch`; the scope argument is required) is a plan-only refresh reporter. It validates
+`scripts/plan_source_refresh.py <scope> [year] --fetch` (e.g. `plan_source_refresh.py all --fetch`; the scope argument is required) is a plan-only refresh reporter. It validates
 freshness and allowlist status, then reports which sources would need manual
 refresh. It does not make live HTTP requests and does not rewrite source
 snapshots. A real refresh requires a developer to retrieve official content,
@@ -31,7 +31,7 @@ differently — both are intentional:
    rolling windows: the source is stale only when `last_checked` predates the
    most recent January 1 — one re-attestation per year, when the season opens.
    A mandatory source that is stale under its policy FAILS validation.
-2. **`fetch_sources.py` (refresh planner).** Thresholds by `source_type`
+2. **`plan_source_refresh.py` (refresh planner).** Thresholds by `source_type`
    (table under "Staleness thresholds" below), not by the policy text. It
    reports which sources a developer should re-verify; it does not block.
 
@@ -80,7 +80,7 @@ These thresholds define when a source is considered stale based on `source_type`
 | `methodology`        | 365 days                         | Methodologies change infrequently      |
 | `official_algorithm_register` | 365 days              | Algorithm register updated annually    |
 
-`fetch_sources.py` emits machine-readable staleness fields for every checked source: `staleness_threshold_days`, `age_days`, and `expires_on` (the date after which the current `last_checked` attestation is stale for that source type). These fields are generated from the register metadata rather than hand-authored per source.
+`plan_source_refresh.py` emits machine-readable staleness fields for every checked source: `staleness_threshold_days`, `age_days`, and `expires_on` (the date after which the current `last_checked` attestation is stale for that source type). These fields are generated from the register metadata rather than hand-authored per source.
 
 ## Filing season dates (reference)
 

@@ -261,7 +261,8 @@ class Box1OwnHomeTests(unittest.TestCase):
 class Box1OwnHomeDocumentationTests(unittest.TestCase):
     def test_skill_reads_evidence_index_without_summarizer(self):
         text = (ROOT / "skills/nl-tax-box1-home/SKILL.md").read_text(encoding="utf-8")
-        self.assertNotIn("summarize_box1_inputs.py", text)
+        retired_summarizer = "summarize_" + "box1_inputs.py"
+        self.assertNotIn(retired_summarizer, text)
         self.assertIn("evidence-index.yaml", text)
         for phrase in ("reviewed", "successful", "correct tax year"):
             self.assertIn(phrase, text.lower())

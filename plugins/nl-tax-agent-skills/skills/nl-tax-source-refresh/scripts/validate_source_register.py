@@ -184,7 +184,7 @@ def validate(register_path):
                 if checked_date > date.today():
                     errors.append(f"{sid}: last_checked is in the future: {last_checked}")
 
-        # Valid skill references. Accept the string shorthand fetch_sources.py
+        # Valid skill references. Accept the string shorthand plan_source_refresh.py
         # accepts, so a typo'd skill name in string form is validated too.
         mandatory_for = source.get("mandatory_for", [])
         if isinstance(mandatory_for, str):

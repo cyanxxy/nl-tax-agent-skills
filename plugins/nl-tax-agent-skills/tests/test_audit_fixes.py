@@ -204,11 +204,11 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
             )
 
 
-class FetchSourcesCliTests(unittest.TestCase):
+class PlanSourceRefreshCliTests(unittest.TestCase):
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-source-refresh/scripts/fetch_sources.py",
-            "fetch_sources_cli",
+            "skills/nl-tax-source-refresh/scripts/plan_source_refresh.py",
+            "plan_source_refresh_cli",
         )
 
     def test_parse_cli_args_exits_on_missing_scope(self):
@@ -217,11 +217,11 @@ class FetchSourcesCliTests(unittest.TestCase):
         # Capture the usage text so suite output stays clean.
         with contextlib.redirect_stderr(io.StringIO()):
             with self.assertRaises(SystemExit):
-                self.module.parse_cli_args(["fetch_sources.py"])
+                self.module.parse_cli_args(["plan_source_refresh.py"])
 
     def test_parse_cli_args_parses_scope_year_and_fetch_flag(self):
         scope, year, fetch_flag = self.module.parse_cli_args(
-            ["fetch_sources.py", "provisional", "2026", "--fetch"]
+            ["plan_source_refresh.py", "provisional", "2026", "--fetch"]
         )
         self.assertEqual(scope, "provisional")
         self.assertEqual(year, 2026)

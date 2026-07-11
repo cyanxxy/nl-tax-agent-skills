@@ -77,3 +77,9 @@ not a reason to remove source-backed knowledge.
 
 Plugin Eval's Python complexity check is a coarse file-level heuristic over the
 helper scripts. Keep normal tests and validators as the functional gate.
+
+Python is optional in taxpayer workflows. The supported maintainer runtime is
+Python 3.10+, and the 14 helpers are grouped into four conceptual components:
+evidence inventory/hash, field-map checks, source-pinned arithmetic checks, and
+developer consistency/source maintenance. Evals should assess the LLM's
+interpretation and artifact behavior, not assume a helper is available.
