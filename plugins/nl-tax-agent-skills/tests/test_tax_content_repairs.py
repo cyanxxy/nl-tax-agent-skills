@@ -532,12 +532,14 @@ class TaxContentRepairTests(unittest.TestCase):
             (
                 "_shared/knowledge/years/2026/provisional/review-flow.md",
                 "_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md",
+                "nl-tax-provisional-assessment/SKILL.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
                 "nl-tax-provisional-assessment/reference/delta-rules.md",
                 "nl-tax-provisional-assessment/templates/provisional-pack.md",
             ),
             required=("unsolicited", "may be issued", "not guaranteed"),
+            forbidden=("auto-issues", "automatically issues"),
         )
 
     def test_complete_change_dataset_without_zero_default_claim(self):

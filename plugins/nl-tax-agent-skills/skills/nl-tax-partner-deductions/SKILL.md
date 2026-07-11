@@ -1,13 +1,11 @@
 ---
 name: nl-tax-partner-deductions
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — determines fiscal-partner status and allocation/deduction notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns fiscal-partner and allocation/deduction facts and questions. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
   - Bash(python3:*)
 ---
 
@@ -49,7 +47,7 @@ asserted.
 
 ## Question packet
 
-Append missing inputs to `workspace/shared/partner-deductions-open-questions.yaml`:
+Return missing inputs to the calling workflow in this shape:
 
 ```yaml
 - question_id: "partner.eligibility.cohabitation_conditions"
@@ -66,21 +64,11 @@ Append missing inputs to `workspace/shared/partner-deductions-open-questions.yam
   evidence_hint: "donation receipts"
 ```
 
-The calling skill asks these questions, records `source` plus `quote`/`evidence_id`, and re-invokes this helper.
+The calling skill asks these questions, records `source` plus
+`quote`/`evidence_id`, and re-invokes this helper.
 
-Write only:
-
-- `workspace/shared/allocation-options.md`
-- `workspace/shared/partner-deduction-review-questions.md`
-- `workspace/shared/partner-deductions-open-questions.yaml`
-
-Do not write annual/provisional workpacks or force unsupported partner cases into v1.
-
-## Must NOT write to
-
-This helper writes only under `workspace/shared/`. It must never write to:
-
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.
+Return structured facts and open questions to the owning workflow. Do not
+persist any final artifact, including shared notes, question packets, session
+state, workpacks, or field maps. The annual/provisional workflow owns all
+workspace persistence and may read historical helper notes for resume
+compatibility only. Do not force unsupported partner cases into v1.

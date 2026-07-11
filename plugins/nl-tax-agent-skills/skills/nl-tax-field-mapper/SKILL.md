@@ -14,6 +14,11 @@ allowed-tools:
 
 Convert workpack findings into a manual-entry field map that guides the taxpayer through data entry on the official Belastingdienst portal.
 
+This skill is the sole writer of both canonical field-map artifacts:
+`workspace/annual/2025/field-map.yaml` and
+`workspace/provisional/2026/field-map.yaml`. Annual and provisional workflow
+skills invoke it after confirmed workpack creation and never write either map.
+
 This skill is conversational. It does not silently emit a field map full of zeros. When a required field has no sourced value, surface a question to the user instead of inventing data.
 
 ## When to use
@@ -169,10 +174,10 @@ Write:
 
 Never merge annual and provisional field maps.
 
-If the workflow skill already wrote a `field-map.yaml`, read it before updating
-the same workflow-specific file. Preserve valid sourced entries unless the
-current workpack/reference makes them obsolete, then validate the result. The
-most recently validated `field-map.yaml` at that workflow path is the
+If a canonical `field-map.yaml` already exists from an earlier mapper run, read
+it before updating the same workflow-specific file. Preserve valid sourced
+entries unless the current workpack/reference makes them obsolete, then
+validate the result. The most recently validated `field-map.yaml` at that workflow path is the
 authoritative manual-entry artifact; do not create a competing `field-map-v2`,
 copy, or alternate path.
 

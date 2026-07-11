@@ -54,9 +54,9 @@ resumed session, or taxpayer state silently forks into a second tree.
   `workspace/shared/session-progress.yaml` and `workspace/taxpayer/profile.yaml`.
 - Every skill, on every turn, reads `workspace_root` back and resolves all
   `workspace/...` paths against it.
-- If `workspace_root` is unset when a non-intake skill runs, reconstruct it
-  from `profile.yaml`. If it is absent there too, ask the user for the working
-  folder and record it before creating any file.
+- A non-intake skill requires both `profile.yaml` and `session-progress.yaml`.
+  If either is missing, return control to `nl-tax-intake`; downstream skills do
+  not create or reconstruct intake-owned state.
 - Never change `workspace_root` once set, and never create a second
   `workspace/` directory.
 
@@ -66,15 +66,28 @@ Path: `workspace/shared/session-progress.yaml`
 
 Purpose: a small, append-friendly state file that any skill can read at the start of a turn to know where the conversation is.
 
-Schema (v1.3 - see `_shared/templates/session-progress.yaml` for the canonical template):
+Schema (v1.4 - see `_shared/templates/session-progress.yaml` for the canonical template):
 
 - Each top-level section (`intake`, `evidence`, `annual_2025`, `provisional_2026`) has a status, an `open_questions` list, an `answered` list, and a `subsections` map.
 - Subsection status values: `not_started | in_progress | complete | chat_only | deferred`.
 - A workflow's workpack-generation gate is satisfied only when every subsection in that workflow is either `complete`, `chat_only`, or `deferred` (with deferred items recorded in `missing-info.md` or as confirmed assumptions). `chat_only` means the user deliberately provided the value in chat instead of uploading a file; it is not a gap.
 - The `provisional_2026` section also carries a `subflow` field (`request | change | review | stopzetten`); the `baseline` subsection applies only to change/review/stopzetten, and `stopzetten_direction` applies only to stopzetten.
+- `annual_2025.subsections.winst` and
+  `provisional_2026.subsections.winst_forecast` are generation-gate members.
+  When the profile establishes that no business applies, the owning workflow
+  marks the relevant subsection `complete` and adds a stable answered entry
+  containing `not applicable`; absence is never inferred from a blank field.
+
+Legacy resume rule: when an owning workflow reads a pre-1.4 file, migrate older
+session state in place by adding the missing `winst` and `winst_forecast`
+subsections from the canonical template without changing existing answers or
+statuses, then set `session_progress_version: "1.4"`. Only mark either new
+subsection not applicable when profile facts or a user answer establish that.
 
 Rules:
-- Create the file on first turn if it does not exist.
+- Only `nl-tax-intake` creates `workspace/shared/session-progress.yaml`, from
+  the canonical template on its first turn. Every downstream workflow requires
+  that file and returns control to intake when it is absent.
 - Update `updated_at`, `last_question_asked`, and the relevant section on every turn that asks a question or records an answer.
 - A `question_id` is a short stable string (e.g., `intake.residency`, `annual.box1.employer_count`, `box3.peildatum.bank_balance`). Reuse the same id when re-asking a deferred question.
 - Write `session-progress.yaml` in one operation with the file-write tool — the no-code default on hosts like Cowork. If you have shell access to the workspace folder and want extra safety against an interrupted write, you may instead write a temp file in the same dir and rename it over the target. The state file is re-derivable from `profile.yaml` and the answered lists, so a rare truncated write is recoverable. Assume a single active session per workspace; do not run two skills concurrently against one `workspace_root`.

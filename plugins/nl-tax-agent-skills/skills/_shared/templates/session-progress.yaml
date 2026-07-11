@@ -1,4 +1,4 @@
-session_progress_version: "1.3"
+session_progress_version: "1.4"
 workspace_root: ""          # absolute path of the working folder; set once at intake, never changed
 created_at: ""
 updated_at: ""
@@ -77,6 +77,10 @@ sections:
         status: "not_started"
         open_questions: []
         answered: []
+      winst:                   # mark complete with an answered "not applicable" when there is no business
+        status: "not_started"
+        open_questions: []
+        answered: []
       eigen_woning:
         status: "not_started"
         open_questions: []
@@ -129,6 +133,10 @@ sections:
         open_questions: []
         answered: []
       income_other:
+        status: "not_started"
+        open_questions: []
+        answered: []
+      winst_forecast:          # expected business profit only; mark complete with "not applicable" when absent
         status: "not_started"
         open_questions: []
         answered: []

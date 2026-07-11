@@ -20,7 +20,12 @@ This skill is conversational. Do not assume the user has pre-staged a complete f
 
 Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this skill's own directory; `_shared/` is `../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory. Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. When a script takes a workspace file as an argument (e.g. the field-map validator), the same shell must also see the workspace path — translate `workspace_root` to the path the shell actually mounts (in Cowork the working folder, not the host path) before invoking, and if script and workspace file are not co-visible from one shell, use the manual fallback instead. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Field-map resources are sibling-skill paths, never local `templates/` or
+`reference/` paths: `nl-tax-field-mapper/templates/field-map-template.yaml`,
+`nl-tax-field-mapper/reference/mapping-principles.md`,
+`nl-tax-field-mapper/reference/annual-field-map.md`, and
+`nl-tax-field-mapper/scripts/validate_field_map.py`. The field mapper owns use
+of those resources and the canonical map artifact.
 
 ## Read first
 
@@ -72,7 +77,13 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
 
 `session-progress.yaml` is the resume contract. Before doing any work:
 
-- If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
+- If `session-progress.yaml` is missing or empty, require intake to create it:
+  return control to `nl-tax-intake` and do not create annual artifacts.
+- For a pre-1.4 state, migrate it in place as defined by the shared
+  elicitation contract: add both missing winst subsections without changing
+  existing answers, then set version 1.4. Mark annual winst `complete` with a
+  stable answered `not applicable` entry only when profile facts establish
+  there is no business.
 - If `profile.yaml` shows `intake_status: complete`, never restart intake — continue the annual workflow from recorded progress.
 - Skip any subsection already marked `complete`, `chat_only`, or `deferred` in `session-progress.yaml`.
 
@@ -106,17 +117,30 @@ A subsection in `chat_only` counts as filled for the generation gate, but the wo
 
 ### Helper delegation
 
-The box and partner phases use the background helper contracts. Prefer a direct Skill/Task invocation when the host provides one. If no Skill/Task tool exists, inline the helper's SKILL.md instructions in this workflow and write the helper-owned `workspace/shared/` files yourself. This fallback is allowed for annual and provisional owning workflows, but the ownership boundary does not change: helpers own only their named `workspace/shared/` artifacts, and this skill owns `workspace/annual/**`.
+The box and partner phases use background helper contracts. Prefer direct
+Skill/Task invocation when the host provides it; otherwise inline the helper's
+instructions. In both modes the helper returns structured facts and open
+questions in its response and writes nothing. This owning workflow must
+persist the returned facts and open questions in the matching
+`workspace/annual/2025/notes/<section>.yaml`, update session state, ask the user,
+and re-run the helper with the newly sourced answers.
 
-In each phase, invoke or inline the matching helper, let it append its question packet under `workspace/shared/`, ask the user those questions, record the answers, then re-invoke/re-run the helper contract to fold them into its notes:
+- **Box 1 / own home** → `nl-tax-box1-home`
+- **Winst uit onderneming** → `nl-tax-winst` when
+  `business.has_onderneming.value` is true. Load the entrepreneur sources
+  listed above and append their returned source IDs to `sources_loaded`.
+- **Box 2** → `nl-tax-box2` when
+  `box2.has_aanmerkelijk_belang.value` is true. Load the Box 2 sources listed
+  above and append their returned source IDs to `sources_loaded`.
+- **Box 3** → `nl-tax-box3` (annual collects fictitious and werkelijk
+  rendement for comparison).
+- **Partner / deductions** → `nl-tax-partner-deductions`.
 
-- **Box 1 / own home** → `nl-tax-box1-home` (writes `workspace/shared/box1-home-notes.md` and `workspace/shared/box1-home-open-questions.yaml`)
-- **Winst uit onderneming** → `nl-tax-winst` (writes `workspace/shared/winst-notes.md`, `workspace/shared/winst-open-questions.yaml`, and `workspace/shared/winst-review-questions.md`). Only when the case has winst uit onderneming (`business.has_onderneming` value `true`): load the six entrepreneur rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_ondernemer_criteria_2025`, `bd_ondernemerscheck_2025`, `bd_urencriterium_2025`, `bd_ondernemersaftrek_2025`, `bd_zelfstandigenaftrek_2025`, `bd_startersaftrek_ao_2025`, `bd_startersaftrek_2025`, `bd_meewerkaftrek_2025`, `bd_stakingsaftrek_2025`, `bd_so_aftrek_2025`, `bd_mkb_winstvrijstelling_2025`, `bd_kia_2025`, `bd_eia_2025`, `bd_eia_mia_vamil_2025`, `bd_zakelijke_kosten_2025`, `bd_beperkt_aftrekbare_kosten_2025`, `bd_werkruimte_2025`, `bd_privevervoermiddel_2025`, `bd_oudedagsreserve_2025`, `bd_administratie_bewaren_2025`, `bd_aangifte_ondernemers_2025`, `bd_ondernemer_cijfers_aangifte_2025`, and `bd_ondernemer_voorbereiden_2025` to `session-progress.yaml` → `sources_loaded` as their notes are loaded, so the workpack's Sources Used section matches the winst facts it cites.
-- **Box 2** → `nl-tax-box2` (writes `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md`). Only when the case has a real Box 2 position (`box2.has_aanmerkelijk_belang` value `true`): load the three box 2 rate sheets listed above first, and — because helpers never update `session-progress.yaml` (this skill owns session state) — this skill MUST append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`, so the workpack's Sources Used section matches the Box 2 facts it cites.
-- **Box 3** → `nl-tax-box3` (writes `workspace/shared/box3-notes.md`, `workspace/shared/box3-open-questions.yaml`, and `workspace/shared/box3-review-questions.md`; annual collects fictitious **and** werkelijk rendement for the comparison)
-- **Partner / deductions** → `nl-tax-partner-deductions` (writes `workspace/shared/allocation-options.md`, `workspace/shared/partner-deductions-open-questions.yaml`, and `workspace/shared/partner-deduction-review-questions.md`)
-
-Read `workspace/shared/box2-notes.md`, `workspace/shared/box2-open-questions.yaml`, and `workspace/shared/box2-review-questions.md` back before assembling the Box 2 section (the review questions feed the Human review checklist). Read `workspace/shared/winst-notes.md`, `workspace/shared/winst-open-questions.yaml`, and `workspace/shared/winst-review-questions.md` back before assembling the Winst uit onderneming section. Read the sibling helpers' named notes/open-question artifacts back before assembling their sections. The helpers never write to `workspace/annual/**`; this skill owns that tree.
+Historical `workspace/shared/*-notes.md`, `*-open-questions.yaml`, and helper
+review files remain readable for resume compatibility only. They must not be
+updated or created in a new run. Fold any useful legacy content into the
+workflow-owned annual notes before continuing. This skill owns session state,
+annual notes, and the annual workpack; helpers own no persisted artifact.
 
 ## Sections in the workpack
 
@@ -176,8 +200,14 @@ When the gate is satisfied:
 - Preserve source provenance for every numeric line using the `Src` codes from the template.
 - Run the self-check in `reference/annual-output-contract.md` § "Workpack self-check"; report every check yes/no in your end-of-turn message. If any structural, content, cross-contamination, or safety check fails, do not write the file — fix the gap or ask the user, and re-run.
 - Set the workpack's top-of-file STATUS banner deterministically from `session-progress.yaml`: if any annual subsection is `deferred` or `unknown`, the banner reads `DRAFT`; otherwise it reads `COMPLETE DRAFT FOR REVIEW`. In both cases the banner always says "not for filing". Treat a mismatch between the banner and `session-progress.yaml` as a blocking self-check item.
-- Write `workspace/annual/2025/field-map.yaml`. Optionally record the same readiness state as a **top-level** `readiness` key in `field-map.yaml` (`draft` or `review_ready` — the values `validate_field_map.py` accepts).
-- After writing `field-map.yaml`, run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/annual-field-map.md`) and use `field_id`s from that reference.
+- After the confirmed workpack is written, invoke `nl-tax-field-mapper`. Pass
+  it the workpack and workflow context; it alone writes and validates
+  `workspace/annual/2025/field-map.yaml` using
+  `nl-tax-field-mapper/templates/field-map-template.yaml`,
+  `nl-tax-field-mapper/reference/mapping-principles.md`,
+  `nl-tax-field-mapper/reference/annual-field-map.md`, and
+  `nl-tax-field-mapper/scripts/validate_field_map.py`. Treat a mapper-reported
+  validation failure as blocking before presenting the manual-entry map.
 
 ## Output files
 
@@ -191,7 +221,9 @@ Write incrementally:
 Write only after the generation gate:
 
 - `workspace/annual/2025/return-pack.md`
-- `workspace/annual/2025/field-map.yaml`
+
+The invoked field mapper separately produces the unchanged public artifact
+`workspace/annual/2025/field-map.yaml`; this workflow does not write it.
 
 Do not write `workspace/provisional/**`.
 
@@ -202,7 +234,7 @@ Do not write `workspace/provisional/**`.
 
 ## Worked example
 
-> Profile shows `annual_2025`, a single resident, one employer, an eigen woning, no Box 2. In Phase 2 (Income) the agent reads `evidence-index.yaml`, sees an indexed jaaropgaaf, references gross income by `evidence_id`, and asks only for the one missing loonheffing figure. In Phase 3 it invokes `nl-tax-box1-home` for the own-home line, asks the WOZ + mortgage-interest questions the helper returned, then re-invokes it. Box 3 invokes `nl-tax-box3`, collecting both fictitious and werkelijk-rendement data for the comparison. Nothing is written to `return-pack.md` until the user types `generate the workpack`; then the agent runs the output-contract self-check, writes `return-pack.md` + `field-map.yaml`, and reports each check yes/no.
+> Profile shows `annual_2025`, a single resident, one employer, an eigen woning, no Box 2. In Phase 2 (Income) the agent reads `evidence-index.yaml`, sees an indexed jaaropgaaf, references gross income by `evidence_id`, and asks only for the one missing loonheffing figure. In Phase 3 it invokes `nl-tax-box1-home` for the own-home line, persists the returned WOZ + mortgage-interest questions in annual notes, asks them, then re-invokes it. Box 3 invokes `nl-tax-box3`, collecting both fictitious and werkelijk-rendement data for the comparison. Nothing is written to `return-pack.md` until the user types `generate the workpack`; then the agent runs the output-contract self-check, writes `return-pack.md`, and invokes `nl-tax-field-mapper` to produce the canonical `field-map.yaml`.
 
 ## End-of-turn report
 

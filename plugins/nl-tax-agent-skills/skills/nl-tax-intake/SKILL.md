@@ -13,6 +13,10 @@ allowed-tools:
 
 Open the conversation with the user, figure out which Dutch tax workflow applies, and progressively build a taxpayer profile. **This skill is conversational.** The user does not arrive with everything ready - ask one focused thing at a time, persist the answer, and continue.
 
+This skill is the sole creator of `workspace/shared/session-progress.yaml`.
+Downstream workflows update the state created here, but never create or
+reconstruct it.
+
 ## User-facing boundary
 
 Keep setup invisible. Do not narrate internal setup steps such as skill selection, rule or template loading, path resolution, local state-file creation, YAML updates, or policy loading. Create and update local files silently. Do not proactively recite generic warnings. The first user-facing reply should say only that you prepare a local workpack and then ask the screening questions. If the workflow is already clear and the user has documents ready, ask them to upload the relevant tax files; do not ask them to upload workspace or state files.

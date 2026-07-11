@@ -1,13 +1,11 @@
 ---
 name: nl-tax-box1-home
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — prepares Box 1 income and eigen-woning notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 1 and eigen-woning facts and questions. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
   - Bash(python3:*)
 ---
 
@@ -53,12 +51,12 @@ For every needed value, including employer count, gross income, loonheffing, WOZ
 
 1. Use existing notes when the value has `source: file` or `source: user_chat`.
 2. Use evidence-index entries when available and record `source: file` plus `evidence_id`.
-3. If still missing, append a question packet entry and stop short of calculating that line.
+3. If still missing, return a question packet entry and stop short of calculating that line.
 4. Compute only from values with a real source or an explicitly confirmed assumption.
 
 ## Question packet
 
-Append missing inputs to `workspace/shared/box1-home-open-questions.yaml`:
+Return missing inputs to the calling workflow in this shape:
 
 ```yaml
 - question_id: "annual.box1.employment.gross_income.employer_1"
@@ -75,15 +73,11 @@ Append missing inputs to `workspace/shared/box1-home-open-questions.yaml`:
   evidence_hint: "WOZ-beschikking"
 ```
 
-The calling skill asks these questions, records the answer with `source`, `quote`/`evidence_id`, and timestamp, then re-invokes this helper.
+The calling skill asks these questions, records the answer with `source`,
+`quote`/`evidence_id`, and timestamp, then re-invokes this helper.
 
-Write only `workspace/shared/box1-home-notes.md`, `workspace/shared/box1-home-open-questions.yaml`, and shared review questions under `workspace/shared/`. Do not write workpacks, mix years, store full identifiers, or handle credentials.
-
-## Must NOT write to
-
-This helper writes only under `workspace/shared/`. It must never write to:
-
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.
+Return structured facts and open questions to the owning workflow. Do not
+persist any final artifact, including shared notes, question packets, session
+state, workpacks, or field maps. The annual/provisional workflow owns all
+workspace persistence and may read historical helper notes for resume
+compatibility only.

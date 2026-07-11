@@ -30,7 +30,12 @@ directory. Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
 tree.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path (this skill runs the bundled `nl-tax-field-mapper/scripts/validate_field_map.py`), and only if Bash can access that path. When a script takes a workspace file as an argument (e.g. the field-map validator), the same shell must also see the workspace path — translate `workspace_root` to the path the shell actually mounts (in Cowork the working folder, not the host path) before invoking, and if script and workspace file are not co-visible from one shell, use the manual fallback instead. If Bash cannot see the plugin path, perform the equivalent validation manually against `nl-tax-field-mapper/reference/mapping-principles.md` (read it with the file tools); never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Field-map resources are sibling-skill paths, never local `templates/` or
+`reference/` paths: `nl-tax-field-mapper/templates/field-map-template.yaml`,
+`nl-tax-field-mapper/reference/mapping-principles.md`,
+`nl-tax-field-mapper/reference/provisional-field-map.md`, and
+`nl-tax-field-mapper/scripts/validate_field_map.py`. The field mapper owns use
+of those resources and the canonical map artifact.
 
 Before the first user-facing reply each turn, load the profile/session state; before generating any numeric content, load the 2026 provisional rate sheets (each sheet once, when first needed — re-read on resume). Record every loaded `source_id` (from `_shared/source-register.yaml`) in the top-level `sources_loaded` list in `session-progress.yaml` — once per ID, never appending duplicates on a re-read; only those IDs may appear in the workpack's "Sources used" section.
 
@@ -72,8 +77,15 @@ Confirm an active workflow candidate of `provisional_2026_request`, `provisional
 
 `session-progress.yaml` is the resume contract. Before doing any work:
 
-- If `session-progress.yaml` is missing or empty, reconstruct it from `profile.yaml` and `_shared/templates/session-progress.yaml` before proceeding.
-- If an older session-progress.yaml lacks `provisional_2026.subsections.box2`, add that subsection before asking or generating. Treat it as part of the generation gate: `box2` must be `complete`, `chat_only`, or `deferred` with a missing-info or confirmed-assumption entry. Mark it `complete` with an answered "not applicable - no aanmerkelijk belang" only after the user profile or answers support that conclusion.
+- If `session-progress.yaml` is missing or empty, require intake to create it:
+  return control to `nl-tax-intake` and do not create provisional artifacts.
+- For a pre-1.4 state, migrate it in place as defined by the shared elicitation
+  contract: add missing `provisional_2026.subsections.box2`,
+  `annual_2025.subsections.winst`, and
+  `provisional_2026.subsections.winst_forecast` entries without changing
+  existing answers, then set version 1.4. Treat `box2` and `winst_forecast` as
+  generation-gate members. Mark either `complete` with a stable answered `not
+  applicable` entry only after profile facts or a user answer support that.
 - If `profile.yaml` shows `intake_status: complete`, never restart intake - continue the provisional workflow from recorded progress.
 - Skip any subsection already marked `complete` in `session-progress.yaml`.
 
@@ -103,29 +115,35 @@ For every subflow:
 
 ### Helper delegation
 
-Use the box and partner helpers as the canonical contracts for their sections. If
-the host exposes a Skill/Task-style tool that can invoke background helpers, use
-it. Otherwise, inline the helper's instructions yourself: read that helper's
-`SKILL.md` and required references, write only the helper-owned
-`workspace/shared/` artifacts, collect any question packet from
-`workspace/shared/`, ask the user, record answers, then re-run the same helper
-contract. Do not skip helper notes just because the host cannot invoke
-non-user-invocable skills directly.
+Use the box and partner helpers as the canonical contracts for their sections.
+If the host exposes a Skill/Task-style tool, invoke them; otherwise inline their
+instructions. In both modes each helper returns structured facts and open
+questions in its response and writes nothing. This owning workflow must
+persist the returned facts and open questions in the matching
+`workspace/provisional/2026/notes/<section>.yaml`, update session state, ask the
+user, and re-run the helper with newly sourced answers.
 
 - **Box 1 / own home** → `nl-tax-box1-home` (use the 2026 provisional references)
 - **Box 2** → `nl-tax-box2` (label all amounts as estimates or baseline-derived)
 - **Box 3** → `nl-tax-box3` (**fictitious method only** — never request werkelijk rendement)
 - **Partner / allocation** → `nl-tax-partner-deductions`
 
-Read the helpers' named `workspace/shared/*-notes.md` and open-question files
-back before assembling outputs. The helpers never write to
-`workspace/provisional/**`; this skill owns that tree.
+Historical `workspace/shared/*-notes.md`, `*-open-questions.yaml`, and helper
+review files remain readable for resume compatibility only. They must not be
+updated or created in a new run. Fold any useful legacy content into the
+workflow-owned provisional notes before continuing. This skill owns session
+state, provisional notes, and provisional workpacks; helpers own no persisted
+artifact.
 
 ## Subflow: request
 
 Walk the user through these sections one at a time:
 
-1. Confirm workflow. First check they have NOT already received a 2026 voorlopige aanslag: if they had a 2025 VA, the Belastingdienst auto-issues a 2026 one (EVA) with payments/refunds already starting in January. If a 2026 beschikking or monthly amount already exists, this is a change/review, not a request — route accordingly and use that beschikking as the baseline.
+1. Confirm workflow. A later unsolicited 2026 voorlopige aanslag may be issued
+   from earlier data, but it is not guaranteed. Check whether a current 2026
+   beschikking or monthly amount already exists. If it does, this is a
+   change/review rather than a request; route accordingly and use that
+   beschikking as the baseline.
 2. Estimated 2026 employment income per employer.
 3. Estimated 2026 pension and benefit income.
 4. Estimated 2026 other income.
@@ -166,8 +184,15 @@ Walk the user through these sections one at a time:
 Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs until all of the following are true:
 
 1. The subflow's final review is complete.
-2. All open items in `session-progress.yaml` for `provisional_2026` are answered, deferred, or recorded as confirmed assumptions.
-3. `provisional_2026.subsections.box2` exists and is `complete`, `chat_only`, or `deferred` with the corresponding missing-info or confirmed-assumption entry.
+2. Every applicable `provisional_2026` subsection, including `winst_forecast`
+   and `box2`, exists and has terminal status `complete`, `chat_only`, or `deferred`.
+   Mark a subsection `complete` with a stable
+   answered `not applicable` entry only when profile facts or a user answer
+   establish that it does not apply. An empty `open_questions` list is not sufficient:
+   a `not_started` or `in_progress` subsection keeps the workpack
+   in draft and blocks generation.
+3. Every deferred item is present in `workspace/shared/missing-info.md` or is a
+   confirmed assumption in `workspace/shared/assumptions.md`.
 4. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`
@@ -177,7 +202,15 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
 
 When generating, preserve source provenance for every numeric line using `Src` codes from the templates and mark unresolved sections clearly.
 
-When a `field-map.yaml` is produced (request and change subflows), after writing it run `nl-tax-field-mapper/scripts/validate_field_map.py` against it and treat validation failure as a blocking self-check item; the field-map MUST conform to the `nl-tax-field-mapper` schema (`templates/field-map-template.yaml` + `reference/provisional-field-map.md`) and use `field_id`s from that reference. The provisional field-map uses the fictitious Box 3 method only — never include werkelijk-rendement fields.
+For request and change subflows, after the confirmed workpack is written,
+invoke `nl-tax-field-mapper`. Pass it the workpack and workflow context; it
+alone writes and validates `workspace/provisional/2026/field-map.yaml` using
+`nl-tax-field-mapper/templates/field-map-template.yaml`,
+`nl-tax-field-mapper/reference/mapping-principles.md`,
+`nl-tax-field-mapper/reference/provisional-field-map.md`, and
+`nl-tax-field-mapper/scripts/validate_field_map.py`. Treat a mapper-reported
+validation failure as blocking before presenting the manual-entry map. The
+provisional map uses the fictitious Box 3 method only.
 
 ## Output files
 
@@ -191,9 +224,12 @@ Write incrementally:
 Write at the generation gate (per-subflow scope — must match `reference/provisional-output-contract.md`):
 
 - `workspace/provisional/2026/provisional-pack.md` (all subflows)
-- `workspace/provisional/2026/field-map.yaml` (request, change)
 - `workspace/provisional/2026/delta-summary.md` (change only)
 - `workspace/provisional/2026/review-questions.md` from `templates/review-questions.md` (review only)
+
+For request and change, the invoked field mapper separately produces the
+unchanged public artifact `workspace/provisional/2026/field-map.yaml`; this
+workflow does not write it.
 
 ## Safety
 
@@ -203,7 +239,7 @@ Write at the generation gate (per-subflow scope — must match `reference/provis
 
 ## Worked example
 
-> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "prepare and verify the complete dataset; include all applicable categories, not only the changed item" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
+> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "prepare and verify the complete dataset; include all applicable categories, not only the changed item" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, writes `provisional-pack.md` and `delta-summary.md`, then invokes `nl-tax-field-mapper` to produce the canonical `field-map.yaml`.
 
 ## End-of-turn report
 

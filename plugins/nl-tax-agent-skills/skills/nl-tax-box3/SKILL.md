@@ -1,13 +1,11 @@
 ---
 name: nl-tax-box3
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — prepares Box 3 notes (annual = fictitious and werkelijk rendement; provisional = fictitious only) into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 3 facts and questions (annual = fictitious and werkelijk rendement; provisional = fictitious only). Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
   - Bash(python3:*)
 ---
 
@@ -56,7 +54,7 @@ Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree.
 
-For each needed input, check section notes and evidence first. If the value is unavailable, append a question packet entry to `workspace/shared/box3-open-questions.yaml`.
+For each needed input, check section notes and evidence first. If the value is unavailable, return a question packet entry to the calling workflow.
 
 ```yaml
 - question_id: "annual.box3.peildatum_2025.banktegoeden_total"
@@ -75,13 +73,8 @@ For each needed input, check section notes and evidence first. If the value is u
 
 If a provisional user asks about actual return, answer that werkelijk rendement is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027.
 
-Write only `workspace/shared/box3-notes.md`, `workspace/shared/box3-open-questions.yaml`, and `workspace/shared/box3-review-questions.md`. Do not write workpacks directly.
-
-## Must NOT write to
-
-This helper writes only under `workspace/shared/`. It must never write to:
-
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.
+Return structured facts and open questions to the owning workflow. Do not
+persist any final artifact, including shared notes, question packets, session
+state, workpacks, or field maps. The annual/provisional workflow owns all
+workspace persistence and may read historical helper notes for resume
+compatibility only.

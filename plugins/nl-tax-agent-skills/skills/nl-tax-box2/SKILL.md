@@ -1,13 +1,11 @@
 ---
 name: nl-tax-box2
-description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — prepares Box 2 substantial-interest (aanmerkelijk belang) notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step.
+description: Internal helper for nl-tax-annual-return and nl-tax-provisional-assessment — returns Box 2 facts and questions. Not a standalone workflow; invoked as a sub-step.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
   - Bash(python3:*)
 ---
 
@@ -57,11 +55,11 @@ Only run Python under an already-resolved plugin `skills/.../scripts/` path (for
 - Flag losses, loss setoff, and excessive borrowing from an own BV for manual review.
 - Label all `provisional_2026` amounts as estimates or baseline-derived.
 - Keep outputs suitable for preparation workpacks and review questions.
-- When facts are missing, append a structured question packet to `workspace/shared/box2-open-questions.yaml` instead of inventing zeros.
+- When facts are missing, return a structured question packet instead of inventing zeros.
 
 ## Question packet
 
-Append missing inputs to `workspace/shared/box2-open-questions.yaml`:
+Return missing inputs to the calling workflow in this shape:
 
 ```yaml
 - question_id: "annual.box2.substantial_interest.status"
@@ -89,19 +87,8 @@ The calling skill asks these questions, records the answers with `source`, `quot
 - Do not handle valuation disputes, emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, corporate-tax-heavy DGA cases, inherited or gifted substantial interests, fictive disposal events, or uncertain excessive-borrowing positions without manual review.
 - Do not write field maps, annual/provisional workpack templates, source registers, supported workflow files, or shared eval data.
 
-Write only Box 2 preparation notes, open questions, or shared review questions under `workspace/shared/` when asked by an owning workflow:
-
-- `workspace/shared/box2-notes.md`
-- `workspace/shared/box2-open-questions.yaml`
-- `workspace/shared/box2-review-questions.md`
-
-Do not write workpacks directly.
-
-## Must NOT write to
-
-This helper writes only under `workspace/shared/`. It must never write to:
-
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees. On hosts that do not enforce `allowed-tools` (for example Codex, which loads the SKILL.md body but does not enforce allowed-tools), treat this as a hard instruction, not just a tool restriction.
+Return structured facts and open questions to the owning workflow. Do not
+persist any final artifact, including shared notes, question packets, session
+state, workpacks, or field maps. The annual/provisional workflow owns all
+workspace persistence and may read historical helper notes for resume
+compatibility only.

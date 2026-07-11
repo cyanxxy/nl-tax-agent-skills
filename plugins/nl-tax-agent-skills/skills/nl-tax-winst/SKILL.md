@@ -1,13 +1,11 @@
 ---
 name: nl-tax-winst
-description: Internal helper for nl-tax-annual-return — prepares winst uit onderneming (eenmanszaak / ZZP) notes into workspace/shared/. Not a standalone workflow; invoked as a sub-step for the 2025 annual return only.
+description: Internal helper for nl-tax-annual-return — returns winst uit onderneming (eenmanszaak / ZZP) facts and questions. Not a standalone workflow; invoked as a sub-step for the 2025 annual return only.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
   - Bash(python3:*)
 ---
 
@@ -39,8 +37,8 @@ directory.
 
 Read the reviewed 2025 knowledge notes — they are canonical for every rate,
 amount, and threshold. Never paraphrase a figure from memory; read it from these
-files and record each `source_id` in `session-progress.yaml` → `sources_loaded`
-(the owning workflow owns session state, so hand it the ids to append):
+files and return each `source_id` to the owning workflow so that workflow can
+append it to `session-progress.yaml` → `sources_loaded`:
 
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`
@@ -76,12 +74,12 @@ under `workspace/`, `uploads/`, or `evidence/`.
   conditions, the private-use-of-a-business-car bijtelling, and the private-vehicle
   kilometre deduction where they apply — as preparation notes, not final figures.
 - Keep outputs suitable for preparation workpacks and review questions.
-- When facts are missing, append a structured question packet to
-  `workspace/shared/winst-open-questions.yaml` instead of inventing zeros.
+- When facts are missing, return a structured question packet instead of
+  inventing zeros.
 
 ## Question packet
 
-Append missing inputs to `workspace/shared/winst-open-questions.yaml`:
+Return missing inputs to the calling workflow in this shape:
 
 ```yaml
 - question_id: "annual.winst.ondernemer.status"
@@ -123,23 +121,7 @@ this helper contract. Do not write caller-owned notes.
 - Do not write field maps, annual/provisional workpack templates, source
   registers, supported workflow files, or shared eval data.
 
-Write only winst preparation notes, open questions, or shared review questions
-under `workspace/shared/` when asked by an owning workflow:
-
-- `workspace/shared/winst-notes.md`
-- `workspace/shared/winst-open-questions.yaml`
-- `workspace/shared/winst-review-questions.md`
-
-Do not write workpacks directly.
-
-## Must NOT write to
-
-This helper writes only under `workspace/shared/`. It must never write to:
-
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-Only `nl-tax-annual-return` and `nl-tax-provisional-assessment` own those trees.
-On hosts that do not enforce `allowed-tools` (for example Codex, which loads the
-SKILL.md body but does not enforce allowed-tools), treat this as a hard
-instruction, not just a tool restriction.
+Return structured facts and open questions to the owning workflow. Do not
+persist any final artifact, including shared notes, question packets, session
+state, workpacks, or field maps. The annual workflow owns all workspace
+persistence and may read historical helper notes for resume compatibility only.

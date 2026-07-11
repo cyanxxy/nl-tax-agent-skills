@@ -162,10 +162,10 @@ class WinstHelperTests(unittest.TestCase):
         skill = read_text("skills/nl-tax-winst/SKILL.md")
         self.assertIn("user-invocable: false", skill)
         self.assertIn("called through a Skill/Task tool or inlined by an owning workflow", skill)
-        self.assertIn("## Must NOT write to", skill)
-        self.assertIn("workspace/annual/**", skill)
-        self.assertIn("workspace/provisional/**", skill)
-        self.assertIn("workspace/shared/winst-notes.md", skill)
+        self.assertIn("Return structured facts and open questions", skill)
+        self.assertIn("Do not\npersist any final artifact", skill)
+        self.assertNotIn("  - Write\n", skill)
+        self.assertNotIn("  - Edit\n", skill)
 
     def test_winst_helper_has_invocation_policy(self):
         policy = load_yaml("skills/nl-tax-winst/agents/openai.yaml")
@@ -184,7 +184,8 @@ class AnnualWorkflowTests(unittest.TestCase):
     def test_annual_skill_delegates_to_winst_helper(self):
         skill = read_text("skills/nl-tax-annual-return/SKILL.md")
         self.assertIn("nl-tax-winst", skill)
-        self.assertIn("workspace/shared/winst-notes.md", skill)
+        self.assertIn("persist the returned facts and open questions", skill)
+        self.assertIn("resume compatibility only", skill)
         self.assertIn("Winst uit onderneming notes", skill)
         self.assertIn("requires 20 sections", skill)
 

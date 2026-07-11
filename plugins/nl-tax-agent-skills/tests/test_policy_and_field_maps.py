@@ -272,8 +272,12 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
 
         self.assertIn("provisional_2026.subsections.box2", skill)
-        self.assertIn("older session-progress.yaml", skill)
+        self.assertIn("pre-1.4 state", skill)
         self.assertIn("generation gate", skill)
+        self.assertIn("Every applicable `provisional_2026` subsection", skill)
+        self.assertIn("including `winst_forecast`", skill)
+        self.assertIn("`complete`, `chat_only`, or `deferred`", skill)
+        self.assertIn("An empty `open_questions` list is not sufficient", skill)
 
     def test_provisional_review_questions_template_is_concrete_and_wired(self):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
@@ -464,17 +468,17 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             with self.subTest(section=section):
                 self.assertIn(section, skill_sections)
 
-    def test_box2_helper_contract_names_notes_and_open_questions(self):
+    def test_box2_helper_contract_returns_notes_and_open_questions(self):
         annual_skill = read_text("skills/nl-tax-annual-return/SKILL.md")
         box2_skill = read_text("skills/nl-tax-box2/SKILL.md")
         combined = f"{annual_skill}\n{box2_skill}"
 
-        self.assertIn("workspace/shared/box2-notes.md", combined)
-        self.assertIn("workspace/shared/box2-open-questions.yaml", combined)
-        self.assertIn("Read `workspace/shared/box2-notes.md`", annual_skill)
-        self.assertIn("workspace/shared/box2-open-questions.yaml", annual_skill)
+        self.assertIn("return a structured question packet", box2_skill)
+        self.assertIn("persist the returned facts and open questions", annual_skill)
+        self.assertIn("resume compatibility only", combined)
+        self.assertIn("must not be\nupdated or created", annual_skill)
 
-    def test_annual_helper_delegation_allows_inline_fallback(self):
+    def test_annual_helper_delegation_allows_read_only_inline_fallback(self):
         annual_skill = read_text("skills/nl-tax-annual-return/SKILL.md")
         box2_skill = read_text("skills/nl-tax-box2/SKILL.md")
         combined = f"{annual_skill}\n{box2_skill}"
@@ -486,9 +490,9 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-partner-deductions/SKILL.md",
         ]
 
-        self.assertIn("If no Skill/Task tool exists", annual_skill)
-        self.assertIn("inline the helper's SKILL.md instructions", annual_skill)
-        self.assertIn("write the helper-owned `workspace/shared/` files", annual_skill)
+        self.assertIn("otherwise inline the helper's\ninstructions", annual_skill)
+        self.assertIn("helper returns structured facts and open\nquestions", annual_skill)
+        self.assertIn("writes nothing", annual_skill)
         self.assertIn("called through a Skill/Task tool or inlined by an owning workflow", combined)
         for helper_path in helper_paths:
             with self.subTest(helper_path=helper_path):
@@ -496,6 +500,72 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                     "called through a Skill/Task tool or inlined by an owning workflow",
                     read_text(helper_path),
                 )
+
+    def test_field_mapper_is_the_only_canonical_field_map_writer(self):
+        annual = read_text("skills/nl-tax-annual-return/SKILL.md")
+        provisional = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
+        mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
+
+        self.assertIn("sole writer of both canonical field-map artifacts", mapper)
+        self.assertIn("`workspace/annual/2025/field-map.yaml`", mapper)
+        self.assertIn("`workspace/provisional/2026/field-map.yaml`", mapper)
+        for workflow in (annual, provisional):
+            with self.subTest(workflow=workflow[:40]):
+                self.assertIn("invoke `nl-tax-field-mapper`", workflow)
+                self.assertNotIn("Write `workspace/annual/2025/field-map.yaml`", workflow)
+                self.assertNotIn(
+                    "Write `workspace/provisional/2026/field-map.yaml`", workflow
+                )
+
+    def test_workflows_use_exact_field_mapper_sibling_paths(self):
+        common_paths = (
+            "nl-tax-field-mapper/templates/field-map-template.yaml",
+            "nl-tax-field-mapper/reference/mapping-principles.md",
+            "nl-tax-field-mapper/scripts/validate_field_map.py",
+        )
+        workflow_paths = {
+            "skills/nl-tax-annual-return/SKILL.md": (
+                "nl-tax-field-mapper/reference/annual-field-map.md"
+            ),
+            "skills/nl-tax-provisional-assessment/SKILL.md": (
+                "nl-tax-field-mapper/reference/provisional-field-map.md"
+            ),
+        }
+
+        for workflow_path, workflow_reference in workflow_paths.items():
+            workflow = read_text(workflow_path)
+            for path in (*common_paths, workflow_reference):
+                with self.subTest(workflow_path=workflow_path, path=path):
+                    self.assertIn(path, workflow)
+
+    def test_helpers_return_results_without_persisting_artifacts(self):
+        helper_paths = (
+            "skills/nl-tax-box1-home/SKILL.md",
+            "skills/nl-tax-box2/SKILL.md",
+            "skills/nl-tax-box3/SKILL.md",
+            "skills/nl-tax-winst/SKILL.md",
+            "skills/nl-tax-partner-deductions/SKILL.md",
+        )
+
+        for helper_path in helper_paths:
+            helper = read_text(helper_path)
+            helper_lower = helper.lower()
+            with self.subTest(helper_path=helper_path):
+                self.assertIn("return structured facts and open questions", helper_lower)
+                self.assertIn("do not\npersist any final artifact", helper_lower)
+                self.assertNotIn("  - Write\n", helper)
+                self.assertNotIn("  - Edit\n", helper)
+
+    def test_owning_workflows_persist_helper_results_and_legacy_notes_are_read_only(self):
+        for workflow_path in (
+            "skills/nl-tax-annual-return/SKILL.md",
+            "skills/nl-tax-provisional-assessment/SKILL.md",
+        ):
+            workflow = read_text(workflow_path)
+            with self.subTest(workflow_path=workflow_path):
+                self.assertIn("persist the returned facts and open questions", workflow)
+                self.assertIn("resume compatibility only", workflow)
+                self.assertIn("must not be\nupdated", workflow)
 
     def test_annual_template_uses_knowledge_placeholders_for_rates(self):
         template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
