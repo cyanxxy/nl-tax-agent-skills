@@ -5,6 +5,91 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] — 2026-07-11
+
+Cowork-first consistency and non-security correctness release. The plugin now ships one
+truthful 12-skill discovery surface, keeps the LLM agent responsible for the workflow, and
+uses Python only for optional mechanical checks. Both nested plugin manifests are bumped
+from `0.1.6` to `0.1.7`; the root marketplace manifests intentionally remain unversioned.
+
+### Fixed
+
+- **Annual tax guidance** — corrected the 2025 handling and citations for healthcare-cost
+  exclusions, periodic-gift caps and transition cases, AOV premiums, AKW, ZW/WAZO,
+  credits/UPO inputs, car first-admission boundaries, and stock-option source/tax timing.
+- **Annual Box 3** — the annual workpack keeps fictitious and actual-return methods
+  separate, compares both only when supported inputs are complete, and records a deferred
+  or manual-review result instead of inventing a choice.
+- **Own home / Box 1** — the own-home balance now uses all accepted deductible-cost
+  components; Hillen is calculated from that balance, while the high-rate deduction
+  adjustment remains a separate review adjustment. Complex home cases stay with the agent
+  for manual review.
+- **Filing workflow** — aligned partner, invitation/deadline, extension, change,
+  migration, provisional, and late-penalty guidance with the reviewed notes. The extension
+  path distinguishes the normal 1 May request, a different invitation-letter deadline,
+  and the separate no-invitation filing guardrail.
+- **Artifact ownership** — intake alone creates taxpayer/session state; workflow skills
+  own their return artifacts; the field mapper is the sole canonical field-map writer.
+  Session schema and ownership checks now agree across playbooks, templates, and tests.
+- **Entrepreneur scope** — annual 2025 may prepare a straightforward
+  eenmanszaak/ZZP winst section; complex business cases remain review-only. Provisional
+  2026 accepts only the supported estimated-profit input and does not run the annual winst
+  workflow.
+- **Optional calculators** — Box 2 validation is integrated into its calculator payload
+  path; Box 3 consumes explicit provenance-bearing rows instead of classifying raw assets;
+  own-home arithmetic and partner allocation helpers consume explicit reviewed inputs.
+  Non-finite, negative, unsupported, or structurally unknown inputs fail their mechanical
+  check cleanly.
+- **Evidence and field maps** — evidence completeness, extraction status, reviewed-year
+  decisions, and canonical field selection remain agent responsibilities. Scripts now
+  report mechanical results with `check_performed_by` provenance and no longer act as
+  duplicate workflow engines.
+
+### Added
+
+- **Progressive disclosure** — public skill playbooks load only the phase, subflow, rule
+  notes, templates, and helper contracts needed for the current turn.
+- **Twelve-skill discovery contract** — seven public/manual entry skills and five
+  background helpers have unique frontmatter, exact public argument hints, and matching
+  Claude/Codex invocation metadata. The obsolete parallel `commands/` surface is absent.
+- **Reviewed-note provenance** — source-register entries, local reviewed-note hashes,
+  review status, workflow/year declarations, and field/evidence check attribution are
+  validated together without presenting metadata as proof of legal accuracy.
+- **Behavioral parity** — annual, provisional, entrepreneur, unsupported-scope, source,
+  ownership, and Python-optional fixtures have one-to-one offline dataset and benchmark
+  coverage, plus first-party Claude behavior cases.
+- **Release packaging tests** — version/metadata, one-icon packaging, 12-skill discovery,
+  argument hints, optional-Python wording, contributor version examples, and the future tag
+  guard are regression tested.
+
+### Changed
+
+- **LLM-led runtime** — reduced the shipped Python inventory to 14 optional helpers in four
+  groups: evidence inventory/hash, field-map checks, source-pinned arithmetic checks, and
+  developer consistency/source maintenance. Removed duplicate summarizers/classifiers and
+  renamed source refresh to an offline planning operation. Python 3.10+ is a maintainer or
+  optional-helper runtime, never a taxpayer prerequisite.
+- **Cowork-first documentation** — natural-language requests are the quickstart;
+  namespaced skill invocation is an advanced path. The docs cover local and remote Cowork
+  sessions, the correct provisional skill invocation, optional-helper fallback, and the
+  distinction between first-party Claude validation and a separate human Cowork UI smoke
+  gate.
+- **Package metadata and assets** — Claude now includes `displayName`, `homepage`, and
+  `repository`; Claude and Codex descriptions match the Cowork-first product; Codex uses
+  `assets/icon.png` for both image fields; duplicate logo and stale screenshot assets are
+  removed.
+- **CI** — Python 3.10 and 3.12 both parse all manifests, validate source/knowledge/workflow
+  and cross-host contracts, compile every helper/test, run the full suite from repository
+  and standalone-plugin working directories, and verify the offline dataset.
+- **Historical plan** — `llm-agent-skill-plan.md` is explicitly archival and includes a
+  current 0.1.7 status matrix instead of serving as the release tracker.
+
+### Security and privacy scope
+
+Security/privacy behavior did not change in 0.1.7. `PRIVACY.md` and `SECURITY.md` are
+unchanged; this release intentionally addresses only non-security correctness, workflow,
+tooling, evaluation, documentation, and packaging issues.
+
 ## [0.1.6] — 2026-07-04
 
 Entrepreneur (winst uit onderneming) support for the 2025 annual return. A

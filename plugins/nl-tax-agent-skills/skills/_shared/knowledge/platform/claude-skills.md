@@ -4,7 +4,7 @@ source_ids: anthropic_agent_skills_overview, claude_code_skills
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-05-13"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -21,10 +21,14 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 ## Discovery and invocation
 
 - Skills are discovered automatically from their frontmatter fields (name, description)
-- Users invoke skills via slash commands in the Claude Code interface
+- In Cowork, users normally describe the outcome in natural language and let the agent select the workflow skills
+- Namespaced slash invocation such as `/nl-tax-agent-skills:nl-tax-intake annual` is an advanced Claude interface, not the required quickstart
 - The agent may also invoke skills programmatically when a task matches a skill's description
 
 ## Execution context
+
+- Cowork tasks may use local or remote execution environments; selected files, tools, and shell visibility depend on the active session
+- Resolve bundled resources through host file tools. Treat Python helpers as optional accelerators and follow the documented agent check when the helper is unavailable
 
 - `context: fork` runs the skill in an isolated subagent with no access to the parent conversation. The subagent receives the SKILL.md content as a one-shot prompt and returns a single summary. Only use this for stateless analysis tasks that need no user follow-up (e.g. summarizing a fixed input). Never use it for skills that ask the user questions, iterate on assumptions, or produce workpacks across multiple turns -- the subagent cannot read or reply to the user
 - `disable-model-invocation: true` prevents auto-invocation (for maintenance or dangerous skills)
@@ -56,6 +60,8 @@ When creating or modifying skills in this project:
 3. Set `disable-model-invocation: true` for skills that modify source data or perform destructive operations
 4. Always declare `allowed-tools` as a YAML list (space-separated strings also work, but lists are unambiguous). Use `python3` (not `python`) in `Bash(...)` patterns -- macOS does not ship a bare `python` interpreter
 5. Register any new external sources in `_shared/source-register.yaml`
+6. Keep natural-language Cowork prompts as the primary usage path; document direct namespaced invocation only as an advanced path
+7. Distinguish first-party Claude package validation from a human Cowork UI smoke test; one does not prove the other
 
 ## Common failure
 

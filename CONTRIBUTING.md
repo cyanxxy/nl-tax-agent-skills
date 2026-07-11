@@ -5,7 +5,7 @@ plugin does, how to install it, and how to use it, see the [README](README.md).
 
 The product is a skills-only Agent Skills plugin under `plugins/nl-tax-agent-skills/` —
 no backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks.
-Python is optional and its small deterministic helpers are limited to four conceptual
+Python is optional for taxpayer workflows, and its small deterministic helpers are limited to four conceptual
 components: evidence inventory/hash, field-map checks, source-pinned arithmetic checks,
 and developer consistency/source maintenance. When extending behavior, prefer adding to
 a `SKILL.md` over adding script logic.
@@ -27,7 +27,7 @@ plugins/nl-tax-agent-skills/
   .claude-plugin/plugin.json
   .codex-plugin/plugin.json
   README.md
-  assets/                           # icon.png, logo.png
+  assets/                           # icon.png (the single packaged image)
   skills/
     _shared/
       source-register.yaml          # every cited source_id with metadata
@@ -42,6 +42,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-box1-home/               # background helper
     nl-tax-box2/                    # background helper
     nl-tax-box3/                    # background helper
+    nl-tax-winst/                   # annual-2025 eenmanszaak/ZZP preparation helper
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
@@ -62,19 +63,20 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.2",
-  "skills": "./skills/",
+  "version": "0.1.7",
+  "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "category": "Productivity",
-    "capabilities": ["Agent Skills", "Local Workpacks", "Source-Backed Guidance"],
+    "capabilities": ["Agent Skills", "Reviewable Workpacks", "Source-Backed Guidance"],
     "brandColor": "#1F6FEB"
   }
 }
 ```
 
 `.claude-plugin/plugin.json` is the Anthropic schema-conformant manifest — slimmer, with
-`keywords` and `skills` pointing at the same `./skills/` directory.
+`displayName`, project URLs, `keywords`, and `skills` pointing at the same `./skills`
+directory. Both nested manifests are versioned; both root marketplaces remain unversioned.
 
 ---
 
@@ -184,6 +186,12 @@ workspace/
       review-questions.md           # review subflow
       notes/                        # per-section working notes
 ```
+
+The annual playbook owns its phases: intake gate, evidence review, Box 1/own home,
+conditional winst, Box 2, Box 3, partner allocation, field-map preparation, and final
+review. The provisional playbook keeps `request`, `change`, `review`, and `stopzetten` as
+separate subflows. Winst preparation is confined to a straightforward annual-2025
+eenmanszaak/ZZP; provisional 2026 records only the supported estimated-profit input.
 
 Output-path ownership is enforced by the *Never* contracts in each skill: `annual-return`
 must never write to `workspace/provisional/**`, and background helpers must never write
@@ -309,11 +317,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed `version` (currently `0.1.2`):
+Both plugin manifests pin a fixed version (currently `0.1.7`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.2"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.2"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.7"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.7"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -331,11 +339,18 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
   uploads, evidence files, compiled Python, and local `.agents/` state other than
   `.agents/plugins/marketplace.json`.
 - Run the full validation gate above before release.
-- **Host runtime behavior is not integration-tested by this repo's checks** — they run
-  validators, compile checks, and unit/eval tests only. Verify skill discovery, invocation
-  policy and frontmatter handling in the target host (Claude Code, Cowork, or Codex) before
-  release. In particular, confirm `disable-model-invocation: true`
-  is respected for plugin skills in the target Claude Code version; if not, use permission
-  rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
-- In Cowork, verify that bundled references load through `Read`/`Glob` and that workflows
-  still complete when Bash cannot access `${CLAUDE_PLUGIN_ROOT}`.
+- Run first-party Claude plugin validation for the manifest, skill discovery, and
+  frontmatter contracts. This is a package validation gate, not a Cowork UI result.
+- In Cowork, install/update the plugin, open a fresh local or remote task, verify that
+  bundled references load, and run one annual and one provisional natural-language smoke
+  prompt. Record this separately; do not claim it from static or CLI validation alone.
+- Verify invocation-policy metadata in the target Claude Code and Codex builds.
+
+For the first future release tag, guard against a retroactive or duplicate tag before
+letting Claude create the tag. The 0.1.7 preparation commit itself does not create one:
+
+```bash
+test "$(git tag --list 'nl-tax-agent-skills--v0.1.7')" = ""
+claude plugin tag plugins/nl-tax-agent-skills
+git tag --list 'nl-tax-agent-skills--v0.1.7'
+```

@@ -46,7 +46,7 @@ sources:
     url: "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-07-02"
+    last_checked: "2026-07-11"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -65,7 +65,7 @@ sources:
     url: "https://code.claude.com/docs/en/skills"
     source_type: platform_docs
     snapshot_path: "skills/_shared/knowledge/platform/claude-skills.md"
-    last_checked: "2026-07-02"
+    last_checked: "2026-07-11"
     freshness_policy: "check monthly; platform docs may change with new releases"
     owner: "tax-content"
     mandatory_for:
@@ -110,7 +110,7 @@ sources:
     mandatory_for:
       - nl-tax-annual-return
       - nl-tax-winst
-      - nl-tax-evidence-indexer
+      - nl-tax-submit-companion
 
   - id: law_uitvoeringsregeling_ib_2001
     title: "Uitvoeringsregeling inkomstenbelasting 2001"

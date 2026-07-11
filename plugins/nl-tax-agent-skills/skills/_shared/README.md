@@ -2,6 +2,10 @@
 
 This directory contains shared resources used by all NL tax skills.
 
+The LLM agent owns intake, evidence sufficiency, tax-workflow decisions, and workpack
+writing. Python is optional; scripts perform only the explicit mechanical checks named by
+the invoking skill.
+
 ## Structure
 
 ```
@@ -35,6 +39,11 @@ _shared/
 3. Only `nl-tax-source-refresh` may fetch from official domains.
 4. Year-specific files must include `tax_year`, `source_ids`, `last_reviewed`, and `review_status`.
 5. No real taxpayer data may appear in any file under `_shared/`.
+
+Annual execution is organized into explicit phases, including conditional
+`nl-tax-winst` preparation for a supported straightforward eenmanszaak/ZZP. Provisional
+execution keeps request, change, review, and stopzetten as separate subflows; it does not
+reuse the annual winst workflow.
 
 `source-register.yaml` uses `snapshot_path` as the path to a local reviewed
 note. `last_checked` is the date of a human review of that note against its

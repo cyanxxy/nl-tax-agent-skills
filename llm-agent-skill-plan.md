@@ -1,9 +1,27 @@
 # LLM-Native Agent Skill Plan - NL Tax Skills
 
 **Created:** 2026-04-30
-**Status (2026-06-09):** Implemented. This document is the original design plan, kept for rationale and architecture context. The checkboxes below reflect the plan as written, not current completion — the shipped plugin under `plugins/nl-tax-agent-skills/` is the source of truth, and its validators, tests, and output contracts gate any further change.
+**Status (2026-07-11): Historical design record.** This document is the original
+redesign plan, kept for rationale and architecture context. The checkboxes below are not a
+release tracker. The shipped plugin, current release plans, validators, evals, and output
+contracts are the source of truth.
 **Purpose:** Redesign the current Dutch tax capability as a plugin that bundles LLM-native Agent Skills, not as a loose collection of static templates and scripts.
 **Scope:** `plugins/nl-tax-agent-skills/` is the primary distributable plugin. The bundled skills support Dutch annual return 2025 and voorlopige aanslag 2026 workpack preparation. Annual/provisional 2027 are explicit future goals, but remain blocked until exact official 2027 sources are registered, snapshotted, reviewed, and validated.
+
+---
+
+## Current 0.1.7 status matrix
+
+| Design area | 0.1.7 state | Normative location |
+|---|---|---|
+| Product package | 12 unique bundled skills; no parallel `commands/` surface | `plugins/nl-tax-agent-skills/` |
+| User experience | Cowork-first natural-language intake; namespaced invocation is advanced | root and plugin READMEs |
+| Annual workflow | 2025 only, including preparation for supported straightforward eenmanszaak/ZZP winst | annual skill, contracts, fixtures |
+| Provisional workflow | Separate 2026 request/change/review/stopzetten subflows | provisional skill, contracts, fixtures |
+| Python | Optional 14-helper inventory in four mechanical groups; agent owns interpretation | optional-tooling contracts and skill manuals |
+| Knowledge | Reviewed-note provenance plus source/workflow gates | `_shared/source-register.yaml`, metadata, validators |
+| Behavioral evidence | Fixture/dataset parity and first-party Claude cases | `evals/` and `_shared/eval-fixtures/` |
+| Host verification | Package validation automated; Cowork UI smoke is a separate human release gate | `CONTRIBUTING.md` release checklist |
 
 ---
 

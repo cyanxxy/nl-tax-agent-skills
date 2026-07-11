@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="plugins/nl-tax-agent-skills/assets/logo.png" alt="NL Tax Agent Skills" width="170" />
+<img src="plugins/nl-tax-agent-skills/assets/icon.png" alt="NL Tax Agent Skills" width="170" />
 
 <h1>NL Tax Agent Skills</h1>
 
@@ -96,21 +96,31 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
 
 <br />
 
-<div align="center">
-
-<img src="plugins/nl-tax-agent-skills/assets/cowork-annual-return.png" alt="The annual-return flow running in Claude Cowork: the intake skill asks screening questions before preparing the 2025 workpack" width="900" />
-
-<sub><em>The annual 2025 flow in Claude Cowork — intake screening before the workpack is prepared.</em></sub>
-
-</div>
-
----
-
 ## 🚀 Quickstart
 
-Once the plugin is [installed](#-install), the workflow is a short chain of slash commands. Each skill consumes the previous skill's output and writes its own output to a scoped path under `workspace/`.
+Once the plugin is [installed](#-install), open Cowork, attach or select the
+documents you want it to use, and describe the result you need. The agent drives
+the workflow: it asks only the missing intake questions, chooses the relevant
+skills, and prepares artifacts for your review.
 
 ### Annual return — 2025
+
+```text
+Help me prepare my 2025 Dutch income-tax workpack. I have my year statement and mortgage summary.
+```
+
+### Voorlopige aanslag — 2026
+
+```text
+Help me request a 2026 voorlopige aanslag. Ask me for the estimates you still need.
+```
+
+You can ask instead to change, review, or stopzetten an existing 2026 voorlopige
+aanslag. Annual and provisional work stay separate, and the agent explains each
+output it creates under `workspace/`.
+
+<details>
+<summary><strong>Advanced: invoke a skill directly</strong></summary>
 
 ```text
 /nl-tax-agent-skills:nl-tax-intake annual
@@ -120,18 +130,17 @@ Once the plugin is [installed](#-install), the workflow is a short chain of slas
 /nl-tax-agent-skills:nl-tax-submit-companion annual 2025
 ```
 
-### Voorlopige aanslag — 2026
-
-Swap in:
+For a provisional workflow, invoke the actual provisional skill:
 
 ```text
-nl-tax-provisional-assessment 2026 <request|change|review|stopzetten>
+/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request
 ```
 
-In Claude Code, the plugin's skills are directly slash-invokable. If a skill and a `commands/` wrapper share a name, the skill takes precedence. In Codex, invoke the registered skills by name after discovery.
+Replace `request` with `change`, `review`, or `stopzetten`. Direct invocation is
+an advanced Claude interface; ordinary Cowork use should start with the natural-
+language request above. Codex users can name a discovered skill explicitly.
 
-> [!IMPORTANT]
-> Test manual-only skill behavior in your target Claude Code version before relying on it. If `disable-model-invocation: true` is not respected for plugin skills in that version, use permission rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
+</details>
 
 ---
 
@@ -166,16 +175,16 @@ Public GitHub repositories are accepted for personal marketplaces — no fork or
 
 | Host | Discovery path | Implicit-invocation control | Status |
 |---|---|---|---|
-| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | `disable-model-invocation` / `user-invocable` frontmatter | ✅ Supported |
-| Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Same Claude frontmatter | ✅ Supported |
+| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | Claude skill frontmatter | ✅ First-party manifest and skill validation |
+| Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Claude skill frontmatter | ⚠️ Package validated; release UI smoke still required |
 | Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | ⚠️ Compatible — see note |
 
-Cowork runs shell/code execution in an isolated local VM. The skills therefore
-resolve bundled plugin files with `Read`/`Glob`-style host file tools, not by
-asking Bash to find the plugin cache path. Bundled Python helpers are
-best-effort in Cowork: if Bash cannot see the resolved plugin script path, the
-skills fall back to manual validation from the same references instead of
-copying scripts into `workspace/`.
+Cowork tasks may use local or remote execution environments. Available files,
+tools, and shell visibility depend on the session, so select or attach the
+documents for that task. The skills resolve bundled resources with host file
+tools; they do not assume Bash can discover the plugin cache. If an optional
+helper is unavailable, the LLM agent performs the documented check from the
+same references.
 
 Python is optional at runtime; do not ask a taxpayer to install it. For hosts
 and maintainers that already provide Python 3.10+, the 14 mechanical helpers
@@ -184,7 +193,12 @@ checks, source-pinned arithmetic checks, and developer consistency/source
 maintenance. The LLM agent still owns interpretation, evidence sufficiency,
 workflow decisions, and the workpack.
 
-Codex implicit-invocation control is enforced structurally through each non-user-invocable skill's `agents/openai.yaml` and statically validated by `validate_invocation_policy.py`. It has not been integration-tested in a live Codex host, so verify it in your target build before release.
+The release gate validates Claude manifests and skill discovery with first-party
+Claude tooling when available. That does not prove the Cowork desktop flow: a
+human must still install/update the plugin in Cowork, open a fresh task, run the
+annual and provisional smoke prompts, and record the result. Codex invocation
+metadata is validated statically but should likewise be checked in the target
+host build.
 
 <details>
 <summary><strong>Other installation paths</strong> — Cowork team/organization, community directory, Codex, and ZIP fallback</summary>

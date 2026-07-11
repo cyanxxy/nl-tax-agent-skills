@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "nl-tax-agent-skills",
-      "description": "Dutch tax skills for local manual-entry workpacks.",
+      "description": "Prepare source-cited Dutch tax workpacks with an LLM agent for manual Mijn Belastingdienst entry.",
       "license": "Apache-2.0",
       "source": {
         "source": "local",

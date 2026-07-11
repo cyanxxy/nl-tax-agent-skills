@@ -36,6 +36,7 @@ active_workflows:
     required_source_ids:
       - anthropic_agent_skills_overview
       - claude_code_skills
+      - law_awr_artikel_52
       - law_wet_inkomstenbelasting_2001
       - law_uitvoeringsregeling_ib_2001
       - law_uitvoeringsbesluit_ib_2001
@@ -145,6 +146,7 @@ active_workflows:
     required_source_ids:
       - anthropic_agent_skills_overview
       - claude_code_skills
+      - law_awr_artikel_52
       - law_wet_inkomstenbelasting_2001
       - law_uitvoeringsregeling_ib_2001
       - law_uitvoeringsbesluit_ib_2001

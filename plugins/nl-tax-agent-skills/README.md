@@ -1,8 +1,8 @@
 # NL Tax Agent Skills — Plugin Package
 
-This directory is the product package for **NL Tax Agent Skills**: a skills-only Agent
-Skills plugin that prepares Dutch individual income-tax workpacks and manual Mijn
-Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026).
+This directory is the product package for **NL Tax Agent Skills**: a Cowork-first,
+skills-only Agent Skills plugin that prepares Dutch individual income-tax workpacks and
+manual Mijn Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026).
 
 > **Not tax advice.** This plugin prepares local workpacks and manual-entry
 > guidance only. It never logs in, signs, or submits anything, and its output is
@@ -20,6 +20,24 @@ marketplace manifests that point at this package: `.claude-plugin/marketplace.js
 (Claude) and `.agents/plugins/marketplace.json` (repo-scoped Codex). Neither
 ships inside this package.
 
+## Cowork quickstart
+
+After installing the plugin, attach or select the relevant documents and ask:
+
+```text
+Help me prepare my 2025 Dutch income-tax workpack. I have my year statement and mortgage summary.
+```
+
+The LLM agent runs intake, asks for missing facts, loads only the needed rule notes,
+and drafts the review artifacts. For a provisional workflow, ask naturally to request,
+change, review, or stopzetten a 2026 voorlopige aanslag. A direct advanced invocation is
+`/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request` (replace `request` with
+the desired subflow).
+
+Cowork tasks may use local or remote execution environments, so file availability and
+shell tooling depend on the active session. Python is optional; the agent follows the
+manual check path whenever a helper cannot run.
+
 ## Package contents
 
 ```text
@@ -27,8 +45,7 @@ nl-tax-agent-skills/
   .claude-plugin/plugin.json    # Claude Code plugin manifest
   .codex-plugin/plugin.json     # Codex plugin manifest
   LICENSE                       # Apache-2.0 license text
-  assets/                       # icon.png, logo.png
-  commands/                     # Claude Code slash-command wrappers (one per user skill)
+  assets/                       # icon.png
   skills/
     _shared/                    # source-register.yaml, supported-workflows.yaml, knowledge/, templates/, eval-fixtures/
     nl-tax-intake/                  # workflow router and taxpayer profile
@@ -79,6 +96,16 @@ the agent-driven manual checks in each `SKILL.md` apply.
 
 Only the annual and provisional workflow skills write main workpacks; helper skills write
 shared notes only.
+
+The annual workflow is phase-based (intake gate, evidence review, Box 1/own home,
+optional winst, Box 2, Box 3, partner allocations, field mapping, and final review).
+The provisional workflow has four separate subflows: request, change, review, and
+stopzetten. `nl-tax-winst` supports only straightforward annual-2025 eenmanszaak/ZZP
+preparation; it is not a provisional tax engine.
+
+The package passes manifest and discovery checks, including first-party Claude validation
+when the CLI capability is installed. Those checks do not replace a human Cowork UI smoke
+test after install/update in a fresh task.
 
 ## Scope
 

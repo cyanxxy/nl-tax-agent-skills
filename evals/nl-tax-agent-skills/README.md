@@ -71,6 +71,12 @@ claude plugin eval plugins/nl-tax-agent-skills \
   --output-dir evals/results/0.1.7
 ```
 
+This is first-party Claude package/behavior validation. It does not verify the Cowork
+desktop UI, marketplace update flow, local/remote file selection, or the exact tools in a
+new Cowork task. Record a separate human smoke run after installing 0.1.7: start a fresh
+task, use the natural-language annual prompt, then a provisional request prompt, and
+confirm that bundled references load without requiring Python.
+
 If `plugin-eval` is not on `PATH`, locate the bundled script dynamically instead of pinning a cache hash:
 
 ```bash

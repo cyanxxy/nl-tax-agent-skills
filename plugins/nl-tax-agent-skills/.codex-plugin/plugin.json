@@ -1,7 +1,7 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.6",
-  "description": "Dutch tax skills for local manual-entry workpacks.",
+  "version": "0.1.7",
+  "description": "Cowork-first Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
@@ -20,12 +20,12 @@
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",
-    "longDescription": "Local Dutch tax preparation skills for manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, or automating the portal.",
+    "longDescription": "LLM-guided Dutch tax preparation skills for reviewable manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, or automating the portal.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",
     "capabilities": [
       "Agent Skills",
-      "Local Workpacks",
+      "Reviewable Workpacks",
       "Source-Backed Guidance"
     ],
     "defaultPrompt": [
@@ -38,6 +38,6 @@
     "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
     "brandColor": "#1F6FEB",
     "composerIcon": "./assets/icon.png",
-    "logo": "./assets/logo.png"
+    "logo": "./assets/icon.png"
   }
 }
