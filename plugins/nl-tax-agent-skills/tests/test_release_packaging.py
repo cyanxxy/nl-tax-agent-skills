@@ -38,7 +38,7 @@ def frontmatter(path):
     return yaml.safe_load(block)
 
 
-class Release017PackagingTests(unittest.TestCase):
+class ReleasePackagingTests(unittest.TestCase):
     def test_no_legacy_commands(self):
         self.assertFalse((PLUGIN / "commands").exists())
 
@@ -74,14 +74,23 @@ class Release017PackagingTests(unittest.TestCase):
         self.assertEqual(codex["interface"]["composerIcon"], "./assets/icon.png")
         self.assertEqual(codex["interface"]["logo"], "./assets/icon.png")
 
-    def test_current_runtime_docs_require_only_optional_python_3_10(self):
-        doc_paths = (
+    def test_user_docs_keep_python_optional(self):
+        user_doc_paths = (
             REPO / "README.md",
-            REPO / "CONTRIBUTING.md",
             PLUGIN / "README.md",
+        )
+        for path in user_doc_paths:
+            with self.subTest(path=path.relative_to(REPO)):
+                text = path.read_text(encoding="utf-8")
+                self.assertIn("python is optional", text.lower())
+                self.assertNotIn("Python 3." + "8", text)
+
+    def test_maintainer_docs_require_python_3_10(self):
+        maintainer_doc_paths = (
+            REPO / "CONTRIBUTING.md",
             REPO / "evals/nl-tax-agent-skills/README.md",
         )
-        for path in doc_paths:
+        for path in maintainer_doc_paths:
             with self.subTest(path=path.relative_to(REPO)):
                 text = path.read_text(encoding="utf-8")
                 self.assertIn("Python 3.10+", text)

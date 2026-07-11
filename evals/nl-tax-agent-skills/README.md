@@ -57,7 +57,7 @@ claude plugin eval plugins/nl-tax-agent-skills \
   --case 'cowork-*' \
   --runs 1 \
   --threshold 0.8 \
-  --output-dir evals/results/0.1.7
+  --output-dir evals/results/latest
 ```
 
 This still does not prove the Cowork desktop UI, marketplace update flow,
@@ -122,7 +122,3 @@ Python is optional in taxpayer workflows. The supported maintainer runtime is
 Python 3.10+, and the 14 helpers remain mechanical accelerators for inventory,
 field-map checks, source-pinned arithmetic, and developer consistency. Agentic
 evaluation must never assume a helper owns tax interpretation.
-
-The earlier 21-run exact-output benchmark is documented in
-`plugin-eval-benchmark-0.1.7.md` as historical evidence and is superseded by the
-five-conversation design.

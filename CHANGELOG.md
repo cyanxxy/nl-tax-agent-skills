@@ -118,9 +118,6 @@ from `0.1.6` to `0.1.7`; the root marketplace manifests intentionally remain unv
 - **CI** — Python 3.10 and 3.12 both parse all manifests, validate source/knowledge/workflow
   and cross-host contracts, compile every helper/test, run the full suite from repository
   and standalone-plugin working directories, and verify the offline dataset.
-- **Historical plan** — `llm-agent-skill-plan.md` is explicitly archival and includes a
-  current 0.1.7 status matrix instead of serving as the release tracker.
-
 ### Security and privacy scope
 
 Security/privacy behavior did not change in 0.1.7. `PRIVACY.md` and `SECURITY.md` are

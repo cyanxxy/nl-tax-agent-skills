@@ -171,34 +171,14 @@ claude --plugin-dir ./plugins/nl-tax-agent-skills
 
 Public GitHub repositories are accepted for personal marketplaces — no fork or ZIP upload is required.
 
-### Host compatibility
+### Supported hosts
 
-| Host | Discovery path | Implicit-invocation control | Status |
-|---|---|---|---|
-| Claude Code | `.claude-plugin/marketplace.json` → nested plugin | Claude skill frontmatter | ✅ First-party manifest and skill validation |
-| Cowork | Same `.claude-plugin/marketplace.json` — personal or organization marketplace | Claude skill frontmatter | ⚠️ Package validated; release UI smoke still required |
-| Codex | `.agents/plugins/marketplace.json` → nested plugin | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | ⚠️ Compatible — see note |
+The plugin is designed primarily for **Claude Cowork** and also works with
+**Claude Code**. Both use the same bundled Agent Skills and reviewed tax
+knowledge. In Cowork, select or attach the documents you want the agent to use.
 
-Cowork tasks may use local or remote execution environments. Available files,
-tools, and shell visibility depend on the session, so select or attach the
-documents for that task. The skills resolve bundled resources with host file
-tools; they do not assume Bash can discover the plugin cache. If an optional
-helper is unavailable, the LLM agent performs the documented check from the
-same references.
-
-Python is optional at runtime; do not ask a taxpayer to install it. For hosts
-and maintainers that already provide Python 3.10+, the 14 mechanical helpers
-belong to four conceptual components: evidence inventory/hash, field-map
-checks, source-pinned arithmetic checks, and developer consistency/source
-maintenance. The LLM agent still owns interpretation, evidence sufficiency,
-workflow decisions, and the workpack.
-
-The release gate validates Claude manifests and skill discovery with first-party
-Claude tooling when available. That does not prove the Cowork desktop flow: a
-human must still install/update the plugin in Cowork, open a fresh task, run the
-annual and provisional smoke prompts, and record the result. Codex invocation
-metadata is validated statically but should likewise be checked in the target
-host build.
+Python is optional. The agent can complete the documented workflow without
+asking a taxpayer to install Python.
 
 <details>
 <summary><strong>Other installation paths</strong> — Cowork team/organization, community directory, Codex, and ZIP fallback</summary>

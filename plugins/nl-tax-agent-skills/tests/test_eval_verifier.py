@@ -238,28 +238,20 @@ class OfflineVerifierTests(unittest.TestCase):
                         "structural contracts must not prescribe Markdown prose",
                     )
 
-    def test_agentic_metric_pack_is_schema_compatible_and_retained(self):
+    def test_agentic_metric_pack_is_schema_compatible(self):
         root = REPO_ROOT / "evals/nl-tax-agent-skills"
         manifest = json.loads(
             (root / "agentic-metric-pack/manifest.json").read_text(encoding="utf-8")
-        )
-        result = json.loads(
-            (root / "agentic-design-checks-0.1.7.json").read_text(
-                encoding="utf-8"
-            )
         )
 
         self.assertEqual(manifest["supportedTargetKinds"], ["plugin"])
         self.assertEqual(
             manifest["command"], ["node", "./emit-agentic-design.js"]
         )
-        checks = result["checks"]
-        self.assertEqual(len(checks), 5)
-        self.assertTrue(all(check["status"] == "pass" for check in checks))
 
         node = shutil.which("node")
         if node is None:
-            self.skipTest("Node is unavailable; retained metric-pack output was parsed")
+            self.skipTest("Node is unavailable; metric-pack execution was not checked")
         emitted = subprocess.run(
             [node, str(root / "agentic-metric-pack/emit-agentic-design.js")],
             cwd=REPO_ROOT,
@@ -267,7 +259,10 @@ class OfflineVerifierTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
-        self.assertEqual(json.loads(emitted.stdout), result)
+        result = json.loads(emitted.stdout)
+        checks = result["checks"]
+        self.assertEqual(len(checks), 5)
+        self.assertTrue(all(check["status"] == "pass" for check in checks))
 
     def test_agentic_shell_verifier_checks_only_hard_artifact_boundaries(self):
         script = (
