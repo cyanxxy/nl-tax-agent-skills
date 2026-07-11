@@ -21,6 +21,10 @@ reconstruct it.
 
 Keep setup invisible. Do not narrate internal setup steps such as skill selection, rule or template loading, path resolution, local state-file creation, YAML updates, or policy loading. Create and update local files silently. Do not proactively recite generic warnings. The first user-facing reply should say only that you prepare a local workpack and then ask the screening questions. If the workflow is already clear and the user has documents ready, ask them to upload the relevant tax files; do not ask them to upload workspace or state files.
 
+Python is optional at runtime. Do not ask the taxpayer to install Python. The
+agent owns intake and applies the documented checks directly; optional scripts
+may only accelerate mechanical checks when the host already supports them.
+
 ## When to use
 
 - User wants to file a Dutch income tax return

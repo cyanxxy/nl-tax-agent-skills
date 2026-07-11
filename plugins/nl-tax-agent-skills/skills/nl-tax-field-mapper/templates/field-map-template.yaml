@@ -10,6 +10,7 @@ readiness: "draft"    # Optional self-declaration: "draft" or "review_ready" (th
                       # values validate_field_map.py accepts). The validator also
                       # computes readiness itself and warns when a "review_ready"
                       # declaration disagrees with the computed state.
+check_performed_by: "checked_by_agent"  # checked_by_agent | checked_by_script
 
 fields: []
 # Each field entry:

@@ -6,6 +6,7 @@ total_files: 0
 classified_files: 0
 user_chat_items: 0
 review_required_count: 0
+check_performed_by: "checked_by_agent"  # checked_by_agent | checked_by_script
 items: []
 # Each item:
 #   evidence_id: "ev_d9d1d3fa52"   # content-hash derived (ev_<10 hex>); stable across reordering

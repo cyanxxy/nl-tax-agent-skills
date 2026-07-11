@@ -50,7 +50,13 @@ The test suite runs standalone from this package (`python3 -m unittest discover 
 
 ### Optional script prerequisites
 
-The bundled Python scripts are best-effort accelerators, not the primary mechanism: every skill carries a declarative fallback the model applies from the knowledge files. Where scripts do run, they need Python 3.8+ and — for the validators and register tooling — PyYAML (`python3 -m pip install pyyaml`). On hosts without PyYAML the scripts exit with a clear message and the manual fallbacks in each SKILL.md apply.
+Python is optional at runtime. Do not ask the taxpayer to install Python: the
+agent applies the same explicit checks from the bundled knowledge and skill
+instructions. The bundled scripts are best-effort mechanical accelerators, not
+the primary mechanism. When a maintainer chooses to run them, they need Python
+3.8+ and — for the validators and register tooling — PyYAML (`python3 -m pip
+install pyyaml`). On hosts without PyYAML the scripts exit with a clear message
+and the agent-driven fallbacks in each SKILL.md apply.
 
 ## Skill inventory
 
