@@ -30,7 +30,7 @@ jobs:
           python -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json > /dev/null
           python -m json.tool .claude-plugin/marketplace.json > /dev/null
           python -m json.tool .agents/plugins/marketplace.json > /dev/null
-          test -d plugins/nl-tax-agent-skills/commands
+          test ! -e plugins/nl-tax-agent-skills/commands
 
       - name: Validate source register
         run: |

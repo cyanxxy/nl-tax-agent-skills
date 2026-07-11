@@ -28,7 +28,6 @@ plugins/nl-tax-agent-skills/
   .codex-plugin/plugin.json
   README.md
   assets/                           # icon.png, logo.png
-  commands/                         # Claude Code slash-command wrappers (one per user skill)
   skills/
     _shared/
       source-register.yaml          # every cited source_id with metadata
@@ -50,8 +49,8 @@ plugins/nl-tax-agent-skills/
   tests/                            # unit tests (validators, box helpers, eval verifier, field-map policy)
 ```
 
-There are no standalone `.claude/skills` or `.agents/skills` trees — skills and command
-wrappers are bundled inside the plugin. The only tracked `.agents/` file is
+There are no standalone `.claude/skills` or `.agents/skills` trees — skills are bundled
+inside the plugin and are the single discovery surface. The only tracked `.agents/` file is
 `.agents/plugins/marketplace.json`; local assistant state under `.agents/`, `.claude/`,
 `.codex/`, plus `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`, is git-ignored
 and is not plugin package content.
@@ -101,6 +100,7 @@ honor it):
 ---
 name: nl-tax-annual-return
 description: Use when preparing a 2025 Dutch annual tax manual-entry guide.
+argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
   - Grep
@@ -141,11 +141,9 @@ The body then specifies the *Do / Never* contract that constrains the skill, for
 - Do not present output as official advice or a final calculation.
 ```
 
-The flat `commands/` directory holds a thin slash-command wrapper for each user-facing
-skill. Wrappers exist so hosts that surface `commands/` separately can still invoke the
-skill — each is a one-line delegation to the bundled skill of the same name and forwards
-`$ARGUMENTS`. The skill owns the workflow; the wrapper never restates it, so the two cannot
-drift.
+Public invocation hints live directly in each skill's `argument-hint` frontmatter. The
+plugin intentionally has no parallel `commands/` discovery surface, so a public workflow
+name is registered only once and cannot collide with a same-named command wrapper.
 
 ### Cross-host invocation policy
 
@@ -253,7 +251,7 @@ python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
 python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
-test -d plugins/nl-tax-agent-skills/commands
+test ! -e plugins/nl-tax-agent-skills/commands
 
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
@@ -331,8 +329,8 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
 - Run the full validation gate above before release.
 - **Host runtime behavior is not integration-tested by this repo's checks** — they run
   validators, compile checks, and unit/eval tests only. Verify skill discovery, invocation
-  policy, frontmatter handling, and slash-command wrappers in the target host (Claude Code,
-  Cowork, or Codex) before release. In particular, confirm `disable-model-invocation: true`
+  policy and frontmatter handling in the target host (Claude Code, Cowork, or Codex) before
+  release. In particular, confirm `disable-model-invocation: true`
   is respected for plugin skills in the target Claude Code version; if not, use permission
   rules to deny unsafe skills or move manual-only skills to standalone project/user skills.
 - In Cowork, verify that bundled references load through `Read`/`Glob` and that workflows

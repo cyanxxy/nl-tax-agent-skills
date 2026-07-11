@@ -10,6 +10,8 @@ import tempfile
 import textwrap
 import unittest
 
+import yaml
+
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[1]
@@ -22,6 +24,14 @@ def read_text(relative_path):
 
 def read_repo_text(relative_path):
     return (ROOT.parents[1] / relative_path).read_text(encoding="utf-8")
+
+
+def skill_frontmatter(skill_name):
+    text = read_text(f"skills/{skill_name}/SKILL.md")
+    if not text.startswith("---\n"):
+        raise AssertionError(f"missing YAML frontmatter: {skill_name}")
+    _, block, _ = text.split("---", 2)
+    return yaml.safe_load(block)
 
 
 def load_module(relative_path, name):
@@ -750,12 +760,10 @@ class PolicyAndFieldMapTests(unittest.TestCase):
 
     def test_source_refresh_docs_describe_fetch_as_plan_only(self):
         skill = read_text("skills/nl-tax-source-refresh/SKILL.md")
-        command = read_text("commands/nl-tax-source-refresh.md")
-        combined = f"{skill}\n{command}".lower()
+        combined = skill.lower()
 
         self.assertIn("plan", combined)
         self.assertIn("no live http", combined)
-        self.assertNotIn("refresh or validate snapshots as requested", command)
         self.assertNotIn("run the scripts in `scripts/` to fetch, rebuild, and validate", skill)
 
     def test_public_workflow_docs_do_not_expose_run_modes(self):
@@ -804,25 +812,31 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("manual review", intake)
         self.assertIn("workflow-specific anchor", intake)
 
-    def test_command_wrappers_do_not_prompt_skill_narration(self):
-        command_files = sorted((ROOT / "commands").glob("nl-tax-*.md"))
+    def test_plugin_has_only_unique_skill_discovery_names(self):
+        self.assertFalse((ROOT / "commands").exists())
+        skill_paths = sorted((ROOT / "skills").glob("*/SKILL.md"))
+        names = [skill_frontmatter(path.parent.name)["name"] for path in skill_paths]
 
-        self.assertGreaterEqual(len(command_files), 7)
-        for path in command_files:
-            content = path.read_text(encoding="utf-8")
-            with self.subTest(path=path.relative_to(ROOT)):
-                self.assertNotIn("Use the bundled", content)
-                self.assertNotIn("forwarding any arguments", content)
-                self.assertIn("Do not tell the user", content)
+        self.assertEqual(len(names), 12)
+        self.assertEqual(len(set(names)), 12)
 
-    def test_manual_and_dev_only_command_wrappers_state_policy_in_body(self):
-        source_refresh = read_text("commands/nl-tax-source-refresh.md")
-        submit_companion = read_text("commands/nl-tax-submit-companion.md")
+    def test_public_skills_retain_exact_argument_hints(self):
+        expected = {
+            "nl-tax-annual-return": "[2025] [confirm]",
+            "nl-tax-evidence-indexer": "[path-to-upload-folder]",
+            "nl-tax-field-mapper": "[annual|provisional] [year]",
+            "nl-tax-intake": "[annual|request|change|review|stopzetten]",
+            "nl-tax-provisional-assessment": (
+                "[2026] [request|change|review|stopzetten|confirm]"
+            ),
+            "nl-tax-source-refresh": "[annual|provisional|box3|all] [year]",
+            "nl-tax-submit-companion": "[annual|provisional] [2025|2026]",
+        }
 
-        self.assertIn("developer-only maintenance", source_refresh)
-        self.assertIn("not a taxpayer workflow", source_refresh)
-        self.assertIn("manual-only checklist", submit_companion)
-        self.assertIn("only after the user explicitly asks", submit_companion)
+        actual = {
+            name: skill_frontmatter(name).get("argument-hint") for name in expected
+        }
+        self.assertEqual(actual, expected)
 
     def test_user_facing_sections_hide_internal_setup_language(self):
         checks = [
