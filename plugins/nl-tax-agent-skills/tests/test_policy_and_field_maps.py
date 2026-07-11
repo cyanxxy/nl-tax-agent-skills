@@ -320,8 +320,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
 
     def test_change_reentry_language_is_canonical_across_provisional_notes(self):
         canonical = (
-            "enter ALL data again; omitted data defaults to zero because the new "
-            "VA replaces the old one entirely"
+            "prepare and verify the complete dataset; the change form requires "
+            "all applicable categories, not only the changed item"
         )
         for relative_path in (
             "skills/_shared/knowledge/years/2026/provisional/change-flow.md",

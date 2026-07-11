@@ -89,7 +89,7 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 - `_shared/knowledge/years/2025/annual/own-home.md` *(bd_own_home_deduction_cap_2025)*
 - `_shared/knowledge/years/2025/annual/deductions.md` *(bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025)*
 - `_shared/knowledge/years/2025/annual/late-filing.md` *(bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib, bd_invorderingsrente)*
-- `_shared/knowledge/years/2025/annual/filing-flow.md` *(bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_annual_deadline_2025, bd_annual_extension_2025)*
+- `_shared/knowledge/years/2025/annual/filing-flow.md` *(bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_annual_deadline_2025, bd_annual_extension_2025, bd_annual_extension_eligibility_2025)*
 - `_shared/knowledge/years/2025/annual/evidence-checklist.md` *(bd_annual_data_checklist_2025)*
 - `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` *(bd_ondernemer_criteria_2025, bd_ondernemerscheck_2025, bd_urencriterium_2025)* — only when the case has winst uit onderneming (`business.has_onderneming` value `true`)
 - `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` *(bd_ondernemersaftrek_2025, bd_zelfstandigenaftrek_2025, bd_startersaftrek_ao_2025, bd_startersaftrek_2025, bd_meewerkaftrek_2025, bd_stakingsaftrek_2025, bd_so_aftrek_2025)* — same condition
@@ -110,23 +110,29 @@ Load every file in this list and append its `source_id` to `session-progress.yam
 
 ## Phase 1.5 — Filing status and late-filing exposure
 
-Before compiling income, establish where the taxpayer stands on the 1 May 2026 deadline. This drives whether the workpack carries a top-level exposure section (see output contract § Filing status).
+Before compiling income, establish the taxpayer's invitation-letter status and applicable deadline. This drives whether the workpack carries a top-level exposure section (see output contract § Filing status).
 
 ### 1.5.1 Determine filing status
 
-Ask the user (one batch, at most 3 questions):
+Ask the user in one batch (at most 3 questions):
 
-1. Have you already filed the 2025 return? (yes / no)
-2. Did you receive uitstel before 1 May 2026? (yes / no — if yes, what is the granted uitsteldatum?)
-3. If not filed and no uitstel — when do you plan to file?
+1. Have you already filed the 2025 return and, if so, on what date?
+2. Did you receive an invitation letter (aangiftebrief), what deadline does it show, and did you request extension through the applicable route? If granted, what is the uitsteldatum?
+3. If there was no invitation, have you established that tax is due for 2025 and, if not yet filed, when do you plan to file? Extension is unavailable on this branch.
+
+If an invitation letter exists, use its deadline. If there is no invitation and the taxpayer establishes that tax is due, use the reviewed voluntary-filing guardrail: file before **14 July 2026**. The 14 July 2026 date is conditional on that no-invitation/tax-due route. Otherwise do not invent a filing deadline.
+
+Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable. For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, making the standard extended date **1 September 2026**. If the invitation letter shows **another date**, request by that letter date using the **official form** route and use the granted uitsteldatum.
 
 Record under `workspace/annual/2025/notes/filing-status.yaml` with `source: user_chat`.
 
 ### 1.5.2 Surface exposure
 
-- **On time** (filed before 1 May 2026, or before granted uitsteldatum): no exposure. The workpack will say "Filing status: on time."
+- **On time** (filed by the applicable established invitation-letter deadline or conditional no-invitation/tax-due guardrail, or by the granted uitsteldatum): no exposure. The workpack will say "Filing status: on time."
 - **Uitstel granted, return outstanding**: quote the uitsteldatum and note that belastingrente still accrues from 1 July 2026 if tax is owed. Use the rate from `late-filing.md` (5% from 1 January 2026).
-- **Late (deadline passed, no uitstel)**: surface the verzuimboete (EUR 469 first / EUR 6,709 max) and the belastingrente rate (5% from 1 January 2026). Recommend filing as soon as possible to shorten the belastingrente period; pay the eventual aanslag by its betaaltermijn to avoid invorderingsrente. Do not imply that paying the aanslag faster reduces belastingrente — that end date is fixed when the aanslag is issued. Cite `bd_verzuimboete` and `bd_belastingrente_overview`.
+- **Late (deadline passed, no uitstel)**: show the EUR 469 first / EUR 6,709 maximum amounts only as **potential exposure**. Missing the deadline alone does not impose a verzuimboete. Record whether the taxpayer received a **herinnering**, then an **aanmaning**, and whether the **10 werkdagen** period after the aanmaning expired while the return remained unfiled. The boete is conditional on that escalation. Also show the applicable belastingrente rate, recommend filing as soon as possible, and cite `bd_verzuimboete` and `bd_belastingrente_overview`.
+
+If no applicable deadline is established, record `deadline_status: not established` and do not classify the return as on time or late.
 
 Do not compute a final boete or rente amount; the Belastingdienst sets these on the aanslag.
 
@@ -481,7 +487,7 @@ Compile all deductible items from evidence and user-provided data.
   insurer statement; ambiguous policy types and exact deductibility are manual
   review. Do not reduce business profit by the AOV premium.
 - Studiekosten / scholingsuitgaven: collect only as a manual-review item unless a reviewed official source is added
-- Restant persoonsgebonden aftrek from prior years
+- Restant persoonsgebonden aftrek from prior years; eligible whole-year fiscal partners may allocate this prior-year personal-deduction remainder, subject to traceable scenarios and taxpayer review
 - Any other qualifying deductions from the profile or evidence
 
 ### 5.6 Deduction summary
@@ -560,6 +566,7 @@ List items that are personal and cannot be allocated:
 - Consider the 2025 tariefsaanpassing/deduction-rate cap for listed deductions (37.48% cap)
 - Consider the phase-out of heffingskortingen
 - Present at least the default and one optimized allocation for review
+- Include any prior-year personal-deduction remainder for eligible whole-year fiscal partners; keep every scenario traceable and require taxpayer review in the official filing environment.
 
 ---
 

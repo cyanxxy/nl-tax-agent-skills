@@ -1,9 +1,9 @@
 snapshot_metadata_version: '1.0'
 sources:
   bd_aangifte_ondernemers_2025:
-    content_hash_sha256: 18cae8c017916dc6041af9cbe9cad71ff554a531611cd207e0a2853a0205d2f6
+    content_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-11T04:07:05.272493+00:00'
     source_id: bd_aangifte_ondernemers_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
   bd_administratie_bewaren_2025:
@@ -49,9 +49,9 @@ sources:
     source_id: bd_mkb_winstvrijstelling_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/mkb-winstvrijstelling-2025
   bd_ondernemer_cijfers_aangifte_2025:
-    content_hash_sha256: 18cae8c017916dc6041af9cbe9cad71ff554a531611cd207e0a2853a0205d2f6
+    content_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-11T04:07:05.272493+00:00'
     source_id: bd_ondernemer_cijfers_aangifte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
   bd_ondernemer_criteria_2025:
@@ -61,9 +61,9 @@ sources:
     source_id: bd_ondernemer_criteria_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
   bd_ondernemer_voorbereiden_2025:
-    content_hash_sha256: 18cae8c017916dc6041af9cbe9cad71ff554a531611cd207e0a2853a0205d2f6
+    content_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
     review_status: reviewed
-    snapshot_created_at: '2026-07-04T12:00:00+00:00'
+    snapshot_created_at: '2026-07-11T04:07:05.272493+00:00'
     source_id: bd_ondernemer_voorbereiden_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/voorbereid-op-uw-belastingaangifte-voor-ondernemers
   bd_ondernemersaftrek_2025:

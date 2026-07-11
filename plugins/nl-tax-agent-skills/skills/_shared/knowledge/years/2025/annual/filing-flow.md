@@ -1,10 +1,10 @@
 # Rule note: Filing flow for annual return 2025
 
-source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index, bd_annual_deadline_2025, bd_annual_extension_2025
+source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index, bd_annual_deadline_2025, bd_annual_extension_2025, bd_annual_extension_eligibility_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -53,11 +53,14 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Filing deadline
 
-- The filing deadline is the date shown in the taxpayer's aangiftebrief. The Belastingdienst says this is often 1 May.
-- For the 2025 return, the Belastingdienst extension page states that 1 May 2026 was the deadline when the return had to be received for taxpayers with that date.
-- If extension is granted, the taxpayer gets 4 extra months to file.
+- If an invitation letter (aangiftebrief) exists, the filing deadline is the date shown in that letter.
+- If there is no invitation and the taxpayer establishes that tax is due, apply the reviewed voluntary-filing guardrail: submit before **14 July 2026**. This date is conditional on the no-invitation/tax-due route.
+- If neither route applies, do not invent a filing deadline; record the facts and verify the position in Mijn Belastingdienst.
+- Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable; keep the separate conditional 14 July filing guardrail when tax due is established.
+- For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, so the standard date becomes **1 September 2026**.
+- If the invitation letter shows **another date**, request extension by that letter date using the **official form** route. Use the granted uitsteldatum rather than substituting the standard dates.
 - Late filing may result in a verzuimboete (penalty for late filing).
-- Always use the date in the taxpayer's notice or Mijn Belastingdienst rather than assuming the default date.
+- Always use the date in the invitation letter or Mijn Belastingdienst rather than assuming a default date.
 
 ## Workpack purpose
 

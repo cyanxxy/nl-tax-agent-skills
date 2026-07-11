@@ -89,9 +89,9 @@ The "Filing status and late-filing exposure" section MUST appear in every workpa
 
 - **On time** — one line: "Filing status: on time. No late-filing exposure." No further detail required.
 - **Uitstel granted** — quote the granted uitsteldatum, note that belastingrente still accrues from 1 July 2026 if tax is owed, and quote the rate from `_shared/knowledge/years/2025/annual/late-filing.md`.
-- **Late (deadline passed, no uitstel)** — quote both the verzuimboete amounts (EUR 469 first / EUR 6,709 max) and the belastingrente rate that applies after 1 July 2026, with citations to `bd_verzuimboete` and `bd_belastingrente_overview`. Do not compute a final boete or rente figure.
+- **Late (deadline passed, no uitstel)** — present EUR 469 first / EUR 6,709 maximum only as **potential exposure**. Record the escalation status for **herinnering**, **aanmaning**, and the **10 werkdagen** period after the aanmaning. State that missing the deadline alone does not impose a boete and that exposure remains conditional unless the return is still missing after that sequence. Quote the applicable belastingrente rate with citations to `bd_verzuimboete` and `bd_belastingrente_overview`; do not compute or promise a final figure.
 
-In all three cases, do not present the section as legal advice. The Belastingdienst sets the actual boete and rente on the aanslag.
+In all three cases, do not present the section as legal advice. The Belastingdienst determines whether the escalation conditions are met and sets any actual boete and rente.
 
 ---
 

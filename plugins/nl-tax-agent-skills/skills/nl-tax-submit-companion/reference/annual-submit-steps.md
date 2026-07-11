@@ -28,8 +28,8 @@
 
 ## Deadline
 
-Typically 1 May 2026. File on time to get the Belastingdienst's response guarantee; if you file (or request uitstel) before 1 May, you have certainty before 1 July. If you are asked to file and submit after 14 July without approved uitstel, you risk a verzuimboete. Check the official Belastingdienst website for the exact date in your notice.
+If the taxpayer received an invitation letter (aangiftebrief), use the deadline printed in it. With **no invitation**, only when the taxpayer establishes that tax is due, apply the reviewed voluntary-filing guardrail and submit before **14 July 2026**. Otherwise do not invent a filing deadline; verify the position in Mijn Belastingdienst.
 
 ## Extension
 
-An extension (uitstel) is possible via an official request through Mijn Belastingdienst or a tax advisor. If you need more time, submit the request before the deadline.
+Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable; keep the separate conditional 14 July filing guardrail when tax due is established. For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, making the standard extended date **1 September 2026**. If the invitation letter shows **another date**, request by that letter date using the **official form** route. Use the granted uitsteldatum shown in the decision.

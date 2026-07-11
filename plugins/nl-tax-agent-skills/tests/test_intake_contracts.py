@@ -95,11 +95,13 @@ class IntakeContractTests(unittest.TestCase):
         self.assertNotIn('explicit "DRAFT - incomplete" markers', contract)
         self.assertIn("output contract", contract)
 
-    def test_filing_paths_do_not_understate_annual_2025_deadline(self):
+    def test_filing_paths_route_annual_2025_deadline_by_invitation_status(self):
         filing_paths = read_text("skills/nl-tax-intake/reference/filing-paths.md")
 
-        self.assertIn("1 May 2026", filing_paths)
+        self.assertIn("invitation letter", filing_paths)
+        self.assertIn("no invitation", filing_paths)
         self.assertIn("14 July 2026", filing_paths)
+        self.assertIn("do not invent a filing deadline", filing_paths)
         self.assertNotIn("March-April 2026", filing_paths)
 
 

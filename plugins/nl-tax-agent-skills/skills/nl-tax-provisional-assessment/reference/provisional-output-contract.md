@@ -139,7 +139,7 @@ The `field-map.yaml` MUST conform to the schema defined by `nl-tax-field-mapper`
 
 Every change-subflow workpack MUST include this reminder:
 
-> When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
+> Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
 
 The reminder must appear:
 - In the workpack body (not just in footnotes or appendices)
@@ -159,6 +159,10 @@ A change-subflow workpack without a delta summary is invalid.
 ---
 
 ## Stopzetten validation rules
+
+Moving abroad requires residency review and is **not a categorical stopzetten reason**. A workpack must route migration facts to the unsupported residency/migration path rather than producing a stopzetten outcome solely from the move.
+
+For review/change context, an **unsolicited** VA from earlier data **may be issued**, but it is **not guaranteed**; do not present a later VA as automatic.
 
 ### Current-date cutoff gate -- REQUIRED
 

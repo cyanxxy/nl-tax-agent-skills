@@ -224,6 +224,22 @@ sources:
       - nl-tax-annual-return
       - nl-tax-submit-companion
 
+  - id: bd_annual_extension_eligibility_2025
+    title: "Uitstel aanvragen voor de belastingaangifte 2025 - hoe doe ik dat?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ik-moet-aangifte-doen-maar-ik-wil-graag-uitstel-kan-dat"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/filing-flow.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check at start of filing season (March) and after any BD portal update"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-intake
+      - nl-tax-annual-return
+      - nl-tax-submit-companion
+
   - id: bd_verzuimboete
     title: "Boete -- verzuimboete bij niet of niet op tijd aangifte"
     domain: belastingdienst.nl

@@ -27,6 +27,7 @@ This document provides the decision logic for determining whether stopzetten (st
 | Pays monthly amount       | Stop because amount is wrong | Change (NOT stop)  |
 | Pays monthly amount       | Reduce monthly payment       | Change             |
 | Pays monthly amount       | Amount is correct            | No action needed   |
+| Moving abroad             | Determine provisional route  | Residency review; not a categorical stopzetten reason |
 
 ---
 
@@ -73,7 +74,7 @@ The taxpayer receives a monthly refund and wants to stop it. This is appropriate
 | Mortgage paid off                     | Refunds stop; settlement at annual return      |
 | Alimony ended                         | Refunds stop; settlement at annual return      |
 | Income increased significantly        | Consider change instead to keep partial refund |
-| Moving abroad                         | Stopzetten; consult adviser for tax residency  |
+| Moving abroad                         | Residency review; not a categorical stopzetten reason |
 | Want to avoid year-end repayment risk | Refunds stop; final amount determined at annual return |
 
 ---

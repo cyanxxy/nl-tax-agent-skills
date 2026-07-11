@@ -56,6 +56,8 @@
 
 ## Existing baseline, if any
 
+An **unsolicited** VA based on earlier data **may be issued**, but is **not guaranteed**. Record an EVA only when it actually exists in the evidence or is confirmed by the taxpayer.
+
 [For change/review/stopzetten: summary of current voorlopige aanslag]
 
 | Field | Value | Src |
@@ -112,6 +114,8 @@
 ## Stopzetten outcome
 
 [For stopzetten only. For request/change/review, replace this section's body with "N/A — not applicable for this subflow"; do not omit the heading.]
+
+If the taxpayer is **moving abroad**, record: "Residency review required; moving abroad is **not a categorical stopzetten reason**." Route to the unsupported residency/migration path and do not emit a refund-stop checklist solely because of the move.
 
 ### Current-date cutoff gate
 
@@ -293,7 +297,7 @@ Manual review / unsupported triggers: valuation disputes, emigration, death, res
 
 [For the **change** subflow only. For request / review / stopzetten, replace this section's body with an explicit "N/A — not applicable for this subflow" line; do not omit the heading.]
 
-> When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
+> Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
 
 ## Field map summary
 

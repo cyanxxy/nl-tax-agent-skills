@@ -110,19 +110,27 @@ Filing status: on time. No late-filing exposure.
 
 ### Late (deadline passed, no uitstel)
 
-- Original deadline: 1 May 2026 -- Src: bd_annual_deadline_2025
-- Status: outstanding -- Src: [U]
-- Verzuimboete (penalty for late filing):
-  - First-time late filing: EUR [amount from `late-filing.md`] -- Src: bd_verzuimboete
-  - Repeated late filing: up to EUR [maximum from `late-filing.md`] -- Src: bd_verzuimboete
+- Deadline route: [invitation letter / no invitation + tax due voluntary-filing guardrail / not established] -- Src: [F/U/C]
+- Applicable deadline: [date from invitation letter / 14 July 2026 / not established] -- Src: [F/U/C]
+- Deadline status: [passed / not established] -- Src: C:deadline_route
+- Filing status: [outstanding / not established] -- Src: [U/C]
+
+Render this late-exposure subsection only when an applicable deadline is established and has passed without granted uitstel. With **no invitation**, use 14 July 2026 only when tax due was established. If the deadline is **not established**, do not invent one and do not classify the return as late.
+- Verzuimboete — **potential exposure**, not a promised penalty:
+  - Herinnering received: [yes / no / unknown] -- Src: [F/U/?]
+  - Aanmaning received: [yes / no / unknown] -- Src: [F/U/?]
+  - 10 werkdagen after aanmaning expired while still unfiled: [yes / no / unknown] -- Src: [F/U/C/?]
+  - Potential first-time amount after the full escalation: EUR [amount from `late-filing.md`] -- Src: bd_verzuimboete
+  - Potential repeated amount after the full escalation: up to EUR [maximum from `late-filing.md`] -- Src: bd_verzuimboete
+  - Missing the filing deadline alone does not impose the boete; exposure is conditional on the herinnering, aanmaning, and 10 werkdagen sequence.
 - Belastingrente:
   - Starts running 1 July 2026 for any tax owed
   - Rate from 1 January 2026: [rate from `late-filing.md`] -- Src: bd_belastingrente_overview
 - Recommended next steps:
   - File the prepared return through Mijn Belastingdienst as soon as possible.
-  - Expect a verzuimboete on the aanslag; pay promptly to avoid further follow-up.
+  - Track any herinnering and aanmaning, file immediately, and do not assume that a verzuimboete will be imposed.
   - Pay the aanslag by its due date (betaaltermijn) to avoid invorderingsrente. Belastingrente is already fixed on the aanslag and is not reduced by paying faster.
-- The Belastingdienst sets the actual boete and rente on the aanslag. This workpack does not compute final figures.
+- The Belastingdienst determines whether the escalation conditions are met and sets any actual boete and rente. This workpack does not compute or promise final figures.
 
 ## Income notes
 
@@ -586,7 +594,7 @@ The following items can be freely allocated between partners:
 | Eigen woning result | 50/50 | [recommendation] | EUR [savings] | C:allocation |
 | Box 2 income | [taxpayer %] / [partner %] | [review scenarios] | [manual review] | [U/A/?] |
 | Box 3 grondslag | 50/50 | [recommendation] | EUR [savings] | C:allocation |
-| Persoonsgebonden aftrek | [to higher-rate partner] | [recommendation] | EUR [savings] | C:allocation |
+| Persoonsgebonden aftrek, including eligible prior-year personal-deduction remainder for whole-year fiscal partners | [scenario split totaling 100%] | [traceable comparison; taxpayer review required] | EUR [estimated difference] | C:allocation |
 
 Items that CANNOT be allocated:
 - Arbeidskorting (personal, based on individual arbeidsinkomen)
@@ -677,7 +685,7 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] WOZ-waarde matches the gemeente beschikking
 - [ ] Mortgage interest matches the jaaroverzicht hypotheek
 - [ ] Loonheffing withheld matches jaaropgaven total
-- [ ] Filing deadline verified (standard: 1 May 2026; with uitstel: 1 September 2026)
+- [ ] Filing route verified: invitation letter deadline used; or, with no invitation and tax due, conditional 14 July 2026 voluntary-filing guardrail used; otherwise no deadline invented
 
 ## Not submission advice
 

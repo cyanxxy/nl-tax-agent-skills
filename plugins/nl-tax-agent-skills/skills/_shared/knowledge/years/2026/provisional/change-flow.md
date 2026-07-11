@@ -4,16 +4,16 @@ source_id: bd_provisional_change_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
 
-An existing voorlopige aanslag for 2026 is changed through the same "Voorlopige aanslag aanvragen of wijzigen" entry in Mijn Belastingdienst (request and change share one combined flow). When changing, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
+An existing voorlopige aanslag for 2026 is changed through the same "Voorlopige aanslag aanvragen of wijzigen" entry in Mijn Belastingdienst (request and change share one combined flow). Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
 
 ## CRITICAL RULE -- Every field must be complete
 
-A change replaces the previous voorlopige aanslag entirely: enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely. The portal MAY offer to pre-fill figures from the taxpayer's most recent aangifte (the data from two years prior) when they opt in -- it does not carry forward the figures from the current voorlopige aanslag. Whether the form opens blank or pre-filled, the workpack must prepare, and the taxpayer must verify, the COMPLETE dataset:
+A change requires all applicable categories, not only the changed item. The portal MAY offer to pre-fill figures from the taxpayer's most recent aangifte (the data from two years prior) when they opt in -- it does not carry forward the figures from the current voorlopige aanslag. Whether the form opens blank or pre-filled, the workpack must prepare, and the taxpayer must verify, the COMPLETE dataset:
 
 - All income sources (employment, pension, benefits, self-employment)
 - All deductions (mortgage interest, alimentatie, premiums, etc.)
@@ -45,7 +45,7 @@ Official guidance states that all data must be present in the form, including da
 1. Log in to Mijn Belastingdienst
 2. Open "Voorlopige aanslag aanvragen of wijzigen" for 2026 (request and change share one combined flow)
 3. Choose to change (wijzigen) the existing 2026 voorlopige aanslag; optionally accept the offer to pre-fill prior-year figures
-4. Verify and complete ALL income, deductions, and box 3 data -- enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely
+4. Prepare and verify the complete dataset: all applicable income, deductions, and box 3 categories, not only the changed item
 5. Review the new summary and adjusted monthly amount
 6. Sign and send (ondertekenen en verzenden)
 
@@ -53,7 +53,7 @@ Official guidance states that all data must be present in the form, including da
 
 When building a workpack for changing a voorlopige aanslag 2026:
 
-1. Warn the user upfront: enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely
+1. Tell the user upfront: prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item
 2. If previous workpack data is available, pre-populate the workpack as a starting point but have the user confirm every field (note that the portal itself may also offer to pre-fill prior-year figures)
 3. Clearly show what changed between the old and new estimates
 4. Present the delta: old monthly amount vs. new monthly amount

@@ -14,6 +14,8 @@
 
 This document defines the routing logic, data collection steps, decision points, and output generation for each of the four provisional assessment subflows.
 
+Across review/change output, state that a later **unsolicited** VA based on earlier data **may be issued**, but is **not guaranteed**. For a change, prepare and **verify** the **complete dataset**; all applicable categories are required, not only the changed item. **Moving abroad** routes to **residency review** and is **not a categorical stopzetten reason**.
+
 ## Subflow routing
 
 ```
@@ -46,7 +48,7 @@ User enters provisional skill
 
 1. Does the taxpayer profile exist? If not, route back to intake.
 2. Does the profile contain `provisional_2026_request`? If not, route to the correct subflow.
-3. **Have they already received any 2026 voorlopige aanslag?** If the taxpayer had a 2025 voorlopige aanslag, the Belastingdienst automatically issues a 2026 one (an EVA -- Eerste Voorlopige Aanslag), with payments/refunds already starting in January 2026. If a 2026 beschikking or monthly amount already exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
+3. **Have they already received any 2026 voorlopige aanslag?** A later unsolicited VA based on earlier data may be issued, but is not guaranteed. If a 2026 beschikking or monthly amount actually exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
 4. Does the taxpayer have a fiscal partner? If yes, collect partner data and determine box 3 allocation.
 
 ### Data collection steps
@@ -124,7 +126,7 @@ User enters provisional skill
 2. Is there a current voorlopige aanslag available to review?
    - From evidence index
    - From user input
-3. Was the current voorlopige aanslag automatically generated (EVA) or user-submitted (VVA)?
+3. Was the current voorlopige aanslag issued without a taxpayer request (EVA) or user-submitted (VVA)?
    - EVA: especially important to verify, as it is based on prior-year data that may be outdated
 4. Have any life events occurred since the voorlopige aanslag was issued?
 

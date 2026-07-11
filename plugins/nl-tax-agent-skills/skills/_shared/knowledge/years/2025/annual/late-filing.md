@@ -1,26 +1,29 @@
 # Rule note: Late-filing exposure for the 2025 annual return
 
-source_ids: bd_annual_deadline_2025, bd_annual_extension_2025, bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib, bd_invorderingsrente
+source_ids: bd_annual_deadline_2025, bd_annual_extension_2025, bd_annual_extension_eligibility_2025, bd_verzuimboete, bd_belastingrente_overview, bd_belastingrente_ib, bd_invorderingsrente
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-06-23"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
 
-A taxpayer who has not filed the 2025 aangifte inkomstenbelasting by the deadline shown in their personal aangiftebrief (or by the granted uitsteldatum) faces two financial consequences: a verzuimboete (administrative penalty for filing late) and, when the eventual aanslag shows tax owed, belastingrente (statutory interest). Both are imposed by the Belastingdienst; this skill does not calculate or impose them. The workpack must surface the exposure so the taxpayer can act before the boete or rente grows.
+A taxpayer who has not filed the 2025 aangifte inkomstenbelasting by the applicable deadline has **potential exposure** to a verzuimboete and, when the eventual aanslag shows tax owed, belastingrente. Missing the deadline alone does not impose the boete: the Belastingdienst first sends a herinnering, then an aanmaning, and imposes the verzuimboete only if the return is still missing after the 10 werkdagen period. The workpack records this conditional exposure; it never promises a penalty.
 
 ## Deadline
 
-- The general/default deadline for the 2025 return was **1 May 2026**, but the binding date is the one on the taxpayer's personal aangiftebrief. The exact date is the one shown on the taxpayer's aangiftebrief or in Mijn Belastingdienst — always prefer the personal notice over the default.
-- An uitstel granted before 1 May 2026 extends the deadline by **4 months**, to **1 September 2026**.
-- The taxpayer can request uitstel for up to 4 months after the original deadline as long as the request is filed before that deadline.
+- If an invitation letter (aangiftebrief) exists, its date is the applicable deadline.
+- With **no invitation**, only when the taxpayer establishes that tax is due, apply the conditional voluntary-filing guardrail of **14 July 2026**.
+- Otherwise the deadline is not established: do not invent one and do not classify the return as late.
+- Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable; this does not change the separate conditional 14 July filing guardrail when tax due is established.
+- For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, making the standard extended date **1 September 2026**.
+- If the invitation letter shows **another date**, request by that letter date using the **official form** route. Use the granted uitsteldatum from the decision.
 
 ## Verzuimboete (penalty for late filing)
 
-- First time the taxpayer files late: **EUR 469**.
-- Repeated late filing: the penalty rises to a maximum of **EUR 6,709**.
+- Potential first-time exposure after the full escalation sequence: **EUR 469**.
+- Potential repeated-filing exposure after the full escalation sequence: up to **EUR 6,709**.
 - Escalation: missing the deadline does not trigger the boete immediately. The Belastingdienst first sends a **herinnering** (reminder), then an **aanmaning** (formal demand). After the aanmaning the taxpayer must file within **10 werkdagen** (working days) from the aanmaning date; only if the return is still not filed by then is the EUR 469 verzuimboete imposed. Requesting an aangifteformulier does not avoid the boete.
 - Waiver: no boete is imposed if the taxpayer bears no fault for the late or missing filing ("geen enkele schuld"). This is decided by the Belastingdienst on the facts; the workpack never asserts the waiver applies.
 
@@ -42,9 +45,10 @@ When building the workpack for box 1 / overall filing status:
 1. Read the filing status from the intake notes or ask the user explicitly: did they file before the deadline, did they get uitstel, or is the return still outstanding?
 2. If the return is outstanding and the deadline has passed:
    - Include a "Filing status and late-filing exposure" section at the top of the workpack, before income notes.
-   - Quote the verzuimboete amounts above without computing a final figure (the actual amount is set by the Belastingdienst).
+   - Quote the verzuimboete amounts above as potential exposure without computing or promising a final figure.
+   - Record whether a **herinnering** and **aanmaning** were received and whether the **10 werkdagen** period after the aanmaning has expired.
    - Quote the belastingrente percentage applicable to the period after 1 July 2026.
-   - List the recommended next steps: submit the prepared return as soon as possible, expect the verzuimboete, monitor for the aanslag and pay the aanslag by its betaaltermijn to avoid invorderingsrente. Note that belastingrente is already fixed on the aanslag and is not reduced by paying faster.
+   - List the recommended next steps: submit the prepared return as soon as possible, monitor reminder/aanmaning status, and pay an eventual aanslag by its betaaltermijn to avoid invorderingsrente. State that the boete remains conditional and that belastingrente is not reduced by paying faster.
 3. If uitstel was granted, note the granted uitsteldatum and the rente warning (interest still accrues after 1 July 2026 if tax is owed).
 4. If the return was filed on time, mark the section "Filing status: on time. No late-filing exposure" and continue.
 
@@ -52,4 +56,4 @@ When building the workpack for box 1 / overall filing status:
 
 Do not pad the workpack with a rente calculation. The base rate is fixed but the daily accrual depends on the aanslag date, which is unknown at workpack-generation time. Quote the rate, state when it starts, and leave the arithmetic to the Belastingdienst.
 
-Do not advise the user to skip filing because the boete already applies. Filing late is materially better than not filing. For a non-filer the Belastingdienst makes an **estimated (ambtshalve) assessment** plus a verzuimboete, and the estimate is often higher than the true tax. A **vergrijpboete** is separate: it applies only when the Belastingdienst establishes intent (opzet) or gross negligence (grove schuld) — it does not follow automatically, and the initial estimated assessment is not a navorderingsaanslag.
+Do not advise the user to skip filing because a boete might apply. Filing late is materially better than not filing. If the return remains missing through the herinnering, aanmaning, and 10 werkdagen period, the Belastingdienst may make an **estimated (ambtshalve) assessment** and impose a verzuimboete; the estimate is often higher than the true tax. A **vergrijpboete** is separate: it applies only when the Belastingdienst establishes intent (opzet) or gross negligence (grove schuld) — it does not follow automatically, and the initial estimated assessment is not a navorderingsaanslag.

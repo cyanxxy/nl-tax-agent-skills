@@ -139,7 +139,7 @@ Walk the user through these sections one at a time:
 
 1. Confirm `provisional_2026_change`.
 2. Establish the baseline from the current beschikking or from chat.
-3. Re-collect all current estimates, not just changed items. Remind the user every turn until confirmed: "When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely."
+3. Re-collect all current estimates, not just changed items. Remind the user every turn until confirmed: "Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item."
 4. Generate a delta summary comparing baseline and current estimates.
 5. Ask for final confirmation before generating the workpack.
 
@@ -203,7 +203,7 @@ Write at the generation gate (per-subflow scope — must match `reference/provis
 
 ## Worked example
 
-> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "enter ALL data again; omitted data defaults to zero" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
+> Profile shows `provisional_2026_change`. The agent confirms the change subflow, reconstructs the baseline from the user's current beschikking, and every turn repeats the "prepare and verify the complete dataset; include all applicable categories, not only the changed item" reminder. It re-collects all current estimates (not just the changed salary), delegating Box 3 to `nl-tax-box3` using the fictitious method only — when the user asks about werkelijk rendement, it answers that this is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027. After the final review it waits for the verbatim `generate the workpack` phrase, then writes `provisional-pack.md`, `field-map.yaml`, and `delta-summary.md`.
 
 ## End-of-turn report
 

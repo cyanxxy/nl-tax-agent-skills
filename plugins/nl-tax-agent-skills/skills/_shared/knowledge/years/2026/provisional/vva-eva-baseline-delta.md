@@ -4,7 +4,7 @@ source_id: bd_algoritmeregister_vva_eva
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -19,7 +19,7 @@ A VVA is a request for a provisional assessment submitted by the taxpayer. The t
 
 ### EVA -- Eerste Voorlopige Aanslag
 
-An EVA is the first provisional assessment generated automatically by the Belastingdienst, typically based on prior-year data. The taxpayer receives this without requesting it. If the taxpayer's situation has changed, the EVA should be reviewed and potentially changed (see review-flow.md and change-flow.md).
+An EVA is a first provisional assessment that the Belastingdienst may issue without a taxpayer request, using earlier available data. This later **unsolicited** VA **may be issued**, but it is **not guaranteed**. If one arrives and the taxpayer's situation has changed, it should be reviewed and potentially changed (see review-flow.md and change-flow.md).
 
 ## Official algorithm-register scope
 

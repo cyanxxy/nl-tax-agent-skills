@@ -86,6 +86,7 @@ Donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling) and
 
 - If the persoonsgebonden aftrek in a prior year exceeded the total income, the unused portion can be carried forward to subsequent years.
 - The workpack should ask whether the taxpayer has unused deductions from prior years.
+- Eligible whole-year fiscal partners may allocate the prior-year personal-deduction remainder in the current return. Record whose remainder it was, model traceable allocation scenarios that total 100%, and require taxpayer review in the official filing environment.
 
 ## Lijfrentepremie (annuity premium deduction)
 
@@ -137,6 +138,7 @@ For 2025, taxpayers with income in the highest box 1 bracket (verzamelinkomen ab
 - The 37.48% deduction-rate cap may affect own-home costs and other listed deductions.
 - The phase-out of heffingskortingen (algemene heffingskorting, arbeidskorting) also affects the optimal allocation.
 - The workpack should model at least the default allocation and one alternative allocation for the taxpayer to compare, and require taxpayer review.
+- Keep every scenario traceable to its inputs and do not choose a binding allocation for the taxpayer.
 
 ### Items that CANNOT be allocated
 

@@ -52,4 +52,4 @@ Note: The Belastingdienst performs its own recalculation based on the full submi
 
 ## Reminder
 
-When changing your voorlopige aanslag, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely.
+Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.

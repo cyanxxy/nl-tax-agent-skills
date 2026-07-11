@@ -4,7 +4,7 @@ source_ids: bd_fisin_2025_index, bd_fiscal_partnership, bd_own_home_deduction_ca
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Contents
@@ -62,8 +62,9 @@ The persoonsgebonden aftrek is freely allocatable between fiscal partners, but i
 
 ### Restant persoonsgebonden aftrek (carryforward)
 
-- Unused deductions from prior years are personal to the partner who had the excess.
-- When applied in the current year, the carryforward deduction is personal to that partner and is not reallocatable.
+- Record which partner originally had the unused deduction and the confirmed amount carried into 2025.
+- Eligible whole-year fiscal partners may allocate the prior-year personal-deduction remainder in the current return. Model traceable scenarios whose shares total 100%, including the portal/default position and at least one alternative when material.
+- Require both taxpayers to review the scenarios and select the allocation in the official filing environment; do not select it automatically.
 
 ## Optimization principle
 

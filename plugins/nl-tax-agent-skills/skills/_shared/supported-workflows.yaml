@@ -44,6 +44,7 @@ active_workflows:
       - bd_fisin_2025_index
       - bd_annual_deadline_2025
       - bd_annual_extension_2025
+      - bd_annual_extension_eligibility_2025
       - bd_box1_rates_2025
       - bd_general_tax_credit_2025
       - bd_labour_tax_credit_2025
@@ -95,6 +96,7 @@ active_workflows:
       - bd_zorgkosten_overzicht_2025
       - bd_deduction_rate_cap_2025
       - bd_bijtelling_auto_2025
+      - bd_stock_options_2025
       - bd_verzuimboete
       - bd_belastingrente_overview
       - bd_belastingrente_ib

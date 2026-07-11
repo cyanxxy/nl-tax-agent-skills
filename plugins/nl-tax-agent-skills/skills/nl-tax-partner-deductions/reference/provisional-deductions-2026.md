@@ -4,7 +4,7 @@ source_ids: bd_fiscal_partnership, bd_provisional_request_2026, bd_provisional_r
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Contents
@@ -74,9 +74,9 @@ Because all amounts are estimates and the allocation can be changed:
 
 1. **Avoid excessive precision.** Spending time finding the mathematically optimal allocation for estimated amounts provides limited value when the actual amounts will differ.
 2. **Focus on the largest items.** Optimize allocation for the items with the biggest tax impact:
-   - **Mortgage interest (hypotheekrenteaftrek):** usually the largest deduction. Allocate to the partner where it provides the most benefit, considering the tariefsaanpassing cap.
+   - **Mortgage interest (hypotheekrenteaftrek):** usually the largest deduction. Compare simple, traceable allocation scenarios, including the tariefsaanpassing cap and heffingskortingen or other credit effects.
    - **Box 3 grondslag:** the combined heffingsvrij vermogen is applied before allocation. Allocate the remaining joint grondslag sparen en beleggen in a 100%-total split that gives the best overall result after all tax and credit effects.
-3. **Use reasonable defaults for smaller items.** For smaller deductions (giften, zorgkosten), a simple allocation (e.g., to the higher-earning partner) is sufficient. Fine-tuning these can wait for the annual return.
+3. **Use simple scenarios for smaller items.** For smaller deductions (giften, zorgkosten), show a small set of traceable allocation scenarios and their estimated cap/credit effects. Require taxpayer review; do not select an allocation automatically or label one as the default.
 4. **Consider cash flow.** The provisional assessment determines monthly payment or refund amounts. An allocation that reduces one partner's monthly payment but increases the other's has no net effect on the household -- unless there is a cash flow reason to prefer one partner's account receiving the refund.
 
 ## Focus areas for provisional 2026
@@ -86,7 +86,7 @@ Because all amounts are estimates and the allocation can be changed:
 - Determine which partner benefits more from the mortgage interest deduction.
 - Consider the tariefsaanpassing cap (projected 2026 rate -- verify in `rates-and-credits.md`).
 - If both partners are in the same bracket, allocation has minimal marginal-rate impact but may still affect heffingskortingen.
-- For the provisional: a reasonable allocation based on current income levels is sufficient.
+- Compare simple 100%-total scenarios based on current estimates, keep each result traceable, and require taxpayer review. Do not select the mortgage allocation automatically.
 
 ### Box 3 allocation (second biggest impact)
 
@@ -97,8 +97,8 @@ Because all amounts are estimates and the allocation can be changed:
 
 ### Other deductions
 
-- For provisional purposes, allocate other deductions (giften, zorgkosten, alimentatie) to the higher-earning partner as a default.
-- Detailed optimization of these items is better left to the annual return when actual amounts are known.
+- For provisional purposes, compare simple traceable scenarios for other deductions (giften, zorgkosten, alimentatie), including relevant deduction-rate cap and credit effects.
+- Present the estimated results for taxpayer review and do not choose a default or automatic allocation. Detailed optimization can wait for the annual return when actual amounts are known.
 
 ## Interaction with provisional subflows
 

@@ -4,7 +4,7 @@ source_ids: bd_aangifte_ondernemers_2025, bd_ondernemer_cijfers_aangifte_2025, b
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-04"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -45,9 +45,18 @@ The zakelijk deel requires:
 
 ## Deadlines (2025 return, filed in 2026)
 
-- Standard deadline: the return had to be received by **1 May 2026** (same
-  baseline as for particulieren). Uitstel had to be requested before 1 May 2026
-  and then runs to **1 September 2026**.
+- If an invitation letter (aangiftebrief) exists, use the deadline shown in it
+  and determine whether extension was requested through the applicable route.
+- With **no invitation**, only when the taxpayer establishes that tax is due,
+  use the conditional voluntary-filing guardrail of **14 July 2026**.
+  Extension is unavailable on the no-invitation branch.
+- For the standard online route, request extension **before 1 May 2026**; a
+  granted extension normally adds **4 months**, making the standard extended
+  date **1 September 2026**. If the invitation letter shows **another date**,
+  request by that letter date using the **official form** route and use the
+  granted uitsteldatum.
+- Otherwise the deadline is not established: do not invent one and verify the
+  position in Mijn Belastingdienst.
 - Late filers without uitstel should file as soon as possible; a fiscal adviser
   can arrange becon-uitstel. Belastingrente and a verzuimboete may apply -- see
   `../annual/late-filing.md`.

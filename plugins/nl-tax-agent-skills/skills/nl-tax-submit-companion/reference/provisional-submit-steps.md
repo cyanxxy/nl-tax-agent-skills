@@ -27,11 +27,11 @@ match it to whatever the live portal shows under "Voorlopige aanslag".
 2. Log in to Mijn Belastingdienst
 3. Open "Voorlopige aanslag aanvragen of wijzigen" and choose to change (wijzigen) the existing 2026 voorlopige aanslag
 4. If offered, accept the pre-fill (vooraf invullen); the form may already show prior-year figures, but the change replaces the old beschikking entirely
-5. Verify and complete the full dataset using the field map -- enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely
+5. Prepare and verify the complete dataset using the field map; the change form requires all applicable categories, not only the changed item
 6. Review the summary
 7. Sign and send (ondertekenen en verzenden)
 8. A new beschikking will be sent with adjusted monthly amounts
 
-**Important:** A change replaces the previous voorlopige aanslag entirely. Whether
-the form opens blank or pre-filled, enter ALL data again; omitted data defaults
-to zero because the new VA replaces the old one entirely.
+**Important:** Whether the form opens blank or pre-filled, prepare and verify the
+complete dataset. The change form requires all applicable categories, not only
+the changed item.

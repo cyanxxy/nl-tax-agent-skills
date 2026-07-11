@@ -4,7 +4,7 @@ source_id: bd_provisional_review_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -49,7 +49,7 @@ The following situations mean the voorlopige aanslag should be checked and poten
 ### Prior-year based assessment
 
 - Received an automatically generated voorlopige aanslag based on prior-year data that no longer reflects the current situation
-- The Belastingdienst may issue an EVA (Eerste Voorlopige Aanslag) based on the prior year -- if your situation has changed, this must be reviewed
+- The Belastingdienst may issue a later **unsolicited** EVA (Eerste Voorlopige Aanslag) from earlier data; it **may be issued**, but it is **not guaranteed**. If one arrives and the situation has changed, it must be reviewed.
 
 ## How to check
 
@@ -61,7 +61,7 @@ The following situations mean the voorlopige aanslag should be checked and poten
 ## If amounts are wrong
 
 - Follow the change procedure described in change-flow.md
-- Remember: when changing, enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely
+- Prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
 
 ## Risk of incorrect voorlopige aanslag
 
@@ -77,8 +77,8 @@ When helping a user review their voorlopige aanslag:
 2. Walk through each category (income, deductions, box 3) and compare to the amounts on the beschikking
 3. If discrepancies are found, recommend changing the voorlopige aanslag and guide to change-flow.md
 4. If the user receives a monthly refund that may be too high, warn about repayment risk
-5. If the assessment was automatically generated (EVA), explicitly ask whether the prior-year basis still applies
+5. If the assessment was issued without a taxpayer request (EVA), explicitly ask whether the earlier-data basis still applies
 
 ## Common failure
 
-Do not assume that an existing voorlopige aanslag is correct just because the Belastingdienst issued it. Automatically generated assessments (EVA) are based on prior-year data and may be outdated. Always prompt the user to compare it with their current situation.
+Do not assume that an existing voorlopige aanslag is correct just because the Belastingdienst issued it. An EVA issued without a taxpayer request can use earlier data that may be outdated. Always prompt the user to compare it with their current situation.

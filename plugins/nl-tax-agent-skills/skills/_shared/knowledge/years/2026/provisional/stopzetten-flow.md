@@ -4,7 +4,7 @@ source_id: bd_provisional_stopzetten_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -12,6 +12,8 @@ review_status: reviewed
 Stopzetten is available for a voorlopige aanslag where the taxpayer RECEIVES a monthly refund (teruggaaf) and wants to stop that refund. If the taxpayer pays a monthly amount, they cannot use stopzetten; they must change the voorlopige aanslag instead. Stopping a refund does not mean the taxpayer no longer owes tax -- final settlement happens through the annual return.
 
 ## When stopzetten is appropriate
+
+Moving abroad requires a residency review and is **not a categorical stopzetten reason**. Route migration or international-residency facts to the unsupported residency/migration path; do not generate stopzetten guidance solely because the taxpayer is moving abroad.
 
 ### Current-date cutoff gate
 

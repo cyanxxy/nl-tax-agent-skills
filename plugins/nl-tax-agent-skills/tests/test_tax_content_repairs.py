@@ -443,13 +443,86 @@ class TaxContentRepairTests(unittest.TestCase):
             2025,
             (
                 "_shared/knowledge/years/2025/annual/filing-flow.md",
+                "_shared/knowledge/years/2025/annual/late-filing.md",
                 "nl-tax-intake/reference/filing-paths.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
                 "nl-tax-submit-companion/reference/annual-submit-steps.md",
+                "_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
             ),
             required=("invitation letter", "no invitation", "14 july 2026"),
-            forbidden=("standard: 1 may 2026",),
+            forbidden=(
+                "standard: 1 may 2026",
+                "filed before 1 may 2026",
+                "original deadline: 1 may 2026",
+            ),
+        )
+
+    def test_extension_is_invitation_only_with_fixed_2025_dates(self):
+        relatives = (
+            "_shared/knowledge/years/2025/annual/filing-flow.md",
+            "_shared/knowledge/years/2025/annual/late-filing.md",
+            "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-submit-companion/reference/annual-submit-steps.md",
+            "_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
+        )
+        self.assert_official_source(
+            "bd_annual_extension_eligibility_2025", 2025, relatives
+        )
+        self.assert_claim(
+            "bd_annual_extension_2025",
+            2025,
+            relatives,
+            required=(
+                "invitation letter",
+                "before 1 may 2026",
+                "no invitation",
+                "extension is unavailable",
+                "1 september 2026",
+                "4 months",
+            ),
+            required_any=(
+                ("another date", "different filing date"),
+                ("official form", "form route"),
+            ),
+        )
+
+    def test_late_penalty_is_conditional_after_escalation(self):
+        self.assert_claim(
+            "bd_verzuimboete",
+            2025,
+            (
+                "_shared/knowledge/years/2025/annual/late-filing.md",
+                "nl-tax-annual-return/reference/annual-flow.md",
+                "nl-tax-annual-return/reference/annual-output-contract.md",
+                "nl-tax-annual-return/templates/annual-return-pack.md",
+            ),
+            required=("herinnering", "aanmaning", "10 werkdagen"),
+            required_any=(("potential exposure", "conditional exposure"),),
+            forbidden=("expect a verzuimboete",),
+        )
+
+    def test_provisional_partner_allocation_uses_reviewed_scenarios_not_defaults(self):
+        self.assert_official_source(
+            "bd_own_home_deduction_cap_2026", 2026,
+            (
+                "_shared/knowledge/years/2026/provisional/own-home.md",
+                "nl-tax-partner-deductions/reference/provisional-deductions-2026.md",
+            ),
+        )
+        self.assert_text_contract(
+            "nl-tax-partner-deductions/reference/provisional-deductions-2026.md",
+            required=("allocation", "scenario", "review"),
+            required_any=(
+                ("tariefsaanpassing cap", "deduction-rate cap"),
+                ("credit effects", "heffingskortingen"),
+                ("do not select", "no automatic", "not automatically"),
+            ),
+            forbidden=(
+                "allocate to the partner where it provides the most benefit",
+                "use reasonable defaults for smaller items",
+                "to the higher-earning partner as a default",
+            ),
         )
 
     def test_unsolicited_va_is_possible_not_automatic(self):

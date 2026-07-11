@@ -30,7 +30,7 @@ Resolve every `workspace/...` path against `workspace_root` from `session-progre
 
 Write `workspace/shared/manual-submission-checklist.md` in this order:
 
-1. **Blockers (first).** Everything that must be resolved before the user opens Mijn Belastingdienst: unresolved `MISSING - enter manually` field-map rows, deferred items in `missing-info.md`, unconfirmed assumptions, every `manual_review_required` field, review questions marked open or change-needed, and — for a voorlopige aanslag **change** — the "enter ALL data again; omitted data defaults to zero because the new VA replaces the old one entirely" reminder. If there are no blockers, say so explicitly.
+1. **Blockers (first).** Everything that must be resolved before the user opens Mijn Belastingdienst: unresolved `MISSING - enter manually` field-map rows, deferred items in `missing-info.md`, unconfirmed assumptions, every `manual_review_required` field, review questions marked open or change-needed, and — for a voorlopige aanslag **change** — the "prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item" reminder. If there are no blockers, say so explicitly.
 2. **Pre-flight.** What to have ready: the evidence documents and the workpack open alongside the portal.
 3. **Step-by-step entry.** The ordered screens/fields from the submit-step reference, each cross-referenced to its field-map row, with the value to type and its source code.
 4. **Final review and submit.** The human checks to run before the user themselves presses submit.
