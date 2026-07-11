@@ -85,6 +85,18 @@ class ReleasePackagingTests(unittest.TestCase):
                 self.assertIn("python is optional", text.lower())
                 self.assertNotIn("Python 3." + "8", text)
 
+    def test_public_readme_has_actionable_codex_install_steps(self):
+        text = (REPO / "README.md").read_text(encoding="utf-8")
+        self.assertIn(
+            "codex plugin marketplace add cyanxxy/nl-tax-agent-skills --ref main",
+            text,
+        )
+        self.assertIn(
+            "codex plugin add nl-tax-agent-skills@nl-tax-agent-skills-local",
+            text,
+        )
+        self.assertIn("codex plugin list", text)
+
     def test_maintainer_docs_require_python_3_10(self):
         maintainer_doc_paths = (
             REPO / "CONTRIBUTING.md",

@@ -161,17 +161,36 @@ Or run the plugin locally without installing the marketplace:
 claude --plugin-dir ./plugins/nl-tax-agent-skills
 ```
 
+### Codex
+
+Add the GitHub marketplace and install the plugin:
+
+```bash
+codex plugin marketplace add cyanxxy/nl-tax-agent-skills --ref main
+codex plugin add nl-tax-agent-skills@nl-tax-agent-skills-local
+```
+
+Confirm that it is installed and enabled:
+
+```bash
+codex plugin list
+```
+
+Then open Codex and ask naturally, for example: “Help me prepare my 2025 Dutch
+income-tax workpack.”
+
 ### Supported hosts
 
 The plugin is designed primarily for **Claude Cowork** and also works with
-**Claude Code**. Both use the same bundled Agent Skills and reviewed tax
-knowledge. In Cowork, select or attach the documents you want the agent to use.
+**Claude Code** and **Codex**. All three use the same bundled Agent Skills and
+reviewed tax knowledge. In Cowork, select or attach the documents you want the
+agent to use.
 
 Python is optional. The agent can complete the documented workflow without
 asking a taxpayer to install Python.
 
 <details>
-<summary><strong>Other installation paths</strong> — Cowork team/organization, community directory, Codex, and ZIP fallback</summary>
+<summary><strong>Other installation paths</strong> — Cowork team/organization, community directory, and ZIP fallback</summary>
 
 <br />
 
@@ -184,12 +203,6 @@ Cowork's organization marketplace accepts only **private or internal** GitHub re
 #### Community directory
 
 Open-source plugins can be submitted to the Anthropic community directory at [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission). Accepted plugins install from the in-product catalog without marketplace setup or forking.
-
-#### Codex
-
-A compatible Codex manifest is included for developers who use the repository
-there. See [CONTRIBUTING.md](CONTRIBUTING.md#cross-host-invocation-policy) for
-host-specific setup and invocation details.
 
 #### ZIP fallback
 
@@ -243,11 +256,11 @@ as complete.
 
 ## 🔒 Privacy
 
-Documents are processed inside the active Cowork or Claude Code task under that
-host's data-handling terms. Repository work folders are git-ignored so taxpayer
-files are not committed or packaged, but git-ignore is not an offline guarantee.
-See [PRIVACY.md](PRIVACY.md) for retention and cleanup details and
-[SECURITY.md](SECURITY.md) to report a sensitive issue.
+Documents are processed inside the active Cowork, Claude Code, or Codex task
+under that host's data-handling terms. Repository work folders are git-ignored
+so taxpayer files are not committed or packaged, but git-ignore is not an
+offline guarantee. See [PRIVACY.md](PRIVACY.md) for retention and cleanup
+details and [SECURITY.md](SECURITY.md) to report a sensitive issue.
 
 ---
 
