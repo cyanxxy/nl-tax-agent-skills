@@ -766,6 +766,40 @@ class AllocationHardeningTests(unittest.TestCase):
                     any("real finite number" in e for e in errors), errors
                 )
 
+    def test_arbitrarily_large_json_integer_is_rejected_without_overflow(self):
+        module = self._module()
+        errors = module.validate(
+            {
+                "has_fiscal_partner": True,
+                "items": [
+                    {
+                        "name": "Box 3 base",
+                        "allocatable": True,
+                        "taxpayer_pct": 10**10_000,
+                        "partner_pct": 0,
+                    }
+                ],
+            }
+        )
+        self.assertTrue(any("between 0 and 100" in error for error in errors))
+
+    def test_sum_tolerance_is_absolute_only(self):
+        module = self._module()
+        errors = module.validate(
+            {
+                "has_fiscal_partner": True,
+                "items": [
+                    {
+                        "name": "Box 3 base",
+                        "allocatable": True,
+                        "taxpayer_pct": 50,
+                        "partner_pct": 50.00000009,
+                    }
+                ],
+            }
+        )
+        self.assertTrue(any("must total 100" in error for error in errors))
+
     def test_percentages_must_be_in_range_and_sum_to_100(self):
         module = self._module()
         for taxpayer_pct, partner_pct in ((-1, 101), (101, -1), (60, 30)):

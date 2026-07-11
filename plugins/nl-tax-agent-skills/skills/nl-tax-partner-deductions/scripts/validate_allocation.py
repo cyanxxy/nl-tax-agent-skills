@@ -36,7 +36,7 @@ def _percentage(value, row_name, field, errors):
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         errors.append(f"{row_name}: {field} must be a real finite number")
         return None
-    if not math.isfinite(value):
+    if isinstance(value, float) and not math.isfinite(value):
         errors.append(f"{row_name}: {field} must be a real finite number")
         return None
     if value < 0 or value > 100:
@@ -85,7 +85,12 @@ def validate(payload):
         if taxpayer_pct is None or partner_pct is None:
             continue
 
-        if not math.isclose(taxpayer_pct + partner_pct, 100, abs_tol=1e-9):
+        if not math.isclose(
+            taxpayer_pct + partner_pct,
+            100,
+            rel_tol=0.0,
+            abs_tol=1e-9,
+        ):
             errors.append(
                 f"{row_name}: taxpayer_pct and partner_pct must total 100"
             )
