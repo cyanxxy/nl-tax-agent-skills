@@ -1,44 +1,25 @@
 #!/usr/bin/env python3
-"""Validate and calculate own-home (eigen woning) inputs for Dutch tax.
+"""Check arithmetic for explicit, agent-reviewed own-home amounts.
 
-Takes WOZ-waarde, mortgage interest, and mortgage start year as arguments.
-Calculates eigenwoningforfait, checks tariefsaanpassing applicability, and
-determines whether the Hillenregeling applies.
+The agent decides eligibility, qualification, ownership allocation, and the
+eigenwoningforfait before calling this optional helper. The helper only checks
+addition, Hillen, the own-home balance, and the separate rate adjustment.
 
 Usage:
-    python3 validate_own_home_inputs.py \\
-        --woz-value 400000 \\
-        --mortgage-interest 8500 \\
-        --mortgage-start-year 2018 \\
-        [--taxable-income 85000] \\
-        [--tax-year 2025] \\
-        [--ownership-share 100] \\
-        [--interest-share 100]
-
-Options:
-    --woz-value VALUE           WOZ-waarde in EUR (required)
-    --mortgage-interest VALUE   Annual deductible mortgage interest in EUR (required)
-    --mortgage-start-year YEAR  Year the mortgage was taken out (required)
-    --taxable-income VALUE      Estimated box 1 income BEFORE the eigen-woning
-                                result.  The script derives the belastbaar inkomen
-                                internally (income + net eigen-woning result after
-                                Hillen) before checking the tariefsaanpassing.  If
-                                omitted, the tariefsaanpassing check outputs a
-                                warning instead of a definitive result.
-    --tax-year YEAR             Tax year for the calculation (default: 2025)
-    --ownership-share PCT       Home-ownership percentage, 1-100 (default: 100).
-                                Scales the WOZ-waarde (eigenwoningforfait side).
-    --interest-share PCT        Eigenwoningschuld / deductible-interest share,
-                                1-100 (alias: --debt-share).  Scales the
-                                deductible mortgage interest independently from
-                                ownership.  Defaults to --ownership-share when
-                                omitted.
+    python3 validate_own_home_inputs.py \
+        --tax-year 2025 \
+        --eigenwoningforfait 4000 \
+        --mortgage-interest 3500 \
+        --qualifying-financing-costs 300 \
+        --periodic-erfpacht-opstal-beklemming 300 \
+        [--taxable-income 85000]
 
 Uses standard library only.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import math
 import sys
@@ -115,6 +96,15 @@ HILLENREGELING_REMAINING: dict[int, Decimal] = {
     2025: Decimal("0.76667"),
     2026: Decimal("0.71867"),
 }
+
+STRUCTURED_AMOUNT_KEYS = {
+    "eigenwoningforfait",
+    "mortgage_interest",
+    "qualifying_financing_costs",
+    "periodic_erfpacht_opstal_beklemming",
+}
+STRUCTURED_OPTIONAL_KEYS = {"taxable_income"}
+STRUCTURED_KEYS = STRUCTURED_AMOUNT_KEYS | STRUCTURED_OPTIONAL_KEYS | {"tax_year"}
 
 
 # ---------------------------------------------------------------------------
@@ -324,304 +314,162 @@ def calculate_hillenregeling(
     return (True, correction, remaining_pct)
 
 
+def _money(value: Decimal) -> str:
+    """Render a reviewed amount consistently in structured output."""
+    return str(value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def _fits_float(value: Decimal) -> bool:
+    """Return whether legacy helpers and money output can represent this amount."""
+    try:
+        value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        return math.isfinite(float(value))
+    except (ArithmeticError, OverflowError, ValueError):
+        return False
+
+
+def _structured_error_result(errors: list[str]) -> dict:
+    """Return the stable structured-output shape when inputs cannot be checked."""
+    return {
+        "errors": errors,
+        "total_deductible_own_home_costs": None,
+        "box1_balance_components": {},
+        "hillen_deduction": None,
+        "box1_own_home_balance": None,
+        "review_adjustments": {},
+        "check_performed_by": "checked_by_script",
+    }
+
+
+def validate(payload: dict) -> dict:
+    """Check arithmetic for explicit, already-reviewed ordinary-home amounts.
+
+    The agent owns evidence completeness, tax-year matching, eligibility,
+    qualification, ownership allocation, and complex-home decisions. This
+    function accepts only the amounts resulting from those decisions and checks
+    their addition, Hillen calculation, own-home balance, and separate
+    tariefsaanpassing review value.
+    """
+    if not isinstance(payload, dict):
+        return _structured_error_result(["payload must be a mapping"])
+
+    errors: list[str] = []
+    unknown = sorted(set(payload) - STRUCTURED_KEYS)
+    if unknown:
+        errors.append("unknown keys: " + ", ".join(unknown))
+
+    missing = sorted((STRUCTURED_AMOUNT_KEYS | {"tax_year"}) - set(payload))
+    if missing:
+        errors.append("missing required keys: " + ", ".join(missing))
+
+    tax_year = payload.get("tax_year")
+    if isinstance(tax_year, bool) or not isinstance(tax_year, int):
+        errors.append("tax_year must be an integer")
+    elif tax_year not in HILLENREGELING_REMAINING or tax_year not in TARIEFSAANPASSING:
+        errors.append(f"no reviewed own-home parameters are available for {tax_year}")
+
+    amounts: dict[str, Decimal] = {}
+    for key in sorted(STRUCTURED_AMOUNT_KEYS | STRUCTURED_OPTIONAL_KEYS):
+        if key not in payload or payload[key] is None:
+            continue
+        try:
+            amount = Decimal(str(payload[key]))
+        except Exception:
+            errors.append(f"{key} must be a finite amount")
+            continue
+        if not amount.is_finite() or not _fits_float(amount):
+            errors.append(f"{key} must be a finite amount")
+        elif amount < 0:
+            errors.append(f"{key} must not be negative")
+        else:
+            amounts[key] = amount
+
+    if errors:
+        return _structured_error_result(errors)
+
+    total_costs = sum(
+        (
+            amounts["mortgage_interest"],
+            amounts["qualifying_financing_costs"],
+            amounts["periodic_erfpacht_opstal_beklemming"],
+        ),
+        Decimal("0"),
+    )
+    forfait = amounts["eigenwoningforfait"]
+    if not _fits_float(total_costs) or not _fits_float(forfait - total_costs):
+        return _structured_error_result(
+            ["accepted amounts produce a total outside the supported numeric range"]
+        )
+    hillen_applies, hillen_amount, hillen_remaining = calculate_hillenregeling(
+        float(forfait), float(total_costs), tax_year
+    )
+    hillen = Decimal(str(hillen_amount))
+    balance = forfait - total_costs - hillen
+
+    taxable_income = amounts.get("taxable_income")
+    if taxable_income is not None and not _fits_float(taxable_income + balance):
+        return _structured_error_result(
+            ["accepted amounts produce a total outside the supported numeric range"]
+        )
+    belastbaar = float(taxable_income + balance) if taxable_income is not None else None
+    adjustment_applies, adjustment_amount, warnings = calculate_tariefsaanpassing(
+        float(total_costs), belastbaar, tax_year
+    )
+
+    return {
+        "errors": [],
+        "total_deductible_own_home_costs": _money(total_costs),
+        "box1_balance_components": {
+            "eigenwoningforfait": _money(forfait),
+            "total_deductible_own_home_costs": _money(total_costs),
+            "hillen_deduction": _money(hillen),
+        },
+        "hillen_deduction": _money(hillen),
+        "hillen_applies": hillen_applies,
+        "hillen_remaining_percentage": str(
+            Decimal(str(hillen_remaining)) * Decimal("100")
+        ),
+        "box1_own_home_balance": _money(balance),
+        "review_adjustments": {
+            "tariefsaanpassing": {
+                "applies": adjustment_applies,
+                "amount": None if adjustment_amount is None else _money(Decimal(str(adjustment_amount))),
+                "warnings": warnings,
+            }
+        },
+        "check_performed_by": "checked_by_script",
+    }
+
+
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 
-def _parse_value(flag: str, raw: str, converter):
-    """Convert a CLI value, exiting with a clean error instead of a traceback."""
-    try:
-        value = converter(raw)
-        if converter is float and not math.isfinite(value):
-            raise ValueError(raw)
-        return value
-    except ValueError:
-        kind = "an integer" if converter is int else "a finite number"
-        print(f"ERROR: {flag} expects {kind}, got: {raw!r}", file=sys.stderr)
-        sys.exit(1)
-
-
 def parse_args(argv: list[str]) -> dict:
-    """Parse command-line arguments into a dict."""
-    result: dict = {
-        "woz_value": None,
-        "mortgage_interest": None,
-        "mortgage_start_year": None,
-        "taxable_income": None,
-        "tax_year": 2025,
-        "ownership_share": 100,
-        "interest_share": None,
-        "interest_share_provided": False,
+    """Parse only explicit, already-reviewed ordinary-home amounts."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--tax-year", required=True, type=int)
+    parser.add_argument("--eigenwoningforfait", required=True)
+    parser.add_argument("--mortgage-interest", required=True)
+    parser.add_argument("--qualifying-financing-costs", required=True)
+    parser.add_argument(
+        "--periodic-erfpacht-opstal-beklemming",
+        required=True,
+    )
+    parser.add_argument("--taxable-income")
+    args = parser.parse_args(argv)
+    return {
+        key: value
+        for key, value in vars(args).items()
+        if value is not None
     }
 
-    i = 0
-    while i < len(argv):
-        arg = argv[i]
-        if arg == "--woz-value" and i + 1 < len(argv):
-            result["woz_value"] = _parse_value("--woz-value", argv[i + 1], float)
-            i += 2
-        elif arg == "--mortgage-interest" and i + 1 < len(argv):
-            result["mortgage_interest"] = _parse_value("--mortgage-interest", argv[i + 1], float)
-            i += 2
-        elif arg == "--mortgage-start-year" and i + 1 < len(argv):
-            result["mortgage_start_year"] = _parse_value("--mortgage-start-year", argv[i + 1], int)
-            i += 2
-        elif arg == "--taxable-income" and i + 1 < len(argv):
-            result["taxable_income"] = _parse_value("--taxable-income", argv[i + 1], float)
-            i += 2
-        elif arg == "--tax-year" and i + 1 < len(argv):
-            result["tax_year"] = _parse_value("--tax-year", argv[i + 1], int)
-            i += 2
-        elif arg == "--ownership-share" and i + 1 < len(argv):
-            result["ownership_share"] = _parse_value("--ownership-share", argv[i + 1], int)
-            i += 2
-        elif arg in ("--interest-share", "--debt-share") and i + 1 < len(argv):
-            result["interest_share"] = _parse_value(arg, argv[i + 1], int)
-            result["interest_share_provided"] = True
-            i += 2
-        elif arg in ("--help", "-h"):
-            print(__doc__)
-            sys.exit(0)
-        else:
-            print(f"Unknown argument: {arg}", file=sys.stderr)
-            sys.exit(1)
 
-    return result
-
-
-def validate_required(args: dict) -> list[str]:
-    """Validate that required arguments are present and sane. Return list of errors."""
-    errors: list[str] = []
-    if args["woz_value"] is None:
-        errors.append("--woz-value is required")
-    elif args["woz_value"] < 0:
-        errors.append("--woz-value must not be negative")
-    if args["mortgage_interest"] is None:
-        errors.append("--mortgage-interest is required")
-    elif args["mortgage_interest"] < 0:
-        errors.append(
-            "--mortgage-interest must not be negative (a negative interest "
-            "amount makes the Hillen comparison meaningless)"
-        )
-    if args["mortgage_start_year"] is None:
-        errors.append("--mortgage-start-year is required")
-    if args["taxable_income"] is not None and args["taxable_income"] < 0:
-        errors.append("--taxable-income must not be negative")
-    return errors
-
-
-def main() -> int:
-    args = parse_args(sys.argv[1:])
-
-    errors = validate_required(args)
-    if errors:
-        for err in errors:
-            print(f"ERROR: {err}", file=sys.stderr)
-        print("\nRun with --help for usage information.", file=sys.stderr)
-        return 1
-
-    woz_value: float = args["woz_value"]
-    mortgage_interest: float = args["mortgage_interest"]
-    mortgage_start_year: int = args["mortgage_start_year"]
-    taxable_income: Optional[float] = args["taxable_income"]
-    tax_year: int = args["tax_year"]
-    ownership_share: int = args["ownership_share"]
-    interest_share_provided: bool = args["interest_share_provided"]
-    interest_share: int = (
-        args["interest_share"] if interest_share_provided else ownership_share
-    )
-
-    all_warnings: list[str] = []
-    missing_inputs: list[str] = []
-
-    # --- Ownership / interest share adjustment ---
-    if ownership_share < 1 or ownership_share > 100:
-        print("ERROR: --ownership-share must be between 1 and 100.", file=sys.stderr)
-        return 1
-    if interest_share < 1 or interest_share > 100:
-        print(
-            "ERROR: --interest-share (--debt-share) must be between 1 and 100.",
-            file=sys.stderr,
-        )
-        return 1
-
-    # Home-ownership share scales the WOZ (eigenwoningforfait); the
-    # eigenwoningschuld / deductible-interest share scales the interest
-    # independently.
-    effective_woz = woz_value * (ownership_share / 100)
-    effective_interest = mortgage_interest * (interest_share / 100)
-
-    if ownership_share < 100:
-        all_warnings.append(
-            f"Home-ownership share is {ownership_share}%. The eigenwoningforfait "
-            f"uses the taxpayer's share of the WOZ: EUR {effective_woz:,.0f}."
-        )
-    if interest_share < 100:
-        all_warnings.append(
-            f"Deductible-interest / eigenwoningschuld share is {interest_share}%. "
-            f"Calculations use the taxpayer's share of the interest: "
-            f"EUR {effective_interest:,.2f}."
-        )
-
-    # Home-ownership share, eigenwoningschuld share, and who actually paid the
-    # deductible interest can each differ — always flag this for verification.
-    all_warnings.append(
-        "Home-ownership share, eigenwoningschuld (debt) share, and who actually "
-        "PAID the deductible interest can all differ from one another. Each must "
-        "be verified separately against the deed, the mortgage agreement, and the "
-        "payment records before relying on these figures."
-    )
-    if not interest_share_provided:
-        missing_inputs.append(
-            "interest_share: not explicitly provided. Defaulted to the "
-            f"ownership share ({ownership_share}%). Provide --interest-share "
-            "(or --debt-share) if the eigenwoningschuld / deductible-interest "
-            "share differs from the home-ownership share."
-        )
-
-    # --- Eigenwoningforfait ---
-    try:
-        ewf = calculate_eigenwoningforfait(effective_woz, tax_year)
-    except ValueError as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
-
-    # --- Mortgage qualification ---
-    qualifies_post2013 = check_mortgage_qualification(mortgage_start_year)
-    if qualifies_post2013:
-        all_warnings.append(
-            f"Mortgage started in {mortgage_start_year} (post-2013). "
-            f"Annuitair or lineair repayment is required for interest deduction. "
-            f"Verify that the mortgage meets this requirement."
-        )
-
-    # --- Net eigen woning (before Hillenregeling) ---
-    net_eigen_woning = _euro(ewf - effective_interest)
-
-    # --- Hillenregeling (computed BEFORE the tariefsaanpassing, because the
-    # tariefsaanpassing grondslag is built on the belastbaar inkomen AFTER the
-    # eigen-woning result, which includes the Hillen correction) ---
-    hillen_applies, hillen_correction, hillen_remaining = calculate_hillenregeling(
-        ewf, effective_interest, tax_year
-    )
-
-    # Net after Hillenregeling
-    if hillen_applies:
-        # The correction reduces the effective eigenwoningforfait
-        net_after_hillen = _euro((ewf - hillen_correction) - effective_interest)
-        all_warnings.append(
-            f"Hillenregeling applies: eigenwoningforfait (EUR {ewf:,}) exceeds "
-            f"mortgage interest (EUR {effective_interest:,.2f}). "
-            f"Correction of EUR {hillen_correction:,} applied "
-            f"({hillen_remaining * 100:.3f}% remaining in {tax_year})."
-        )
-    else:
-        net_after_hillen = net_eigen_woning
-
-    # --- Tariefsaanpassing ---
-    # belastbaar inkomen uit werk en woning = income (before the eigen-woning
-    # result) + net eigen-woning result after Hillen. Pass that (not the raw
-    # pre-EW income) into the official grondslag method, together with the
-    # GROSS aftrekbare kosten (art. 2.10 lid 2 targets the deductible costs,
-    # not the net eigen-woning saldo — the official Hillen example adds the
-    # gross costs back even when Hillen leaves a positive result).
-    belastbaar: Optional[float] = (
-        (taxable_income + net_after_hillen) if taxable_income is not None else None
-    )
-    ta_applies, ta_amount, ta_warnings = calculate_tariefsaanpassing(
-        effective_interest, belastbaar, tax_year
-    )
-    all_warnings.extend(ta_warnings)
-
-    if taxable_income is None:
-        missing_inputs.append(
-            "taxable_income: not provided. Cannot determine tariefsaanpassing. "
-            "Provide --taxable-income (box 1 income before the eigen-woning "
-            "result) for a complete calculation."
-        )
-
-    # --- Build result ---
-    result = OwnHomeResult(
-        tax_year=tax_year,
-        woz_value=woz_value,
-        ownership_share_pct=ownership_share,
-        eigenwoningforfait=ewf,
-        mortgage_interest=effective_interest,
-        mortgage_start_year=mortgage_start_year,
-        mortgage_regime_post2013=qualifies_post2013,
-        net_eigen_woning=net_eigen_woning,
-        tariefsaanpassing_applies=ta_applies,
-        tariefsaanpassing_amount=ta_amount,
-        hillenregeling_applies=hillen_applies,
-        hillenregeling_correction=hillen_correction,
-        hillenregeling_remaining_pct=hillen_remaining,
-        net_after_hillen=net_after_hillen,
-        warnings=all_warnings,
-        missing_inputs=missing_inputs,
-    )
-
-    # --- Output ---
-    print("=== Own Home (Eigen Woning) Validation Summary ===\n")
-
-    print(f"Tax year:               {result.tax_year}")
-    print(f"WOZ-waarde:             EUR {result.woz_value:,.0f}")
-    if ownership_share < 100:
-        print(f"Ownership share:        {result.ownership_share_pct}%")
-        print(f"Effective WOZ:          EUR {effective_woz:,.0f}")
-    if interest_share < 100:
-        print(f"Interest/debt share:    {interest_share}%")
-    print(f"Eigenwoningforfait:     EUR {result.eigenwoningforfait:,}")
-    print(f"Mortgage interest:      EUR {result.mortgage_interest:,.2f}")
-    print(f"Mortgage start year:    {result.mortgage_start_year}")
-    if result.mortgage_regime_post2013 is not None:
-        if result.mortgage_regime_post2013:
-            label = "post-2013 (annuitair/lineair required)"
-        else:
-            label = "pre-2013 (transitional rules)"
-        print(f"Mortgage regime:        {label}")
-    print(f"Net eigen woning:       EUR {result.net_eigen_woning:,}")
-    print()
-
-    # Tariefsaanpassing
-    if result.tariefsaanpassing_applies is True:
-        print(f"Tariefsaanpassing:      YES")
-        print(f"  Adjustment amount:    EUR {result.tariefsaanpassing_amount:,.2f}")
-    elif result.tariefsaanpassing_applies is False:
-        print(f"Tariefsaanpassing:      NO (income below threshold)")
-    else:
-        print(f"Tariefsaanpassing:      UNKNOWN (taxable income not provided)")
-    print()
-
-    # Hillenregeling
-    if result.hillenregeling_applies:
-        print(f"Hillenregeling:         YES")
-        print(f"  Correction:           EUR {result.hillenregeling_correction:,}")
-        print(f"  Benefit remaining:    {result.hillenregeling_remaining_pct * 100:.3f}%")
-        print(f"  Net after Hillen:     EUR {result.net_after_hillen:,}")
-    else:
-        print(f"Hillenregeling:         NO (mortgage interest >= eigenwoningforfait)")
-    print()
-
-    # Warnings
-    if result.warnings:
-        print("WARNINGS:")
-        for w in result.warnings:
-            print(f"  - {w}")
-        print()
-
-    # Missing inputs
-    if result.missing_inputs:
-        print("MISSING INPUTS:")
-        for m in result.missing_inputs:
-            print(f"  - {m}")
-        print()
-
-    # JSON output for programmatic consumption
-    print("--- JSON OUTPUT ---")
-    print(json.dumps(result.to_dict(), indent=2, ensure_ascii=False))
-
-    return 0
+def main(argv: Optional[list[str]] = None) -> int:
+    result = validate(parse_args(sys.argv[1:] if argv is None else argv))
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 1 if result["errors"] else 0
 
 
 if __name__ == "__main__":

@@ -111,9 +111,23 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 
 ### Hillenregeling
 
-- If the eigenwoningforfait exceeds the estimated mortgage interest, the aftrek wegens geen of geringe eigenwoningschuld may apply.
+- If the eigenwoningforfait exceeds the estimated `total_deductible_own_home_costs`, the aftrek wegens geen of geringe eigenwoningschuld may apply.
 - Use the reviewed 2026 percentage from `_shared/knowledge/years/2026/provisional/own-home.md`: 71.867% of the difference between eigenwoningforfait and deductible own-home costs.
 - Mark as estimated
+
+### Manual/script parity
+
+For one ordinary home, add estimated mortgage interest, qualifying financing
+costs, and periodic erfpacht/opstal/beklemming as
+`total_deductible_own_home_costs`. Compute `hillen_deduction`, list only
+eigenwoningforfait, that total, and the Hillen amount in
+`box1_balance_components`, then calculate `box1_own_home_balance`. Keep
+tariefsaanpassing under `review_adjustments`, separate from the balance.
+
+Record `check_performed_by: checked_by_agent` for the manual check or
+`check_performed_by: checked_by_script` when the optional helper checks the same
+accepted estimates. Eligibility and complex-home decisions remain with the
+agent.
 
 ---
 

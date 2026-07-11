@@ -27,6 +27,87 @@ def _load():
 
 
 class Box1OwnHomeTests(unittest.TestCase):
+    def valid_payload(self, **overrides):
+        payload = {
+            "tax_year": 2025,
+            "eigenwoningforfait": "4000",
+            "mortgage_interest": "3500",
+            "qualifying_financing_costs": "0",
+            "periodic_erfpacht_opstal_beklemming": "0",
+            "taxable_income": "80000",
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_hillen_uses_all_qualifying_costs(self):
+        module = _load()
+        result = module.validate(
+            self.valid_payload(
+                eigenwoningforfait="4000",
+                mortgage_interest="3500",
+                qualifying_financing_costs="300",
+                periodic_erfpacht_opstal_beklemming="300",
+            )
+        )
+        self.assertEqual(result["errors"], [])
+        self.assertEqual(result["total_deductible_own_home_costs"], "4100.00")
+        self.assertEqual(result["hillen_deduction"], "0.00")
+        self.assertEqual(result["box1_own_home_balance"], "-100.00")
+
+    def test_tariefsaanpassing_is_separate_from_box1_balance(self):
+        module = _load()
+        result = module.validate(
+            self.valid_payload(
+                eigenwoningforfait="4000",
+                mortgage_interest="3500",
+                qualifying_financing_costs="300",
+                periodic_erfpacht_opstal_beklemming="300",
+            )
+        )
+        self.assertEqual(result["box1_own_home_balance"], "-100.00")
+        self.assertNotIn("tariefsaanpassing", result["box1_balance_components"])
+        self.assertIn("tariefsaanpassing", result["review_adjustments"])
+        self.assertEqual(result["check_performed_by"], "checked_by_script")
+
+    def test_structured_validator_rejects_unknown_or_ineligible_scope_keys(self):
+        module = _load()
+        for patch in (
+            {"is_primary_residence": True},
+            {"number_of_homes": 1},
+            {"mortgage_qualifies": True},
+        ):
+            with self.subTest(patch=patch):
+                result = module.validate(self.valid_payload(**patch))
+                self.assertTrue(result["errors"])
+
+    def test_structured_validator_requires_explicit_accepted_amounts(self):
+        module = _load()
+        for key in (
+            "eigenwoningforfait",
+            "mortgage_interest",
+            "qualifying_financing_costs",
+            "periodic_erfpacht_opstal_beklemming",
+        ):
+            with self.subTest(key=key):
+                payload = self.valid_payload()
+                del payload[key]
+                result = module.validate(payload)
+                self.assertTrue(result["errors"])
+
+    def test_structured_validator_rejects_float_overflow(self):
+        module = _load()
+        for patch in (
+            {"mortgage_interest": "1e400"},
+            {
+                "mortgage_interest": "1e308",
+                "qualifying_financing_costs": "1e308",
+            },
+            {"taxable_income": "1e308", "eigenwoningforfait": "1e308"},
+        ):
+            with self.subTest(patch=patch):
+                result = module.validate(self.valid_payload(**patch))
+                self.assertTrue(result["errors"])
+
     # --- Hillenregeling golden cases (verified ground truth) ---
     # Each case is tagged with its tax_year because the remaining-benefit
     # percentage phases out year over year, and ROUND_HALF_UP rounding to whole
@@ -175,6 +256,51 @@ class Box1OwnHomeTests(unittest.TestCase):
         self.assertTrue(result.mortgage_regime_post2013)
         self.assertIn("mortgage_regime_post2013", result.to_dict())
         self.assertNotIn("mortgage_qualifies_post2013", result.to_dict())
+
+
+class Box1OwnHomeDocumentationTests(unittest.TestCase):
+    def test_skill_reads_evidence_index_without_summarizer(self):
+        text = (ROOT / "skills/nl-tax-box1-home/SKILL.md").read_text(encoding="utf-8")
+        self.assertNotIn("summarize_box1_inputs.py", text)
+        self.assertIn("evidence-index.yaml", text)
+        for phrase in ("reviewed", "successful", "correct tax year"):
+            self.assertIn(phrase, text.lower())
+
+    def test_annual_evidence_cannot_close_a_gap_without_all_review_gates(self):
+        text = (ROOT / "skills/nl-tax-box1-home/SKILL.md").read_text(encoding="utf-8")
+        behavior = text.split("## Behavior", 1)[1].split(
+            "## Own-home arithmetic parity", 1
+        )[0]
+        for required_gate in (
+            "extraction_status: extracted",
+            "review_required: false",
+            "tax_year` equal to the return year",
+        ):
+            self.assertIn(required_gate, behavior)
+        for non_closing_status in ("indexed_only", "deferred", "failed", "wrong-year"):
+            self.assertIn(non_closing_status, behavior)
+
+    def test_manual_and_script_paths_have_parity_and_check_trail(self):
+        paths = (
+            "skills/nl-tax-box1-home/SKILL.md",
+            "skills/nl-tax-box1-home/reference/own-home-2025.md",
+            "skills/nl-tax-box1-home/reference/box1-2025.md",
+            "skills/nl-tax-box1-home/reference/box1-2026-provisional.md",
+        )
+        required = (
+            "total_deductible_own_home_costs",
+            "box1_balance_components",
+            "box1_own_home_balance",
+            "hillen_deduction",
+            "review_adjustments",
+            "checked_by_agent",
+            "checked_by_script",
+        )
+        for relative in paths:
+            with self.subTest(path=relative):
+                text = (ROOT / relative).read_text(encoding="utf-8")
+                for phrase in required:
+                    self.assertIn(phrase, text)
 
 
 if __name__ == "__main__":

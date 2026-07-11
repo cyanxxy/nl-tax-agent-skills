@@ -9,10 +9,13 @@ mismatches, that is a real drift bug to fix in the calculator, not here.
 """
 
 import importlib.util
+import io
+import json
 import pathlib
 import re
 import sys
 import unittest
+from contextlib import redirect_stdout
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -207,6 +210,32 @@ class Box1OwnHomeRateParityTests(unittest.TestCase):
         # it only implicitly (cap 37.56% + tariefsaanpassing 11.94%), so assert the
         # script constant directly rather than scanning the note for it.
         self.assertEqual(ta["schijf3_rate"], 0.4950)
+
+    def test_cli_uses_the_same_explicit_amount_contract(self):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            status = self.module.main(
+                [
+                    "--tax-year", "2025",
+                    "--eigenwoningforfait", "4000",
+                    "--mortgage-interest", "3500",
+                    "--qualifying-financing-costs", "300",
+                    "--periodic-erfpacht-opstal-beklemming", "300",
+                    "--taxable-income", "80000",
+                ]
+            )
+        result = json.loads(output.getvalue())
+        self.assertEqual(status, 0)
+        self.assertEqual(result, self.module.validate({
+            "tax_year": 2025,
+            "eigenwoningforfait": "4000",
+            "mortgage_interest": "3500",
+            "qualifying_financing_costs": "300",
+            "periodic_erfpacht_opstal_beklemming": "300",
+            "taxable_income": "80000",
+        }))
+        self.assertNotIn("woz_value", result)
+        self.assertNotIn("mortgage_start_year", result)
 
 
 if __name__ == "__main__":

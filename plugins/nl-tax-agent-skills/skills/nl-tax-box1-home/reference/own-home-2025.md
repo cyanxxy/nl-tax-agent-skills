@@ -30,7 +30,10 @@ These are reference notes for workpack preparation -- not final tax advice.
 - Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
 - Hillen compares eigenwoningforfait with `total_deductible_own_home_costs`, not mortgage interest alone.
 - `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
+- `box1_balance_components` contains only eigenwoningforfait, `total_deductible_own_home_costs`, and `hillen_deduction`.
 - Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and must not be added to taxable Box 1 income.
+- Put tariefsaanpassing under `review_adjustments`, never in `box1_balance_components`.
+- Record `check_performed_by: checked_by_agent` after the manual check or `check_performed_by: checked_by_script` after the optional helper checks the same accepted amounts.
 - Optional helper fields are review inputs. The agent verifies them against the evidence and keeps missing or uncertain qualification facts visible for manual review.
 - One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
 
@@ -144,10 +147,10 @@ own-home costs:
 4. If income context is not yet available when this skill runs, output a WARNING
    that tariefsaanpassing may apply and must be checked by the calling skill.
 
-Note: the script's structured output renames the post-2013 mortgage-regime field to
-`mortgage_regime_post2013` (formerly `mortgage_qualifies_post2013`), and a
-`--interest-share` / `--debt-share` flag scales the deductible interest and
-eigenwoningschuld to the taxpayer's share when ownership and the loan are split.
+The optional script accepts only ordinary-home amounts that the agent has
+already reviewed. The agent decides residence status, cost qualification,
+ownership or partner shares, and whether the home situation is too complex for
+this arithmetic check.
 
 ---
 

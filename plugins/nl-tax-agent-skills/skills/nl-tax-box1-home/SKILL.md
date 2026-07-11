@@ -13,7 +13,9 @@ allowed-tools:
 
 Background helper for box 1 income and eigen woning notes.
 
-Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Run the bundled scripts (`scripts/summarize_box1_inputs.py` and `scripts/validate_own_home_inputs.py`) when structured inputs are available and Bash can access the resolved plugin script path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Read `workspace/taxpayer/evidence-index.yaml` directly; the agent, not Python, decides whether evidence is complete. For an annual input, only an evidence entry that is reviewed, successfully processed, and for the correct tax year closes the corresponding gap. A provisional estimate instead needs an explicit source and uncertainty note.
+
+Python is optional. If the agent has already accepted the amounts for one ordinary home and Bash can access the resolved plugin script path, `scripts/validate_own_home_inputs.py` may check the arithmetic. Do not pass eligibility, mortgage qualification, ownership decisions, or complex-home facts to the script. If Python is unavailable, perform the same short manual check below; do not ask the user to install Python. Never copy bundled scripts into `workspace/` or execute a `.py` under `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume all inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros or treating missing values as not applicable.
 
@@ -49,10 +51,26 @@ Workspace state:
 
 For every needed value, including employer count, gross income, loonheffing, WOZ value, mortgage interest, mortgage type, and outstanding mortgage balance:
 
-1. Use existing notes when the value has `source: file` or `source: user_chat`.
-2. Use evidence-index entries when available and record `source: file` plus `evidence_id`.
-3. If still missing, return a question packet entry and stop short of calculating that line.
-4. Compute only from values with a real source or an explicitly confirmed assumption.
+1. Use an existing note only when `source: user_chat` is explicitly confirmed, or when `source: file` links to an evidence entry that passes step 2.
+2. For an annual file, close the input gap only when its evidence entry has `extraction_status: extracted`, `review_required: false`, and `tax_year` equal to the return year. Record `source: file` plus `evidence_id`. An `indexed_only`, `deferred`, or `failed` entry, an entry still requiring review, or a wrong-year entry never closes the gap.
+3. For a provisional estimate, require an explicit source and uncertainty note; do not present the estimate as annual evidence.
+4. If still missing, return a question packet entry and stop short of calculating that line.
+5. Compute only from values that pass these gates or from an explicitly confirmed assumption.
+
+## Own-home arithmetic parity
+
+For one ordinary home, after the agent has accepted each amount:
+
+1. Add mortgage interest, qualifying financing costs, and periodic erfpacht/opstal/beklemming as `total_deductible_own_home_costs`.
+2. Compute `hillen_deduction` from the positive excess of eigenwoningforfait over that full total using the reviewed year percentage; otherwise use EUR 0.
+3. Record `box1_balance_components` as eigenwoningforfait, `total_deductible_own_home_costs`, and `hillen_deduction`.
+4. Compute `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
+5. Put tariefsaanpassing only under `review_adjustments`; never include it in `box1_balance_components` or taxable Box 1 income.
+
+Record `check_performed_by: checked_by_agent` for this manual path or
+`check_performed_by: checked_by_script` when the optional helper checks the same
+accepted amounts. Eligibility and complex own-home cases always remain with the
+agent and may require manual review.
 
 ## Question packet
 

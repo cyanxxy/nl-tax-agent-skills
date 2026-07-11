@@ -271,13 +271,23 @@ class Box1NanGuardTests(unittest.TestCase):
             "validate_own_home_inputs_review",
         )
 
-    def test_nan_cli_value_exits_cleanly(self):
+    def test_nan_cli_value_returns_a_clean_validation_error(self):
         import contextlib
         import io
+        import json
 
-        with contextlib.redirect_stderr(io.StringIO()):
-            with self.assertRaises(SystemExit):
-                self.mod._parse_value("--mortgage-interest", "nan", float)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            status = self.mod.main([
+                "--tax-year", "2025",
+                "--eigenwoningforfait", "4000",
+                "--mortgage-interest", "nan",
+                "--qualifying-financing-costs", "0",
+                "--periodic-erfpacht-opstal-beklemming", "0",
+            ])
+        result = json.loads(output.getvalue())
+        self.assertEqual(status, 1)
+        self.assertTrue(result["errors"])
 
     def test_no_deductible_costs_means_no_tariefsaanpassing(self):
         # With zero aftrekbare kosten there is nothing for the rate
