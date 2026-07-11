@@ -20,6 +20,8 @@ FIXTURES_DIR = (
     / "_shared"
     / "eval-fixtures"
 )
+REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
+DATASET_PATH = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
 
 # Workflow labels: the intake routing vocabulary (annual_2025 plus the four
 # provisional subflows), and the two non-taxpayer harness labels used by the
@@ -89,6 +91,34 @@ class FixtureSchemaTests(unittest.TestCase):
             fixture_id = data.get("fixture_id")
             self.assertNotIn(fixture_id, seen, f"duplicate fixture_id {fixture_id}")
             seen[fixture_id] = path
+
+    @unittest.skipUnless(
+        DATASET_PATH.is_file(),
+        "repo-only offline dataset is absent from standalone plugin package",
+    )
+    def test_shipped_fixture_paths_equal_dataset_fixture_paths(self):
+        dataset = yaml.safe_load(DATASET_PATH.read_text(encoding="utf-8"))
+        shipped = {
+            path.relative_to(FIXTURES_DIR.parents[2]).as_posix()
+            for path in iter_fixture_paths()
+        }
+        referenced_paths = [case["fixture"] for case in dataset["cases"]]
+        self.assertEqual(
+            len(referenced_paths),
+            len(set(referenced_paths)),
+            "each dataset case must map to a unique shipped fixture",
+        )
+        self.assertEqual(set(referenced_paths), shipped)
+
+    @unittest.skipUnless(
+        DATASET_PATH.is_file(),
+        "repo-only offline dataset is absent from standalone plugin package",
+    )
+    def test_dataset_case_ids_are_unique_and_equal_default_cases(self):
+        dataset = yaml.safe_load(DATASET_PATH.read_text(encoding="utf-8"))
+        case_ids = [case["id"] for case in dataset["cases"]]
+        self.assertEqual(len(case_ids), len(set(case_ids)))
+        self.assertEqual(set(case_ids), set(dataset["benchmark_default_cases"]))
 
     def test_annual_entrepreneur_fixture_keeps_field_map_draft(self):
         data = load_fixture("annual/entrepreneur-zzp.yaml")

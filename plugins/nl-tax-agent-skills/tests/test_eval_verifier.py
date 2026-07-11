@@ -2,6 +2,7 @@
 """Tests for offline benchmark workspace verification."""
 
 import importlib.util
+import json
 import pathlib
 import tempfile
 import unittest
@@ -30,6 +31,35 @@ def load_module(relative_path, name):
     f"offline eval verifier not present ({VERIFIER_PATH}) — standalone package run",
 )
 class OfflineVerifierTests(unittest.TestCase):
+    def _release_case_sets(self):
+        dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
+        benchmark_path = (
+            REPO_ROOT / "evals/nl-tax-agent-skills/plugin-eval-benchmark.json"
+        )
+        dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
+        benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
+
+        dataset_ids = {case["id"] for case in dataset["cases"]}
+        default_ids = set(dataset["benchmark_default_cases"])
+        benchmark_ids = [
+            scenario.get("datasetCaseId") for scenario in benchmark["scenarios"]
+        ]
+        return dataset_ids, default_ids, benchmark_ids
+
+    def test_dataset_and_default_case_sets_are_equal(self):
+        dataset_ids, default_ids, _ = self._release_case_sets()
+        self.assertEqual(default_ids, dataset_ids)
+
+    def test_dataset_and_benchmark_case_sets_are_one_to_one(self):
+        dataset_ids, _, benchmark_ids = self._release_case_sets()
+        self.assertTrue(all(case_id is not None for case_id in benchmark_ids))
+        self.assertEqual(
+            len(benchmark_ids),
+            len(set(benchmark_ids)),
+            "each benchmark scenario must use a unique datasetCaseId",
+        )
+        self.assertEqual(set(benchmark_ids), dataset_ids)
+
     def test_behavioral_fixture_cases_are_wired_into_dataset(self):
         dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
         dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
