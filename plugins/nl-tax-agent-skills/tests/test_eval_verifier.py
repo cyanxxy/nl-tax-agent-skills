@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Tests for offline benchmark workspace verification."""
+"""Tests for the agentic benchmark and offline structural contracts."""
 
 import hashlib
 import importlib.util
 import json
 import pathlib
+import shutil
+import subprocess
 import tempfile
 import unittest
 
@@ -32,7 +34,7 @@ def load_module(relative_path, name):
     f"offline eval verifier not present ({VERIFIER_PATH}) — standalone package run",
 )
 class OfflineVerifierTests(unittest.TestCase):
-    def _release_case_sets(self):
+    def _release_eval_surfaces(self):
         dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
         benchmark_path = (
             REPO_ROOT / "evals/nl-tax-agent-skills/plugin-eval-benchmark.json"
@@ -41,25 +43,43 @@ class OfflineVerifierTests(unittest.TestCase):
         benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
 
         dataset_ids = {case["id"] for case in dataset["cases"]}
-        default_ids = set(dataset["benchmark_default_cases"])
-        benchmark_ids = [
-            scenario.get("datasetCaseId") for scenario in benchmark["scenarios"]
-        ]
-        return dataset_ids, default_ids, benchmark_ids
+        contract_ids = set(dataset["contract_default_cases"])
+        return dataset_ids, contract_ids, benchmark
 
     def test_dataset_and_default_case_sets_are_equal(self):
-        dataset_ids, default_ids, _ = self._release_case_sets()
-        self.assertEqual(default_ids, dataset_ids)
+        dataset_ids, contract_ids, _ = self._release_eval_surfaces()
+        self.assertEqual(contract_ids, dataset_ids)
 
-    def test_dataset_and_benchmark_case_sets_are_one_to_one(self):
-        dataset_ids, _, benchmark_ids = self._release_case_sets()
-        self.assertTrue(all(case_id is not None for case_id in benchmark_ids))
-        self.assertEqual(
-            len(benchmark_ids),
-            len(set(benchmark_ids)),
-            "each benchmark scenario must use a unique datasetCaseId",
+    def test_agentic_benchmark_is_not_coupled_to_contract_fixtures(self):
+        _, _, benchmark = self._release_eval_surfaces()
+        scenarios = benchmark["scenarios"]
+        self.assertEqual(len(scenarios), 5)
+        self.assertTrue(all("datasetCaseId" not in scenario for scenario in scenarios))
+
+        rendered_prompts = "\n".join(
+            scenario["userInput"].lower() for scenario in scenarios
         )
-        self.assertEqual(set(benchmark_ids), dataset_ids)
+        for forbidden in (
+            "fixture",
+            "current-case",
+            "dataset case",
+            "exact case",
+            "expected file",
+            "run offline",
+        ):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, rendered_prompts)
+
+        self.assertEqual(
+            {scenario["rubricProfile"] for scenario in scenarios},
+            {
+                "informational",
+                "annual_preparation",
+                "provisional_change",
+                "entrepreneur_winst",
+                "unsupported_boundary",
+            },
+        )
 
     def test_behavioral_fixture_cases_are_wired_into_dataset(self):
         dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
@@ -112,12 +132,11 @@ class OfflineVerifierTests(unittest.TestCase):
                 self.assertIn(forbidden, provisional_map["none"])
 
         evidence = cases["annual_evidence_status"]
-        evidence_pack = next(
-            rule
-            for rule in evidence["text_checks"]
-            if rule["path"] == "workspace/annual/2025/return-pack.md"
+        self.assertNotIn(
+            "text_checks",
+            evidence,
+            "agent interpretation belongs in fixtures/rubrics, not exact Markdown checks",
         )
-        self.assertIn("Eligible reviewed current-year evidence: 1", evidence_pack["all"])
 
     def test_omitted_shipped_fixtures_are_wired_without_replacing_security_fixture(self):
         dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
@@ -147,10 +166,16 @@ class OfflineVerifierTests(unittest.TestCase):
             "cowork-casual-tax-question",
             "cowork-explicit-annual-preparation",
             "cowork-annual-entrepreneur-boundary",
-            "cowork-provisional-entrepreneur-profit",
-            "cowork-corrected-tax-rules",
+            "cowork-provisional-change",
+            "cowork-unsupported-boundary",
         }
         eval_root = REPO_ROOT / "evals/claude"
+        actual_case_names = {
+            path.parent.name
+            for path in eval_root.glob("cowork-*/prompt.md")
+            if (path.parent / "graders/criteria.md").is_file()
+        }
+        self.assertEqual(actual_case_names, case_names)
 
         for case_name in case_names:
             with self.subTest(case=case_name):
@@ -166,9 +191,119 @@ class OfflineVerifierTests(unittest.TestCase):
         benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
         rendered = json.dumps(benchmark)
 
-        self.assertNotIn("Edit workspace.sourcePath", rendered)
-        self.assertNotIn("What are the 3 highest-value real tasks", rendered)
+        self.assertEqual(len(benchmark["scenarios"]), 5)
+        self.assertEqual(
+            benchmark["workspace"]["sourcePath"],
+            "evals/nl-tax-agent-skills/agentic-workspace",
+        )
+        self.assertEqual(
+            benchmark["verifiers"]["commands"],
+            ["bash .eval/verify-hard-contracts.sh"],
+        )
+        workspace_seed = REPO_ROOT / benchmark["workspace"]["sourcePath"]
+        self.assertTrue(
+            (workspace_seed / ".eval/verify-hard-contracts.sh").is_file()
+        )
         self.assertIn("Dutch tax", rendered)
+
+    def test_agentic_rubric_is_weighted_and_allows_valid_variation(self):
+        rubric_path = REPO_ROOT / "evals/nl-tax-agent-skills/agentic-rubric.json"
+        rubric = json.loads(rubric_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(
+            sum(dimension["weight"] for dimension in rubric["dimensions"]),
+            100,
+        )
+        self.assertEqual(rubric["passThresholdPercent"], 80)
+        self.assertGreaterEqual(len(rubric["hardFails"]), 4)
+        instructions = " ".join(rubric["reviewInstructions"]).lower()
+        self.assertIn("different wording", instructions)
+        self.assertIn("do not require a case marker", instructions)
+
+    def test_structural_dataset_contains_no_model_prompts_or_case_markers(self):
+        dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
+        dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
+
+        self.assertNotIn("case_marker", dataset["global"])
+        for case in dataset["cases"]:
+            with self.subTest(case=case["id"]):
+                self.assertNotIn("prompt", case)
+                self.assertNotIn(
+                    "workspace/eval/current-case.txt",
+                    case.get("expected_files", []),
+                )
+                for rule in case.get("text_checks", []):
+                    self.assertTrue(
+                        rule["path"].endswith(".yaml"),
+                        "structural contracts must not prescribe Markdown prose",
+                    )
+
+    def test_agentic_metric_pack_is_schema_compatible_and_retained(self):
+        root = REPO_ROOT / "evals/nl-tax-agent-skills"
+        manifest = json.loads(
+            (root / "agentic-metric-pack/manifest.json").read_text(encoding="utf-8")
+        )
+        result = json.loads(
+            (root / "agentic-design-checks-0.1.7.json").read_text(
+                encoding="utf-8"
+            )
+        )
+
+        self.assertEqual(manifest["supportedTargetKinds"], ["plugin"])
+        self.assertEqual(
+            manifest["command"], ["node", "./emit-agentic-design.js"]
+        )
+        checks = result["checks"]
+        self.assertEqual(len(checks), 5)
+        self.assertTrue(all(check["status"] == "pass" for check in checks))
+
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("Node is unavailable; retained metric-pack output was parsed")
+        emitted = subprocess.run(
+            [node, str(root / "agentic-metric-pack/emit-agentic-design.js")],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(json.loads(emitted.stdout), result)
+
+    def test_agentic_shell_verifier_checks_only_hard_artifact_boundaries(self):
+        script = (
+            REPO_ROOT
+            / "evals/nl-tax-agent-skills/agentic-workspace/.eval/verify-hard-contracts.sh"
+        )
+
+        with tempfile.TemporaryDirectory() as tmp:
+            clean = subprocess.run(
+                ["bash", str(script)], cwd=tmp, capture_output=True, text=True
+            )
+            self.assertEqual(clean.returncode, 0, clean.stderr)
+
+        invalid_layouts = {
+            "case marker": ["workspace/eval/current-case.txt"],
+            "mixed workflows": [
+                "workspace/annual/2025/return-pack.md",
+                "workspace/provisional/2026/provisional-pack.md",
+            ],
+            "noncanonical map": ["workspace/shared/field-map.yaml"],
+            "helper-owned note": ["workspace/shared/box2-notes.md"],
+        }
+        for label, relative_paths in invalid_layouts.items():
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as tmp:
+                root = pathlib.Path(tmp)
+                for relative_path in relative_paths:
+                    path = root / relative_path
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text("test\n", encoding="utf-8")
+                result = subprocess.run(
+                    ["bash", str(script)],
+                    cwd=root,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertNotEqual(result.returncode, 0, result.stdout)
 
     def test_offline_verifier_validates_generated_field_maps(self):
         verifier = load_module(

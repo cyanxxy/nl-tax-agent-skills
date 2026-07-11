@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify generated workspaces for the offline NL tax benchmark dataset."""
+"""Verify hard workspace contracts for the offline NL tax fixture library."""
 
 from __future__ import annotations
 
@@ -76,34 +76,15 @@ def iter_text_files(root: Path) -> list[Path]:
     return result
 
 
-def normalize_case_ids(raw: str) -> list[str]:
-    case_ids: list[str] = []
-    for line in raw.replace(",", "\n").splitlines():
-        cleaned = line.strip()
-        if not cleaned or cleaned.startswith("#"):
-            continue
-        if ":" in cleaned:
-            cleaned = cleaned.split(":", 1)[1].strip()
-        case_ids.extend(part.strip() for part in cleaned.split() if part.strip())
-    return case_ids
-
-
-def selected_case_ids(args: argparse.Namespace, dataset: dict[str, Any], workspace: Path) -> list[str]:
+def selected_case_ids(args: argparse.Namespace, dataset: dict[str, Any]) -> list[str]:
     if args.case:
         return args.case
     if args.all:
         return [case["id"] for case in dataset.get("cases", [])]
-
-    marker = workspace / dataset.get("global", {}).get("case_marker", "workspace/eval/current-case.txt")
-    if not marker.exists():
-        raise ValueError(
-            f"No case selected and marker not found: {marker}. "
-            "Pass --case <id> or write the marker during the benchmark run."
-        )
-    case_ids = normalize_case_ids(read_text(marker))
-    if not case_ids:
-        raise ValueError(f"Case marker is empty: {marker}")
-    return case_ids
+    raise ValueError(
+        "No structural contract selected. Pass --case <id> or --all; "
+        "agentic benchmark runs never select cases through output marker files."
+    )
 
 
 def find_case(dataset: dict[str, Any], case_id: str) -> dict[str, Any]:
@@ -298,17 +279,17 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
     cases = dataset.get("cases", []) or []
     case_ids = [case.get("id") for case in cases]
     fixture_paths = [case.get("fixture") for case in cases]
-    default_ids = dataset.get("benchmark_default_cases", []) or []
+    default_ids = dataset.get("contract_default_cases", []) or []
 
     if len(case_ids) != len(set(case_ids)):
         errors.append("dataset case ids must be unique")
     if len(default_ids) != len(set(default_ids)):
-        errors.append("benchmark_default_cases must not contain duplicates")
+        errors.append("contract_default_cases must not contain duplicates")
     if set(default_ids) != set(case_ids):
         missing = sorted(set(case_ids) - set(default_ids))
         extra = sorted(set(default_ids) - set(case_ids))
         errors.append(
-            "benchmark_default_cases must equal dataset case ids "
+            "contract_default_cases must equal dataset case ids "
             f"(missing={missing}, extra={extra})"
         )
     if len(fixture_paths) != len(set(fixture_paths)):
@@ -365,7 +346,7 @@ def main() -> int:
     warnings: list[str] = []
     case_ids: list[str] = []
     try:
-        case_ids = selected_case_ids(args, dataset, workspace)
+        case_ids = selected_case_ids(args, dataset)
         for case_id in case_ids:
             errors.extend(
                 verify_case(workspace, dataset, find_case(dataset, case_id), warnings)

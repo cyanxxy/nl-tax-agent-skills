@@ -367,17 +367,17 @@ The register schema, freshness gate, and process for adding a source are documen
 
 ## 🧪 Evals & tests
 
-Behavior is pinned down at three layers, all offline — no live web access, no portal logins:
+Behavior is assessed at three deliberately separate layers; none logs in or files:
 
-- **Eval fixtures** — [`skills/_shared/eval-fixtures/`](plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/) ships scenario fixtures (`annual/`, `provisional/`, and `security/` routing/boundary cases) describing the expected behavior for each supported workflow: what routes where, which files get created, and what a workpack must and must not contain.
-- **Offline eval harness** — [`evals/nl-tax-agent-skills/`](evals/nl-tax-agent-skills/) (repo-level, not shipped in the plugin package) defines benchmark cases over those fixtures plus a verifier for generated `workspace/**` outputs:
+- **Agentic conversations** — [`evals/nl-tax-agent-skills/`](evals/nl-tax-agent-skills/) defines five natural Cowork-style prompts and a weighted rubric for reasoning, source use, question quality, uncertainty, usefulness, progressive loading, and agent ownership. The live benchmark uses a minimal workspace and only one hard-contract verifier.
+- **Structural fixtures** — [`skills/_shared/eval-fixtures/`](plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/) and `offline-dataset.yaml` retain annual, provisional, and boundary invariants without acting as model prompts or exact answer templates:
 
   ```bash
   python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
   ```
 
-  See [`evals/nl-tax-agent-skills/README.md`](evals/nl-tax-agent-skills/README.md) for the case list and the Plugin Eval benchmark run.
-- **Unit tests** — `plugins/nl-tax-agent-skills/tests/` covers the validators, box helpers, rate parity between knowledge pack and scripts, fixture schema, and cross-host invocation policy:
+  See [`evals/nl-tax-agent-skills/README.md`](evals/nl-tax-agent-skills/README.md) for the five conversational profiles, shared rubric, structural-contract boundary, and benchmark command.
+- **Unit tests** — `plugins/nl-tax-agent-skills/tests/` covers hard contracts, optional mechanical helpers, rate parity, fixture shape, and cross-host invocation policy:
 
   ```bash
   python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'

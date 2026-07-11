@@ -55,9 +55,10 @@ from `0.1.6` to `0.1.7`; the root marketplace manifests intentionally remain unv
 - **Reviewed-note provenance** — source-register entries, local reviewed-note hashes,
   review status, workflow/year declarations, and field/evidence check attribution are
   validated together without presenting metadata as proof of legal accuracy.
-- **Behavioral parity** — annual, provisional, entrepreneur, unsupported-scope, source,
-  ownership, and Python-optional fixtures have one-to-one offline dataset and benchmark
-  coverage, plus first-party Claude behavior cases.
+- **Agentic evaluation** — five natural Cowork conversations cover informational,
+  annual, provisional-change, entrepreneur, and unsupported-boundary behavior with a
+  weighted LLM/human rubric. The 21 shipped fixtures remain a separate structural
+  contract library and no longer dictate live benchmark prompts or exact artifacts.
 - **Release packaging tests** — version/metadata, one-icon packaging, 12-skill discovery,
   argument hints, optional-Python wording, contributor version examples, and the future tag
   guard are regression tested.

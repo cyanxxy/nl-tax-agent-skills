@@ -73,6 +73,6 @@ jobs:
         run: |
           python -m unittest discover -s tests -p 'test_*.py'
 
-      - name: Verify offline eval dataset
+      - name: Verify offline structural contract dataset
         run: |
           python evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset

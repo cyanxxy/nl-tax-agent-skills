@@ -1,0 +1,97 @@
+{
+  "checks": [
+    {
+      "id": "agentic-five-scenario-scope",
+      "category": "agentic-eval-design",
+      "severity": "info",
+      "status": "pass",
+      "message": "The live benchmark should stay focused on five representative conversations.",
+      "evidence": [
+        "scenario_count=5"
+      ],
+      "remediation": [
+        "Use one informational, annual, provisional-change, entrepreneur, and unsupported scenario."
+      ]
+    },
+    {
+      "id": "agentic-natural-prompts",
+      "category": "agentic-eval-design",
+      "severity": "info",
+      "status": "pass",
+      "message": "Live prompts must sound like user requests rather than fixture instructions.",
+      "evidence": [
+        "No fixture, marker, exact-output, or dataset instructions found."
+      ],
+      "remediation": [
+        "Remove evaluator implementation details from userInput."
+      ]
+    },
+    {
+      "id": "agentic-profile-coverage",
+      "category": "agentic-eval-design",
+      "severity": "info",
+      "status": "pass",
+      "message": "The benchmark should cover the five agreed agentic profiles once each.",
+      "evidence": [
+        "All five profiles are covered."
+      ],
+      "remediation": [
+        "Add the missing profile without adding duplicate near-identical scenarios."
+      ]
+    },
+    {
+      "id": "agentic-weighted-rubric",
+      "category": "agentic-eval-design",
+      "severity": "info",
+      "status": "pass",
+      "message": "The shared rubric must have stable weighted dimensions and explicit hard fails.",
+      "evidence": [
+        "dimension_count=7",
+        "total_weight=100",
+        "hard_fail_count=5"
+      ],
+      "remediation": [
+        "Make dimension weights total 100 and retain explicit hard-fail conditions."
+      ]
+    },
+    {
+      "id": "agentic-minimal-harness",
+      "category": "agentic-eval-design",
+      "severity": "info",
+      "status": "pass",
+      "message": "Live evaluation should use a minimal workspace and only one hard-contract verifier.",
+      "evidence": [
+        "workspace=evals/nl-tax-agent-skills/agentic-workspace",
+        "verifier_count=1"
+      ],
+      "remediation": [
+        "Use agentic-workspace and keep semantic scoring in the LLM/human rubric."
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "id": "agentic_scenario_count",
+      "category": "agentic-eval-design",
+      "value": 5,
+      "unit": "scenarios",
+      "band": "good"
+    },
+    {
+      "id": "agentic_design_checks_passed",
+      "category": "agentic-eval-design",
+      "value": 5,
+      "unit": "checks",
+      "band": "good"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "agentic-rubric",
+      "type": "rubric",
+      "label": "NL Tax agentic evaluation rubric",
+      "description": "Weighted human/LLM rubric for conversational plugin evaluation.",
+      "path": "../agentic-rubric.json"
+    }
+  ]
+}

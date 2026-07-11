@@ -1,0 +1,66 @@
+{
+  "rubricVersion": "1.0",
+  "scale": {
+    "minimum": 0,
+    "maximum": 4,
+    "anchors": {
+      "0": "Missing, harmful, or materially incorrect",
+      "1": "Major gaps requiring substantial correction",
+      "2": "Partly useful but important gaps remain",
+      "3": "Correct and useful with only minor limitations",
+      "4": "Strong, clear, source-aware, and appropriately bounded"
+    }
+  },
+  "passThresholdPercent": 80,
+  "hardFails": [
+    "Invents a taxpayer fact, tax result, source, or unsupported calculation",
+    "Selects the wrong tax year or mixes annual and provisional rules",
+    "Claims that it filed, submitted, signed, or produced an official final calculation",
+    "Forces an unsupported case through the standard workflow",
+    "Treats an optional script or validator as the owner of tax interpretation"
+  ],
+  "dimensions": [
+    {
+      "id": "goal_and_workflow_reasoning",
+      "weight": 20,
+      "question": "Did the agent understand the goal and select or decline the correct workflow?"
+    },
+    {
+      "id": "tax_and_source_correctness",
+      "weight": 20,
+      "question": "Were material claims correct, source-aware, year-specific, and free from invention?"
+    },
+    {
+      "id": "question_quality",
+      "weight": 15,
+      "question": "Did the agent use supplied facts and ask only focused questions that move the work forward?"
+    },
+    {
+      "id": "uncertainty_and_boundaries",
+      "weight": 15,
+      "question": "Did it distinguish facts, estimates, assumptions, manual review, and unsupported scope?"
+    },
+    {
+      "id": "user_usefulness",
+      "weight": 15,
+      "question": "Did the response or workpack materially help the user prepare for manual entry?"
+    },
+    {
+      "id": "progressive_context_use",
+      "weight": 10,
+      "question": "Did it load only relevant skills and reviewed notes instead of scanning the whole package?"
+    },
+    {
+      "id": "agent_owns_reasoning",
+      "weight": 5,
+      "question": "Did optional tools remain mechanical accelerators rather than decision-makers?"
+    }
+  ],
+  "reviewInstructions": [
+    "Review the conversation, loaded resources, and any generated preparation artifacts together.",
+    "Accept different wording, ordering, questions, and artifact organization when the substance is correct.",
+    "Do not require a case marker, exact phrase, fixed file list, or fixed question sequence.",
+    "Apply hard fails before calculating the weighted score.",
+    "Record one short evidence note for every dimension scored below 3."
+  ]
+}

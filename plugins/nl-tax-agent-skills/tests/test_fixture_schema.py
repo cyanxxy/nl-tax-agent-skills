@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shape checks for the eval fixtures under skills/_shared/eval-fixtures/.
 
-Fixtures are consumed by humans and by the offline eval harness, so they must
+Fixtures are consumed by humans and by the structural contract harness, so they must
 share one minimal schema: identifying metadata, a workflow label drawn from the
 intake routing vocabulary, and explicit expectations (either an
 ``expected_behavior`` list or an ``acceptance_criteria`` list; both may be
@@ -114,11 +114,11 @@ class FixtureSchemaTests(unittest.TestCase):
         DATASET_PATH.is_file(),
         "repo-only offline dataset is absent from standalone plugin package",
     )
-    def test_dataset_case_ids_are_unique_and_equal_default_cases(self):
+    def test_dataset_case_ids_are_unique_and_equal_contract_cases(self):
         dataset = yaml.safe_load(DATASET_PATH.read_text(encoding="utf-8"))
         case_ids = [case["id"] for case in dataset["cases"]]
         self.assertEqual(len(case_ids), len(set(case_ids)))
-        self.assertEqual(set(case_ids), set(dataset["benchmark_default_cases"]))
+        self.assertEqual(set(case_ids), set(dataset["contract_default_cases"]))
 
     @unittest.skipUnless(
         DATASET_PATH.is_file(),

@@ -1,51 +1,41 @@
-# Offline Evaluation
+# Agentic and structural evaluation
 
-This directory contains the repo-local evaluation setup for `nl-tax-agent-skills`.
-It is intentionally offline: benchmark prompts point at local YAML fixtures and
-must not browse, refresh sources, log in, file, or collect portal credentials.
-It lives outside the plugin package so development-only benchmark files are not
-shipped to users or counted as plugin support context.
+This directory separates two different kinds of evidence. The live benchmark
+evaluates an LLM-driven Cowork conversation. The offline fixture library checks
+only hard structural contracts. Passing one does not imply passing the other.
 
-## Files
+## Agentic evaluation — primary behavior signal
 
-- `offline-dataset.yaml` defines the offline cases, fixture paths, benchmark
-  prompts, expected files, and policy text checks.
-- `verify_offline_workspace.py` verifies generated `workspace/**` outputs for
-  the case written to `workspace/eval/current-case.txt`.
-- `plugin-eval-benchmark.json` is the Plugin Eval benchmark config that
-  runs real Codex CLI scenarios against the offline cases.
-- `../claude/cowork-*/` contains first-party Claude prose evals for Cowork
-  routing, entrepreneur scope, provisional Winst mapping, and corrected tax
-  rules.
+`plugin-eval-benchmark.json` contains five natural user conversations:
 
-The shipped fixture paths, dataset cases, `benchmark_default_cases`, and
-benchmark `datasetCaseId` values are intentionally identical sets. Each fixture
-has exactly one dataset case and one benchmark scenario.
+1. an informational healthcare-cost question;
+2. explicit annual-return preparation;
+3. a provisional-assessment salary change;
+4. annual entrepreneur/Winst preparation with an overreaching request; and
+5. an unsupported part-year-resident case.
 
-## Local Checks
+The prompts contain no fixture names, case IDs, marker files, expected file
+lists, or prescribed question sequences. Each run starts from the minimal
+`agentic-workspace/`; Plugin Eval installs the plugin into that isolated copy.
 
-List the cases:
+Apply `agentic-rubric.json` to the transcript, loaded resources, and any output
+artifacts. It scores workflow reasoning, tax/source correctness, question
+quality, uncertainty, usefulness, progressive context use, and agent ownership
+of reasoning. Different wording and organization are valid. Hard failures cover
+invented facts, cross-year/workflow mixing, false submission/final-calculation
+claims, unsupported overreach, and delegating interpretation to a validator.
 
-```bash
-python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --list
-```
+The only automated live-run verifier is
+`agentic-workspace/.eval/verify-hard-contracts.sh`. It checks canonical artifact
+boundaries such as annual/provisional separation and mapper-owned field-map
+paths. It deliberately does not score semantic quality.
 
-Validate that every dataset fixture path still exists:
+Plugin Eval currently sends one natural user request per isolated Codex run. It
+can assess the agent's first response, tool/resource choices, questions, and
+artifacts, but it does not supply simulated taxpayer replies. Use the native
+Claude cases or a human Cowork smoke for genuinely multi-turn follow-up quality.
 
-```bash
-python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
-```
-
-This check also rejects duplicate ids or fixtures and any mismatch between the
-shipped fixture set, dataset, and default-case set. The unit verifier additionally
-checks one-to-one benchmark coverage.
-
-The `--all` command verifies generated outputs for every case, so it is mainly
-useful inside a prepared workspace containing all expected `workspace/**`
-artifacts. For normal Plugin Eval runs, the verifier reads
-`workspace/eval/current-case.txt` and checks the single active case.
-
-Run the Plugin Eval benchmark:
+Run the focused benchmark only when live model evidence is needed:
 
 ```bash
 plugin-eval benchmark plugins/nl-tax-agent-skills \
@@ -53,15 +43,14 @@ plugin-eval benchmark plugins/nl-tax-agent-skills \
   --format markdown
 ```
 
-Run the static Plugin Eval report:
+Do not expand this into one live run per fixture. Add a sixth scenario only when
+it represents a materially different user journey that cannot be assessed by
+the existing five profiles.
 
-```bash
-plugin-eval analyze plugins/nl-tax-agent-skills \
-  --format markdown
-```
+## Native Claude prose evaluation
 
-Run the first-party Claude Cowork behavior cases when `plugin eval` is enabled
-in the installed Claude Code build:
+`../claude/cowork-*/` contains five first-party Claude cases using natural
+prompts and LLM graders. When native evaluation is available:
 
 ```bash
 claude plugin eval plugins/nl-tax-agent-skills \
@@ -71,43 +60,69 @@ claude plugin eval plugins/nl-tax-agent-skills \
   --output-dir evals/results/0.1.7
 ```
 
-This is first-party Claude package/behavior validation. It does not verify the Cowork
-desktop UI, marketplace update flow, local/remote file selection, or the exact tools in a
-new Cowork task. Record a separate human smoke run after installing 0.1.7: start a fresh
-task, use the natural-language annual prompt, then a provisional request prompt, and
-confirm that bundled references load without requiring Python.
+This still does not prove the Cowork desktop UI, marketplace update flow,
+local/remote file selection, or available tools in a fresh task. Record a
+separate human smoke after installation.
 
-If `plugin-eval` is not on `PATH`, locate the bundled script dynamically instead of pinning a cache hash:
+## Offline structural contracts — secondary regression signal
+
+`offline-dataset.yaml` maps all shipped fixtures to expected/forbidden paths and
+a small set of structured YAML identifiers. It contains no Markdown prose
+assertions. It is a contract library, not a prompt library: it contains no model
+instructions and requires no case-marker file.
+
+Use it to catch hard regressions in supported years, artifact ownership,
+annual/provisional separation, source-bound fields, and unsupported boundaries.
+It must not be used to demand exact prose, a fixed interview, or a complete
+answer template from an agent.
+
+List or validate the fixture library:
 
 ```bash
-PLUGIN_EVAL_JS="$(
-  find "${CODEX_HOME:-$HOME/.codex}/plugins/cache" \
-    -path '*/plugin-eval/*/scripts/plugin-eval.js' \
-    -type f \
-    -print | head -n 1
-)"
-test -n "$PLUGIN_EVAL_JS"
+python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --list
+python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
+```
 
-node "$PLUGIN_EVAL_JS" benchmark plugins/nl-tax-agent-skills \
-  --config evals/nl-tax-agent-skills/plugin-eval-benchmark.json \
-  --format markdown
+To verify an already prepared test workspace, select the structural contract
+explicitly:
 
-node "$PLUGIN_EVAL_JS" analyze plugins/nl-tax-agent-skills \
+```bash
+python3 evals/nl-tax-agent-skills/verify_offline_workspace.py \
+  --workspace /path/to/test-workspace \
+  --case annual_simple_resident
+```
+
+There is intentionally no automatic case selection from generated output.
+
+## Evaluation-design metric pack
+
+The local metric pack validates the design rather than grading conversations:
+
+```bash
+plugin-eval analyze plugins/nl-tax-agent-skills \
+  --metric-pack evals/nl-tax-agent-skills/agentic-metric-pack/manifest.json \
   --format markdown
 ```
 
-## Static Eval Notes
+It checks that the benchmark stays at five natural prompts, covers the agreed
+profiles, uses a weighted rubric, and runs in a minimal workspace with only one
+hard-contract verifier. Extension results do not overwrite Plugin Eval's core
+static score.
 
-The plugin intentionally keeps an offline source pack in the shipped bundle so
-taxpayer-facing skills do not depend on live web lookup. Plugin Eval will still
-flag deferred token cost for that source pack. Treat that as a release tradeoff,
-not a reason to remove source-backed knowledge.
+## Static-analysis interpretation
 
-Plugin Eval's Python complexity check is a coarse file-level heuristic over the
-helper scripts. Keep normal tests and validators as the functional gate.
+The plugin intentionally ships an offline, source-cited knowledge pack. Core
+Plugin Eval aggregates that supporting tree and multiple implicit skill bodies,
+so its static deferred/invoke budget does not represent Claude Cowork's actual
+always-on context. Compare it with `claude --plugin-dir ... plugin details`, and
+state clearly whether any token figure is static, cumulative benchmark usage,
+or Claude package inventory.
 
 Python is optional in taxpayer workflows. The supported maintainer runtime is
-Python 3.10+, and the 14 helpers are grouped into four conceptual components:
-evidence inventory/hash, field-map checks, source-pinned arithmetic checks, and
-developer consistency/source maintenance. Evals should assess the LLM's
-interpretation and artifact behavior, not assume a helper is available.
+Python 3.10+, and the 14 helpers remain mechanical accelerators for inventory,
+field-map checks, source-pinned arithmetic, and developer consistency. Agentic
+evaluation must never assume a helper owns tax interpretation.
+
+The earlier 21-run exact-output benchmark is documented in
+`plugin-eval-benchmark-0.1.7.md` as historical evidence and is superseded by the
+five-conversation design.

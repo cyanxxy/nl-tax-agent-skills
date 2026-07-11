@@ -63,7 +63,7 @@ nl-tax-agent-skills/
   tests/                        # unit tests (validators, box helpers, eval verifier, field-map policy)
 ```
 
-The test suite runs standalone from this package (`python3 -m unittest discover -s tests -p 'test_*.py'`); repo-only checks skip themselves. Scenario eval fixtures ship in `skills/_shared/eval-fixtures/`; the offline eval harness that runs benchmark cases against them lives at repo level under `evals/nl-tax-agent-skills/` and is deliberately not shipped in this package.
+The test suite runs standalone from this package (`python3 -m unittest discover -s tests -p 'test_*.py'`); repo-only checks skip themselves. Structural fixtures ship in `skills/_shared/eval-fixtures/`. The repo-level evaluation layer deliberately keeps those contracts separate from its five natural Cowork conversations and weighted agentic rubric; development-only eval files are not shipped in this package.
 
 ### Optional script prerequisites
 

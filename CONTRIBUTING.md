@@ -288,7 +288,7 @@ python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
 | `validate_invocation_policy.py` | Every non-user-invocable skill ships an `agents/openai.yaml` with `policy.allow_implicit_invocation: false` |
 | `tests/` (unittest) | Unit coverage of the validator/helper logic plus regression and golden tests for audited fixes |
-| `verify_offline_workspace.py` | Offline eval dataset is internally consistent and fixtures load without live network access |
+| `verify_offline_workspace.py` | Structural contract library is internally consistent; it is not the live conversational grader |
 
 ### Developer utilities
 

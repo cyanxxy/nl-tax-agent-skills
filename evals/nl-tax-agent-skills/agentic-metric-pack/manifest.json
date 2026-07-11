@@ -1,0 +1,6 @@
+{
+  "name": "nl-tax-agentic-eval-design",
+  "version": "1.0.0",
+  "supportedTargetKinds": ["plugin"],
+  "command": ["node", "./emit-agentic-design.js"]
+}
