@@ -131,23 +131,39 @@ class Box2InputHardeningTests(unittest.TestCase):
             "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
             "calculate_box2_tax_review",
         )
-        self.validator = load_module(
-            "skills/nl-tax-box2/scripts/validate_box2_inputs.py",
-            "validate_box2_inputs_review",
-        )
 
     def test_nan_and_inf_raise_clean_value_error(self):
         for bad in (float("nan"), float("inf"), "-inf"):
-            with self.assertRaises(ValueError):
-                self.calc.calculate_box2_tax(tax_year=2025, regular_benefits=bad)
+            with self.subTest(bad=bad):
+                result = self.calc.calculate_from_payload(
+                    {
+                        "workflow": "annual_2025",
+                        "tax_year": 2025,
+                        "substantial_interest_pct": 10,
+                        "resident_full_year": True,
+                        "standard_ab_case": True,
+                        "regular_benefits": bad,
+                        "disposal_benefit": 0,
+                        "loss_setoff": 0,
+                    }
+                )
+                self.assertTrue(result["errors"])
+                self.assertIsNone(result["result"])
 
     def test_unknown_payload_key_is_flagged(self):
         result = self.calc.calculate_from_payload(
-            {"tax_year": 2025, "regular_benefit": 10_000}  # typo'd key
+            {
+                "workflow": "annual_2025",
+                "tax_year": 2025,
+                "substantial_interest_pct": 10,
+                "resident_full_year": True,
+                "standard_ab_case": True,
+                "regular_benefit": 10_000,
+            }  # typo'd key
         )
         self.assertTrue(
-            any("regular_benefit" in warning for warning in result.get("warnings", [])),
-            result.get("warnings"),
+            any("regular_benefit" in error for error in result.get("errors", [])),
+            result.get("errors"),
         )
 
     def test_explicit_zero_disposal_price_matches_calculator_presence_rule(self):
@@ -161,7 +177,13 @@ class Box2InputHardeningTests(unittest.TestCase):
             "gross_disposal_price": 50_000,
             "acquisition_price": 20_000,
         }
-        result = self.validator.validate_box2_input_payload(payload)
+        payload.update(
+            {
+                "resident_full_year": True,
+                "standard_ab_case": True,
+            }
+        )
+        result = self.calc.calculate_from_payload(payload)
         self.assertNotIn(
             "provide either disposal_price or gross_disposal_price, not both",
             result["errors"],

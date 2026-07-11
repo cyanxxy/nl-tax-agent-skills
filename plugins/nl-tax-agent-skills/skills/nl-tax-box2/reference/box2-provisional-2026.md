@@ -29,6 +29,21 @@ Use these notes for `provisional_2026` Box 2 estimate support. Every amount in
 the workpack must be labeled as an estimate or baseline-derived amount for
 manual provisional-assessment entry.
 
+Python is optional. Do not ask the taxpayer to install it. The agent can apply
+the checks below directly and record `check_performed_by: checked_by_agent`; an
+optional run of `calculate_box2_tax.py` records
+`check_performed_by: checked_by_script` and must produce the same boundary
+decision.
+
+Before any calculation, require the explicit pair
+`workflow: provisional_2026` and integer `tax_year: 2026`, a supplied
+`substantial_interest_pct`, actual `true` booleans for `resident_full_year` and
+`standard_ab_case`, and source-backed values for `regular_benefits`,
+`disposal_benefit`, and `loss_setoff`. Reject unknown fields rather than
+defaulting a misspelled amount to zero. Stop for any complex marker below.
+Apply 24.5% through EUR 68,843 before applying 31%, then apply estimated Dutch
+dividend withholding tax as a credit.
+
 ## Substantial-Interest Baseline
 
 - Baseline-derived substantial-interest status generally starts at a direct or
@@ -100,16 +115,17 @@ manual provisional-assessment entry.
   manual-review data.
 - Do not decide formal loss availability, ordering, or entitlement inside this
   helper.
+- A positive `loss_setoff` blocks calculation until a reviewer confirms the
+  amount and the payload records the actual boolean
+  `loss_setoff_reviewed: true` and a non-empty `loss_setoff_source`.
 
 ## Fiscal Partner Allocation Estimate
 
 - Full-year fiscal partners may choose an estimated allocation split that totals
   100%.
-- The `calculate_box2_tax.py` calculator only computes the allocation when the
-  payload sets `full_year_fiscal_partner: true`. Otherwise it skips the
-  allocation, records `partner_allocation_skipped`, and raises a
-  `partner_status_unconfirmed` manual-review flag — confirm full-year partnership
-  before estimating a split.
+- Calculate an allocation only when the payload sets the actual boolean
+  `full_year_fiscal_partner: true`; otherwise return no calculated result and
+  ask for confirmation before estimating a split.
 - Show each partner's estimated allocated income and preparation tax amount separately.
 
 ## Excessive Borrowing Estimate

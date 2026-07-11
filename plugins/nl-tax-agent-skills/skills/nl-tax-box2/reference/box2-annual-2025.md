@@ -28,6 +28,20 @@ review_status: reviewed
 Use these notes for standard full-year Dutch resident annual 2025 preparation
 workpacks. Outputs are for manual Mijn Belastingdienst entry and review only.
 
+Python is optional. Do not ask the taxpayer to install it. The agent can apply
+the checks below directly and record `check_performed_by: checked_by_agent`; an
+optional run of `calculate_box2_tax.py` records
+`check_performed_by: checked_by_script` and must produce the same boundary
+decision.
+
+Before any calculation, require the explicit pair `workflow: annual_2025` and
+integer `tax_year: 2025`, a supplied `substantial_interest_pct`, actual `true`
+booleans for `resident_full_year` and `standard_ab_case`, and source-backed
+values for `regular_benefits`, `disposal_benefit`, and `loss_setoff`. Reject
+unknown fields rather than defaulting a misspelled amount to zero. Stop for any
+complex marker below. Apply 24.5% through EUR 67,804 before applying 31%, then
+apply Dutch dividend withholding tax as a credit.
+
 ## Substantial Interest
 
 - A substantial interest generally starts when the taxpayer, directly or
@@ -97,16 +111,18 @@ workpacks. Outputs are for manual Mijn Belastingdienst entry and review only.
 - Negative Box 2 income or loss setoff should be recorded as manual-review data.
 - Do not decide carry-back, carry-forward, or formal loss-determination issues
   in this helper.
+- A positive `loss_setoff` blocks calculation until a reviewer confirms the
+  amount and the payload records the actual boolean
+  `loss_setoff_reviewed: true` and a non-empty `loss_setoff_source` (for
+  example, the relevant assessment loss statement).
 
 ## Fiscal Partner Allocation
 
 - Full-year fiscal partners may allocate Box 2 income in any split totaling
   100%.
-- The `calculate_box2_tax.py` calculator only computes an allocation when the
-  payload sets `full_year_fiscal_partner: true`. Without that confirmation it
-  skips the allocation, records `partner_allocation_skipped`, and raises a
-  `partner_status_unconfirmed` manual-review flag — so confirm full-year
-  partnership before presenting a split.
+- Calculate an allocation only when the payload sets the actual boolean
+  `full_year_fiscal_partner: true`; otherwise return no calculated result and
+  ask for confirmation before presenting a split.
 - Validate the selected percentages before calculation and show each partner's
   allocated income and preparation tax amount separately.
 

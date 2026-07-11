@@ -8,7 +8,10 @@ review where losses or special events are present.
 
 Usage:
     python3 calculate_box2_tax.py input.json
-    python3 calculate_box2_tax.py --tax-year 2025 --regular-benefits 10000
+    python3 calculate_box2_tax.py --workflow annual_2025 --tax-year 2025 \
+        --substantial-interest-pct 10 --resident-full-year \
+        --standard-ab-case --regular-benefits 10000 \
+        --disposal-benefit 0 --loss-setoff 0
 """
 
 from __future__ import annotations
@@ -190,7 +193,7 @@ def _build_result(
     }
 
 
-def calculate_box2_tax(
+def _calculate_box2_tax(
     *,
     tax_year: int,
     regular_benefits: float | int | Decimal = 0,
@@ -401,8 +404,26 @@ def allocate_partner_box2(
     }
 
 
-# Payload keys this calculator consumes, plus keys legitimately present for the
-# sibling validator/summarizer (markers, boundary flags, allocation blocks).
+SUPPORTED_WORKFLOWS = {
+    "annual_2025": 2025,
+    "provisional_2026": 2026,
+}
+
+COMPLEX_MARKERS = {
+    "valuation_dispute": "Valuation dispute for shares or transfer price.",
+    "emigration": "Emigration or immigration can trigger special Box 2 rules.",
+    "death": "Death during the year needs estate and succession review.",
+    "restructurings": "Merger, split, share-for-share exchange, or restructuring.",
+    "treaty_nonresident_issues": "Treaty, nonresident, or partial-year residence issue.",
+    "informal_capital": "Informal capital or shareholder contribution issue.",
+    "non_arm_length_transfers": "Transfer may not be at arm's length.",
+    "corporate_tax_heavy_dga_cases": "DGA case depends heavily on corporate-tax analysis.",
+    "inherited_gifted_ab": "Inherited or gifted substantial interest.",
+    "fictive_disposal": "Potential fictive disposal event.",
+    "excessive_borrowing_uncertainty": "Uncertain excessive-borrowing position.",
+}
+
+# Payload keys accepted by the single validated public entrypoint.
 _KNOWN_PAYLOAD_KEYS = {
     "tax_year",
     "workflow",
@@ -415,6 +436,8 @@ _KNOWN_PAYLOAD_KEYS = {
     "disposal_benefit",
     "fictitious_regular_benefit_bv_loan",
     "loss_setoff",
+    "loss_setoff_reviewed",
+    "loss_setoff_source",
     "dividend_withholding_tax",
     "bv_loan_balance",
     "substantial_interest_pct",
@@ -438,71 +461,324 @@ _KNOWN_PAYLOAD_KEYS = {
 }
 
 
-def unknown_payload_keys(payload: dict[str, Any]) -> list[str]:
-    """Keys the calculator would silently ignore — typically typos.
-
-    A typo'd amount key (e.g. "regular_benefit") would otherwise default to 0
-    and produce a confident wrong result.
-    """
-    return sorted(set(payload) - _KNOWN_PAYLOAD_KEYS)
+def _add_unique(values: list[str], value: str) -> None:
+    if value not in values:
+        values.append(value)
 
 
-def _payload_to_calculation_kwargs(payload: dict[str, Any]) -> dict[str, Any]:
-    tax_year = payload.get("tax_year")
-    if tax_year is None:
-        workflow = payload.get("workflow")
-        if workflow == "annual_2025":
-            tax_year = 2025
-        elif workflow == "provisional_2026":
-            tax_year = 2026
+def _require_boolean(
+    payload: dict[str, Any],
+    field_name: str,
+    errors: list[str],
+) -> bool | None:
+    if field_name not in payload:
+        errors.append(f"{field_name} is required and must be a boolean")
+        return None
+    value = payload[field_name]
+    if type(value) is not bool:
+        errors.append(f"{field_name} must be a boolean")
+        return None
+    return value
 
+
+def _optional_boolean(
+    payload: dict[str, Any],
+    field_name: str,
+    errors: list[str],
+) -> bool | None:
+    if field_name not in payload:
+        return None
+    value = payload[field_name]
+    if type(value) is not bool:
+        errors.append(f"{field_name} must be a boolean")
+        return None
+    return value
+
+
+def _normalize_amount(
+    payload: dict[str, Any],
+    field_name: str,
+    errors: list[str],
+    *,
+    required: bool = False,
+    allow_negative: bool = False,
+) -> Decimal | None:
+    if field_name not in payload or payload[field_name] in (None, ""):
+        if required:
+            errors.append(f"{field_name} is required")
+        return None
+    try:
+        value = _decimal(payload[field_name], field_name)
+    except ValueError as exc:
+        errors.append(str(exc))
+        return None
+    if not allow_negative and value < ZERO:
+        errors.append(f"{field_name} must be non-negative")
+        return None
+    return value
+
+
+def _validate_allocation(
+    payload: dict[str, Any],
+    errors: list[str],
+    warnings: list[str],
+    manual_review_flags: list[str],
+) -> dict[str, float] | None:
+    allocation = payload.get("partner_allocation") or payload.get("allocation")
+    if allocation is None:
+        return None
+    if not isinstance(allocation, dict):
+        errors.append("partner_allocation must be an object")
+        return None
+
+    if "taxpayer_pct" not in allocation or "partner_pct" not in allocation:
+        errors.append("partner_allocation requires taxpayer_pct and partner_pct")
+        return None
+
+    try:
+        taxpayer_pct = _validate_percentage(
+            allocation.get("taxpayer_pct"), "taxpayer_pct"
+        )
+        partner_pct = _validate_percentage(
+            allocation.get("partner_pct"), "partner_pct"
+        )
+    except ValueError as exc:
+        errors.append(str(exc))
+        return None
+    if _money(taxpayer_pct + partner_pct) != Decimal("100.00"):
+        errors.append("partner allocation percentages must total 100")
+        return None
+
+    partner_status = _optional_boolean(payload, "full_year_fiscal_partner", errors)
+    if partner_status is not True:
+        _add_unique(manual_review_flags, "partner_status_unconfirmed")
+        warnings.append(
+            "Box 2 allocation requires confirmed full-year fiscal-partner status."
+        )
     return {
-        "tax_year": tax_year,
-        "regular_benefits": payload.get("regular_benefits", 0),
-        "regular_costs": payload.get("regular_costs", 0),
-        "disposal_price": payload.get("disposal_price", 0),
-        "gross_disposal_price": payload.get("gross_disposal_price", 0),
-        "acquisition_price": payload.get("acquisition_price", 0),
-        "disposal_costs": payload.get("disposal_costs", 0),
-        "disposal_benefit": payload.get("disposal_benefit"),
-        "fictitious_regular_benefit_bv_loan": payload.get(
-            "fictitious_regular_benefit_bv_loan",
-            0,
-        ),
-        "loss_setoff": payload.get("loss_setoff", 0),
-        "dividend_withholding_tax": payload.get("dividend_withholding_tax", 0),
+        "taxpayer_pct": float(taxpayer_pct),
+        "partner_pct": float(partner_pct),
     }
 
 
-def calculate_from_payload(payload: dict[str, Any]) -> dict:
-    """Calculate Box 2 tax and optional partner allocation from a JSON payload."""
-    result = calculate_box2_tax(**_payload_to_calculation_kwargs(payload))
+def validate_and_normalize_payload(
+    payload: dict[str, Any],
+) -> tuple[list[str], list[str], dict[str, Any]]:
+    """Validate the complete public Box 2 payload before any calculation."""
+    errors: list[str] = []
+    warnings: list[str] = []
+    manual_review_flags: list[str] = []
+    if not isinstance(payload, dict):
+        return ["input JSON must contain an object"], [], {
+            "manual_review_required": False,
+            "manual_review_flags": [],
+        }
 
-    unknown = unknown_payload_keys(payload)
+    unknown = sorted(set(payload) - _KNOWN_PAYLOAD_KEYS)
     if unknown:
-        result.setdefault("warnings", []).append(
-            "Ignored unknown payload key(s) (typo?): " + ", ".join(unknown)
+        errors.append("Unknown payload key(s): " + ", ".join(unknown))
+
+    workflow = payload.get("workflow")
+    if not isinstance(workflow, str) or workflow not in SUPPORTED_WORKFLOWS:
+        errors.append("workflow is required: annual_2025 or provisional_2026")
+        workflow = None
+
+    tax_year = payload.get("tax_year")
+    if type(tax_year) is not int or tax_year not in BOX2_RATES:
+        errors.append("tax_year is required and must be 2025 or 2026")
+        tax_year = None
+    if workflow is not None and tax_year is not None:
+        expected_year = SUPPORTED_WORKFLOWS[workflow]
+        if tax_year != expected_year:
+            errors.append(f"{workflow} requires tax_year {expected_year}")
+
+    resident_full_year = _require_boolean(payload, "resident_full_year", errors)
+    standard_ab_case = _require_boolean(payload, "standard_ab_case", errors)
+    if resident_full_year is False:
+        errors.append("resident_full_year must be true for the standard Box 2 helper")
+    if standard_ab_case is False:
+        errors.append("standard_ab_case must be true for the standard Box 2 helper")
+
+    substantial_interest_pct = _normalize_amount(
+        payload, "substantial_interest_pct", errors, required=True
+    )
+    if substantial_interest_pct is not None:
+        if substantial_interest_pct > Decimal("100"):
+            errors.append("substantial_interest_pct must be between 0 and 100")
+        elif substantial_interest_pct < Decimal("5"):
+            errors.append(
+                "substantial_interest_pct below 5 requires manual Box 2 review"
+            )
+
+    amounts: dict[str, Decimal] = {}
+    for field_name in NON_NEGATIVE_FIELDS:
+        value = _normalize_amount(
+            payload,
+            field_name,
+            errors,
+            required=field_name in {"regular_benefits", "loss_setoff"},
+        )
+        if value is not None:
+            amounts[field_name] = value
+    disposal_benefit = _normalize_amount(
+        payload,
+        "disposal_benefit",
+        errors,
+        required=True,
+        allow_negative=True,
+    )
+    if disposal_benefit is not None:
+        amounts["disposal_benefit"] = disposal_benefit
+    bv_loan_balance = _normalize_amount(payload, "bv_loan_balance", errors)
+    if bv_loan_balance is not None:
+        amounts["bv_loan_balance"] = bv_loan_balance
+
+    def present(field_name: str) -> bool:
+        return amounts.get(field_name, ZERO) != ZERO
+
+    if present("disposal_price") and present("gross_disposal_price"):
+        errors.append("provide either disposal_price or gross_disposal_price, not both")
+    disposal_components_present = any(
+        present(name)
+        for name in (
+            "disposal_price",
+            "gross_disposal_price",
+            "acquisition_price",
+            "disposal_costs",
+        )
+    )
+    if disposal_components_present and not (
+        present("disposal_price") or present("gross_disposal_price")
+    ):
+        errors.append(
+            "disposal_price or gross_disposal_price is required when acquisition "
+            "price or disposal costs are provided"
+        )
+    if disposal_components_present and not present("acquisition_price"):
+        errors.append("acquisition_price is required when disposal components are provided")
+    if present("disposal_price") and present("disposal_costs"):
+        warnings.append(
+            "disposal_price is treated as the official net transfer price; "
+            "disposal_costs are retained for evidence and are not deducted again."
         )
 
-    allocation = payload.get("partner_allocation") or payload.get("allocation")
-    if allocation:
-        if payload.get("full_year_fiscal_partner") is True:
-            result["partner_allocation"] = allocate_partner_box2(
-                tax_year=result["tax_year"],
-                total_taxable_income=result["taxable_income"],
-                taxpayer_pct=allocation.get("taxpayer_pct"),
-                partner_pct=allocation.get("partner_pct"),
-                dividend_withholding_tax=result["dividend_withholding_credit"],
-            )
-        else:
-            # Full-year fiscal-partner status is not confirmed: do NOT emit a
-            # computed split. Allocation requires proven eligibility.
-            result["partner_allocation_skipped"] = (
-                "full_year_fiscal_partner not confirmed; allocation not computed"
-            )
-            _add_flag(result["manual_review_flags"], "partner_status_unconfirmed")
+    markers = payload.get("complex_markers", {})
+    if not isinstance(markers, dict):
+        errors.append("complex_markers must be an object")
+        markers = {}
+    for marker, description in COMPLEX_MARKERS.items():
+        nested = markers.get(marker)
+        direct = payload.get(marker)
+        for value in (nested, direct):
+            if value is not None and type(value) is not bool:
+                errors.append(f"{marker} must be a boolean")
+                break
+        if nested is True or direct is True:
+            _add_unique(manual_review_flags, marker)
+            warnings.append(f"Manual review required: {description}")
 
+    if amounts.get("fictitious_regular_benefit_bv_loan", ZERO) > ZERO:
+        _add_unique(manual_review_flags, "excessive_borrowing_bv_loan")
+        warnings.append(
+            "Fictitious regular benefit from own-BV borrowing requires manual review."
+        )
+    if amounts.get("bv_loan_balance", ZERO) > Decimal("500000"):
+        _add_unique(manual_review_flags, "excessive_borrowing_check")
+        warnings.append("Own-BV borrowing above EUR 500,000 requires manual review.")
+
+    loss_setoff = amounts.get("loss_setoff", ZERO)
+    loss_reviewed = _optional_boolean(payload, "loss_setoff_reviewed", errors)
+    loss_source = payload.get("loss_setoff_source")
+    if loss_source is not None and (
+        not isinstance(loss_source, str) or not loss_source.strip()
+    ):
+        errors.append("loss_setoff_source must be a non-empty string")
+    if loss_setoff > ZERO:
+        if loss_reviewed is not True or not isinstance(loss_source, str) or not loss_source.strip():
+            _add_unique(manual_review_flags, "loss_setoff_manual_review")
+            warnings.append(
+                "Box 2 loss setoff needs loss_setoff_reviewed: true and a "
+                "loss_setoff_source before calculation."
+            )
+
+    allocation = _validate_allocation(
+        payload, errors, warnings, manual_review_flags
+    )
+    manual_review_required = bool(manual_review_flags)
+    normalized = {
+        "workflow": workflow,
+        "tax_year": tax_year,
+        "substantial_interest_pct": (
+            float(substantial_interest_pct)
+            if substantial_interest_pct is not None
+            else None
+        ),
+        "resident_full_year": resident_full_year,
+        "standard_ab_case": standard_ab_case,
+        "amounts": {key: float(_money(value)) for key, value in amounts.items()},
+        "partner_allocation": allocation,
+        "full_year_fiscal_partner": payload.get("full_year_fiscal_partner"),
+        "loss_setoff_reviewed": loss_reviewed,
+        "loss_setoff_source": loss_source,
+        "manual_review_flags": manual_review_flags,
+        "manual_review_required": manual_review_required,
+    }
+    return errors, warnings, normalized
+
+
+def _calculate_validated(normalized: dict[str, Any]) -> dict:
+    amounts = normalized["amounts"]
+    result = _calculate_box2_tax(
+        tax_year=normalized["tax_year"],
+        regular_benefits=amounts.get("regular_benefits", 0),
+        regular_costs=amounts.get("regular_costs", 0),
+        disposal_price=amounts.get("disposal_price", 0),
+        gross_disposal_price=amounts.get("gross_disposal_price", 0),
+        acquisition_price=amounts.get("acquisition_price", 0),
+        disposal_costs=amounts.get("disposal_costs", 0),
+        disposal_benefit=amounts.get("disposal_benefit"),
+        fictitious_regular_benefit_bv_loan=amounts.get(
+            "fictitious_regular_benefit_bv_loan", 0
+        ),
+        loss_setoff=amounts.get("loss_setoff", 0),
+        dividend_withholding_tax=amounts.get("dividend_withholding_tax", 0),
+    )
+    if normalized.get("loss_setoff_reviewed") is True:
+        result["manual_review_flags"] = [
+            flag
+            for flag in result["manual_review_flags"]
+            if flag != "loss_setoff_manual_review"
+        ]
+    allocation = normalized.get("partner_allocation")
+    if allocation is not None:
+        result["partner_allocation"] = allocate_partner_box2(
+            tax_year=result["tax_year"],
+            total_taxable_income=result["taxable_income"],
+            taxpayer_pct=allocation["taxpayer_pct"],
+            partner_pct=allocation["partner_pct"],
+            dividend_withholding_tax=result["dividend_withholding_credit"],
+        )
     return result
+
+
+def calculate_from_payload(payload: dict[str, Any]) -> dict:
+    """Validate, normalize, and optionally calculate a Box 2 JSON payload."""
+    errors, warnings, normalized = validate_and_normalize_payload(payload)
+    if errors or normalized.get("manual_review_required"):
+        return {
+            "errors": errors,
+            "warnings": warnings,
+            "normalized": normalized,
+            "result": None,
+            "check_performed_by": "checked_by_script",
+        }
+    return {
+        "errors": [],
+        "warnings": warnings,
+        "normalized": normalized,
+        "result": _calculate_validated(normalized),
+        "check_performed_by": "checked_by_script",
+    }
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -517,7 +793,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         description="Calculate indicative Box 2 tax for annual 2025 or provisional 2026."
     )
     parser.add_argument("input_path", nargs="?", help="Optional JSON input path")
+    parser.add_argument("--workflow", choices=sorted(SUPPORTED_WORKFLOWS))
     parser.add_argument("--tax-year", type=int, choices=sorted(BOX2_RATES))
+    parser.add_argument("--substantial-interest-pct", type=float)
+    parser.add_argument("--resident-full-year", action="store_true", default=None)
+    parser.add_argument("--standard-ab-case", action="store_true", default=None)
     parser.add_argument("--regular-benefits", type=float, default=0)
     parser.add_argument("--regular-costs", type=float, default=0)
     parser.add_argument("--disposal-price", type=float, default=0)
@@ -527,6 +807,8 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--disposal-benefit", type=float)
     parser.add_argument("--fictitious-regular-benefit-bv-loan", type=float, default=0)
     parser.add_argument("--loss-setoff", type=float, default=0)
+    parser.add_argument("--loss-setoff-reviewed", action="store_true", default=None)
+    parser.add_argument("--loss-setoff-source")
     parser.add_argument("--dividend-withholding-tax", type=float, default=0)
     parser.add_argument("--taxpayer-pct", type=float)
     parser.add_argument("--partner-pct", type=float)
@@ -551,7 +833,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.tax_year is None:
                 raise ValueError("--tax-year is required when no input JSON is provided")
             payload = {
+                "workflow": args.workflow,
                 "tax_year": args.tax_year,
+                "substantial_interest_pct": args.substantial_interest_pct,
+                "resident_full_year": args.resident_full_year,
+                "standard_ab_case": args.standard_ab_case,
                 "regular_benefits": args.regular_benefits,
                 "regular_costs": args.regular_costs,
                 "disposal_price": args.disposal_price,
@@ -566,6 +852,10 @@ def main(argv: list[str] | None = None) -> int:
                 "dividend_withholding_tax": args.dividend_withholding_tax,
                 "full_year_fiscal_partner": args.full_year_fiscal_partner,
             }
+            if args.loss_setoff_reviewed is not None:
+                payload["loss_setoff_reviewed"] = args.loss_setoff_reviewed
+            if args.loss_setoff_source is not None:
+                payload["loss_setoff_source"] = args.loss_setoff_source
             if args.taxpayer_pct is not None or args.partner_pct is not None:
                 # Derive the missing side so `--taxpayer-pct 60` alone works
                 # instead of failing "must total 100" via a None->0 coercion.
@@ -580,8 +870,9 @@ def main(argv: list[str] | None = None) -> int:
                     "partner_pct": partner_pct,
                 }
 
-        print(json.dumps(calculate_from_payload(payload), indent=2, sort_keys=True))
-        return 0
+        output = calculate_from_payload(payload)
+        print(json.dumps(output, indent=2, sort_keys=True))
+        return 1 if output["errors"] or output["result"] is None else 0
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1

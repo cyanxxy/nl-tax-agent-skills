@@ -36,13 +36,38 @@ relative to this skill directory.
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 
-Run these bundled scripts when structured inputs are available. Each accepts either CLI flags or a JSON payload file (`calculate_box2_tax.py input.json`) with the keys documented in its docstring — `tax_year` (or `workflow`: `annual_2025` / `provisional_2026`), `regular_benefits`, `regular_costs`, `disposal_price` (or `gross_disposal_price` + `disposal_costs`), `acquisition_price`, `fictitious_regular_benefit_bv_loan`, `loss_setoff`, `dividend_withholding_tax`, and optional `partner_allocation` with `full_year_fiscal_partner: true`. Build the payload from values already collected in the box 2 notes; never invent inputs:
+Python is optional. Do not ask the taxpayer to install Python and do not make
+completion depend on it. The agent owns classification, questions, and the
+workpack. If an already-resolved bundled script is available, the agent may run
+`scripts/calculate_box2_tax.py input.json` as a mechanical cross-check after it
+has built an explicit, source-backed payload. The script validates before it
+calculates and records `check_performed_by: checked_by_script`.
 
-- `scripts/validate_box2_inputs.py`
-- `scripts/calculate_box2_tax.py`
-- `scripts/summarize_box2_inputs.py`
+Whether or not the script is run, apply this same checklist and record
+`check_performed_by: checked_by_agent` for the manual path:
 
-Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, the three scripts above), and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+1. Require explicit `workflow` and matching integer `tax_year`; never infer one
+   from the other.
+2. Require `substantial_interest_pct`, actual booleans for
+   `resident_full_year` and `standard_ab_case`, and explicit source-backed
+   values for `regular_benefits`, `disposal_benefit`, and `loss_setoff`.
+3. Reject unknown payload fields instead of treating a misspelled amount as
+   zero. Other amount fields may be included only when collected from evidence.
+4. Stop before calculation for a non-standard residence/AB case or any complex
+   marker listed under **Never**.
+5. When `loss_setoff` is greater than zero, calculate only after a reviewer has
+   confirmed it and the payload records `loss_setoff_reviewed: true` plus a
+   non-empty `loss_setoff_source`; otherwise return it as a review question.
+6. For a partner allocation, require an actual
+   `full_year_fiscal_partner: true` boolean and percentages totaling 100%.
+7. Apply the year-pinned lower bracket before the upper bracket, then apply
+   Dutch dividend withholding tax as a credit. Treat the result as indicative.
+
+Only run Python under the already-resolved plugin
+`skills/nl-tax-box2/scripts/calculate_box2_tax.py` path and only if Bash can
+access it. If Bash cannot see that path, continue with the manual checklist;
+never copy the script into `workspace/`. Never execute a `.py` located under
+`workspace/`, `uploads/`, or `evidence/`.
 
 ## Do
 
@@ -51,7 +76,10 @@ Only run Python under an already-resolved plugin `skills/.../scripts/` path (for
 - Distinguish regular benefits, such as dividends, from disposal benefits, such as share-sale gains.
 - Calculate disposal benefit as the official net disposal or transfer price minus acquisition price. If only gross proceeds are available, subtract disposal costs once to derive the net transfer price first.
 - Include Dutch dividend withholding tax as a same-year credit in the indicative calculation.
-- For full-year fiscal partners, support allocation splits that total 100%. The `calculate_box2_tax.py` calculator only computes a partner allocation when the payload sets `full_year_fiscal_partner: true`; otherwise it skips the allocation, records `partner_allocation_skipped`, and raises a `partner_status_unconfirmed` manual-review flag. Do not present a partner split until full-year partnership is confirmed.
+- For full-year fiscal partners, support allocation splits that total 100%. The
+  calculator returns no result unless the payload sets the actual boolean
+  `full_year_fiscal_partner: true`. Do not present a partner split until
+  full-year partnership is confirmed.
 - Flag losses, loss setoff, and excessive borrowing from an own BV for manual review.
 - Label all `provisional_2026` amounts as estimates or baseline-derived.
 - Keep outputs suitable for preparation workpacks and review questions.
