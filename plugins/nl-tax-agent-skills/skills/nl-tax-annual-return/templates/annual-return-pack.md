@@ -510,9 +510,14 @@ as a finished deduction calculation.
 
 - Total qualifying expenses: EUR [amount] -- Src: C:sum
 - Drempelinkomen (combined): EUR [amount] -- Src: C:from_income
-- Zorgkosten **threshold: manual review** [required unless the complete reviewed
-  2025 threshold and multiplier table is registered and all inputs are present]
-- Deductible zorgkosten result: [manual review required / EUR amount with source-backed calculation] -- Src: C:threshold_calc
+- Increase-eligible subtotal: EUR [amount]; percentage [40% / 113% / none] and
+  increase EUR [amount] -- Src: C:classified_multiplier
+- Non-increased subtotal (genees- en heelkundige hulp and reiskosten
+  ziekenbezoek): EUR [amount] -- Src: C:classified_sum
+- Mobility forfait: [not applicable / EUR 925 minus EUR [available or received
+  reimbursements] = EUR [amount]], supported by [evidence] -- Src: [F/U/C]
+- 2025 drempel: EUR [amount] using [single / full-year fiscal-partner] table -- Src: C:threshold_calc
+- **Deductible zorgkosten result:** [EUR amount / review required because: missing input] -- Src: C:threshold_calc
 
 ### Giften (charitable donations)
 
@@ -548,10 +553,10 @@ Total periodieke giften before the annual maximum/transition review: EUR [amount
 
 - Premiums paid in 2025: EUR [amount] -- Src: [F/U/A/?]
 - Provider: [name] -- Src: [F/U/A/?]
-- Lijfrente limit manual review: [required unless exact reviewed 2025 jaarruimte/reserveringsruimte rules and all required inputs are present]
-- Jaarruimte available: [manual review required / EUR amount with source-backed calculation] -- Src: [F/U/A/?/C]
-- Reserveringsruimte available: [manual review required / EUR amount with source-backed calculation] -- Src: [F/U/A/?/C]
-- Deductible lijfrentepremie result: [manual review required / EUR amount with source-backed calculation] -- Src: C:min(premie, available room)
+- Official Hulpmiddel Lijfrentepremie result retained: [yes / missing] -- Src: [F/U/?]
+- Jaarruimte 2025 (based on 2024 inputs): [EUR amount / missing inputs] -- Src: [F/U/C]
+- Reserveringsruimte 2025 (2015-2024 history; maximum EUR 42,108): [EUR amount / missing inputs] -- Src: [F/U/C]
+- Deductible lijfrentepremie result: [EUR amount / review required because: missing input] -- Src: C:min(premie, available room)
 
 ### Other deductions
 
@@ -564,6 +569,10 @@ Total periodieke giften before the annual maximum/transition review: EUR [amount
 - AOV: [policy type / insurer statement / manual review]. A qualifying private
   AOV premium belongs to the **private income-provision category**, **not ordinary business costs**. Do not subtract it from business profit; ambiguous
   policy types and exact deductibility remain manual review.
+- Studiekosten: [not deductible: ordinary post-2021 expense / qualifying
+  prestatiebeurs exception]. If qualifying, record DUO final non-conversion
+  notice, pre-1 July 2015 study periods, level, capped grant amount, separate EUR
+  250 threshold per partner, and any 100%-total partner allocation -- Src: [F/U/C]
 
 ### Deductions total
 

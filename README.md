@@ -258,6 +258,15 @@ Upload the ZIP through the same **Browse plugins** modal. Versioning and release
 > [!WARNING]
 > **Box 3 rule split.** Annual 2025 collects both methods — **fictitious (forfaitair)** and **werkelijk rendement** — and presents a comparison for the user to choose from. Provisional 2026 uses **fictitious only**; werkelijk rendement is never requested in any provisional flow.
 
+Annual 2025 also includes reviewed deduction guidance for the income-dependent
+specific-healthcare-cost threshold and increase, the EUR 925 limited-mobility
+transport forfait, the narrow legacy DUO prestatiebeurs study-cost exception,
+and jaarruimte/reserveringsruimte. For lijfrente limits, the agent gathers and
+explains the inputs and preserves the result from the official Belastingdienst
+Hulpmiddel Lijfrentepremie; the plugin does not substitute a universal local
+calculator for that official tool. Missing eligibility facts or evidence remain
+visible review items in the workpack.
+
 Active declarations live in [`supported-workflows.yaml`](plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml). A workflow is supported only when its workflow/year pair has reviewed source-register entries, local knowledge snapshots, and passing validators.
 
 The plugin must not reuse rates, thresholds, field maps, or box 3 logic across tax years — not 2025 annual values for the 2026 annual return, and not 2025/2026 values for 2027.

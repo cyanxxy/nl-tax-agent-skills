@@ -5,6 +5,42 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.8] — 2026-07-11
+
+This release expands the 2025 annual-return guidance for deductions that were
+previously left as general review items. The plugin remains agent-led: it asks
+for the facts and evidence relevant to the taxpayer, explains its reasoning,
+and leaves the final entries for review in Mijn Belastingdienst.
+
+### What changed for users
+
+- **Specific healthcare costs** — the workpack can now apply the reviewed 2025
+  income-dependent threshold and the 40% or 113% increase where applicable. It
+  keeps costs that do not receive the increase separate instead of applying one
+  percentage to every healthcare expense.
+- **Limited-mobility transport costs** — the agent now screens for the EUR 925
+  forfait when a person cannot independently walk more than 100 metres. It asks
+  for supporting evidence and subtracts reimbursements that were received or
+  available.
+- **Jaarruimte and reserveringsruimte** — the agent gathers the relevant income,
+  pension, prior-year room, and payment evidence, then uses and preserves the
+  result from the official Belastingdienst Hulpmiddel Lijfrentepremie. For 2025,
+  it recognizes unused room from 2015 through 2024 and the EUR 42,108 maximum
+  reserveringsruimte.
+- **Study costs** — ordinary study and training expenses remain non-deductible.
+  The agent now recognizes the narrow exception for a qualifying pre-1 July 2015
+  DUO prestatiebeurs that was definitively not converted into a gift after the
+  diploma period expired.
+- **Clearer workpacks** — missing eligibility facts are named explicitly. The
+  plugin does not invent a result, infer mobility eligibility from a diagnosis,
+  or replace the official pension-room tool with a universal local calculator.
+
+### Scope reminder
+
+These additions apply to the supported **2025 annual return**. They do not add
+2026 annual-return rules, autonomous portal entry, filing, or final tax advice.
+The taxpayer still reviews the workpack and enters the approved figures manually.
+
 ## [0.1.7] — 2026-07-11
 
 Cowork-first consistency and non-security correctness release. The plugin now ships one

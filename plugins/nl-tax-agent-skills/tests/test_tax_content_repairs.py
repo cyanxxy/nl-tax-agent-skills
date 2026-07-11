@@ -154,17 +154,121 @@ class TaxContentRepairTests(unittest.TestCase):
                     required_any=required_any,
                 )
 
-    def test_healthcare_exclusions_and_manual_threshold(self):
-        self.assert_claim(
-            "bd_zorgkosten_overzicht_2025",
-            2025,
-            (
-                "_shared/knowledge/years/2025/annual/deductions.md",
-                "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+    def test_healthcare_threshold_and_increase_are_reviewed_agent_guidance(self):
+        relatives = (
+            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-annual-return/templates/annual-return-pack.md",
+        )
+        self.assert_official_source("bd_zorgkosten_overzicht_2025", 2025, relatives)
+        self.assert_official_source("bd_fisin_zorgkosten_2025", 2025, relatives)
+        self.assert_text_contract(
+            relatives[0],
+            required=(
+                "wheelchair: not deductible",
+                "eur 9,534",
+                "eur 19,068",
+                "1.65%",
+                "5.75%",
+                "eur 40,502",
+                "add 40%",
+                "add 113%",
+                "genees- en heelkundige hulp",
+                "reiskosten ziekenbezoek",
             ),
-            required=("wheelchair: not deductible", "threshold: manual review"),
-            forbidden=("wheelchairs and mobility aids are deductible",),
+            forbidden=(
+                "does not yet contain a reviewed 2025 table",
+                "wheelchairs and mobility aids are deductible",
+            ),
+        )
+        self.assert_scoped_contract(
+            relatives[1],
+            anchors=("specifieke zorgkosten",),
+            required_any=(
+                ("full-year partner status",),
+                ("aow age on 1 january 2025",),
+                ("category-level expense breakdown",),
+            ),
+        )
+        self.assert_text_contract(
+            relatives[2],
+            required=(
+                "increase-eligible subtotal",
+                "non-increased subtotal",
+                "2025 drempel",
+                "missing input",
+            ),
+        )
+
+    def test_mobility_forfait_is_screened_not_inferred(self):
+        relatives = (
+            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-annual-return/templates/annual-return-pack.md",
+        )
+        self.assert_official_source(
+            "bd_vervoerskosten_ziekte_2025", 2025, relatives
+        )
+        for relative in relatives:
+            self.assert_text_contract(
+                relative,
+                required=("eur 925", "100", "metres", "reimbursements"),
+            )
+        self.assert_text_contract(
+            relatives[0],
+            required=("must not infer eligibility from a diagnosis alone",),
+        )
+
+    def test_lijfrente_uses_official_tool_and_preserves_agent_reasoning(self):
+        relatives = (
+            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-annual-return/templates/annual-return-pack.md",
+        )
+        self.assert_official_source("bd_fisin_lijfrente_2025", 2025, relatives)
+        for relative in relatives:
+            self.assert_text_contract(
+                relative,
+                required=(
+                    "hulpmiddel lijfrentepremie",
+                    "eur 42,108",
+                ),
+                required_any=(("2015-2024", "2015 through 2024"),),
+            )
+        self.assert_text_contract(
+            relatives[0],
+            required=("2025 depends on the taxpayer's income and pension accrual in 2024",),
+            forbidden=(
+                "does not yet contain a reviewed 2025 source for the exact jaarruimte",
+                "does not yet contain reviewed 2025 reserveringsruimte limits",
+            ),
+        )
+
+    def test_study_costs_default_to_no_deduction_with_narrow_exception(self):
+        relatives = (
+            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-annual-return/reference/annual-flow.md",
+            "nl-tax-annual-return/templates/annual-return-pack.md",
+        )
+        self.assert_official_source("bd_fisin_studiekosten_2025", 2025, relatives)
+        for relative in relatives:
+            self.assert_text_contract(
+                relative,
+                required=("pre-1 july 2015", "prestatiebeurs", "duo"),
+            )
+        self.assert_text_contract(
+            relatives[0],
+            required=(
+                "have not been deductible since 2022",
+                "eur 1,693",
+                "eur 2,443",
+                "eur 141.09",
+                "eur 203.59",
+                "separate eur 250 threshold",
+            ),
+            forbidden=(
+                "do not claim or calculate education-expense deductions from this source pack",
+            ),
         )
 
     def test_own_home_balance_excludes_tariefsaanpassing(self):

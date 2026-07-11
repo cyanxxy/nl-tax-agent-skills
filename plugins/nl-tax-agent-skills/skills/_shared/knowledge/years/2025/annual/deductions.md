@@ -1,10 +1,10 @@
 # Rule note: Common deductions for annual return 2025
 
-source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_deduction_rate_cap_2025
+source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_fisin_zorgkosten_2025, bd_vervoerskosten_ziekte_2025, bd_fisin_lijfrente_2025, bd_fisin_studiekosten_2025, bd_deduction_rate_cap_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -47,15 +47,58 @@ as a completed deduction calculation.
 
 #### Threshold (drempel)
 
-- The deductible amount is the total qualifying expenses minus the drempel.
-- The drempel is income-dependent and must be calculated from the official 2025 specific-healthcare-costs table.
-- This source pack does not yet contain a reviewed 2025 table for the exact zorgkosten drempel.
-- Until that source is added, do not calculate the zorgkosten deduction in the workpack. List the potentially qualifying expenses, record the evidence, and flag the exact drempel, any multiplier, and deductible amount as **threshold: manual review** in Mijn Belastingdienst. The threshold and multiplier remain manual review until the complete reviewed table and all inputs are present.
-- Drempelinkomen = combined income of taxpayer and fiscal partner before persoonsgebonden aftrek.
+- Drempelinkomen is the total income in boxes 1, 2, and 3 before
+  persoonsgebonden aftrek. Use the combined amount when the taxpayer had a
+  fiscal partner for all of 2025 or elects full-year partner treatment.
+- Without a full-year fiscal partner, the 2025 drempel is:
+
+  | Drempelinkomen | Drempel |
+  |---|---:|
+  | EUR 0 through EUR 9,534 | EUR 164 |
+  | above EUR 9,534 through EUR 50,635 | 1.65% of drempelinkomen |
+  | above EUR 50,635 | EUR 835 + 5.75% of the amount above EUR 50,635 |
+
+- With a full-year fiscal partner, use the combined drempelinkomen and this
+  table:
+
+  | Combined drempelinkomen | Drempel |
+  |---|---:|
+  | EUR 0 through EUR 19,068 | EUR 328 |
+  | above EUR 19,068 through EUR 50,635 | 1.65% of combined drempelinkomen |
+  | above EUR 50,635 | EUR 835 + 5.75% of the amount above EUR 50,635 |
+
+- Apply the table only after the agent has established partner status and the
+  complete drempelinkomen. If either is unresolved, show the missing input and
+  leave the result for review in Mijn Belastingdienst.
 
 #### Multiplier for specific costs
 
-Certain specific zorgkosten are multiplied by a factor before applying the threshold. This effectively increases the deductible amount for those items.
+Before applying the drempel, increase the eligible subset of specific
+healthcare costs when the taxpayer's (and any full-year partner's) combined
+drempelinkomen is no more than EUR 40,502:
+
+- add 40% when the taxpayer had not reached AOW age on 1 January 2025;
+- add 113% when the taxpayer had reached AOW age on 1 January 2025;
+- if one fiscal partner had reached AOW age and the other had not, use 113% for
+  both partners' eligible costs.
+
+Do not increase genees- en heelkundige hulp or reiskosten ziekenbezoek. The
+agent must classify costs first, show the increased and non-increased subtotals
+separately, and then subtract the drempel. Do not apply the percentage to the
+entire healthcare-cost inventory.
+
+#### Extra vervoerskosten: mobility forfait
+
+- In 2025, a taxpayer who can substantiate that they cannot walk more than 100
+  metres independently may include a fixed EUR 925 for extra transport caused
+  by illness or disability.
+- Possible evidence includes a disabled parking card, a WMO/PGB mobility
+  decision or application, or a physician's statement.
+- Subtract reimbursements received or available for these extra transport
+  costs from EUR 925. Keep this distinct from medical-trip costs (EUR 0.23 per
+  car kilometre, or actual taxi/public-transport costs).
+- The agent asks about walking ability, evidence, and available reimbursements;
+  it must not infer eligibility from a diagnosis alone.
 
 ### Giften (charitable donations)
 
@@ -79,8 +122,20 @@ Donations to ANBI-registered institutions (Algemeen Nut Beogende Instelling) and
 
 ### Studiekosten / scholingsuitgaven (education expenses)
 
-- Do not claim or calculate education-expense deductions from this source pack unless a reviewed 2025 source-register entry for the specific education-expense rule has been added.
-- If the user reports education expenses, list the expense and evidence as a manual-review item instead of treating it as deductible.
+- Ordinary study and training expenses have not been deductible since 2022.
+  Do not treat tuition, books, courses, or retraining paid in 2025 as a general
+  deduction.
+- Narrow exception: ask whether the taxpayer had a pre-1 July 2015 DUO
+  prestatiebeurs whose diploma period expired in 2025 and which DUO definitively
+  did not convert into a gift. If not, there is no 2025 studiekosten deduction.
+- For the qualifying exception, use the lower of the prestatiebeurs amount and
+  the fixed cap: EUR 1,693 per MBO study year (EUR 141.09 per month for part of
+  a year), or EUR 2,443 per HBO/WO study year (EUR 203.59 per month).
+- Apply a separate EUR 250 threshold to each partner's calculation. Afterwards,
+  fiscal partners may combine the deductible results and allocate the total,
+  provided their allocation totals 100%.
+- Evidence: DUO notice showing the expired diploma period, the final conversion
+  outcome, covered study periods, education level, and prestatiebeurs amount.
 
 ### Restant persoonsgebonden aftrek (carryforward from prior years)
 
@@ -94,15 +149,30 @@ Premiums paid for lijfrente (annuity insurance or bank savings for retirement) a
 
 ### Jaarruimte (annual space)
 
-- The annual deductible amount depends on the pension gap: the difference between the taxpayer's income and the pension already accrued through employer pension schemes.
-- This source pack does not yet contain a reviewed 2025 source for the exact jaarruimte formula parameters, AOW franchise, or ceiling.
-- Until that source is added, do not calculate jaarruimte in the workpack. List paid lijfrentepremies, factor A evidence, and the missing official calculation as manual-review items.
+- Jaarruimte 2025 depends on the taxpayer's income and pension accrual in 2024.
+  A pensioentekort is required, and the taxpayer generally must not yet have
+  reached the age that is five years above AOW age.
+- Gather the 2024 income data, every 2024 UPO/factor-A or other pension-accrual
+  value requested by the official tool, and any relevant net-pension or
+  entrepreneur information. Pension arrangements can require different
+  adjustments, so do not force every taxpayer through one handwritten formula.
+- Run those facts through the Belastingdienst **Hulpmiddel Lijfrentepremie vanaf
+  2016** and preserve the tool's 2025 result or screenshot as evidence. The
+  agent explains the inputs and result; it does not replace the official tool
+  with an invented calculator.
 
 ### Reserveringsruimte (carryback space)
 
-- Unused jaarruimte from prior years may be usable under the official rules.
-- This source pack does not yet contain reviewed 2025 reserveringsruimte limits.
-- Until that source is added, do not calculate reserveringsruimte. Flag it for manual review in the official filing environment.
+- Unused jaarruimte from 2015 through 2024 may contribute to 2025
+  reserveringsruimte. Ask for prior jaarruimte results and actual deductible
+  lijfrente payments; do not assume that every historical year was unused.
+- Use the Belastingdienst Hulpmiddel Lijfrentepremie to calculate the available
+  amount. The total accumulated reserveringsruimte usable in 2025 is capped at
+  EUR 42,108.
+- Only premiums or deposits actually paid in 2025 can be deducted for 2025.
+  Deductible lijfrentepremie is limited by the relevant available room; show
+  jaarruimte, reserveringsruimte, payment evidence, and the final claimed amount
+  separately for taxpayer review.
 
 ### Evidence required
 
@@ -154,7 +224,8 @@ For 2025, taxpayers with income in the highest box 1 bracket (verzamelinkomen ab
 4. Not verifying ANBI status of the charity before claiming giften.
 5. Using the wrong drempelinkomen (should be combined income of both partners).
 6. Forgetting restant persoonsgebonden aftrek from prior years.
-7. Claiming studiekosten when the STAP-budget was already used for the same expense.
+7. Claiming ordinary 2025 studiekosten despite the post-2021 abolition, or using
+   the prestatiebeurs exception without a final DUO non-conversion notice.
 
 ## Notes
 
@@ -162,4 +233,6 @@ For 2025, taxpayers with income in the highest box 1 bracket (verzamelinkomen ab
 - For the 2025 return, collect all supporting documents as listed in evidence-checklist.md.
 - The Belastingdienst may request proof (bewijsstukken) of deductions up to 5 years after filing. The taxpayer should retain all receipts and documentation.
 - Deductions reduce taxable income, not tax payable directly. The actual tax benefit depends on the marginal rate at which the deduction is applied.
-- Under specifieke zorgkosten, 2025 added a fixed-amount vervoerskosten deduction (forfait) for taxpayers who can prove they cannot independently walk a short distance (about 100 metres). Surface it for manual review when mobility-related healthcare costs are in scope; the exact forfait amount and the zorgkosten drempel must be confirmed against the official 2025 specific-healthcare-costs source before a figure is entered.
+- The agent applies these tables only after gathering the required facts and
+  shows its classification and arithmetic. The tables support agent reasoning;
+  they are not a substitute for taxpayer review in Mijn Belastingdienst.

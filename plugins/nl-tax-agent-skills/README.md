@@ -100,6 +100,12 @@ maps, and background helpers write no artifacts.
 
 The annual workflow is phase-based (intake gate, evidence review, Box 1/own home,
 optional winst, Box 2, Box 3, partner allocations, field mapping, and final review).
+Its reviewed 2025 deduction guidance includes the specific-healthcare-cost
+threshold and increase, the EUR 925 limited-mobility transport forfait, the
+narrow legacy DUO prestatiebeurs study-cost exception, and
+jaarruimte/reserveringsruimte. The agent uses the official Belastingdienst
+Hulpmiddel Lijfrentepremie for lijfrente limits and retains its result; no local
+universal pension-room calculator replaces the official tool.
 The provisional workflow has four separate subflows: request, change, review, and
 stopzetten. `nl-tax-winst` supports straightforward annual-2025 preparation and
 the single bounded provisional field `onderneming.geschatte_winst`; it is not a

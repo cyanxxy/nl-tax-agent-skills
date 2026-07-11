@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Release-package contracts for the Cowork-first 0.1.7 release."""
+"""Release-package contracts for the current Cowork-first release."""
 
 import json
 import pathlib
@@ -59,8 +59,8 @@ class Release017PackagingTests(unittest.TestCase):
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.1.7")
-        self.assertEqual(codex["version"], "0.1.7")
+        self.assertEqual(claude["version"], "0.1.8")
+        self.assertEqual(codex["version"], "0.1.8")
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -96,11 +96,11 @@ class Release017PackagingTests(unittest.TestCase):
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.1.7\')" = ""',
+            'test "$(git tag --list \'nl-tax-agent-skills--v0.1.8\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.7'", text)
+        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.8'", text)
 
     def test_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")

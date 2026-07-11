@@ -613,6 +613,65 @@ sources:
       - nl-tax-annual-return
       - nl-tax-partner-deductions
 
+  - id: bd_fisin_zorgkosten_2025
+    title: "Fiscale informatie 2025 -- aftrek specifieke zorgkosten"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_specifieke_zorgkosten"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check at start of filing season; thresholds and increase percentages change by tax year"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_vervoerskosten_ziekte_2025
+    title: "Welke vervoerskosten mag ik bij ziekte of invaliditeit aftrekken?"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/vervoerskosten-ziekte-invaliditeit-aftrekken"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check at start of filing season; kilometre rate and mobility forfait may change"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
+  - id: bd_fisin_lijfrente_2025
+    title: "Fiscale informatie 2025 -- uitgaven voor inkomensvoorzieningen"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/uitgaven_voor_inkomensvoorzieningen"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check at start of filing season; eligible years and maximum reserveringsruimte change annually"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+
+  - id: bd_fisin_studiekosten_2025
+    title: "Fiscale informatie 2025 -- aftrek studiekosten"
+    domain: belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_studiekosten"
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/annual/deductions.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check at start of filing season while the prestatiebeurs transition exception remains possible"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-partner-deductions
+
   - id: bd_bijtelling_auto_2025
     title: "Bijtelling privegebruik auto 2025"
     domain: belastingdienst.nl

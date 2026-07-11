@@ -14,11 +14,17 @@ Compile all deductible items from evidence and user-provided data.
 - Inventory potentially qualifying medical expenses. Reimbursed costs,
   premiums, and the statutory excess are excluded. **Wheelchair: not deductible**; scooters and home modifications are also not deductible
   healthcare costs for 2025.
-- Apply the zorgkosten drempel and any multiplier only if the complete reviewed
-  2025 table and all inputs are present; otherwise record **threshold: manual review** and do not calculate a deductible result.
-- Drempelinkomen = combined income of both partners before persoonsgebonden aftrek
+- Load the reviewed 2025 drempel and increase rules from `deductions.md`. Ask for
+  full-year partner status, drempelinkomen, AOW age on 1 January 2025, and a
+  category-level expense breakdown before calculating. If an input is missing,
+  name it and leave the result for review rather than guessing.
+- Drempelinkomen = boxes 1, 2, and 3 before persoonsgebonden aftrek; combine it
+  only for full-year fiscal partners or an elected full-year partnership
 - Only the amount above the drempel is deductible
 - Note the multiplier for certain specific zorgkosten categories
+- Screen for the EUR 925 mobility forfait by asking whether the person can walk
+  more than 100 metres independently, what evidence supports that fact, and
+  which reimbursements were received or available
 - Evidence: receipts, insurance reimbursement statements
 
 ### 5.3 Giften (charitable donations)
@@ -36,16 +42,21 @@ Compile all deductible items from evidence and user-provided data.
 ### 5.4 Lijfrentepremie (annuity premium)
 
 - Collect premiums paid for lijfrente products
-- Calculate jaarruimte and reserveringsruimte only if the exact reviewed 2025 source rules and required inputs are present; otherwise flag the limit and deductible amount for manual review
-- Required inputs normally include employment income, pension accrual (factor A), and unused jaarruimte of prior years
-- Evidence: annual statement from lijfrente provider, factor A statement from employer
+- For jaarruimte 2025, gather the requested 2024 income and pension-accrual/UPO
+  inputs and use the official Belastingdienst Hulpmiddel Lijfrentepremie
+- For reserveringsruimte, gather 2015-2024 unused-jaarruimte and actual-payment
+  history; apply the official tool result and the EUR 42,108 2025 cap
+- Evidence: provider annual statement, UPO/factor-A evidence, historical room
+  and payment records, and saved official-tool result
 
 ### 5.5 Other deductions
 
 - A qualifying private AOV premium belongs to the **private income-provision category**, **not ordinary business costs**. Inventory the policy and annual
   insurer statement; ambiguous policy types and exact deductibility are manual
   review. Do not reduce business profit by the AOV premium.
-- Studiekosten / scholingsuitgaven: collect only as a manual-review item unless a reviewed official source is added
+- Studiekosten: ordinary expenses are not deductible. Screen only for the narrow
+  pre-1 July 2015 prestatiebeurs exception, requiring a final DUO notice that
+  the grant was not converted into a gift after the diploma period expired
 - Restant persoonsgebonden aftrek from prior years; eligible whole-year fiscal partners may allocate this prior-year personal-deduction remainder, subject to traceable scenarios and taxpayer review
 - Any other qualifying deductions from the profile or evidence
 

@@ -97,6 +97,10 @@ active_workflows:
       - bd_ondernemer_voorbereiden_2025
       - bd_giften_aftrek_2025
       - bd_zorgkosten_overzicht_2025
+      - bd_fisin_zorgkosten_2025
+      - bd_vervoerskosten_ziekte_2025
+      - bd_fisin_lijfrente_2025
+      - bd_fisin_studiekosten_2025
       - bd_deduction_rate_cap_2025
       - bd_bijtelling_auto_2025
       - bd_stock_options_2025
