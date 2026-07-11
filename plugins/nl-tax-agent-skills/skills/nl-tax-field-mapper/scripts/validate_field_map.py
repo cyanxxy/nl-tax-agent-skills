@@ -62,20 +62,27 @@ WERKELIJK_KEYWORDS = {
     "actual_return", "actual-return", "actual return",
     "actueel rendement", "echt rendement",
 }
-# Winst uit onderneming (eenmanszaak / ZZP) is an annual-2025-only capability;
-# the 2026 voorlopige aanslag may take a plain estimate of expected business
-# profit but never applies entrepreneur DEDUCTIONS. So a provisional field map
-# must not carry the annual `onderneming.` field namespace or any entrepreneur
-# deduction term. The dotted "onderneming." targets the annual field prefix
-# specifically, so a plain estimate label like "geschatte winst uit onderneming"
-# (no trailing dot, no deduction term) is still allowed.
+# Provisional 2026 has one dedicated business field. Every other onderneming
+# field or entrepreneur-deduction term remains rejected.
+PROVISIONAL_EXPECTED_PROFIT_FIELD = "onderneming.geschatte_winst"
 ENTREPRENEUR_KEYWORDS = {
     "onderneming.", "zelfstandigenaftrek", "startersaftrek",
     "mkb-winstvrijstelling", "mkb_winstvrijstelling", "ondernemersaftrek",
     "investeringsaftrek", "kleinschaligheidsinvesteringsaftrek",
 }
+ENTREPRENEUR_DEDUCTION_KEYWORDS = ENTREPRENEUR_KEYWORDS - {"onderneming."}
 ENTREPRENEUR_TOKEN_PATTERNS = (
     re.compile(r"\bkia\b"),
+)
+BUSINESS_PROFIT_PATTERNS = (
+    re.compile(r"\bwinst[\s_.-]*uit[\s_.-]*onderneming\b"),
+    re.compile(r"\bondernemings[\s_.-]*winst\b"),
+    re.compile(r"\bbusiness[\s_.-]*(?:profit|income|earnings)\b"),
+    re.compile(r"\benterprise[\s_.-]*(?:profit|income|earnings)\b"),
+    re.compile(
+        r"\bself[\s_.-]*(?:employment|employed)[\s_.-]*"
+        r"(?:income|profit|earnings)\b"
+    ),
 )
 # Top-level keys the schema knows about. Anything else is warned on so a typo'd
 # key (e.g. "field" instead of "fields") doesn't silently drop data.
@@ -259,6 +266,23 @@ def contains_entrepreneur_keyword(scanned_texts):
     )
 
 
+def contains_entrepreneur_deduction_keyword(scanned_texts):
+    """Reject annual deduction concepts without rejecting the allowed field id."""
+    return any(
+        any(kw in text for kw in ENTREPRENEUR_DEDUCTION_KEYWORDS)
+        or any(pattern.search(text) for pattern in ENTREPRENEUR_TOKEN_PATTERNS)
+        for text in scanned_texts
+    )
+
+
+def contains_business_profit_indicator(scanned_texts):
+    return any(
+        pattern.search(text)
+        for text in scanned_texts
+        for pattern in BUSINESS_PROFIT_PATTERNS
+    )
+
+
 def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     fid = field.get("field_id", f"field[{index}]")
     label_lower = (field.get("label") or "").lower()
@@ -266,6 +290,14 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     validate_portal_automation_fields(fid, label_lower, errors)
 
     value = field.get("value")
+    if (
+        workflow == "annual_return"
+        and fid == "business.has_onderneming"
+        and not isinstance(value, bool)
+    ):
+        errors.append(
+            f"business.has_onderneming must be a real boolean ({value!r})"
+        )
     if (
         isinstance(value, float)
         and not isinstance(value, bool)
@@ -296,7 +328,42 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
                     f"CRITICAL: werkelijk rendement field in provisional map: {fid}"
                 )
                 break
-        if contains_entrepreneur_keyword(scanned_texts):
+        if fid == PROVISIONAL_EXPECTED_PROFIT_FIELD:
+            if contains_entrepreneur_deduction_keyword(scanned_texts):
+                errors.append(
+                    "CRITICAL: entrepreneur deduction content in provisional "
+                    f"expected-profit field: {fid}"
+                )
+            if not isinstance(source, dict) or source.get("type") not in {
+                "evidence", "user_chat", "baseline"
+            }:
+                errors.append(
+                    f"Expected-profit field requires concrete provenance ({fid})"
+                )
+            elif source.get("type") == "user_chat" and (
+                not source.get("quote") or not source.get("stated_at")
+            ):
+                errors.append(
+                    f"Expected-profit user_chat provenance requires quote and stated_at ({fid})"
+                )
+            elif source.get("type") == "baseline" and not source.get("baseline_ref"):
+                errors.append(
+                    f"Expected-profit baseline provenance requires baseline_ref ({fid})"
+                )
+            elif source.get("type") == "evidence" and not source.get("evidence_id"):
+                errors.append(
+                    f"Expected-profit evidence provenance requires evidence_id ({fid})"
+                )
+            if field.get("manual_review_required") is not True:
+                errors.append(
+                    f"Expected-profit field requires manual review ({fid})"
+                )
+        elif contains_business_profit_indicator(scanned_texts):
+            errors.append(
+                "Business profit requires the dedicated expected-profit field "
+                f"{PROVISIONAL_EXPECTED_PROFIT_FIELD}; do not substitute {fid}"
+            )
+        elif contains_entrepreneur_keyword(scanned_texts):
             errors.append(
                 f"CRITICAL: entrepreneur (winst uit onderneming) deduction field "
                 f"in provisional map: {fid} — winst deductions are annual 2025 only"
@@ -328,7 +395,26 @@ def validate_missing_fields(missing, workflow, errors, warnings):
                         f"missing_fields: {fid}"
                     )
                     break
-            if contains_entrepreneur_keyword(scanned_texts):
+            if (
+                str(m.get("field_id") or "") == PROVISIONAL_EXPECTED_PROFIT_FIELD
+                and contains_entrepreneur_deduction_keyword(scanned_texts)
+            ):
+                errors.append(
+                    "CRITICAL: entrepreneur deduction content in provisional "
+                    f"expected-profit missing field: {fid}"
+                )
+            elif (
+                str(m.get("field_id") or "") != PROVISIONAL_EXPECTED_PROFIT_FIELD
+                and contains_business_profit_indicator(scanned_texts)
+            ):
+                errors.append(
+                    "Business profit requires the dedicated expected-profit field "
+                    f"{PROVISIONAL_EXPECTED_PROFIT_FIELD}; do not substitute {fid}"
+                )
+            elif (
+                str(m.get("field_id") or "") != PROVISIONAL_EXPECTED_PROFIT_FIELD
+                and contains_entrepreneur_keyword(scanned_texts)
+            ):
                 errors.append(
                     "CRITICAL: entrepreneur (winst uit onderneming) deduction in "
                     f"provisional map missing_fields: {fid} — annual 2025 only"
@@ -454,13 +540,14 @@ def portal_prefilled_reference_fields(reference_path):
 def assess_readiness(fields, missing, workflow, parsed_tax_year):
     """Assess whether the field map is ready for manual portal entry.
 
-    Returns a dict {ready, populated_count, required_unpopulated}:
+    Returns a dict {ready, populated_count, required_unpopulated, blockers}:
       - populated_count: fields with a non-empty value AND usable provenance
         (source.type known/not unknown; baseline/calculated carry their ref).
       - required_unpopulated: required reference field_ids that are not populated,
         EXCLUDING BSN/IBAN-class identifiers (portal-prefilled, intentionally blank).
-      - ready: at least one populated field AND no required reference field left
-        unpopulated.
+      - blockers: workflow-specific manual-review blockers.
+      - ready: at least one populated field, no required reference field left
+        unpopulated, and no blocker.
     """
     populated_ids = {
         field.get("field_id")
@@ -489,11 +576,29 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year):
             and rid not in prefilled
         )
 
-    ready = populated_count > 0 and not required_unpopulated
+    blockers = []
+    if workflow == "annual_return" and parsed_tax_year == 2025:
+        has_annual_business = any(
+            isinstance(field, dict)
+            and (
+                str(field.get("field_id") or "").startswith("onderneming.")
+                or (
+                    field.get("field_id") == "business.has_onderneming"
+                    and field.get("value") is not False
+                    and field.get("value") is not None
+                )
+            )
+            for field in fields
+        )
+        if has_annual_business:
+            blockers.append("business-section schema review")
+
+    ready = populated_count > 0 and not required_unpopulated and not blockers
     return {
         "ready": ready,
         "populated_count": populated_count,
         "required_unpopulated": required_unpopulated,
+        "blockers": blockers,
     }
 
 
@@ -555,10 +660,16 @@ def validate(data):
 
     readiness = assess_readiness(clean_fields, clean_missing, workflow, parsed_tax_year)
     if readiness_decl == "review_ready" and not readiness["ready"]:
+        blocker_detail = (
+            f", blockers={', '.join(readiness['blockers'])}"
+            if readiness.get("blockers")
+            else ""
+        )
         warnings.append(
             "readiness declared review_ready but assess_readiness says NOT ready "
             f"(populated_count={readiness['populated_count']}, "
-            f"required_unpopulated={len(readiness['required_unpopulated'])})"
+            f"required_unpopulated={len(readiness['required_unpopulated'])}"
+            f"{blocker_detail})"
         )
 
     return errors, warnings

@@ -22,6 +22,7 @@
 - Review questions
 - Stopzetten outcome
 - Income estimate
+- Winst uit onderneming forecast
 - Own-home estimate
 - Box 2 provisional estimate
 - Box 3 provisional estimate
@@ -95,6 +96,18 @@ An **unsolicited** VA based on earlier data **may be issued**, but is **not guar
 | Other income sources       | EUR               | [F/U/A/?] |
 | **Total other income**     | EUR               | C:sum |
 
+### Expected profit from enterprise 2026
+
+[If no enterprise: "Not applicable -- no expected profit from enterprise reported."]
+
+| Item | Amount label | Src | Review |
+|------|--------------|-----|--------|
+| Expected full-year profit in `Winst uit onderneming` (`onderneming.geschatte_winst`) | EUR [amount] (estimate/from-baseline) | [F/U/B/?] | manual review required |
+
+This is the taxpayer's sourced, user-reviewed forecast only. Do not substitute
+a generic other-income field. Do not prepare annual accounts, entrepreneur
+deductions, Zvw, cessation profit, or final tax.
+
 ## Delta summary
 
 [For change: see workspace/provisional/2026/delta-summary.md for full baseline vs current estimates comparison]
@@ -162,6 +175,12 @@ Stopping payments does not reduce the tax obligation. Route to the change subflo
 | Total pension/benefit income          | EUR               | C:above |
 | Total other income                    | EUR               | C:above |
 | **Total box 1 gross income**          | EUR               | C:sum |
+
+## Winst uit onderneming forecast
+
+[Repeat or reference the sourced `onderneming.geschatte_winst` forecast above.
+If not applicable, state that explicitly. Preserve manual review and do not
+include annual deduction or final-tax calculations.]
 
 ### Estimated tax credits
 

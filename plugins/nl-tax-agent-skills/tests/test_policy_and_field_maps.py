@@ -125,6 +125,103 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertEqual([], annual_errors)
         self.assertEqual([], provisional_errors)
 
+    def test_provisional_expected_profit_requires_provenance_and_manual_review(self):
+        valid_errors, _ = self.validator.validate(
+            {
+                "field_map_version": "1.0",
+                "workflow": "provisional_assessment",
+                "tax_year": 2026,
+                "fields": [
+                    {
+                        "field_id": "onderneming.geschatte_winst",
+                        "label": "Geschatte winst uit onderneming",
+                        "value": 48000,
+                        "source": {
+                            "type": "user_chat",
+                            "quote": "I expect EUR 48,000 profit",
+                            "stated_at": "2026-07-11",
+                        },
+                        "manual_review_required": True,
+                    }
+                ],
+                "missing_fields": [],
+            }
+        )
+        invalid_errors, _ = self.validator.validate(
+            {
+                "field_map_version": "1.0",
+                "workflow": "provisional_assessment",
+                "tax_year": 2026,
+                "fields": [
+                    {
+                        "field_id": "onderneming.geschatte_winst",
+                        "label": "Geschatte winst uit onderneming",
+                        "value": 48000,
+                        "source": {"type": "estimate"},
+                        "manual_review_required": False,
+                    }
+                ],
+                "missing_fields": [],
+            }
+        )
+
+        self.assertEqual([], valid_errors)
+        self.assertTrue(any("provenance" in e.lower() for e in invalid_errors), invalid_errors)
+        self.assertTrue(any("manual review" in e.lower() for e in invalid_errors), invalid_errors)
+
+    def test_provisional_expected_profit_does_not_bypass_deduction_guard(self):
+        errors, _ = self.validator.validate(
+            {
+                "field_map_version": "1.0",
+                "workflow": "provisional_assessment",
+                "tax_year": 2026,
+                "fields": [
+                    {
+                        "field_id": "onderneming.geschatte_winst",
+                        "label": "Geschatte winst uit onderneming",
+                        "value": 48000,
+                        "notes": "Includes ondernemersaftrek",
+                        "source": {
+                            "type": "user_chat",
+                            "quote": "EUR 48,000",
+                            "stated_at": "2026-07-11",
+                        },
+                        "manual_review_required": True,
+                    }
+                ],
+                "missing_fields": [],
+            }
+        )
+
+        self.assertTrue(any("deduction" in error.lower() for error in errors), errors)
+
+    def test_provisional_expected_profit_requires_complete_concrete_provenance(self):
+        incomplete_sources = (
+            {"type": "user_chat", "quote": "EUR 48,000"},
+            {"type": "baseline"},
+            {"type": "evidence"},
+        )
+        for source in incomplete_sources:
+            errors, _ = self.validator.validate(
+                {
+                    "field_map_version": "1.0",
+                    "workflow": "provisional_assessment",
+                    "tax_year": 2026,
+                    "fields": [
+                        {
+                            "field_id": "onderneming.geschatte_winst",
+                            "label": "Geschatte winst uit onderneming",
+                            "value": 48000,
+                            "source": source,
+                            "manual_review_required": True,
+                        }
+                    ],
+                    "missing_fields": [],
+                }
+            )
+            with self.subTest(source=source):
+                self.assertTrue(any("provenance" in error.lower() for error in errors), errors)
+
     def test_field_map_validator_does_not_require_portal_prefilled_personal_fields(self):
         annual_errors, _ = self.validator.validate(
             {

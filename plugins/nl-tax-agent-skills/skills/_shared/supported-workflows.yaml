@@ -14,6 +14,8 @@ active_workflows:
     workflow: annual_return
     tax_year: 2025
     status: active
+    business_scope: preparation_only_finalized_profit_and_loss_and_balance
+    business_field_map_readiness: draft_manual_review
     profile_candidates:
       - annual_2025
     knowledge_dirs:
@@ -111,6 +113,8 @@ active_workflows:
     workflow: provisional_assessment
     tax_year: 2026
     status: active
+    business_scope: sourced_expected_profit_forecast_only
+    business_field_id: onderneming.geschatte_winst
     profile_candidates:
       - provisional_2026_request
       - provisional_2026_change
@@ -210,10 +214,10 @@ blocked_workflows:
     case_scope: complex_business_profit
     allowed_output: workspace/shared/missing-info.md
     reason: >-
-      Standard winst uit onderneming for an eenmanszaak/ZZP is now supported in
-      the active annual_2025 workflow (zelfstandigenaftrek, startersaftrek,
-      MKB-winstvrijstelling, kleinschaligheidsinvesteringsaftrek). This blocked
-      candidate is narrowed to the complex business forms that still need
+      An eenmanszaak/ZZP has preparation-only support in annual_2025: finalized
+      profit-and-loss and balance facts and questions, with the business field
+      map kept draft. This blocked candidate covers complex forms/events and any
+      final taxable-profit or completed-business-return work that still needs
       dedicated official sources, snapshots, field maps, and tests before a
       workpack can be prepared: partnerships (VOF, maatschap, CV) and their
       profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische

@@ -84,29 +84,22 @@ do not calculate it as standard support until reviewed sources are added.
 
 ## Winst uit onderneming (Profit from enterprise) — Box 1
 
-Supported for the standard IB-ondernemer with an eenmanszaak (the usual ZZP legal
-form). Amounts are read from the reviewed knowledge notes under
-`_shared/knowledge/years/2025/entrepreneur/`. Partnerships (VOF, maatschap, CV),
-DGA/BV winst, agrarisch, zeevarenden, and cessation events stay manual review.
+Preparation-only for an IB-ondernemer with an eenmanszaak. Until a complete
+reviewed zakelijke schema exists, an entrepreneur field map remains
+`readiness: draft` with blocker `business-section schema review`. The workpack
+organizes finalized profit-and-loss and balance evidence but does not emit
+filing-ready business amounts. Complex forms and events are terminal review.
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
 | `business.has_onderneming` | Heeft onderneming | Has enterprise | Winst uit onderneming | conditional | `kvk_uittreksel` / user-provided |
-| `onderneming.omzet` | Omzet | Turnover | Winst uit onderneming | conditional | `winst_verlies_rekening` |
-| `onderneming.kosten` | Zakelijke kosten | Business costs | Winst uit onderneming | conditional | `winst_verlies_rekening` |
-| `onderneming.winst_voor_ondernemersaftrek` | Winst voor ondernemersaftrek | Profit before entrepreneur deduction | Winst uit onderneming | conditional | Calculated |
-| `onderneming.zelfstandigenaftrek` | Zelfstandigenaftrek | Self-employed deduction | Winst uit onderneming | conditional | Calculated from knowledge note |
-| `onderneming.startersaftrek` | Startersaftrek | Starter deduction | Winst uit onderneming | conditional | Calculated from knowledge note |
-| `onderneming.ondernemersaftrek_totaal` | Ondernemersaftrek totaal | Total entrepreneur deduction | Winst uit onderneming | conditional | Calculated |
-| `onderneming.mkb_winstvrijstelling` | MKB-winstvrijstelling | SME profit exemption | Winst uit onderneming | conditional | Calculated from knowledge note |
-| `onderneming.kleinschaligheidsinvesteringsaftrek` | Kleinschaligheidsinvesteringsaftrek (KIA) | Small-scale investment deduction | Winst uit onderneming | conditional | `investering_factuur` |
-| `onderneming.belastbare_winst` | Belastbare winst uit onderneming | Taxable profit from enterprise | Winst uit onderneming | conditional | Calculated |
 
 ### Notes on winst uit onderneming fields
-- Prepare figures in order: winst (turnover minus deductible costs), minus investeringsaftrek such as KIA, minus the ondernemersaftrek, then the MKB-winstvrijstelling on the result.
-- The zelfstandigenaftrek and most ondernemersaftrek components require the urencriterium (at least 1,225 hours). The MKB-winstvrijstelling needs no urencriterium.
-- The ondernemersaftrek and MKB-winstvrijstelling are personal to the ondernemer and are not allocated between fiscal partners.
-- No row is `required`: an entrepreneur workpack sets `business.has_onderneming` (the same profile key and canonical not-applicable hook the workpack uses) and the applicable `onderneming.*` rows; a non-entrepreneur workpack leaves the whole section out via the "not applicable" hook. Never mark a row `required`, or every non-entrepreneur field map fails validation.
+- Only `business.has_onderneming` is represented. It is a routing/review hook,
+  not a filing-ready business amount.
+- No row is `required`; non-entrepreneurs use the canonical not-applicable hook.
+- When `business.has_onderneming` is true, declare `readiness: draft`, require
+  manual review, and include the blocker in top-level notes.
 
 ---
 

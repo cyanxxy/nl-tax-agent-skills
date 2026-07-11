@@ -128,7 +128,11 @@ and re-run the helper with the newly sourced answers.
 - **Box 1 / own home** → `nl-tax-box1-home`
 - **Winst uit onderneming** → `nl-tax-winst` when
   `business.has_onderneming.value` is true. Load the entrepreneur sources
-  listed above and append their returned source IDs to `sources_loaded`.
+  actually consulted and append their returned source IDs to `sources_loaded`.
+  Require finalized profit-and-loss and balance evidence, organize facts and
+  questions only, and keep the annual field map draft with a business-section
+  schema-review blocker. Never derive final taxable business profit or claim a
+  complete business return.
 - **Box 2** → `nl-tax-box2` when
   `box2.has_aanmerkelijk_belang.value` is true. Load the Box 2 sources listed
   above and append their returned source IDs to `sources_loaded`.
@@ -171,7 +175,7 @@ The output contract requires 20 sections in order. Don't confuse "sections the u
 
 1. Filing status (on-time, uitstel, or late — drives late-filing exposure)
 2. Box 1 employment / pension / benefit / other income
-3. Winst uit onderneming — ondernemer status, urencriterium, winst, ondernemersaftrek, MKB-winstvrijstelling, investeringsaftrek (only when the taxpayer has an eenmanszaak / ZZP), or "not applicable"
+3. Winst uit onderneming — preparation-only review of finalized profit-and-loss, balance, status, hours, investments, and candidate-deduction evidence (eenmanszaak / ZZP), or "not applicable"
 4. Own home — WOZ, mortgage interest, mortgage type, tariefsaanpassing, Hillenregeling, two-homes if applicable
 5. Box 2 — substantial-interest status and standard fields, or "not applicable"
 6. Box 3 peildatum (1 January 2025) values; box 3 actual-return data for the comparison

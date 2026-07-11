@@ -6,7 +6,8 @@
 # policy governs implicit invocation.
 #
 # nl-tax-winst is an INTERNAL helper, invoked only as a sub-step by
-# nl-tax-annual-return — not a standalone user workflow. Disabling implicit
+# nl-tax-annual-return or nl-tax-provisional-assessment — not a standalone user
+# workflow. Disabling implicit
 # invocation keeps Codex from routing a user prompt straight to it and bypassing
 # the orchestrating workflow skill. Explicit `$nl-tax-winst` invocation still
 # works.

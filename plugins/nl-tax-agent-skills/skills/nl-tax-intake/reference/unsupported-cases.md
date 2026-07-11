@@ -33,10 +33,10 @@ The following taxpayer situations are not supported in version 1 of the Dutch ta
 
 ## 4. Complex Business Forms (Winst uit onderneming)
 
-- **Supported standard preparation:** A full-year resident individual with an **eenmanszaak** (the usual ZZP legal form) is SUPPORTED in the active `annual_2025` workflow. Standard winst uit onderneming is prepared, including the ondernemersaftrek (zelfstandigenaftrek, startersaftrek), the MKB-winstvrijstelling, and the kleinschaligheidsinvesteringsaftrek. Route these cases to `annual_2025` with `business.has_onderneming: true` — do not treat them as unsupported.
+- **Supported bounded preparation:** A full-year resident individual with an **eenmanszaak** may use `annual_2025` to organize finalized profit-and-loss and balance evidence, facts, and questions. This is preparation-only; the business field map stays draft and no final taxable business profit is produced. A `provisional_2026_request` or `provisional_2026_change` may record only the sourced, user-reviewed expected-profit forecast in `onderneming.geschatte_winst`.
 - **Profile candidate:** `annual_2025_entrepreneurs`
 - **Manual review / unsupported boundary:** Route the case to the blocked candidate (or manual review) when the business form or event is outside standard scope: partnerships (VOF, maatschap, CV) and their profit-share allocation, medegerechtigdheid, DGA / BV winst, agrarische ondernemingen (landbouwvrijstelling), zeevarenden, and business-cessation events (staking, herinvesteringsreserve, oudedagsreserve wind-down). Resultaat uit overige werkzaamheden (a freelancer who is not an ondernemer for the inkomstenbelasting) is also a manual-review item, not standard winst uit onderneming.
-- **Why the boundary:** the complex forms need dedicated official sources, profit-allocation rules, and field maps that are not yet reviewed; the standard eenmanszaak deductions are.
+- **Why the boundary:** the complete zakelijke schema and complex-form/event rules are not reviewed. Annual deductions and final business-profit calculations are therefore outside the supported preparation, while provisional support is limited to one reviewed forecast.
 - **Advice:** For complex business cases, use accounting software (e.g., Exact, Moneybird) with tax-filing integration, or consult a boekhouder / belastingadviseur.
 
 ## 5. M-Aangifte (Migration Return)

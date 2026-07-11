@@ -57,11 +57,16 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 | `box1.geschat_pensioen` | Geschat pensioen | Estimated pension income | Box 1 — Inkomen | conditional | Estimate based on pension statements |
 | `box1.geschatte_uitkeringen` | Geschatte uitkeringen | Estimated benefits | Box 1 — Inkomen | conditional | Estimate based on current benefit level |
 | `box1.geschat_overig_inkomen` | Geschat overig inkomen | Estimated other income | Box 1 — Inkomen | conditional | Estimate / user-provided |
+| `onderneming.geschatte_winst` | Geschatte winst uit onderneming | Expected profit from enterprise | Winst uit onderneming | conditional | Sourced, user-reviewed estimate / baseline; manual review required |
 
 ### Notes on income estimates
 - These are the taxpayer's best estimates for the full year 2026. They may be based on current employment contracts, recent jaaropgaven, or known upcoming changes.
 - The portal asks for total amounts, not per-employer breakdowns.
-- **Business profit (winst uit onderneming) estimate:** a self-employed taxpayer's expected 2026 profit is entered here as a plain income estimate via `box1.geschat_overig_inkomen`. The provisional flow never applies entrepreneur deductions (zelfstandigenaftrek, MKB-winstvrijstelling, KIA, etc.) — those are annual-2025-only. Do NOT use the annual `onderneming.*` field ids in a provisional map.
+- **Business profit forecast:** use only `onderneming.geschatte_winst` for a
+  sourced, user-reviewed full-year forecast in the `Winst uit onderneming`
+  section. Set `manual_review_required: true`. Never substitute a generic
+  other-income field and never add annual deductions, Zvw, cessation
+  profit, or final tax.
 
 ---
 
@@ -160,7 +165,7 @@ The following annual return fields have no equivalent in the provisional assessm
 | Annual field_id | Reason not in provisional |
 |---|---|
 | `box3.werkelijk_rendement_*` | Werkelijk rendement is not part of provisional 2026 |
-| `onderneming.*` (winst uit onderneming) | Entrepreneur winst and its deductions are annual-2025 only; a plain 2026 profit estimate goes in `box1.geschat_overig_inkomen` |
+| `onderneming.*` other than `onderneming.geschatte_winst` | Only the dedicated expected-profit forecast is supported in provisional 2026 |
 | `onderneming.zelfstandigenaftrek` / `onderneming.startersaftrek` / `onderneming.ondernemersaftrek_totaal` / `onderneming.mkb_winstvrijstelling` / `onderneming.kleinschaligheidsinvesteringsaftrek` | Entrepreneur deductions are annual-2025 only; never applied in a provisional estimate |
 | `aftrek.zorgkosten` | Rolled into general estimated deductions |
 | `aftrek.giften_anbi` | Rolled into general estimated deductions |

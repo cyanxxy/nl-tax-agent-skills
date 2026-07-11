@@ -30,7 +30,7 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 5. **Evidence summary** — summary of the evidence index used, including any `chat_only` values
 6. **Filing status and late-filing exposure** — on-time / uitstel / late, plus quoted verzuimboete and belastingrente when applicable
 7. **Income notes** — all box 1 income categories (employment, pension, benefits, other)
-8. **Winst uit onderneming notes** — ondernemer status, urencriterium, winst, ondernemersaftrek, MKB-winstvrijstelling, kleinschaligheidsinvesteringsaftrek, manual-review triggers
+8. **Winst uit onderneming notes** — preparation-only organization of finalized profit-and-loss and balance evidence, facts, questions, and manual-review triggers
 9. **Own-home notes** — WOZ, mortgage interest, eigenwoningforfait, tariefsaanpassing, Hillenregeling, plus verkoopregeling / aankoopregeling when applicable
 10. **Box 2 notes** — substantial-interest status, regular benefits, disposal benefits, dividend withholding tax credit, loss setoff, partner allocation, manual-review triggers
 11. **Box 3 notes** — assets, debts, fictitious return, actual return data, comparison, partner allocation
@@ -97,7 +97,7 @@ In all three cases, do not present the section as legal advice. The Belastingdie
 
 ## Winst uit onderneming requirements
 
-### Standard winst uit onderneming preparation
+### Preparation-only business section
 
 The Winst uit onderneming section MUST be present.
 
@@ -110,24 +110,20 @@ business.has_onderneming: no
 
 Do not enumerate the other fields. The single `business.has_onderneming: no` line is the canonical hook for the field map.
 
-**When it applies** (an IB-ondernemer with an eenmanszaak / ZZP), include standard preparation fields for:
+**When it applies**, require finalized 2025 profit-and-loss and balance evidence.
+Organize their supplied categories, evidence references, entrepreneur-status and
+hours facts, investments, candidate-deduction evidence, and open questions. This
+is preparation-only. It must not derive final taxable business profit or claim a
+complete business return.
 
-- `business.has_onderneming`
-- `onderneming.omzet`
-- `onderneming.kosten`
-- `onderneming.kleinschaligheidsinvesteringsaftrek`
-- `onderneming.winst_voor_ondernemersaftrek`
-- `onderneming.zelfstandigenaftrek`
-- `onderneming.startersaftrek`
-- `onderneming.ondernemersaftrek_totaal`
-- `onderneming.mkb_winstvrijstelling`
-- `onderneming.belastbare_winst`
-
-Prepare the figures in order: turnover minus deductible business costs, minus the investeringsaftrek that comes ten laste van de winst (including KIA), minus the ondernemersaftrek, then the MKB-winstvrijstelling on that result. `onderneming.winst_voor_ondernemersaftrek` is therefore the winst after investeringsaftrek but before ondernemersaftrek, and `onderneming.belastbare_winst` is that amount minus `onderneming.ondernemersaftrek_totaal` and `onderneming.mkb_winstvrijstelling`. Read every amount, percentage, and threshold from the reviewed knowledge notes under `_shared/knowledge/years/2025/entrepreneur/`; never paraphrase a rate from memory. The zelfstandigenaftrek and most ondernemersaftrek components require the urencriterium; record whether it is met.
+The associated annual field map MUST remain `readiness: draft` and include the
+manual-review blocker `business-section schema review` until a complete reviewed
+zakelijke schema exists. Business amounts are review notes, not filing-ready
+field values.
 
 ### Winst uit onderneming manual-review routing
 
-The workpack MUST route winst uit onderneming to manual review or unsupported when the case involves partnerships (VOF, maatschap, CV) or profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische ondernemingen, zeevarenden, staking or cessation events, herinvesteringsreserve, oudedagsreserve wind-down, or resultaat uit overige werkzaamheden. The ondernemersaftrek and MKB-winstvrijstelling are personal to the ondernemer and are not allocated between fiscal partners.
+The workpack MUST route winst uit onderneming to terminal manual review when the case involves partnerships (VOF, maatschap, CV) or profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische ondernemingen, zeevarenden, staking or cessation events, herinvesteringsreserve, oudedagsreserve wind-down, or resultaat uit overige werkzaamheden. Do not produce a partial business calculation for these cases.
 
 ---
 
@@ -281,7 +277,7 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Every `assumption_id` referenced in the body appears in the Assumptions section
 - [ ] Every `evidence_id` referenced in the body exists in `workspace/taxpayer/evidence-index.yaml`
 - [ ] The Sources Used section lists exactly the IDs in `session-progress.yaml` → `sources_loaded`
-- [ ] Winst uit onderneming section uses the canonical "not applicable" line or the standard field set, with amounts read from the entrepreneur knowledge notes
+- [ ] Winst uit onderneming uses the canonical "not applicable" line or a preparation-only review of finalized profit-and-loss and balance evidence
 - [ ] Complex business facts (partnerships, DGA/BV winst, agrarisch, zeevarenden, staking, resultaat uit overige werkzaamheden) are routed to manual review or unsupported
 - [ ] Box 2 section uses the canonical "not applicable" line or the full 11-field set
 - [ ] Complex Box 2 facts are routed to manual review or unsupported
@@ -290,7 +286,7 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Partner allocation is addressed (even if no partner — state "not applicable")
 - [ ] Own-home notes use `total_deductible_own_home_costs` for Hillen, keep `tariefsaanpassing` separate, and route every complex home case to manual review
 - [ ] IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
-- [ ] Winst uit onderneming amounts (zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, KIA, urencriterium) are read from the entrepreneur knowledge notes, not paraphrased, and complex business forms are routed to manual review
+- [ ] Annual business preparation does not derive taxable profit or deductions; its field map remains draft with the business-section schema-review blocker
 
 ### Cross-contamination
 

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-winst
-description: Internal helper for nl-tax-annual-return — returns winst uit onderneming (eenmanszaak / ZZP) facts and questions. Not a standalone workflow; invoked as a sub-step for the 2025 annual return only.
+description: Internal helper for annual business-section preparation and a provisional expected-profit forecast — returns sourced facts and questions, never a completed business return or final tax result.
 user-invocable: false
 allowed-tools:
   - Read
@@ -11,14 +11,16 @@ allowed-tools:
 
 # NL Tax Winst uit onderneming
 
-Background helper for winst uit onderneming preparation notes for the **2025
-annual return**. It supports the standard IB-ondernemer with an **eenmanszaak**
-(the usual ZZP legal form): winst uit onderneming, ondernemersaftrek,
-MKB-winstvrijstelling, and kleinschaligheidsinvesteringsaftrek.
+Background helper with two deliberately narrow modes:
 
-Use this skill only for source-backed preparation support for `annual_2025`.
-There is no provisional entrepreneur flow: never prepare winst uit onderneming for
-a 2026 voorlopige aanslag.
+- **Annual 2025 preparation-only:** organize facts, evidence, and questions for
+  the business section of an eenmanszaak/ZZP return. Require a finalized
+  profit-and-loss statement and finalized balance. Do not derive final taxable
+  business profit and do not claim the business return is complete.
+- **Provisional 2026 expected-profit forecast:** record the taxpayer's sourced,
+  user-reviewed forecast for `Winst uit onderneming` as
+  `onderneming.geschatte_winst`. Do not prepare annual accounts, deductions,
+  Zvw, cessation profit, or final tax.
 
 This helper may be called through a Skill/Task tool or inlined by an owning workflow when no such tool exists. The same output contract applies either way.
 
@@ -47,33 +49,23 @@ append it to `session-progress.yaml` → `sources_loaded`:
 - `../_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md`
 - `../_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md`
 - `reference/winst-2025.md` — how the pieces fit together for the workpack
+- `reference/winst-2026-provisional.md` — bounded expected-profit forecast
 
-There are no bundled calculators for this helper. Compute the ordering (winst →
-minus investeringsaftrek such as KIA → minus ondernemersaftrek →
-MKB-winstvrijstelling) by hand from the sourced amounts;
-if the host ever adds a script under an already-resolved plugin
-`skills/.../scripts/` path, run it only when Bash can reach that path, and always
-keep the declarative fallback of continuing manually from the sourced inputs and
-rules. Never copy bundled scripts into `workspace/`, and never execute a `.py`
-under `workspace/`, `uploads/`, or `evidence/`.
+There are no bundled calculators for this helper. Its job is classification and
+question generation, not completing the taxpayer's accounts or tax computation.
 
 ## Do
 
-- Confirm the taxpayer is an ondernemer voor de inkomstenbelasting with an
-  eenmanszaak, and record whether the urencriterium (or, for the startersaftrek
-  bij arbeidsongeschiktheid, the verlaagd urencriterium) is met.
-- Prepare the winst uit onderneming: turnover minus deductible business costs,
-  then investeringsaftrek such as KIA, then ondernemersaftrek, then the
-  MKB-winstvrijstelling, in that order.
-- Prepare the ondernemersaftrek components the case qualifies for
-  (zelfstandigenaftrek, startersaftrek, S&O-aftrek, meewerkaftrek), reading the
-  2025 amounts from the knowledge notes.
-- Prepare the kleinschaligheidsinvesteringsaftrek from the KIA table when the
-  taxpayer invested in qualifying bedrijfsmiddelen.
-- Note the beperkt-aftrekbare-kosten threshold (or the 80% election), werkruimte
-  conditions, the private-use-of-a-business-car bijtelling, and the private-vehicle
-  kilometre deduction where they apply — as preparation notes, not final figures.
-- Keep outputs suitable for preparation workpacks and review questions.
+- Select annual or provisional mode from the owning workflow; never blend them.
+- For annual mode, confirm the finalized profit-and-loss statement and balance
+  belong to tax year 2025 and are internally identified as final/reviewed.
+- Organize official profit-and-loss and balance categories, entrepreneur status,
+  hours, investments, and deduction evidence into sourced facts and questions.
+  Record candidate deductions only as review facts; do not calculate them.
+- For provisional mode, collect one expected-profit forecast for the full 2026
+  year, its basis, source provenance, and explicit user review. Return only
+  `onderneming.geschatte_winst` plus review notes and open questions.
+- Keep outputs suitable for preparation workpacks and manual review.
 - When facts are missing, return a structured question packet instead of
   inventing zeros.
 
@@ -100,18 +92,28 @@ Return missing inputs to the calling workflow in this shape:
   prompt_for_user: "What was your 2025 turnover (omzet) and total deductible business costs? A winst-en-verliesrekening or bookkeeping export is ideal."
   acceptable_sources: ["file", "user_chat"]
   evidence_hint: "winst-en-verliesrekening, balans, facturen"
+- question_id: "provisional.winst.expected_profit"
+  workflow: "provisional_2026"
+  section: "winst_forecast"
+  prompt_for_user: "What is your reviewed best estimate of full-year 2026 profit from the enterprise, and what forecast or current bookkeeping supports it?"
+  acceptable_sources: ["file", "user_chat"]
+  evidence_hint: "current profit forecast, year-to-date bookkeeping, or user-reviewed estimate"
 ```
 
 The calling skill asks these questions, records the answers with `source`,
-`quote`/`evidence_id`, and timestamp under its own annual notes tree, then re-runs
-this helper contract. Do not write caller-owned notes.
+`quote`/`evidence_id`, and timestamp under its own workflow notes tree, then
+re-runs this helper contract. The annual workflow owns persistence in annual
+mode. The provisional workflow owns persistence in provisional mode. The helper
+owns no persisted artifact. Do not write caller-owned notes.
 
 ## Never
 
 - Do not log in, automate a browser, sign, or submit anything.
 - Do not claim that the helper gives binding tax advice or a final assessment.
-- Do not prepare winst uit onderneming for a 2026 voorlopige aanslag; the
-  entrepreneur unlock is annual 2025 only.
+- Do not turn annual preparation notes into a final taxable-profit computation,
+  completed business return, or filing-ready business field map.
+- Do not turn the provisional expected-profit forecast into business accounts,
+  annual deductions, Zvw, cessation profit, or final tax.
 - Do not route complex business cases as standard preparation. Partnerships (VOF,
   maatschap, CV) and profit-share allocation, medegerechtigdheid, DGA/BV winst,
   agrarische ondernemingen, zeevarenden, staking/cessation events,
@@ -123,5 +125,5 @@ this helper contract. Do not write caller-owned notes.
 
 Return structured facts and open questions to the owning workflow. Do not
 persist any final artifact, including shared notes, question packets, session
-state, workpacks, or field maps. The annual workflow owns all workspace
-persistence and may read historical helper notes for resume compatibility only.
+state, workpacks, or field maps. In either mode, only the calling owning workflow
+may read historical helper notes for resume compatibility.

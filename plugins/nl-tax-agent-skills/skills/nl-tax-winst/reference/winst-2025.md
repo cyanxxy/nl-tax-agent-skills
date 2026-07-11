@@ -11,10 +11,9 @@ last_reviewed: "2026-07-04"
 
 - Scope
 - Ondernemer status and urencriterium
-- Winst computation order
-- Ondernemersaftrek components
-- MKB-winstvrijstelling
-- Investeringsaftrek
+- Finalized business evidence
+- Profit-and-loss and balance organization
+- Deduction and investment review facts
 - Costs, werkruimte, and car
 - Evidence
 - Complex or manual-review markers
@@ -23,7 +22,9 @@ last_reviewed: "2026-07-04"
 
 Use these notes for standard full-year Dutch resident annual 2025 preparation
 workpacks for an IB-ondernemer with an eenmanszaak (the usual ZZP legal form).
-Outputs are for manual Mijn Belastingdienst entry and review only. The reviewed
+Outputs are preparation-only notes for manual review. They do not constitute a
+completed business return and do not establish final taxable business profit.
+The reviewed
 knowledge notes under `_shared/knowledge/years/2025/entrepreneur/` are canonical
 for every amount, percentage, and threshold; read them and never paraphrase a
 figure from memory.
@@ -39,45 +40,37 @@ figure from memory.
 - If the income looks like resultaat uit overige werkzaamheden rather than winst
   uit onderneming, route it to manual review.
 
-## Winst computation order
+## Finalized business evidence
 
-Prepare the figures in this order and show each step:
+Require both of these before treating the annual business preparation as filled:
 
-1. Winst uit onderneming = turnover minus deductible business costs.
-2. Minus investeringsaftrek that comes ten laste van de winst, including KIA.
-3. Minus the ondernemersaftrek (only the components the case qualifies for).
-4. Apply the MKB-winstvrijstelling to the result of step 3.
+- a finalized profit-and-loss statement for 2025
+- a finalized balance for 2025, including opening/closing context where relevant
 
-## Ondernemersaftrek components
+If either is missing, provisional, unreconciled, or not clearly for 2025, record
+an open question and keep the business section blocked for manual review.
 
-- Prepare only the components that apply: zelfstandigenaftrek (plus the
-  startersaftrek increase where the starter conditions are met), aftrek voor
-  speur- en ontwikkelingswerk, meewerkaftrek, and the startersaftrek bij
-  arbeidsongeschiktheid. Read the amounts and conditions from `ondernemersaftrek.md`.
-- The winst cap on the zelfstandigenaftrek and any niet-gerealiseerde
-  zelfstandigenaftrek carry-forward are recorded as review data.
-- The tax benefit of the ondernemersaftrek is subject to the tariefsaanpassing;
-  read the cap from the shared deduction-rate note.
+## Profit-and-loss and balance organization
 
-## MKB-winstvrijstelling
+Organize — do not recalculate — the supplied categories: revenue, purchases,
+personnel, depreciation, other operating costs, financial income/costs, fixed
+assets, current assets, enterprise equity, provisions, and liabilities. Preserve
+the statement labels and evidence provenance. Flag reconciliation questions and
+do not manufacture missing categories or zeros.
 
-- Applies to every ondernemer with no urencriterium requirement, on the winst
-  after investeringsaftrek and ondernemersaftrek. Read the percentage from `mkb-winstvrijstelling.md`;
-  it cannot be allocated to a fiscal partner.
+## Deduction and investment review facts
 
-## Investeringsaftrek
-
-- Prepare the kleinschaligheidsinvesteringsaftrek from the KIA table in
-  `investeringsaftrek.md` when the taxpayer invested in qualifying
-  bedrijfsmiddelen for the year. Confirm each asset meets the minimum and is not
-  on the exclusion list.
-- EIA, MIA, Vamil, and the desinvesteringsbijtelling depend on RVO verklaringen
-  and annual lists; treat exact eligibility as manual-review data.
+- Record entrepreneur status, hours evidence, starter history, investment
+  invoices, RVO statements, and candidate deduction facts as questions/review
+  notes. Do not apply amounts or percentages and do not derive a taxable-profit
+  result.
+- EIA, MIA, Vamil, desinvestering, carry-forwards, and every ambiguous
+  qualification remain manual-review data.
 
 ## Costs, werkruimte, and car
 
-- Apply the beperkt-aftrekbare-kosten threshold or the alternative percentage
-  election (never both) from `winst-en-kosten.md`, and show which was used.
+- Record the treatment selected in the finalized accounts for
+  beperkt-aftrekbare costs and ask a review question if it is unclear.
 - Werkruimte in a private-asset home, the private-use-of-a-business-car
   bijtelling, and the private-vehicle kilometre deduction are prepared from the
   knowledge notes; flag anything ambiguous for manual review.
@@ -88,7 +81,7 @@ Prepare the figures in this order and show each step:
 
 ## Evidence
 
-- Ask for the winst-en-verliesrekening, balans, invoices, bank jaaroverzicht,
+- Ask for the finalized profit-and-loss statement, finalized balance, invoices, bank jaaroverzicht,
   investment invoices, and urenadministratie as gaps when missing (see
   `entrepreneur-aangifte.md`). Never assume zeros and never collect the BSN.
 

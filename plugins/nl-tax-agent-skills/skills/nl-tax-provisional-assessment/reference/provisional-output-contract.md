@@ -37,6 +37,7 @@ Every provisional workpack (`workspace/provisional/2026/provisional-pack.md`) MU
 | Review questions            | review                                    |
 | Stopzetten outcome          | stopzetten                                |
 | Income estimate             | request, change                           |
+| Winst uit onderneming forecast | request, change                        |
 | Own-home estimate           | request, change                           |
 | Box 2 provisional estimate  | request, change                           |
 | Box 3 provisional estimate  | request, change                           |
@@ -62,6 +63,19 @@ Every monetary amount in the workpack MUST be labeled with one of:
 Do NOT present any amount without a label. Unlabeled amounts create ambiguity about whether they are actuals, estimates, or inherited values.
 
 Box 2 provisional amounts MUST also be labeled this way. This applies to estimated regular benefits, estimated disposal benefits, estimated costs, estimated dividend withholding tax, estimated fictitious regular benefit from BV lending, and partner allocation values.
+
+## Winst uit onderneming forecast rule
+
+For an eenmanszaak/ZZP, the workpack may contain one sourced, user-reviewed
+full-year forecast in the portal section `Winst uit onderneming`:
+`onderneming.geschatte_winst`. It MUST carry provenance, an estimate or
+from-baseline label, and manual review. Do not use the generic Box 1
+other-income field as a business-profit substitute.
+
+The provisional workpack MUST NOT prepare annual profit-and-loss or balance
+accounts, zelfstandigenaftrek, startersaftrek, ondernemersaftrek,
+MKB-winstvrijstelling, KIA, Zvw, cessation profit, or final tax. Complex forms
+and events route to terminal manual review.
 
 ### Examples
 

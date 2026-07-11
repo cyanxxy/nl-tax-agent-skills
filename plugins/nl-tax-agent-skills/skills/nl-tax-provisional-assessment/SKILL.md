@@ -96,11 +96,19 @@ Confirm an active workflow candidate of `provisional_2026_request`, `provisional
 - Do not request, calculate, or offer method choices for werkelijk rendement in provisional 2026.
 - Use only the provisional fictitious Box 3 method.
 - Do not write `workspace/annual/**`.
-- Do not prepare winst uit onderneming (eenmanszaak / ZZP: ondernemersaftrek, zelfstandigenaftrek, startersaftrek, MKB-winstvrijstelling, investeringsaftrek, urencriterium) in any provisional 2026 flow. The entrepreneur unlock is annual 2025 only; those reviewed sources do not exist for the 2026 voorlopige aanslag. Estimate expected business profit only as a plain box 1 income figure the user supplies, without applying entrepreneur deductions or calling `nl-tax-winst`.
+- For an eenmanszaak/ZZP, invoke or inline `nl-tax-winst` in provisional mode
+  and collect only a sourced, user-reviewed expected-profit forecast for the
+  portal section `Winst uit onderneming`. Map it only as
+  `onderneming.geschatte_winst`, with `manual_review_required: true`.
+- Never substitute a generic other-income field for expected business profit.
+  Do not prepare annual accounts, entrepreneur deductions, Zvw, cessation
+  profit, or final tax in this flow.
 
 If the user asks about werkelijk rendement, respond: "Werkelijk rendement is not part of the 2026 voorlopige aanslag. It may become relevant when filing the annual 2026 return in 2027."
 
-If the user asks about entrepreneur deductions (zelfstandigenaftrek, MKB-winstvrijstelling, and the like) for the voorlopige aanslag, respond: "Entrepreneur deductions are prepared for the annual 2025 return, not the 2026 voorlopige aanslag; for the provisional I can only use your own estimate of expected business profit."
+If the user asks about entrepreneur deductions for the voorlopige aanslag,
+explain that this flow records only their reviewed full-year expected-profit
+forecast; annual deductions and final tax remain outside this preparation.
 
 ## Conversational behavior
 
@@ -124,6 +132,7 @@ persist the returned facts and open questions in the matching
 user, and re-run the helper with newly sourced answers.
 
 - **Box 1 / own home** → `nl-tax-box1-home` (use the 2026 provisional references)
+- **Winst uit onderneming forecast** → `nl-tax-winst` in provisional mode; persist only `onderneming.geschatte_winst` with provenance and manual review
 - **Box 2** → `nl-tax-box2` (label all amounts as estimates or baseline-derived)
 - **Box 3** → `nl-tax-box3` (**fictitious method only** — never request werkelijk rendement)
 - **Partner / allocation** → `nl-tax-partner-deductions`
@@ -147,11 +156,12 @@ Walk the user through these sections one at a time:
 2. Estimated 2026 employment income per employer.
 3. Estimated 2026 pension and benefit income.
 4. Estimated 2026 other income.
-5. Estimated deductions, including own home, alimony, lijfrente/AOV, gifts, and other expenses.
-6. Standard Box 2 estimates where applicable: regular benefits/dividends, disposal benefits, costs, withholding tax, BV lending fictitious benefit, and partner allocation.
-7. Box 3 assets and debts on 1 January 2026 using the fictitious method only.
-8. Fiscal partner and allocation.
-9. Final review and confirmation.
+5. Expected 2026 profit from enterprise, when applicable: one sourced and user-reviewed `onderneming.geschatte_winst` forecast only.
+6. Estimated deductions, including own home, alimony, lijfrente/AOV, gifts, and other expenses.
+7. Standard Box 2 estimates where applicable: regular benefits/dividends, disposal benefits, costs, withholding tax, BV lending fictitious benefit, and partner allocation.
+8. Box 3 assets and debts on 1 January 2026 using the fictitious method only.
+9. Fiscal partner and allocation.
+10. Final review and confirmation.
 
 ## Subflow: change
 

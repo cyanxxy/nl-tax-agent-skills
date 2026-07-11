@@ -55,17 +55,18 @@ User enters provisional skill
 
 1. **Employment income estimate** — gross annual salary, holiday allowance, bonuses expected in 2026
 2. **Pension/benefit income estimate** — AOW, pension, WW, WIA, bijstand expected in 2026
-3. **Other income estimate** — freelance, rental, foreign income expected in 2026
-4. **Own-home deduction estimate** — mortgage interest (hypotheekrente) for 2026, eigenwoningforfait based on WOZ-waarde
-5. **Other deductions estimate** — alimentatie, lijfrentepremie, arbeidsongeschiktheidsverzekering, specific care costs, gifts. Treat zorgkosten thresholds and lijfrente limits as manual-review items unless exact reviewed sources and all required inputs are present.
-6. **Box 2 estimate** — standard aanmerkelijk-belang estimates:
+3. **Other income estimate** — non-business rental, foreign, or other income expected in 2026
+4. **Winst uit onderneming forecast** — if applicable, invoke or inline `nl-tax-winst`; record only the sourced, user-reviewed full-year forecast as `onderneming.geschatte_winst` with manual review. Never put business profit in a generic other-income field and never apply annual deductions, Zvw, cessation profit, or final tax.
+5. **Own-home deduction estimate** — mortgage interest (hypotheekrente) for 2026, eigenwoningforfait based on WOZ-waarde
+6. **Other deductions estimate** — alimentatie, lijfrentepremie, arbeidsongeschiktheidsverzekering, specific care costs, gifts. Treat zorgkosten thresholds and lijfrente limits as manual-review items unless exact reviewed sources and all required inputs are present.
+7. **Box 2 estimate** — standard aanmerkelijk-belang estimates:
    - Estimated regular benefits, including dividends
    - Estimated disposal benefits from share sales
    - Estimated related costs and dividend withholding tax
    - Estimated fictitious regular benefit from BV lending, if applicable
    - Fiscal-partner Box 2 allocation, if applicable
    - Route valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA facts to manual review or unsupported
-7. **Box 3 data** — assets and debts as of peildatum 1 January 2026:
+8. **Box 3 data** — assets and debts as of peildatum 1 January 2026:
    - Categorie I: Banktegoeden
    - Categorie II: Overige bezittingen
    - Categorie III: Schulden (excluding eigenwoningschuld)
@@ -100,7 +101,7 @@ User enters provisional skill
    - Deductions as submitted
    - Box 3 data as submitted
 2. **Full re-entry of all current estimates** (CRITICAL — not just changes):
-   - All income categories (employment, pension/benefit, other)
+   - All income categories (employment, pension/benefit, other, and the dedicated expected-profit forecast when applicable)
    - All deductions (own-home, alimentatie, premiums, other)
    - All standard Box 2 estimates (regular benefits, disposal benefits, costs, withholding tax, partner allocation)
    - All box 3 data (assets and debts as of 1 January 2026, fictitious method only)
