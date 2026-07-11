@@ -37,13 +37,38 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 4. Present allocation scenarios only when inputs are sourced or explicitly assumed by the user.
 5. Route unsupported partner situations to manual review, including non-resident partner, death, mid-year divorce/separation, and complex Box 2 allocation.
 
-When allocation inputs are sourced and Bash can reach the plugin path, run
-`scripts/validate_allocation.py` to check the split. When it cannot (e.g. Cowork's
-isolated VM), apply the same invariants by hand: each allocatable item's
-`partner1_share + partner2_share` must equal its total (the split sums to 100%),
-no share is negative or exceeds the total, non-allocatable/personal items go 100%
-to one partner, and a partner-2 share is valid only when a fiscal partner has been
-asserted.
+The agent owns the tax classification. For every proposed row, use reviewed
+sources to set an explicit real boolean `allocatable`; never infer it from the
+row name. Also set the sourced partner conclusion as the real boolean
+`has_fiscal_partner`. Do not invent defaults when either conclusion is missing.
+
+When those inputs are sourced and Bash can reach the plugin path, the optional
+`scripts/validate_allocation.py` can check this wrapped payload:
+
+```json
+{
+  "has_fiscal_partner": true,
+  "items": [
+    {
+      "name": "Joint Box 3 base",
+      "allocatable": true,
+      "taxpayer_pct": 60,
+      "partner_pct": 40
+    }
+  ]
+}
+```
+
+The helper performs arithmetic checks only. It requires both percentages to be
+finite numbers in the 0–100 range and to total 100; requires a non-allocatable
+row to be 100/0 or 0/100; and requires `partner_pct: 0` when
+`has_fiscal_partner` is false. Record
+`check_performed_by: checked_by_script` after a successful run.
+
+When Python is unavailable (for example in Cowork's isolated VM), apply those
+same explicit boolean, range, sum, non-allocatable, and no-partner invariants by
+hand and record `check_performed_by: checked_by_agent`. Python availability
+never blocks the agent from preparing the allocation scenarios.
 
 ## Question packet
 

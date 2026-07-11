@@ -1,244 +1,144 @@
 #!/usr/bin/env python3
-"""Validate fiscal partner allocation splits.
+"""Check explicit fiscal-partner allocation percentages.
 
 Usage:
-    python3 validate_allocation.py [--no-partner] <path-to-allocations.json>
+    python3 validate_allocation.py <path-to-allocation.json>
 
-Input JSON format (bare list, backward compatible):
-[
-  {
-    "item": "Box 3 banktegoeden",
-    "total": 80000,
-    "partner1_share": 50000,
-    "partner2_share": 30000,
-    "allocatable": true
-  }
-]
+The input must be a wrapped object. The agent determines partner status and
+whether each row is allocatable from the reviewed sources; this optional helper
+checks only the explicit arithmetic assertions.
 
-Or the wrapped object shape:
 {
   "has_fiscal_partner": true,
-  "items": [ ... ]
+  "items": [
+    {
+      "name": "Joint Box 3 base",
+      "allocatable": true,
+      "taxpayer_pct": 60,
+      "partner_pct": 40
+    }
+  ]
 }
 
-Checks:
-    - partner1_share + partner2_share == total
-    - No negative values
-    - Non-allocatable items are 100% to one partner
-    - No shares exceeding total
-    - Numeric inputs are real finite numbers (rejects strings, None, NaN, Inf,
-      and booleans)
-    - Duplicate item names are flagged
-    - Fully-empty rows (no total and no shares) are warned about
-    - partner2_share > 0 is rejected when no fiscal partner is asserted
-
-Note: `allocatable` is inferred heuristically from the item name when not
-provided (see NON_ALLOCATABLE_KEYWORDS). This heuristic is best-effort only;
-callers should set `allocatable` explicitly on each item to avoid surprises.
-Numeric amounts must be carried as JSON numeric literals — this validator does
-NOT parse Dutch-locale number strings (e.g. "1.000,50").
+Both boolean fields must be JSON booleans. Percentages must be finite JSON
+numbers from 0 through 100 and must total 100. A non-allocatable row must be
+assigned 100/0 or 0/100. If there is no fiscal partner, partner_pct must be 0.
+The helper never classifies a row from its name.
 """
 
 import json
 import math
 import sys
 
-NON_ALLOCATABLE_KEYWORDS = {
-    "employment", "loon", "salary", "dienstbetrekking",
-    "pension", "pensioen",
-    "arbeidskorting",
-}
 
-
-def _num(value, name, field, errors):
-    """Coerce an input to a finite number or record an error and return None.
-
-    Accepts ints/floats and plain numeric strings (e.g. "50000", "50000.50").
-    Rejects booleans, other types, non-numeric text, locale-formatted strings
-    (e.g. "50.000,00"), and NaN/Inf so downstream arithmetic cannot crash with a
-    TypeError or silently propagate a non-finite value.
-    """
-    if isinstance(value, bool):
-        errors.append(f"{name}: {field} is not a number ({value!r})")
+def _percentage(value, row_name, field, errors):
+    """Return an explicit finite numeric percentage, or append an error."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        errors.append(f"{row_name}: {field} must be a real finite number")
         return None
-    if isinstance(value, (int, float)):
-        number = value
-    elif isinstance(value, str) and value.strip():
-        try:
-            number = float(value.strip())
-        except ValueError:
-            errors.append(
-                f"{name}: {field} is not a number ({value!r}); provide plain "
-                "numbers like 50000 or 50000.50, not locale strings like '50.000,00'"
-            )
-            return None
-    else:
-        errors.append(f"{name}: {field} is not a number ({value!r})")
+    if not math.isfinite(value):
+        errors.append(f"{row_name}: {field} must be a real finite number")
         return None
-    if not math.isfinite(number):
-        errors.append(f"{name}: {field} is not a finite number ({number})")
+    if value < 0 or value > 100:
+        errors.append(f"{row_name}: {field} must be between 0 and 100")
         return None
-    return number
+    return value
 
 
-def validate_allocations(items, has_fiscal_partner=True):
+def validate(payload):
+    """Return arithmetic/type errors for one explicit wrapped payload."""
     errors = []
-    warnings = []
-    seen_names = {}
+    if not isinstance(payload, dict):
+        return [
+            "input must be an object with explicit has_fiscal_partner and items fields"
+        ]
 
-    for i, item in enumerate(items):
+    has_fiscal_partner = payload.get("has_fiscal_partner")
+    if not isinstance(has_fiscal_partner, bool):
+        errors.append("has_fiscal_partner must be a JSON boolean")
+
+    items = payload.get("items")
+    if not isinstance(items, list):
+        errors.append("items must be an array")
+        return errors
+
+    for index, item in enumerate(items):
+        row_name = f"item[{index}]"
         if not isinstance(item, dict):
-            errors.append(f"item[{i}]: must be a mapping, got: {item!r}")
-            continue
-        name = item.get("item", f"item[{i}]")
-
-        # Duplicate detection (key on item name)
-        seen_names[name] = seen_names.get(name, 0) + 1
-        if seen_names[name] == 2:
-            warnings.append(f"{name}: duplicate item name appears more than once")
-
-        total = _num(item.get("total", 0), name, "total", errors)
-        p1 = _num(item.get("partner1_share", 0), name, "partner1_share", errors)
-        p2 = _num(item.get("partner2_share", 0), name, "partner2_share", errors)
-        allocatable = item.get("allocatable", True)
-
-        # Skip arithmetic if any numeric field failed to parse.
-        if total is None or p1 is None or p2 is None:
+            errors.append(f"{row_name}: must be an object")
             continue
 
-        # Fully-empty row (no amounts at all)
-        has_total = "total" in item and item.get("total") not in (None, 0)
-        has_shares = (
-            ("partner1_share" in item and item.get("partner1_share") not in (None, 0))
-            or ("partner2_share" in item and item.get("partner2_share") not in (None, 0))
+        name = item.get("name")
+        if isinstance(name, str) and name.strip():
+            row_name = name.strip()
+
+        allocatable = item.get("allocatable")
+        if not isinstance(allocatable, bool):
+            errors.append(f"{row_name}: allocatable must be a JSON boolean")
+
+        taxpayer_pct = _percentage(
+            item.get("taxpayer_pct"), row_name, "taxpayer_pct", errors
         )
-        if not has_total and not has_shares:
-            warnings.append(
-                f"{name}: no amounts provided — incomplete allocation row"
-            )
+        partner_pct = _percentage(
+            item.get("partner_pct"), row_name, "partner_pct", errors
+        )
+        if taxpayer_pct is None or partner_pct is None:
+            continue
 
-        # Negative values
-        if total < 0:
-            warnings.append(f"{name}: total is negative ({total}) — verify this is a debt/deduction")
-        if p1 < 0:
-            errors.append(f"{name}: partner1_share is negative ({p1})")
-        if p2 < 0:
-            errors.append(f"{name}: partner2_share is negative ({p2})")
-
-        # No partner asserted but partner2 has a share
-        if not has_fiscal_partner and p2 > 0:
+        if not math.isclose(taxpayer_pct + partner_pct, 100, abs_tol=1e-9):
             errors.append(
-                f"{name}: partner2_share ({p2}) > 0 but no fiscal partner asserted"
+                f"{row_name}: taxpayer_pct and partner_pct must total 100"
             )
 
-        # Sum check (allow for debts where total may be negative)
-        if abs(total) > 0 or abs(p1) > 0 or abs(p2) > 0:
-            if abs((p1 + p2) - total) > 0.01:
-                errors.append(
-                    f"{name}: shares don't sum to total "
-                    f"({p1} + {p2} = {p1 + p2}, expected {total})"
-                )
+        if has_fiscal_partner is False and partner_pct != 0:
+            errors.append(
+                f"{row_name}: partner_pct must be 0 when no fiscal partner asserted"
+            )
 
-        # Shares exceeding total (for positive totals)
-        if total > 0:
-            if p1 > total:
-                errors.append(f"{name}: partner1_share ({p1}) exceeds total ({total})")
-            if p2 > total:
-                errors.append(f"{name}: partner2_share ({p2}) exceeds total ({total})")
+        if allocatable is False and not (
+            (taxpayer_pct == 100 and partner_pct == 0)
+            or (taxpayer_pct == 0 and partner_pct == 100)
+        ):
+            errors.append(
+                f"{row_name}: non-allocatable item must be assigned 100% to one partner"
+            )
 
-        # Non-allocatable check
-        name_lower = name.lower()
-        is_non_allocatable = not allocatable or any(
-            kw in name_lower for kw in NON_ALLOCATABLE_KEYWORDS
-        )
-        if is_non_allocatable:
-            if p1 > 0 and p2 > 0:
-                errors.append(
-                    f"{name}: non-allocatable item is split between partners "
-                    f"({p1}/{p2}) — must be 100% to one partner"
-                )
-
-    return errors, warnings
+    return errors
 
 
 def main():
     argv = sys.argv[1:]
     if "-h" in argv or "--help" in argv:
-        print("validate_allocation.py — check fiscal-partner allocation splits")
-        print("Usage: python3 validate_allocation.py [--no-partner] <path-to-allocations.json>")
-        sys.exit(0)
-    no_partner = False
-    if "--no-partner" in argv:
-        no_partner = True
-        argv = [a for a in argv if a != "--no-partner"]
-
-    if not argv:
+        print("validate_allocation.py — check explicit allocation percentages")
+        print("Usage: python3 validate_allocation.py <path-to-allocation.json>")
+        return 0
+    if len(argv) != 1:
         print(
-            "Usage: python3 validate_allocation.py [--no-partner] <path-to-allocations.json>",
+            "Usage: python3 validate_allocation.py <path-to-allocation.json>",
             file=sys.stderr,
         )
-        sys.exit(1)
+        return 1
 
-    path = argv[0]
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except (json.JSONDecodeError, FileNotFoundError) as e:
-        print(f"Error loading file: {e}", file=sys.stderr)
-        sys.exit(1)
+        with open(argv[0], "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"Error loading file: {exc}", file=sys.stderr)
+        return 1
 
-    has_fiscal_partner = not no_partner
-
-    # Accept either a bare list or a wrapped {has_fiscal_partner, items} object.
-    if isinstance(data, dict):
-        if "items" not in data or not isinstance(data["items"], list):
-            print(
-                "Error: object input must contain an 'items' array",
-                file=sys.stderr,
-            )
-            sys.exit(1)
-        items = data["items"]
-        if "has_fiscal_partner" in data and not no_partner:
-            has_fiscal_partner = bool(data["has_fiscal_partner"])
-    elif isinstance(data, list):
-        items = data
-        if not no_partner:
-            print(
-                "Note: bare-list input assumes a fiscal partner is present; "
-                "pass --no-partner or the {has_fiscal_partner, items} shape to "
-                "assert otherwise.",
-                file=sys.stderr,
-            )
-    else:
-        print(
-            "Error: input must be a JSON array of allocation items or an object "
-            "with an 'items' array",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
-    errors, warnings = validate_allocations(items, has_fiscal_partner=has_fiscal_partner)
-
+    errors = validate(payload)
     if errors:
         print("VALIDATION FAILED")
         print()
         print("Errors:")
-        for e in errors:
-            print(f"  - {e}")
-    else:
-        print("VALIDATION PASSED")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
 
-    if warnings:
-        print()
-        print("Warnings:")
-        for w in warnings:
-            print(f"  - {w}")
-
-    if not errors and not warnings:
-        print("No issues found.")
-
-    sys.exit(1 if errors else 0)
+    print("VALIDATION PASSED")
+    print("No issues found.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

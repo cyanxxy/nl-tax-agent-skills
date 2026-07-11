@@ -170,16 +170,18 @@ class ValidatorSmokeTests(unittest.TestCase):
             "skills/nl-tax-partner-deductions/scripts/validate_allocation.py",
             "validate_allocation",
         )
-        errors, _ = module.validate_allocations(
-            [
-                {
-                    "item": "employment income",
-                    "total": 100,
-                    "partner1_share": 50,
-                    "partner2_share": 50,
-                    "allocatable": False,
-                }
-            ]
+        errors = module.validate(
+            {
+                "has_fiscal_partner": True,
+                "items": [
+                    {
+                        "name": "employment income",
+                        "allocatable": False,
+                        "taxpayer_pct": 50,
+                        "partner_pct": 50,
+                    }
+                ],
+            }
         )
         self.assertTrue(any("non-allocatable" in error for error in errors))
 
@@ -683,55 +685,120 @@ class AllocationHardeningTests(unittest.TestCase):
             "validate_allocation_hardening",
         )
 
-    def test_string_total_does_not_crash_and_reports_error(self):
+    def test_partner_and_allocatable_require_real_booleans(self):
         module = self._module()
-        errors, _ = module.validate_allocations(
-            [
+        for bad in ("false", "true", 0, 1, None):
+            with self.subTest(field="has_fiscal_partner", bad=bad):
+                errors = module.validate({"has_fiscal_partner": bad, "items": []})
+                self.assertTrue(errors)
+
+            with self.subTest(field="allocatable", bad=bad):
+                errors = module.validate(
+                    {
+                        "has_fiscal_partner": True,
+                        "items": [
+                            {
+                                "name": "Box 3 base",
+                                "allocatable": bad,
+                                "taxpayer_pct": 50,
+                                "partner_pct": 50,
+                            }
+                        ],
+                    }
+                )
+                self.assertTrue(errors)
+
+    def test_item_name_does_not_decide_allocatability(self):
+        module = self._module()
+        payload = {
+            "has_fiscal_partner": True,
+            "items": [
                 {
-                    "item": "Box 3 banktegoeden",
-                    "total": "lots",
-                    "partner1_share": 100,
-                    "partner2_share": 0,
+                    "name": "employment income",
+                    "allocatable": True,
+                    "taxpayer_pct": 50,
+                    "partner_pct": 50,
                 }
-            ]
+            ],
+        }
+        self.assertFalse(module.validate(payload))
+
+    def test_wrapped_payload_and_explicit_row_fields_are_required(self):
+        module = self._module()
+        self.assertTrue(module.validate([]))
+        self.assertTrue(module.validate({"has_fiscal_partner": True, "items": [{}]}))
+
+    def test_percentage_string_does_not_crash_and_reports_error(self):
+        module = self._module()
+        errors = module.validate(
+            {
+                "has_fiscal_partner": True,
+                "items": [
+                    {
+                        "name": "Box 3 base",
+                        "allocatable": True,
+                        "taxpayer_pct": "50",
+                        "partner_pct": 50,
+                    }
+                ],
+            }
         )
-        self.assertTrue(any("not a number" in e for e in errors), errors)
+        self.assertTrue(any("real finite number" in e for e in errors), errors)
 
     def test_nan_and_inf_are_rejected(self):
         module = self._module()
         for bad in (float("nan"), float("inf")):
             with self.subTest(bad=bad):
-                errors, _ = module.validate_allocations(
-                    [
-                        {
-                            "item": "Box 3 banktegoeden",
-                            "total": bad,
-                            "partner1_share": 0,
-                            "partner2_share": 0,
-                        }
-                    ]
+                errors = module.validate(
+                    {
+                        "has_fiscal_partner": True,
+                        "items": [
+                            {
+                                "name": "Box 3 base",
+                                "allocatable": True,
+                                "taxpayer_pct": bad,
+                                "partner_pct": 0,
+                            }
+                        ],
+                    }
                 )
                 self.assertTrue(
-                    any("not a finite number" in e for e in errors), errors
+                    any("real finite number" in e for e in errors), errors
                 )
 
-    def test_duplicate_item_is_flagged(self):
+    def test_percentages_must_be_in_range_and_sum_to_100(self):
         module = self._module()
-        _, warnings = module.validate_allocations(
-            [
-                {"item": "Box 3 banktegoeden", "total": 100, "partner1_share": 100, "partner2_share": 0},
-                {"item": "Box 3 banktegoeden", "total": 200, "partner1_share": 200, "partner2_share": 0},
-            ]
-        )
-        self.assertTrue(any("duplicate" in w for w in warnings), warnings)
+        for taxpayer_pct, partner_pct in ((-1, 101), (101, -1), (60, 30)):
+            with self.subTest(taxpayer_pct=taxpayer_pct, partner_pct=partner_pct):
+                errors = module.validate(
+                    {
+                        "has_fiscal_partner": True,
+                        "items": [
+                            {
+                                "name": "Box 3 base",
+                                "allocatable": True,
+                                "taxpayer_pct": taxpayer_pct,
+                                "partner_pct": partner_pct,
+                            }
+                        ],
+                    }
+                )
+                self.assertTrue(errors)
 
-    def test_partner2_share_without_partner_is_rejected(self):
+    def test_partner_percentage_without_partner_is_rejected(self):
         module = self._module()
-        errors, _ = module.validate_allocations(
-            [
-                {"item": "Box 3 banktegoeden", "total": 100, "partner1_share": 60, "partner2_share": 40},
-            ],
-            has_fiscal_partner=False,
+        errors = module.validate(
+            {
+                "has_fiscal_partner": False,
+                "items": [
+                    {
+                        "name": "Box 3 base",
+                        "allocatable": True,
+                        "taxpayer_pct": 60,
+                        "partner_pct": 40,
+                    }
+                ],
+            }
         )
         self.assertTrue(any("no fiscal partner asserted" in e for e in errors), errors)
 

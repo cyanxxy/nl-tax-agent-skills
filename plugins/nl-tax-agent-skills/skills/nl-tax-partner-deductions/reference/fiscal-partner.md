@@ -110,6 +110,16 @@ When determining fiscal partnership, verify:
 5. Whether death, separation, multiple-partner, emigration, or immigration facts require human review.
 6. Whether both partners use the same allocation choices and the allocations total 100%.
 
+For each allocation scenario, the agent records the reviewed partner conclusion
+as a real boolean `has_fiscal_partner` and classifies every row with an explicit
+real boolean `allocatable`. A row name never determines that classification.
+Check that `taxpayer_pct` and `partner_pct` are finite numbers from 0 through
+100 and total 100. A non-allocatable row must be 100/0 or 0/100, and
+`partner_pct` must be 0 when `has_fiscal_partner` is false. Record
+`check_performed_by: checked_by_agent` for this manual check or
+`check_performed_by: checked_by_script` after the optional helper checks the
+same explicit payload.
+
 ## Notes
 
 - Do not assume all married taxpayers are full-year fiscal partners in the year of marriage; start date depends on the official same-address and marriage/registration facts.

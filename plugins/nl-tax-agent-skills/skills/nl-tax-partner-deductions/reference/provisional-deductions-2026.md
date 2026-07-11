@@ -107,6 +107,21 @@ Because all amounts are estimates and the allocation can be changed:
 - **Review:** when reviewing an existing voorlopige aanslag, check whether the current allocation is still reasonable given any changes in circumstances (income change, new deduction, partner status change).
 - **Stopzetten:** stopping does not involve allocation choices and is only available for monthly refund cases. Payment corrections must use the change subflow.
 
+## Allocation arithmetic check
+
+The agent determines fiscal-partner status and row allocatability from the
+reviewed sources before checking a provisional scenario. Record
+`has_fiscal_partner` as a real boolean on the wrapped scenario and
+`allocatable` as a real boolean on every row. Never infer either value from a
+row name or use a missing-value default.
+
+For each row, `taxpayer_pct` and `partner_pct` must be finite numbers from 0
+through 100 and total 100. An explicitly non-allocatable row must be 100/0 or
+0/100, and `partner_pct` must be 0 when `has_fiscal_partner` is false. Apply
+these invariants manually and record `check_performed_by: checked_by_agent`, or
+record `check_performed_by: checked_by_script` after the optional helper checks
+the same explicit payload. Python availability never blocks the workpack.
+
 ## Notes
 
 - The provisional assessment for 2026 uses ONLY the fictitious return method for box 3. Werkelijk rendement is not relevant for the provisional and should not be considered in allocation calculations.
