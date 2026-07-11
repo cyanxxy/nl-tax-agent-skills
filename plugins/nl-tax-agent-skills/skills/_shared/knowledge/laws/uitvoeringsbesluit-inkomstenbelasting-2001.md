@@ -4,7 +4,7 @@ source_id: law_uitvoeringsbesluit_ib_2001
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -15,15 +15,10 @@ The Uitvoeringsbesluit inkomstenbelasting 2001 is the government decree (Algemen
 
 The Uitvoeringsbesluit specifies detailed rules on:
 
-- **Eigenwoningforfait percentages** -- the imputed rental value rates applied to owner-occupied homes, broken down by WOZ value brackets
 - **Box 3 category definitions** -- precise definitions of what constitutes banktegoeden, overige bezittingen, and schulden for box 3 purposes
 - **Specific deduction thresholds** -- threshold amounts and caps for certain deductions that are set by government decree rather than by law or ministerial regulation
 
 ## Relevance to this project
-
-### Own-home calculations (box 1)
-
-The eigenwoningforfait percentages are defined in this decree. The box1-home skill uses these percentages to calculate the imputed rental value added to box 1 income. Year-specific percentages are in year-specific knowledge files.
 
 ### Box 3 asset classification
 
@@ -37,7 +32,8 @@ Certain deduction thresholds (e.g., drempel for specific care costs, threshold f
 
 When building own-home or box 3 calculations:
 
-1. Use year-specific knowledge files for eigenwoningforfait percentages -- they change annually
+1. Attribute the eigenwoningforfait and its table to article 3.112 Wet IB 2001,
+   then use year-specific knowledge files for the applicable year
 2. Use the box 3 category definitions from this decree (via the year-specific box3 knowledge files) to classify assets
 3. Do not hard-code thresholds from this decree -- they are year-dependent
 4. When a classification is ambiguous (e.g., crypto-assets, rights to periodic payments), flag for human review

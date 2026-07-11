@@ -102,7 +102,7 @@ class KnowledgePackTests(unittest.TestCase):
         for sid, entry in meta["sources"].items():
             with self.subTest(source=sid):
                 self.assertEqual(entry["review_status"], "reviewed")
-                self.assertEqual(len(entry["content_hash_sha256"]), 64)
+                self.assertEqual(len(entry["reviewed_note_hash_sha256"]), 64)
 
     def test_key_2025_amounts_present_in_notes(self):
         # Adversarially verified 2025 figures (belastingdienst.nl / wetten.overheid.nl).

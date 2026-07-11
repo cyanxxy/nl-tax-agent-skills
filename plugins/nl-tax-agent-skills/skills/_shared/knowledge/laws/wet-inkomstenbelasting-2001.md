@@ -4,7 +4,7 @@ source_id: law_wet_inkomstenbelasting_2001
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -53,7 +53,8 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 ### Eigenwoningregeling (own-home rules)
 
 - Mortgage interest on the own home is deductible in box 1
-- Eigenwoningforfait (imputed rental value) is added as income in box 1
+- Article 3.112 Wet IB 2001 defines the eigenwoningforfait and its WOZ-value
+  table; the imputed rental value is added as income in box 1
 - Rules for qualifying own-home debt are in Chapter 3, Section 3.6
 
 ### Persoonsgebonden aftrek (personal deductions)

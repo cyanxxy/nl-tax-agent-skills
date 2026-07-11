@@ -1,6 +1,6 @@
 # Rule note: Winstbepaling, kosten en administratie 2025
 
-source_ids: bd_zakelijke_kosten_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werkruimte_2025, bd_privevervoermiddel_2025, bd_oudedagsreserve_2025, bd_administratie_bewaren_2025, bd_bijtelling_auto_2025, law_wet_inkomstenbelasting_2001
+source_ids: bd_zakelijke_kosten_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werkruimte_2025, bd_privevervoermiddel_2025, bd_oudedagsreserve_2025, bd_administratie_bewaren_2025, bd_bijtelling_auto_2025, law_wet_inkomstenbelasting_2001, law_awr_artikel_52
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -102,6 +102,8 @@ manual-review item.
 
 ## Administratie and bewaarplicht
 
+- Article 52(1), (2), and (4) AWR is the legal basis for the administration
+  duty and the seven-year retention period (`law_awr_artikel_52`).
 - Fiscale bewaarplicht: **7 years** for the administratie (basisgegevens such as
   the grootboek, debtor/creditor and purchase/sales records); **10 years** for
   data on onroerende zaken.

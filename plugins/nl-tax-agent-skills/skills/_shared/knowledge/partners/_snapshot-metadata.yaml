@@ -1,20 +1,20 @@
-snapshot_metadata_version: '1.0'
+metadata_version: '1.1'
 sources:
   bd_fiscal_partner_death_return:
-    content_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     source_id: bd_fiscal_partner_death_return
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden
   bd_fiscal_partner_separation:
-    content_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     source_id: bd_fiscal_partner_separation
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners
   bd_fiscal_partnership:
-    content_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_sha256: fb0b5883f2cab880d09d688c3eb1dea119837ffdf6ca76b621521d3f524b2e59
     source_id: bd_fiscal_partnership
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap

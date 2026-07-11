@@ -6,9 +6,9 @@ Usage:
 
 For each source entry with a snapshot_path:
     - Checks if the snapshot file exists
-    - Computes SHA-256 hash if it exists
+    - Computes a SHA-256 hash of the local reviewed note if it exists
     - Generates/updates _snapshot-metadata.yaml alongside the snapshot
-    - Reports status: present, missing, or hash-changed
+    - Reports status: present, missing, or reviewed-note-hash-changed
 """
 
 import hashlib
@@ -81,24 +81,23 @@ def write_metadata(meta_path, metadata):
 def normalize_directory_metadata(existing_meta):
     """Return directory metadata with one entry per source ID."""
     if not isinstance(existing_meta, dict):
-        return {"snapshot_metadata_version": "1.0", "sources": {}}
+        return {"metadata_version": "1.1", "sources": {}}
 
     if isinstance(existing_meta.get("sources"), dict):
-        return existing_meta
+        return {
+            "metadata_version": "1.1",
+            "sources": existing_meta["sources"],
+        }
 
     # Backward compatibility with the old single-source file shape.
     if existing_meta.get("source_id"):
         source_id = existing_meta["source_id"]
         return {
-            "snapshot_metadata_version": "1.0",
+            "metadata_version": "1.1",
             "sources": {source_id: existing_meta},
         }
 
-    existing_meta["snapshot_metadata_version"] = existing_meta.get(
-        "snapshot_metadata_version", "1.0"
-    )
-    existing_meta["sources"] = {}
-    return existing_meta
+    return {"metadata_version": "1.1", "sources": {}}
 
 
 def existing_source_metadata(existing_meta, source_id):
@@ -197,16 +196,18 @@ def main():
 
         status = "present"
         if existing_source_meta:
-            old_hash = existing_source_meta.get("content_hash_sha256", "")
+            old_hash = existing_source_meta.get("reviewed_note_hash_sha256", "")
             if old_hash and old_hash != current_hash:
                 status = "hash_changed"
 
-        # Preserve the original snapshot_created_at unless the content hash
-        # actually changed, so re-running on an unchanged tree is a no-op.
+        # Preserve the time at which this exact note hash was recorded unless
+        # the reviewed note changed, so an unchanged rebuild is a no-op.
         if existing_source_meta and status != "hash_changed":
-            created_at = existing_source_meta.get("snapshot_created_at", now)
+            recorded_at = existing_source_meta.get(
+                "reviewed_note_hash_recorded_at", now
+            )
         else:
-            created_at = now
+            recorded_at = now
 
         # New or changed content always needs human review; an unchanged
         # snapshot keeps its recorded review_status (this script must never
@@ -218,9 +219,9 @@ def main():
 
         metadata = {
             "source_id": sid,
-            "snapshot_created_at": created_at,
+            "reviewed_note_hash_recorded_at": recorded_at,
             "source_url": source.get("url", ""),
-            "content_hash_sha256": current_hash,
+            "reviewed_note_hash_sha256": current_hash,
             "review_status": review_status,
         }
 

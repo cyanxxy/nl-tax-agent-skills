@@ -33,6 +33,7 @@ Output:
     `expires_on` fields derived from `last_checked` and `source_type`.
 """
 
+import hashlib
 import os
 import sys
 from datetime import datetime, timedelta, timezone
@@ -236,6 +237,15 @@ def check_snapshot_exists(source, base_dir):
     return False, full_path
 
 
+def compute_sha256(filepath):
+    """Hash the local reviewed note; this does not retrieve remote content."""
+    digest = hashlib.sha256()
+    with open(filepath, "rb") as handle:
+        for chunk in iter(lambda: handle.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 # ---------------------------------------------------------------------------
 def find_source_register():
     """Locate source-register.yaml relative to this script."""
@@ -342,7 +352,7 @@ def source_report_entry(source, now, repo_root, fetch_flag):
     source_id = source.get("id", "unknown")
     url = source.get("url", "")
     freshness = staleness_metadata(source, now)
-    snapshot_exists, _ = check_snapshot_exists(source, repo_root)
+    snapshot_exists, abs_snapshot = check_snapshot_exists(source, repo_root)
     url_allowed = is_url_allowed(url)
 
     entry = {
@@ -359,6 +369,14 @@ def source_report_entry(source, now, repo_root, fetch_flag):
         "snapshot_exists": snapshot_exists,
         "snapshot_path": source.get("snapshot_path", ""),
         "url_on_allowlist": url_allowed,
+        "url_reachability": "not_checked",
+        "reachability_checked_at": None,
+        "last_retrieved_at": None,
+        "last_human_reviewed": str(source.get("last_checked", "")),
+        "reviewed_note_path": source.get("snapshot_path", ""),
+        "reviewed_note_hash_sha256": (
+            compute_sha256(abs_snapshot) if snapshot_exists else None
+        ),
     }
 
     if fetch_flag and freshness["is_stale"]:

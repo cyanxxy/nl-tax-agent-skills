@@ -28,7 +28,7 @@ Safety: only run Python under an already-resolved plugin `skills/.../scripts/` p
 
 ## What the validators check (and what they do not)
 
-- The validators verify **metadata consistency only**: that ids/paths/hashes match, that `review_status` and `source_id` registrations are internally coherent, and that every cited `source_id` is registered. `review_status: reviewed` is a **human attestation** that someone checked the note against the cited official source — it is not machine proof of legal accuracy. A green validator run does not certify that a rate or rule is correct.
+- The validators verify **metadata consistency only**: that ids/paths/local reviewed-note hashes match, that `review_status` and `source_id` registrations are internally coherent, and that every cited `source_id` is registered. `review_status: reviewed` and source-register `last_checked` are **human attestations** that someone checked the local note against the cited official source — they are not machine proof of legal accuracy or URL reachability. `reviewed_note_hash_sha256` hashes the local reviewed note, never a remote page body. A green validator run does not certify that a rate or rule is correct.
 - The must-cite-a-`source_id` check exempts four internal knowledge prefixes — `methods/`, `platform/`, `security/`, and `compat/` — because these are authored internal playbooks rather than restatements of an external authority. Any `source_id` those files *do* cite is still validated against the register.
 - Freshness: prose cadences (for example "check monthly") are now parsed, and a stale source whose `mandatory_for` is non-empty blocks validation. Refresh or re-attest stale mandatory sources before relying on a passing run.
 

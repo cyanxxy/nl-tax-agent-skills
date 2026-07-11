@@ -485,12 +485,12 @@ class ValidatorSmokeTests(unittest.TestCase):
             metadata.write_text(
                 "\n".join(
                     [
-                        "snapshot_metadata_version: '1.0'",
+                        "metadata_version: '1.1'",
                         "sources:",
                         "  source_one:",
-                        "    content_hash_sha256: stale",
+                        "    reviewed_note_hash_sha256: stale",
                         "    review_status: reviewed",
-                        "    snapshot_created_at: '2026-01-01T00:00:00+00:00'",
+                        "    reviewed_note_hash_recorded_at: '2026-01-01T00:00:00+00:00'",
                         "    source_id: source_one",
                         "    source_url: https://www.belastingdienst.nl/example",
                         "",
@@ -530,12 +530,12 @@ class ValidatorSmokeTests(unittest.TestCase):
             metadata.write_text(
                 "\n".join(
                     [
-                        "snapshot_metadata_version: '1.0'",
+                        "metadata_version: '1.1'",
                         "sources:",
                         "  source_one:",
-                        f"    content_hash_sha256: {digest}",
+                        f"    reviewed_note_hash_sha256: {digest}",
                         "    review_status: reviewed",
-                        "    snapshot_created_at: '2026-01-01T00:00:00+00:00'",
+                        "    reviewed_note_hash_recorded_at: '2026-01-01T00:00:00+00:00'",
                         "    source_id: source_one",
                         "    source_url: https://www.belastingdienst.nl/example",
                         "",

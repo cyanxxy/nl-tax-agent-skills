@@ -35,6 +35,13 @@ differently — both are intentional:
    (table under "Staleness thresholds" below), not by the policy text. It
    reports which sources a developer should re-verify; it does not block.
 
+In both cases, `last_checked` means the date of human review of the local note
+against the official source. The plan report emits URL reachability separately
+as `url_reachability: not_checked` with `reachability_checked_at: null` and
+`last_retrieved_at: null`. Its `reviewed_note_hash_sha256` is a hash of the local
+reviewed note; it does not imply that any remote page body was fetched or
+archived.
+
 When writing a `freshness_policy`, include one of the recognized cadence
 keywords so the blocking gate derives the intended threshold rather than the
 365-day default.

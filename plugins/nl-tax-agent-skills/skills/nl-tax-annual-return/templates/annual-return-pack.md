@@ -686,7 +686,7 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] Box 3 method choice reviewed (fictitious vs actual return)
 - [ ] Winst uit onderneming reviewed if applicable: finalized profit-and-loss and balance evidence organized, open questions listed, and field map kept draft with the business-section schema-review blocker
 - [ ] Complex business facts (partnership, DGA/BV winst, agrarisch, zeevarende, staking, resultaat uit overige werkzaamheden) routed to manual review or professional advice
-- [ ] Business administration retained for at least 7 years (fiscale bewaarplicht) if you have winst uit onderneming
+- [ ] Business administration retained for at least 7 years (AWR article 52; `law_awr_artikel_52`) if you have winst uit onderneming
 - [ ] Box 2 dividends, share-sale data, withholding tax, loss setoff, and partner allocation reviewed if applicable
 - [ ] Complex Box 2 facts routed to manual review or professional advice
 - [ ] Partner allocation reviewed and agreed with fiscal partner

@@ -4,7 +4,7 @@ source_id: law_uitvoeringsregeling_ib_2001
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-07-11"
 review_status: reviewed
 
 ## Rule
@@ -29,10 +29,6 @@ The regulation defines what evidence is required to support specific deduction c
 ### Deduction eligibility checks
 
 Detailed conditions for claiming deductions (e.g., specific care costs, gifts, own-home interest) are specified in this regulation. Skills that calculate or validate deductions must reference these conditions.
-
-### Documentation requirements
-
-The regulation specifies retention periods and formats for supporting documentation. This informs the evidence-indexer skill's completeness checks.
 
 ## Developer instruction
 

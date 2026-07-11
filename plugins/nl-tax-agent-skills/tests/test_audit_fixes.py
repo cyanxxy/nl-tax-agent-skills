@@ -153,13 +153,13 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
         snapshot_text = "# Rule note\n\nsome content\n"
         current_hash = hashlib.sha256(snapshot_text.encode("utf-8")).hexdigest()
         metadata_text = (
-            "snapshot_metadata_version: '1.0'\n"
+            "metadata_version: '1.1'\n"
             "sources:\n"
             "  test_source:\n"
             "    source_id: test_source\n"
-            "    snapshot_created_at: '2026-05-01T00:00:00+00:00'\n"
+            "    reviewed_note_hash_recorded_at: '2026-05-01T00:00:00+00:00'\n"
             "    source_url: 'https://www.belastingdienst.nl/test'\n"
-            f"    content_hash_sha256: {current_hash}\n"
+            f"    reviewed_note_hash_sha256: {current_hash}\n"
             "    review_status: needs_review\n"
         )
         with tempfile.TemporaryDirectory() as tmp:
@@ -175,13 +175,13 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
         snapshot_text = "# Rule note\n\nreviewed content\n"
         current_hash = hashlib.sha256(snapshot_text.encode("utf-8")).hexdigest()
         metadata_text = (
-            "snapshot_metadata_version: '1.0'\n"
+            "metadata_version: '1.1'\n"
             "sources:\n"
             "  test_source:\n"
             "    source_id: test_source\n"
-            "    snapshot_created_at: '2026-05-01T00:00:00+00:00'\n"
+            "    reviewed_note_hash_recorded_at: '2026-05-01T00:00:00+00:00'\n"
             "    source_url: 'https://www.belastingdienst.nl/test'\n"
-            f"    content_hash_sha256: {current_hash}\n"
+            f"    reviewed_note_hash_sha256: {current_hash}\n"
             "    review_status: reviewed\n"
         )
         with tempfile.TemporaryDirectory() as tmp:
@@ -196,6 +196,28 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
     def test_new_snapshot_entry_defaults_to_needs_review(self):
         with tempfile.TemporaryDirectory() as tmp:
             project_root = self.make_project(tmp, "# Rule note\n\nnew content\n")
+            result = self.run_build(project_root)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            metadata = self.load_metadata(project_root)
+            self.assertEqual(
+                metadata["sources"]["test_source"]["review_status"], "needs_review"
+            )
+
+    def test_changed_reviewed_note_is_demoted_for_human_review(self):
+        metadata_text = (
+            "metadata_version: '1.1'\n"
+            "sources:\n"
+            "  test_source:\n"
+            "    source_id: test_source\n"
+            "    reviewed_note_hash_recorded_at: '2026-05-01T00:00:00+00:00'\n"
+            "    source_url: 'https://www.belastingdienst.nl/test'\n"
+            "    reviewed_note_hash_sha256: stale\n"
+            "    review_status: reviewed\n"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            project_root = self.make_project(
+                tmp, "# Rule note\n\nchanged content\n", metadata_text
+            )
             result = self.run_build(project_root)
             self.assertEqual(result.returncode, 0, result.stderr)
             metadata = self.load_metadata(project_root)

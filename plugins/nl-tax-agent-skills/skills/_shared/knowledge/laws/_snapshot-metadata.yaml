@@ -1,20 +1,26 @@
-snapshot_metadata_version: '1.0'
+metadata_version: '1.1'
 sources:
-  law_uitvoeringsbesluit_ib_2001:
-    content_hash_sha256: 2550c398c4edbb641afa227dab0d4bcf2c58809c04a98655569a87640d08cade
+  law_awr_artikel_52:
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
+    reviewed_note_hash_sha256: 86449210f1bcac96f1b6cffe873f50a2ce7c412eceedcdcf694486074f67c644
+    source_id: law_awr_artikel_52
+    source_url: https://wetten.overheid.nl/jci1.3:c:BWBR0002320&artikel=52
+  law_uitvoeringsbesluit_ib_2001:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
+    reviewed_note_hash_sha256: 2a62ab981ea2cbebebf36a25c5dd6adf4085a24a190346fe2d51b27a63c297ef
     source_id: law_uitvoeringsbesluit_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012066/
   law_uitvoeringsregeling_ib_2001:
-    content_hash_sha256: 5cbd81fdd821ea425d3df3950491adc07c2d835336a983a640232110ea15e2c2
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
+    reviewed_note_hash_sha256: 2578eb5d20909c73fd81f15bc0e82c9a80ea5df7629ba83d6ec0c440d73a378f
     source_id: law_uitvoeringsregeling_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012031/
   law_wet_inkomstenbelasting_2001:
-    content_hash_sha256: 8b69e898a022d5eb7bccf966476173c437aec4460d3e81b570601c0679de4f97
     review_status: reviewed
-    snapshot_created_at: '2026-05-26T19:13:32.798384+00:00'
+    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
+    reviewed_note_hash_sha256: ff0ccd3c23e248c55682dcf0b7816c24e42ff5f4e5296bcac2c2071ce7b7e9e6
     source_id: law_wet_inkomstenbelasting_2001
     source_url: https://wetten.overheid.nl/BWBR0011353/

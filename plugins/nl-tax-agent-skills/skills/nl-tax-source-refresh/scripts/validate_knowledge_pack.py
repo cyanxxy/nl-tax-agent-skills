@@ -14,7 +14,7 @@ Checks:
 
 Scope and honesty note:
     These validators verify METADATA consistency only -- ids, snapshot paths,
-    content hashes, review_status flags, and that every cited source_id is
+    local reviewed-note hashes, review_status flags, and that every cited source_id is
     registered. A `review_status: reviewed` marker is a HUMAN attestation that a
     person checked the file; it is NOT machine proof of legal or tax-rate
     accuracy. Passing this validator means the bookkeeping is internally
@@ -403,12 +403,16 @@ def collect_snapshot_metadata_errors(sources, project_root):
             errors.append((sid, f"unreadable snapshot metadata: {exc}", rel_meta_path))
             continue
 
+        if not isinstance(metadata, dict) or metadata.get("metadata_version") != "1.1":
+            errors.append((sid, "snapshot metadata_version is not 1.1", rel_meta_path))
+            continue
+
         source_meta = metadata_for_source(metadata, sid)
         if not source_meta:
             errors.append((sid, "missing snapshot metadata entry", rel_meta_path))
             continue
 
-        stored_hash = source_meta.get("content_hash_sha256", "")
+        stored_hash = source_meta.get("reviewed_note_hash_sha256", "")
         current_hash = compute_sha256(abs_snapshot)
         if stored_hash != current_hash:
             errors.append((sid, "hash mismatch", rel_meta_path))
@@ -420,6 +424,9 @@ def collect_snapshot_metadata_errors(sources, project_root):
 
         if source_meta.get("review_status") != "reviewed":
             errors.append((sid, "snapshot metadata not reviewed", rel_meta_path))
+
+        if not source_meta.get("reviewed_note_hash_recorded_at"):
+            errors.append((sid, "missing reviewed-note hash timestamp", rel_meta_path))
 
         snapshot_refs = extract_source_ids(abs_snapshot)
         if sid not in snapshot_refs:

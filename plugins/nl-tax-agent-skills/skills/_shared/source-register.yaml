@@ -12,13 +12,19 @@
 #   source_type        law | official_guidance | official_rates |
 #                      official_doctrine | official_algorithm_register |
 #                      platform_docs | developer_reference | methodology
-#   snapshot_path      local markdown snapshot relative to repo root, not
+#   snapshot_path      path to the local reviewed note, relative to repo root, not
 #                      relative to an individual skill directory. Skill docs may
 #                      refer to the same file with skill-relative paths such as
 #                      `_shared/knowledge/...`; register paths keep the leading
 #                      `skills/` segment so validators can resolve them from the
 #                      plugin/repo root.
-#   last_checked       ISO date of most recent manual verification
+#   last_checked       ISO date of the most recent human review of the local
+#                      note against the cited official source. It is not a URL
+#                      reachability check and does not mean the remote page body
+#                      was fetched, archived, or hashed.
+#
+# Snapshot metadata records `reviewed_note_hash_sha256` for the local reviewed
+# note only. It never claims to hash the remote page body.
 #   freshness_policy   how often / when to re-check
 #   owner              team or role responsible for keeping the snapshot current
 #   mandatory_for      list of skill names that MUST have access to this source
@@ -91,6 +97,20 @@ sources:
       - nl-tax-box1-home
       - nl-tax-box3
       - nl-tax-partner-deductions
+
+  - id: law_awr_artikel_52
+    title: "Algemene wet inzake rijksbelastingen — artikel 52"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/jci1.3:c:BWBR0002320&artikel=52"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/laws/algemene-wet-inzake-rijksbelastingen.md"
+    last_checked: "2026-07-11"
+    freshness_policy: "check annually and after a published amendment to AWR article 52"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+      - nl-tax-evidence-indexer
 
   - id: law_uitvoeringsregeling_ib_2001
     title: "Uitvoeringsregeling inkomstenbelasting 2001"

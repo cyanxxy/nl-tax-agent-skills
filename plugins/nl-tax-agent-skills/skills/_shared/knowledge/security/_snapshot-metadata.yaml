@@ -1,8 +1,8 @@
-snapshot_metadata_version: '1.0'
+metadata_version: '1.1'
 sources:
   bd_machtigen_authorization:
-    content_hash_sha256: 11b15028370f0f9321b57b0927531b265ef7fe14887842e4e8d51a772dd563ce
     review_status: reviewed
-    snapshot_created_at: '2026-06-24T14:14:16.656493+00:00'
+    reviewed_note_hash_recorded_at: '2026-06-24T14:14:16.656493+00:00'
+    reviewed_note_hash_sha256: 11b15028370f0f9321b57b0927531b265ef7fe14887842e4e8d51a772dd563ce
     source_id: bd_machtigen_authorization
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen

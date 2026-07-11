@@ -218,8 +218,10 @@ official_algorithm_register | platform_docs | developer_reference | methodology`
 
 To add a rate or rule: put it in the right `knowledge/years/<year>/<scope>/*.md`, register
 the source (with `mandatory_for` listing every skill that needs it), then run the validators.
-After editing a reviewed knowledge `.md`, recompute its `content_hash_sha256` in the relevant
-`_snapshot-metadata.yaml` by hand and keep `review_status: reviewed`.
+After editing a reviewed knowledge `.md`, run `build_snapshots.py` to recompute its
+`reviewed_note_hash_sha256` in the relevant `_snapshot-metadata.yaml`. The builder marks a
+new or changed note `review_status: needs_review`; only a human who compared the local note
+with the cited official source may change that status to `reviewed`.
 
 > **Freshness gate.** `validate_knowledge_pack.py` parses prose `freshness_policy` cadences
 > ("check monthly" → 31 days, "quarter" → 92, "prinsjesdag" → 120, "annual" → 365) and a
@@ -231,10 +233,12 @@ Only `nl-tax-source-refresh` may maintain source snapshots. Active supported pai
 blocked** until official 2027 sources are registered and validated. Never reuse 2025/2026
 rates, thresholds, field maps, or box 3 logic for a future year.
 
-> **Validation scope.** The validators verify *metadata* consistency only (ids, paths, hashes,
-> `review_status` flag, `source_id` registration). `review_status: reviewed` is a human
-> attestation by the tax-content owner that the snapshot matched the cited authority at
-> `last_checked` — it is not machine proof of legal accuracy.
+> **Validation scope.** The validators verify *metadata* consistency only (ids, paths, local
+> reviewed-note hashes, `review_status` flag, `source_id` registration).
+> `review_status: reviewed` and register `last_checked` are human attestations by the
+> tax-content owner that the local reviewed note matched the cited authority. They are not
+> machine proof of legal accuracy or URL reachability, and the hash never covers a remote
+> page body.
 
 ---
 
