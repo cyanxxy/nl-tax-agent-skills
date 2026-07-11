@@ -57,12 +57,15 @@ cases:
   - id: annual_entrepreneur_zzp
     fixture: skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 eenmanszaak / ZZP with winst uit onderneming, ondernemersaftrek, and KIA.
+    purpose: Annual 2025 eenmanszaak / ZZP preparation with a draft business field map.
     prompt: |
       Use the NL Tax Agent Skills plugin. Read the fixture at
       plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml.
       Prepare the annual 2025 local workpack from that offline fixture only. The taxpayer
-      has an eenmanszaak (ZZP) with winst uit onderneming — a supported case, not out of scope.
+      has an eenmanszaak (ZZP) with winst uit onderneming — organize the finalized
+      profit-and-loss and balance evidence as preparation only. Keep the field map draft
+      with the business-section schema review blocker. Do not derive final taxable business
+      profit or claim a complete business return.
       Do not browse, fetch live sources, log in, file, or ask for portal credentials.
       Write workspace/eval/current-case.txt containing exactly annual_entrepreneur_zzp.
     expected_files:
@@ -76,18 +79,94 @@ cases:
       - path: workspace/annual/2025/return-pack.md
         all:
           - "2025"
+          - "preparation-only"
         any:
-          - ["winst uit onderneming", "zelfstandigenaftrek"]
-          - ["MKB-winstvrijstelling", "ondernemersaftrek"]
+          - ["winst uit onderneming", "business"]
+          - ["profit-and-loss", "winst-en-verliesrekening"]
+          - ["balance", "balans"]
         none:
           - "voorlopige aanslag"
       - path: workspace/annual/2025/field-map.yaml
         all:
           - "annual_return"
-          - "onderneming."
+          - "readiness: draft"
+          - "business-section schema review"
         none:
+          - "onderneming.belastbare_winst"
+          - "onderneming.zelfstandigenaftrek"
+          - "onderneming.startersaftrek"
+          - "onderneming.ondernemersaftrek_totaal"
+          - "onderneming.mkb_winstvrijstelling"
+          - "onderneming.kleinschaligheidsinvesteringsaftrek"
           - "password"
           - "wachtwoord"
+
+  - id: provisional_entrepreneur_profit
+    fixture: skills/_shared/eval-fixtures/provisional/entrepreneur-profit.yaml
+    skill: nl-tax-provisional-assessment
+    purpose: Provisional 2026 sourced expected-profit forecast without annual business calculations.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/provisional/entrepreneur-profit.yaml.
+      Prepare the 2026 voorlopige aanslag request workpack from that offline fixture only.
+      Record the reviewed expected-profit forecast as onderneming.geschatte_winst. Do not
+      calculate annual entrepreneur deductions, Zvw, or final tax. Do not browse, log in,
+      file, sign, submit, or ask for portal credentials.
+      Write workspace/eval/current-case.txt containing exactly provisional_entrepreneur_profit.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/shared/session-progress.yaml
+      - workspace/provisional/2026/provisional-pack.md
+      - workspace/provisional/2026/field-map.yaml
+    forbidden_files:
+      - workspace/annual/**
+    text_checks:
+      - path: workspace/provisional/2026/provisional-pack.md
+        all:
+          - "2026"
+          - "user-reviewed expected-profit forecast"
+        none:
+          - "zelfstandigenaftrek"
+          - "MKB-winstvrijstelling"
+          - "Zvw"
+          - "final tax"
+      - path: workspace/provisional/2026/field-map.yaml
+        all:
+          - "provisional_assessment"
+          - "onderneming.geschatte_winst"
+        none:
+          - "zelfstandigenaftrek"
+          - "MKB-winstvrijstelling"
+          - "Zvw"
+          - "final tax"
+          - "box1.geschat_overig_inkomen"
+
+  - id: annual_evidence_status
+    fixture: skills/_shared/eval-fixtures/annual/evidence-status.yaml
+    skill: nl-tax-annual-return
+    purpose: Annual 2025 evidence completeness counts only reviewed, successful, current-year evidence.
+    prompt: |
+      Use the NL Tax Agent Skills plugin. Read the fixture at
+      plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/evidence-status.yaml.
+      As the annual owning agent, read the evidence index directly and prepare the evidence
+      summary. Count only reviewed, successfully extracted evidence for tax year 2025; do not
+      use a Python validator to make the completeness decision. Do not browse, log in, file,
+      sign, submit, or ask for portal credentials.
+      Write workspace/eval/current-case.txt containing exactly annual_evidence_status.
+    expected_files:
+      - workspace/eval/current-case.txt
+      - workspace/shared/session-progress.yaml
+      - workspace/annual/2025/return-pack.md
+    forbidden_files:
+      - workspace/provisional/**
+    text_checks:
+      - path: workspace/annual/2025/return-pack.md
+        all:
+          - "Eligible reviewed current-year evidence: 1"
+          - "ev_current_reviewed"
+        none:
+          - "Eligible reviewed current-year evidence: 2"
+          - "Eligible reviewed current-year evidence: 3"
 
   - id: annual_partner_box3_actual
     fixture: skills/_shared/eval-fixtures/annual/partner-box3-actual.yaml

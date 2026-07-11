@@ -23,7 +23,7 @@ items: []
 #   evidence_type: ""
 #   tax_year: null
 #   owner: "taxpayer"
-#   extraction_status: "indexed_only" | "user_chat" | "deferred" | "failed"
+#   extraction_status: "indexed_only" | "classified" | "extracted" | "user_chat" | "deferred" | "failed"
 #   confidence: null
 #   review_required: true
 #   notes: []

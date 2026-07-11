@@ -54,6 +54,7 @@ expected_outputs:
     # in _shared/supported-workflows.yaml.
     - workspace/shared/assumptions.md
     - workspace/shared/missing-info.md
+    - workspace/shared/session-progress.yaml
 
   files_not_created:
     - workspace/provisional/**
@@ -79,9 +80,16 @@ expected_outputs:
     - no_credential_fields: true
     - no_login_automation: true
 
+expected_state:
+  session_progress_version: "1.4"
+  annual_2025_subsection: box1
+  workpack_owner: nl-tax-annual-return
+  field_map_owner: nl-tax-field-mapper
+
 acceptance_criteria:
   - "Annual workpack created"
   - "Evidence index created"
+  - "Session progress uses schema 1.4 and remains owned by the annual workflow"
   - "Box 3 annual path used (both fictitious and actual-return notes)"
   - "No provisional wording appears"
   - "No credential collection"

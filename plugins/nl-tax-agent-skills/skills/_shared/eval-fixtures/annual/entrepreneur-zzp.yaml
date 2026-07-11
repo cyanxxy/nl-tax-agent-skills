@@ -5,11 +5,11 @@
 #
 # Expected behavior:
 #   - Case is SUPPORTED and routes into annual_2025 (NOT out of scope)
-#   - business.has_onderneming is set true; winst uit onderneming is prepared
-#     in Phase 2A via the nl-tax-winst helper
-#   - Ondernemersaftrek (zelfstandigenaftrek), MKB-winstvrijstelling, and KIA
-#     amounts are read from the entrepreneur knowledge notes, not paraphrased
-#   - No provisional wording appears in output; winst is annual-only
+#   - business.has_onderneming is set true; finalized profit-and-loss and balance
+#     evidence is organized in Phase 2A via the nl-tax-winst helper
+#   - Preparation remains fact/question organization: it does not derive final
+#     taxable business profit or claim a complete business return
+#   - The annual field map remains draft with the business-schema review blocker
 
 fixture_id: eval_annual_entrepreneur_zzp
 fixture_version: "1.0"
@@ -41,6 +41,12 @@ evidence_files:
       omzet: 62000.00
       zakelijke_kosten: 14000.00
       winst_voor_ondernemersaftrek: 48000.00
+  - file: "balans-2025.pdf"
+    evidence_type: balans
+    tax_year: 2025
+    extracted_fields:
+      activa_totaal: 24500.00
+      passiva_totaal: 24500.00
   - file: "urenadministratie-2025.xlsx"
     evidence_type: urenadministratie
     tax_year: 2025
@@ -60,6 +66,7 @@ expected_outputs:
     - workspace/annual/2025/field-map.yaml
     - workspace/shared/assumptions.md
     - workspace/shared/missing-info.md
+    - workspace/shared/session-progress.yaml
 
   files_not_created:
     - workspace/provisional/**
@@ -67,8 +74,8 @@ expected_outputs:
   workpack_checks:
     - section: "Winst uit onderneming notes"
       present: true
-      contains: "zelfstandigenaftrek"
-      contains_also: "MKB-winstvrijstelling"
+      contains: "preparation-only"
+      contains_also: "finalized profit-and-loss and balance"
     - section: "Scope"
       contains: "2025"
       not_contains: "2026"
@@ -78,7 +85,8 @@ expected_outputs:
   field_map_checks:
     - workflow: "annual_return"
     - tax_year: 2025
-    - contains_field_prefix: "onderneming."
+    - readiness: "draft"
+    - contains_blocker: "business-section schema review"
 
   negative_checks:
     - no_provisional_wording: true
@@ -86,10 +94,20 @@ expected_outputs:
     - no_login_automation: true
     - routes_out: false   # eenmanszaak / ZZP is supported, not out of scope
 
+expected_state:
+  session_progress_version: "1.4"
+  annual_2025_subsection: winst
+  annual_2025_winst_status: complete
+  field_map_readiness: draft
+  field_map_blockers:
+    - business-section schema review
+  workpack_owner: nl-tax-annual-return
+  field_map_owner: nl-tax-field-mapper
+
 acceptance_criteria:
   - "Case routes into annual_2025 (supported), not out of scope"
-  - "Winst uit onderneming section is prepared with ondernemersaftrek and MKB-winstvrijstelling"
-  - "Entrepreneur amounts are read from the knowledge notes, not paraphrased"
-  - "Complex business forms would route to manual review; a plain eenmanszaak does not"
-  - "No provisional wording appears; winst uit onderneming is annual-only"
+  - "Finalized profit-and-loss and balance evidence is organized as preparation-only facts and questions"
+  - "The annual field map stays draft with the business-section schema review blocker"
+  - "No final taxable business profit, annual deduction amount, or complete business return is produced"
+  - "Complex business forms route to terminal manual review"
   - "No credential collection or login automation"

@@ -6,6 +6,8 @@ import pathlib
 import tempfile
 import unittest
 
+import yaml
+
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[3]
 
@@ -28,6 +30,60 @@ def load_module(relative_path, name):
     f"offline eval verifier not present ({VERIFIER_PATH}) — standalone package run",
 )
 class OfflineVerifierTests(unittest.TestCase):
+    def test_behavioral_fixture_cases_are_wired_into_dataset(self):
+        dataset_path = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
+        dataset = yaml.safe_load(dataset_path.read_text(encoding="utf-8"))
+        cases = {case["id"]: case for case in dataset["cases"]}
+        expected = {
+            "annual_entrepreneur_zzp": "skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml",
+            "provisional_entrepreneur_profit": "skills/_shared/eval-fixtures/provisional/entrepreneur-profit.yaml",
+            "annual_evidence_status": "skills/_shared/eval-fixtures/annual/evidence-status.yaml",
+        }
+
+        self.assertTrue(expected.keys() <= cases.keys())
+        for case_id, fixture in expected.items():
+            with self.subTest(case_id=case_id):
+                self.assertEqual(cases[case_id]["fixture"], fixture)
+
+        entrepreneur = cases["annual_entrepreneur_zzp"]
+        entrepreneur_map = next(
+            rule
+            for rule in entrepreneur["text_checks"]
+            if rule["path"] == "workspace/annual/2025/field-map.yaml"
+        )
+        self.assertIn("readiness: draft", entrepreneur_map["all"])
+        self.assertIn("business-section schema review", entrepreneur_map["all"])
+        filing_ready_business_ids = {
+            "onderneming.belastbare_winst",
+            "onderneming.zelfstandigenaftrek",
+            "onderneming.startersaftrek",
+            "onderneming.ondernemersaftrek_totaal",
+            "onderneming.mkb_winstvrijstelling",
+            "onderneming.kleinschaligheidsinvesteringsaftrek",
+        }
+        self.assertTrue(
+            filing_ready_business_ids <= set(entrepreneur_map["none"])
+        )
+
+        provisional = cases["provisional_entrepreneur_profit"]
+        provisional_map = next(
+            rule
+            for rule in provisional["text_checks"]
+            if rule["path"] == "workspace/provisional/2026/field-map.yaml"
+        )
+        self.assertIn("onderneming.geschatte_winst", provisional_map["all"])
+        for forbidden in ("zelfstandigenaftrek", "MKB-winstvrijstelling", "Zvw", "final tax"):
+            with self.subTest(forbidden=forbidden):
+                self.assertIn(forbidden, provisional_map["none"])
+
+        evidence = cases["annual_evidence_status"]
+        evidence_pack = next(
+            rule
+            for rule in evidence["text_checks"]
+            if rule["path"] == "workspace/annual/2025/return-pack.md"
+        )
+        self.assertIn("Eligible reviewed current-year evidence: 1", evidence_pack["all"])
+
     def test_offline_verifier_validates_generated_field_maps(self):
         verifier = load_module(
             "evals/nl-tax-agent-skills/verify_offline_workspace.py",

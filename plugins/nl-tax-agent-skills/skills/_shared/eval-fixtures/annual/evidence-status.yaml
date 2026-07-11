@@ -1,0 +1,71 @@
+# Eval fixture: Annual evidence status and year gating
+
+fixture_id: eval_annual_evidence_status
+fixture_version: "1.0"
+scenario: "Annual 2025 income evidence — only one reviewed current-year item closes the gap"
+tax_year: 2025
+workflow: annual_2025
+
+taxpayer_profile:
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+
+evidence_index:
+  evidence_index_version: "1.1"
+  items:
+    - evidence_id: ev_current_reviewed
+      source: file
+      file_path: uploads/jaaropgaaf-2025-reviewed.pdf
+      evidence_type: jaaropgaaf
+      tax_year: 2025
+      extraction_status: extracted
+      review_required: false
+      extracted_fields:
+        loon_loonheffing: 45000.00
+        ingehouden_loonheffing: 12500.00
+    - evidence_id: ev_previous_reviewed
+      source: file
+      file_path: uploads/jaaropgaaf-2024-reviewed.pdf
+      evidence_type: jaaropgaaf
+      tax_year: 2024
+      extraction_status: extracted
+      review_required: false
+      extracted_fields:
+        loon_loonheffing: 43000.00
+        ingehouden_loonheffing: 11800.00
+    - evidence_id: ev_current_needs_review
+      source: file
+      file_path: uploads/jaaropgaaf-2025-needs-review.pdf
+      evidence_type: jaaropgaaf
+      tax_year: 2025
+      extraction_status: extracted
+      review_required: true
+      extracted_fields:
+        loon_loonheffing: 9000.00
+
+expected_outputs:
+  files_created:
+    - workspace/shared/session-progress.yaml
+    - workspace/annual/2025/return-pack.md
+  workpack_checks:
+    - section: "Evidence summary"
+      contains: "Eligible reviewed current-year evidence: 1"
+      contains_also: "ev_current_reviewed"
+
+expected_state:
+  session_progress_version: "1.4"
+  eligible_evidence_count: 1
+  eligible_evidence_ids:
+    - ev_current_reviewed
+  excluded_evidence_ids:
+    - ev_previous_reviewed
+    - ev_current_needs_review
+  decision_owner_is_agent: true
+
+expected_behavior:
+  - "The annual agent reads the evidence index directly and applies the workflow contract"
+  - "Only reviewed, successfully extracted, correct-year evidence closes the 2025 income gap"
+  - "The reviewed 2024 item and the unreviewed 2025 item do not count toward completeness"
+  - "No Python validator decides evidence completeness"

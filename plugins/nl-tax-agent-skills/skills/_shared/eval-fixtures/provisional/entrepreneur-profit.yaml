@@ -1,0 +1,73 @@
+# Eval fixture: Provisional 2026 entrepreneur expected-profit forecast
+
+fixture_id: eval_provisional_entrepreneur_profit
+fixture_version: "1.0"
+scenario: "Provisional 2026 request — sourced expected profit for an eenmanszaak"
+tax_year: 2026
+workflow: provisional_2026_request
+
+taxpayer_profile:
+  residency:
+    full_year_nl_resident: true
+  partner:
+    has_fiscal_partner: false
+  business:
+    has_onderneming: true
+    legal_form: eenmanszaak
+  workflows:
+    provisional_2026:
+      requested: true
+      subflow: request
+
+estimated_data:
+  business:
+    field_id: onderneming.geschatte_winst
+    expected_profit_2026: 54000.00
+    source:
+      type: user_chat
+      quote: "My reviewed best estimate of full-year 2026 business profit is EUR 54,000."
+      stated_at: "2026-07-11"
+    support:
+      evidence_id: ev_profit_forecast_2026
+      description: "Current bookkeeping plus a full-year forecast reviewed by the taxpayer"
+    manual_review_required: true
+
+expected_outputs:
+  files_created:
+    - workspace/shared/session-progress.yaml
+    - workspace/provisional/2026/provisional-pack.md
+    - workspace/provisional/2026/field-map.yaml
+  files_not_created:
+    - workspace/annual/**
+  workpack_checks:
+    - section: "Winst uit onderneming forecast"
+      contains: "EUR 54,000"
+      contains_also: "user-reviewed expected-profit forecast"
+  field_map_checks:
+    - workflow: provisional_assessment
+    - tax_year: 2026
+    - contains_field: onderneming.geschatte_winst
+    - manual_review_required: true
+  negative_checks:
+    - no_annual_entrepreneur_deductions: true
+    - no_zvw_calculation: true
+    - no_final_tax_calculation: true
+
+expected_state:
+  session_progress_version: "1.4"
+  provisional_2026_subsection: winst_forecast
+  provisional_2026_winst_forecast_status: complete
+  required_field_ids:
+    - onderneming.geschatte_winst
+  forbidden_outputs:
+    - annual entrepreneur deductions
+    - Zvw calculation
+    - final tax calculation
+  workpack_owner: nl-tax-provisional-assessment
+  field_map_owner: nl-tax-field-mapper
+
+acceptance_criteria:
+  - "The agent records the sourced, user-reviewed full-year expected-profit forecast"
+  - "The field mapper emits only onderneming.geschatte_winst for the business forecast"
+  - "No annual entrepreneur deductions, Zvw calculation, or final tax calculation is produced"
+  - "Session progress remains schema 1.4 and the owning workflow persists helper results"
