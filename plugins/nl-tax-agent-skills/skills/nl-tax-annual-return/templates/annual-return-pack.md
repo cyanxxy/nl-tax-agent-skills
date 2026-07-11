@@ -363,6 +363,26 @@ Note: Box 2 allocation and any reviewed calculation remain preparation notes for
 
 ## Box 3 notes
 
+[The agent classifies rows from reviewed facts and the Box 3 reference. Do not
+infer categories from names or keywords. Only accepted rows with a supported
+category, finite non-negative value, and provenance enter the totals below.]
+
+### Accepted rows
+
+| ID | Description | Category | Status | Value | Provenance |
+|----|-------------|----------|--------|-------|------------|
+| [row id] | [description] | [banktegoeden / overige_bezittingen / schulden] | accepted | EUR [amount] | [F/U/A] |
+
+### Rejected/manual-review rows
+
+| ID | Description | Category | Status | Value | Provenance | Reason |
+|----|-------------|----------|--------|-------|------------|--------|
+| [row id] | [description] | [category/unknown] | [manual_review/rejected] | EUR [amount] | [F/U/A/?] | [why excluded] |
+
+Check trail: `check_performed_by: "[checked_by_agent | checked_by_script]"`.
+The manual path and optional script apply the same row checks. Preserve this
+trail and both tables even when there are no rejected rows.
+
 ### Assets on peildatum (1 January 2025)
 
 #### Banktegoeden

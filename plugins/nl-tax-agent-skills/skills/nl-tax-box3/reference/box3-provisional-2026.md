@@ -39,6 +39,24 @@ Over the calculated box 3 income, the provisional 2026 box 3 tax rate is 36%.
 - Fiscal partners allocate the joint grondslag sparen en beleggen, not individual assets or debts
 - Workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
 
+The agent classifies reviewed facts before arithmetic. Each row needs
+`category`, `status`, `value`, and `provenance`. Only `accepted` rows in
+`banktegoeden`, `overige_bezittingen`, or `schulden`, with finite non-negative
+values and non-empty provenance, enter trusted totals. Preserve every other row
+in rejected/manual-review rows with a reason. Manual and optional-script paths
+apply identical checks and record `checked_by_agent` or `checked_by_script`.
+Python never classifies a description by keyword.
+
+Until the direction and relevant facts of a generic loan are confirmed, use:
+
+```yaml
+- description: "Loan to friend"
+  category: "unknown"
+  status: "manual_review"
+  value: 10000
+  provenance: "U:<dated user statement>"
+```
+
 ## Actual-Return Boundary
 
 Use only this explanatory note: "Werkelijk rendement is not part of provisional 2026."

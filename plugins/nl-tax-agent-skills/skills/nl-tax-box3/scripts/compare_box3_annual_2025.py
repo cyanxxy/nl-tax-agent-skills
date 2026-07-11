@@ -7,9 +7,7 @@ NOTE: This script is ONLY for the annual 2025 return, NOT for provisional assess
 
 Usage:
     python3 compare_box3_annual_2025.py \\
-        --banktegoeden <amount> \\
-        --overige <amount> \\
-        --schulden <amount> \\
+        --rows-json '<already-classified JSON rows>' \\
         --actual_return <amount> \\
         [--heffingsvrij <amount>] \\
         [--has_partner] \\
@@ -27,6 +25,87 @@ import argparse
 from decimal import Decimal, ROUND_FLOOR, ROUND_HALF_UP
 import json
 import math
+
+
+ACCEPTED_ROW_CATEGORIES = (
+    "banktegoeden",
+    "overige_bezittingen",
+    "schulden",
+)
+
+
+def normalize_classified_rows(rows):
+    """Total explicit, source-backed rows without classifying their descriptions."""
+    if not isinstance(rows, list):
+        raise ValueError("rows must be a list of already-classified mappings")
+
+    totals = {category: Decimal("0") for category in ACCEPTED_ROW_CATEGORIES}
+    accepted_rows = []
+    rejected_rows = []
+    for index, raw_row in enumerate(rows):
+        if not isinstance(raw_row, dict):
+            rejected_rows.append(
+                {
+                    "id": f"row-{index + 1}",
+                    "row": raw_row,
+                    "rejection_reasons": ["row must be a mapping"],
+                }
+            )
+            continue
+
+        row = dict(raw_row)
+        reasons = []
+        category = row.get("category")
+        if category not in ACCEPTED_ROW_CATEGORIES:
+            reasons.append(
+                "category must be banktegoeden, overige_bezittingen, or schulden"
+            )
+        if row.get("status") != "accepted":
+            reasons.append("status must be accepted")
+        provenance = row.get("provenance")
+        if not isinstance(provenance, str) or not provenance.strip():
+            reasons.append("provenance is required")
+        try:
+            if isinstance(row.get("value"), bool):
+                raise ValueError
+            value = Decimal(str(row.get("value")))
+            if not value.is_finite() or value < 0:
+                raise ValueError
+        except (ValueError, TypeError, ArithmeticError):
+            reasons.append("value must be a finite non-negative number")
+            value = None
+
+        normalized_value = None
+        if value is not None:
+            normalized_value = float(value)
+            if not math.isfinite(normalized_value):
+                reasons.append("value must remain finite after normalization")
+        candidate_total = None
+        if (
+            category in ACCEPTED_ROW_CATEGORIES
+            and value is not None
+            and normalized_value is not None
+            and math.isfinite(normalized_value)
+        ):
+            candidate_total = totals[category] + value
+            if not math.isfinite(float(candidate_total)):
+                reasons.append("category total must remain finite after normalization")
+
+        if reasons:
+            row["rejection_reasons"] = reasons
+            rejected_rows.append(row)
+            continue
+
+        normalized = {**row, "value": normalized_value}
+        accepted_rows.append(normalized)
+        totals[category] = candidate_total
+
+    return {
+        "trusted_totals": {key: float(value) for key, value in totals.items()},
+        "accepted_rows": accepted_rows,
+        "rejected_rows": rejected_rows,
+        "check_performed_by": "checked_by_script",
+    }
 
 
 def _require_finite_non_negative(name, value):
@@ -192,12 +271,14 @@ def build_parser():
             "NOTE: ONLY for annual 2025 return, NOT for provisional assessments."
         )
     )
-    parser.add_argument("--banktegoeden", type=float, required=True,
-                        help="Total banktegoeden in EUR on 1 January 2025")
-    parser.add_argument("--overige", type=float, required=True,
-                        help="Total overige bezittingen in EUR on 1 January 2025")
-    parser.add_argument("--schulden", type=float, required=True,
-                        help="Total box 3 debts in EUR on 1 January 2025")
+    parser.add_argument(
+        "--rows-json",
+        required=True,
+        help=(
+            "JSON list of already-classified rows. Each row needs category, "
+            "status, value, and provenance. Descriptions are never classified."
+        ),
+    )
     parser.add_argument("--heffingsvrij", type=float, default=0,
                         help=(
                             "Heffingsvrij vermogen in EUR (default: 57684 per "
@@ -274,10 +355,27 @@ def build_output(args, fictitious, actual_return_allocated):
 
 def run(args):
     _require_finite("actual_return", args.actual_return)
+    try:
+        rows = json.loads(args.rows_json)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"rows_json must contain valid JSON: {exc.msg}") from exc
+    row_check = normalize_classified_rows(rows)
+    if row_check["rejected_rows"]:
+        return {
+            "assessment_type": "annual_2025",
+            **row_check,
+            "manual_review_required": True,
+            "result": None,
+            "note": (
+                "Resolve every rejected/manual-review row before running "
+                "annual box 3 arithmetic."
+            ),
+        }
+    totals = row_check["trusted_totals"]
     fictitious = calculate_fictitious_box3(
-        banktegoeden=args.banktegoeden,
-        overige=args.overige,
-        schulden=args.schulden,
+        banktegoeden=totals["banktegoeden"],
+        overige=totals["overige_bezittingen"],
+        schulden=totals["schulden"],
         heffingsvrij=args.heffingsvrij,
         has_partner=args.has_partner,
         allocation_pct=args.allocation_pct,
@@ -288,7 +386,11 @@ def run(args):
         args.has_partner,
         args.allocation_pct,
     )
-    return build_output(args, fictitious, actual_return_allocated)
+    return {
+        **build_output(args, fictitious, actual_return_allocated),
+        **row_check,
+        "manual_review_required": False,
+    }
 
 
 def main():

@@ -9,6 +9,23 @@ review_status: reviewed
 
 ## Asset Classification
 
+The agent applies these official categories to reviewed facts. It does not ask
+Python to classify descriptions. Before totals, each already-classified row has
+`category`, `status`, `value`, and `provenance`. Only accepted rows in one of the
+three categories below, with a finite non-negative value and non-empty
+provenance, enter arithmetic. Preserve all other rows with rejection reasons.
+
+A generic description is not enough to decide whether a loan is an asset or a
+debt. Keep it unresolved until the direction and relevant facts are confirmed:
+
+```yaml
+- description: "Loan to friend"
+  category: "unknown"
+  status: "manual_review"
+  value: 10000
+  provenance: "U:<dated user statement>"
+```
+
 ### Banktegoeden (Bank Assets)
 - Savings accounts (spaarrekeningen)
 - Current accounts (betaalrekeningen)
@@ -58,6 +75,9 @@ review_status: reviewed
 - The annual return allows choosing between the fictitious return method and the actual return method (werkelijk rendement)
 - Werkelijk rendement is calculated without heffingsvrij vermogen and follows the same partner allocation percentage as the joint grondslag sparen en beleggen
 - Fictitious-return workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
+- Manual and optional-script paths use the same row checks and totals. Record
+  `checked_by_agent` for a manual check or `checked_by_script` for the optional
+  script; never infer categories from keywords.
 
 ## Required two-method workpack treatment
 

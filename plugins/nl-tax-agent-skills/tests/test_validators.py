@@ -4,6 +4,7 @@
 import importlib.util
 import pathlib
 import json
+import math
 import subprocess
 import sys
 import tempfile
@@ -256,12 +257,32 @@ class ValidatorSmokeTests(unittest.TestCase):
             [
                 sys.executable,
                 str(script),
-                "--banktegoeden",
-                "150000",
-                "--overige",
-                "275000",
-                "--schulden",
-                "100000",
+                "--rows-json",
+                json.dumps(
+                    [
+                        {
+                            "id": "bank",
+                            "category": "banktegoeden",
+                            "status": "accepted",
+                            "value": 150000,
+                            "provenance": "F:bank",
+                        },
+                        {
+                            "id": "assets",
+                            "category": "overige_bezittingen",
+                            "status": "accepted",
+                            "value": 275000,
+                            "provenance": "F:assets",
+                        },
+                        {
+                            "id": "debts",
+                            "category": "schulden",
+                            "status": "accepted",
+                            "value": 100000,
+                            "provenance": "F:debts",
+                        },
+                    ]
+                ),
             ],
             text=True,
         )
@@ -273,21 +294,156 @@ class ValidatorSmokeTests(unittest.TestCase):
             "Werkelijk rendement is not part of provisional 2026.",
         )
 
-    def test_box3_classifier_recognizes_official_bank_asset_edge_cases(self):
+    def test_only_accepted_rows_enter_annual_trusted_totals(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/classify_box3_assets.py",
-            "classify_box3_assets_edge_cases",
+            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "compare_box3_annual_2025_rows",
         )
-        cases = [
-            {"name": "Aandeel reservefonds VvE", "type_hint": "", "value": 900},
-            {"name": "Premiedepot hypotheek", "type_hint": "", "value": 1200},
-            {"name": "Derdengeldenrekening notaris", "type_hint": "", "value": 5000},
+        rows = [
+            {
+                "id": "a",
+                "category": "banktegoeden",
+                "status": "accepted",
+                "value": 1000,
+                "provenance": "F:bank-2025",
+            },
+            {
+                "id": "b",
+                "category": "banktegoeden",
+                "status": "manual_review",
+                "value": 9000,
+                "provenance": "U:loan",
+            },
+            {
+                "id": "c",
+                "category": "unknown",
+                "status": "accepted",
+                "value": 5000,
+                "provenance": "F:mystery",
+            },
+            {
+                "id": "d",
+                "category": "banktegoeden",
+                "status": "accepted",
+                "value": -100,
+                "provenance": "F:bad",
+            },
+            {
+                "id": "e",
+                "category": "overige_bezittingen",
+                "status": "accepted",
+                "value": 2500,
+                "provenance": "",
+            },
         ]
 
-        for case in cases:
-            with self.subTest(case=case["name"]):
-                category, _, _ = module.classify_asset(case)
-                self.assertEqual(category, "banktegoeden")
+        output = module.normalize_classified_rows(rows)
+        self.assertEqual(output["trusted_totals"]["banktegoeden"], 1000)
+        self.assertEqual(output["trusted_totals"]["overige_bezittingen"], 0)
+        self.assertEqual(output["trusted_totals"]["schulden"], 0)
+        self.assertEqual(
+            {row["id"] for row in output["rejected_rows"]},
+            {"b", "c", "d", "e"},
+        )
+        for row in output["rejected_rows"]:
+            self.assertTrue(row["rejection_reasons"])
+
+    def test_provisional_row_normalizer_matches_annual_contract(self):
+        module = load_module(
+            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "summarize_box3_provisional_2026_rows",
+        )
+        rows = [
+            {
+                "id": "bank",
+                "category": "banktegoeden",
+                "status": "accepted",
+                "value": "1200.50",
+                "provenance": "A:confirmed-estimate",
+            },
+            {
+                "id": "loan",
+                "description": "Loan to friend",
+                "category": "unknown",
+                "status": "manual_review",
+                "value": 10_000,
+                "provenance": "U:loan-to-friend",
+            },
+            {
+                "id": "nan",
+                "category": "schulden",
+                "status": "accepted",
+                "value": float("nan"),
+                "provenance": "F:bad",
+            },
+        ]
+
+        output = module.normalize_classified_rows(rows)
+        self.assertEqual(output["trusted_totals"]["banktegoeden"], 1200.5)
+        self.assertEqual(
+            {row["id"] for row in output["rejected_rows"]},
+            {"loan", "nan"},
+        )
+
+    def test_box3_row_normalizers_reject_float_and_total_overflow(self):
+        modules = [
+            (
+                "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+                "compare_box3_annual_2025_overflow",
+            ),
+            (
+                "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+                "summarize_box3_provisional_2026_overflow",
+            ),
+        ]
+        rows = [
+            {
+                "id": "too-large",
+                "category": "overige_bezittingen",
+                "status": "accepted",
+                "value": "1e400",
+                "provenance": "F:huge",
+            },
+            {
+                "id": "first",
+                "category": "banktegoeden",
+                "status": "accepted",
+                "value": "1e308",
+                "provenance": "F:first",
+            },
+            {
+                "id": "total-overflow",
+                "category": "banktegoeden",
+                "status": "accepted",
+                "value": "1e308",
+                "provenance": "F:second",
+            },
+        ]
+
+        for relative_path, module_name in modules:
+            with self.subTest(path=relative_path):
+                module = load_module(relative_path, module_name)
+                output = module.normalize_classified_rows(rows)
+                self.assertEqual(
+                    {row["id"] for row in output["rejected_rows"]},
+                    {"too-large", "total-overflow"},
+                )
+                self.assertEqual(
+                    [row["id"] for row in output["accepted_rows"]],
+                    ["first"],
+                )
+                self.assertTrue(
+                    all(
+                        math.isfinite(value)
+                        for value in output["trusted_totals"].values()
+                    )
+                )
+                self.assertTrue(
+                    all(
+                        math.isfinite(row["value"])
+                        for row in output["accepted_rows"]
+                    )
+                )
 
     def test_knowledge_validator_reports_missing_snapshot_metadata(self):
         module = load_module(
@@ -518,58 +674,6 @@ class Box3InputHardeningTests(unittest.TestCase):
         )
         self.assertEqual(result["actual_return_for_tax"], 0)
         self.assertEqual(result["tax_at_actual"], 0)
-
-
-class ClassifierHardeningTests(unittest.TestCase):
-    def _module(self):
-        return load_module(
-            "skills/nl-tax-box3/scripts/classify_box3_assets.py",
-            "classify_box3_assets_hardening",
-        )
-
-    def test_type_hint_contradicting_name_is_flagged(self):
-        module = self._module()
-        category, confidence, flags = module.classify_asset(
-            {
-                "name": "loan receivable from friend",
-                "type_hint": "loan",
-                "value": 5_000,
-                "owner": "taxpayer",
-            }
-        )
-        self.assertTrue(any("MANUAL_REVIEW" in f for f in flags), flags)
-        self.assertLess(confidence, 0.95)
-
-    def test_amount_key_instead_of_value_is_flagged(self):
-        module = self._module()
-        flags = module.validate_asset(
-            {"name": "Savings", "amount": 5_000, "owner": "taxpayer"}
-        )
-        self.assertTrue(
-            any("MANUAL_REVIEW" in f and "amount" in f for f in flags), flags
-        )
-
-    def test_nan_value_is_flagged(self):
-        module = self._module()
-        flags = module.validate_asset(
-            {"name": "Savings", "value": float("nan"), "owner": "taxpayer"}
-        )
-        self.assertTrue(any("MANUAL_REVIEW" in f for f in flags), flags)
-
-    def test_negative_value_is_flagged(self):
-        module = self._module()
-        flags = module.validate_asset(
-            {"name": "Savings", "value": -100, "owner": "taxpayer"}
-        )
-        self.assertTrue(
-            any("MANUAL_REVIEW" in f and "negative" in f for f in flags), flags
-        )
-
-    def test_spaar_substring_no_longer_false_matches(self):
-        module = self._module()
-        # "Spaarvarken" (piggy bank, a collectible) must not match "spaar".
-        score = module.match_keywords("Spaarvarken", ["spaar"])
-        self.assertEqual(score, 0)
 
 
 class AllocationHardeningTests(unittest.TestCase):

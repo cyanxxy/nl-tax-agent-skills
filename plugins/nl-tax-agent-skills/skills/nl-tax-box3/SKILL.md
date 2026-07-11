@@ -25,6 +25,13 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 - Provisional 2026: use only the fictitious method.
 - Never request werkelijk-rendement inputs in a provisional workflow.
 - Compute only from values with a real source or an explicitly confirmed assumption.
+- The agent classifies each row from the reviewed facts and official rules. Python
+  never infers a category from a description, name, or keyword.
+- Before arithmetic, represent every row with `category`, `status`, `value`, and
+  `provenance`. Only `status: "accepted"` rows in `banktegoeden`,
+  `overige_bezittingen`, or `schulden`, with finite non-negative values and
+  non-empty provenance, enter trusted totals. Keep every other row in a
+  rejected/manual-review table with a reason.
 - The bundled scripts require `--partner-full-year-confirmed` alongside `--has_partner` before they double the heffingsvrij vermogen and the schulden drempel; `--has_partner` on its own raises an error. They also reject negative or non-finite amounts. Do not present a doubled allowance until full-year partnership is confirmed.
 
 ## Loading bundled files
@@ -46,7 +53,7 @@ Bundled references — read the ones matching the active workflow before computi
 
 The knowledge files those references point at (`_shared/knowledge/years/2025/box3/*.md`, `_shared/knowledge/years/2026/provisional/box3-provisional.md`) stay canonical for every numeric value.
 
-Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/classify_box3_assets.py`, `scripts/compare_box3_annual_2025.py`, and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/compare_box3_annual_2025.py` and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. Python is optional: if Bash cannot see the plugin path, total accepted rows and apply the sourced arithmetic manually; never ask the taxpayer to install Python, never copy bundled scripts into `workspace/`, and never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 
 ## Behavior
 
@@ -72,6 +79,24 @@ For each needed input, check section notes and evidence first. If the value is u
 ```
 
 If a provisional user asks about actual return, answer that werkelijk rendement is not part of the 2026 voorlopige aanslag and may become relevant when filing the annual 2026 return in 2027.
+
+When the description alone is ambiguous, do not guess. A generic loan starts
+like this until the user establishes whether it is a receivable, a liability,
+or outside the standard case:
+
+```yaml
+- description: "Loan to friend"
+  category: "unknown"
+  status: "manual_review"
+  value: 10000
+  provenance: "U:<dated user statement>"
+```
+
+For the no-Python path, apply the same accepted-category, status, finite
+non-negative value, and provenance checks, then record
+`check_performed_by: "checked_by_agent"`. An optional script run records
+`check_performed_by: "checked_by_script"`. Both paths preserve the accepted
+rows and rejected/manual-review rows in the calling workflow's workpack.
 
 Return structured facts and open questions to the owning workflow. Do not
 persist any final artifact, including shared notes, question packets, session

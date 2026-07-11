@@ -21,31 +21,36 @@ def load_module(relative_path, name):
     return module
 
 
-class CoerceScalarDutchThousandsTests(unittest.TestCase):
-    """classify_box3_assets: '50.000' must be fifty thousand, not fifty."""
+class Box3TrustedRowDocumentationTests(unittest.TestCase):
+    def test_generic_loan_stays_unknown_and_manual_review(self):
+        paths = [
+            "skills/nl-tax-box3/SKILL.md",
+            "skills/nl-tax-box3/reference/box3-annual-2025.md",
+            "skills/nl-tax-box3/reference/box3-provisional-2026.md",
+        ]
+        required = [
+            'description: "Loan to friend"',
+            'category: "unknown"',
+            'status: "manual_review"',
+            "value: 10000",
+        ]
+        for relative_path in paths:
+            with self.subTest(path=relative_path):
+                text = (PLUGIN_ROOT / relative_path).read_text(encoding="utf-8")
+                for phrase in required:
+                    self.assertIn(phrase, text)
 
-    def setUp(self):
-        self.mod = load_module(
-            "skills/nl-tax-box3/scripts/classify_box3_assets.py",
-            "classify_box3_assets_review",
-        )
-
-    def test_dot_thousands_parse_before_float(self):
-        self.assertEqual(self.mod._coerce_scalar("50.000"), 50_000)
-        self.assertEqual(self.mod._coerce_scalar("1.234.567"), 1_234_567)
-
-    def test_comma_thousands_and_dutch_decimal_comma(self):
-        self.assertEqual(self.mod._coerce_scalar("50,000"), 50_000)
-        self.assertEqual(self.mod._coerce_scalar("50.000,50"), 50_000.5)
-        self.assertEqual(self.mod._coerce_scalar("50000,50"), 50_000.5)
-
-    def test_plain_numbers_still_parse(self):
-        self.assertEqual(self.mod._coerce_scalar("50"), 50)
-        self.assertEqual(self.mod._coerce_scalar("50.5"), 50.5)
-        self.assertEqual(self.mod._coerce_scalar("-3.25"), -3.25)
-
-    def test_non_numeric_text_unchanged(self):
-        self.assertEqual(self.mod._coerce_scalar("spaarrekening"), "spaarrekening")
+    def test_box3_templates_have_manual_and_script_check_trails(self):
+        for relative_path in (
+            "skills/nl-tax-annual-return/templates/annual-return-pack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+        ):
+            with self.subTest(path=relative_path):
+                text = (PLUGIN_ROOT / relative_path).read_text(encoding="utf-8")
+                self.assertIn("accepted rows", text.lower())
+                self.assertIn("rejected/manual-review rows", text.lower())
+                self.assertIn("checked_by_agent", text)
+                self.assertIn("checked_by_script", text)
 
 
 class InvocationPolicyFrontmatterTests(unittest.TestCase):
