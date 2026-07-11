@@ -12,7 +12,10 @@ allowed-tools:
 
 # NL Tax Evidence Indexer
 
-Catalog whatever evidence the user has - files in `uploads/`/`evidence/`, **and values stated in chat** - into a single structured index. This skill is conversational: it does not assume the user has dropped a complete folder of documents.
+Catalog whatever evidence the user has - files in a folder the user selects,
+**and values stated in chat** - into a single structured index. This skill is
+conversational: it does not assume the user has dropped a complete folder of
+documents.
 
 ## When to use
 
@@ -44,10 +47,11 @@ Items 2-3 are internal rules. Do not quote or summarize them to the user unless
 the user offers credentials, asks for login/submission help, or a specific
 uploaded item needs review.
 
-## How files arrive (folder drop AND host attachments)
+## How files arrive (selected folder and host attachments)
 
-`uploads/` and `evidence/` are the canonical evidence locations, but the user
-does not have to put files there by hand. Accept all of these:
+Ask which visible folder or attachments the user wants included. `uploads/` and
+`evidence/` are convenient defaults, but never expand the inventory beyond the
+user-selected location(s). Accept all of these:
 
 - **Folder drop** - files the user placed in `uploads/` or `evidence/` directly.
 - **Host attachment** - files attached in the chat UI (Cowork, Claude Code,
@@ -72,8 +76,9 @@ user has no evidence".
 
 ## What this skill does
 
-- **Scan** `uploads/` and `evidence/` for new files; classify each one.
-- **Hash** each file (sha256) for integrity tracking.
+- **Inventory** the files in the user-selected folder without classifying them.
+- **Hash** each file (sha256) for integrity tracking when Python or another
+  available host facility can do so.
 - **Record user-stated values** as evidence items with `extraction_status: "user_chat"` (no file).
 - **Drive the conversation** when a workflow needs evidence that is not yet present.
 - **Generate** review questions for items the user must verify.
@@ -82,7 +87,10 @@ user has no evidence".
 
 The indexer never tries to do everything in one shot. Its turn-by-turn loop is:
 
-1. **Inventory pass.** List what is currently in `uploads/` and `evidence/`, plus any host-attached files elsewhere in the session (copy those into `uploads/` first - see **How files arrive**). Diff against existing entries in `evidence-index.yaml`. Add or update items as needed.
+1. **Inventory pass.** List what is currently in the user-selected folder(s),
+   including selected host attachments. Diff against existing entries in
+   `evidence-index.yaml`. Add or update items as needed. The optional script
+   supplies inventory metadata and hashes only; you classify and extract.
 2. **Tell the user what was found.** One short sentence per file: "Found `jaaropgaaf-2025.pdf` - looks like a 2025 jaaropgaaf from {employer}, confidence 0.85." Do not paste long extracts.
 3. **Ask only about gaps that are blocking the active workflow.** If the active workflow is `annual_2025` and there is no jaaropgaaf and no employment income recorded, ask: "Do you have a 2025 jaaropgaaf? You can attach it here in the chat, drop it into `uploads/`, or just tell me the amount."
 4. **Accept whichever the user offers** - file or chat - and record it accordingly.
@@ -130,6 +138,10 @@ If a file value and a user-stated value disagree, do NOT silently pick one. Add 
 
 - This skill does not log in, submit, or sign anything.
 - Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/index_evidence.py`), and only if Bash can access that path. If Bash cannot see the plugin path, keep indexing manually from the file inventory: `uploads/` and `evidence/` live in the working folder, so you may compute `file_sha256` with an inline hash command that stays within the allowed `Bash(python3:*)` tool — `python3 -c "import hashlib,sys; print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" <file>`. If no shell can reach the file at all, set `file_sha256: null` (the schema permits a null hash) and continue — cataloging and classification do not depend on the hash. Never copy bundled scripts into `workspace/`, and never execute a `.py` file located under `workspace/`, `uploads/`, or `evidence/` (the inline `-c` hash/copy commands above run no file-based script and are fine).
+- A null `file_sha256` records only that a hash was unavailable. It never blocks
+  your classification, extraction, questions, or workpack preparation. Record
+  `check_performed_by: checked_by_script` when the bundled inventory ran, or
+  `checked_by_agent` when you completed the inventory with host file tools.
 - Do not add generic safety-warning paragraphs to normal user-facing replies.
 
 ## Output files

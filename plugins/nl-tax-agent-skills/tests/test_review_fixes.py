@@ -207,6 +207,7 @@ class FieldMapWerkelijkScanTests(unittest.TestCase):
             "field_map_version": "1.0",
             "workflow": "provisional_assessment",
             "tax_year": 2026,
+            "check_performed_by": "checked_by_agent",
             "fields": [
                 {
                     "field_id": "box3.geschatte_banktegoeden",

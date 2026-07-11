@@ -137,17 +137,18 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/validate_field_
 
 The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, readiness, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
 
+After a successful script check, set `check_performed_by:
+checked_by_script`. If the script is unavailable, complete every stable check ID
+in the manual checklist in `reference/mapping-principles.md` and set
+`check_performed_by: checked_by_agent`. These are the only two check-trail
+values.
+
 **If `python3` is not available or Bash cannot see the plugin script path** (for
-example in Cowork's isolated VM), do not skip validation - verify the field map
-by hand against `reference/mapping-principles.md` and the checks above: every
-field has a valid `source.type` with its required sub-fields; no browser/submission
-(portal-automation) fields; no duplicate `field_id`s and no non-finite (NaN/inf)
-values; every required reference field other than portal-prefilled identifiers
-appears in `fields` or `missing_fields`; every `unknown` field also appears in
-`missing_fields`; and (for provisional) no werkelijk-rendement field exists. The
-map is ready for entry only when at least one field is populated-and-sourced and
-no required reference field is left unpopulated. Never copy bundled scripts into
-`workspace/` to make them executable.
+example in Cowork's isolated VM), do not skip validation. Complete the concise
+manual checklist in `reference/mapping-principles.md`; its IDs exactly match the
+validator's `CHECK_IDS`. The map is ready for entry only when at least one field
+is populated-and-sourced and no required reference field is left unpopulated.
+Never copy bundled scripts into `workspace/` to make them executable.
 
 ## Rendering
 

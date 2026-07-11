@@ -48,12 +48,44 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "validate_field_map_policy",
         )
 
+    def test_manual_checklist_has_exact_validator_check_ids(self):
+        principles = read_text(
+            "skills/nl-tax-field-mapper/reference/mapping-principles.md"
+        )
+        manual_ids = set(
+            re.findall(r"^- \[[ xX]\] `([^`]+)`", principles, re.MULTILINE)
+        )
+
+        self.assertEqual(set(self.validator.CHECK_IDS), manual_ids)
+
+    def test_check_trail_accepts_only_agent_or_script(self):
+        base = {
+            "field_map_version": "1.1",
+            "workflow": "provisional_assessment",
+            "tax_year": 2026,
+            "fields": [],
+            "missing_fields": [{"field_id": "box1.geschat_loon"}],
+        }
+        for trail in ("checked_by_agent", "checked_by_script"):
+            data = dict(base, check_performed_by=trail)
+            errors, _ = self.validator.validate(data)
+            self.assertFalse(any("check_performed_by" in e for e in errors), errors)
+
+        errors, _ = self.validator.validate(
+            dict(base, check_performed_by="checked_by_human")
+        )
+        self.assertTrue(any("check_performed_by" in e for e in errors), errors)
+
+        errors, _ = self.validator.validate(base)
+        self.assertTrue(any("check_performed_by" in e for e in errors), errors)
+
     def test_field_map_validator_accepts_annual_and_provisional_box2_fields(self):
         annual_errors, _ = self.validator.validate(
             {
                 "field_map_version": "1.0",
                 "workflow": "annual_return",
                 "tax_year": 2025,
+                "check_performed_by": "checked_by_agent",
                 "missing_fields": [
                     {"field_id": "personal.bsn"},
                     {"field_id": "personal.naam"},
@@ -92,6 +124,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "provisional_assessment",
                 "tax_year": 2026,
+                "check_performed_by": "checked_by_agent",
                 "missing_fields": [
                     {"field_id": "personal.bsn"},
                     {"field_id": "personal.adres"},
@@ -131,6 +164,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "provisional_assessment",
                 "tax_year": 2026,
+                "check_performed_by": "checked_by_agent",
                 "fields": [
                     {
                         "field_id": "onderneming.geschatte_winst",
@@ -228,6 +262,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.1",
                 "workflow": "annual_return",
                 "tax_year": 2025,
+                "check_performed_by": "checked_by_agent",
                 "fields": [
                     {
                         "field_id": "box1.loon",
@@ -254,6 +289,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.1",
                 "workflow": "provisional_assessment",
                 "tax_year": 2026,
+                "check_performed_by": "checked_by_agent",
                 "fields": [
                     {
                         "field_id": "box1.geschat_loon",
@@ -454,6 +490,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "provisional_assessment",
                 "tax_year": 2026,
+                "check_performed_by": "checked_by_agent",
                 "notes": [
                     "Werkelijk rendement is not part of provisional 2026."
                 ],
@@ -831,6 +868,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "field_map_version": "1.0",
             "workflow": "annual_return",
             "tax_year": 2025,
+            "check_performed_by": "checked_by_agent",
             "fields": [],
             "missing_fields": [
                 {"field_id": "personal.bsn"},
@@ -1103,6 +1141,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             field_map_version: "1.0"
             workflow: annual_return
             tax_year: 2025
+            check_performed_by: checked_by_agent
             fields: []
             missing_fields:
               - field_id: personal.bsn

@@ -90,9 +90,25 @@ BUSINESS_PROFIT_PATTERNS = (
 KNOWN_TOP_LEVEL_KEYS = {
     "field_map_version", "workflow", "tax_year", "created_at", "updated_at",
     "fields", "missing_fields", "user_chat_values_index", "notes", "readiness",
+    "check_performed_by",
 }
 # Optional top-level readiness self-declaration (ME-30).
 VALID_READINESS_VALUES = {"draft", "review_ready"}
+VALID_CHECK_TRAILS = {"checked_by_script", "checked_by_agent"}
+
+# Stable identifiers shared with the no-Python checklist in
+# reference/mapping-principles.md. Keep the identifiers stable even if the
+# implementation of an individual check evolves.
+CHECK_IDS = (
+    "FM-METADATA",
+    "FM-WORKFLOW-YEAR",
+    "FM-STRUCTURE",
+    "FM-SOURCE",
+    "FM-CONFIDENCE-FINITE",
+    "FM-REFERENCE-COVERAGE",
+    "FM-MISSING-READINESS",
+    "FM-PROVISIONAL-METHOD",
+)
 
 
 def load_yaml(path):
@@ -619,6 +635,15 @@ def validate(data):
     if readiness_decl is not None and readiness_decl not in VALID_READINESS_VALUES:
         errors.append(f"Invalid readiness value: {readiness_decl}")
 
+    check_trail = data.get("check_performed_by")
+    if check_trail is None:
+        errors.append("Missing required metadata: check_performed_by")
+    elif check_trail not in VALID_CHECK_TRAILS:
+        errors.append(
+            "Invalid check_performed_by value: "
+            f"{check_trail!r}; use checked_by_script or checked_by_agent"
+        )
+
     fields = data.get("fields", []) or []
     if not isinstance(fields, list):
         errors.append("fields must be a list")
@@ -730,6 +755,7 @@ def main():
             print(f"  - {e}")
     else:
         print("VALIDATION PASSED")
+        print("CHECK_TRAIL: checked_by_script")
 
     if warnings:
         print()

@@ -13,7 +13,7 @@ items: []
 #   source: "file" | "user_chat" | "unknown"   # deferred items use source: unknown + extraction_status: deferred
 #   # When source = file:
 #   file_path: "uploads/example.pdf"   # relative to the scanned directory
-#   file_sha256: ""   # null when the file could not be hashed (see extraction_status: failed)
+#   file_sha256: ""   # null when hashing is unavailable; this never blocks agent classification/workpacks
 #   file_size_bytes: 0
 #   # When source = user_chat:
 #   file_path: null
@@ -23,9 +23,12 @@ items: []
 #   # Common:
 #   evidence_type: ""
 #   tax_year: null
-#   owner: "taxpayer"
+#   owner: null   # agent assigns taxpayer/partner/shared after review
 #   extraction_status: "indexed_only" | "classified" | "extracted" | "user_chat" | "deferred" | "failed"
 #   confidence: null
 #   review_required: true
 #   notes: []
 #   extracted_fields: {}
+# The optional inventory script leaves evidence_type blank, tax_year/confidence/
+# owner null, and extraction_status indexed_only. The agent fills classification
+# and extraction fields after reviewing the evidence.

@@ -226,5 +226,22 @@ class EvidenceIndexerTests(unittest.TestCase):
             ids_after = {e["file_name"]: e["evidence_id"] for e in entries2}
             self.assertEqual(ids_before["b.txt"], ids_after["b.txt"])
 
+    def test_inventory_does_not_classify_evidence(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder = pathlib.Path(tmp)
+            (folder / "jaaropgaaf-2025.txt").write_text(
+                "Jaaropgaaf 2025; loon 50000", encoding="utf-8"
+            )
+
+            entry = self.mod.index_directory(str(folder))[0]
+
+            self.assertEqual(entry["evidence_type"], "")
+            self.assertIsNone(entry["tax_year"])
+            self.assertIsNone(entry["confidence"])
+            self.assertIsNone(entry["owner"])
+            self.assertEqual(entry["extraction_status"], "indexed_only")
+            rendered = self.mod.format_output([entry], str(folder))
+            self.assertIn("check_performed_by: checked_by_script", rendered)
+
 if __name__ == "__main__":
     unittest.main()

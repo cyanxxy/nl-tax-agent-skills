@@ -27,6 +27,7 @@ them obsolete.
 - Fields the mapper omits
 - Review flagging rules
 - Workflow-specific rules
+- Manual validation checklist
 
 ## Mapping cardinality
 
@@ -206,3 +207,18 @@ A field is flagged as `manual_review_required: true` when any of the following a
 - Apply peildatum 1 January 2026 for box 3
 - Map summary fields only (totals, not per-employer breakdowns)
 - Set `manual_review_required: true` for any estimate exceeding the baseline by more than 20%
+
+## Manual validation checklist
+
+Use this checklist when the optional validator cannot run. The IDs are the
+stable `CHECK_IDS` exposed by `scripts/validate_field_map.py`; complete every
+item and record `check_performed_by: checked_by_agent` in the artifact.
+
+- [ ] `FM-METADATA` — required metadata and the check trail are present and valid.
+- [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are the supported annual 2025 or provisional 2026 pair.
+- [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields exist.
+- [ ] `FM-SOURCE` — every populated row has a valid source type and its required provenance fields.
+- [ ] `FM-CONFIDENCE-FINITE` — confidence is numeric within 0–1 and numeric values are finite.
+- [ ] `FM-REFERENCE-COVERAGE` — every required non-prefilled reference field appears in fields or missing fields.
+- [ ] `FM-MISSING-READINESS` — unknown rows are also missing, at least one row is populated and sourced, and no required row or workflow blocker remains.
+- [ ] `FM-PROVISIONAL-METHOD` — a provisional map contains no werkelijk-rendement field and uses only the allowed expected-profit treatment.

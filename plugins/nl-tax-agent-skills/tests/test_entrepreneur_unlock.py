@@ -323,6 +323,7 @@ class FieldMapTests(unittest.TestCase):
                 "field_map_version": "1.0",
                 "workflow": "annual_return",
                 "tax_year": 2025,
+                "check_performed_by": "checked_by_agent",
                 "readiness": "review_ready",
                 "fields": [
                     {

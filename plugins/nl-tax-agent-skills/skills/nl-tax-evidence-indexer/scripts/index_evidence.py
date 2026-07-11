@@ -156,6 +156,16 @@ def scan_directory(directory: str) -> list:
     return entries
 
 
+def index_directory(directory: str) -> list:
+    """Inventory a user-selected directory without classifying its files.
+
+    This named entry point makes the script's deliberately narrow contract
+    explicit: the returned rows contain file metadata and an optional hash;
+    classification remains agent work.
+    """
+    return scan_directory(directory)
+
+
 def _new_entry(evidence_id, rel_path, file_name, ext_lower, file_hash, file_size):
     """Build a fully-populated evidence entry dict with default fields."""
     return {
@@ -170,7 +180,7 @@ def _new_entry(evidence_id, rel_path, file_name, ext_lower, file_hash, file_size
         "stated_at": None,
         "evidence_type": "",
         "tax_year": None,
-        "owner": "taxpayer",
+        "owner": None,
         "extraction_status": "indexed_only",
         "confidence": None,
         "review_required": True,
@@ -197,6 +207,7 @@ def format_output(entries: list, directory: str) -> str:
         "classified_files": 0,
         "user_chat_items": 0,
         "review_required_count": sum(1 for e in entries if e["review_required"]),
+        "check_performed_by": "checked_by_script",
         "items": entries,
     }
 
@@ -244,7 +255,7 @@ def main():
         print(f"Error: '{directory}' is not a directory.", file=sys.stderr)
         sys.exit(1)
 
-    entries = scan_directory(directory)
+    entries = index_directory(directory)
 
     if not entries:
         print(

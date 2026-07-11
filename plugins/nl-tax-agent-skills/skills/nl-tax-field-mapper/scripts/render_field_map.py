@@ -124,6 +124,7 @@ def render(data):
     workflow = data.get("workflow", "unknown")
     tax_year = data.get("tax_year", "unknown")
     created = data.get("created_at", "unknown")
+    check_performed_by = data.get("check_performed_by", "not recorded")
 
     lines = []
     lines.append(f"# Field Map — {workflow} {tax_year}")
@@ -131,6 +132,7 @@ def render(data):
     lines.append(f"**Workflow:** {workflow}")
     lines.append(f"**Tax year:** {tax_year}")
     lines.append(f"**Created:** {created}")
+    lines.append(f"**Checks:** {_cell(check_performed_by)}")
     lines.append("")
 
     fields = data.get("fields", [])
