@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Tax Intake"
+  short_description: "Start a supported Dutch tax workflow or answer a bundled-rule question."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Start my supported Dutch tax workflow and ask only for the facts you still need."
+
+policy:
+  allow_implicit_invocation: true

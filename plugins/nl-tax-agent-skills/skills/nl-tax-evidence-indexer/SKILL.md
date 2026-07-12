@@ -27,17 +27,14 @@ documents.
 
 ## Read first (every turn)
 
-Bundled paths below are relative to this skill's own directory: `reference/`
-and `templates/` are subfolders, and `_shared/` is the plugin-shared folder at
-`../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob`
-or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin
-files: in Cowork, shell commands run in an isolated VM that may not see the
-plugin cache even when `Read` and `Glob` can. If the host has already expanded
-`${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
-for file tools; otherwise search within the loaded plugin/skill tree and resolve
-relative to this skill directory. Resolve every `workspace/...` path against
-`workspace_root` recorded in `session-progress.yaml` (or `profile.yaml`); never
-create a second `workspace/` tree.
+Read `../_shared/runtime-contract.md` first. Bundled paths below are relative to
+this skill's own directory: `reference/` and `templates/` are subfolders, and
+`_shared/` is the plugin-shared folder at `../_shared/`. Use the host's
+skill-resource or file tools to resolve them, and do not depend on shell
+visibility or vendor-specific environment variables. Resolve every
+`workspace/...` path against `workspace_root` recorded in
+`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
+tree.
 
 1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract.
 2. `reference/evidence-types.md`, `reference/extraction-boundaries.md`
@@ -55,8 +52,8 @@ Ask which visible folder or attachments the user wants included. `uploads/` and
 user-selected location(s). Accept all of these:
 
 - **Folder drop** - files the user placed in `uploads/` or `evidence/` directly.
-- **Host attachment** - files attached in the chat UI (Cowork, Claude Code,
-  Codex). Hosts place these somewhere in the session working directory - often
+- **Host attachment** - files attached in the chat UI (ChatGPT Work, Codex,
+  Claude, or another supported host). Hosts place these somewhere in the session working directory - often
   the workspace root or a host-specific attachments path, not `uploads/`.
 - **Stated in chat** - no file at all; record as a `user_chat` item.
 
@@ -142,7 +139,7 @@ If a file value and a user-stated value disagree, do NOT silently pick one. Add 
 - A null `file_sha256` records only that a hash was unavailable. It never blocks
   your classification, extraction, questions, or workpack preparation. Record
   `check_performed_by: checked_by_script` when the bundled inventory ran, or
-  `checked_by_agent` when you completed the inventory with host file tools.
+  `checked_by_agent` when you completed the inventory with available file tools.
 - Do not add generic safety-warning paragraphs to normal user-facing replies.
 
 ## Output files

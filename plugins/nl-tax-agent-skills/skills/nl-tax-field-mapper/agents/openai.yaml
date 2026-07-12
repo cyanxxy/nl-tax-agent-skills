@@ -1,0 +1,10 @@
+interface:
+  display_name: "Mijn Belastingdienst Field Mapper"
+  short_description: "Map a reviewed workpack to source-traceable fields for manual portal entry."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Create a source-traceable manual-entry field map from my reviewed tax workpack."
+
+policy:
+  allow_implicit_invocation: true

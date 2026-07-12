@@ -11,5 +11,9 @@
 # straight to it and bypassing the orchestrating workflow skill (and the box-3
 # annual-vs-provisional method rules it enforces). Explicit `$nl-tax-box3`
 # invocation still works.
+interface:
+  display_name: "Dutch Tax Box 3 Helper"
+  short_description: "Internal Box 3 method and fact helper for supported workflows."
+
 policy:
   allow_implicit_invocation: false

@@ -8,5 +8,9 @@
 # nl-tax-source-refresh is a developer-only maintenance skill that refreshes and
 # validates source snapshots. It must never be auto-invoked by the model.
 # Explicit `$nl-tax-source-refresh` invocation still works.
+interface:
+  display_name: "Dutch Tax Source Refresh"
+  short_description: "Developer-only validation and source-refresh planning."
+
 policy:
   allow_implicit_invocation: false

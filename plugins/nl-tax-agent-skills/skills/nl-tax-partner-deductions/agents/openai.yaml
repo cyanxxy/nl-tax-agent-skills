@@ -10,5 +10,9 @@
 # workflow. Disabling implicit invocation keeps Codex from routing a user prompt
 # straight to it and bypassing the orchestrating workflow skill. Explicit
 # `$nl-tax-partner-deductions` invocation still works.
+interface:
+  display_name: "Dutch Tax Partner and Deductions Helper"
+  short_description: "Internal partner, deduction, and allocation fact helper."
+
 policy:
   allow_implicit_invocation: false

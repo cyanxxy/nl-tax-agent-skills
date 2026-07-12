@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Annual Tax Workpack"
+  short_description: "Prepare a reviewable 2025 Dutch annual income-tax workpack for manual entry."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare my 2025 Dutch income-tax workpack from the documents and facts I provide."
+
+policy:
+  allow_implicit_invocation: true

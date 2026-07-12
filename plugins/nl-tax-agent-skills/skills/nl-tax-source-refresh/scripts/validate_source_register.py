@@ -24,6 +24,7 @@ REQUIRED_FIELDS = {
 }
 
 VALID_SKILL_NAMES = {
+    "nl-tax-shared-resources",
     "nl-tax-intake",
     "nl-tax-evidence-indexer",
     "nl-tax-annual-return",

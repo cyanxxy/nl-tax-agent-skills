@@ -843,8 +843,9 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         skill_paths = sorted((ROOT / "skills").glob("*/SKILL.md"))
         names = [skill_frontmatter(path.parent.name)["name"] for path in skill_paths]
 
-        self.assertEqual(len(names), 12)
-        self.assertEqual(len(set(names)), 12)
+        self.assertEqual(len(names), 13)
+        self.assertEqual(len(set(names)), 13)
+        self.assertIn("nl-tax-shared-resources", names)
 
     def test_public_skills_retain_exact_argument_hints(self):
         expected = {

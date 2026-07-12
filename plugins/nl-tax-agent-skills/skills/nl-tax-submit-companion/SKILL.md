@@ -15,11 +15,17 @@ allowed-tools:
 
 Create a Manual-entry checklist from an existing workpack and field map. The taxpayer or an authorized representative performs every official action manually in Mijn Belastingdienst.
 
-This skill is manual-only (`disable-model-invocation: true`; on Codex the same is set via `agents/openai.yaml`). Run it only when the user explicitly asks for a Manual-entry checklist.
+This skill is manual-only (`disable-model-invocation: true` for Claude; the
+equivalent OpenAI policy is set in `agents/openai.yaml`). Run it only when the
+user explicitly asks for a Manual-entry checklist.
 
 ## Read first
 
-Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory.
+Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
+tree. Read `../_shared/runtime-contract.md` first. Resolve bundled files
+relative to this skill directory with the host's skill-resource or file tools.
+Do not depend on shell visibility or vendor-specific environment variables.
 
 - The relevant workpack: `workspace/annual/2025/return-pack.md` or `workspace/provisional/2026/provisional-pack.md`.
 - The matching `field-map.yaml` for annual, provisional request, or provisional change. For `provisional_2026_review`, read `workspace/provisional/2026/review-questions.md`; no field map is expected unless the review has routed to a change workpack.

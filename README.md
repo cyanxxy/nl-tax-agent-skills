@@ -7,14 +7,15 @@
 <p>
   <strong>Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack for manual Mijn Belastingdienst entry.</strong>
   <br />
-  <sub>A Cowork-first Agent Skills plugin — annual 2025 &amp; voorlopige aanslag 2026.</sub>
+  <sub>A Cowork-first, cross-platform Agent Skills plugin for Claude, ChatGPT Work, and Codex — annual 2025 &amp; voorlopige aanslag 2026.</sub>
 </p>
 
 <br />
 <br />
 
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" /></a>
-<a href="https://claude.ai"><img alt="Cowork" src="https://img.shields.io/badge/Cowork-supported-6E56CF" /></a>
+<a href="#claude-cowork--personal"><img alt="Cowork" src="https://img.shields.io/badge/Cowork-primary-6E56CF" /></a>
+<a href="#chatgpt-work"><img alt="ChatGPT Work" src="https://img.shields.io/badge/ChatGPT%20Work-ready-10A37F" /></a>
 <a href="https://claude.com/claude-code"><img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-supported-D97757" /></a>
 <a href="#-install"><img alt="Codex" src="https://img.shields.io/badge/Codex-compatible-111111" /></a>
 <a href="#-supported-workflows"><img alt="Years" src="https://img.shields.io/badge/Years-2025%20annual%20%C2%B7%202026%20provisional-2EA44F" /></a>
@@ -92,10 +93,16 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
 
 ## 🚀 Quickstart
 
-Once the plugin is [installed](#-install), open Cowork, attach or select the
-documents you want it to use, and describe the result you need. The agent drives
-the workflow: it asks only the missing intake questions, chooses the relevant
-skills, and prepares artifacts for your review.
+Once the plugin is [installed](#-install), open Claude Cowork, ChatGPT Work,
+Codex, or another
+supported Agent Skills host, provide the documents you want it to use, and
+describe the result you need. The agent drives the workflow: it asks only the
+missing intake questions, chooses the relevant skills, and prepares artifacts
+for your review.
+
+On Work web or mobile, upload documents to the conversation or project. On
+desktop, select a local folder or attach files. The plugin never assumes that a
+cloud task can see files that remain only on your computer.
 
 ### Annual return — 2025
 
@@ -126,9 +133,9 @@ For a provisional workflow, you can invoke the workflow skill directly:
 /nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request
 ```
 
-Replace `request` with `change`, `review`, or `stopzetten`. Direct invocation is
-an advanced Claude interface; ordinary Cowork use should start with the natural-
-language request above. Codex users can name a discovered skill explicitly.
+Replace `request` with `change`, `review`, or `stopzetten`. Direct invocation
+syntax varies by host; the portable path is the natural-language request above.
+Codex users can name a discovered skill explicitly.
 
 </details>
 
@@ -140,11 +147,28 @@ language request above. Codex users can name a discovered skill explicitly.
 
 <sup><em>Public repository supported</em></sup>
 
-1. Open Claude Desktop → **Cowork** → **Customize** → **Browse plugins** → **Personal**.
-2. Select **+** → **Add marketplace from GitHub**, then enter `https://github.com/cyanxxy/nl-tax-agent-skills`.
-3. Select **Install** on the `nl-tax-agent-skills` entry.
+1. Open Claude Desktop → **Cowork**, then open **Customize**.
+2. Open **Plugins**. Under **Personal plugins**, select **+** → **Add marketplace**.
+3. Choose **Add from a repository**, then enter `https://github.com/cyanxxy/nl-tax-agent-skills`.
+4. Select **Install** on the `nl-tax-agent-skills` entry.
 
 Public GitHub repositories are accepted for personal marketplaces — no fork or ZIP upload is required.
+
+### ChatGPT Work
+
+For a published release, open ChatGPT **Plugins**, find **NL Tax Agent Skills**
+in the Plugin Directory, and select **Install**. Start a fresh task after an
+install or update so Work loads the current skill metadata.
+
+For an unpublished reviewer build, first run
+`python3 submission/openai/build_bundle.py`, then use the resulting
+`dist/openai/nl-tax-agent-skills.zip` in the workspace's Apps Management draft
+and test flow. This route requires publisher verification and Apps Management
+write permission; the repository cannot complete those account-level gates.
+
+Work web and mobile use uploaded or project files. Work desktop can also use a
+local folder selected for the task. No connected app or external account
+authorization is required by this plugin.
 
 ### Claude Code
 
@@ -161,7 +185,7 @@ Or run the plugin locally without installing the marketplace:
 claude --plugin-dir ./plugins/nl-tax-agent-skills
 ```
 
-### Codex
+### Codex CLI
 
 Add the GitHub marketplace and install the plugin:
 
@@ -181,10 +205,10 @@ income-tax workpack.”
 
 ### Supported hosts
 
-The plugin is designed primarily for **Claude Cowork** and also works with
-**Claude Code** and **Codex**. All three use the same bundled Agent Skills and
-reviewed tax knowledge. In Cowork, select or attach the documents you want the
-agent to use.
+The plugin is Cowork-first and supports **Claude Cowork**, **ChatGPT Work**,
+**Codex**, and **Claude Code**. Each host uses the same bundled Agent Skills and reviewed tax
+knowledge. File access follows the active surface: upload or project files on
+Work web/mobile, and user-selected local files or attachments on desktop.
 
 Python is optional. The agent can complete the documented workflow without
 asking a taxpayer to install Python.
@@ -216,7 +240,10 @@ zip -r ../../nl-tax-agent-skills.plugin.zip . \
   -x "evidence/*" -x "__pycache__/*" -x "*.pyc"
 ```
 
-Upload the ZIP through the same **Browse plugins** modal. Versioning and release mechanics are documented in [CONTRIBUTING.md](CONTRIBUTING.md#release-process).
+Download the Cowork ZIP from the matching GitHub release, or build it locally
+with the command above. In Claude Desktop, open **Customize → Plugins**; under
+**Personal plugins**, select **+** and upload the custom plugin file. Versioning
+and release mechanics are documented in [CONTRIBUTING.md](CONTRIBUTING.md#release-process).
 
 </details>
 
@@ -256,11 +283,12 @@ as complete.
 
 ## 🔒 Privacy
 
-Documents are processed inside the active Cowork, Claude Code, or Codex task
-under that host's data-handling terms. Repository work folders are git-ignored
-so taxpayer files are not committed or packaged, but git-ignore is not an
-offline guarantee. See [PRIVACY.md](PRIVACY.md) for retention and cleanup
-details and [SECURITY.md](SECURITY.md) to report a sensitive issue.
+Documents are processed inside the active ChatGPT Work, Codex, Claude, or other
+supported host task under that host's data-handling terms. Repository work
+folders are git-ignored so taxpayer files are not committed or packaged, but
+git-ignore is not an offline guarantee. See [PRIVACY.md](PRIVACY.md) for
+retention and cleanup details and [SECURITY.md](SECURITY.md) to report a
+sensitive issue.
 
 ---
 
@@ -279,7 +307,7 @@ Tax-content correctness — rates, thresholds, rules, and cited sources — is o
 <sub>
   Licensed under <a href="LICENSE">Apache-2.0</a>
   &nbsp;&nbsp;·&nbsp;&nbsp;
-  Built for Claude Code, Cowork, and Codex
+  Built for ChatGPT Work, Codex, Claude Code, and Cowork
   &nbsp;&nbsp;·&nbsp;&nbsp;
   Submission is always manual through Mijn Belastingdienst
 </sub>

@@ -9,5 +9,9 @@
 # model. The user (or an owning workflow) triggers it explicitly. Explicit
 # `$nl-tax-submit-companion` invocation still works when implicit invocation is
 # disabled.
+interface:
+  display_name: "Dutch Tax Manual-entry Checklist"
+  short_description: "Explicit-only checklist from a reviewed workpack and field map."
+
 policy:
   allow_implicit_invocation: false

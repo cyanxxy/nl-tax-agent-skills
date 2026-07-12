@@ -32,15 +32,11 @@ If the relevant workpack does not exist, tell the user it must be generated firs
 
 ## Read first
 
-Bundled paths below are relative to this skill's own directory: `reference/`
-is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`.
-Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a
-path is not obvious). Do not use Bash to discover or read plugin files: in
-Cowork, shell commands run in an isolated VM that may not see the plugin cache
-even when `Read` and `Glob` can. If the host has already expanded
-`${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
-for file tools; otherwise search within the loaded plugin/skill tree and resolve
-relative to this skill directory. Resolve every `workspace/...` path against
+Read `../_shared/runtime-contract.md` first. Bundled paths below are relative to
+this skill's own directory: `reference/` is a subfolder, and `_shared/` is the
+plugin-shared folder at `../_shared/`. Use the host's skill-resource or file
+tools to resolve them, and do not depend on shell visibility or vendor-specific
+environment variables. Resolve every `workspace/...` path against
 `workspace_root` recorded in `session-progress.yaml` (or `profile.yaml`); never
 create a second `workspace/` tree.
 
@@ -133,7 +129,7 @@ this environment and Bash can access the resolved plugin script path, run the
 bundled validator:
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
 The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, readiness, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
@@ -144,8 +140,8 @@ in the manual checklist in `reference/mapping-principles.md` and set
 `check_performed_by: checked_by_agent`. These are the only two check-trail
 values.
 
-**If `python3` is not available or Bash cannot see the plugin script path** (for
-example in Cowork's isolated VM), do not skip validation. Complete the concise
+**If `python3` is not available or the execution environment cannot see the
+plugin script path**, do not skip validation. Complete the concise
 manual checklist in `reference/mapping-principles.md`; its IDs exactly match the
 validator's `CHECK_IDS`. The map is ready for entry only when at least one field
 is populated-and-sourced and no required reference field is left unpopulated.
@@ -157,7 +153,7 @@ If `python3` is available and Bash can access the resolved plugin script path,
 render a human-readable preview with the bundled renderer:
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
 If `python3` is not available or Bash cannot see the plugin script path, present

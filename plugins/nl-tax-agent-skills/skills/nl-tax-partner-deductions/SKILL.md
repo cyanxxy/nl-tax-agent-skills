@@ -21,9 +21,18 @@ Load `workspace/taxpayer/profile.yaml` and the relevant partner/deduction refere
 
 Use annual 2025 references for annual workpacks and provisional 2026 references for provisional estimates.
 
-Resolve every `workspace/...` path against `workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin files: in Cowork, shell commands run in an isolated VM that may not see the plugin cache even when `Read` and `Glob` can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise search within the loaded plugin/skill tree and resolve relative to this skill directory.
+Resolve every `workspace/...` path against `workspace_root` from
+`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
+tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`.
+Read `../_shared/runtime-contract.md` first. Resolve bundled files relative to
+this skill directory with the host's skill-resource or file tools. Do not
+depend on shell visibility or vendor-specific environment variables.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/` path, and only if Bash can access that path. If Bash cannot see the plugin path, continue manually from the sourced inputs and rules; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+Safety: only run Python under an already-resolved plugin `skills/.../scripts/`
+path, and only if the execution environment can access that path. Otherwise
+continue manually from the sourced inputs and rules; never copy bundled scripts
+into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`,
+or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume partner data or deduction amounts are pre-staged. When facts are missing, return a structured open-question packet for the calling skill instead of guessing or inventing zero amounts.
 
@@ -65,7 +74,7 @@ row to be 100/0 or 0/100; and requires `partner_pct: 0` when
 `has_fiscal_partner` is false. Record
 `check_performed_by: checked_by_script` after a successful run.
 
-When Python is unavailable (for example in Cowork's isolated VM), apply those
+When Python is unavailable or cannot access the bundled script, apply those
 same explicit boolean, range, sum, non-allocatable, and no-partner invariants by
 hand and record `check_performed_by: checked_by_agent`. Python availability
 never blocks the agent from preparing the allocation scenarios.

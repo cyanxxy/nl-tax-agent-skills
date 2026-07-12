@@ -59,13 +59,9 @@ may only accelerate mechanical checks when the host already supports them.
 
 Bundled paths below are relative to this skill's own directory: `templates/`
 is a subfolder, and `_shared/` is the plugin-shared folder at `../_shared/`.
-Resolve bundled files with host file tools (`Read` first, `Glob` or `Grep` if a
-path is not obvious). Do not use Bash to discover or read plugin files: in
-Cowork, shell commands run in an isolated VM that may not see the plugin cache
-even when `Read` and `Glob` can. If the host has already expanded
-`${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
-for file tools; otherwise search within the loaded plugin/skill tree and resolve
-relative to this skill directory.
+Read `../_shared/runtime-contract.md` first. Resolve bundled files relative to
+this skill directory with the host's skill-resource or file tools. Do not
+depend on shell visibility or vendor-specific environment variables.
 
 For explicit preparation only, before responding to the user, read:
 

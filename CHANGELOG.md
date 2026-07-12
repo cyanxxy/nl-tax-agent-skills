@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] — 2026-07-12
+
+Cross-host packaging and release-hygiene release. The source plugin remains
+Cowork-first while the same skills support ChatGPT Work and Codex.
+
+### Added
+
+- A shared runtime contract for local, uploaded, project, and host-provided
+  files, with Python and shell treated as optional accelerators.
+- OpenAI skill interface and invocation-policy metadata, a reviewer pack with
+  five positive and three negative cases, and a reproducible OpenAI ZIP builder.
+- Regression coverage for source/bundle separation and cross-host packaging.
+
+### Changed
+
+- Both plugin manifests now use `0.1.9`; public descriptions consistently say
+  Cowork-first and cross-platform.
+- The OpenAI builder removes Claude-only invocation frontmatter from its copy
+  while preserving Claude's manual/developer invocation guards in source.
+- The packaging-only shared-resource skill is hidden from both manual and model
+  invocation; workflow skills continue to load its files directly as needed.
+- ChatGPT Work installation and external reviewer gates are documented more
+  explicitly, and generated `dist/` output is ignored.
+- Cowork installation guidance follows the unified Customize and Plugins UI,
+  and the GitHub release includes a ready-to-upload Cowork ZIP.
+
+### Scope reminder
+
+Publisher verification, Apps Management access, genuine screenshots, and live
+Work/Cowork smoke tests remain human, account-level release gates. Static tests
+do not claim to satisfy them.
+
 ## [0.1.8] — 2026-07-11
 
 This release expands the 2025 annual-return guidance for deductions that were

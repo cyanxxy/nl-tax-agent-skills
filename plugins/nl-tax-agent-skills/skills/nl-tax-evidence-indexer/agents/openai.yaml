@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Tax Evidence Indexer"
+  short_description: "Organize selected tax files and chat-stated values into a reviewable evidence index."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Index the Dutch tax documents I selected and tell me which evidence is still missing."
+
+policy:
+  allow_implicit_invocation: true

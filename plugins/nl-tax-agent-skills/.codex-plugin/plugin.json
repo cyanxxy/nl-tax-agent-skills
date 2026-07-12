@@ -1,11 +1,13 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.8",
-  "description": "Cowork-first Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
+  "version": "0.1.9",
+  "description": "Cowork-first, cross-platform Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
+  "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills#readme",
+  "repository": "https://github.com/cyanxxy/nl-tax-agent-skills",
   "license": "Apache-2.0",
   "keywords": [
     "tax",
@@ -20,7 +22,7 @@
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",
-    "longDescription": "LLM-guided Dutch tax preparation skills for reviewable manual Mijn Belastingdienst form entry. The plugin guides intake, evidence indexing, source checks, field maps, and checklists without logging in, filing, signing, submitting, or automating the portal.",
+    "longDescription": "Prepare source-traceable Dutch tax workpacks in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The plugin guides intake, evidence indexing, source checks, field maps, and manual-entry checklists without logging in, filing, signing, submitting, or automating Mijn Belastingdienst.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",
     "capabilities": [
@@ -29,9 +31,9 @@
       "Source-Backed Guidance"
     ],
     "defaultPrompt": [
-      "Start Dutch tax intake.",
-      "Prepare 2026 voorlopige aanslag.",
-      "Index Dutch tax documents."
+      "Prepare my 2025 Dutch income-tax workpack.",
+      "Prepare a 2026 voorlopige aanslag workpack.",
+      "Index my Dutch tax documents for review."
     ],
     "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
     "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",

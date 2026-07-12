@@ -25,13 +25,10 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
 `workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
-`../_shared/`. Resolve bundled files with host file tools (`Read` first, `Glob`
-or `Grep` if a path is not obvious). Do not use Bash to discover or read plugin
-files: in Cowork, shell commands run in an isolated VM that may not see the
-plugin cache even when `Read` and `Glob` can. If the host has already expanded
-`${CLAUDE_PLUGIN_ROOT}` or `${CLAUDE_SKILL_DIR}`, those absolute paths are fine
-for file tools; otherwise search within the loaded plugin/skill tree and resolve
-relative to this skill directory.
+`../_shared/`. Read `../_shared/runtime-contract.md` first. Resolve bundled
+files relative to this skill directory with the host's skill-resource or file
+tools. Do not depend on shell visibility or vendor-specific environment
+variables.
 
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`

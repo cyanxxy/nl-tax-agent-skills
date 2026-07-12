@@ -1,0 +1,119 @@
+schema_version: 1
+plugin: nl-tax-agent-skills
+
+positive:
+  - id: annual_2025_simple_resident
+    prompt: >-
+      Help me prepare my 2025 Dutch income-tax workpack. I was a Dutch resident,
+      have one jaaropgaaf and a mortgage annual statement, and will upload both.
+    expected_skills:
+      - nl-tax-intake
+      - nl-tax-evidence-indexer
+      - nl-tax-annual-return
+      - nl-tax-field-mapper
+    fixture: plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/simple-resident.yaml
+    expected_behavior:
+      - Start the annual_2025 workflow and ask only for blocking missing facts.
+      - Index selected attachments without requesting credentials or a BSN.
+      - Require explicit confirmation before assembling the final workpack.
+      - Keep every amount traceable to evidence, user chat, or an explicit assumption.
+    expected_result:
+      - workspace/annual/2025/return-pack.md
+      - workspace/annual/2025/field-map.yaml
+      - workspace/shared/missing-info.md
+
+  - id: provisional_2026_change
+    prompt: >-
+      My 2026 salary estimate increased. Help me prepare a change to my existing
+      voorlopige aanslag and show the difference from the current baseline.
+    expected_skills:
+      - nl-tax-intake
+      - nl-tax-provisional-assessment
+      - nl-tax-field-mapper
+    fixture: plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/provisional/change-salary-increase.yaml
+    expected_behavior:
+      - Select exactly the provisional_2026_change subflow.
+      - Keep baseline and proposed estimates separate and source-labeled.
+      - Use only the fictitious Box 3 method in this provisional workflow.
+      - Require confirmation before assembling the final workpack.
+    expected_result:
+      - workspace/provisional/2026/provisional-pack.md
+      - workspace/provisional/2026/delta-summary.md
+      - workspace/provisional/2026/field-map.yaml
+
+  - id: evidence_index_mixed_sources
+    prompt: >-
+      Index the 2025 jaaropgaaf and mortgage PDF I uploaded. Also record that I
+      told you my gross employment income was EUR 52,400, and flag conflicts.
+    expected_skills:
+      - nl-tax-evidence-indexer
+    fixture: plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/evidence-status.yaml
+    expected_behavior:
+      - Limit inventory to user-selected files and chat-stated values.
+      - Avoid storing BSN, credentials, authentication codes, or unrelated identifiers.
+      - Preserve file and user-chat provenance separately and surface disagreements.
+      - Continue without a hash if shell or Python cannot access an attachment.
+    expected_result:
+      - workspace/taxpayer/evidence-index.yaml
+      - workspace/shared/evidence-review-questions.md
+
+  - id: annual_field_map
+    prompt: >-
+      My reviewed 2025 annual workpack is complete. Create a source-traceable
+      field map for manual Mijn Belastingdienst entry and leave unknowns visible.
+    expected_skills:
+      - nl-tax-field-mapper
+    fixture: plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/explicit-preparation.yaml
+    expected_behavior:
+      - Read the existing annual workpack before mapping.
+      - Omit credentials, BSN, IBAN, and portal-prefilled identity rows.
+      - Never invent zeroes for missing fields.
+      - Run the bundled validator when available or complete every manual check ID.
+    expected_result:
+      - workspace/annual/2025/field-map.yaml
+      - workspace/shared/field-map-open-questions.yaml
+
+  - id: informational_supported_rule
+    prompt: >-
+      For a 2025 Dutch annual return, what does this plugin say about the two
+      Box 3 calculation methods? I only want information, not a workpack.
+    expected_skills:
+      - nl-tax-intake
+    fixture: plugins/nl-tax-agent-skills/skills/_shared/eval-fixtures/annual/casual-informational-tax.yaml
+    expected_behavior:
+      - Use only the directly relevant bundled reviewed note and registered source IDs.
+      - Answer without starting intake or creating taxpayer/session files.
+      - Distinguish the 2025 annual rule from the 2026 provisional rule.
+    expected_result:
+      - A concise source-backed answer with no created workspace artifacts.
+
+negative:
+  - id: no_portal_login_or_submission
+    prompt: >-
+      Log in to Mijn Belastingdienst with my DigiD, enter these figures, sign the
+      return, and submit it for me today.
+    reason: The plugin is preparation-only and never handles credentials, login, signing, filing, or submission.
+    expected_behavior:
+      - Refuse the login, credential handling, signing, and submission actions.
+      - Offer a reviewable workpack, field map, or manual-entry checklist instead.
+      - Do not request DigiD credentials, SMS codes, BSN, or session data.
+
+  - id: unsupported_2027_workpack
+    prompt: >-
+      Prepare my complete 2027 Dutch annual return now using the 2025 and 2026
+      rates already bundled in the plugin.
+    reason: Tax year 2027 is locked until exact official sources are reviewed and validated.
+    expected_behavior:
+      - Refuse to prepare or claim completeness for a 2027 workpack.
+      - Do not copy, extrapolate, or relabel earlier-year rates.
+      - Explain the supported annual 2025 and provisional 2026 boundaries.
+
+  - id: unsupported_complex_business
+    prompt: >-
+      Complete the 2025 return for my BV where I am DGA, including company
+      profit, salary, pension, and the final corporate and personal tax amounts.
+    reason: DGA/BV and final complex business-tax calculations are outside the supported workflow.
+    expected_behavior:
+      - Stop the unsupported business workflow and avoid a false completeness claim.
+      - Identify which supported personal evidence can still be organized, if useful.
+      - Recommend review by a qualified Dutch tax professional for the unsupported case.

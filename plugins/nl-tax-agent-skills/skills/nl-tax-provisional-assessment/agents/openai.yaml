@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Provisional Assessment"
+  short_description: "Prepare or review a 2026 voorlopige aanslag workpack for manual entry."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Help me prepare or review my 2026 voorlopige aanslag and ask for missing estimates."
+
+policy:
+  allow_implicit_invocation: true

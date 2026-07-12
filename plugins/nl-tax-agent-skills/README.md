@@ -1,8 +1,9 @@
 # NL Tax Agent Skills — Plugin Package
 
-This directory is the product package for **NL Tax Agent Skills**: a Cowork-first,
-skills-only Agent Skills plugin that prepares Dutch individual income-tax workpacks and
-manual Mijn Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026).
+This directory is the product package for **NL Tax Agent Skills**: a
+Cowork-first, cross-platform, skills-only Agent Skills plugin for Claude,
+ChatGPT Work, and Codex that prepares Dutch individual income-tax workpacks and manual Mijn
+Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026).
 
 > **Not tax advice.** This plugin prepares local workpacks and manual-entry
 > guidance only. It never logs in, signs, or submits anything, and its output is
@@ -20,7 +21,7 @@ marketplace manifests that point at this package: `.claude-plugin/marketplace.js
 (Claude) and `.agents/plugins/marketplace.json` (repo-scoped Codex). Neither
 ships inside this package.
 
-## Cowork quickstart
+## Claude Cowork, ChatGPT Work, and Codex quickstart
 
 After installing the plugin, attach or select the relevant documents and ask:
 
@@ -34,9 +35,10 @@ change, review, or stopzetten a 2026 voorlopige aanslag. A direct advanced invoc
 `/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request` (replace `request` with
 the desired subflow).
 
-Cowork tasks may use local or remote execution environments, so file availability and
-shell tooling depend on the active session. Python is optional; the agent follows the
-manual check path whenever a helper cannot run.
+Tasks may use local or cloud execution environments, so file availability and
+shell tooling depend on the active surface. Work web/mobile uses uploaded or
+project files; desktop tasks can also use a selected local folder. Python is
+optional; the agent follows the manual check path whenever a helper cannot run.
 
 ## Package contents
 
@@ -94,6 +96,11 @@ the agent-driven manual checks in each `SKILL.md` apply.
 | `nl-tax-partner-deductions` | background | Return fiscal-partner, deduction, and allocation facts/questions |
 | `nl-tax-source-refresh` | developer | Validate source registers, knowledge snapshots, and supported workflows |
 
+The `skills/_shared/` directory is packaged as the hidden
+`nl-tax-shared-resources` internal skill so OpenAI plugin ingestion can validate
+the shared runtime contract and resources. It is not a taxpayer workflow and
+cannot be invoked implicitly.
+
 Only the annual and provisional workflow skills write main workpacks. Intake
 creates taxpayer/session state, the field mapper alone writes canonical field
 maps, and background helpers write no artifacts.
@@ -111,9 +118,9 @@ stopzetten. `nl-tax-winst` supports straightforward annual-2025 preparation and
 the single bounded provisional field `onderneming.geschatte_winst`; it is not a
 provisional tax engine or final business-tax calculator.
 
-The package passes manifest and discovery checks, including first-party Claude validation
-when the CLI capability is installed. Those checks do not replace a human Cowork UI smoke
-test after install/update in a fresh task.
+The package passes manifest and discovery checks, including host-specific
+validation when the relevant CLI capability is installed. Those checks do not
+replace fresh-task smoke tests in Work web, Work desktop, Codex, and Claude.
 
 ## Scope
 

@@ -26,6 +26,7 @@ evidence/
 *.rar
 
 # Generated local packs and secrets
+dist/
 __pycache__/
 *.py[cod]
 plugins/*/version.json

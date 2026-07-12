@@ -1,9 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "displayName": "NL Tax Agent Skills",
-  "description": "Cowork-first Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
+  "description": "Cowork-first, cross-platform Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
   "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills",
   "repository": "https://github.com/cyanxxy/nl-tax-agent-skills",
   "author": {

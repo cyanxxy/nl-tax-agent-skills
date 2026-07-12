@@ -11,5 +11,9 @@
 # invocation keeps Codex from routing a user prompt straight to it and bypassing
 # the orchestrating workflow skill. Explicit `$nl-tax-winst` invocation still
 # works.
+interface:
+  display_name: "Dutch Tax Business-income Helper"
+  short_description: "Internal annual business preparation and provisional forecast helper."
+
 policy:
   allow_implicit_invocation: false

@@ -19,17 +19,13 @@ This skill is conversational. Do not assume the user has prepared all estimates 
 
 ## Read first
 
-Bundled paths (`reference/`, `templates/`, `_shared/`) are relative to this
-skill's own directory; `_shared/` is `../_shared/`. Resolve bundled files with
-host file tools (`Read` first, `Glob` or `Grep` if a path is not obvious). Do
-not use Bash to discover or read plugin files: in Cowork, shell commands run in
-an isolated VM that may not see the plugin cache even when `Read` and `Glob`
-can. If the host has already expanded `${CLAUDE_PLUGIN_ROOT}` or
-`${CLAUDE_SKILL_DIR}`, those absolute paths are fine for file tools; otherwise
-search within the loaded plugin/skill tree and resolve relative to this skill
-directory. Resolve every `workspace/...` path against `workspace_root` from
-`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree.
+Read `../_shared/runtime-contract.md` first. Bundled paths (`reference/`,
+`templates/`, `_shared/`) are relative to this skill's own directory;
+`_shared/` is `../_shared/`. Use the host's skill-resource or file tools to
+resolve them, and do not depend on shell visibility or vendor-specific
+environment variables. Resolve every `workspace/...` path against
+`workspace_root` from `session-progress.yaml` (or `profile.yaml`); never create
+a second `workspace/` tree.
 
 Field-map resources are sibling-skill paths, never local `templates/` or
 `reference/` paths: `nl-tax-field-mapper/templates/field-map-template.yaml`,

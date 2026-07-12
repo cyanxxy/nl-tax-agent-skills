@@ -63,7 +63,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -263,6 +263,10 @@ python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
 python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
 test ! -e plugins/nl-tax-agent-skills/commands
 
+python3 submission/openai/build_bundle.py
+python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
+  dist/openai/nl-tax-agent-skills
+
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
@@ -281,8 +285,16 @@ python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
 python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ```
 
+For an OpenAI Plugin Directory release, also review
+`submission/openai/README.md`, run its fresh-task smoke-test matrix, and submit
+the exact five positive and three negative reviewer cases in
+`submission/openai/test-cases.yaml`. Repository validation cannot replace
+publisher verification, Apps Management permission, genuine product
+screenshots, or a Work web/desktop smoke test.
+
 | Validator | Purpose |
 |---|---|
+| OpenAI plugin validator | Codex manifest, skill metadata, asset containment, invocation metadata, and ingestion shape |
 | `validate_source_register.py` | Every `source_id` has the required fields, snapshot path resolves, `last_checked` parses as an ISO date, URLs are HTTPS and on the allowlist |
 | `validate_knowledge_pack.py` | Each knowledge note cites only registered `source_id`s; snapshots match referenced paths and hashes; stale mandatory sources fail |
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
@@ -315,11 +327,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.1.8`):
+Both plugin manifests pin a fixed version (currently `0.1.9`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.8"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.8"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.9"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.9"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -348,7 +360,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.1.8')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.1.9')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.1.8'
+git tag --list 'nl-tax-agent-skills--v0.1.9'
 ```

@@ -10,5 +10,9 @@
 # workflow. Disabling implicit invocation keeps Codex from routing a user prompt
 # straight to it and bypassing the orchestrating workflow skill. Explicit
 # `$nl-tax-box2` invocation still works.
+interface:
+  display_name: "Dutch Tax Box 2 Helper"
+  short_description: "Internal substantial-interest fact helper for supported workflows."
+
 policy:
   allow_implicit_invocation: false
