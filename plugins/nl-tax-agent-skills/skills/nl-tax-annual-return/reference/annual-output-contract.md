@@ -168,22 +168,30 @@ If fiscal partners allocate Box 2 income, the workpack MUST show the allocation 
 
 ## Box 3 requirements
 
-### Both methods required
+### Both methods explained; actual-return inputs optional
 
 The box 3 section MUST include notes for BOTH methods:
 
 1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, aftrekbare schulden, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax amount. Use the rates from `_shared/knowledge/years/2025/box3/fictitious.md` — never paraphrase from memory.
 2. **Actual return (werkelijk rendement) data collection:** Data gathered or gaps identified for interest, dividends, rental income, capital gains/losses, unrealized value changes, interest paid on box 3 debts, and qualifying WOZ-value investment correction.
 
-If all required actual-return evidence is available, the workpack records that
-subsection as `complete`. If the taxpayer declines or evidence is missing, the
-workpack still includes both method explanations, lists the evidence needed,
-and records the actual-return subsection as `deferred/manual review`. It must
-not imply that both calculations were completed.
+If all required actual-return inputs are available, file and chat provenance are
+equally valid for completeness. Record the subsection as `complete` when the
+inputs include indexed evidence, or `chat_only` when the complete input set was
+stated in chat. Cross-index every chat value for human review. An explicit
+decision not to provide actual return is also complete: record `not supplied by
+choice`, prepare the fictitious-return workpack, and do not create a missing-info
+item. Only required facts still missing after the taxpayer chose the comparison
+may make the subsection `deferred/manual review`; list those inputs and do not
+imply that both calculations were completed.
 
 ### Comparison section
 
-A comparison subsection must present both figures (fictitious and actual return) and note which is more favorable. Include a note that the final election is made in the official filing environment.
+When actual-return inputs were supplied, the comparison subsection must present
+both figures and note which is more favorable. When the taxpayer declined, it
+must instead say that no actual-return comparison was prepared by choice. In
+both cases, explain that the official filing environment performs the binding
+calculation and selection.
 
 ### Partner allocation
 
@@ -203,7 +211,12 @@ The Credits screening section MUST list, for each of the four manual-review cred
 - **Alleenstaande-ouderenkorting** — triggered only when the taxpayer is entitled
   to an AOW benefit for a single person; ask for the AOW entitlement and do not
   infer it from household or fiscal-partner fields.
-- **Jonggehandicaptenkorting** — triggered when the taxpayer receives a Wajong-uitkering or has a young-disabled status; ask the user, do not infer from age alone.
+- **Jonggehandicaptenkorting** — triggered only when the taxpayer receives or is
+  entitled to a Wajong-uitkering / Wajong work support and does not receive the
+  ouderenkorting. A reported young-disabled status counts only when it establishes
+  that Wajong entitlement or work support. Ask the dedicated yes/no question
+  `annual.credits.young_disabled_status`; do not infer the answer from age or a
+  broad denial of other benefits, deductions, or credits.
 
 For each triggered credit, list the trigger that fired and instruct the user to verify the calculated amount in Mijn Belastingdienst. Do not compute the credit amount unless an exact reviewed 2025 source is registered and all inputs are present.
 
@@ -260,11 +273,16 @@ This section must not be:
 Every workpack MUST open with a deterministic STATUS banner derived from `session-progress.yaml` (not from the model's free-form judgment). Compute it from the rollup of the active workflow's subsections:
 
 - If any applicable subsection is `deferred` or has `unknown`/open blocking items, the banner reads: `STATUS: DRAFT — N deferred section(s)` where `N` is the count of deferred/incomplete subsections.
-- If every applicable subsection is `complete`, the banner reads: `STATUS: COMPLETE DRAFT FOR REVIEW`.
+- If every applicable subsection is `complete` or `chat_only`, the banner reads: `STATUS: COMPLETE DRAFT FOR REVIEW`.
 
 In both cases the banner MUST also state that the workpack is **not for filing** (e.g. append "not for filing — review and submit manually via Mijn Belastingdienst"). The banner is recomputed from disk on every assembly, so it never drifts from the recorded session state.
 
-Optionally, `field-map.yaml` may carry a matching **top-level** `readiness` field (`draft` / `review_ready`) so a downstream consumer can read status without re-parsing the workpack prose. (`validate_field_map.py` accepts `readiness` only as a top-level key with one of those two values.)
+`field-map.yaml` MUST carry a matching **top-level** `readiness` field:
+`draft` when this banner is `DRAFT`, and `review_ready` when this banner is
+`COMPLETE DRAFT FOR REVIEW`, unless a workflow-specific blocker (such as
+business schema review) requires `draft`. The agent derives both artifacts from
+the same `session-progress.yaml` rollup. An optional validator may reject an
+impossible `review_ready` declaration but never promote `draft`.
 
 ## Workpack self-check
 
@@ -289,6 +307,8 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Complex Box 2 facts are routed to manual review or unsupported
 - [ ] Box 3 section includes both fictitious and actual return notes, with rates quoted from the knowledge file
 - [ ] Credits screening lists each of the 4 credits with trigger result
+- [ ] A complete set of chat-supplied Box 3 actual-return inputs is `chat_only`, not deferred, and every value appears in the user-stated values index
+- [ ] Jonggehandicaptenkorting is backed by the dedicated explicit Wajong/young-disabled answer, not a broad "no other benefits or credits" inference
 - [ ] Partner allocation is addressed (even if no partner — state "not applicable")
 - [ ] Own-home notes use `total_deductible_own_home_costs` for Hillen, keep `tariefsaanpassing` separate, and route every complex home case to manual review
 - [ ] IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered

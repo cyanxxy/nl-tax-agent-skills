@@ -143,7 +143,7 @@ After each user reply:
 
 If the workflow is `annual_2025` or any `provisional_2026_*` flow, also collect household composition. The annual workpack's credits screening (IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting) depends on these facts. Ask in a single batch of **at most 3 questions**, persisting each answer to `profile.yaml` -> `person`, `partner`, and `household`:
 
-1. **Date of birth** of the taxpayer (and of the fiscal partner if one exists). Persist to `person.date_of_birth` and `partner.partner_date_of_birth`. Derive `aow_age_in_tax_year` from the DOB and the tax year, store it with `source: assumption`, add `assumption_id` on the profile field, and create the matching row in `workspace/shared/assumptions.md` (for example `A001: AOW-age status derived from DOB for tax-year credits screening`) so the user can correct it if AOW age was reached mid-year.
+1. **Date of birth** of the taxpayer (and of the fiscal partner if one exists). Persist to `person.date_of_birth` and `partner.partner_date_of_birth`. Using the reviewed AOW-age rule for the tax year, derive `aow_age_in_tax_year` deterministically from the DOB. Store it with `source: calculated` and `calculated_from: [person.date_of_birth, tax_year]` (or the partner equivalents). Do not create an assumption or ask the user to confirm the calculation; ask only if the DOB itself is missing or disputed.
 2. **Children at home on 31 December of the tax year**: count and, for any child under 18, their date of birth (DOBs only -- never BSN). Persist to `household.children_at_home_count` and `household.children`.
 3. **Single-parent status**: yes / no. Persist to `household.single_parent_status`.
 
@@ -171,7 +171,7 @@ restart intake:
 - `workspace/taxpayer/profile.yaml` has `workflow_candidate` set, `workspace_root` set, and `intake_status: complete`.
 - `updated_at` is stamped on both files.
 
-Once complete, write a one-paragraph summary back to the user and tell them which skill will run next:
+Once complete, write a one-paragraph summary back to the user and describe the next tax topic without naming or narrating a skill handoff:
 
 - `annual_2025` -> "Next: I'll guide you through evidence and the 2025 return one section at a time."
 - `provisional_2026_*` -> "Next: I'll walk through the 2026 estimates category by category."
@@ -183,10 +183,13 @@ Do NOT auto-invoke the next skill. Wait for the user to continue.
 For every fact you record, the user may take one of three paths:
 
 - **Upload a file** to `uploads/` or `evidence/` - hand off to the `nl-tax-evidence-indexer` skill. The corresponding subsection in `session-progress.yaml` becomes `complete` once the file is indexed and the value extracted.
-- **State the value in chat only** - record it with `source: user_chat`, a verbatim `quote`, and `stated_at`. Mark the corresponding subsection's `status: chat_only`. This is an explicit choice, not a gap; do not nag for a file the user has declined to upload.
-- **Defer ("I'll send it later")** - record `source: unknown`, mark the subsection's `status: deferred`, add the item to `missing-info.md`, and move on. The downstream workflow skill will re-prompt.
+- **State the value in chat only** - record it with `source: user_chat`, a verbatim `quote`, and `stated_at`. Mark the corresponding subsection's `status: chat_only`; also update `sections.evidence.subsections.user_chat_values` as required by the shared elicitation contract. This is an explicit choice, not a gap; do not nag for a file the user has declined to upload.
+- **Defer ("I'll send it later")** - record `source: unknown`, mark the subsection's `status: deferred`, keep the question in `open_questions` rather than `answered`, add the item to `missing-info.md`, and move on. The annual/provisional conversation will re-prompt when relevant.
 
-`chat_only` and `complete` both count as filled for the workpack generation gate. `deferred` must be resolved or explicitly accepted as missing before the gate opens.
+`chat_only` and `complete` both count as filled for the workpack generation
+gate. A deferred blocking fact must be resolved. A nonblocking deferred fact may
+remain only when the downstream output contract permits a `DRAFT` and the user
+later gives that workflow's explicit generation confirmation.
 
 ## Unsupported cases
 
@@ -229,6 +232,9 @@ Tell the user:
 1. Which workflow was selected.
 2. Whether anything was deferred to `missing-info.md`.
 3. Which tax topic comes next, or that you are ready to continue in the same conversation.
+
+Use ordinary taxpayer language such as "2025 annual return" or "2026 estimate".
+Never mention internal skill names, selection, activation, or control transfer.
 
 ## Worked example
 

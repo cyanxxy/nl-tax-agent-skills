@@ -18,7 +18,7 @@ def load_yaml(relative_path):
     return yaml.safe_load(read_text(relative_path))
 
 
-TERMINAL_STATUSES = {"complete", "chat_only", "deferred"}
+REVIEW_READY_STATUSES = {"complete", "chat_only"}
 
 
 def completed_annual_state():
@@ -39,7 +39,7 @@ def readiness(state, workflow="annual_2025"):
     subsections = state["sections"][workflow]["subsections"].values()
     return (
         "review_ready"
-        if all(item["status"] in TERMINAL_STATUSES for item in subsections)
+        if all(item["status"] in REVIEW_READY_STATUSES for item in subsections)
         else "draft"
     )
 
@@ -107,13 +107,14 @@ class IntakeContractTests(unittest.TestCase):
         self.assertIn("manual_review", manual_review["profile_candidates"])
         self.assertEqual(manual_review["allowed_output"], "workspace/shared/missing-info.md")
 
-    def test_aow_assumption_requires_assumption_id(self):
+    def test_aow_age_is_deterministic_calculation_not_assumption(self):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
         household_section = intake[intake.index("### Household composition") :]
 
         self.assertIn("aow_age_in_tax_year", household_section)
-        self.assertIn("assumption_id", household_section)
-        self.assertIn("assumptions.md", household_section)
+        self.assertIn("source: calculated", household_section)
+        self.assertIn("calculated_from", household_section)
+        self.assertIn("Do not create an assumption", household_section)
 
     def test_interactive_contract_aligns_draft_generation_with_output_contracts(self):
         contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
@@ -146,6 +147,14 @@ class IntakeContractTests(unittest.TestCase):
         state = completed_annual_state()
         state["sections"]["annual_2025"]["subsections"]["winst"]["status"] = (
             "in_progress"
+        )
+
+        self.assertEqual(readiness(state), "draft")
+
+    def test_deferred_annual_subsection_keeps_draft_readiness(self):
+        state = completed_annual_state()
+        state["sections"]["annual_2025"]["subsections"]["box3_actual"]["status"] = (
+            "deferred"
         )
 
         self.assertEqual(readiness(state), "draft")

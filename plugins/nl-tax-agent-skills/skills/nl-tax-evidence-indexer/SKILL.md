@@ -77,7 +77,9 @@ user has no evidence".
 - **Inventory** the files in the user-selected folder without classifying them.
 - **Hash** each file (sha256) for integrity tracking when Python or another
   available host facility can do so.
-- **Record user-stated values** as evidence items with `extraction_status: "user_chat"` (no file).
+- **Return chat answers to the owning workflow** for storage in profile or
+  workflow notes with `source: user_chat`. Do not invoke this indexer solely to
+  turn chat into document evidence.
 - **Drive the conversation** when a workflow needs evidence that is not yet present.
 - **Generate** review questions for items the user must verify.
 
@@ -91,8 +93,8 @@ The indexer never tries to do everything in one shot. Its turn-by-turn loop is:
    supplies inventory metadata and hashes only; you classify and extract.
 2. **Tell the user what was found.** One short sentence per file: "Found `jaaropgaaf-2025.pdf` - looks like a 2025 jaaropgaaf from {employer}, confidence 0.85." Do not paste long extracts.
 3. **Ask only about gaps that are blocking the active workflow.** If the active workflow is `annual_2025` and there is no jaaropgaaf and no employment income recorded, ask: "Do you have a 2025 jaaropgaaf? You can attach it here in the chat, drop it into `uploads/`, or just tell me the amount."
-4. **Accept whichever the user offers** - file or chat - and record it accordingly.
-5. **Defer politely.** If the user can't provide it now, mark `extraction_status: "deferred"`, add to `missing-info.md`, and move on.
+4. **Accept whichever the user offers** - file or chat - and record it accordingly. For chat, set `sections.evidence.subsections.user_chat_values.status: chat_only`, append the resolved question ID to its `answered` list, and update the evidence rollup.
+5. **Defer politely.** If the user can't provide it now, mark `extraction_status: "deferred"`, keep the question ID in `open_questions` rather than `answered`, add it to `missing-info.md`, and move on.
 
 Batch at most three evidence questions per turn.
 
@@ -105,6 +107,9 @@ Each item in `evidence-index.yaml` carries a `source` field:
 - `unknown` - promised but not yet provided (deferred). Set `extraction_status: "deferred"`; this matches the `source: unknown` + deferred-status provenance used in `profile.yaml` and the workflow skills.
 
 For `user_chat` items, set `file_path: null`, `file_sha256: null`, `extraction_status: "user_chat"`, and put the stated amounts under `extracted_fields` with a clear key (e.g., `gross_employment_income_eur`).
+This item form is resume compatibility for a chat answer received while the
+indexer was already active; pure chat collection does not require an
+`evidence-index.yaml` entry and is owned by the active workflow.
 
 ## Evidence classification
 

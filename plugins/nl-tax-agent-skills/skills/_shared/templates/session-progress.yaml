@@ -61,6 +61,9 @@ sections:
         answered: []
       user_chat_values:
         status: "not_started"
+        # On the first user-chat value anywhere in the workflow, set this to
+        # chat_only and append the stable question_id below. This subsection is
+        # descriptive; it is not part of an annual/provisional generation gate.
         open_questions: []
         answered: []
 

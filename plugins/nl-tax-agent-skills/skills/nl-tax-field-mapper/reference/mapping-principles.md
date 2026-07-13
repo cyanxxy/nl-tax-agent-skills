@@ -101,6 +101,18 @@ The value comes from a document in the evidence index.
 - The evidence must exist and be classified
 - The field mapper does not reclassify evidence -- it uses the classification as-is
 
+### `user_chat`
+
+The taxpayer supplied the value directly in the conversation. This is valid
+provenance, not a missing-data state.
+
+- `quote`: required -- short verbatim text supporting the value
+- `stated_at`: required -- date of the statement
+- Add the field to `user_chat_values_index` and set
+  `manual_review_required: true` for spot-checking before entry
+- Do not lower confidence merely because the source is chat; distinguish an
+  exact answer from a rough estimate
+
 ### `estimate`
 
 The value is an estimate provided by the taxpayer or derived from available information.
@@ -124,6 +136,13 @@ The value was computed from other field values using tax rules.
 - `evidence_id`: null
 - The calculation logic must be noted (e.g., "eigenwoningforfait = WOZ-waarde * 0.35%")
 - The input fields used in the calculation must be listed in `notes`
+
+### `assumption`
+
+The value uses a user-confirmed default that is not fully determined by sourced
+facts. It requires `assumption_id` and remains a human-review item. Do not label
+deterministic derivations, such as an AOW-age screen from sourced DOB plus tax
+year and a reviewed rule, as assumptions; use `calculated`.
 
 ---
 
@@ -186,7 +205,7 @@ A field is flagged as `manual_review_required: true` when any of the following a
 3. Multiple conflicting evidence items exist for the same field
 4. The evidence item was flagged for review in the evidence index
 5. The field involves a tax choice (e.g., werkelijk rendement vs forfaitair, partner allocation percentage)
-6. The value was derived from a calculation with assumptions
+6. The value is an assumption or was derived from an assumption
 7. The field is in a section the taxpayer did not explicitly confirm
 
 ---
@@ -213,6 +232,8 @@ A field is flagged as `manual_review_required: true` when any of the following a
 Use this checklist when the optional validator cannot run. The IDs are the
 stable `CHECK_IDS` exposed by `scripts/validate_field_map.py`; complete every
 item and record `check_performed_by: checked_by_agent` in the artifact.
+The checklist validates the map mechanically; session state remains the sole
+readiness authority.
 
 - [ ] `FM-METADATA` — required metadata and the check trail are present and valid.
 - [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are the supported annual 2025 or provisional 2026 pair.
@@ -220,5 +241,5 @@ item and record `check_performed_by: checked_by_agent` in the artifact.
 - [ ] `FM-SOURCE` — every populated row has a valid source type and its required provenance fields.
 - [ ] `FM-CONFIDENCE-FINITE` — confidence is numeric within 0–1 and numeric values are finite.
 - [ ] `FM-REFERENCE-COVERAGE` — every required non-prefilled reference field appears in fields or missing fields.
-- [ ] `FM-MISSING-READINESS` — unknown rows are also missing, at least one row is populated and sourced, and no required row or workflow blocker remains.
+- [ ] `FM-MISSING-STRUCTURE` — every unknown row also appears in `missing_fields`; required rows are represented; structural blockers are reported without changing the agent-declared readiness.
 - [ ] `FM-PROVISIONAL-METHOD` — a provisional map contains no werkelijk-rendement field and uses only the allowed expected-profit treatment.

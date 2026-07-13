@@ -5,6 +5,42 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.10] — 2026-07-13
+
+Agent-driven workflow consistency and conversational quality release.
+
+### Fixed
+
+- Chat-stated values are first-class provenance throughout annual preparation,
+  including a complete Box 3 actual-return comparison without an uploaded file.
+- Declining the optional 2025 actual-return route is a completed user choice,
+  not a missing fact or deferred section; missing inputs after opting in remain
+  visible for review.
+- Workpack and field-map readiness now come from the same persisted workflow
+  rollup. The optional field-map validator can reject an inconsistent
+  `review_ready` declaration but cannot promote an agent-declared draft.
+- The credits phase asks a dedicated Wajong-entitlement/work-support question
+  and applies the official condition that jonggehandicaptenkorting does not
+  apply when ouderenkorting is received.
+- Deferred questions remain open instead of also being recorded as answered;
+  chat-evidence bookkeeping, active-workflow state, deterministic AOW screening,
+  and post-generation confirmation resets now have explicit contracts.
+- Failed commands are reported as failed and are separated from tax-specific
+  checks. Tax workspaces are no longer assumed to be Git repositories, and the
+  annual workflow no longer probes a nonexistent template path.
+
+### Changed
+
+- Skill selection, helper handoffs, state updates, and validation mechanics stay
+  invisible so intake, annual preparation, Box helpers, and field mapping read
+  as one continuous conversation.
+- Knowledge files load by active phase and case branch, preventing irrelevant
+  late-filing interest sources and stale-source warnings in on-time cases.
+- The agent remains the workflow and readiness authority; Python helpers are
+  limited to optional arithmetic, schema, provenance, and consistency checks.
+- Box 3, Wajong, filing-status, and AOW routing were rechecked against current
+  official Belastingdienst, SVB, and Rijksoverheid guidance before release.
+
 ## [0.1.9] — 2026-07-12
 
 Cross-host packaging and release-hygiene release. The source plugin remains

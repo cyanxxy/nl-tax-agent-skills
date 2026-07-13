@@ -1,5 +1,7 @@
 ## Phase 2 — Income compilation
 
+Load `_shared/knowledge/years/2025/annual/box1-rates.md` when this phase starts.
+
 Compile all box 1 income from evidence and user-provided data.
 
 ### 2.1 Employment income (loon uit dienstbetrekking)

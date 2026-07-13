@@ -6,10 +6,9 @@ workflow: ""          # "annual_return" or "provisional_assessment" — the FIEL
 tax_year: ""          # REQUIRED: set explicitly to 2025 for annual_return or 2026 for provisional_assessment
 created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
 updated_at: ""
-readiness: "draft"    # Optional self-declaration: "draft" or "review_ready" (the only
-                      # values validate_field_map.py accepts). The validator also
-                      # computes readiness itself and warns when a "review_ready"
-                      # declaration disagrees with the computed state.
+readiness: "draft"    # Canonical agent declaration derived from session-progress.yaml:
+                      # "review_ready" only for a complete active workflow with no
+                      # blocker; otherwise "draft". A validator never promotes it.
 check_performed_by: "checked_by_agent"  # checked_by_agent after completing every manual CHECK_ID;
                                         # checked_by_script only after the bundled validator passes
 

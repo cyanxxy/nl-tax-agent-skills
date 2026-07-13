@@ -28,7 +28,7 @@ The AOW-leeftijd (Dutch state-pension age) determines whether a taxpayer reaches
 
 ## Developer instruction
 
-Intake derives `aow_age_in_tax_year` from the date of birth and stores it with `source: assumption` so the user can correct it. Never collect or store the AOW administration number or BSN.
+Intake derives `aow_age_in_tax_year` deterministically from the sourced date of birth, tax year, and this reviewed rule. Store it with `source: calculated` and `calculated_from`; do not create an assumption or request separate confirmation. Ask the user only when the DOB is missing or disputed. Never collect or store the AOW administration number or BSN.
 
 ## Common failure
 

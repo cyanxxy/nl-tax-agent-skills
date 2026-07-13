@@ -21,12 +21,19 @@ This skill is the sole writer of both canonical field-map artifacts:
 skills invoke it after confirmed workpack creation and never write either map.
 
 This skill is conversational. It does not silently emit a field map full of zeros. When a required field has no sourced value, surface a question to the user instead of inventing data.
+Keep invocation and validation implementation invisible. Continue in the same
+tax conversation; never announce that a field-mapper skill or Python script is
+taking control.
 
 ## When to use
 
 - After an annual workpack exists at `workspace/annual/2025/return-pack.md`.
 - After a provisional workpack exists at `workspace/provisional/2026/provisional-pack.md`.
 - When the user explicitly asks to prepare a field map for manual data entry.
+
+An owning annual/provisional workflow invokes this mapper automatically after
+its explicitly confirmed workpack; that workpack confirmation also authorizes
+the canonical companion field map, so no second mapping request is needed.
 
 If the relevant workpack does not exist, tell the user it must be generated first and offer to continue with the relevant workflow skill.
 
@@ -59,7 +66,10 @@ The field-map rules are also summarized in **Fields to omit** and
 6. For any required data-entry field with no sourced value, add an open-question entry and tell the user before finalizing the field map. Omit portal-prefilled personal/identifier rows from both `fields` and `missing_fields`.
 7. Flag fields requiring manual review.
 8. List missing data-entry fields.
-9. Write the field map and validate it.
+9. Derive top-level `readiness` from `session-progress.yaml`: `review_ready`
+   only when the active workflow is complete with no blocking/manual-review
+   workflow blocker; otherwise `draft`.
+10. Write the field map and validate its structure and provenance.
 
 ## Annual vs Provisional
 
@@ -92,6 +102,14 @@ Each field includes:
 | `notes` | Notes, warnings, or context. |
 
 A field with `source.type: unknown` must also be listed in `missing_fields` and in `workspace/shared/missing-info.md`. It is never silently set to zero.
+A deferred optional field may be omitted from the field map until sourced; keep
+its question and missing-info entry in workflow state. This omission never
+promotes workflow readiness: the map remains `draft` because session state is
+authoritative.
+
+`source.type: user_chat` is first-class sourced input. It requires the verbatim
+quote and date, appears in `user_chat_values_index`, and may populate a field.
+It does not become missing or deferred merely because no document was uploaded.
 
 Set `tax_year` explicitly before writing the map: `2025` for `annual_return` and
 `2026` for `provisional_assessment`. Do not leave the template value blank,
@@ -124,7 +142,9 @@ security control; sensitive-data handling is the host's responsibility):
 
 ## Validation
 
-After writing the field map, validate it. If a Python interpreter is available in
+Before writing, derive `readiness` from the active workflow rollup in
+`session-progress.yaml`; this declaration is authoritative. After writing,
+validate the map. If a Python interpreter is available in
 this environment and Bash can access the resolved plugin script path, run the
 bundled validator:
 
@@ -132,7 +152,7 @@ bundled validator:
 python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 ```
 
-The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, readiness, unknown-field missing entries, and the provisional werkelijk rendement exclusion.
+The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, unknown-field missing entries, the provisional werkelijk rendement exclusion, and whether a `review_ready` declaration is structurally possible. It never promotes a declared `draft`.
 
 After a successful script check, set `check_performed_by:
 checked_by_script`. If the script is unavailable, complete every stable check ID
@@ -143,8 +163,9 @@ values.
 **If `python3` is not available or the execution environment cannot see the
 plugin script path**, do not skip validation. Complete the concise
 manual checklist in `reference/mapping-principles.md`; its IDs exactly match the
-validator's `CHECK_IDS`. The map is ready for entry only when at least one field
-is populated-and-sourced and no required reference field is left unpopulated.
+validator's `CHECK_IDS`. These checks establish structural validity, not
+workflow readiness. Preserve the readiness derived from session state; never
+promote `draft` because populated fields happen to pass mechanical checks.
 Never copy bundled scripts into `workspace/` to make them executable.
 
 ## Rendering

@@ -15,8 +15,8 @@ Checks:
     - source.type = unknown rows are listed in missing_fields
     - Structural guards: root must be a mapping; fields/missing_fields must be lists;
       duplicate field_id detection; non-finite numeric values rejected
-    - Readiness assessment: a map with zero populated fields is never reported as
-      "No issues found." and surfaces an explicit NOT_READY_FOR_ENTRY summary
+    - Structural readiness candidate: a false agent declaration is rejected, but
+      the script never promotes an agent-declared draft to review-ready
 
 Exit codes:
     Default exit stays unchanged (nonzero only on errors). Pass --strict /
@@ -106,7 +106,7 @@ CHECK_IDS = (
     "FM-SOURCE",
     "FM-CONFIDENCE-FINITE",
     "FM-REFERENCE-COVERAGE",
-    "FM-MISSING-READINESS",
+    "FM-MISSING-STRUCTURE",
     "FM-PROVISIONAL-METHOD",
 )
 
@@ -554,9 +554,11 @@ def portal_prefilled_reference_fields(reference_path):
 
 
 def assess_readiness(fields, missing, workflow, parsed_tax_year):
-    """Assess whether the field map is ready for manual portal entry.
+    """Assess whether map structure could support review-ready status.
 
-    Returns a dict {ready, populated_count, required_unpopulated, blockers}:
+    This mechanical candidate never overrides the agent declaration derived from
+    session-progress.yaml. Returns
+    {ready, populated_count, required_unpopulated, blockers}:
       - populated_count: fields with a non-empty value AND usable provenance
         (source.type known/not unknown; baseline/calculated carry their ref).
       - required_unpopulated: required reference field_ids that are not populated,
@@ -701,16 +703,28 @@ def validate(data):
 
 
 def _readiness_for(data):
-    """Recompute readiness for output in main() without changing validate()'s
-    2-tuple contract (the test suite asserts on validate()'s return shape)."""
+    """Combine authoritative agent declaration with mechanical eligibility."""
     if not isinstance(data, dict):
-        return {"ready": False, "populated_count": 0, "required_unpopulated": []}
+        return {
+            "ready": False,
+            "declared": None,
+            "structurally_ready": False,
+            "populated_count": 0,
+            "required_unpopulated": [],
+            "blockers": [],
+        }
     workflow, parsed_tax_year = data.get("workflow"), _parse_tax_year(data.get("tax_year"))
     fields = data.get("fields", []) or []
     fields = [f for f in fields if isinstance(f, dict)] if isinstance(fields, list) else []
     missing = data.get("missing_fields", []) or []
     missing = [m for m in missing if isinstance(m, dict)] if isinstance(missing, list) else []
-    return assess_readiness(fields, missing, workflow, parsed_tax_year)
+    result = assess_readiness(fields, missing, workflow, parsed_tax_year)
+    structurally_ready = result["ready"]
+    declared = data.get("readiness")
+    result["declared"] = declared
+    result["structurally_ready"] = structurally_ready
+    result["ready"] = declared == "review_ready" and structurally_ready
+    return result
 
 
 def main():
@@ -766,12 +780,19 @@ def main():
     print()
     if readiness["ready"]:
         print(
-            f"READINESS: READY_FOR_ENTRY "
+            f"READINESS: REVIEW_READY "
             f"(populated_count={readiness['populated_count']})"
+        )
+    elif readiness.get("declared") == "draft":
+        print(
+            f"READINESS: DRAFT (agent-declared, "
+            f"structurally_ready={str(readiness['structurally_ready']).lower()}, "
+            f"populated_count={readiness['populated_count']}, "
+            f"required_unpopulated={len(readiness['required_unpopulated'])})"
         )
     else:
         print(
-            f"READINESS: NOT_READY_FOR_ENTRY "
+            f"READINESS: UNDECLARED_OR_BLOCKED "
             f"(populated_count={readiness['populated_count']}, "
             f"required_unpopulated={len(readiness['required_unpopulated'])})"
         )

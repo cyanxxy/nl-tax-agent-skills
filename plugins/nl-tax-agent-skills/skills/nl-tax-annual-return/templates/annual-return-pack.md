@@ -453,19 +453,23 @@ trail and both tables even when there are no rejected rows.
 
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
-[Actual-return subsection status: `complete` when all required evidence is
-available; otherwise `deferred/manual review`. If deferred, retain both method
-explanations and list the evidence needed above. Do not imply that both
-calculations were completed.]
+[Actual-return subsection status: `complete` when all required inputs are
+available with indexed evidence; `chat_only` when the complete input set was
+supplied in chat; also `complete` with `not supplied by choice` when the taxpayer
+explicitly declines this optional comparison. A declined comparison is not a
+gap. Use `deferred/manual review` only for required facts still missing after
+the taxpayer chose the comparison. Cross-index all `U:` inputs. If deferred,
+retain both method explanations and list the unresolved inputs. Do not imply
+that both calculations were completed.]
 
 ### Comparison: fictitious vs actual
 
 | Method | Box 3 income | Box 3 tax (at [box 3 rate from `fictitious.md`]) | Src | Data status |
 |--------|-------------|-------------------|-----|-------------|
 | Fictitious return (forfaitair rendement) | EUR [amount] | EUR [amount] | C:fictitious_rows | Complete |
-| Actual return (werkelijk rendement) | EUR [amount] | EUR [amount] | C:actual_return_rows | [Complete / Partial / Missing] |
+| Actual return (werkelijk rendement) | [EUR amount / Not supplied by choice] | [EUR amount / Not calculated] | [C:actual_return_rows / U] | [Complete / Partial / Not supplied by choice] |
 
-More favorable method: [fictitious / actual / cannot determine -- data incomplete]
+More favorable method: [fictitious / actual / not compared by taxpayer choice / cannot determine -- data incomplete]
 
 Note: The final election between fictitious and actual return is made in the official Mijn Belastingdienst filing environment. This comparison is informational only and does not constitute a binding election.
 
@@ -596,7 +600,7 @@ Allocation order: box 1 first, then box 3, then box 2.
 - **Alleenstaande-ouderenkorting** -- [Triggered: entitled to an AOW benefit for
   a single person; verify in Mijn Belastingdienst] | [Not applicable: no such AOW
   entitlement] -- Src: [payment-year AOW entitlement evidence / U]
-- **Jonggehandicaptenkorting** -- [Triggered: Wajong / young-disabled status confirmed; verify in Mijn Belastingdienst] | [Not applicable: no Wajong / young-disabled status] -- Src: [U]
+- **Jonggehandicaptenkorting** -- [Triggered: Wajong entitlement/work support confirmed and no ouderenkorting; verify in Mijn Belastingdienst] | [Not applicable: no Wajong entitlement/work support] | [Not applicable: ouderenkorting applies] -- Src: [U + credits screen]
 
 ## Fiscal partner notes
 

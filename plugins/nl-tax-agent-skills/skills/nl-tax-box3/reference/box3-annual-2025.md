@@ -83,9 +83,11 @@ debt. Keep it unresolved until the direction and relevant facts are confirmed:
 
 Every annual 2025 workpack explains both the fictitious (forfaitair) method and
 the actual return (werkelijk rendement) method, and offers to collect the
-actual-return evidence needed for comparison. If the taxpayer provides the
-complete evidence, mark the actual-return subsection `complete` and show the
-comparison. If the taxpayer declines or the facts remain missing, keep the
-fictitious explanation and record the actual-return subsection as
-`deferred/manual review`; do not silently omit it or claim that both methods
-were completed.
+actual-return inputs needed for comparison. Indexed files and exact chat answers
+are both valid provenance. When every required input is present, mark the
+subsection `complete` if indexed evidence is used or `chat_only` if the complete
+set is chat-supplied, then show the comparison. If the taxpayer declines this
+optional route, mark it `complete` with `not supplied by choice`; that is not a
+gap. Only facts still missing after the taxpayer chose the comparison may be
+`deferred/manual review`; do not silently omit the explanation or claim that
+both methods were completed.

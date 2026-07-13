@@ -70,31 +70,33 @@ Do not load `reference/annual-output-contract.md` or
 the workpack generation gate opens, together
 with `annual-output-contract.md` for the final self-check.
 
-Before generating content for a phase (Phase 2 onward in `annual-flow.md`), load the 2025 rate sheets that phase relies on — each sheet once, when its phase first needs it, re-read on resume. These are canonical for every numeric line the workpack will reference — do not paraphrase rates from memory or from an earlier paraphrase.
+Load knowledge only for the active phase and only when the case needs it:
 
-- `_shared/knowledge/years/2025/annual/box1-rates.md`
-- `_shared/knowledge/years/2025/annual/credits.md`
-- `_shared/knowledge/years/2025/annual/own-home.md`
-- `_shared/knowledge/years/2025/annual/deductions.md`
-- `_shared/knowledge/years/2025/annual/late-filing.md`
-- `_shared/knowledge/years/2025/annual/filing-flow.md`
-- `_shared/knowledge/years/2025/annual/evidence-checklist.md`
-- `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` (only when the case has winst uit onderneming — `business.has_onderneming` value `true` in the profile)
-- `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` (same condition)
-- `_shared/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md` (same condition)
-- `_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md` (same condition)
-- `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` (same condition)
-- `_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md` (same condition)
-- `_shared/knowledge/years/2025/box3/fictitious.md`
-- `_shared/knowledge/years/2025/box3/actual-return.md`
-- `_shared/knowledge/years/2025/box2/box2-rates.md` (only when the case has an aanmerkelijk belang — `box2.has_aanmerkelijk_belang` value `true` in the profile)
-- `_shared/knowledge/years/2025/box2/box2-income-guidance.md` (same condition)
-- `_shared/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md` (same condition)
-- `_shared/knowledge/own-home/eigenwoningforfait.md`
-- `_shared/knowledge/own-home/hypotheekrenteaftrek.md`
-- `_shared/knowledge/partners/fiscal-partnership.md`
+- Filing status: `_shared/knowledge/years/2025/annual/filing-flow.md`; add
+  `_shared/knowledge/years/2025/annual/late-filing.md` only for
+  granted-extension/outstanding or late-exposure branches.
+- Income: `_shared/knowledge/years/2025/annual/box1-rates.md`.
+- Business: only the entrepreneur files actually needed when
+  `business.has_onderneming.value` is true.
+- Own home: `_shared/knowledge/years/2025/annual/own-home.md`,
+  `_shared/knowledge/own-home/eigenwoningforfait.md`, and
+  `_shared/knowledge/own-home/hypotheekrenteaftrek.md`; add Box 1/deduction rates only when the
+  top-rate adjustment is applicable.
+- Box 2: only the three Box 2 files when an aanmerkelijk belang exists.
+- Box 3: `_shared/knowledge/years/2025/box3/fictitious.md` and
+  `_shared/knowledge/years/2025/box3/actual-return.md`.
+- Deductions: `_shared/knowledge/years/2025/annual/deductions.md`.
+- Credits: `_shared/knowledge/years/2025/annual/credits.md` and
+  `_shared/knowledge/aow/aow-leeftijd.md` when AOW screening
+  needs the reviewed age rule.
+- Partner allocation: `_shared/knowledge/partners/fiscal-partnership.md`.
+- Evidence checklist:
+  `_shared/knowledge/years/2025/annual/evidence-checklist.md`, only when the
+  user chooses document-based collection.
 
-If a rate sheet fails to load, stop and tell the user — do not fabricate a rate.
+Do not load or stale-check a source for an inapplicable branch. If a required
+active-phase source fails to load, stop that phase and tell the user; never
+fabricate a rate.
 
 **Source-pack staleness check (warn, don't block):** the first time knowledge files are loaded in a session, compare each loaded source's `last_checked` in `_shared/source-register.yaml` against its `freshness_policy` cadence and today's date. If any source required by this workflow is past its cadence, tell the user once, in one sentence, that the source pack may be stale (name the stale `source_id`s) and that the values should be double-checked in Mijn Belastingdienst before filing. Staleness never blocks workpack generation; list the stale `source_id`s in the workpack's Human review checklist instead.
 
@@ -112,7 +114,10 @@ Confirm `workflow_candidate: annual_2025`. If the profile is missing or the work
   stable answered `not applicable` entry only when profile facts establish
   there is no business.
 - If `profile.yaml` shows `intake_status: complete`, never restart intake — continue the annual workflow from recorded progress.
-- Skip any subsection already marked `complete`, `chat_only`, or `deferred` in `session-progress.yaml`.
+- Skip subsections marked `complete` or `chat_only`. A `deferred` subsection
+  remains open: do not nag during the same pass, but reopen it when the user
+  supplies the fact, asks to resume missing items, or reaches final missing-info
+  review.
 
 ## Workflow
 
@@ -124,13 +129,13 @@ and within each phase apply the conversational contract below.
 
 For every phase:
 
-1. Read `workspace/shared/session-progress.yaml` and skip subsections already marked `complete`, `chat_only`, or `deferred`.
+1. Read `workspace/shared/session-progress.yaml`; skip `complete` and `chat_only` subsections. Preserve deferred questions as open and revisit them only when the user resumes them or during final missing-info review.
 2. Check existing evidence and notes before asking the user anything.
 3. Ask for gaps in groups of **at most 3 closely related questions**, with one exception: when the questions all come from a **single artifact** (one mortgage statement, one WOZ-beschikking, one jaaropgaaf), ask up to **6 questions** in a single batch. The canonical case is eigen woning with tijdelijke twee woningen, which needs the move date, both addresses, both WOZ-waarden, both mortgage statements, and the vacancy/listing status.
 4. Accept either a file or a chat answer for each value (see "Evidence handoff" below).
-5. Record every value under `workspace/annual/2025/notes/<section>.yaml` with `source` (`file`, `user_chat`, `assumption`, or `unknown`) and either `evidence_id` or `quote` plus `stated_at`.
-6. If the user cannot answer, record `source: unknown`, add the item to `workspace/shared/missing-info.md`, and continue.
-7. Update `workspace/shared/session-progress.yaml`: move answered question ids into `answered`, leave open ones in `open_questions`, set subsection `status` accordingly, and append any new `source_id` to `sources_loaded`.
+5. Record every value under `workspace/annual/2025/notes/<section>.yaml` with `source` (`file`, `user_chat`, `calculated`, `assumption`, or `unknown`) and the matching provenance.
+6. If the user cannot answer, record `source: unknown`, keep the question ID in `open_questions` rather than `answered`, add the item to `workspace/shared/missing-info.md`, and continue.
+7. Update `workspace/shared/session-progress.yaml`: put only resolved question IDs in `answered`, leave deferred ones in `open_questions`, set subsection and workflow rollup statuses, update the shared user-chat evidence ledger, and append only actually loaded `source_id`s to `sources_loaded`.
 
 Never silently treat missing values as zero. Use assumptions only after the user explicitly accepts them.
 
@@ -139,8 +144,8 @@ Never silently treat missing values as zero. Use assumptions only after the user
 For every value the user could provide:
 
 - **User uploads a file** (to `uploads/` or `evidence/`) → invoke `nl-tax-evidence-indexer`, then read the resulting `evidence-index.yaml` and reference values by `evidence_id`. The subsection is `complete` once the file is indexed and the value extracted.
-- **User states the value in chat only** → record the value with `source: user_chat`, set the subsection's `status: chat_only`, and continue. This is an explicit choice, not a gap. Do not nag for a file the user has declined to upload.
-- **User says they will provide later** → record `source: unknown`, set `status: deferred`, add the item to `missing-info.md`, and continue.
+- **User states the value in chat only** → record the value with `source: user_chat`, set the subsection's `status: chat_only` when all required facts are supplied, update `sections.evidence.subsections.user_chat_values`, and continue. This is an explicit choice, not a gap. Do not nag for a file the user has declined to upload.
+- **User says they will provide later** → record `source: unknown`, set `status: deferred`, keep the question in `open_questions`, add the item to `missing-info.md`, and continue.
 
 A subsection in `chat_only` counts as filled for the generation gate, but the workpack's Human Review checklist must list every `U:` line for spot-checking before filing.
 
@@ -153,6 +158,8 @@ questions in its response and writes nothing. This owning workflow must
 persist the returned facts and open questions in the matching
 `workspace/annual/2025/notes/<section>.yaml`, update session state, ask the user,
 and re-run the helper with the newly sourced answers.
+Keep this delegation invisible to the user; continue the tax conversation in
+one voice and never announce helper or skill activation.
 
 - **Box 1 / own home** → `nl-tax-box1-home`
 - **Winst uit onderneming** → `nl-tax-winst` when
@@ -220,7 +227,9 @@ Match this list to `reference/annual-output-contract.md`. If anything diverges, 
 Do not write `workspace/annual/2025/return-pack.md` until **all** of:
 
 1. Every annual subsection in `session-progress.yaml` is `complete`, `chat_only`, or `deferred`.
-2. The user has typed one of these confirmation phrases verbatim in chat:
+2. No blocking deferred item remains. Nonblocking deferred items may produce a
+   `DRAFT` only after the explicit confirmation below.
+3. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`
    - `klaar voor workpack`
@@ -234,15 +243,30 @@ When the gate is satisfied:
 - Assemble `workspace/annual/2025/notes/*.yaml` into `templates/annual-return-pack.md`.
 - Preserve source provenance for every numeric line using the `Src` codes from the template.
 - Run the self-check in `reference/annual-output-contract.md` § "Workpack self-check"; report every check yes/no in your end-of-turn message. If any structural, content, cross-contamination, or safety check fails, do not write the file — fix the gap or ask the user, and re-run.
-- Set the workpack's top-of-file STATUS banner deterministically from `session-progress.yaml`: if any annual subsection is `deferred` or `unknown`, the banner reads `DRAFT`; otherwise it reads `COMPLETE DRAFT FOR REVIEW`. In both cases the banner always says "not for filing". Treat a mismatch between the banner and `session-progress.yaml` as a blocking self-check item.
-- After the confirmed workpack is written, invoke `nl-tax-field-mapper`. Pass
+- Set the workpack's top-of-file STATUS banner deterministically from `session-progress.yaml`: if any annual subsection is `deferred`, or contains a `source: unknown` / open blocking item, the banner reads `DRAFT`; otherwise it reads `COMPLETE DRAFT FOR REVIEW`. In both cases the banner always says "not for filing". Treat a mismatch between the banner and `session-progress.yaml` as a blocking self-check item.
+- Use only the two resolved resources named above. Do not probe speculative template names or add Git/repository checks to the workpack self-check.
+- Before invoking the mapper, recompute and persist the annual rollup from the
+  subsections. Set `sections.annual_2025.status: complete` only when every
+  applicable subsection is `complete` or `chat_only`; otherwise set it to
+  `in_progress`. Keep `active_skill: nl-tax-annual-return` through validation.
+- After the confirmed workpack is written and the rollup is current, invoke `nl-tax-field-mapper`. Pass
   it the workpack and workflow context; it alone writes and validates
   `workspace/annual/2025/field-map.yaml` using
   `nl-tax-field-mapper/templates/field-map-template.yaml`,
   `nl-tax-field-mapper/reference/mapping-principles.md`,
   `nl-tax-field-mapper/reference/annual-field-map.md`, and
-  `nl-tax-field-mapper/scripts/validate_field_map.py`. Treat a mapper-reported
-  validation failure as blocking before presenting the manual-entry map.
+  `nl-tax-field-mapper/scripts/validate_field_map.py`. The mapper derives its
+  `readiness` from this same session rollup; optional script output cannot
+  promote a draft. Treat a structural/provenance validation failure or a
+  readiness mismatch as blocking before presenting the manual-entry map.
+- After successful mapping, clear `active_skill` only when the persisted annual
+  rollup is `complete`. Otherwise keep `active_skill: nl-tax-annual-return` so
+  later chat answers resume the draft. A deferred question must remain open and
+  must not also be listed as answered.
+- If any sourced fact changes after a workpack was generated, reset the
+  `confirm` subsection to `not_started`. Recompute affected calculations and
+  require a fresh exact generation phrase before overwriting the canonical
+  workpack and field map.
 
 ## Output files
 

@@ -46,7 +46,9 @@ Before generating any workpack content, verify all prerequisites are met.
 ### 1.8 Evidence index exists
 
 - Read `workspace/taxpayer/evidence-index.yaml`
-- If missing: warn the user that no evidence has been indexed -- the workpack will contain more gaps
+- If missing: continue normally with chat collection. Say only that the user may
+  provide amounts in chat or attach documents; absence of an evidence index is
+  not itself a gap and never forces a draft.
 - If partially indexed: proceed but flag uncovered categories
 
 ### 1.9 Box 2 scope check
@@ -55,9 +57,14 @@ Before generating any workpack content, verify all prerequisites are met.
 - Keep the case in scope for regular benefits such as dividends, disposal benefits such as share-sale profit, dividend withholding tax credit, loss carry-forward fields, and fiscal-partner allocation of Box 2 income.
 - Route to manual review or unsupported for valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA cases.
 
-### 1.10 Knowledge files available
+### 1.10 Knowledge loading boundary
 
-Load every file in this list and append its `source_id` to `session-progress.yaml` → `sources_loaded` as you go. If any fails to load, stop and tell the user; do not paraphrase rates from memory.
+Do **not** load any file in the list below during preflight. It is a routing
+inventory only: each later phase loads the applicable files immediately before
+using them and records only those actually consulted in `sources_loaded`. Never
+stale-check or warn about an inapplicable source. If an active phase cannot load
+a required file, stop that phase and tell the user; do not paraphrase rates from
+memory.
 
 - `_shared/knowledge/years/2025/annual/box1-rates.md` *(bd_box1_rates_2025, bd_bijtelling_auto_2025, bd_stock_options_2025)*
 - `_shared/knowledge/years/2025/annual/credits.md` *(bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit_payout_2025, bd_heffingskortingen_how_2025, bd_arbeidsinkomen_definition_2025)*

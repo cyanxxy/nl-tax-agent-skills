@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Cowork-first, cross-platform Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",

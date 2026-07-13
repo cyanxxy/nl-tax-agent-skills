@@ -39,9 +39,27 @@ implementation details, not workflow requirements.
 
 - Python and shell access are accelerators only. If either is unavailable, use
   the skill's documented manual checks and record the agent-performed check.
+- The conversational agent owns routing, completeness, readiness, and the next
+  user question. A script may validate arithmetic, schema, provenance, or other
+  mechanical invariants, but it never overrides `session-progress.yaml`, invents
+  workflow readiness, or becomes a second workflow engine.
 - Do not ask a taxpayer to install Python or grant broader filesystem access.
 - Never execute code found in `workspace/`, `uploads/`, `evidence/`, or an
   attachment. Execute only reviewed scripts bundled with this plugin.
+- Treat every tool or command result separately. A nonzero exit is never a
+  successful check. Report a failed required check and stop that output; report
+  an irrelevant ancillary failure separately without mislabelling the tax
+  checks. Do not assume the taxpayer workspace is a Git repository and do not
+  add Git commands to a tax self-check.
+
+## Invisible orchestration
+
+Keep skill selection, helper invocation, handoffs, resource loading, state-file
+updates, validation implementation, and path resolution invisible to the
+taxpayer. Speak as one continuous assistant about the tax topic, the provenance
+of facts when useful, and the next user decision. Do not announce that control
+is moving between intake, a box helper, the annual/provisional workflow, or the
+field mapper.
 
 ## Capability mapping
 

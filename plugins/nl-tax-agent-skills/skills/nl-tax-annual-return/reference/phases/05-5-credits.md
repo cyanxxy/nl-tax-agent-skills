@@ -2,6 +2,10 @@
 
 Use household composition from `profile.yaml` to surface which credits apply. For each of the 4 credits below, emit one line in the workpack: either "Triggered: [reason]" or "Not applicable: [reason in one phrase]".
 
+Load `_shared/knowledge/years/2025/annual/credits.md`. Load
+`_shared/knowledge/aow/aow-leeftijd.md` only if the stored deterministic AOW
+screen must be checked or recomputed.
+
 ### 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
 
 Triggered when the taxpayer (or fiscal partner with lower arbeidsinkomen) had at least one child registered at the taxpayer's address who was **younger than 12 on 1 January 2025**, AND the taxpayer met the minimum arbeidsinkomen threshold.
@@ -25,7 +29,17 @@ manual review.
 
 ### 5.5.4 Jonggehandicaptenkorting
 
-Triggered when the taxpayer receives a Wajong-uitkering or holds young-disabled status. Ask the user explicitly; do not infer from age alone.
+Triggered only when the taxpayer receives or is entitled to a Wajong-uitkering
+or Wajong work support **and does not receive the ouderenkorting**. A reported
+young-disabled status is not enough unless it establishes that Wajong
+entitlement or work support. Ask this dedicated question explicitly: "Do you
+receive or have entitlement to Wajong or Wajong work support (sometimes
+described as young-disabled status)?" Store it as
+`annual.credits.young_disabled_status` with a yes/no value and chat provenance.
+A broad answer such as "no other benefits or credits" does not answer this
+question. Combine the answer with the ouderenkorting screen before setting the
+trigger. Do not mark credits screening `complete` or `chat_only` until the
+dedicated answer is recorded or this question is explicitly deferred.
 
 ### 5.5.5 Output
 

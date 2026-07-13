@@ -120,8 +120,8 @@ For every subflow:
 1. Use `workspace/shared/session-progress.yaml` to avoid re-asking answered questions.
 2. Group at most 3 closely related questions per turn.
 3. Accept file inputs or values stated in chat.
-4. Record each value in `workspace/provisional/2026/notes/<section>.yaml` with `source` (`file`, `user_chat`, `assumption`, `unknown`, or `baseline`) and either `evidence_id`, `baseline_ref`, or `quote` plus `stated_at`.
-5. If the user cannot answer, record `unknown`, add it to `workspace/shared/missing-info.md`, and continue.
+4. Record each value in `workspace/provisional/2026/notes/<section>.yaml` with `source` (`file`, `user_chat`, `calculated`, `assumption`, `unknown`, or `baseline`) and matching provenance. For chat values, also update `sections.evidence.subsections.user_chat_values`.
+5. If the user cannot answer, record `unknown`, keep the stable question ID in `open_questions` rather than `answered`, add it to `workspace/shared/missing-info.md`, and continue.
 6. Never silently treat missing values as zero.
 
 ### Helper delegation
@@ -133,6 +133,8 @@ questions in its response and writes nothing. This owning workflow must
 persist the returned facts and open questions in the matching
 `workspace/provisional/2026/notes/<section>.yaml`, update session state, ask the
 user, and re-run the helper with newly sourced answers.
+Keep helper selection and invocation invisible; continue in one conversational
+voice without announcing internal skill handoffs.
 
 - **Box 1 / own home** → `nl-tax-box1-home` (use the 2026 provisional references)
 - **Winst uit onderneming forecast** → `nl-tax-winst` in provisional mode; persist only `onderneming.geschatte_winst` with provenance and manual review
@@ -169,7 +171,9 @@ Do not write `workspace/provisional/2026/provisional-pack.md` or related outputs
    in draft and blocks generation.
 3. Every deferred item is present in `workspace/shared/missing-info.md` or is a
    confirmed assumption in `workspace/shared/assumptions.md`.
-4. The user has typed one of these confirmation phrases verbatim in chat:
+4. No blocking deferred item remains. Nonblocking deferred items may produce
+   only the draft status permitted by the output contract.
+5. The user has typed one of these confirmation phrases verbatim in chat:
    - `generate the workpack`
    - `genereer de workpack`
    - `klaar voor workpack`
@@ -183,15 +187,27 @@ At this point, load `reference/provisional-output-contract.md` and
 active change subflow and `templates/review-questions.md` only for an active
 review subflow. Do not load an inactive subflow's output template.
 
-For request and change subflows, after the confirmed workpack is written,
-invoke `nl-tax-field-mapper`. Pass it the workpack and workflow context; it
+Before any mapper invocation, recompute and persist the provisional rollup.
+Set `sections.provisional_2026.status: complete` only when every applicable
+subsection is `complete` or `chat_only`; otherwise keep it `in_progress`.
+Retain `active_skill: nl-tax-provisional-assessment` through validation.
+
+For request and change subflows, after the confirmed workpack is written and
+the rollup is current, invoke `nl-tax-field-mapper`. Pass it the workpack and workflow context; it
 alone writes and validates `workspace/provisional/2026/field-map.yaml` using
 `nl-tax-field-mapper/templates/field-map-template.yaml`,
 `nl-tax-field-mapper/reference/mapping-principles.md`,
 `nl-tax-field-mapper/reference/provisional-field-map.md`, and
-`nl-tax-field-mapper/scripts/validate_field_map.py`. Treat a mapper-reported
-validation failure as blocking before presenting the manual-entry map. The
-provisional map uses the fictitious Box 3 method only.
+`nl-tax-field-mapper/scripts/validate_field_map.py`. The mapper derives
+`readiness` from the provisional session rollup; optional script output cannot
+promote a draft. Treat structural/provenance failure or a readiness mismatch as
+blocking before presenting the manual-entry map. The provisional map uses the
+fictitious Box 3 method only.
+
+After successful mapping, clear `active_skill` only for a complete rollup;
+otherwise keep it active and keep deferred question IDs open rather than
+answered. If a sourced fact changes after generation, reset `confirm` and
+require a fresh exact generation phrase before overwriting canonical outputs.
 
 ## Output files
 

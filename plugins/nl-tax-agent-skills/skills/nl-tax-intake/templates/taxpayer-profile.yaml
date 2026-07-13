@@ -9,7 +9,7 @@ workflow_candidate: ""
 # into annual/provisional workpack generation.
 
 # Every fact below carries provenance:
-#   source: file | user_chat | assumption | unknown
+#   source: file | user_chat | calculated | assumption | unknown
 #   evidence_id: "ev_001"        # when source = file
 #   quote: ""                    # when source = user_chat (verbatim user text)
 #   stated_at: ""                # when source = user_chat (date)
@@ -25,7 +25,7 @@ person:
   aow_age_in_tax_year:
     value: null                  # true | false; derived from date_of_birth and tax year, recorded for traceability
     source: "unknown"
-    assumption_id: null          # required when source = assumption
+    calculated_from: []          # [person.date_of_birth, tax_year] when derived
 
 residency:
   full_year_nl_resident:
@@ -46,6 +46,7 @@ partner:
   partner_aow_age_in_tax_year:
     value: null
     source: "unknown"
+    calculated_from: []
 
 household:
   # Children living at home as of 31 December of the tax year, used to screen

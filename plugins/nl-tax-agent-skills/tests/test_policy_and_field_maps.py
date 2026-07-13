@@ -1155,7 +1155,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertFalse(any("unknown" in e.lower() for e in errors))
 
     # ------------------------------------------------------------------
-    # CR-04 end-to-end: main() prints NOT_READY_FOR_ENTRY, suppresses
+    # CR-04 end-to-end: main() reports undeclared/blocked readiness, suppresses
     # "No issues found.", keeps default exit 0, and exits nonzero under --strict.
     # ------------------------------------------------------------------
     def _run_validator(self, yaml_text, *extra_args):
@@ -1193,13 +1193,13 @@ class PolicyAndFieldMapTests(unittest.TestCase):
               - field_id: box1.loonheffing
         """
         result = self._run_validator(yaml_text)
-        self.assertIn("NOT_READY_FOR_ENTRY", result.stdout)
+        self.assertIn("UNDECLARED_OR_BLOCKED", result.stdout)
         self.assertNotIn("No issues found.", result.stdout)
         # Default exit semantics unchanged: no errors -> exit 0.
         self.assertEqual(0, result.returncode)
 
         strict = self._run_validator(yaml_text, "--strict")
-        self.assertIn("NOT_READY_FOR_ENTRY", strict.stdout)
+        self.assertIn("UNDECLARED_OR_BLOCKED", strict.stdout)
         self.assertEqual(1, strict.returncode)
 
     def test_unknown_source_type_not_in_missing_fields_errors(self):

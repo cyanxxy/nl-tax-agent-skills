@@ -87,17 +87,21 @@ For fiscal partners, the actual return follows the same distribution chosen for 
 
 When building the workpack for box 3 with actual return data:
 
-1. Always collect data for BOTH the fictitious and actual return methods
+1. Always calculate the fictitious method, explain the optional actual-return
+   route, and ask whether the taxpayer wants to supply its inputs
 2. Present the fictitious return calculation in full (per the fictitious.md rules)
 3. Present the actual return calculation broken down by income type
 4. Include a comparison summary showing which method is lower
 5. Add a note that the final election happens in the official filing environment
 6. Never present the actual return option in a voorlopige aanslag workpack
-7. If the taxpayer provides all required actual-return evidence, record the
-   actual-return subsection as `complete`. If evidence is declined or missing,
-   list the evidence needed and record the subsection as `deferred/manual
-   review`; retain both method explanations and do not claim both calculations
-   were completed.
+7. If the taxpayer provides every required actual-return input, calculate the
+   comparison using indexed-file, user-chat, or mixed provenance. Record the
+   subsection as `chat_only` when the complete set is chat-supplied, otherwise
+   `complete`. If the taxpayer declines, record `complete` with `not supplied by
+   choice`; do not create a gap or block the workpack. Only a genuinely missing
+   fact after the taxpayer chose the comparison is `deferred/manual review`;
+   retain both method explanations and do not claim both calculations were
+   completed.
 8. For fiscal partners, apply the same allocation percentage to actual return as to the joint grondslag sparen en beleggen
 
 ## Common failure
