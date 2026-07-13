@@ -28,6 +28,8 @@ Agent-driven workflow consistency and conversational quality release.
 - Failed commands are reported as failed and are separated from tax-specific
   checks. Tax workspaces are no longer assumed to be Git repositories, and the
   annual workflow no longer probes a nonexistent template path.
+- CI's dedicated release-package step now runs the current packaging contract
+  instead of a removed version-specific test filename.
 
 ### Changed
 

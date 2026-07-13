@@ -59,9 +59,9 @@ jobs:
         run: |
           python -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
 
-      - name: Validate 0.1.7 package and skill discovery
+      - name: Validate current release package and skill discovery
         run: |
-          python -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_release_017_packaging.py'
+          python -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_release_packaging.py'
           python -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_skill_discovery_and_loading.py'
 
       - name: Run unit tests from repository root
