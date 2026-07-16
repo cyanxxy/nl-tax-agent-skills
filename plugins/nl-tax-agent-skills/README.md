@@ -35,6 +35,13 @@ change, review, or stopzetten a 2026 voorlopige aanslag. A direct advanced invoc
 `/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request` (replace `request` with
 the desired subflow).
 
+For finite-choice intake questions, the skills prefer a native question control
+or compact form when the host can return selections to the same conversation.
+If it cannot, the agent asks the same short question batch in chat; the workflow
+never depends on an interactive UI.
+In Claude Cowork, the preferred path is Claude's native interactive inputs when
+offered; a custom HTML visual is not used as the answer-submission mechanism.
+
 Tasks may use local or cloud execution environments, so file availability and
 shell tooling depend on the active surface. Work web/mobile uses uploaded or
 project files; desktop tasks can also use a selected local folder. Python is

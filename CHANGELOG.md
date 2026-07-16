@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.11] — 2026-07-16
+
+Host-adaptive interactive intake release.
+
+### Added
+
+- Conversational skills now prefer return-capable native questions or compact
+  in-chat forms for finite choices. Claude Code skills explicitly allow
+  `AskUserQuestion`; Codex may use an inline form when its submit action posts a
+  follow-up message into the same task.
+- Initial intake can collect residency, taxpayer type, living status, and
+  workflow selection through one compact control. Hosts limited to four options
+  ask annual-versus-provisional first, then request, change, review, or
+  stopzetten without losing the workflow distinction.
+
+### Changed
+
+- The shared runtime and elicitation contracts now capability-check every
+  structured input. Returned selections retain normal `user_chat` provenance
+  and are never persisted before they reach the agent as a user response.
+- Claude chat and Cowork prefer Claude's native interactive-input surface when
+  offered. `AskUserQuestion` remains a Claude Code path rather than a claimed
+  Cowork API, and custom Cowork HTML visuals are never treated as answer forms.
+
+### Compatibility
+
+- Short conversational questions remain the universal fallback for hosts,
+  surfaces, accessibility modes, and mobile or CLI sessions without a
+  return-capable input control. Interactive UI is never required to complete a
+  tax workflow.
+
 ## [0.1.10] — 2026-07-13
 
 Agent-driven workflow consistency and conversational quality release.

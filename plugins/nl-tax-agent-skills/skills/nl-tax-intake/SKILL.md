@@ -8,6 +8,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
+  - AskUserQuestion
 ---
 
 # NL Tax Intake
@@ -41,7 +42,7 @@ reconstruct it.
 
 ## User-facing boundary
 
-Keep setup invisible. Do not narrate internal setup steps such as skill selection, rule or template loading, path resolution, local state-file creation, YAML updates, or policy loading. Create and update local files silently. Do not proactively recite generic warnings. The first user-facing reply should say only that you prepare a local workpack and then ask the screening questions. If the workflow is already clear and the user has documents ready, ask them to upload the relevant tax files; do not ask them to upload workspace or state files.
+Keep setup invisible. Do not narrate internal setup steps such as skill selection, rule or template loading, path resolution, local state-file creation, YAML updates, or policy loading. Create and update local files silently. Do not proactively recite generic warnings. The first user-facing reply should say only that you prepare a local workpack and then present the screening questions, preferably through a return-capable structured-input control. If the workflow is already clear and the user has documents ready, ask them to upload the relevant tax files; do not ask them to upload workspace or state files.
 
 Python is optional at runtime. Do not ask the taxpayer to install Python. The
 agent owns intake and applies the documented checks directly; optional scripts
@@ -106,14 +107,44 @@ Across one or more turns of conversation:
 
 ### Turn 1 - open warmly, then ask the first screening batch
 
-If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll do (prepare a local workpack), then ask up to **four short screening questions** in one message:
+If `workspace/taxpayer/profile.yaml` does not exist, briefly explain what you'll
+do (prepare a local workpack), then capability-check for a structured-input
+control that returns answers to this same conversation:
+
+- **Return-capable control available:** prefer one compact form for the four
+  screening topics below. A richer form may use separate controls for
+  individual filing and business legal form. Use native selects, radios, or the
+  host's multiple-choice question tool; label every control. The submitted
+  values must return as a user reply before anything is recorded.
+- **Claude chat or Cowork:** first try Claude's native interactive inputs. Do
+  not build a custom HTML visual for Cowork intake because visual clicks may not
+  return a follow-up reply. `AskUserQuestion` is a documented Claude Code tool,
+  not a guaranteed Cowork API; if Cowork presents no native input, use chat.
+- **Claude Code:** use `AskUserQuestion` when available and apply the bounded
+  choice split below.
+- **Codex:** use a native input control or inline form only when submission
+  creates a follow-up message in this same task.
+- **Control has a four-option limit:** use `2025 annual return`, `2026
+  voorlopige aanslag`, `both`, and `unsure` for the workflow question. If the
+  user chooses 2026, ask a second four-choice control for `request`, `change`,
+  `review`, or `stopzetten`. Group complex business forms only for the first
+  screen, then ask the exact legal form before routing.
+- **No return-capable control:** ask up to **four short screening questions** in
+  one ordinary chat message. Do not use a display-only visual. In particular,
+  a custom visual whose clicks cannot create a follow-up reply is presentation,
+  not intake.
+
+Use these screening topics and distinctions in either presentation:
 
 1. **Residency** - Were you a Dutch resident for the *full* of 2025 (and, if relevant, 2026)? Did you move to or from the Netherlands at any point during the year? (A mid-year move usually means an M-aangifte, which v1 does not cover -- see `reference/unsupported-cases.md` #1/#5.)
 2. **Taxpayer type** - Are you filing as an individual? Do you have income from your own business, and if so what legal form (eenmanszaak / ZZP, or a VOF / maatschap / BV)? (An eenmanszaak / ZZP is supported; partnerships and BVs route to a specialist.)
 3. **Living status** - Is this for a living taxpayer?
 4. **Workflow** - What do you want help with: the annual 2025 return, or a 2026 voorlopige aanslag (request / change / review / stopzetten)?
 
-Tell the user they can answer all at once or one at a time. Never ask for names or BSN. If the user volunteers a name, you may store it in `person.display_name` as a plain label for readability; it is never required and never verified.
+In the chat fallback, tell the user they can answer all at once or one at a
+time. Never ask for names or BSN. If the user volunteers a name, you may store
+it in `person.display_name` as a plain label for readability; it is never
+required and never verified.
 
 **If the user is unsure about question 4** (the voorlopige-aanslag terms are jargon most people do not use, and many confuse *voorlopige aanslag* with *voorlopige teruggaaf* or just say "I get/pay money monthly"): do NOT repeat the jargon list. Read `reference/filing-paths.md` and disambiguate by intent -- ask "Do you want to look back at what happened in 2025, or plan ahead for 2026?" -- then narrow the 2026 case using the request / change / review / stopzetten decision tree in that file.
 
@@ -121,7 +152,10 @@ Tell the user they can answer all at once or one at a time. Never ask for names 
 
 After each user reply:
 
-1. Parse out everything the user answered. For each value, record it in `workspace/taxpayer/profile.yaml` with `source: user_chat`, a short verbatim `quote`, and `stated_at` (today's date).
+1. Parse out everything the user answered, including values returned by a
+   structured-input control. For each value, record it in
+   `workspace/taxpayer/profile.yaml` with `source: user_chat`, a short verbatim
+   `quote`, and `stated_at` (today's date).
 2. Append the answered `question_id`s to `sections.intake.answered` in `session-progress.yaml`.
 3. Update `sections.intake.status` to `in_progress`.
 4. Decide the next thing to ask:

@@ -52,6 +52,38 @@ implementation details, not workflow requirements.
   checks. Do not assume the taxpayer workspace is a Git repository and do not
   add Git commands to a tax self-check.
 
+## Structured user input
+
+- For a finite-choice question or short screening batch, prefer a host-provided
+  structured-input control when it is available and returns the selected values
+  to this same conversation. This may be a native multiple-choice question tool
+  or an inline form with a supported follow-up callback.
+- Capability-check before use. A return-capable control must deliver its
+  selections to the same conversation. A visual that can display controls but
+  cannot return the answers to the conversation is not an input surface. In
+  that case, use the ordinary short chat-question fallback instead of asking
+  the taxpayer to copy values out of the visual.
+- Treat a returned structured answer exactly like a typed chat reply: record
+  `source: user_chat`, the returned wording as `quote`, and `stated_at`. Never
+  persist a selection before it has returned to the agent.
+- Keep controls limited to the questions already due in the workflow. Do not
+  collect names, BSN, credentials, or unrelated facts, and do not make an
+  interactive UI a prerequisite for CLI, mobile, or accessibility use.
+
+Host-specific selection:
+
+- **Claude chat or Cowork:** prefer Claude's native interactive-input surface
+  for multiple-choice or multi-select questions when the host presents it.
+  Do not use a custom HTML visual as a Cowork answer form: Cowork visuals may be
+  interactive on screen without returning a click as a conversational reply.
+  Treat the Claude Code tool named `AskUserQuestion` as not a guaranteed Cowork
+  API; capability-check and keep the chat fallback.
+- **Claude Code:** use `AskUserQuestion` when it is exposed. Respect its current
+  one-to-four-question and two-to-four-option bounds, splitting a larger choice
+  into a follow-up question.
+- **Codex:** use a native structured-input control or inline form only when its
+  submit action posts a follow-up message into the same task.
+
 ## Invisible orchestration
 
 Keep skill selection, helper invocation, handoffs, resource loading, state-file

@@ -45,6 +45,33 @@ def readiness(state, workflow="annual_2025"):
 
 
 class IntakeContractTests(unittest.TestCase):
+    def test_finite_choice_intake_prefers_return_capable_controls(self):
+        runtime = read_text("skills/_shared/runtime-contract.md")
+        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        intake = read_text("skills/nl-tax-intake/SKILL.md")
+
+        for text in (runtime, contract, intake):
+            with self.subTest(document=text[:40]):
+                self.assertIn("return-capable", text)
+                self.assertIn("same conversation", text)
+        self.assertIn("Do not use a display-only visual", intake)
+        self.assertIn("four-option limit", intake)
+        self.assertIn("AskUserQuestion", intake)
+        self.assertIn("source: user_chat", intake)
+
+    def test_claude_host_rules_distinguish_cowork_from_claude_code(self):
+        runtime = read_text("skills/_shared/runtime-contract.md")
+        intake = read_text("skills/nl-tax-intake/SKILL.md")
+
+        for text in (runtime, intake):
+            with self.subTest(document=text[:40]):
+                self.assertIn("Claude chat or Cowork", text)
+                self.assertIn("Claude Code", text)
+                self.assertIn("custom HTML visual", text)
+                self.assertIn("not a guaranteed Cowork", text)
+                self.assertIn("AskUserQuestion", text)
+                self.assertIn("Codex", text)
+
     def test_session_progress_schema_version_and_chat_only_gate_match_template(self):
         template = load_yaml("skills/_shared/templates/session-progress.yaml")
         contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")

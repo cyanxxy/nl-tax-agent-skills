@@ -100,6 +100,13 @@ describe the result you need. The agent drives the workflow: it asks only the
 missing intake questions, chooses the relevant skills, and prepares artifacts
 for your review.
 
+For finite-choice intake questions, the plugin prefers a native in-chat control
+or compact form when the active host can return selections to the conversation.
+Where that capability is unavailable, it asks the same short questions in chat;
+interactive UI is never required to complete a workflow.
+In Claude Cowork this means native interactive inputs when offered, not a custom
+HTML visual whose clicks cannot return answers to the conversation.
+
 On Work web or mobile, upload documents to the conversation or project. On
 desktop, select a local folder or attach files. The plugin never assumes that a
 cloud task can see files that remain only on your computer.

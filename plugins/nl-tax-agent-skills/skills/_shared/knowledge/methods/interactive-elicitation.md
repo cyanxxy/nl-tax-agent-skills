@@ -3,7 +3,7 @@
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 # Internal methodology contract (no external source_id — this file is authored
 # in-repo, like the other methods/ playbooks, and is exempt from the
@@ -31,6 +31,11 @@ This contract applies to:
 5. **Persist after every turn.** After each user reply, update the relevant workspace files (profile, evidence-index, session-progress) before continuing the conversation. The conversation must be resumable from disk alone.
 6. **Confirm before producing the workpack.** Do not generate `return-pack.md` or `provisional-pack.md` until the user has given the workflow's explicit confirmation and all blocking questions are resolved.
 7. **Surface gaps, don't hide them.** Items the user could not answer become entries in `workspace/shared/missing-info.md`, not silent zeros.
+8. **Prefer return-capable controls.** For finite choices, use a native
+   multiple-choice control or compact form when the active host can return its
+   selections to this same conversation. If that capability is absent or
+   uncertain, ask the same short questions in chat. A display-only visual is
+   never a substitute for a reply.
 
 ## Source of truth for each input
 
@@ -119,7 +124,10 @@ When a skill discovers it needs a value, it follows this loop:
 
 1. **Check progress.** Read `workspace/shared/session-progress.yaml` and the relevant workspace file. Has this `question_id` already been answered? If yes, use the stored value.
 2. **Check evidence.** Is this value already derivable from a file in `evidence-index.yaml`? If yes, use it and record `source: file`.
-3. **Ask the user.** Pose the question in plain language. Offer at most two clarifying examples. Tell the user they may answer in chat OR upload a file.
+3. **Ask the user.** For finite choices, capability-check and prefer a
+   return-capable structured-input control. Otherwise pose the question in
+   plain language. Offer at most two clarifying examples. Tell the user they may
+   answer in chat OR upload a file when a file can answer the question.
 4. **Record the answer.** Write the value to its proper home (profile, evidence-index, or workpack draft) with `source: user_chat`, `quote`, `stated_at`. Append the `question_id` to `answered` in session-progress.
 5. **Handle "I don't know".** If the user cannot answer:
    - If a sensible default exists, propose it and confirm before applying. On confirm, record `source: assumption`.
@@ -130,7 +138,12 @@ When a skill discovers it needs a value, it follows this loop:
 
 ## Batching rules
 
-- Initial intake turn may ask up to 4 short screening questions (residency, taxpayer type, living status, workflow choice).
+- Initial intake may present its four short screening questions (residency,
+  taxpayer type, living status, workflow choice) in one compact return-capable
+  form. If the host's native question control allows at most four options per
+  question, ask annual-versus-2026 first and ask the four 2026 subflows only
+  after the user chooses 2026. If no return-capable control is available, use
+  the ordinary short chat batch.
 - After intake, default to one section per turn (e.g., "let's do employment income"), with at most 3 sub-questions in that turn.
 - If the user pastes a long block of facts, parse out everything you can in one go and only re-ask for items still missing.
 

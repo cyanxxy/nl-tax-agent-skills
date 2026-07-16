@@ -8,6 +8,7 @@ allowed-tools:
   - Grep
   - Write
   - Edit
+  - AskUserQuestion
   - Bash(python3:*)
 ---
 

@@ -47,6 +47,26 @@ def frontmatter(path):
 
 
 class SkillDiscoveryAndLoadingTests(unittest.TestCase):
+    def test_conversational_skills_allow_native_structured_questions(self):
+        conversational = (
+            "nl-tax-intake",
+            "nl-tax-evidence-indexer",
+            "nl-tax-annual-return",
+            "nl-tax-provisional-assessment",
+            "nl-tax-partner-deductions",
+            "nl-tax-box1-home",
+            "nl-tax-box2",
+            "nl-tax-box3",
+            "nl-tax-field-mapper",
+            "nl-tax-winst",
+        )
+        for skill_name in conversational:
+            with self.subTest(skill=skill_name):
+                tools = frontmatter(SKILLS / skill_name / "SKILL.md")[
+                    "allowed-tools"
+                ]
+                self.assertIn("AskUserQuestion", tools)
+
     def test_all_skill_descriptions_fit_claude_metadata_limit(self):
         for path in SKILLS.glob("*/SKILL.md"):
             description = frontmatter(path)["description"]
