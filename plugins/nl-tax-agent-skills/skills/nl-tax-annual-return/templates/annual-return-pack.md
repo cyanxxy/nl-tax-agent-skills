@@ -56,7 +56,10 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ## Sources used
 
-[Emit exactly the IDs from `workspace/shared/session-progress.yaml` -> `sources_loaded`, one per line. Do not pad with sources that were not consulted, and do not omit sources that were consulted.]
+[Emit exactly the IDs from `workspace/shared/session-progress.yaml` ->
+`sources_loaded_by_workflow.annual_2025`, one per line. Do not pad with sources
+that were not consulted, omit consulted annual sources, or include provisional
+source IDs.]
 
 - [source_id]
 - [source_id]
@@ -67,13 +70,15 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 - Name: [taxpayer name] -- Src: [F/U/A/?]
 - Date of birth: [date] -- Src: [F/U/A/?]
-- AOW age in 2025: [yes/no] -- Src: [C:dob_vs_aow_age | U]
+- AOW status in 2025: [below_all_year / reaches_during_year / aow_all_year] -- Src: [profile.person.aow_by_tax_year.2025.status]
+- AOW transition month in 2025: [1..12 / n/a] -- Src: [profile.person.aow_by_tax_year.2025.transition_month]
 - Residency: full-year Dutch resident 2025 -- Src: [F/U/A/?]
 - Primary income type: [employment / pension / benefit / combination] -- Src: [F/U/A/?]
 - Fiscal partner: [yes/no] -- Src: [F/U/A/?]
 - Partner name: [if applicable] -- Src: [F/U/A/?]
 - Partner date of birth: [date or n/a] -- Src: [F/U/A/?]
-- Partner AOW age in 2025: [yes/no/n/a] -- Src: [C/U]
+- Partner AOW status in 2025: [below_all_year / reaches_during_year / aow_all_year / n/a] -- Src: [profile.partner.aow_by_tax_year.2025.status]
+- Partner AOW transition month in 2025: [1..12 / n/a] -- Src: [profile.partner.aow_by_tax_year.2025.transition_month]
 - Children at home on 31 Dec 2025: [count] -- Src: [U/A/?]
 - Children DOBs (for IACK age test on 1 Jan 2025): [list or n/a] -- Src: [U/A/?]
 - Single-parent status: [yes/no] -- Src: [U/A/?]
@@ -96,11 +101,24 @@ If any check is "no", this workpack should not have been generated. Stop and con
 
 ## Filing status and late-filing exposure
 
-[From workspace/annual/2025/notes/filing-status.yaml. Emit exactly one of the three subsections below.]
+[From workspace/annual/2025/notes/filing-status.yaml. First emit one route
+label: `invited`, `no_letter_but_mandatory`, `refund_claim_only`, or
+`filing_obligation_unresolved`. These labels report reviewed facts; they do not
+automatically decide a filing obligation. Then render only the applicable
+timing/exposure lines below.]
+
+- Filing-route label: [one of the four labels] -- Src: [F/U/C]
+- Official result before submission: [EUR amount to pay; mandatory no-letter
+  threshold EUR 58 / EUR amount back; refund-claim threshold EUR 19 /
+  unresolved] -- Src: [official portal result / U/?]
+- No-letter asset/scheme test: [not applicable / mandatory because both
+  elements confirmed / unresolved] -- Src: [U/F/?]
 
 ### On time
 
-Filing status: on time. No late-filing exposure.
+Filing status: on time. No late-filing penalty exposure. This does not promise
+zero belastingrente: it can still apply if the return was received on or after
+1 May or the Belastingdienst deviates from the filed return.
 
 ### Uitstel granted
 
@@ -110,33 +128,48 @@ Filing status: on time. No late-filing exposure.
 
 ### Late (deadline passed, no uitstel)
 
-- Deadline route: [invitation letter / no invitation + tax due voluntary-filing guardrail / not established] -- Src: [F/U/C]
+- Deadline route: [invited / no_letter_but_mandatory / not established] -- Src: [F/U/C]
 - Applicable deadline: [date from invitation letter / 14 July 2026 / not established] -- Src: [F/U/C]
 - Deadline status: [passed / not established] -- Src: C:deadline_route
 - Filing status: [outstanding / not established] -- Src: [U/C]
 
-Render this late-exposure subsection only when an applicable deadline is established and has passed without granted uitstel. With **no invitation**, use 14 July 2026 only when tax due was established. If the deadline is **not established**, do not invent one and do not classify the return as late.
-- Verzuimboete — **potential exposure**, not a promised penalty:
+Render this late-exposure subsection only when an applicable deadline is
+established and has passed without granted uitstel. With no invitation, use
+14 July 2026 only for `no_letter_but_mandatory`. A refund-only or unresolved
+route is not classified as late.
+- Invited-return verzuimboete — **potential exposure**, render only for
+  `invited`:
   - Herinnering received: [yes / no / unknown] -- Src: [F/U/?]
   - Aanmaning received: [yes / no / unknown] -- Src: [F/U/?]
   - 10 werkdagen after aanmaning expired while still unfiled: [yes / no / unknown] -- Src: [F/U/C/?]
   - Potential first-time amount after the full escalation: EUR [amount from `late-filing.md`] -- Src: bd_verzuimboete
   - Potential repeated amount after the full escalation: up to EUR [maximum from `late-filing.md`] -- Src: bd_verzuimboete
   - Missing the filing deadline alone does not impose the boete; exposure is conditional on the herinnering, aanmaning, and 10 werkdagen sequence.
+- No-letter failure-to-request exposure — **potential exposure**, render only
+  for `no_letter_but_mandatory`:
+  - Aangifte requested: [yes / no / unknown] -- Src: [F/U/?]
+  - Request date: [date / unknown] -- Src: [F/U/?]
+  - Official timing facts: 6 months after the tax liability arose; no penalty
+    when requested within the following 2 weeks -- Src: bd_verzuimboete
+  - Potential amount: EUR 3,354 -- Src: bd_verzuimboete
+  - Do not apply the invited-return herinnering/aanmaning sequence here; the
+    Belastingdienst determines whether this separate regime applies.
 - Belastingrente:
-  - Starts running 1 July 2026 for any tax owed
+  - Can apply when the return is received on or after 1 May, or when the
+    Belastingdienst deviates from the filed return, even if filed before 1 May
+  - Normally starts 1 July 2026 when tax is owed and an interest ground applies
   - Rate from 1 January 2026: [rate from `late-filing.md`] -- Src: bd_belastingrente_overview
 - Recommended next steps:
-  - File the prepared return through Mijn Belastingdienst as soon as possible.
-  - Track any herinnering and aanmaning, file immediately, and do not assume that a verzuimboete will be imposed.
-  - Pay the aanslag by its due date (betaaltermijn) to avoid invorderingsrente. Belastingrente is already fixed on the aanslag and is not reduced by paying faster.
+  - **Taxpayer:** File the prepared return through Mijn Belastingdienst as soon as possible.
+  - **Taxpayer:** Track any herinnering and aanmaning, file immediately, and do not assume that a verzuimboete will be imposed.
+  - **Taxpayer:** Pay the aanslag by its due date (betaaltermijn) to avoid invorderingsrente. Belastingrente is already fixed on the aanslag and is not reduced by paying faster.
 - The Belastingdienst determines whether the escalation conditions are met and sets any actual boete and rente. This workpack does not compute or promise final figures.
 
 ## Income notes
 
 ### Employment income (loon uit dienstbetrekking)
 
-| Employer | Gross salary | Loonheffing withheld | Src (gross) | Src (loonheffing) |
+| Employer | Loon / fiscaal loon (copied exactly) | Loonheffing withheld | Src (fiscaal loon) | Src (loonheffing) |
 |----------|--------------|----------------------|-------------|-------------------|
 | [name]   | EUR [amount] | EUR [amount]         | [F/U/A/?]   | [F/U/A/?]         |
 
@@ -172,7 +205,7 @@ Non-taxable household context — AKW (kinderbijslag): [received/not received/no
 relevant] -- Src: [F/U/A/?]. Do not include this line in taxable benefit or box
 1 totals.
 
-### Company car and stock options review
+### Company car and equity-compensation review
 
 - Company car (auto van de zaak / bijtelling): [yes/no]
 - Evidence of **500 private kilometres or fewer**: [confirmed/not confirmed]
@@ -185,6 +218,10 @@ relevant] -- Src: [F/U/A/?]. Do not include this line in taxable benefit or box
   is the **default tax point**; by default, taxation follows when acquired
   shares become tradable. Immediate-tradability cases and any election to use
   exercise require the employer statement and manual review.
+- Other equity compensation (RSU/restricted or employee shares/other):
+  [instrument / grant-vesting-delivery-sale dates / employer statement / payroll
+  treatment / manual review]. Do not apply a blanket vesting-date rule; unresolved
+  or cross-border awards stay outside standard totals.
 
 ### Other box 1 income
 
@@ -401,13 +438,17 @@ trail and both tables even when there are no rejected rows.
 
 **Total overige bezittingen (category II):** EUR [amount] -- Src: C:sum
 
-### Schulden (non-mortgage debts)
+### Schulden (screened qualifying Box 3 debts)
 
-| Debt | Type | Balance 1 Jan 2025 | Src |
-|------|------|--------------------|-----|
-| [description] | [consumer loan / student debt / other] | EUR [amount] | [F/U/A/?] |
+| Debt | Type | Official inclusion/exclusion check | Balance 1 Jan 2025 | Src | Status |
+|------|------|------------------------------------|--------------------|-----|--------|
+| [description] | [consumer / study / tax / business / other] | [qualifies / excluded / unresolved] | EUR [amount] | [F/U/A/?] | [accepted / rejected / manual review] |
 
-**Total schulden (category III):** EUR [amount] -- Src: C:sum
+**Total qualifying schulden (category III; accepted rows only):** EUR [amount] -- Src: C:sum
+
+Do not use "all non-mortgage debts" as the classification rule. Keep excluded
+and unresolved rows visible but outside the trusted total; apply the debt
+threshold only to the qualifying total.
 
 ### Heffingsvrij vermogen
 
@@ -456,9 +497,9 @@ Do not deduct custody fees, transaction costs, management fees, maintenance cost
 [Actual-return subsection status: `complete` when all required inputs are
 available with indexed evidence; `chat_only` when the complete input set was
 supplied in chat; also `complete` with `not supplied by choice` when the taxpayer
-explicitly declines this optional comparison. A declined comparison is not a
+explicitly declines this additional data collection. A declined comparison is not a
 gap. Use `deferred/manual review` only for required facts still missing after
-the taxpayer chose the comparison. Cross-index all `U:` inputs. If deferred,
+the taxpayer requested the comparison. Cross-index all `U:` inputs. If deferred,
 retain both method explanations and list the unresolved inputs. Do not imply
 that both calculations were completed.]
 
@@ -469,9 +510,11 @@ that both calculations were completed.]
 | Fictitious return (forfaitair rendement) | EUR [amount] | EUR [amount] | C:fictitious_rows | Complete |
 | Actual return (werkelijk rendement) | [EUR amount / Not supplied by choice] | [EUR amount / Not calculated] | [C:actual_return_rows / U] | [Complete / Partial / Not supplied by choice] |
 
-More favorable method: [fictitious / actual / not compared by taxpayer choice / cannot determine -- data incomplete]
+More favorable portal calculation: [fictitious / actual / not compared because actual data was not supplied / cannot determine -- data incomplete]
 
-Note: The final election between fictitious and actual return is made in the official Mijn Belastingdienst filing environment. This comparison is informational only and does not constitute a binding election.
+Note: If actual-return data is supplied, Mijn Belastingdienst performs both
+calculations and uses the more favorable amount. The workpack comparison is
+informational; it does not make a tax-method election or override the portal.
 
 ### Partner allocation for box 3
 
@@ -479,12 +522,15 @@ Note: The final election between fictitious and actual return is made in the off
 
 [If fiscal partner:]
 
-| Allocation | Taxpayer share | Partner share | Combined box 3 tax | Src |
-|------------|---------------|--------------|-------------------|-----|
-| Default (50/50) | EUR [amount] | EUR [amount] | EUR [amount] | C:allocation |
-| Optimized ([X]% / [Y]%) | EUR [amount] | EUR [amount] | EUR [amount] | C:allocation |
+| Scenario | Taxpayer % | Partner % | Estimated taxpayer tax | Estimated partner tax | Estimated combined tax | Difference vs Scenario A | Sources / assumptions |
+|----------|-------------|-----------|------------------------|-----------------------|------------------------|--------------------------|-----------------------|
+| Scenario A | 50% | 50% | EUR [amount] | EUR [amount] | EUR [amount] | EUR 0 | [C/U/A/?] |
+| Scenario B | [X]% | [Y]% | EUR [amount] | EUR [amount] | EUR [amount] | EUR [signed amount] | [C/U/A/?] |
 
-Recommended allocation: [percentage split] -- results in EUR [amount] lower combined box 3 tax.
+Taxpayer-selected allocation: [not selected / user-confirmed split] -- Src: [U:?]
+
+Do not rank, recommend, or automatically select a scenario. The taxpayers
+choose after reviewing the traceable estimates and the official filing result.
 
 Note: The allocation percentage applies to the entire box 3 base (assets minus debts). Partners cannot allocate asset-by-asset. Both partners must use the same ratio in their respective returns.
 
@@ -495,7 +541,9 @@ Note: The allocation percentage applies to the entire box 3 base (assets minus d
 [If not applicable: "Not applicable -- no partneralimentatie payments."]
 
 - Total partneralimentatie paid in 2025: EUR [amount] -- Src: [F/U/A/?]
-- Basis: [court order / divorce agreement / notarial deed] -- Src: [F/U/A/?]
+- Basis: [court order / divorce or cohabitation agreement / notarial deed /
+  urgent moral obligation enforceable in court / unresolved] -- Src: [F/U/A/?]
+- Enforceability review: [confirmed from evidence / manual review required]
 
 Note: Kinderalimentatie (child maintenance) is NOT deductible.
 
@@ -593,14 +641,29 @@ Allocation order: box 1 first, then box 3, then box 2.
 
 ## Credits screening
 
-[For each of the four credits below, emit one line: either `Triggered: <reason>` (and flag for manual review in Mijn Belastingdienst) or `Not applicable: <reason>`. Read household composition from workspace/taxpayer/profile.yaml. Do not calculate amounts.]
+[For each item below, emit `Candidate`, `Not applicable`, or `Unresolved`, list
+the facts supporting that status, and flag candidates/unresolved conditions for
+review in Mijn Belastingdienst. Profile data starts the screen; it does not
+decide the result. Do not calculate amounts.]
 
-- **IACK (inkomensafhankelijke combinatiekorting)** -- [Triggered: child born [DOB], younger than 12 on 1 January 2025; verify arbeidsinkomen threshold in Mijn Belastingdienst] | [Not applicable: no child younger than 12 on 1 January 2025] -- Src: [profile.household.children]
-- **Ouderenkorting** -- [Triggered: AOW age reached in 2025; verify amount in Mijn Belastingdienst] | [Not applicable: not AOW age in 2025] -- Src: [profile.person.aow_age_in_tax_year]
+- **IACK (inkomensafhankelijke combinatiekorting)** -- [status; child DOB and
+  whether younger than 12 on 1 January 2025;
+  6-month household status or co-parent 78-day/6-month repeating-rhythm facts;
+  child-death exception if relevant; arbeidsinkomen > EUR 6,145; partner
+  duration; both arbeidsinkomens; older partner if equal] -- Src: [profile/U/F/?]
+- **Ouderenkorting** -- [Candidate: AOW age reached by 31 December 2025;
+  verify amount in Mijn Belastingdienst] | [Not applicable: AOW age not reached
+  by 31 December 2025] -- Src: [profile.person.aow_by_tax_year.2025.status +
+  transition month when applicable]
 - **Alleenstaande-ouderenkorting** -- [Triggered: entitled to an AOW benefit for
   a single person; verify in Mijn Belastingdienst] | [Not applicable: no such AOW
   entitlement] -- Src: [payment-year AOW entitlement evidence / U]
 - **Jonggehandicaptenkorting** -- [Triggered: Wajong entitlement/work support confirmed and no ouderenkorting; verify in Mijn Belastingdienst] | [Not applicable: no Wajong entitlement/work support] | [Not applicable: ouderenkorting applies] -- Src: [U + credits screen]
+- **Possible payout of unused algemene heffingskorting** -- [status; unused own
+  credit; born before 1963; same fiscal partner > 6 months or partner-death
+  exception; partner has sufficient Dutch tax/premium liability after own
+  credits; verify portal result and do not assume EUR 3,068 maximum] -- Src:
+  [profile/U/F/?]
 
 ## Fiscal partner notes
 
@@ -611,39 +674,51 @@ Allocation order: box 1 first, then box 3, then box 2.
 - Fiscal partner: [yes/no] -- Src: [F/U/A/?]
 - Basis: [married / registered partnership / cohabiting with qualifying conditions] -- Src: [F/U/A/?]
 - Partner for full year 2025: [yes/no] -- Src: [F/U/A/?]
+- Filing mode: [together online / separate returns] -- Src: [U]
 - Special circumstances: [e.g., partner has no income, partner is AOW-age]
 
 ### Allocation options
 
 The following items can be freely allocated between partners:
 
-| Item | Default allocation | Optimized allocation | Tax impact | Src |
-|------|-------------------|---------------------|------------|-----|
-| Eigen woning result | 50/50 | [recommendation] | EUR [savings] | C:allocation |
-| Box 2 income | [taxpayer %] / [partner %] | [review scenarios] | [manual review] | [U/A/?] |
-| Box 3 grondslag | 50/50 | [recommendation] | EUR [savings] | C:allocation |
-| Persoonsgebonden aftrek, including eligible prior-year personal-deduction remainder for whole-year fiscal partners | [scenario split totaling 100%] | [traceable comparison; taxpayer review required] | EUR [estimated difference] | C:allocation |
+| Item | Scenario A | Scenario B | Estimated difference vs Scenario A | Sources / assumptions |
+|------|------------|------------|------------------------------------|-----------------------|
+| Eigen woning result | [split totaling 100%] | [alternative split totaling 100%] | EUR [signed amount] | [C/U/A/?] |
+| Box 2 income | [split totaling 100%] | [alternative split totaling 100%] | EUR [signed amount / manual review] | [C/U/A/?] |
+| Box 3 grondslag | [split totaling 100%] | [alternative split totaling 100%] | EUR [signed amount] | [C/U/A/?] |
+| Persoonsgebonden aftrek, including eligible prior-year personal-deduction remainder for whole-year fiscal partners | [split totaling 100%] | [alternative split totaling 100%] | EUR [signed amount] | [C/U/A/?] |
+
+Taxpayer-selected allocations: [not selected / list each user-confirmed split]
+-- Src: [U:?]. Do not rank, recommend, or automatically select a scenario.
 
 Items that CANNOT be allocated:
 - Arbeidskorting (personal, based on individual arbeidsinkomen)
 - Ondernemersaftrek (personal to the ondernemer)
 - MKB-winstvrijstelling (personal to the ondernemer)
 
-### Recommended review points
+If filing separately, each taxpayer signs the own return. Cross-check every
+legally available shared allocation against the partner's return:
+corresponding entries must agree and each allocatable item must total no more
+than 100% across both. Part-year/separation eligibility remains manual review.
 
-- [ ] Verify which partner has the higher marginal tax rate
-- [ ] Consider tariefsaanpassing impact on eigen woning allocation
-- [ ] Consider heffingskorting phase-out impact on income allocation
-- [ ] Review box 3 allocation for optimal combined result
+### Allocation review points
+
+- [ ] Verify that each scenario uses sourced rates and shows both partners' effects
+- [ ] Compare tariefsaanpassing impact on the eigen woning scenarios
+- [ ] Compare heffingskorting phase-out impact across the scenarios
+- [ ] Review box 3 scenarios without ranking or automatic selection
 - [ ] Review Box 2 allocation if there is an aanmerkelijk belang
-- [ ] Confirm both partners will use the same box 3 allocation ratio
+- [ ] Record the taxpayers' explicit choice, or leave the allocation unresolved
+- [ ] I confirmed both partners will use the same taxpayer-selected box 3 allocation ratio
 
 ## Field map summary
 
 The field map for this workpack is available at:
 `workspace/annual/2025/field-map.yaml`
 
-This field map maps each line item in this workpack to the corresponding field in the Belastingdienst online return. Use it as a guide when entering data in Mijn Belastingdienst.
+This field map maps each line item in this workpack to the corresponding field
+in the Belastingdienst online return. The taxpayer uses it as a guide while
+personally entering data in Mijn Belastingdienst.
 
 Note: This field map is specific to the annual return 2025. It is separate from any provisional assessment field maps.
 
@@ -691,19 +766,27 @@ Total assumptions: [count]
 
 ## Human review checklist
 
-Before filing through Mijn Belastingdienst, review the following:
+The taxpayer or an authorized human completes this review personally. Before
+filing through Mijn Belastingdienst, the taxpayer reviews the following; the
+assistant must not open or operate the portal, enter values, sign, send, or
+submit.
 
-- [ ] All income sources accounted for -- compare with VIA pre-filled data
+- [ ] I accounted for all income sources and compared them with VIA pre-filled data
 - [ ] Evidence matches reported amounts -- no unexplained discrepancies
 - [ ] Box 3 peildatum values verified against bank/broker statements
-- [ ] Box 3 method choice reviewed (fictitious vs actual return)
+- [ ] I reviewed the Box 3 data-supply choice; when actual-return data was
+  supplied, I checked the portal comparison and favorable amount (no method
+  election was attributed to the taxpayer)
 - [ ] Winst uit onderneming reviewed if applicable: finalized profit-and-loss and balance evidence organized, open questions listed, and field map kept draft with the business-section schema-review blocker
 - [ ] Complex business facts (partnership, DGA/BV winst, agrarisch, zeevarende, staking, resultaat uit overige werkzaamheden) routed to manual review or professional advice
 - [ ] Business administration retained for at least 7 years (AWR article 52; `law_awr_artikel_52`) if you have winst uit onderneming
 - [ ] Box 2 dividends, share-sale data, withholding tax, loss setoff, and partner allocation reviewed if applicable
 - [ ] Complex Box 2 facts routed to manual review or professional advice
-- [ ] Partner allocation reviewed and agreed with fiscal partner
-- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed in the official portal; no calculated amounts are shown here unless exact reviewed sources are registered
+- [ ] Partner filing mode confirmed; if separate, shared allocations agree
+  across both returns and total no more than 100%
+- [ ] I reviewed IACK, ouderenkorting, alleenstaandeouderenkorting,
+  jonggehandicaptenkorting, and possible payout of unused algemene
+  heffingskorting in the official portal; unresolved conditions remain visible
 - [ ] Zorgkosten threshold manual review completed if exact reviewed 2025 threshold sources are not registered
 - [ ] Lijfrente limit manual review completed if exact reviewed 2025 jaarruimte/reserveringsruimte sources are not registered
 - [ ] Deductions have supporting evidence retained for at least 5 years
@@ -713,8 +796,13 @@ Before filing through Mijn Belastingdienst, review the following:
 - [ ] WOZ-waarde matches the gemeente beschikking
 - [ ] Mortgage interest matches the jaaroverzicht hypotheek
 - [ ] Loonheffing withheld matches jaaropgaven total
-- [ ] Filing route verified: invitation letter deadline used; or, with no invitation and tax due, conditional 14 July 2026 voluntary-filing guardrail used; otherwise no deadline invented
+- [ ] Filing-route label verified: `invited`, `no_letter_but_mandatory`,
+  `refund_claim_only`, or `filing_obligation_unresolved`; 14 July 2026 used only
+  for the mandatory no-letter route and no deadline invented for unresolved
+  facts
 
 ## Not submission advice
 
-This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting.
+This workpack is a preparation aid. You, the taxpayer or an authorized human,
+must review the figures and perform all portal entry, signing, and submission
+yourself. The assistant must not access or operate Mijn Belastingdienst.

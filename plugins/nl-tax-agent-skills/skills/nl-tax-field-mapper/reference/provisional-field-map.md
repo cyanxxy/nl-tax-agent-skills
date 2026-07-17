@@ -7,7 +7,11 @@ status: active
 last_reviewed: "2026-07-06"
 review_status: reviewed
 
-This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. All values are ESTIMATES of the current/upcoming year -- not actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
+This reference defines the known fields in the Dutch voorlopige aanslag request or change form for tax year 2026. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. Amounts are forward-looking 2026 estimates or explicitly labeled baseline values -- not annual actuals from a completed year. The provisional assessment has fewer fields and less detail than the annual return.
+
+This map is preparation-only. The taxpayer or an authorized human performs all
+authenticated portal entry, review, signing, sending, or changes; the assistant
+must not access or operate Mijn Belastingdienst.
 
 > **Provenance / freshness.** Labels reflect the 2026 Mijn Belastingdienst voorlopige aanslag as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
 
@@ -27,11 +31,17 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 ## Key Differences from Annual Return
 
-1. **All fields are estimates** -- every value is the taxpayer's best projection, not a confirmed amount from evidence.
+1. **Amounts are estimates or explicit baselines** -- evidence can support a
+   projection, but every current amount remains a taxpayer-reviewed 2026
+   estimate; a carried beschikking amount stays labeled `from-baseline`.
 2. **Fewer detail fields** -- the provisional form asks for totals, not breakdowns per employer or per account.
 3. **Box 3 explanatory note only** -- use this note and no input fields: "Werkelijk rendement is not part of provisional 2026."
-4. **Peildatum is 1 January 2026** -- not 1 January 2025 as in the annual return.
-5. **No allocation of prior-year evidence** -- provisional estimates are forward-looking, not evidence-based.
+4. **Dates differ by section** -- Box 3 assets and qualifying debts use
+   peildatum 1 January 2026; the own-home WOZ value uses peildatum
+   **1 January 2025**.
+5. **Prior-year facts are only baselines** -- evidence may support a
+   forward-looking estimate, but do not copy a prior-year amount as if it were
+   a 2026 actual or unchanged forecast without taxpayer review.
 
 ---
 
@@ -66,7 +76,13 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
   sourced, user-reviewed full-year forecast in the `Winst uit onderneming`
   section. Set `manual_review_required: true`. Never substitute a generic
   other-income field and never add annual deductions, Zvw, cessation
-  profit, or final tax.
+  profit, or final tax. Preserve it in the workpack's Box 1 rollup and change
+  delta even though the field map keeps it as its own portal section.
+- If the taxpayer reaches AOW age during 2026, preserve the reviewed transition
+  month in the workpack and use the live portal result for affected rates and
+  credits. Do not select a whole-year table from a legacy yes/no AOW flag.
+- Alleenstaandeouderenkorting concerns entitlement to an AOW pension for a
+  single person; never infer it from children or single-parent status.
 
 ---
 
@@ -74,12 +90,21 @@ This reference defines the known fields in the Dutch voorlopige aanslag request 
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `eigenwoning.geschatte_woz_waarde` | Geschatte WOZ-waarde | Estimated WOZ property valuation | Eigen woning | conditional | Most recent `woz_beschikking` or estimate |
+| `eigenwoning.geschatte_woz_waarde` | WOZ-waarde met peildatum 1 januari 2025 | Own-home WOZ value with reference date 1 Jan 2025 | Eigen woning | conditional | 2026 `woz_beschikking` or reviewed estimate for a 2026 purchase |
 | `eigenwoning.geschatte_hypotheekrente` | Geschatte hypotheekrente | Estimated mortgage interest | Eigen woning | conditional | Current mortgage terms / `hypotheek_jaaroverzicht` |
 
 ### Notes on own-home estimates
-- The WOZ-waarde for the provisional 2026 may not yet be known. Use the most recent WOZ-beschikking as a baseline estimate.
+- Use the WOZ value with peildatum 1 January 2025, normally shown on the
+  municipal WOZ-beschikking issued in early 2026. For a 2026 purchase without
+  that value, retain a reviewed estimate and manual-review note; do not carry
+  the Box 3 peildatum into the own-home section.
 - Mortgage interest estimate is typically the annual interest based on current mortgage terms.
+- The workpack must preserve eigenwoningforfait, qualifying financing costs,
+  periodic erfpacht/opstal/beklemming, total deductible own-home costs, any
+  Hillen deduction, and `box1_own_home_balance` separately. If the live portal
+  exposes more granular labels than this minimal field reference, review and
+  map them there rather than dropping components or inventing a combined
+  mortgage-only total.
 
 ---
 
@@ -111,7 +136,7 @@ All Box 2 values in a provisional 2026 field map are estimates or from-baseline 
 | `box3.geschatte_overige_bezittingen` | Geschatte overige bezittingen op 1 januari 2026 | Estimated other assets on 1 Jan 2026 | Box 3 — Bezittingen | conditional | Recent portfolio / estimate |
 | `box3.geschatte_groene_beleggingen_spaartegoeden` | Geschatte groene beleggingen en groene spaartegoeden | Estimated green investments and green savings | Box 3 — Vrijstellingen | optional | Recent green fund / bank statements |
 | `box3.geschat_contant_geld` | Geschat contant geld en cadeaubonnen | Estimated cash and gift cards | Box 3 — Bezittingen | optional | User estimate |
-| `box3.geschatte_schulden` | Geschatte schulden op 1 januari 2026 | Estimated debts on 1 Jan 2026 | Box 3 — Schulden | conditional | Current debt levels / estimate |
+| `box3.geschatte_schulden` | Geschatte kwalificerende schulden op 1 januari 2026 | Estimated qualifying Box 3 debts on 1 Jan 2026 | Box 3 — Schulden | conditional | Accepted rows after official debt inclusion/exclusion screen; unresolved rows require manual review |
 
 ### Box 3 note
 
@@ -124,6 +149,13 @@ The validation script rejects provisional field IDs or labels that try to add we
 - Only the fictitious return method (forfaitair rendement) applies. The portal computes the fictitious return from the asset estimates.
 - The heffingsvrij vermogen is applied automatically by the portal.
 - Green investments/savings and cash must be identifiable separately because exemptions can change the amount included in banktegoeden or overige bezittingen.
+- A debt does not qualify merely because it is not an own-home mortgage. Record
+  type and purpose, exclude Box 1/2 debts and published exclusions, and do not
+  map unresolved debt into the accepted total.
+- The official 2026 Box 3 page says 3 decimals in the general aandeel step but
+  displays 2 decimals in examples. The workpack can show a labeled review
+  estimate with its display convention; the live portal and resulting
+  beschikking are authoritative.
 
 ---
 
@@ -131,15 +163,21 @@ The validation script rejects provisional field IDs or labels that try to add we
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `partner.verdeling_box2_inkomen` | Geschatte verdeling Box 2 inkomen | Estimated Box 2 income allocation | Partner | conditional | User choice / baseline |
-| `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen | Box 3 base allocation | Partner | conditional | User choice |
-| `partner.verdeling_eigenwoning_saldo` | Verdeling saldo eigen woning | Own-home balance allocation | Partner | conditional | User choice |
-| `partner.verdeling_aftrekposten` | Verdeling aftrekposten | Deduction allocation | Partner | conditional | User choice |
+| `partner.verdeling_box2_inkomen` | Geschatte verdeling Box 2 inkomen | Estimated Box 2 income allocation | Partner | conditional | Explicit taxpayer choice (`user_chat`) |
+| `partner.verdeling_box3_grondslag` | Verdeling grondslag sparen en beleggen | Box 3 base allocation | Partner | conditional | Explicit taxpayer choice (`user_chat`) |
+| `partner.verdeling_eigenwoning_saldo` | Verdeling saldo eigen woning | Own-home balance allocation | Partner | conditional | Explicit taxpayer choice (`user_chat`) |
+| `partner.verdeling_aftrekposten` | Verdeling aftrekposten | Deduction allocation | Partner | conditional | Explicit taxpayer choice (`user_chat`) |
 
 ### Notes on partner allocation estimates
 - If there is a fiscal partner and the provisional form asks for allocation, map the allocation of the joint grondslag sparen en beleggen, not individual assets or debts.
-- Allocation values are estimates for cash-flow planning. The final allocation is chosen again in the annual 2026 return.
-- Box 2 allocation values are estimates or from-baseline and must total 100% when shown for fiscal partners.
+- Only map an allocation after the taxpayer explicitly confirms that choice in
+  the current conversation. Record it with `source.type: user_chat`, the
+  taxpayer's quote, `stated_at`, and `manual_review_required: true`. A baseline,
+  calculated scenario, or assistant-generated comparison cannot select it; keep
+  the field unresolved otherwise.
+- Confirmed allocation values are provisional cash-flow inputs. The taxpayer
+  chooses the final allocation again in the annual 2026 return.
+- Confirmed Box 2 allocation values must total 100% when shown for fiscal partners.
 
 ---
 

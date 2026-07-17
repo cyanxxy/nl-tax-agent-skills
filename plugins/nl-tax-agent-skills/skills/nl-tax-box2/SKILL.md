@@ -1,12 +1,11 @@
 ---
 name: nl-tax-box2
-description: Background helper that returns standard Box 2 facts and questions; use reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for provisional workpacks.
+description: Use when an owning Dutch tax workflow needs standard Box 2 facts and questions; use reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for provisional workpacks.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
   - Bash(python3:*)
 ---
 
@@ -106,7 +105,6 @@ The calling skill asks these questions, records the answers with `source`, `quot
 
 ## Never
 
-- Do not log in, automate a browser, sign, or submit anything.
 - Do not claim that the helper gives binding tax advice or a final assessment.
 - Do not use annual 2025 final-filing language for provisional 2026 estimates.
 - Do not route complex substantial-interest cases as standard calculations.
@@ -118,3 +116,8 @@ persist any final artifact, including shared notes, question packets, session
 state, workpacks, or field maps. The annual/provisional workflow owns all
 workspace persistence and may read historical helper notes for resume
 compatibility only.
+
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

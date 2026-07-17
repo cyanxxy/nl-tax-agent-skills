@@ -5,7 +5,7 @@ created_at: ""
 updated_at: ""
 workflow_candidate: ""
 # Known terminal candidates include `manual_review` and the blocked candidates
-# declared in `_shared/supported-workflows.yaml`; intake must not route those
+# declared in the intake contract; intake must not route those
 # into annual/provisional workpack generation.
 
 # Every fact below carries provenance:
@@ -22,10 +22,17 @@ person:
   date_of_birth:
     value: null                  # ISO date YYYY-MM-DD; needed for AOW age and jonggehandicaptenkorting trigger
     source: "unknown"
-  aow_age_in_tax_year:
-    value: null                  # true | false; derived from date_of_birth and tax year, recorded for traceability
-    source: "unknown"
-    calculated_from: []          # [person.date_of_birth, tax_year] when derived
+  # Keep AOW facts per tax year. Both entries may be needed when the user asks
+  # for annual 2025 and provisional 2026 in the same workspace.
+  aow_by_tax_year:
+    "2025":
+      status: {value: null, source: "unknown", calculated_from: []}  # below_all_year | reaches_during_year | aow_all_year
+      transition_month: {value: null, source: "unknown", calculated_from: []}  # 1..12 only for reaches_during_year
+      single_person_pension_entitlement: {value: null, source: "unknown"}  # true | false | unresolved; entitlement to an AOW pension for a single person, not single-parent status
+    "2026":
+      status: {value: null, source: "unknown", calculated_from: []}
+      transition_month: {value: null, source: "unknown", calculated_from: []}
+      single_person_pension_entitlement: {value: null, source: "unknown"}
 
 residency:
   full_year_nl_resident:
@@ -43,16 +50,21 @@ partner:
   partner_date_of_birth:
     value: null                  # ISO date; required when has_fiscal_partner is true
     source: "unknown"
-  partner_aow_age_in_tax_year:
-    value: null
-    source: "unknown"
-    calculated_from: []
+  aow_by_tax_year:
+    "2025":
+      status: {value: null, source: "unknown", calculated_from: []}
+      transition_month: {value: null, source: "unknown", calculated_from: []}
+      single_person_pension_entitlement: {value: null, source: "unknown"}
+    "2026":
+      status: {value: null, source: "unknown", calculated_from: []}
+      transition_month: {value: null, source: "unknown", calculated_from: []}
+      single_person_pension_entitlement: {value: null, source: "unknown"}
 
 household:
   # Children living at home as of 31 December of the tax year, used to screen
-  # IACK and (when combined with partner status) alleenstaande-ouderenkorting
-  # and other family-status credits. Collect only what is needed for credits
-  # screening.
+  # IACK and other family-status questions. Children and single-parent status
+  # do NOT establish alleenstaandeouderenkorting; that credit concerns a
+  # single-person AOW pension entitlement. Collect only what is needed.
   children_at_home_count:
     value: null                  # integer, 0 or more
     source: "unknown"
@@ -61,7 +73,7 @@ household:
     # eligibility (child under 12 on 1 January of the tax year).
     []
   single_parent_status:
-    value: null                  # true | false; relevant for alleenstaande-ouderenkorting eligibility
+    value: null                  # true | false; never use for alleenstaandeouderenkorting
     source: "unknown"
 
 box2:
@@ -95,6 +107,9 @@ business:
     source: "unknown"
 
 workflows:
+  # Status values: not_started | queued | in_progress | complete.
+  # When both workflows are requested, annual_2025 is in_progress and
+  # provisional_2026 is queued until the annual workpack and map validate.
   annual_2025:
     requested: false
     status: "not_started"

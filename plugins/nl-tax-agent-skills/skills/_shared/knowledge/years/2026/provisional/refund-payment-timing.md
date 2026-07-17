@@ -4,7 +4,7 @@ source_ids: bd_provisional_refund_timing_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -26,11 +26,16 @@ Request on 1 May 2026 showing a EUR 7,000 refund: the first payment arrives arou
 
 ## Changing a voorlopige aanslag mid-year
 
-If the user changes the voorlopige aanslag during the year, the recalculated yearly refund is re-spread over the remaining termijnen. The change subflow's rule still applies: prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
+If the user changes the voorlopige aanslag during the year, the replacement
+beschikking may re-spread a recalculated yearly refund over the remaining
+termijnen. The portal preview is an estimate; the new beschikking controls the
+actual amount and timing. The change subflow's rule still applies: prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item.
 
 ## Developer instruction
 
-Use this only to set expectations in the provisional workpack and the submit-companion checklist (roughly when the user receives money and how much per month). Do not present exact dates as guaranteed.
+Use this only to set expectations in the provisional workpack (roughly when the
+user may receive money). Do not present exact dates or amounts as guaranteed,
+and do not convert a workpack estimate into a payment promise.
 
 ## Common failure
 

@@ -1,10 +1,10 @@
 # Rule note: Box 1 income tax rates for 2025
 
-source_ids: bd_box1_rates_2025, bd_bijtelling_auto_2025, bd_stock_options_2025
+source_ids: bd_box1_rates_2025, bd_bijtelling_auto_2025, bd_stock_options_2025, bd_jaaropgaaf_fields_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -18,7 +18,7 @@ These are reference notes for workpack preparation -- not final tax advice.
 | Schijf | Taxable income (belastbaar inkomen) | Combined rate (IB + premie volksverzekeringen) |
 |--------|-------------------------------------|-----------------------------------------------|
 | 1      | Up to EUR 38,441                    | 35.82%                                        |
-| 2      | EUR 38,441 to EUR 76,817            | 37.48%                                        |
+| 2      | Above EUR 38,441 up to and including EUR 76,817 | 37.48%                              |
 | 3      | Above EUR 76,817                    | 49.50%                                        |
 
 ## Composition of the combined rates

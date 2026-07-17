@@ -7,7 +7,8 @@ has no onderneming, emit the canonical "not applicable" line and continue.
 
 Invoke or inline `nl-tax-winst`. Require a finalized profit-and-loss statement
 and finalized balance for 2025. Preserve their evidence provenance and append
-only actually consulted entrepreneur `source_id`s to `sources_loaded`.
+only actually consulted entrepreneur `source_id`s to
+`sources_loaded_by_workflow.annual_2025` and the active `sources_loaded` mirror.
 
 ### 2A.1 Ondernemer status and urencriterium
 
@@ -19,6 +20,12 @@ only actually consulted entrepreneur `source_id`s to `sources_loaded`.
 
 - Organize the finalized profit-and-loss categories and finalized balance
   categories exactly as supplied; do not recalculate the accounts.
+- Review material purchases and prepaid costs with two independent questions:
+  the tax cost basis and whether the item/cost benefits only 2025 or more than
+  one year. Do not treat EUR 450 by itself as a complete depreciation decision.
+  Record the supplied depreciation schedule and its acquisition cost, in-use
+  date, useful life, and residual value; unresolved treatment remains a focused
+  review question.
 - Record open reconciliation, classification, hours, investment, and candidate
   deduction questions. Do not apply ondernemersaftrek, MKB-winstvrijstelling,
   KIA, Zvw, cessation profit, or final tax.

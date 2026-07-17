@@ -124,9 +124,9 @@ def _require_finite(name, value):
 
 # 2025 annual box 3 fictitious return percentages and thresholds.
 #
-# These values duplicate the canonical knowledge pack so this script can act as a
-# deterministic calculator. The knowledge notes are canonical; keep these in sync
-# with the reviewed rule note and bump them in the same commit it changes:
+# These values duplicate the canonical knowledge pack so this optional mechanical
+# arithmetic check can run offline. The knowledge notes are canonical; keep these
+# in sync with the reviewed rule note and bump them in the same commit it changes:
 #   _shared/knowledge/years/2025/box3/fictitious.md (source bd_box3_2025_calc).
 # Decimal constants: all money math below runs in Decimal end-to-end so that
 # rounding happens exactly once per output figure (no binary-float drift).
@@ -140,7 +140,11 @@ SCHULDEN_DREMPEL_PER_PERSON = 3_800
 
 
 def nearest_euro(value):
-    return int(Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    # ``quantize(Decimal("1"))`` uses the ambient Decimal precision and raises
+    # InvalidOperation for otherwise finite values such as 1e308. Converting an
+    # integral Decimal is precision-independent and preserves the same HALF_UP
+    # whole-euro rule.
+    return int(Decimal(str(value)).to_integral_value(rounding=ROUND_HALF_UP))
 
 
 def floor_euro(value):
@@ -165,18 +169,29 @@ def aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag):
 
 
 def validate_allocation_pct(allocation_pct):
-    if allocation_pct < 0 or allocation_pct > 100:
+    if isinstance(allocation_pct, bool):
+        raise ValueError("allocation_pct must be a finite number between 0 and 100")
+    try:
+        normalized = Decimal(str(allocation_pct))
+    except (ArithmeticError, TypeError, ValueError) as exc:
+        raise ValueError(
+            "allocation_pct must be a finite number between 0 and 100"
+        ) from exc
+    if not normalized.is_finite():
+        raise ValueError("allocation_pct must be a finite number between 0 and 100")
+    if normalized < 0 or normalized > 100:
         raise ValueError("allocation_pct must be between 0 and 100")
+    return normalized
 
 
 def allocated_amount(total, has_partner, allocation_pct):
-    validate_allocation_pct(allocation_pct)
-    if not has_partner and allocation_pct != 100:
+    allocation_pct = validate_allocation_pct(allocation_pct)
+    if not has_partner and allocation_pct != Decimal("100"):
         raise ValueError("allocation_pct can only differ from 100 when has_partner is true")
     total = Decimal(str(total))
     if not has_partner:
         return total
-    return total * Decimal(str(allocation_pct)) / Decimal("100")
+    return total * allocation_pct / Decimal("100")
 
 
 def calculate_fictitious_box3(
@@ -193,7 +208,7 @@ def calculate_fictitious_box3(
     _require_finite_non_negative("overige", overige)
     _require_finite_non_negative("schulden", schulden)
     _require_finite_non_negative("heffingsvrij", heffingsvrij)
-    validate_allocation_pct(allocation_pct)
+    allocation_pct = validate_allocation_pct(allocation_pct)
     if has_partner and not partner_full_year_confirmed:
         raise ValueError(
             "has_partner requires --partner-full-year-confirmed "
@@ -253,7 +268,7 @@ def calculate_fictitious_box3(
         },
     }
     if has_partner:
-        result["partner_allocation_pct"] = allocation_pct
+        result["partner_allocation_pct"] = float(allocation_pct)
         result["partner_eligibility_note"] = (
             "Doubling of the heffingsvrij vermogen and the schulden drempel "
             "assumes a confirmed full-year (or elected full-year) fiscal "
@@ -347,7 +362,7 @@ def build_output(args, fictitious, actual_return_allocated):
             "Actual return is set to EUR 0 for tax comparison if the allocated amount is negative. "
             "For fiscal partners, actual return follows the same allocation percentage as the "
             "grondslag sparen en beleggen. "
-            "Displayed amounts use portal-style whole-euro rounding. "
+            "Displayed amounts use this helper's documented whole-euro working convention. "
             "The official filing environment makes the binding calculation."
         ),
     }
@@ -403,7 +418,8 @@ def main():
         parser.error(str(exc))
 
     print(json.dumps(output, indent=2, ensure_ascii=False))
+    return 1 if output.get("manual_review_required") else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

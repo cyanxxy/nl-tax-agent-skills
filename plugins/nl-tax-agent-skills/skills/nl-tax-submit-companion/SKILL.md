@@ -1,8 +1,7 @@
 ---
 name: nl-tax-submit-companion
-description: Use only when the user explicitly wants to create a Manual-entry checklist from an existing annual or provisional workpack and field map; list blockers first and never auto-invoke or submit.
+description: Use when a user explicitly asks in natural language for a human-only manual-entry checklist from an existing annual or provisional workpack, or clearly accepts the mapper's immediate checklist offer.
 argument-hint: "[annual|provisional] [2025|2026]"
-disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob
@@ -13,11 +12,15 @@ allowed-tools:
 
 # Manual-entry checklist
 
-Create a Manual-entry checklist from an existing workpack and field map. The taxpayer or an authorized representative performs every official action manually in Mijn Belastingdienst.
+Create a Manual-entry checklist from an existing workpack and, where the
+workflow produces one, its field map. The taxpayer or an authorized
+representative performs every official action manually in Mijn Belastingdienst.
 
-This skill is manual-only (`disable-model-invocation: true` for Claude; the
-equivalent OpenAI policy is set in `agents/openai.yaml`). Run it only when the
-user explicitly asks for a Manual-entry checklist.
+This skill is natural-language invocable only for explicit checklist intent.
+Run it when the user directly asks for the checklist or gives an unambiguous
+affirmative reply to the field mapper's immediately preceding checklist offer.
+Do not run it merely because a field map exists, and never require a slash
+command or magic phrase.
 
 ## Read first
 
@@ -28,7 +31,14 @@ relative to this skill directory with the host's skill-resource or file tools.
 Do not depend on shell visibility or vendor-specific environment variables.
 
 - The relevant workpack: `workspace/annual/2025/return-pack.md` or `workspace/provisional/2026/provisional-pack.md`.
-- The matching `field-map.yaml` for annual, provisional request, or provisional change. For `provisional_2026_review`, read `workspace/provisional/2026/review-questions.md`; no field map is expected unless the review has routed to a change workpack.
+- The matching `field-map.yaml` is required for annual, provisional request,
+  and provisional change. It is not expected for `provisional_2026_review` or
+  `provisional_2026_stopzetten`, so its absence is not a blocker for either
+  workflow.
+- For `provisional_2026_review`, read
+  `workspace/provisional/2026/review-questions.md`. If that review has already
+  routed to a generated change workpack, use the change workpack and its field
+  map instead.
 - The relevant submit-step reference (`reference/annual-submit-steps.md`, `reference/provisional-submit-steps.md`, or `reference/stopzetten-submit-steps.md`).
 - `templates/manual-submission-checklist.md`.
 - `workspace/shared/missing-info.md` and `workspace/shared/assumptions.md`, if present.
@@ -37,16 +47,26 @@ Do not depend on shell visibility or vendor-specific environment variables.
 
 Write `workspace/shared/manual-submission-checklist.md` in this order:
 
-1. **Blockers (first).** Everything that must be resolved before the user opens Mijn Belastingdienst: unresolved `MISSING - enter manually` field-map rows, deferred items in `missing-info.md`, unconfirmed assumptions, every `manual_review_required` field, review questions marked open or change-needed, and — for a voorlopige aanslag **change** — the "prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item" reminder. If there are no blockers, say so explicitly.
-2. **Pre-flight.** What to have ready: the evidence documents and the workpack open alongside the portal.
-3. **Step-by-step entry.** The ordered screens/fields from the submit-step reference, each cross-referenced to its field-map row, with the value to type and its source code.
-4. **Final review and submit.** The human checks to run before the user themselves presses submit.
+1. **Blockers (first).** Everything that must be resolved before the user opens Mijn Belastingdienst: unresolved `MISSING - enter manually` rows and every `manual_review_required` row from an applicable field map; deferred items in `missing-info.md`; unconfirmed assumptions; review questions marked open or change-needed; and — for a voorlopige aanslag **change** — the "prepare and verify the complete dataset; the change form requires all applicable categories, not only the changed item" reminder. If there are no blockers, say so explicitly. Never report a missing field map as a blocker for review or stopzetten.
+2. **Pre-flight.** What to have ready: the evidence documents and the workpack open alongside the portal, plus the field map when that workflow produces one.
+3. **Step-by-step entry or review.** Use the ordered human steps from the
+   relevant submit-step reference. Cross-reference values and source codes to
+   field-map rows only for annual, provisional request, or provisional change.
+   For review, use the review-question rows and route any change-needed item to
+   the change flow; for stopzetten, use the stopzetten reference without
+   inventing field-map rows.
+4. **Final human review.** The checks the taxpayer performs before deciding
+   whether to sign and submit personally.
 
 Keep checklist wording task-focused. Do not add generic credential warning paragraphs; respond tersely if the user offers credentials.
 
 ## Partial inputs
 
-If the workpack or field map is incomplete, do not refuse. Produce the checklist with the known steps and put every gap in the **Blockers** section so the user resolves it before filing.
+If the workpack or an applicable field map is incomplete, do not refuse.
+Produce the checklist with the known steps and put every actual gap in the
+**Blockers** section so the user resolves it before filing. A field map remains
+required for annual, provisional request, and provisional change; it is not an
+input for provisional review or stopzetten.
 
 ## Worked example (brief)
 
@@ -54,4 +74,9 @@ User: "Give me the Manual-entry checklist for my 2025 return." → Read `return-
 
 ## Safety
 
-Do not log in, submit, sign, automate the portal, ask for credentials, or process credentials. Mention authorization only when someone else helps the taxpayer file.
+Apply the authenticated-portal boundary in `../_shared/runtime-contract.md`.
+Never open or navigate Mijn Belastingdienst with a browser, Claude in Chrome,
+computer use, screen interaction, or another tool; never log in, enter or change
+values, sign, send, or submit; and never ask for or process credentials. Write
+every portal action with an explicit human subject. Mention authorization only
+when someone else helps the taxpayer file.

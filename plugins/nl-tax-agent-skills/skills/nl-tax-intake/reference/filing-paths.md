@@ -1,10 +1,31 @@
-# Filing Paths — Decision Tree for Workflow Selection
+# Filing Paths — Conversational Intent Guide
+
+Use these distinctions to interpret what the user is trying to accomplish.
+They are not a fixed questionnaire or decision tree: credit facts the user has
+already supplied, ask only about a material ambiguity, and let the owning agent
+choose the clearest conversational order.
 
 ## Annual Return 2025
 
 - **Direction:** Backward-looking — what happened in 2025
-- **Filing period:** If an invitation letter (aangiftebrief) exists, use the deadline printed in it. With no invitation, only when the taxpayer establishes that tax is due, use the reviewed voluntary-filing guardrail: submit before **14 July 2026**. Otherwise do not invent a filing deadline; verify the position in Mijn Belastingdienst.
-- **What the user needs:** Evidence from 2025 (jaaropgave, WOZ-beschikking, bank statements as of 1 January 2025 and 1 January 2026, mortgage annual statement, health insurance policy, etc.)
+- **Filing review:** Ask whether an invitation letter (aangiftebrief) exists. If it does, record
+  `invited` and use its deadline. With no invitation, ask the taxpayer to
+  complete the 2025 return personally in Mijn Belastingdienst without
+  submitting. The assistant must not open or operate the authenticated portal.
+  Record one of:
+  `no_letter_but_mandatory` (EUR 58 or more to pay, or the separate
+  income-dependent-scheme/assets test), `refund_claim_only` (EUR 19 or more
+  back, with no mandatory test), or `filing_obligation_unresolved`. The first
+  no-letter route carries the **14 July 2026** guardrail. These are review labels
+  based on the official result, not an automated eligibility decision.
+- **Asset/scheme question:** Filing can still be mandatory when the taxpayer has
+  a right to an income-dependent scheme and relevant assets exceed EUR 37,395,
+  or EUR 74,790 with a fiscal partner. Do not infer scheme entitlement or the
+  relevant asset total.
+- **What the user needs:** Relevant 2025 evidence (jaaropgaven, WOZ-beschikking,
+  bank statements for applicable Box 3 dates, mortgage annual statement, and
+  deduction evidence). Values may be supplied in chat when the user chooses not
+  to upload a document.
 - **Trigger phrases:** "aangifte doen", "belastingaangifte 2025", "file my taxes", "income tax return"
 
 ## Voorlopige Aanslag 2026 — Request
@@ -46,4 +67,9 @@ Ask: "Do you want to look back at what happened in 2025, or plan ahead for 2026?
 
 - If looking back at 2025 → Annual return 2025
 - If planning ahead for 2026 → Voorlopige aanslag 2026 (then determine subflow: request, change, review, or stopzetten)
-- If both → Start with the annual return 2025 (it provides actuals that can inform a provisional request afterward)
+- If both → Record the chosen 2026 subflow, start with the annual return
+  2025, and queue provisional 2026. After the completed annual workpack and
+  field map validate, continue into the queued subflow without asking for a new
+  activation phrase. Annual actuals may inform a later estimate only after the
+  taxpayer reviews or states that provisional estimate; do not copy them
+  automatically.

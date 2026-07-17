@@ -1,0 +1,152 @@
+metadata_version: '1.1'
+sources:
+  bd_aangifte_ondernemers_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
+    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    source_id: bd_aangifte_ondernemers_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
+  bd_administratie_bewaren_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_administratie_bewaren_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/administratie_bewaren
+  bd_beperkt_aftrekbare_kosten_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_beperkt_aftrekbare_kosten_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
+  bd_eia_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-06T12:00:00+00:00'
+    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    source_id: bd_eia_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/investeringsaftrek-2025/energie-investeringsaftrek-2025
+  bd_eia_mia_vamil_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    source_id: bd_eia_mia_vamil_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/milieu_investeringsaftrek_mia_willekeurige_afschrijving_milieu_investeringen_vamil
+  bd_kia_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    source_id: bd_kia_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/kleinschaligheidsinvesteringsaftrek_kia
+  bd_meewerkaftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_meewerkaftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/meewerkaftrek-2025
+  bd_mkb_winstvrijstelling_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: 5ccba15f44e764749b479a1b0edb74c1b56c918b523e057426b064e26bbf1192
+    source_id: bd_mkb_winstvrijstelling_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/mkb-winstvrijstelling-2025
+  bd_ondernemer_cijfers_aangifte_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
+    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    source_id: bd_ondernemer_cijfers_aangifte_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
+  bd_ondernemer_criteria_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    source_id: bd_ondernemer_criteria_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
+  bd_ondernemer_voorbereiden_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
+    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    source_id: bd_ondernemer_voorbereiden_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/voorbereid-op-uw-belastingaangifte-voor-ondernemers
+  bd_ondernemersaftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_ondernemersaftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/
+  bd_ondernemerscheck_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    source_id: bd_ondernemerscheck_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/checken-of-ik-ondernemer-ben-voor-de-inkomstenbelasting
+  bd_oudedagsreserve_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_oudedagsreserve_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve
+  bd_privevervoermiddel_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_privevervoermiddel_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/zakelijk-gebruik-privevervoermiddel-2025
+  bd_so_aftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_so_aftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/aftrek-voor-speur-en-ontwikkelingswerk-2025
+  bd_stakingsaftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_stakingsaftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/stakingsaftrek-2025
+  bd_startersaftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-06T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_startersaftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek
+  bd_startersaftrek_ao_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_startersaftrek_ao_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek_bij_arbeidsongeschiktheid
+  bd_urencriterium_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    source_id: bd_urencriterium_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+  bd_werkruimte_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_werkruimte_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/werkruimte_in_de_woning
+  bd_zakelijke_kosten_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_zakelijke_kosten_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/zakelijke_kosten
+  bd_zakelijke_kosten_een_jaar_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_zakelijke_kosten_een_jaar_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_in_1_jaar_mag_aftrekken
+  bd_zakelijke_kosten_meerdere_jaren_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    source_id: bd_zakelijke_kosten_meerdere_jaren_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_gespreid_over_een_aantal_jaren_moet_aftrekken
+  bd_zelfstandigenaftrek_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
+    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    source_id: bd_zelfstandigenaftrek_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/zelfstandigenaftrek-2025

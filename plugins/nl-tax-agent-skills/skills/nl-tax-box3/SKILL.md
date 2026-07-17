@@ -1,12 +1,11 @@
 ---
 name: nl-tax-box3
-description: Background helper that returns Box 3 facts and questions; annual 2025 compares fictitious and actual return, while provisional 2026 uses the fictitious method only.
+description: Use when an owning Dutch tax workflow needs Box 3 facts and questions; annual 2025 compares fictitious and actual return, while provisional 2026 uses the fictitious method only.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
   - Bash(python3:*)
 ---
 
@@ -23,8 +22,16 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 ## Hard rules
 
 - Annual 2025: collect and compare fictitious return and werkelijk rendement when the user wants the actual-return comparison.
+- Ask only branch-applicable annual inputs. A savings-only case needs the
+  1 January balance for the fictitious method and actual 2025 interest for an
+  actual-return comparison; it does not need a 31 December bank balance merely
+  because the comparison was offered.
 - Provisional 2026: use only the fictitious method.
 - Never request werkelijk-rendement inputs in a provisional workflow.
+- In provisional 2026, accept a debt into `schulden` only after the official
+  inclusion/exclusion screen. Do not use "all debts except the own-home
+  mortgage" as a shortcut; unresolved debts remain manual-review rows outside
+  accepted totals.
 - Compute only from values with a real source or an explicitly confirmed assumption.
 - The agent classifies each row from the reviewed facts and official rules. Python
   never infers a category from a description, name, or keyword.
@@ -100,3 +107,8 @@ persist any final artifact, including shared notes, question packets, session
 state, workpacks, or field maps. The annual/provisional workflow owns all
 workspace persistence and may read historical helper notes for resume
 compatibility only.
+
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

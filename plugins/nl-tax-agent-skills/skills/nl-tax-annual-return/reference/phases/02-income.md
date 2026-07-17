@@ -7,7 +7,14 @@ Compile all box 1 income from evidence and user-provided data.
 ### 2.1 Employment income (loon uit dienstbetrekking)
 
 - Match jaaropgaaf evidence items from the evidence index
-- For each employer: extract gross salary, loonheffing withheld, and employer name
+- For each employer, copy the amount labelled **loon** or **fiscaal loon** on the
+  jaaropgaaf exactly, plus the loonheffing withheld and employer name. Do not
+  reconstruct taxable wage from a payslip-style gross amount and do not
+  subtract employee-insurance premiums or other year-statement lines.
+- The arbeidskorting shown on a jaaropgaaf is the credit already taken into
+  account in payroll withholding. Retain it only as an informational
+  reconciliation point; it is not the taxable-loon basis and is not a separate
+  annual-return field unless the live portal presents an exact matching field.
 - Flag if multiple employers are present (may affect tax calculation)
 - Flag if any jaaropgaaf has low classification confidence or is marked for review
 - If no jaaropgaaf is available but the profile indicates employment: ask for the values in chat (subsection then becomes `chat_only`) or mark the item as missing if the user defers
@@ -19,7 +26,10 @@ Compile all box 1 income from evidence and user-provided data.
   used as payment or withholding evidence.
 - For each pension provider: extract gross pension, loonheffing withheld
 - Distinguish between employer pension (pensioenuitkering) and AOW (from SVB)
-- Note whether the taxpayer is at or above AOW age (affects tax rates and credits) — use `profile.yaml` → `person.aow_age_in_tax_year`
+- Use `profile.yaml` → `person.aow_by_tax_year.2025.status` to distinguish below
+  AOW age all year, reaching AOW age during 2025, and AOW age for the whole
+  year. Preserve `person.aow_by_tax_year.2025.transition_month`; do not select
+  a whole-year rate table from a legacy scalar.
 
 ### 2.3 Benefit income (uitkeringen)
 
@@ -43,6 +53,11 @@ Compile all box 1 income from evidence and user-provided data.
   taxation follows when acquired shares become tradable. Immediate-tradability
   cases and any election to use exercise as the tax point require the employer
   statement and manual review.
+- For RSUs, restricted shares, employee shares, and other equity compensation,
+  do not assume vesting is always the Dutch tax point. Collect the award type,
+  grant/vesting/delivery/sale events, employer equity statement, payslip, and
+  jaaropgaaf treatment. Unclear instruments, foreign payroll, or cross-border
+  service periods remain manual review and outside standard totals.
 
 ### 2.4 Other box 1 income
 
@@ -54,7 +69,8 @@ Compile all box 1 income from evidence and user-provided data.
 ### 2.5 Income summary
 
 - Total only the supported box 1 income sources. Do not feed a derived taxable-business-profit result from Phase 2A into this total.
-- Total all loonheffing withheld (this determines whether the taxpayer gets a refund or owes additional tax)
+- Total all loonheffing withheld (this contributes to the official result; do
+  not predict the refund or amount due from withholding alone)
 - Note any income items without supporting evidence
 
 ---

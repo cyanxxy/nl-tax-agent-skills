@@ -24,27 +24,50 @@ import json
 import math
 import sys
 from dataclasses import dataclass, field
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, localcontext
 from typing import Optional
 
 
 def _euro(value: float) -> int:
     """Round to whole euros, half up (Belastingdienst convention)."""
-    return int(Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    return int(Decimal(str(value)).to_integral_value(rounding=ROUND_HALF_UP))
 
 
 def _cents(value) -> float:
     """Round to cents, half up (Belastingdienst convention)."""
-    return float(Decimal(str(value)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+    decimal_value = Decimal(str(value))
+    integer_digits = max(1, decimal_value.adjusted() + 1) if decimal_value else 1
+    with localcontext() as context:
+        context.prec = max(28, integer_digits + 4)
+        rounded = decimal_value.quantize(
+            Decimal("0.01"),
+            rounding=ROUND_HALF_UP,
+        )
+    return float(rounded)
+
+
+def _finite_float(value, field_name: str, *, non_negative: bool) -> float:
+    """Normalize a direct arithmetic input or raise a stable ValueError."""
+    if isinstance(value, bool):
+        raise ValueError(f"{field_name} must be a finite number")
+    try:
+        normalized = float(value)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError(f"{field_name} must be a finite number") from exc
+    if not math.isfinite(normalized):
+        raise ValueError(f"{field_name} must be a finite number")
+    if non_negative and normalized < 0:
+        raise ValueError(f"{field_name} must not be negative")
+    return normalized
 
 
 # ---------------------------------------------------------------------------
 # Constants — reviewed 2025 and 2026 parameters
 #
-# These values duplicate the canonical knowledge pack so this script can act as a
-# deterministic calculator. The knowledge notes are canonical; this table is a
-# convenience copy. Keep them in sync with the reviewed rule notes (and bump them
-# in the same commit a note changes):
+# These values duplicate the canonical knowledge pack so this optional mechanical
+# arithmetic check can run offline. The knowledge notes are canonical; this table
+# is a convenience copy. Keep them in sync with the reviewed rule notes (and bump
+# them in the same commit a note changes):
 #   - eigenwoningforfait brackets: _shared/knowledge/own-home/eigenwoningforfait.md
 #                                  (source bd_eigenwoningforfait_2025_2026)
 #   - tariefsaanpassing / Hillen:  _shared/knowledge/years/2025/annual/own-home.md
@@ -161,6 +184,7 @@ class OwnHomeResult:
 
 def calculate_eigenwoningforfait(woz_value: float, tax_year: int) -> float:
     """Calculate the eigenwoningforfait based on WOZ-waarde and tax year."""
+    woz_value = _finite_float(woz_value, "woz_value", non_negative=True)
     table = EIGENWONINGFORFAIT_TABLE.get(tax_year)
     if table is None:
         raise ValueError(
@@ -226,6 +250,17 @@ def calculate_tariefsaanpassing(
     Returns (applies, amount, warnings).
     """
     warnings: list[str] = []
+    deductible_costs = _finite_float(
+        deductible_costs,
+        "deductible_costs",
+        non_negative=True,
+    )
+    if belastbaar_inkomen is not None:
+        belastbaar_inkomen = _finite_float(
+            belastbaar_inkomen,
+            "belastbaar_inkomen",
+            non_negative=False,
+        )
     params = TARIEFSAANPASSING.get(tax_year)
     if params is None:
         return (
@@ -236,7 +271,6 @@ def calculate_tariefsaanpassing(
             ],
         )
 
-    deductible_costs = max(deductible_costs, 0.0)
     if deductible_costs == 0:
         # No deductible eigen-woning costs, so there is nothing for the rate
         # adjustment to correct — regardless of income.
@@ -296,7 +330,21 @@ def calculate_hillenregeling(
 
     Returns (applies, correction_amount, remaining_percentage).
     """
-    remaining_decimal = HILLENREGELING_REMAINING.get(tax_year, Decimal("0"))
+    eigenwoningforfait = _finite_float(
+        eigenwoningforfait,
+        "eigenwoningforfait",
+        non_negative=True,
+    )
+    mortgage_interest = _finite_float(
+        mortgage_interest,
+        "mortgage_interest",
+        non_negative=True,
+    )
+    if tax_year not in HILLENREGELING_REMAINING:
+        raise ValueError(
+            f"No reviewed Hillenregeling percentage is available for {tax_year}."
+        )
+    remaining_decimal = HILLENREGELING_REMAINING[tax_year]
     remaining_pct = float(remaining_decimal)
 
     if eigenwoningforfait <= mortgage_interest:
@@ -306,8 +354,8 @@ def calculate_hillenregeling(
     # Excess forfait that would otherwise be added to income
     excess = eigenwoningforfait - mortgage_interest
     correction = int(
-        (Decimal(str(excess)) * remaining_decimal).quantize(
-            Decimal("1"), rounding=ROUND_HALF_UP
+        (Decimal(str(excess)) * remaining_decimal).to_integral_value(
+            rounding=ROUND_HALF_UP
         )
     )
 
@@ -379,7 +427,7 @@ def validate(payload: dict) -> dict:
             continue
         if not amount.is_finite() or not _fits_float(amount):
             errors.append(f"{key} must be a finite amount")
-        elif amount < 0:
+        elif amount < 0 and key != "taxable_income":
             errors.append(f"{key} must not be negative")
         else:
             amounts[key] = amount
@@ -457,7 +505,13 @@ def parse_args(argv: list[str]) -> dict:
         "--periodic-erfpacht-opstal-beklemming",
         required=True,
     )
-    parser.add_argument("--taxable-income")
+    parser.add_argument(
+        "--taxable-income",
+        help=(
+            "Box 1 taxable income before applying the accepted own-home balance; "
+            "used only for the separate tariefsaanpassing check"
+        ),
+    )
     args = parser.parse_args(argv)
     return {
         key: value

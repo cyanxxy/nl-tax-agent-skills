@@ -1,10 +1,10 @@
 # Rule note: Eigenwoningforfait 2025 and 2026
 
-source_ids: bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes
+source_ids: bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_woz_value_provisional_2026
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -50,7 +50,10 @@ For 2026, the aftrek wegens geen of geringe eigenwoningschuld applies to 71.867%
 ## Application notes
 
 - The 2025 annual return uses the WOZ value with valuation date 1 January 2024.
-- The 2026 provisional assessment uses a projected or known WOZ value for the 2026 estimate; if the taxpayer does not have the current WOZ beschikking, flag the WOZ value as estimated.
+- The 2026 provisional assessment uses the WOZ value for tax year 2026 with
+  valuation date 1 January 2025. If that WOZ beschikking is not yet available,
+  use the latest known value only as a labelled estimate and create a review
+  item to replace it.
 - For a moving year, calculate eigenwoningforfait for the period the taxpayer was registered at the home as their main residence.
 - For a former home that is empty and for sale, or a new bought home that is empty or under construction before occupancy, the eigenwoningforfait can be EUR 0 for that period under the official moving-home rules.
 - Those moving-home rules are fact-collection prompts in the workpack: any two-home, overlap, temporary double-home, or divorce-use case routes to manual review for the actual period and qualification outcome.

@@ -1,10 +1,10 @@
 # Rule note: Fiscal partner rules (fiscaal partnerschap)
 
-source_ids: bd_fiscal_partnership, bd_fiscal_partner_death_return, bd_fiscal_partner_separation
+source_ids: bd_fiscal_partnership, bd_joint_filing_2025, bd_fiscal_partner_death_return, bd_fiscal_partner_separation
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Contents
@@ -124,4 +124,6 @@ same explicit payload.
 
 - Do not assume all married taxpayers are full-year fiscal partners in the year of marriage; start date depends on the official same-address and marriage/registration facts.
 - Do not assume death creates mandatory full-year fiscal partnership; it creates a choice.
-- Do not select an optimal allocation automatically. Present source-backed options with impact notes and require taxpayer review.
+- Do not rank, recommend, or automatically select an allocation. Present
+  source-backed scenarios with impact notes and require an explicit taxpayer
+  choice.

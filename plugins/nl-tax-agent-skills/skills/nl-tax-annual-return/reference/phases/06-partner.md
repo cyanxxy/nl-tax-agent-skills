@@ -12,6 +12,10 @@ writes nothing; this skill owns `workspace/annual/**` and session state.
 
 - Confirm fiscal partner status on 31 December 2025 (or qualifying part-year partnership)
 - Married, registered partnership, or cohabiting with qualifying conditions
+- Ask whether the taxpayers want to file together online or submit separate
+  returns. Joint filing is permitted for qualifying fiscal partners; it is not
+  mandatory. If filing together, both partners review and sign. If filing
+  separately, each signs the own return.
 
 ### 6.2 Allocatable items
 
@@ -28,13 +32,25 @@ List items that are personal and cannot be allocated:
 - Ondernemersaftrek (personal to the ondernemer)
 - MKB-winstvrijstelling (personal to the ondernemer)
 
-### 6.4 Allocation recommendations
+### 6.4 Allocation comparison scenarios
 
 - Identify each partner's marginal rate and affected credits
 - Present allocation scenarios rather than choosing one automatically
 - Consider the 2025 tariefsaanpassing/deduction-rate cap for listed deductions (37.48% cap)
 - Consider the phase-out of heffingskortingen
-- Present at least the default and one optimized allocation for review
+- Present at least two clearly labeled comparison scenarios when material,
+  showing both partners' percentages, estimated individual and combined
+  effects, difference versus Scenario A, assumptions, uncertainty, and sources
+- Do not call a scenario default, recommended, optimized, best, or optimal;
+  never rank or automatically select one
+- Record `Taxpayer-selected allocation: [not selected / user-confirmed split]`
+  with `U:` provenance, and leave it unresolved until the taxpayer chooses
 - Include any prior-year personal-deduction remainder for eligible whole-year fiscal partners; keep every scenario traceable and require taxpayer review in the official filing environment.
+- Never select an allocation for the taxpayer or merely because the returns are filed separately.
+  Where allocation is legally available (for example whole-year fiscal
+  partners), cross-check the chosen shared entries across both returns: they
+  must remain consistent, corresponding percentages must agree, and each
+  allocatable item must total no more than 100%. Keep a part-year election or
+  separation case as manual review rather than assuming allocation is allowed.
 
 ---

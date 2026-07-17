@@ -49,7 +49,7 @@ the existing five profiles.
 
 ## Native Claude prose evaluation
 
-`../claude/cowork-*/` contains five first-party Claude cases using natural
+`../claude/cowork-*/` contains ten first-party Claude cases using natural
 prompts and LLM graders. When native evaluation is available:
 
 ```bash
@@ -119,6 +119,7 @@ state clearly whether any token figure is static, cumulative benchmark usage,
 or Claude package inventory.
 
 Python is optional in taxpayer workflows. The supported maintainer runtime is
-Python 3.10+, and the 14 helpers remain mechanical accelerators for inventory,
-field-map checks, source-pinned arithmetic, and developer consistency. Agentic
+Python 3.10+. Eight installed helpers remain mechanical accelerators for
+inventory, field-map checks, and source-pinned arithmetic; seven developer
+consistency/source-maintenance tools stay repository-only. Agentic
 evaluation must never assume a helper owns tax interpretation.

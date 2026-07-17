@@ -13,7 +13,11 @@
 
 ## Purpose
 
-This document defines the baseline and current-estimate comparison used inside provisional assessment workpacks. The comparison provides the taxpayer with a clear understanding of what changed and the likely direction of the monthly amount. It is for user understanding only -- the Belastingdienst recalculates from the complete submitted data.
+This document defines the baseline and current-estimate comparison used inside
+provisional assessment workpacks. It helps the taxpayer see what changed and
+discuss a possible direction without predicting the monthly amount. It is for
+user understanding only -- the Belastingdienst recalculates from the complete
+submitted data.
 
 ---
 
@@ -41,8 +45,12 @@ The forecast is the user's current estimates for 2026 — the forward-looking pr
 
 **Sources for the forecast:**
 - User-provided estimates for all income categories
+- The dedicated sourced, user-reviewed expected-profit forecast
+  (`onderneming.geschatte_winst`) when applicable
 - User-provided estimates for all deductions
-- User-provided box 3 assets and debts as of 1 January 2026
+- User-provided Box 3 assets and candidate debts as of 1 January 2026;
+  only debts accepted after the official inclusion/exclusion screen enter the
+  forecast total
 - Amounts derived from evidence (e.g., mortgage annual statement projecting 2026 interest)
 
 **Rules:**
@@ -52,15 +60,21 @@ The forecast is the user's current estimates for 2026 — the forward-looking pr
 
 ### Delta
 
-The delta is the difference between the baseline and the forecast. It shows what changed and the expected directional impact on the monthly payment or refund.
+The delta is the difference between the baseline and the forecast. It shows
+what changed; any cash-flow direction remains a reviewed, non-binding note.
 
 **Rules:**
 - Delta = Forecast minus Baseline
-- A positive delta in income means higher expected income → likely higher monthly payment
-- A negative delta in income means lower expected income → likely lower monthly payment or higher refund
-- A positive delta in deductions means higher expected deductions → likely lower monthly payment or higher refund
-- A negative delta in deductions means lower expected deductions → likely higher monthly payment
-- Box 3 delta follows the same directional logic as income (higher assets → higher tax)
+- Treat each sign only as a prompt for whole-workpack review. Income,
+  deductions, withholding, credits, Box 2/3, partner allocation, and earlier
+  provisional amounts can interact, so a single row never determines the
+  payment/refund direction.
+- Explain a possible direction only after reviewing the complete estimate and
+  clearly label it as non-binding.
+- Box 3 asset/debt changes require category and allocation review; do not infer
+  the final effect from a gross asset or debt delta alone.
+- The live portal and replacement beschikking, not these heuristics, determine
+  the actual future cash flow.
 
 ---
 
@@ -72,10 +86,14 @@ The delta summary must cover the following categories:
 |-------------------------|------------------------------------------------|
 | Employment income       | Loon uit dienstbetrekking                      |
 | Pension/benefit income  | Pensioen, AOW, uitkeringen                     |
-| Other income            | Freelance, rental, foreign, other              |
-| Own-home deduction      | Hypotheekrente minus eigenwoningforfait        |
+| Expected business profit | Dedicated `onderneming.geschatte_winst`; never fold into generic other income |
+| Other income            | Non-business rental, foreign, other            |
+| Eigenwoningforfait      | Own-home WOZ peildatum 1 January 2025 × reviewed 2026 percentage |
+| Total deductible own-home costs | Mortgage interest + qualifying financing costs + periodic erfpacht/opstal/beklemming |
+| Hillen deduction        | Separate reviewed component when applicable    |
+| Box 1 own-home balance (`box1_own_home_balance`) | Eigenwoningforfait - total deductible own-home costs - Hillen deduction |
 | Box 3 assets            | Total assets in categories I and II            |
-| Box 3 debts             | Total debts in category III                    |
+| Box 3 qualifying debts  | Accepted qualifying debts in category III; unresolved candidates stay outside the delta total |
 | Alimentatie             | Alimony payments                               |
 | Other deductions        | Lijfrentepremie, specific care, gifts, other   |
 | Partner changes         | Any change in partner status or partner data   |
@@ -91,10 +109,14 @@ The delta summary must present the comparison in a table format:
 |------------------------|---------------|------------------|---------------|--------------------|
 | Employment income      | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX | [reason if known]  |
 | Pension/benefit income | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
+| Expected business profit | EUR XX,XXX  | EUR XX,XXX       | +/- EUR X,XXX | dedicated forecast |
 | Other income           | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
-| Own-home deduction     | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
+| Eigenwoningforfait     | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
+| Total deductible own-home costs | EUR XX,XXX | EUR XX,XXX | +/- EUR X,XXX |                 |
+| Hillen deduction       | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX | if applicable      |
+| Box 1 own-home balance (`box1_own_home_balance`) | EUR XX,XXX | EUR XX,XXX | +/- EUR X,XXX | |
 | Box 3 assets           | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
-| Box 3 debts            | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
+| Box 3 qualifying debts | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX | accepted rows only |
 | Alimentatie            | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
 | Other deductions       | EUR XX,XXX    | EUR XX,XXX       | +/- EUR X,XXX |                    |
 ```
@@ -107,11 +129,19 @@ The delta summary must present the comparison in a table format:
 
 Below the delta table, include a plain-language summary of the expected impact:
 
-- **If net tax position increases:** "Based on these changes, your estimated tax liability for 2026 is higher than the current voorlopige aanslag. This may result in higher monthly payments."
-- **If net tax position decreases:** "Based on these changes, your estimated tax liability for 2026 is lower than the current voorlopige aanslag. This may result in lower monthly payments or a higher monthly refund."
-- **If net tax position is unchanged:** "Based on these changes, your estimated tax position for 2026 is similar to the current voorlopige aanslag. No significant change in monthly payments is expected."
+- **If the reviewed estimate points upward:** "The prepared 2026 estimate is
+  higher than the current baseline. The portal may therefore show a higher
+  future payment or lower future refund."
+- **If the reviewed estimate points downward:** "The prepared 2026 estimate is
+  lower than the current baseline. The portal may therefore show a lower
+  future payment or higher future refund."
+- **If the reviewed estimate is similar:** "The prepared 2026 estimate is
+  similar to the current baseline, but the portal can still produce a
+  different monthly amount."
 
-Always include the caveat that the Belastingdienst performs its own recalculation and the actual monthly amount may differ.
+These are review directions, not predicted cash flows. The Belastingdienst
+performs its own recalculation; only the live portal result and replacement
+beschikking determine the actual future payment/refund amount and timing.
 
 ---
 

@@ -1,10 +1,10 @@
 # Rule note: Own home for voorlopige aanslag 2026
 
-source_ids: bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_own_home_deduction_cap_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
+source_ids: bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_own_home_deduction_cap_2026, bd_woz_value_provisional_2026, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -34,7 +34,13 @@ Use the 2026 eigenwoningforfait table from `_shared/knowledge/own-home/eigenwoni
 | More than EUR 75,000 up to and including EUR 1,350,000 | 0.35% |
 | More than EUR 1,350,000 | EUR 4,725 + 2.35% of the WOZ value above EUR 1,350,000 |
 
-If the current WOZ beschikking is not available when the provisional assessment is prepared, use the best available WOZ estimate and mark it as estimated.
+Use the own home's **WOZ value with peildatum 1 January 2025** for the 2026
+provisional assessment. This is normally on the WOZ-beschikking issued by the
+municipality in early 2026. If the taxpayer buys the home during 2026 and that
+value is unavailable, collect a user-reviewed estimate based on comparable
+homes at 1 January 2025 or a recent appraisal, label it as an estimate, and
+leave complex cases for manual portal review. Do not substitute the Box 3
+peildatum of 1 January 2026 for this own-home WOZ date.
 
 ## Aftrek wegens geen of geringe eigenwoningschuld
 
@@ -62,6 +68,11 @@ Also inventory expected qualifying financing costs and periodic erfpacht/opstal/
 ## Workpack handling
 
 - Mark all own-home amounts as estimates.
+- Preserve each component needed to review `box1_own_home_balance`: WOZ value
+  (peildatum 1 January 2025), eigenwoningforfait, mortgage interest,
+  qualifying financing costs, periodic erfpacht/opstal/beklemming, the total
+  deductible own-home costs, and any Hillen deduction. Do not reduce the
+  workpack to a mortgage-interest-only amount.
 - For two homes or any other complex own-home situation, collect the relevant dates, addresses, occupancy/use, listing/rental, mortgage, and divorce facts and route the calculation to manual review.
 - Do not reuse 2025 eigenwoningforfait thresholds or Hillen percentages.
 - If projected values are missing, record missing information rather than carrying forward a previous-year value without a taxpayer-provided estimate.

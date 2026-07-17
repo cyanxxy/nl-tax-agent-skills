@@ -19,13 +19,19 @@ Belastingdienst, to the plugin authors, or to any third party.
 
 - It **does** guide intake, evidence indexing, source checks, field maps, and
   manual-submission checklists, writing working files into the local workspace.
-- It **does not** perform Mijn Belastingdienst portal access, signing, submission,
-  filing, or portal automation. Submission is manual: you type the prepared
-  figures into the official forms yourself.
+- It **does not** perform Mijn Belastingdienst portal access, signing,
+  submission, filing, or portal automation. It never uses Chrome, browser
+  control, computer use, screen interaction, or a connector to operate an
+  authenticated portal. You or an authorized human types and verifies the
+  prepared figures and decides whether to submit.
 
 ## Portal Access
 
-Portal credentials are not part of this plugin's data model.
+Portal credentials are not part of this plugin's data model. The plugin must
+not request, collect, store, or process DigiD details, passwords, verification
+codes, app approvals, cookies, or authenticated sessions. User permission does
+not change this boundary. Public read-only research on official tax sources is
+separate and remains allowed.
 
 ## Evidence Content
 

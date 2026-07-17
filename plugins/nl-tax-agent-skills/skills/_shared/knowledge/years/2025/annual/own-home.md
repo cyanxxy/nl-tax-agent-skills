@@ -1,10 +1,10 @@
 # Rule note: Own home (eigen woning) rules for 2025
 
-source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
+source_ids: bd_own_home_deduction_cap_2025, bd_woz_value_annual_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_hypotheek_oversluiten, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -54,7 +54,12 @@ Mortgage interest paid on the eigen woning loan is deductible in box 1.
 
 1. The loan must be used to purchase, improve, or maintain the eigen woning (the taxpayer's primary residence).
 2. For mortgages taken out on or after 1 January 2013: the mortgage must be annuitair (annuity-based) or lineair (linear repayment). Interest-only (aflossingsvrij) mortgages taken after this date do not qualify for interest deduction.
-3. For mortgages taken out before 1 January 2013: interest-only mortgages still qualify under transitional rules (overgangsrecht), provided the loan has not been materially changed.
+3. For mortgages taken out before 1 January 2013: interest-only mortgages can
+   retain transitional treatment. Refinancing the same outstanding amount does
+   not by itself end that treatment. If the mortgage was increased, preserve the
+   old balance separately and apply the own-home use and 30-year repayment
+   conditions to the increase. Record both balances and terms; do not reject the
+   whole loan because it was refinanced.
 4. Maximum deduction period: 30 years from the date the loan was taken out.
 
 ### What is deductible

@@ -1,6 +1,6 @@
 # Eigen Woning (Own Home) Rules — Annual Return 2025
 
-source_ids: bd_own_home_deduction_cap_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest, bd_fiscal_partnership
+source_ids: bd_own_home_deduction_cap_2025, bd_woz_value_annual_2025, bd_eigenwoningforfait_2025_2026, bd_eigenwoningforfait_multiple_homes, bd_hypotheekrenteaftrek_conditions, bd_hypotheek_oversluiten, bd_own_home_deductible_costs, bd_temporary_two_homes_interest, bd_fiscal_partnership
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -80,7 +80,12 @@ Mortgage interest paid on the eigen woning loan is deductible from box 1 income.
 
 1. **Purpose:** the loan must be used to purchase, improve, or maintain the primary residence (eigen woning)
 2. **Repayment requirement for post-2013 mortgages:** mortgages taken out on or after 1 January 2013 must follow an annuitair (annuity) or lineair (linear) repayment schedule. Interest-only (aflossingsvrij) mortgages taken after this date do NOT qualify for interest deduction.
-3. **Pre-2013 transitional rules (overgangsrecht):** mortgages taken out before 1 January 2013 retain interest deductibility even if aflossingsvrij, provided the loan has not been materially changed (e.g., increased, refinanced with new terms).
+3. **Pre-2013 transitional rules (overgangsrecht):** refinancing a qualifying
+   pre-2013 balance for the same amount does not itself remove the existing
+   interest deduction, including for an aflossingsvrije mortgage. A later
+   increase is tested separately: it must be used for the own home and repaid
+   within 30 years. Collect the old balance, new balance, use of the increase,
+   and repayment terms instead of treating every refinance as disqualifying.
 4. **Primary residence requirement:** the property must be the taxpayer's hoofdverblijf (main residence). Holiday homes, rental properties, and second homes do not qualify.
 5. **Maximum deduction period:** 30 years from the date the loan was first taken out.
 
@@ -224,7 +229,9 @@ When producing notes, flag the following if not available in the evidence index:
 | Move date not provided (if applicable) | `missing_move_date: true` | Cannot pro-rate eigenwoningforfait |
 | WOZ-waarde provided without beschikking | `unverified_woz: true` | Value should be verified against official document |
 
-Each missing item should generate a corresponding entry in `workspace/shared/review-questions.md`.
+Return a corresponding open question for each missing item to the owning
+workflow. The owner persists it in the active workflow's canonical notes and
+missing-information files; this helper does not write shared review files.
 
 ---
 

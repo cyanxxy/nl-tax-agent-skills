@@ -5,6 +5,108 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.1.12] — 2026-07-17
+
+Full tax-content, agent-experience, source-provenance, and release-readiness audit.
+The plugin remains conversational and agent-led; this work does not introduce a
+fixed interview, tax decision engine, or Python-owned workflow.
+
+### Added
+
+- A bounded specialist reviewer for Claude hosts and shared guidance for using
+  native Codex/ChatGPT Work subagents without creating competing workflow owners.
+- Official-source coverage for no-letter annual filing obligations, jaaropgaaf
+  fields, joint filing, annual and provisional WOZ dates, 2026 Box 1/AOW
+  transition rates, qualifying Box 3 debts, and one-year versus multi-year
+  business costs.
+- Focused annual, provisional, helper-reliability, agent-contract, source, and
+  cross-host packaging regression coverage.
+- Native Cowork cases for natural-language checklist activation, corrected tax
+  rules, bounded provisional entrepreneur profit, refusal of authenticated
+  portal control, and one-request annual-to-provisional sequencing.
+- Mechanically reversible human-only runtime projections for the reviewed 2026
+  request, change, and stopzetten portal-flow notes. The reviewed snapshots
+  remain byte-identical provenance authorities and each projection records its
+  full source hash and source ids.
+
+### Changed
+
+- Intake is an adaptive conversation rather than a decision tree. The saved
+  progress document is a conversation ledger, and the owning workflow decides
+  which facts and specialist reviews are relevant to the taxpayer's case.
+- Annual and provisional workflows may use one owning writer plus bounded
+  specialist reviews. User-requested scheduled tasks can support deadline
+  reminders, missing-document check-ins, source reports, and resumed draft review.
+- Python helpers are explicitly optional mechanical arithmetic and consistency
+  checks; tax classification, evidence sufficiency, workflow progression, and
+  readiness remain with the agent and taxpayer review.
+- Public entry skills now defer detailed workflow material into directly linked
+  references, reducing implicit invocation cost without adding a rules engine.
+- OpenAI bundle generation removes Claude-only frontmatter while preserving the
+  cross-host source plugin and Codex manifest.
+- Repository tests remain part of CI but now live outside the distributable
+  plugin, removing test-only text from Claude and Codex installations.
+- Developer source-maintenance tools and structural evaluation fixtures also
+  remain in the repository but no longer ship in the taxpayer runtime plugin.
+- Platform/Cowork/Codex research, future ODB notes, RegelSpraak authoring notes,
+  reviewed-note hash metadata, and the workflow-support validation gate are now
+  maintainer-only repository material rather than installed tax context.
+- Field mapping no longer loads the full intake elicitation guide. Review flags
+  use case-sensitive agent judgment instead of fixed EUR 5,000, 20%, or
+  confidence cutoffs; exact chat answers are not review blockers merely because
+  they came from chat.
+- Workpack generation and checklist activation use contextual natural-language
+  confirmation. A scoped “yes” or equivalent reply is sufficient; no exact
+  phrase, slash command, or skill name is required.
+- One natural-language request may queue annual 2025 followed by a selected
+  provisional 2026 subflow. Exactly one owner remains active, the handoff waits
+  for validated annual outputs, workflow source ledgers stay separate, and the
+  provisional generation gate remains independent.
+- Partner allocations are neutral, traceable comparison scenarios. The plugin
+  no longer ranks or recommends a split and records only an explicit taxpayer
+  choice with user-chat provenance.
+- The human-only authenticated-portal boundary is centralized and now
+  explicitly covers Chrome, browser control, computer use, screen interaction,
+  connectors, credentials, form entry, clicking, signing, sending, and
+  submission regardless of host permissions.
+
+### Fixed
+
+- **Annual 2025:** distinguished invitation, no-letter mandatory filing, refund
+  claim, and unresolved obligation; corrected thresholds, penalties, extension
+  status, jaaropgaaf use, credits, partner treatment, WOZ reference date, pension
+  evidence, refinance and depreciation questions, and Box 3 actual-return guidance.
+- **Provisional 2026:** corrected stopzetten and repayment guidance, part-year AOW
+  handling, business/own-home rollups, the 1 January 2025 WOZ reference date,
+  alleenstaandeouderenkorting, Box 3 debt screening and rounding disclosure, and
+  non-binding baseline-delta wording.
+- **Mechanical helpers:** reject malformed and non-finite inputs cleanly, handle
+  large finite amounts without Decimal crashes, validate allocation conflicts,
+  and return a failing CLI status for manual-review/no-result outcomes.
+- Evidence indexing and field mapping now preserve user-chat provenance;
+  source, workflow, snapshot, and invocation-policy validation reject
+  inconsistent release state.
+- The field-map validator scans both populated and missing rows for whole-token
+  authenticated-portal actions without false-matching benign text such as
+  “assigned category,” and rejects nested selector, XPath, DOM-locator, and
+  browser-locator metadata.
+- Provisional progressive loading and intake's informational fast path now use
+  exact human-only projection paths for portal procedures instead of exposing
+  the raw imperative snapshots as runtime alternatives.
+
+### Validation
+
+- The integrated suite contains 418 passing tests.
+- The static plugin inventory estimate fell from 363,174 to 229,407 tokens;
+  tests, developer/evaluation assets, maintainer notes, source metadata, and the
+  workflow gate account for the reduction and remain available in repository
+  CI. This is package inventory, not one-run model context.
+- The source register and workflow validators report zero errors and warnings;
+  the knowledge validator covers 99 runtime tax sources with no missing, stale,
+  metadata, reference, or workflow errors.
+
 ## [0.1.11] — 2026-07-16
 
 Host-adaptive interactive intake release.

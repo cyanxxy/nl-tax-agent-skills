@@ -1,5 +1,9 @@
 # Manual Steps -- Stopping a Voorlopige Aanslag (Stopzetten)
 
+> **HUMAN-ONLY PORTAL STEPS.** The taxpayer or an authorized human performs
+> every step below on their own device. The assistant must not open or operate
+> Mijn Belastingdienst, enter values, click controls, confirm, send, or submit.
+
 The official form is **"Uitbetaling van mijn voorlopige aanslag stopzetten"**,
 found under Inkomstenbelasting in Mijn Belastingdienst. It is only visible once
 the voorlopige aanslag (the monthly refund) has actually been issued.
@@ -13,12 +17,12 @@ settlement.
 
 ## Steps
 
-1. Go to Mijn Belastingdienst (mijn.belastingdienst.nl)
-2. Log in to Mijn Belastingdienst
-3. Under Inkomstenbelasting, open the form "Uitbetaling van mijn voorlopige aanslag stopzetten" for 2026 (visible only after the aanslag has been received)
-4. Confirm that you want to stop the monthly refund -- do this before 1 October 2026
-5. Monthly refunds will stop
-6. Final settlement happens at annual return time
+1. **Taxpayer:** Go to Mijn Belastingdienst (mijn.belastingdienst.nl).
+2. **Taxpayer:** Log in to Mijn Belastingdienst.
+3. **Taxpayer:** Under Inkomstenbelasting, open the form "Uitbetaling van mijn voorlopige aanslag stopzetten" for 2026 (visible only after the aanslag has been received).
+4. **Taxpayer:** Confirm the request to stop the monthly refund before 1 October 2026.
+5. **Taxpayer:** Save the official response and verify when monthly refunds stop.
+6. **Taxpayer:** Account for final settlement if an annual return is filed.
 
 ## Note
 

@@ -4,12 +4,15 @@ source_id: law_wet_inkomstenbelasting_2001
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
 
-The Wet inkomstenbelasting 2001 (Wet IB 2001) is the primary Dutch income tax law. All income tax calculations, deductions, and filing obligations in this project derive from this law.
+The Wet inkomstenbelasting 2001 (Wet IB 2001) is the primary Dutch income-tax
+statute. This file is orientation only: a filing position can also depend on the
+applicable regulations, decrees, transitional law, case law, and year-specific
+official guidance. Do not infer a complete eligibility rule from this summary.
 
 ## Three-box system
 
@@ -27,14 +30,19 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 ### Box 2 -- Belastbaar inkomen uit aanmerkelijk belang
 
 - Income from substantial interest in a company (dividend, capital gains)
-- Applies when a taxpayer holds 5% or more of shares in a BV or NV
+- A 5% direct or indirect interest can trigger Box 2, but the statutory tests
+  also distinguish classes of shares and cover certain options, profit-sharing
+  certificates, cooperative membership rights, family attribution, and related
+  positions. Use the reviewed Box 2 sources and keep non-standard facts for
+  manual review rather than treating this bullet as the legal test.
 - Standard full-year resident preparation is supported for active annual 2025 and provisional 2026 workflows; complex Box 2 facts stay manual review or unsupported.
 
 ### Box 3 -- Belastbaar inkomen uit sparen en beleggen
 
 - Savings and investments
-- Taxed on a fictitious return (forfaitair rendement) based on asset composition
-- Alternative: actual return method (werkelijk rendement) available from 2025
+- The filing starts from the statutory/fictitious calculation based on asset
+  composition. For 2025, the portal can also collect actual-return data and,
+  when supplied, compares both calculations and uses the more favorable amount.
 
 ## Key structural provisions
 
@@ -42,7 +50,10 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 
 - Fiscal partners may allocate certain income and deduction items between them
 - Allocation must be consistent within each box
-- Partnership can arise from marriage, registered partnership, or cohabitation contract with joint home ownership
+- Partnership can arise from marriage, registered partnership, or several
+  official cohabitation conditions. A cohabitation contract and joint home
+  ownership are separate possible conditions, not one combined exhaustive test;
+  use the dedicated fiscal-partnership note.
 
 ### Heffingsvrij vermogen (box 3)
 
@@ -52,7 +63,8 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 
 ### Eigenwoningregeling (own-home rules)
 
-- Mortgage interest on the own home is deductible in box 1
+- Interest is deductible only to the extent it relates to a qualifying
+  eigenwoningschuld and the applicable use, repayment, and time conditions are met.
 - Article 3.112 Wet IB 2001 defines the eigenwoningforfait and its WOZ-value
   table; the imputed rental value is added as income in box 1
 - Rules for qualifying own-home debt are in Chapter 3, Section 3.6
@@ -60,7 +72,8 @@ Dutch income tax is divided into three boxes, each with its own tax base and rat
 ### Persoonsgebonden aftrek (personal deductions)
 
 - Specific care costs (specifieke zorgkosten)
-- Study costs (until recently; check year-specific rules)
+- A narrow transitional prestatiebeurs exception may apply; ordinary study
+  costs are not a general 2025 deduction. Use the year-specific note.
 - Gifts (giften)
 - Maintenance payments to ex-partner (alimentatie)
 - These deductions are allocated across boxes in a specific order

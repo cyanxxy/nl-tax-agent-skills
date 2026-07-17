@@ -7,7 +7,8 @@ Usage:
 Checks:
     - All required metadata fields present
     - No workflow mismatch (annual field in provisional map)
-    - No browser/submission (portal-automation) fields (the tool is prep-only)
+    - No authenticated-portal action fields in fields or missing_fields
+    - No browser-automation metadata keys in fields or missing_fields
     - Confidence values in range 0.0-1.0
     - Source types are valid (v1.1 schema: includes user_chat, assumption, unknown)
     - Per-source-type required fields are present
@@ -48,12 +49,73 @@ VALID_WORKFLOWS = {workflow for workflow, _ in SUPPORTED_WORKFLOW_YEARS}
 # so a field map intentionally omits them; they must not count against readiness
 # as "unpopulated required fields". Used only by the readiness/coverage logic
 # below (_is_identifier_field) — not as a data ban. Sensitive-data handling is the
-# host's responsibility (see CLAUDE.md "Host execution model"), not the plugin's.
+# runtime contract's human-only portal boundary, regardless of host permissions.
 SENSITIVE_IDENTIFIER_KEYWORDS = {"bsn", "burgerservicenummer", "iban"}
-PORTAL_AUTOMATION_KEYWORDS = {
-    "browser", "session", "submit", "submission", "sign", "signature",
-    "onderteken", "verzenden", "indienen",
-}
+PORTAL_AUTOMATION_TERMS = (
+    "browser",
+    "chrome",
+    "computer use",
+    "computer control",
+    "screen interaction",
+    "screen control",
+    "session",
+    "authenticate",
+    "authenticated",
+    "authenticating",
+    "authentication",
+    "login",
+    "log in",
+    "logged in",
+    "logging in",
+    "log into",
+    "logged into",
+    "logging into",
+    "inloggen",
+    "digid",
+    "form fill",
+    "form filling",
+    "form entry",
+    "fill form",
+    "invullen",
+    "enter value",
+    "enter values",
+    "entered value",
+    "entered values",
+    "entering value",
+    "entering values",
+    "click",
+    "clicking",
+    "submit",
+    "submitted",
+    "submitting",
+    "submission",
+    "sign",
+    "signed",
+    "signing",
+    "signature",
+    "onderteken",
+    "ondertekenen",
+    "send",
+    "sending",
+    "sent",
+    "verzenden",
+    "indienen",
+)
+# These are metadata *key* tokens, not free-text action terms. Match them only
+# as complete normalized tokens/phrases so ``selection`` and ``location`` stay
+# valid while ``cssSelector``, ``DOM_locator``, and ``browser-locator`` do not.
+PORTAL_AUTOMATION_METADATA_KEY_TERMS = (
+    "css selector",
+    "dom locator",
+    "browser locator",
+    "element locator",
+    "selector",
+    "selectors",
+    "xpath",
+    "x path",
+    "locator",
+    "locators",
+)
 # Catch every common spelling of "actual return" — Dutch and English, joined and
 # space-separated — so a provisional field cannot smuggle werkelijk rendement past
 # the box-3 fictitious-only guard via a clean field_id plus a prose label.
@@ -65,6 +127,7 @@ WERKELIJK_KEYWORDS = {
 # Provisional 2026 has one dedicated business field. Every other onderneming
 # field or entrepreneur-deduction term remains rejected.
 PROVISIONAL_EXPECTED_PROFIT_FIELD = "onderneming.geschatte_winst"
+PARTNER_ALLOCATION_TOKENS = {"allocation", "verdeling", "toedeling"}
 ENTREPRENEUR_KEYWORDS = {
     "onderneming.", "zelfstandigenaftrek", "startersaftrek",
     "mkb-winstvrijstelling", "mkb_winstvrijstelling", "ondernemersaftrek",
@@ -230,17 +293,104 @@ def validate_reference_coverage(workflow, parsed_tax_year, fields, missing, erro
     return missing_field_ids
 
 
-def validate_portal_automation_fields(fid, label_lower, errors):
-    """Reject browser/login-automation or submission fields.
+def _normalized_action_text(value):
+    """Normalize separators while preserving whole-token matching."""
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
-    The tool prepares a workpack for manual entry; it never logs in, signs, or
-    submits, so a field that names a portal action is out of scope. This is a
-    product-scope guard (prep-only), not a security control.
+
+def _normalized_metadata_key(value):
+    """Normalize snake/kebab/space/camel/Pascal-case metadata keys."""
+    text = str(value or "")
+    text = re.sub(r"(?<=[A-Z])(?=[A-Z][a-z])", " ", text)
+    text = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", text)
+    return _normalized_action_text(text)
+
+
+def find_portal_automation_term(*values):
+    """Return the first whole token/phrase naming a prohibited portal action."""
+    normalized_values = [f" {_normalized_action_text(value)} " for value in values]
+    for term in PORTAL_AUTOMATION_TERMS:
+        normalized_term = _normalized_action_text(term)
+        if any(f" {normalized_term} " in value for value in normalized_values):
+            return term
+    return None
+
+
+def find_portal_automation_metadata_keys(value):
+    """Return prohibited metadata key matches recursively as ``(term, path)``.
+
+    A field-map row must contain tax values and provenance, never DOM/browser
+    targeting hints. Recursion prevents an otherwise harmless wrapper mapping
+    from hiding a selector or locator. A seen-set also makes YAML aliases safe.
     """
-    fid_lower = fid.lower()
-    for kw in PORTAL_AUTOMATION_KEYWORDS:
-        if kw in fid_lower or kw in label_lower:
-            errors.append(f"Browser/submission automation field detected: {fid}")
+    matches = []
+    seen = set()
+
+    def visit(node, path):
+        if not isinstance(node, (dict, list)):
+            return
+        node_id = id(node)
+        if node_id in seen:
+            return
+        seen.add(node_id)
+
+        if isinstance(node, dict):
+            for key, nested in node.items():
+                key_text = str(key)
+                key_path = path + (key_text,)
+                normalized_key = f" {_normalized_metadata_key(key)} "
+                for term in PORTAL_AUTOMATION_METADATA_KEY_TERMS:
+                    normalized_term = _normalized_action_text(term)
+                    if f" {normalized_term} " in normalized_key:
+                        matches.append((term, ".".join(key_path)))
+                        break
+                visit(nested, key_path)
+        else:
+            for index, nested in enumerate(node):
+                visit(nested, path + (f"[{index}]",))
+
+    visit(value, ())
+    return matches
+
+
+def is_partner_allocation_field_id(field_id):
+    """Recognize partner-allocation IDs without relying on one spelling/order.
+
+    Field IDs use a ``partner`` namespace. Within that namespace, an exact
+    allocation token may appear before or after the tax concept, for example
+    ``partner.verdeling_box3_grondslag``, ``partner.allocation_box3``, or
+    ``partner.box3_allocation``. Exact normalized tokens avoid treating words
+    such as ``reallocation`` as allocation fields.
+    """
+    tokens = _normalized_action_text(field_id).split()
+    return bool(
+        tokens
+        and tokens[0] == "partner"
+        and PARTNER_ALLOCATION_TOKENS.intersection(tokens[1:])
+    )
+
+
+def validate_portal_automation_fields(fid, texts, errors):
+    """Reject browser/computer-use/login/form-entry/submission fields.
+
+    The tool prepares a workpack for human-only manual entry. Authenticated
+    portal actions remain outside product scope even when the host exposes a
+    browser or computer-control capability.
+    """
+    term = find_portal_automation_term(*texts)
+    if term:
+        errors.append(
+            f"Authenticated-portal action field detected ({term}): {fid}"
+        )
+
+
+def validate_portal_automation_metadata(row, fid, location, errors):
+    """Reject DOM/browser targeting metadata anywhere inside a map row."""
+    for term, key_path in find_portal_automation_metadata_keys(row):
+        errors.append(
+            "Authenticated-portal automation metadata key detected "
+            f"({term}) in {location} for {fid}: {key_path}"
+        )
 
 
 def validate_source(fid, field, missing_field_ids, errors, warnings):
@@ -274,6 +424,63 @@ def validate_source(fid, field, missing_field_ids, errors, warnings):
             errors.append(f"source.type=unknown requires entry in missing_fields ({fid})")
 
 
+def validate_user_chat_index(data, fields, errors, warnings):
+    """Validate the optional chat-value cross-index and reject silent extra rows."""
+    index = data.get("user_chat_values_index")
+    if index is None:
+        index = []
+    if not isinstance(index, list):
+        errors.append("user_chat_values_index must be a list")
+        return
+
+    indexed = {}
+    for position, row in enumerate(index):
+        if not isinstance(row, dict):
+            errors.append(f"user_chat_values_index[{position}] must be a mapping")
+            continue
+        fid = row.get("field_id")
+        if not isinstance(fid, str) or not fid.strip():
+            errors.append(
+                f"user_chat_values_index[{position}] requires a non-empty string field_id"
+            )
+            continue
+        if fid in indexed:
+            errors.append(f"Duplicate user_chat_values_index field_id: {fid}")
+        indexed[fid] = row
+
+    chat_fields = {}
+    for field in fields:
+        source = field.get("source")
+        fid = field.get("field_id")
+        if (
+            isinstance(fid, str)
+            and fid.strip()
+            and isinstance(source, dict)
+            and source.get("type") == "user_chat"
+        ):
+            chat_fields[fid] = field
+
+    for fid in sorted(set(indexed) - set(chat_fields)):
+        errors.append(f"user_chat_values_index contains no matching user_chat field: {fid}")
+    for fid in sorted(set(chat_fields) - set(indexed)):
+        message = f"user_chat field missing from user_chat_values_index: {fid}"
+        if data.get("readiness") == "review_ready":
+            errors.append(message)
+        else:
+            warnings.append(message)
+    for fid in sorted(set(indexed) & set(chat_fields)):
+        row = indexed[fid]
+        field = chat_fields[fid]
+        source = field.get("source", {})
+        for key, expected in (
+            ("value", field.get("value")),
+            ("quote", source.get("quote")),
+            ("stated_at", source.get("stated_at")),
+        ):
+            if row.get(key) != expected:
+                errors.append(f"user_chat_values_index mismatch for {fid}: {key}")
+
+
 def contains_entrepreneur_keyword(scanned_texts):
     return any(
         any(kw in text for kw in ENTREPRENEUR_KEYWORDS)
@@ -300,10 +507,20 @@ def contains_business_profit_indicator(scanned_texts):
 
 
 def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
-    fid = field.get("field_id", f"field[{index}]")
-    label_lower = (field.get("label") or "").lower()
+    raw_fid = field.get("field_id")
+    if not isinstance(raw_fid, str) or not raw_fid.strip():
+        errors.append(f"fields[{index}] requires a non-empty string field_id")
+        fid = f"field[{index}]"
+    else:
+        fid = raw_fid
+    label_lower = str(field.get("label") or "").lower()
 
-    validate_portal_automation_fields(fid, label_lower, errors)
+    validate_portal_automation_fields(
+        fid,
+        (fid, label_lower, field.get("notes")),
+        errors,
+    )
+    validate_portal_automation_metadata(field, fid, "fields", errors)
 
     value = field.get("value")
     if (
@@ -329,6 +546,16 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
             errors.append(f"Confidence out of range [0,1] for {fid}: {confidence}")
 
     validate_source(fid, field, missing_field_ids, errors, warnings)
+
+    if is_partner_allocation_field_id(fid):
+        source = field.get("source", {})
+        if not isinstance(source, dict) or source.get("type") != "user_chat":
+            errors.append(
+                "Partner allocation requires an explicit taxpayer choice with "
+                f"user_chat provenance; leave it unresolved otherwise ({fid})"
+            )
+        if field.get("manual_review_required") is not True:
+            errors.append(f"Partner allocation requires manual review ({fid})")
 
     if _is_provisional(workflow):
         source = field.get("source", {})
@@ -393,17 +620,19 @@ def validate_missing_fields(missing, workflow, errors, warnings):
     for m in missing:
         if not m.get("field_id") and not m.get("label"):
             warnings.append("Missing field entry without field_id or label")
+        fid = m.get("field_id") or m.get("label") or "missing_fields entry"
+        scanned_texts = [
+            str(m.get("field_id") or "").lower(),
+            str(m.get("label") or "").lower(),
+            str(m.get("reason") or "").lower(),
+            str(m.get("notes") or "").lower(),
+        ]
+        validate_portal_automation_fields(fid, scanned_texts, errors)
+        validate_portal_automation_metadata(m, fid, "missing_fields", errors)
         if _is_provisional(workflow):
             # A missing_fields entry is an instruction to go COLLECT the data,
             # so the werkelijk-rendement ban applies here just as hard as it
             # does to populated fields.
-            fid = m.get("field_id") or m.get("label") or "missing_fields entry"
-            scanned_texts = [
-                str(m.get("field_id") or "").lower(),
-                str(m.get("label") or "").lower(),
-                str(m.get("reason") or "").lower(),
-                str(m.get("notes") or "").lower(),
-            ]
             for kw in WERKELIJK_KEYWORDS:
                 if any(kw in text for text in scanned_texts):
                     errors.append(
@@ -667,7 +896,7 @@ def validate(data):
     seen_field_ids = set()
     for field in clean_fields:
         fid = field.get("field_id")
-        if fid:
+        if isinstance(fid, str) and fid.strip():
             if fid in seen_field_ids:
                 errors.append(f"Duplicate field_id: {fid}")
             seen_field_ids.add(fid)
@@ -682,6 +911,7 @@ def validate(data):
     )
     for index, field in enumerate(clean_fields):
         validate_field(field, index, workflow, missing_field_ids, errors, warnings)
+    validate_user_chat_index(data, clean_fields, errors, warnings)
     validate_missing_fields(clean_missing, workflow, errors, warnings)
     validate_top_level_notes(data, workflow, errors)
 
@@ -692,7 +922,7 @@ def validate(data):
             if readiness.get("blockers")
             else ""
         )
-        warnings.append(
+        errors.append(
             "readiness declared review_ready but assess_readiness says NOT ready "
             f"(populated_count={readiness['populated_count']}, "
             f"required_unpopulated={len(readiness['required_unpopulated'])}"

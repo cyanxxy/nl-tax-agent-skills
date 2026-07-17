@@ -49,7 +49,11 @@
 
 ## Sources used
 
-[List all source_ids used in producing this workpack]
+[List exactly the source IDs from
+`workspace/shared/session-progress.yaml` ->
+`sources_loaded_by_workflow.provisional_2026`; do not copy the annual ledger.
+An ID used by both appears here only if consulted independently for provisional
+2026]
 
 - [source_id_1]
 - [source_id_2]
@@ -88,6 +92,18 @@ An **unsolicited** VA based on earlier data **may be issued**, but is **not guar
 | Pension                            | EUR               | [F/U/A/?] |
 | WW/WIA/other benefits             | EUR               | [F/U/A/?] |
 | **Total pension/benefit income**   | EUR               | C:sum |
+
+### AOW age review
+
+| Item | Value | Src / handling |
+|------|-------|----------------|
+| AOW status in 2026 | [below_all_year / reaches_during_year / aow_all_year] | [profile/calculated/?] |
+| AOW transition month | [1..12 / N/A] | [profile/calculated/?] |
+| Rate/credit handling | [whole-year non-AOW table / manual portal transition / whole-year AOW table] | [C:review] |
+
+For `reaches_during_year`, do not use either whole-year table or interpolate a
+credit. Record the month and use the live `Verzoek of wijziging voorlopige
+aanslag 2026` result as a manual-review item.
 
 ### Estimated other income 2026
 
@@ -138,7 +154,7 @@ If the taxpayer is **moving abroad**, record: "Residency review required; moving
 | Stopzetten cutoff | 2026-10-01 | C:bd_provisional_stopzetten_2026 |
 | Cutoff result | [before cutoff / cutoff passed] | C:date_compare |
 
-If the current date is on or after 2026-10-01, do not generate a stopzetten checklist. State that the 2026 stopzetten cutoff has passed and route the user to review/change or annual-return settlement as applicable.
+If the current date is on or after 2026-10-01, do not generate a stopzetten checklist. State that the 2026 stopzetten cutoff has passed and route the user to review/change or to a separate filing-status review and, when a return will be filed, annual settlement.
 
 ### Cash-flow direction and route
 
@@ -147,17 +163,28 @@ If the current date is on or after 2026-10-01, do not generate a stopzetten chec
 | Current monthly direction | [refund / payment / unknown] | [F/U/?] |
 | Route chosen | [stop refund / change VA / no action] | C:decision |
 | Reason | [short reason] | [F/U/C] |
+| Refund component | [deductions / IACK / algemene heffingskorting / unknown] | [F/U/?] |
+| Effective date | [2026-01-01 / selected first day of month / unknown] | [F/U/C/?] |
+| Amount already received in 2026 | EUR [amount / unknown] | [F/U/?] |
+| Separate repayment notice | [expected for paid deductions/IACK / not applicable / unresolved] | C:review |
+| 2026 annual filing status | [required / not required / unresolved / plans to file] | [F/U/?] |
 
 ### Refund-stop checklist
 
 [Include only when the taxpayer receives a monthly refund and the current-date cutoff gate is before 2026-10-01.]
 
-- [ ] Confirm the current VA pays a monthly refund
-- [ ] Confirm the current date is before 2026-10-01
-- [ ] Confirm refunds should stop for the rest of 2026
-- [ ] Record that final settlement happens through the 2026 annual return in 2027
-- [ ] Use the official Mijn Belastingdienst stopzetten form for the taxpayer's 2026 monthly refund
-- [ ] Keep the confirmation for records
+> **HUMAN-ONLY PORTAL STEPS.** The taxpayer or an authorized human performs any
+> authenticated portal action below personally. The assistant must not open or
+> operate the portal, click controls, confirm, send, or submit.
+
+- [ ] I confirmed the current VA pays a monthly refund
+- [ ] I confirmed the current date is before 2026-10-01
+- [ ] I identified whether the selected refund concerns deductions, IACK, or the algemene heffingskorting
+- [ ] For deductions/IACK: I confirmed the effect is retroactive to 1 January 2026 and prior payments may be reclaimed in a separate notice
+- [ ] For algemene heffingskorting: I confirmed the selected first day of a month and prospective payment effect from that selected/next payment month
+- [ ] I checked the 2026 annual filing obligation separately; stopzetten itself does not make filing universally required
+- [ ] I used the official Mijn Belastingdienst stopzetten form personally for my 2026 monthly refund
+- [ ] I kept the confirmation for my records
 
 ### Payment-case redirect
 
@@ -174,7 +201,8 @@ Stopping payments does not reduce the tax obligation. Route to the change subflo
 | Total employment income               | EUR               | C:above |
 | Total pension/benefit income          | EUR               | C:above |
 | Total other income                    | EUR               | C:above |
-| **Total box 1 gross income**          | EUR               | C:sum |
+| Expected profit from enterprise (`onderneming.geschatte_winst`) | EUR [estimate/from-baseline/N/A] | [F/U/B/?] |
+| **Total Box 1 income before own-home balance** | EUR             | C:sum |
 
 ## Winst uit onderneming forecast
 
@@ -190,7 +218,7 @@ include annual deduction or final-tax calculations.]
 | Arbeidskorting                        | [portal estimate / source-backed estimate / manual review] | [C/F/U/A/?] |
 | IACK                                  | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
 | Ouderenkorting                        | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
-| Alleenstaandeouderenkorting           | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
+| Alleenstaandeouderenkorting           | [manual review of entitlement to an AOW pension for a single person; never infer from single-parent status or children] | [F/U/A/?] |
 | Jonggehandicaptenkorting              | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
 
 Do not show calculated credit amounts unless exact reviewed sources are registered and all required taxpayer facts are available.
@@ -202,16 +230,25 @@ Do not show calculated credit amounts unless exact reviewed sources are register
 | Item                                  | Amount (estimate) | Src |
 |---------------------------------------|-------------------|-----|
 | Mortgage interest (hypotheekrente)    | EUR               | [F/U/A/B/?] |
+| Qualifying financing costs            | EUR               | [F/U/A/B/?] |
+| Periodic erfpacht/opstal/beklemming   | EUR               | [F/U/A/B/?] |
+| **Total deductible own-home costs**   | EUR               | C:sum |
 
 ### Estimated eigenwoningforfait 2026
 
 | Item                                  | Amount (estimate) | Src |
 |---------------------------------------|-------------------|-----|
-| WOZ-waarde                           | EUR               | [F/U/A/B/?] |
+| WOZ-waarde (peildatum 1 January 2025) | EUR               | [F/U/A/B/?] |
 | Eigenwoningforfait percentage         |                   | C:from_2026_table |
 | Eigenwoningforfait amount            | EUR               | C:woz*pct |
+| Hillen deduction, if applicable       | EUR               | [C:reviewed_formula/?] |
+| **Box 1 own-home balance** (`box1_own_home_balance`) | EUR | C:eigenwoningforfait-total_deductible_own_home_costs-hillen_deduction |
 
-| **Net own-home deduction**            | EUR               | C:sum |
+| **Estimated Box 1 income after own-home balance** | EUR | C:income_before_own_home+box1_own_home_balance |
+
+The WOZ date above is the own-home WOZ peildatum. Do not replace it with the
+Box 3 asset/debt peildatum of 1 January 2026. Preserve every component even if
+the live portal groups or labels them differently.
 
 ## Box 2 provisional estimate
 
@@ -279,8 +316,12 @@ trail and both tables even when there are no rejected rows.
 
 | Item                                  | Amount (estimate) | Src |
 |---------------------------------------|-------------------|-----|
-| Debts (excluding eigenwoningschuld)   | EUR               | [F/U/A/B/?] |
-| **Total schulden**                    | EUR               | C:sum |
+| Candidate debts screened against the official Box 3 inclusion/exclusion list | EUR | [F/U/A/B/?] |
+| **Total accepted qualifying Box 3 schulden** | EUR          | C:accepted_rows_sum |
+
+A debt is not accepted merely because it is not an own-home mortgage. Record
+its type and purpose; debts belonging in Box 1/2 and published exclusions stay
+out, and unresolved debts remain in the manual-review table above.
 
 ### Heffingsvrij vermogen
 
@@ -309,10 +350,15 @@ trail and both tables even when there are no rejected rows.
 | Belastbaar rendement: I x [bank %] + II x [other-assets %] - aftrekbare schulden x [debt %] (2026 provisional percentages from `box3-provisional.md`) | EUR | C:formula |
 | Rendementsgrondslag: I + II - aftrekbare schulden | EUR      | C:formula |
 | Grondslag sparen en beleggen          | EUR               | C:formula |
-| Aandeel in rendementsgrondslag        |                   | C:formula |
+| Aandeel in rendementsgrondslag        | [portal result / labeled workpack estimate] | C:formula; [2- or 3-decimal display convention recorded] |
 | **Box 3 income**                      | EUR (estimate/from-baseline) | C:formula |
 | Box 3 tax rate                        | [from `box3-provisional.md`] | C:from_2026_table |
 | **Box 3 tax**                         | EUR (estimate/from-baseline) | C:formula |
+
+The official 2026 publication says 3 decimals in the general instruction but
+uses 2 decimals in its worked examples. Do not claim either display convention
+is the binding portal algorithm; the live portal calculation and resulting
+beschikking are authoritative.
 
 ## Deductions estimate
 
@@ -373,21 +419,33 @@ All amounts are estimates unless explicitly tagged `B:` (baseline/from-baseline)
 
 ## Human review checklist
 
+The taxpayer or an authorized human completes this review. Any authenticated
+portal check or action is performed personally, never by the assistant.
+
 - [ ] All income estimates are reasonable and based on current knowledge
+- [ ] Expected business profit, when applicable, is included in the Box 1 rollup and change delta rather than only shown in a side section
 - [ ] Deduction estimates are based on the current situation for 2026
-- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed manually unless exact reviewed sources are registered
+- [ ] AOW status uses below_all_year / reaches_during_year / aow_all_year; a transition month uses the manual portal result
+- [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed manually unless exact reviewed sources are registered; alleenstaandeouderenkorting is based on a single-person AOW pension entitlement, not single-parent status
 - [ ] Zorgkosten threshold manual review completed if relevant
 - [ ] Lijfrente limit manual review completed if relevant
 - [ ] Box 2 estimates are labeled estimate or from-baseline, if applicable
 - [ ] Box 3 assets reflect the position as of 1 January 2026
+- [ ] Box 3 debts passed the official inclusion/exclusion screen; unresolved debts stay outside accepted totals
+- [ ] Box 3 rounding display notes the published 3-decimal/2-decimal inconsistency and defers to the portal/beschikking
 - [ ] Box 3 uses the provisional fictitious method
 - [ ] For change subflow: all data has been entered, not just the changed items
 - [ ] All `U:` user-chat values reviewed for accuracy
 - [ ] All `A:` assumptions reviewed and confirmed or corrected
 - [ ] All `?` missing information resolved or consciously accepted
 - [ ] Partner data is correct (if applicable)
-- [ ] Box 3 allocation is optimal (if fiscal partners)
+- [ ] Box 3 comparison scenarios are traceable and the taxpayer-selected split
+  is recorded with `U:` provenance, or the allocation remains unresolved (if
+  fiscal partners); no scenario was ranked or automatically selected
 
 ## Not submission advice
 
-This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting or changing a voorlopige aanslag.
+This workpack is a preparation aid. You, the taxpayer or an authorized human,
+must review the figures and perform all portal entry, signing, sending, or
+changes yourself. The assistant must not access or operate Mijn
+Belastingdienst.

@@ -1,6 +1,6 @@
 # Winst uit onderneming - Annual 2025: Preparation Notes
 
-source_ids: bd_ondernemer_criteria_2025, bd_urencriterium_2025, bd_ondernemersaftrek_2025, bd_startersaftrek_2025, bd_mkb_winstvrijstelling_2025, bd_kia_2025, bd_eia_2025, bd_zakelijke_kosten_2025, bd_aangifte_ondernemers_2025
+source_ids: bd_ondernemer_criteria_2025, bd_urencriterium_2025, bd_ondernemersaftrek_2025, bd_startersaftrek_2025, bd_mkb_winstvrijstelling_2025, bd_kia_2025, bd_eia_2025, bd_zakelijke_kosten_2025, bd_zakelijke_kosten_een_jaar_2025, bd_zakelijke_kosten_meerdere_jaren_2025, bd_aangifte_ondernemers_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -71,6 +71,12 @@ do not manufacture missing categories or zeros.
 
 - Record the treatment selected in the finalized accounts for
   beperkt-aftrekbare costs and ask a review question if it is unclear.
+- For purchases and prepaid costs, do not infer one-year deduction or
+  depreciation from price alone. Ask the two separate facts: cost basis
+  (including the correct VAT treatment) and whether the item/cost benefits only
+  2025 or more than one year. A purchase of at least EUR 450 used longer than
+  one year and costs benefiting multiple years need the multi-year treatment
+  review described in `winst-en-kosten.md`.
 - Werkruimte in a private-asset home, the private-use-of-a-business-car
   bijtelling, and the private-vehicle kilometre deduction are prepared from the
   knowledge notes; flag anything ambiguous for manual review.
@@ -84,6 +90,9 @@ do not manufacture missing categories or zeros.
 - Ask for the finalized profit-and-loss statement, finalized balance, invoices, bank jaaroverzicht,
   investment invoices, and urenadministratie as gaps when missing (see
   `entrepreneur-aangifte.md`). Never assume zeros and never collect the BSN.
+- For a material depreciation line, also ask for the asset invoice, in-use date,
+  expected useful life, residual value, and opening book value/schedule. Preserve
+  unresolved accounting treatment as a review question.
 
 ## Complex or manual-review markers
 

@@ -19,12 +19,13 @@ Each question should include:
 | ID | Category | Workflow | Question |
 |----|----------|----------|----------|
 | Q001 | partner | annual_2025 | Did you have a fiscal partner for all of 2025? |
-| Q002 | box3 | annual_2025 | Do you want to compare fictitious and actual return for box 3? |
+| Q002 | box3 | annual_2025 | Do you want to supply complete actual-return data so Mijn Belastingdienst can compare both outcomes? |
 | Q003 | evidence | both | Have all uploaded documents been verified as authentic and complete? |
 
 ## Rules
 
 1. Authorization questions must always be included.
-2. Box 3 method choice questions appear only in annual workflows.
+2. Box 3 actual-return data-supply questions appear only in annual workflows;
+   do not frame them as a tax-method election.
 3. Partner allocation questions appear whenever a fiscal partner is detected.
 4. Every assumption with impact "high" should generate a review question.

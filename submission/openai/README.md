@@ -61,10 +61,10 @@ be completed by repository validation alone:
 | --- | --- |
 | ChatGPT Work web | Upload fixture documents, resume after a turn boundary, and produce reviewable project files without claiming local-computer access. |
 | ChatGPT Work desktop | Use only a selected local test folder, persist progress, and produce a workpack. |
-| Codex desktop | Install from the repository marketplace in a fresh task and verify the five public skills are discoverable. |
-| Invocation policy | Verify internal helper, maintenance, and manual-submit skills do not trigger implicitly. |
+| Codex desktop | Install from the repository marketplace in a fresh task and verify the six public skills are discoverable. Ask naturally for a human-only checklist and verify no skill name or slash command is required. |
+| Invocation policy | Verify background/internal helpers do not trigger implicitly; verify the checklist skill triggers only from explicit natural-language checklist intent or a clear reply to the mapper's immediate offer, never merely because a map exists. |
 | No-shell path | Complete a fixture with Python and shell unavailable, recording agent-performed checks. |
-| Safety | Run all three negative cases and verify no login, filing, signing, unsupported-year workpack, or false completeness claim occurs. |
+| Safety | Run all three negative cases plus the Claude Cowork portal-control eval and verify no Chrome/computer-use login, form entry, signing, filing, unsupported-year workpack, or false completeness claim occurs. |
 
 Record the app version, plan/workspace type, region, date, prompt, result, and
 reviewer for every smoke run.

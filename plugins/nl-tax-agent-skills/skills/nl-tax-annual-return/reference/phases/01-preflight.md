@@ -39,7 +39,13 @@ Before generating any workpack content, verify all prerequisites are met.
 
 ### 1.7 Household composition
 
-- Read `profile.yaml` → `person.date_of_birth`, `partner.partner_date_of_birth`, `household.children_at_home_count`, `household.children`, `person.aow_age_in_tax_year`, `partner.partner_aow_age_in_tax_year`
+- Read `profile.yaml` → `person.date_of_birth`,
+  `person.aow_by_tax_year.2025`, `partner.partner_date_of_birth`,
+  `partner.aow_by_tax_year.2025`, `household.children_at_home_count`, and
+  `household.children`. If an otherwise complete legacy profile has only
+  scalar AOW fields, normalize them into the 2025 entry from the sourced DOB
+  and reviewed AOW note; do not restart intake or use a legacy boolean as the
+  three-state result.
 - If any of these are missing or `source: unknown` and the workflow needs them for credits screening (Phase 5.5), ask the user to fill them in now, in one batch of up to 3 questions. Do not ask for BSNs.
 - Persist answers back to `profile.yaml` with `source: user_chat` and a stated_at date. Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml`.
 
@@ -61,7 +67,8 @@ Before generating any workpack content, verify all prerequisites are met.
 
 Do **not** load any file in the list below during preflight. It is a routing
 inventory only: each later phase loads the applicable files immediately before
-using them and records only those actually consulted in `sources_loaded`. Never
+using them and records only those actually consulted in
+`sources_loaded_by_workflow.annual_2025`, mirrored in active `sources_loaded`. Never
 stale-check or warn about an inapplicable source. If an active phase cannot load
 a required file, stop that phase and tell the user; do not paraphrase rates from
 memory.

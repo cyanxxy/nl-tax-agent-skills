@@ -22,14 +22,28 @@ Use these canonical `evidence_type` tokens exactly as headings below. Dutch disp
 ## Income & Employment
 
 ### jaaropgaaf
-- **Description:** Annual salary statement from an employer, summarising gross salary, withheld wage tax (loonheffing), and social contributions for a calendar year.
-- **Typical fields:** werkgever (employer name), loon (gross salary), loonheffing (wage tax withheld), arbeidskorting, ingehouden bijdrage ZVW, fiscaal loon, tax year.
+- **Description:** Annual salary statement from an employer. For annual-return
+  mapping, use the amount labelled `loon` or `fiscaal loon` exactly and the
+  withheld loonheffing; do not reconstruct taxable wage from other lines.
+- **Typical fields:** werkgever (employer name), loon/fiscaal loon (copy exact
+  labelled amount), loonheffing (wage tax withheld), arbeidskorting already
+  applied in payroll (informational only), ingehouden bijdrage Zvw, tax year.
+- **Boundary:** Never subtract employee-insurance premiums or social-contribution
+  lines from fiscaal loon. Do not map the displayed arbeidskorting as taxable
+  wage or as a standalone annual-return field without an exact live-portal match.
 - **Workflow:** annual / provisional (both)
 - **Common naming patterns:** `jaaropgaaf*.pdf`, `jaaropgave*.pdf`, `loonopgave*.pdf`, `annual_salary*.pdf`
 
 ### pensioenoverzicht
-- **Description:** Pension statement showing pension accrual, contributions, and/or pension income received during the year.
-- **Typical fields:** pensioenuitvoerder (pension provider), bruto pensioen, ingehouden loonheffing, opgebouwd pensioen, AOW-franchise, tax year.
+- **Description:** Pension-related statement. Distinguish two subtypes before
+  extracting tax fields: `payment_year_statement` for pension actually paid in
+  the return year, and `upo_accrual` for a Uniform Pensioenoverzicht showing
+  accrued/projected pension.
+- **Typical fields:** a payment-year statement may support bruto belastbaar
+  pensioen and ingehouden loonheffing; a UPO may support pension-accrual/factor-A
+  context but **never** proves pension paid or withholding for the return year.
+- **Review rule:** record `document_subtype`. If it is unclear, classify the
+  item for manual review and do not extract payment/withholding fields.
 - **Workflow:** annual / provisional (both)
 - **Common naming patterns:** `pensioen*.pdf`, `pension*.pdf`, `UPO*.pdf`
 
@@ -176,10 +190,16 @@ gather the BSN.
 - **Common naming patterns:** `zorgkosten*.pdf`, `medisch*.pdf`, `zorg*.pdf`, `eigen_risico*.pdf`
 
 ### alimentatie_overeenkomst
-- **Description:** Alimony agreement or court order specifying payments to former partner and/or children.
+- **Description:** Evidence about maintenance payments to a former partner or
+  children. This may be a court order, divorce/cohabitation agreement, notarial
+  deed, or facts supporting an urgent moral obligation that can be enforced in
+  court. Unclear enforceability remains a manual-review question.
 - **Typical fields:** type alimentatie (partneralimentatie / kinderalimentatie), maandbedrag, ingangsdatum, einddatum, ontvangende partij.
 - **Workflow:** annual
 - **Common naming patterns:** `alimentatie*.pdf`, `alimony*.pdf`, `echtscheiding*.pdf`
+- **Boundary:** Kinderalimentatie is not deductible. Classification as
+  `alimentatie_overeenkomst` does not itself establish that partner maintenance
+  qualifies; retain the obligation basis and payment proof for agent review.
 
 ### lijfrente_overzicht
 - **Description:** Annuity premium overview — premiums paid for lijfrente products that may be deductible in box 1.

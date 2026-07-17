@@ -14,14 +14,18 @@ review_status: reviewed
 - Key difference: all amounts are estimates
 - Provisional assessment uses the allocation as submitted
 - Can be changed later
-- Key message: do not over-optimize provisional allocation
+- Key message: keep provisional scenario comparison proportionate
 - Focus areas for provisional 2026
 - Interaction with provisional subflows
 - Notes
 
 ## Rule
 
-When fiscal partners submit a voorlopige aanslag (provisional assessment) request for 2026, the allocation of deductions between partners follows the same structural rules as the annual return. However, because the provisional assessment is based on estimates rather than actual amounts, the allocation strategy must account for uncertainty.
+When fiscal partners submit a voorlopige aanslag (provisional assessment)
+request for 2026, the allocation of deductions between partners follows the
+same structural rules as the annual return. Because the provisional assessment
+uses estimates rather than actual amounts, comparisons must show uncertainty
+and must not rank, recommend, or select a scenario.
 
 These are reference notes for workpack preparation -- not final tax advice.
 
@@ -47,7 +51,7 @@ For the provisional assessment:
 - The allocation is therefore applied to estimated amounts, not verified actuals.
 
 This means:
-- The marginal-rate optimization is based on estimated income levels, which may change.
+- Any marginal-rate comparison is based on estimated income levels, which may change.
 - A partner currently in the 35.75% bracket may end up in the 49.50% bracket if income changes during the year, or vice versa.
 - Deduction amounts may turn out higher or lower than estimated.
 
@@ -57,7 +61,8 @@ The Belastingdienst applies the allocation exactly as submitted in the provision
 
 - If you allocate all mortgage interest to partner A, the provisional assessment for partner A reflects that full deduction and partner B reflects none.
 - The monthly payment or refund amounts for each partner are based on their individual provisional assessments.
-- There is no automatic optimization by the Belastingdienst. The allocation you submit is the allocation they use.
+- The Belastingdienst does not choose or alter the split. The taxpayer-selected
+  allocation is the allocation used for the provisional calculation.
 
 ## Can be changed later
 
@@ -66,16 +71,22 @@ The provisional allocation is not permanent:
 - **Change the voorlopige aanslag:** if circumstances change during the year (income change, new deductions, different partner situation), a new voorlopige aanslag can be requested with a different allocation. This replaces the previous provisional assessment.
 - **Annual return overrides:** the final allocation is determined in the annual return for 2026 (filed in 2027). The provisional allocation has no binding effect on the annual return. Partners can choose a completely different allocation when filing the definitive return.
 
-This means the provisional allocation is a best-estimate choice that affects monthly cash flow (payment or refund amounts) but not the final tax liability.
+This means the taxpayer-selected provisional allocation is an estimate that
+affects monthly cash flow (payment or refund amounts) but not the final tax
+liability.
 
-## Key message: do not over-optimize provisional allocation
+## Key message: keep provisional scenario comparison proportionate
 
 Because all amounts are estimates and the allocation can be changed:
 
-1. **Avoid excessive precision.** Spending time finding the mathematically optimal allocation for estimated amounts provides limited value when the actual amounts will differ.
-2. **Focus on the largest items.** Optimize allocation for the items with the biggest tax impact:
+1. **Avoid excessive precision.** Fine-grained comparisons of estimated amounts
+   provide limited value when the actual amounts will differ.
+2. **Focus on the largest items.** Compare scenarios for the items with the biggest tax impact:
    - **Mortgage interest (hypotheekrenteaftrek):** usually the largest deduction. Compare simple, traceable allocation scenarios, including the tariefsaanpassing cap and heffingskortingen or other credit effects.
-   - **Box 3 grondslag:** the combined heffingsvrij vermogen is applied before allocation. Allocate the remaining joint grondslag sparen en beleggen in a 100%-total split that gives the best overall result after all tax and credit effects.
+   - **Box 3 grondslag:** the combined heffingsvrij vermogen is applied before
+     allocation. Show a small set of 100%-total splits for the remaining joint
+     grondslag sparen en beleggen and their estimated tax and credit effects;
+     do not rank or select one.
 3. **Use simple scenarios for smaller items.** For smaller deductions (giften, zorgkosten), show a small set of traceable allocation scenarios and their estimated cap/credit effects. Require taxpayer review; do not select an allocation automatically or label one as the default.
 4. **Consider cash flow.** The provisional assessment determines monthly payment or refund amounts. An allocation that reduces one partner's monthly payment but increases the other's has no net effect on the household -- unless there is a cash flow reason to prefer one partner's account receiving the refund.
 
@@ -83,7 +94,8 @@ Because all amounts are estimates and the allocation can be changed:
 
 ### Mortgage interest allocation (biggest impact)
 
-- Determine which partner benefits more from the mortgage interest deduction.
+- Show the estimated effect of the mortgage interest deduction for each partner
+  under a small set of eligible splits.
 - Consider the tariefsaanpassing cap (projected 2026 rate -- verify in `rates-and-credits.md`).
 - If both partners are in the same bracket, allocation has minimal marginal-rate impact but may still affect heffingskortingen.
 - Compare simple 100%-total scenarios based on current estimates, keep each result traceable, and require taxpayer review. Do not select the mortgage allocation automatically.
@@ -93,12 +105,15 @@ Because all amounts are estimates and the allocation can be changed:
 - Estimate combined box 3 grondslag for 2026 peildatum (1 January 2026).
 - Apply the combined heffingsvrij vermogen first.
 - Allocate the joint grondslag sparen en beleggen, not individual assets or debts.
-- For provisional purposes, compare simple scenarios such as 50/50, 100/0, and 0/100 rather than over-optimizing exact percentages from estimates.
+- For provisional purposes, compare simple scenarios such as 50/50, 100/0, and
+  0/100 rather than presenting precise percentages from uncertain estimates.
 
 ### Other deductions
 
 - For provisional purposes, compare simple traceable scenarios for other deductions (giften, zorgkosten, alimentatie), including relevant deduction-rate cap and credit effects.
-- Present the estimated results for taxpayer review and do not choose a default or automatic allocation. Detailed optimization can wait for the annual return when actual amounts are known.
+- Present the estimated results for taxpayer review and do not choose a default
+  or automatic allocation. More detailed scenario analysis can wait for the
+  annual return when actual amounts are known.
 
 ## Interaction with provisional subflows
 

@@ -4,12 +4,16 @@ source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
 
-Since the Hoge Raad ruling (kerstarrest, 24 December 2021), taxpayers may opt for taxation based on their actual return (werkelijk rendement) if it is lower than the fictitious return (forfaitair rendement). For tax year 2025, the taxpayer may provide actual return data as part of the annual return.
+For tax year 2025, the taxpayer may provide actual-return data as part of the
+annual return. If complete actual-return data is provided, Mijn Belastingdienst
+calculates both the actual and fictitious outcomes and uses the more favorable
+amount. The taxpayer decides whether to supply the data; they do not elect to
+make a higher-tax method binding.
 
 **This option is ONLY available in the annual return (aangifte inkomstenbelasting). It is NEVER available in the voorlopige aanslag.**
 
@@ -58,7 +62,8 @@ Permitted exceptions:
 
 ## Data required for actual return calculation
 
-The workpack must collect the following data to enable the actual return comparison:
+When the taxpayer chooses to supply actual-return data, the workpack must
+collect the following data to support the portal comparison:
 
 1. **Bank accounts:** actual interest received during 2025 (from annual statements or jaaropgaven)
 2. **Dividends:** dividend amounts received per security, including dividend withholding tax
@@ -77,7 +82,9 @@ The workpack should enable comparison between the two methods:
 3. Present both figures side by side
 4. Note which method is more favorable for the taxpayer
 
-**The official return filing environment performs the final binding comparison.** The workpack provides the calculation as informational notes only and does not make a binding election.
+**The official return filing environment performs the binding comparison and
+uses the favorable amount.** The workpack provides informational preparation
+notes only and does not make a tax-method election.
 
 ## Fiscal partner allocation
 
@@ -92,7 +99,9 @@ When building the workpack for box 3 with actual return data:
 2. Present the fictitious return calculation in full (per the fictitious.md rules)
 3. Present the actual return calculation broken down by income type
 4. Include a comparison summary showing which method is lower
-5. Add a note that the final election happens in the official filing environment
+5. Add a note that the official filing environment calculates both outcomes
+   from supplied data and uses the favorable amount; there is no final
+   tax-method election
 6. Never present the actual return option in a voorlopige aanslag workpack
 7. If the taxpayer provides every required actual-return input, calculate the
    comparison using indexed-file, user-chat, or mixed provenance. Record the

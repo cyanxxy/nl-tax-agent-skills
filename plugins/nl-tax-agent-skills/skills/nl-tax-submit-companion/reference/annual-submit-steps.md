@@ -1,35 +1,58 @@
 # Manual Submission Steps -- Annual Return 2025
 
+> **HUMAN-ONLY PORTAL STEPS.** The taxpayer or an authorized human performs
+> every step below on their own device. The assistant must not open or operate
+> Mijn Belastingdienst, enter values, sign, send, or submit.
+
 ## Pre-submission checklist
 
 - [ ] All evidence verified and complete
 - [ ] Workpack reviewed and assumptions confirmed
 - [ ] Field map reviewed -- all high-confidence fields verified
 - [ ] Missing information resolved or accepted as gaps
-- [ ] Partner allocation finalized (if fiscal partner)
-- [ ] Box 3 method choice decided (fictitious vs actual return)
+- [ ] Taxpayer-selected partner allocation recorded (if fiscal partner)
+- [ ] Box 3 data-supply choice recorded: if actual-return data was supplied,
+  confirm that the portal compares both calculations and uses the favorable
+  amount; if it was declined, do not call that a tax-method election
 
 ## Submission steps
 
-1. Go to Mijn Belastingdienst (mijn.belastingdienst.nl)
-2. Log in to Mijn Belastingdienst
-3. Select "Aangifte inkomstenbelasting 2025"
-4. Review pre-filled data (VIA) -- compare with your evidence
-5. Correct or add data using the field map as guide
-6. Pay special attention to:
+1. **Taxpayer:** Go to Mijn Belastingdienst (mijn.belastingdienst.nl).
+2. **Taxpayer:** Log in to Mijn Belastingdienst.
+3. **Taxpayer:** Select "Aangifte inkomstenbelasting 2025".
+4. **Taxpayer:** Review pre-filled data (VIA) and compare it with the evidence.
+5. **Taxpayer:** Correct or add data using the field map as a guide.
+6. **Taxpayer:** Pay special attention to:
    - Box 3 values on peildatum (1 January 2025)
    - Eigen woning details (WOZ-waarde, hypotheek, rente)
    - Deductions with supporting evidence (aftrekposten)
    - Winst uit onderneming (if you have an eenmanszaak / ZZP): the zakelijk deel (balans and winst-en-verliesrekening), the urencriterium answer, and the ondernemersaftrek / MKB-winstvrijstelling / kleinschaligheidsinvesteringsaftrek figures. The income-tax return, including the winst section, is filed via Mijn Belastingdienst — not Mijn Belastingdienst Zakelijk.
-7. Review the complete return
-8. If fiscal partner: partner must also review and sign
-9. Submit the return
-10. Save the confirmation/receipt
+7. **Taxpayer:** Review the complete return.
+8. **Taxpayer:** If filing together with a fiscal partner, both partners review and sign. If
+   filing separately: each taxpayer signs their own return, and both returns
+   must use mutually consistent allocations that do not exceed 100% in total
+   wherever allocation is legally available. Treat part-year/separation
+   eligibility as manual review.
+9. **Taxpayer:** Submit the return.
+10. **Taxpayer:** Save the confirmation/receipt.
 
 ## Deadline
 
-If the taxpayer received an invitation letter (aangiftebrief), use the deadline printed in it. With **no invitation**, only when the taxpayer establishes that tax is due, apply the reviewed voluntary-filing guardrail and submit before **14 July 2026**. Otherwise do not invent a filing deadline; verify the position in Mijn Belastingdienst.
+If the taxpayer received an invitation letter (aangiftebrief), record `invited`
+and use the deadline printed in it. With **no invitation**, use **14 July 2026**
+only for `no_letter_but_mandatory`: the completed return shows EUR 58 or more to
+pay, or the income-dependent-scheme/assets test applies (EUR 37,395; EUR 74,790
+with a fiscal partner). Record `refund_claim_only` for EUR 19 or more back when
+no mandatory test applies. If the calculation or scheme/assets facts are open,
+record `filing_obligation_unresolved`; do not invent a deadline.
 
 ## Extension
 
-Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable; keep the separate conditional 14 July filing guardrail when tax due is established. For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, making the standard extended date **1 September 2026**. If the invitation letter shows **another date**, request by that letter date using the **official form** route. Use the granted uitsteldatum shown in the decision.
+Extension requires an invitation letter. With no invitation, extension is unavailable.
+As of **16 July 2026**, the ordinary online window that ended on **1 May 2026**
+is closed; historically the request had to be made **before 1 May 2026**. Do
+not offer it as a current action. If already granted, verify the
+confirmation (standard granted date: **1 September 2026**, 4 months extra). If
+the invitation shows another date—a still-future deadline—the taxpayer may request
+extension by that printed date using the official form. If it has passed,
+the taxpayer should submit promptly instead of presenting extension as available.

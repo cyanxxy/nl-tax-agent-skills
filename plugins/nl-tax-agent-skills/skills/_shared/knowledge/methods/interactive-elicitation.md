@@ -11,6 +11,11 @@ review_status: reviewed
 
 All taxpayer-facing NL tax skills are **conversational**. The user does not pre-stage a folder of evidence and then run a skill once. They chat with the model, and the skill drives a turn-by-turn dialogue, asking only what is needed at each step and persisting state between turns.
 
+The persisted profile and progress files are a conversation ledger, not a
+state machine. They help the agent remember sourced facts, gaps, and review
+status. They do not prescribe a fixed interview order, choose a tax treatment,
+or replace the agent's judgment about the clearest next question.
+
 This contract applies to:
 - `nl-tax-intake`
 - `nl-tax-evidence-indexer`
@@ -21,6 +26,7 @@ This contract applies to:
 - `nl-tax-box2`
 - `nl-tax-box3`
 - `nl-tax-field-mapper`
+- `nl-tax-submit-companion`
 
 ## Core principles
 
@@ -29,7 +35,10 @@ This contract applies to:
 3. **Resume, don't restart.** Before asking, read `workspace/shared/session-progress.yaml`. If a question has already been answered, do not re-ask it.
 4. **Two paths for every input.** For every fact you need, accept either (a) a file uploaded to `uploads/` or `evidence/`, or (b) a value the user states directly in chat. Both are valid sources.
 5. **Persist after every turn.** After each user reply, update the relevant workspace files (profile, evidence-index, session-progress) before continuing the conversation. The conversation must be resumable from disk alone.
-6. **Confirm before producing the workpack.** Do not generate `return-pack.md` or `provisional-pack.md` until the user has given the workflow's explicit confirmation and all blocking questions are resolved.
+6. **Confirm before producing the workpack.** Do not generate `return-pack.md`
+   or `provisional-pack.md` until final review, when the user has clearly
+   authorized generation in natural language and all blocking questions are
+   resolved. Never require a magic phrase.
 7. **Surface gaps, don't hide them.** Items the user could not answer become entries in `workspace/shared/missing-info.md`, not silent zeros.
 8. **Prefer return-capable controls.** For finite choices, use a native
    multiple-choice control or compact form when the active host can return its
@@ -47,7 +56,7 @@ Every recorded value carries a `source` field with one of:
 - `assumption` - a default the user explicitly accepted because the value was not fully determined. Must also be added to `workspace/shared/assumptions.md` with an `assumption_id`.
 - `unknown` - the value is required but not yet provided. Must also appear in `workspace/shared/missing-info.md`.
 
-A value with `source: assumption` or `source: unknown` MUST NOT be presented to the user in a workpack as if it were confirmed. A deterministic result from sourced inputs and a reviewed rule uses `source: calculated` plus `calculated_from`; it is not an assumption and needs no separate confirmation.
+A value with `source: assumption` or `source: unknown` MUST NOT be presented to the user in a workpack as if it were confirmed. A rule-derived value from sourced inputs and a reviewed rule uses `source: calculated` plus `calculated_from`; it is not an assumption and needs no separate confirmation.
 
 ## Workspace root
 
@@ -70,7 +79,10 @@ resumed session, or taxpayer state silently forks into a second tree.
 
 Path: `workspace/shared/session-progress.yaml`
 
-Purpose: a small, append-friendly state file that any skill can read at the start of a turn to know where the conversation is.
+Purpose: a small, append-friendly conversation ledger that any skill can read
+at the start of a turn to see what the user has established and what remains
+open. It supports resumption and completeness review; it does not select or
+sequence questions by itself.
 
 Schema (v1.4 - see `_shared/templates/session-progress.yaml` for the canonical template):
 
@@ -116,11 +128,14 @@ Rules:
   that file and returns control to intake when it is absent.
 - Update `updated_at`, `last_question_asked`, and the relevant section on every turn that asks a question or records an answer.
 - A `question_id` is a short stable string (e.g., `intake.residency`, `annual.box1.employer_count`, `box3.peildatum.bank_balance`). Reuse the same id when re-asking a deferred question.
-- Write `session-progress.yaml` in one operation with the file-write tool — the no-code default on hosts like Cowork. If you have shell access to the workspace folder and want extra safety against an interrupted write, you may instead write a temp file in the same dir and rename it over the target. The state file is re-derivable from `profile.yaml` and the answered lists, so a rare truncated write is recoverable. Assume a single active session per workspace; do not run two skills concurrently against one `workspace_root`.
+- Write `session-progress.yaml` in one operation with the file-write tool — the no-code default on hosts like Cowork. If you have shell access to the workspace folder and want extra safety against an interrupted write, you may instead write a temp file in the same dir and rename it over the target. The state file is re-derivable from `profile.yaml` and the answered lists, so a rare truncated write is recoverable. Assume one active owning workflow and one canonical-state writer per `workspace_root`; optional specialist reviewers return findings to that owner rather than independently updating session state.
 
 ## Question-asking pattern
 
-When a skill discovers it needs a value, it follows this loop:
+When a skill discovers it needs a value, use this judgment-led pattern. The
+numbered items are provenance and continuity checks, not a prescribed interview
+sequence; skip or reorder them when the conversation has already supplied the
+needed fact:
 
 1. **Check progress.** Read `workspace/shared/session-progress.yaml` and the relevant workspace file. Has this `question_id` already been answered? If yes, use the stored value.
 2. **Check evidence.** Is this value already derivable from a file in `evidence-index.yaml`? If yes, use it and record `source: file`.
@@ -153,8 +168,21 @@ Before writing `return-pack.md` or `provisional-pack.md`:
 
 1. Every applicable subsection of the active workflow in `session-progress.yaml` is either `complete`, `chat_only`, or `deferred`. The top-level workflow status reflects the rollup: `complete` only when every subsection is `complete` or `chat_only`; otherwise it is `in_progress`. Use `deferred` only at subsection/question level, never as the final active-workflow rollup.
 2. Every deferred item is reflected in `missing-info.md` or recorded as a confirmed assumption in `assumptions.md`.
-3. The user has typed one of the workflow skill's verbatim confirmation phrases (e.g. `generate the workpack`, `genereer de workpack`, `klaar voor workpack`) or run the skill's `confirm` command. A general affirmative ("looks good", "yes", "ok") is **not** confirmation — ask explicitly for the phrase. Do not infer consent. This confirmation gate is an instruction the model follows, not a hard lock; it is a UX guardrail against accidental generation, not a security control.
-4. If unresolved blocking gaps remain, do not generate the workpack. If only nonblocking deferred items remain, generate only when the active workflow's output contract permits a draft/review-ready status banner and the user has given the required explicit confirmation phrase; apply that output contract's exact status wording.
+3. At final review, summarize what will be written and ask a scoped question such
+   as "Shall I create the workpack and field map now?" Clear authorization is
+   any of: a direct generation request made after that review; an unambiguous
+   affirmative reply to the immediately preceding scoped question (for example
+   "yes", "go ahead", "looks good", or a natural Dutch equivalent); or the
+   optional skill `confirm` command. Do not require exact wording. Do not reuse
+   an opening preparation request or an unrelated affirmative answer as final
+   generation consent. If context is ambiguous, ask one short clarification.
+   Record the confirmed generation question in the workflow's `confirm`
+   subsection.
+4. If unresolved blocking gaps remain, do not generate the workpack. If only
+   nonblocking deferred items remain, generate only when the active workflow's
+   output contract permits a draft/review-ready status banner and the user has
+   given the clear contextual confirmation above; apply that output contract's
+   exact status wording.
 
 ## Readiness authority
 

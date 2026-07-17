@@ -1,24 +1,45 @@
 ## Phase 5.5 — Credits screening
 
-Use household composition from `profile.yaml` to surface which credits apply. For each of the 4 credits below, emit one line in the workpack: either "Triggered: [reason]" or "Not applicable: [reason in one phrase]".
+Entry gate: load this file only after deductions is `complete`, `chat_only`, or
+explicitly `deferred` with its open item recorded. Never preload this phase
+while a deductions question is awaiting the user's reply.
+
+Use household composition from `profile.yaml` as the start of a conversation,
+not as a credit decision. For each credit below, record `candidate`, `not
+applicable`, or `unresolved`, with the answered conditions and provenance. The
+live return calculates the result.
 
 Load `_shared/knowledge/years/2025/annual/credits.md`. Load
-`_shared/knowledge/aow/aow-leeftijd.md` only if the stored deterministic AOW
-screen must be checked or recomputed.
+`_shared/knowledge/aow/aow-leeftijd.md` only if stored AOW-age facts must be
+checked.
 
 ### 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
 
-Triggered when the taxpayer (or fiscal partner with lower arbeidsinkomen) had at least one child registered at the taxpayer's address who was **younger than 12 on 1 January 2025**, AND the taxpayer met the minimum arbeidsinkomen threshold.
+Do not mark IACK from age alone. Ask and record:
 
-- Check `profile.yaml` → `household.children` for DOBs.
-- If at least one child satisfies the age condition, mark IACK as a manual-review item; do not calculate the amount.
+- child born after 31 December 2012 (younger than 12 on 1 January 2025);
+- child in the taxpayer's household for at least 6 months, or the exact
+  co-parenting facts (at least 78 days during a 6-month period in a repeating
+  rhythm with each parent);
+- whether a failure of the 6-month test was solely because the child died;
+- taxpayer's arbeidsinkomen and whether it exceeds EUR 6,145;
+- fiscal-partner duration and both partners' arbeidsinkomen; with equal
+  arbeidsinkomen, which partner is older.
+
+Record co-parenting, the death exception, multiple partners, and unresolved
+duration/income facts for manual portal review. Do not calculate the amount.
 
 ### 5.5.2 Ouderenkorting
 
-Triggered when the taxpayer reaches AOW age in 2025.
+Candidate only when the taxpayer has reached AOW age **by 31 December 2025**.
 
-- Check `profile.yaml` → `person.aow_age_in_tax_year`.
-- If triggered, flag as manual review.
+- Check `profile.yaml` → `person.aow_by_tax_year.2025.status`. Both
+  `reaches_during_year` and `aow_all_year` satisfy the by-31-December screen;
+  `below_all_year` does not. Keep that year's transition month for portal
+  review and do not infer this from a legacy scalar alone.
+- If the condition is met, flag the amount for official-portal review. Do not
+  require AOW age for the whole year; reaching it by 31 December is the
+  ouderenkorting condition.
 
 ### 5.5.3 Alleenstaande-ouderenkorting
 
@@ -41,7 +62,23 @@ question. Combine the answer with the ouderenkorting screen before setting the
 trigger. Do not mark credits screening `complete` or `chat_only` until the
 dedicated answer is recorded or this question is explicitly deferred.
 
-### 5.5.5 Output
+### 5.5.5 Possible payout of unused algemene heffingskorting
+
+Screen this only when the taxpayer has low/no income or an apparent unused
+general credit. Ask whether:
+
+- an unused portion remains after their own income tax and premiums;
+- they were born before 1963;
+- they had the same fiscal partner for more than 6 months (an election for
+  full-year treatment does not replace actual duration), unless that partner
+  died in 2025; and
+- the partner is sufficiently liable for Dutch tax and premiums after the
+  partner's own credits.
+
+Record the result as manual portal review. Never assume the EUR 3,068 maximum
+will be paid.
+
+### 5.5.6 Output
 
 Write the screening results to `workspace/annual/2025/notes/credits.yaml`. The template's Credits screening section emits these results verbatim.
 

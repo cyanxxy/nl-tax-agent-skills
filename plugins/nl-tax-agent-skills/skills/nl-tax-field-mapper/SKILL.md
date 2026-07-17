@@ -1,6 +1,6 @@
 ---
 name: nl-tax-field-mapper
-description: Use when the user explicitly wants to map an existing annual or provisional workpack into a source-traceable manual-entry field map for Mijn Belastingdienst.
+description: Use when the user explicitly wants a supported workpack mapped to source-traceable Mijn Belastingdienst fields.
 argument-hint: "[annual|provisional] [year]"
 allowed-tools:
   - Read
@@ -14,208 +14,134 @@ allowed-tools:
 
 # NL Tax Field Mapper
 
-Convert workpack findings into a manual-entry field map that guides the taxpayer through data entry on the official Belastingdienst portal.
+Convert a reviewed workpack into a source-traceable manual-entry guide for the
+official Belastingdienst portal. This skill is the sole writer of both canonical field-map artifacts:
 
-This skill is the sole writer of both canonical field-map artifacts:
-`workspace/annual/2025/field-map.yaml` and
-`workspace/provisional/2026/field-map.yaml`. Annual and provisional workflow
-skills invoke it after confirmed workpack creation and never write either map.
+- `workspace/annual/2025/field-map.yaml`
+- `workspace/provisional/2026/field-map.yaml`
 
-This skill is conversational. It does not silently emit a field map full of zeros. When a required field has no sourced value, surface a question to the user instead of inventing data.
-Keep invocation and validation implementation invisible. Continue in the same
-tax conversation; never announce that a field-mapper skill or Python script is
-taking control.
+Annual and provisional workflows invoke it after confirmed workpack creation
+and never write either map. Continue the same tax conversation; never announce
+that an internal mapper skill or Python script is taking control.
 
 ## When to use
 
-- After an annual workpack exists at `workspace/annual/2025/return-pack.md`.
-- After a provisional workpack exists at `workspace/provisional/2026/provisional-pack.md`.
-- When the user explicitly asks to prepare a field map for manual data entry.
+Use this skill when:
+
+- `workspace/annual/2025/return-pack.md` exists and needs its annual map;
+- `workspace/provisional/2026/provisional-pack.md` exists and needs its
+  provisional map; or
+- the user explicitly asks for a manual-entry field map from an existing
+  supported workpack.
 
 An owning annual/provisional workflow invokes this mapper automatically after
-its explicitly confirmed workpack; that workpack confirmation also authorizes
-the canonical companion field map, so no second mapping request is needed.
+its explicitly confirmed workpack. That confirmation also authorizes the
+canonical companion map, so no second mapping request is needed.
 
-If the relevant workpack does not exist, tell the user it must be generated first and offer to continue with the relevant workflow skill.
+If the relevant workpack is absent, explain that it must be prepared first and
+offer to continue the matching annual or provisional workflow.
 
-## Read first
+## Required context
 
-Read `../_shared/runtime-contract.md` first. Bundled paths below are relative to
-this skill's own directory: `reference/` is a subfolder, and `_shared/` is the
-plugin-shared folder at `../_shared/`. Use the host's skill-resource or file
-tools to resolve them, and do not depend on shell visibility or vendor-specific
-environment variables. Resolve every `workspace/...` path against
-`workspace_root` recorded in `session-progress.yaml` (or `profile.yaml`); never
-create a second `workspace/` tree.
+Read [`../_shared/runtime-contract.md`](../_shared/runtime-contract.md) first.
+Resolve `workspace/...` against `workspace_root` in
+`workspace/shared/session-progress.yaml` (or `profile.yaml`); never create a
+second workspace tree. Bundled paths are relative to this skill directory and
+must be resolved with host resource/file tools, not vendor-specific environment
+variables or assumed shell visibility.
 
-1. `_shared/knowledge/methods/interactive-elicitation.md`
-2. `workspace/shared/session-progress.yaml`
-3. The workpack the user is asking about.
-4. The relevant field reference: `reference/annual-field-map.md` or `reference/provisional-field-map.md`.
-5. `reference/mapping-principles.md`.
+Before mapping, read all of
+[`reference/mapper-flow.md`](reference/mapper-flow.md). It is the operating
+procedure for source records, question packets, canonical-map updates,
+validation, rendering, and the completion report. It delegates field policy to:
 
-The field-map rules are also summarized in **Fields to omit** and
-**Safety** below.
+- [`reference/mapping-principles.md`](reference/mapping-principles.md) for
+  provenance, confidence, omissions, readiness checks, and stable validation
+  IDs;
+- [`reference/annual-field-map.md`](reference/annual-field-map.md) for the 2025
+  annual submission fields; or
+- [`reference/provisional-field-map.md`](reference/provisional-field-map.md)
+  for the 2026 provisional submission fields.
 
-## Workflow
+Then read session progress, the relevant workpack, and any existing canonical
+map in the order defined by `mapper-flow.md`.
 
-1. Read the annual or provisional workpack.
-2. Read the appropriate field reference as the canonical list of submission fields.
-3. Map each workpack finding to a submission field.
-4. Trace every value back to an `evidence_id`, user-chat `quote`, `assumption_id`, `baseline_ref`, `calculated_from`, or profile path.
-5. Score each mapping 0.0 to 1.0 per `reference/mapping-principles.md`.
-6. For any required data-entry field with no sourced value, add an open-question entry and tell the user before finalizing the field map. Omit portal-prefilled personal/identifier rows from both `fields` and `missing_fields`.
-7. Flag fields requiring manual review.
-8. List missing data-entry fields.
-9. Derive top-level `readiness` from `session-progress.yaml`: `review_ready`
-   only when the active workflow is complete with no blocking/manual-review
-   workflow blocker; otherwise `draft`.
-10. Write the field map and validate its structure and provenance.
+## Non-negotiable mapping contract
 
-## Annual vs Provisional
+- Keep annual and provisional maps separate. Annual 2025 is backward-looking
+  and evidence-based and may include actual-return input fields. Provisional
+  2026 is forward-looking and estimate-based; no werkelijk-rendement input
+  field or method choice exists.
+- Set `tax_year` explicitly: `2025` with `annual_return`, or `2026` with
+  `provisional_assessment`. Never leave it blank, `null`, or as a placeholder.
+- Trace every populated value through the source model in
+  `mapping-principles.md`. `user_chat` is first-class sourced input: preserve
+  its verbatim quote and date and cross-index it in `user_chat_values_index`.
+- Never invent a value or silently substitute zero. Represent an unsourced
+  required data-entry value as `unknown`, an open question, and a missing-info
+  item. A deferred optional question may remain outside `fields`, but it never
+  makes the map ready.
+- Omit portal credentials and portal-prefilled identity/identifier rows from
+  both `fields` and `missing_fields`. This is mapping scope, not a scanner.
+- Derive top-level `readiness` from the active rollup in
+  `session-progress.yaml`. Use `review_ready` only when that workflow is
+  complete without blocking or manual-review blockers; otherwise use `draft`.
+  Structural checks may reject false readiness but never promote a draft.
+- Preserve valid sourced entries when updating the canonical map unless the
+  current workpack or field reference makes them obsolete. The most recently validated
+  map at the canonical workflow path is authoritative; never create
+  a `field-map-v2`, copy, merged map, or alternate path.
 
-Annual and provisional field maps are never merged. Each gets its own file:
+This is an agent-led, non-deterministic conversation, not a fixed questionnaire
+or tax-decision engine. Select the next useful question from the evidence and
+workflow state. Bundled scripts are optional structural aids; they do not
+choose facts, tax positions, or readiness.
 
-- Annual: backward-looking, evidence-based, includes werkelijk rendement option fields.
-- Provisional: forward-looking, estimate-based, no werkelijk rendement field exists.
+## Produce and check the manual-entry map
 
-Do not combine, cross-reference, or merge them.
+Follow `mapper-flow.md` to map the workpack, surface gaps, write the canonical
+YAML, and present a human-readable manual-entry view. When gaps exist, also
+update:
 
-## Field Metadata
+- `workspace/shared/field-map-open-questions.yaml`
+- `workspace/shared/missing-info.md`
 
-Each field includes:
-
-| Attribute | Description |
-| --- | --- |
-| `field_id` | Unique id matching the field reference. |
-| `label` | Dutch field label as shown on the portal. |
-| `source.type` | One of `evidence`, `user_chat`, `estimate`, `baseline`, `calculated`, `assumption`, `unknown`. |
-| `source.evidence_id` | Required when `source.type` is `evidence`. |
-| `source.quote` | Required when `source.type` is `user_chat`. |
-| `source.stated_at` | Recommended when `source.type` is `user_chat`. |
-| `source.assumption_id` | Required when `source.type` is `assumption`. |
-| `source.baseline_ref` | Recommended when `source.type` is `baseline`. |
-| `source.calculated_from` | Recommended when `source.type` is `calculated`. |
-| `source.profile_path` | Path in taxpayer profile when applicable. |
-| `value` | The value to enter, or `null` if `source.type` is `unknown`. |
-| `confidence` | 0.0 to 1.0 per mapping principles. |
-| `manual_review_required` | True if the user must verify before entry. |
-| `notes` | Notes, warnings, or context. |
-
-A field with `source.type: unknown` must also be listed in `missing_fields` and in `workspace/shared/missing-info.md`. It is never silently set to zero.
-A deferred optional field may be omitted from the field map until sourced; keep
-its question and missing-info entry in workflow state. This omission never
-promotes workflow readiness: the map remains `draft` because session state is
-authoritative.
-
-`source.type: user_chat` is first-class sourced input. It requires the verbatim
-quote and date, appears in `user_chat_values_index`, and may populate a field.
-It does not become missing or deferred merely because no document was uploaded.
-
-Set `tax_year` explicitly before writing the map: `2025` for `annual_return` and
-`2026` for `provisional_assessment`. Do not leave the template value blank,
-`null`, or as a placeholder.
-
-## Question Packet
-
-When required fields have no sourced value, append to `workspace/shared/field-map-open-questions.yaml`:
-
-```yaml
-- question_id: "annual.field.box1.row01.gross_income"
-  workflow: "annual_2025"
-  field_id: "BOX1.ROW01.GROSS_INCOME"
-  prompt_for_user: "I don't have a value for {field_label}. Do you want to provide it, or shall I leave it blank for manual entry?"
-  acceptable_sources: ["file", "user_chat", "leave_blank"]
-```
-
-Tell the user about open questions before finalizing the field map. Offer two paths: provide the value now, or leave blank with a clear `MISSING - enter manually` marker on that row.
-
-## Fields to omit
-
-The tool never logs in, signs, or submits, and the portal pre-fills identity
-rows — so these never become field-map entries (this is mapping scope, not a
-security control; sensitive-data handling is the host's responsibility):
-
-- Portal credentials: username, password, SMS codes.
-- BSN, IBAN, or portal-prefilled personal identity rows such as name, address, or date of birth.
-- Bank login credentials.
-- Authentication tokens or session data.
-
-## Validation
-
-Before writing, derive `readiness` from the active workflow rollup in
-`session-progress.yaml`; this declaration is authoritative. After writing,
-validate the map. If a Python interpreter is available in
-this environment and Bash can access the resolved plugin script path, run the
-bundled validator:
+If `python3` and the resolved bundled paths are available, optionally validate
+and render with:
 
 ```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
-```
-
-The validator checks required metadata, workflow names, portal-automation (no-submission) fields, confidence range, source provenance rules, duplicate `field_id`s, non-finite values, required-reference coverage, unknown-field missing entries, the provisional werkelijk rendement exclusion, and whether a `review_ready` declaration is structurally possible. It never promotes a declared `draft`.
-
-After a successful script check, set `check_performed_by:
-checked_by_script`. If the script is unavailable, complete every stable check ID
-in the manual checklist in `reference/mapping-principles.md` and set
-`check_performed_by: checked_by_agent`. These are the only two check-trail
-values.
-
-**If `python3` is not available or the execution environment cannot see the
-plugin script path**, do not skip validation. Complete the concise
-manual checklist in `reference/mapping-principles.md`; its IDs exactly match the
-validator's `CHECK_IDS`. These checks establish structural validity, not
-workflow readiness. Preserve the readiness derived from session state; never
-promote `draft` because populated fields happen to pass mechanical checks.
-Never copy bundled scripts into `workspace/` to make them executable.
-
-## Rendering
-
-If `python3` is available and Bash can access the resolved plugin script path,
-render a human-readable preview with the bundled renderer:
-
-```bash
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
 python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
-If `python3` is not available or Bash cannot see the plugin script path, present
-the field map to the user directly from the YAML you wrote (field label, the
-value or a `MISSING - enter manually` marker, and the source) instead of running
-the script.
+Omit `--require-ready` for a declared draft. If either script is unavailable,
+use the agent validation and direct-YAML rendering fallbacks in
+`mapper-flow.md`; never skip the checks or copy a bundled script into the
+workspace.
 
-## Output Files
+## Boundaries
 
-Write:
+- Write only the canonical map and the two shared gap artifacts under the
+  resolved `workspace/` tree.
+- Do not write workpacks or modify the evidence index or taxpayer profile.
+- Keep maps preparation-only: never add browser-automation metadata such as
+  selectors, XPath, CSS selectors, or DOM/browser locators.
+- Only execute the already-resolved bundled `scripts/validate_field_map.py` and
+  `scripts/render_field_map.py`. Never execute Python from `workspace/`,
+  `uploads/`, or `evidence/`.
 
-- `workspace/annual/2025/field-map.yaml` for annual workflows.
-- `workspace/provisional/2026/field-map.yaml` for provisional workflows.
-- `workspace/shared/field-map-open-questions.yaml` when gaps exist.
-- `workspace/shared/missing-info.md` when unknown fields remain.
+## End of turn
 
-Never merge annual and provisional field maps.
+In two to four sentences, report the sourced-field count, the unknown or
+low-confidence count, and the next decision: answer open questions or finalize
+those rows as `MISSING - enter manually`. After a canonical map is successfully
+created or updated, offer to create the human-only manual-entry checklist. Do
+not invoke the checklist merely because a map exists. If the user already asked
+for it in the current request, or gives an unambiguous affirmative reply to the
+immediately preceding offer, continue into the checklist without requiring a
+slash command or a second wording formula.
 
-If a canonical `field-map.yaml` already exists from an earlier mapper run, read
-it before updating the same workflow-specific file. Preserve valid sourced
-entries unless the current workpack/reference makes them obsolete, then
-validate the result. The most recently validated `field-map.yaml` at that workflow path is the
-authoritative manual-entry artifact; do not create a competing `field-map-v2`,
-copy, or alternate path.
-
-## Write Restrictions
-
-- Do not write anywhere inside the plugin's skill directories; only write under the `workspace/` tree.
-- Do not write workpacks.
-- Do not modify the evidence index or taxpayer profile.
-
-## Safety
-
-- This skill does not log in, submit, sign, or act as the user.
-- Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/validate_field_map.py` and `scripts/render_field_map.py`), and only if Bash can access that path. If Bash cannot see the plugin path, use the manual validation/rendering fallbacks above; never copy bundled scripts into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
-
-## End-of-turn Report
-
-After each turn, tell the user in 2 to 4 sentences:
-
-1. How many fields were mapped from sourced values.
-2. How many fields are unknown or low-confidence.
-3. The next decision point: answer open questions, or finalize with `MISSING - enter manually` markers.
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

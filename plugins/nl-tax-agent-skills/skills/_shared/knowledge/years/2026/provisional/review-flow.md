@@ -4,14 +4,17 @@ source_id: bd_provisional_review_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
 
-A voorlopige aanslag should be reviewed whenever the taxpayer's financial situation changes significantly during the year. Failure to review and correct an inaccurate provisional assessment can lead to unexpected tax bills or required repayments when the annual return is filed.
+A voorlopige aanslag should be reviewed whenever the taxpayer's financial
+situation changes significantly during the year. An inaccurate estimate can
+lead to a replacement notice, repayment, or a different annual assessment when
+a return is filed.
 
-## Situations requiring review
+## Situations that warrant a conversation review
 
 The following situations mean the voorlopige aanslag should be checked and potentially changed:
 
@@ -22,7 +25,7 @@ The following situations mean the voorlopige aanslag should be checked and poten
 - Lost employment (ontslag, einde contract)
 - Retired or started receiving pension/AOW
 - Started or stopped receiving benefits (WW, WIA, bijstand)
-- Started or stopped self-employment
+- Started or stopped self-employment, or expected business profit changed
 
 ### Housing changes
 
@@ -54,9 +57,12 @@ The following situations mean the voorlopige aanslag should be checked and poten
 ## How to check
 
 1. Obtain the beschikking (decision letter) for the current voorlopige aanslag
-2. Compare the amounts listed on the beschikking with your actual current situation
-3. Check each category: income, deductions, box 3 assets/debts
-4. If any amounts are significantly different from your current reality, the voorlopige aanslag should be changed
+2. Compare the amounts listed on the beschikking with the taxpayer's reviewed
+   full-year 2026 estimates and fixed peildatum facts
+3. Check each category: income (including expected business profit), separate
+   own-home components, deductions, and Box 3 assets/qualifying debts
+4. If material differences remain, discuss the change route; the taxpayer
+   decides after reviewing the complete estimate and portal preview
 
 ## If amounts are wrong
 
@@ -65,9 +71,12 @@ The following situations mean the voorlopige aanslag should be checked and poten
 
 ## Risk of incorrect voorlopige aanslag
 
-- If you receive too much refund (teruggaaf): you may have to repay the excess when filing the annual return
-- If you pay too little: a large additional payment may be due at annual return time
-- If you pay too much: you will receive the overpayment back, but your money is tied up unnecessarily
+- If a refund estimate is too high, later correction or annual reconciliation
+  may require repayment
+- If a payment estimate is too low or high, a replacement or later assessment
+  may change what is due or refundable
+- These are risk directions only; the workpack does not predict the actual
+  cash flow or establish that annual filing is mandatory
 
 ## Developer instruction
 

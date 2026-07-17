@@ -40,7 +40,9 @@
 <br />
 
 > [!NOTE]
-> This plugin **prepares workpacks for review**. It is not tax advice. Submission to the Belastingdienst is manual.
+> This plugin **prepares workpacks for review**. It is not tax advice. You or an
+> authorized human performs every authenticated Mijn Belastingdienst action;
+> the assistant never opens or operates the portal, signs, sends, or submits.
 
 ---
 
@@ -48,7 +50,9 @@
 
 Filing Dutch income tax means a yearly slog of chasing documents, decoding **Mijn Belastingdienst** fields, and keeping track of box 3 rules that change every year — only to repeat the process months later for the voorlopige aanslag.
 
-Off-the-shelf tax software wraps the official forms in its own interface. This plugin keeps you in Mijn Belastingdienst while handling the gathering, classification, and field mapping up to the point of manual entry.
+Off-the-shelf tax software wraps the official forms in its own interface. This
+plugin leaves you in control of Mijn Belastingdienst while handling gathering,
+classification, and field mapping up to the point of human-only manual entry.
 
 There is no autonomous filing. By design, the skills read a bundled, source-cited knowledge pack instead of fetching live web pages at runtime.
 
@@ -84,7 +88,7 @@ There is no autonomous filing. By design, the skills read a bundled, source-cite
     <td align="center">✅</td>
     <td>
       <strong>4 &nbsp;You enter the numbers yourself</strong><br />
-      A final field map connects each reviewed amount to its Mijn Belastingdienst field for you to enter and verify.
+      A final field map connects each reviewed amount to its Mijn Belastingdienst field for you to enter and verify. Ask naturally for a manual-entry checklist, or accept the mapper's offer; no slash command or magic phrase is required.
     </td>
   </tr>
 </table>
@@ -97,8 +101,21 @@ Once the plugin is [installed](#-install), open Claude Cowork, ChatGPT Work,
 Codex, or another
 supported Agent Skills host, provide the documents you want it to use, and
 describe the result you need. The agent drives the workflow: it asks only the
-missing intake questions, chooses the relevant skills, and prepares artifacts
-for your review.
+missing questions that matter for the facts you supplied, chooses the relevant
+guidance as the conversation develops, and prepares artifacts for your review.
+The saved progress record supports resuming later; it is not a questionnaire or
+rules engine that dictates the conversation.
+
+Natural-language intent drives the workflow. At final review, a contextual
+“yes,” “go ahead,” or equivalent answer to the agent's scoped generation or
+checklist question is enough; exact confirmation wording is never required.
+
+On hosts with subagents, the main assistant may ask specialist reviewers to
+cross-check independent sections after the facts are collected. This remains
+agentic rather than a scripted tax flow: the main assistant is the only writer,
+question asker, workflow router, and readiness authority. Claude Cowork can use
+the packaged reviewer; ChatGPT Work and Codex can use built-in subagents. The
+workflow also works fully inline when subagents are unavailable.
 
 For finite-choice intake questions, the plugin prefers a native in-chat control
 or compact form when the active host can return selections to the conversation.
@@ -126,6 +143,12 @@ Help me request a 2026 voorlopige aanslag. Ask me for the estimates you still ne
 You can ask instead to change, review, or stopzetten an existing 2026 voorlopige
 aanslag. Annual and provisional work stay separate, and the agent explains each
 output it prepares.
+
+You can also request both in one sentence, for example: “Help me prepare my
+2025 return, then request a 2026 voorlopige aanslag.” The plugin finishes and
+validates the annual workpack first, then continues naturally with the chosen
+2026 subflow without asking you to activate it again. Each workpack still has
+its own final-generation confirmation, facts, sources, and output folder.
 
 <details>
 <summary><strong>Advanced: invoke a skill directly</strong></summary>
@@ -243,8 +266,10 @@ Use this path if the GitHub marketplace is unavailable in your host build:
 cd plugins/nl-tax-agent-skills
 zip -r ../../nl-tax-agent-skills.plugin.zip . \
   -x "*.DS_Store" -x "__MACOSX/*" -x ".git/*" -x ".claude/*" \
+  -x ".plugin-eval/" -x ".plugin-eval/*" \
   -x ".agents/*" -x ".codex/*" -x "workspace/*" -x "uploads/*" \
-  -x "evidence/*" -x "__pycache__/*" -x "*.pyc"
+  -x "evidence/*" -x "__pycache__/" -x "__pycache__/*" \
+  -x "*/__pycache__/" -x "*/__pycache__/*" -x "*.pyc"
 ```
 
 Download the Cowork ZIP from the matching GitHub release, or build it locally

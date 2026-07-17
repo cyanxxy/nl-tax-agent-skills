@@ -1,6 +1,6 @@
 # Annual Income Tax Return Field Reference (Aangifte Inkomstenbelasting 2025)
 
-source_ids: bd_annual_data_checklist_2025, bd_box3_2025_calc, bd_box3_2025_actual_return, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_fiscal_partnership, bd_ondernemersaftrek_2025, bd_startersaftrek_2025, bd_mkb_winstvrijstelling_2025, bd_kia_2025, bd_zakelijke_kosten_2025, bd_aangifte_ondernemers_2025
+source_ids: bd_annual_data_checklist_2025, bd_jaaropgaaf_fields_2025, bd_joint_filing_2025, bd_box3_2025_calc, bd_box3_2025_actual_return, bd_woz_value_annual_2025, bd_eigenwoningforfait_2025_2026, bd_hypotheekrenteaftrek_conditions, bd_fiscal_partnership, bd_ondernemersaftrek_2025, bd_startersaftrek_2025, bd_mkb_winstvrijstelling_2025, bd_kia_2025, bd_zakelijke_kosten_2025, bd_aangifte_ondernemers_2025
 workflow: annual_return
 tax_year: 2025
 status: active
@@ -8,6 +8,10 @@ last_reviewed: "2026-07-06"
 review_status: reviewed
 
 This reference defines the known fields in the Dutch annual income tax return that the field mapper may produce. Portal-prefilled personal rows are documented for portal awareness but are omitted from field-map output. Each field includes an identifier, Dutch and English labels, the section it belongs to, whether it is required or conditional, and the evidence type that typically provides the value.
+
+This map is preparation-only. The taxpayer or an authorized human performs all
+authenticated portal entry, review, signing, and submission; the assistant
+must not access or operate Mijn Belastingdienst.
 
 > **Provenance / freshness.** Labels reflect the 2025 Mijn Belastingdienst aangifte as described in the cited Belastingdienst guidance (source_ids above); section names and field placement can change between filing seasons — confirm against the live portal before relying on exact label text.
 
@@ -47,15 +51,18 @@ This reference defines the known fields in the Dutch annual income tax return th
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `box1.loon` | Loon (inkomen uit dienstbetrekking) | Employment income (gross salary) | Box 1 — Werk | required | `jaaropgaaf` |
+| `box1.loon` | Loon / fiscaal loon (inkomen uit dienstbetrekking) | Taxable employment wage copied from the year statement | Box 1 — Werk | required | `jaaropgaaf` |
 | `box1.loonheffing` | Ingehouden loonheffing | Withheld wage tax | Box 1 — Werk | required | `jaaropgaaf` |
-| `box1.arbeidskorting_loon` | Loon voor arbeidskorting | Salary for employment tax credit | Box 1 — Werk | optional | `jaaropgaaf` |
 
-> **Entry mode — confirm, don't blind-enter.** `box1.loon`, `box1.loonheffing`, and
-> `box1.arbeidskorting_loon` are normally **pre-filled** in the aangifte from the
+> **Entry mode — confirm, don't blind-enter.** `box1.loon` and
+> `box1.loonheffing` are normally **pre-filled** in the aangifte from the
 > loonaangifteketen (VIA). The taxpayer's task is to **check that the pre-filled value
 > matches the jaaropgaaf and correct it if wrong**, not to type it into a blank box.
 > Render these as the value to confirm, and note "check it matches the VIA pre-fill".
+> Copy `box1.loon` from the jaaropgaaf's `loon`/`fiscaal loon` amount exactly;
+> never derive it by subtracting employee-insurance premiums. A displayed
+> arbeidskorting is informational payroll reconciliation, not the wage basis or
+> a standalone mapper field unless the live portal supplies an exact field.
 
 ### Pension Income (Pensioeninkomen)
 
@@ -167,8 +174,12 @@ filing-ready business amounts. Complex forms and events are terminal review.
 
 ### Notes on box 3 fields
 - Peildatum for 2025 annual return is 1 January 2025.
-- The annual return supports BOTH fictitious return (forfaitair rendement) and actual return (werkelijk rendement). The field map collects data for both.
-- Werkelijk rendement fields are optional -- the taxpayer may choose the fictitious method instead.
+- The annual return supports both the forfaitair calculation and actual-return
+  data. The taxpayer chooses whether to supply the additional actual-return
+  facts; this is not a tax-method election.
+- When actual-return data is supplied, the 2025 portal performs both
+  calculations and uses the favorable amount. The field map records supplied
+  inputs and comparison evidence; it does not select a method.
 - The heffingsvrij vermogen (EUR 57,684 single / EUR 115,368 partners) applies to the fictitious method; do not deduct it from werkelijk rendement.
 - For fiscal partners, the actual return follows the same allocation percentage as the joint grondslag sparen en beleggen.
 - Green investments/savings and cash must be identifiable separately because exemptions can change the amount included in banktegoeden or overige bezittingen.
@@ -207,5 +218,15 @@ filing-ready business amounts. Complex forms and events are terminal review.
 
 ### Notes on partner fields
 - Partner BSN is handled through the portal partner-link flow. The field mapper omits it entirely — it is not a data-entry field.
-- Allocation choices (verdeling) determine how shared Box 2 income, the joint box 3 base, and deductions are split between partners. Box 2 allocation must total 100% for full-year fiscal partners. The optimal split depends on individual tax positions.
+- Allocation choices (verdeling) determine how shared Box 2 income, the joint
+  box 3 base, and deductions are split between partners. Box 2 allocation must
+  total 100% for full-year fiscal partners. The mapper records only an explicit
+  taxpayer choice with `U:` provenance; otherwise it leaves the allocation
+  unresolved. It never ranks or selects a scenario.
+- Fiscal partners may file together online or file separate returns. When they
+  file separately, each return is signed by its own taxpayer. Where allocation
+  is legally available, shared entries must remain consistent across both
+  returns and total no more than 100% for each allocatable item. Part-year or
+  separation cases require a manual eligibility check before mapping an
+  allocation.
 - Non-allocatable items (arbeidskorting, ondernemersaftrek) cannot be transferred to the partner.

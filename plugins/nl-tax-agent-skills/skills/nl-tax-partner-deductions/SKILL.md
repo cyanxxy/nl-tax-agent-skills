@@ -1,12 +1,11 @@
 ---
 name: nl-tax-partner-deductions
-description: Background helper that returns fiscal-partner, deduction, and allocation facts and review scenarios for annual 2025 or provisional 2026 preparation.
+description: Use when an owning Dutch tax workflow needs fiscal-partner, deduction, or allocation facts and review scenarios for annual 2025 or provisional 2026 preparation.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
   - Bash(python3:*)
 ---
 
@@ -41,11 +40,15 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 
 ## Behavior
 
-1. Distinguish legal partner status from allocation optimization.
+1. Distinguish legal partner status from neutral allocation-scenario comparison.
 2. Determine fiscal partner eligibility from sourced facts only.
 3. Identify allocatable and non-allocatable items.
 4. Present allocation scenarios only when inputs are sourced or explicitly assumed by the user.
 5. Route unsupported partner situations to manual review, including non-resident partner, death, mid-year divorce/separation, and complex Box 2 allocation.
+
+Never rank, recommend, label as best/optimal, or automatically select an
+allocation. Show traceable scenario effects and return the taxpayer's explicit
+choice with `U:` provenance; otherwise keep the allocation unresolved.
 
 The agent owns the tax classification. For every proposed row, use reviewed
 sources to set an explicit real boolean `allocatable`; never infer it from the
@@ -107,3 +110,8 @@ persist any final artifact, including shared notes, question packets, session
 state, workpacks, or field maps. The annual/provisional workflow owns all
 workspace persistence and may read historical helper notes for resume
 compatibility only. Do not force unsupported partner cases into v1.
+
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

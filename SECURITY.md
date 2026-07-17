@@ -7,7 +7,10 @@ This repository ships the `nl-tax-agent-skills` plugin: a skills-only package
 hashing, schema validation, simple math, and freshness checks). There is no
 backend service, web app, authentication layer, or network filing path. The
 plugin does not perform Mijn Belastingdienst portal access, signing, submission,
-or tax-return transmission. Submission is performed manually by the user.
+or tax-return transmission. It must not use Chrome, browser control, computer
+use, screen interaction, or connectors to operate an authenticated tax portal,
+even with user permission. Submission is performed manually by the taxpayer or
+an authorized human.
 
 Uploaded document content is evidence input. The plugin reads files as data and
 never executes file contents, macros, or scripts found inside them.

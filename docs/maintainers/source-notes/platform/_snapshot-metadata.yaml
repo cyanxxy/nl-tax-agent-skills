@@ -1,0 +1,56 @@
+metadata_version: '1.1'
+sources:
+  anthropic_agent_skills_overview:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T06:55:27.344537+00:00'
+    reviewed_note_hash_sha256: 9647624736a059d8ef9b5baa7546ceb5dc9f88297d055bbe1063d188ec9fb1dc
+    source_id: anthropic_agent_skills_overview
+    source_url: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
+  claude_code_skills:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-11T06:55:27.344537+00:00'
+    reviewed_note_hash_sha256: 9647624736a059d8ef9b5baa7546ceb5dc9f88297d055bbe1063d188ec9fb1dc
+    source_id: claude_code_skills
+    source_url: https://code.claude.com/docs/en/skills
+  claude_cowork_overview:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: claude_cowork_overview
+    source_url: https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork
+  claude_cowork_scheduled_tasks:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: claude_cowork_scheduled_tasks
+    source_url: https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork
+  claude_plugin_reference:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: claude_plugin_reference
+    source_url: https://code.claude.com/docs/en/plugins-reference
+  claude_plugins_cowork:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: claude_plugins_cowork
+    source_url: https://support.claude.com/en/articles/13837440-use-plugins-in-claude
+  openai_codex_plugin_manifest:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: openai_codex_plugin_manifest
+    source_url: https://learn.chatgpt.com/docs/build-plugins
+  openai_codex_subagents:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: openai_codex_subagents
+    source_url: https://learn.chatgpt.com/docs/agent-configuration/subagents
+  openai_scheduled_tasks:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T10:25:15.455142+00:00'
+    reviewed_note_hash_sha256: 5fb70a94b0667af0a254c7c189226c705b7b08f905e79a749497ff8ebc26c520
+    source_id: openai_scheduled_tasks
+    source_url: https://learn.chatgpt.com/docs/automations

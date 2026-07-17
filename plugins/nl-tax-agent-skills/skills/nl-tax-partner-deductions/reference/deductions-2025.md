@@ -11,14 +11,17 @@ review_status: reviewed
 
 - Rule
 - Persoonsgebonden aftrek: allocation rules per category
-- Optimization principle
+- Scenario-comparison principle
 - Heffingskorting interaction
-- Warning: this skill suggests options, not optimal strategy
+- Warning: this skill compares options but never selects one
 - Common errors
 
 ## Rule
 
-When fiscal partners file their annual return for 2025, they can allocate certain deductions between them to optimize their combined tax position. This note covers the allocation rules and optimization principles specific to the 2025 annual return.
+When fiscal partners file their annual return for 2025, they can allocate
+certain deductions between them. This note covers the allocation rules and how
+to compare traceable scenarios without ranking, recommending, or selecting one
+for the taxpayers.
 
 These are reference notes for workpack preparation -- not final tax advice.
 
@@ -38,7 +41,8 @@ The persoonsgebonden aftrek is freely allocatable between fiscal partners, but i
 - The drempel (threshold) is calculated based on the combined household drempelinkomen of both partners.
 - The total qualifying zorgkosten of the household are compared against the single combined drempel.
 - Only the excess above the drempel is deductible.
-- The allocation of this excess between partners is free -- assign it to the partner where it yields the most tax benefit.
+- The allocation of this excess between partners is free. Show traceable
+  eligible splits and their estimated effects; the taxpayers choose the split.
 - Important: the drempel is household-level, not per-partner. Do not calculate separate thresholds for each partner.
 
 ### Giften (charitable donations)
@@ -66,9 +70,9 @@ The persoonsgebonden aftrek is freely allocatable between fiscal partners, but i
 - Eligible whole-year fiscal partners may allocate the prior-year personal-deduction remainder in the current return. Model traceable scenarios whose shares total 100%, including the portal/default position and at least one alternative when material.
 - Require both taxpayers to review the scenarios and select the allocation in the official filing environment; do not select it automatically.
 
-## Optimization principle
+## Scenario-comparison principle
 
-The core optimization principle for deduction allocation:
+The core comparison principle for deduction allocation:
 
 **Model multiple allocation scenarios; do not automatically allocate everything to the highest marginal-rate partner.**
 
@@ -106,9 +110,12 @@ Allocation choices affect the heffingskortingen because they can change each par
 
 ### Net effect
 
-The heffingskorting interaction can partially offset or amplify the bracket-rate optimization. A complete optimization requires modelling both the marginal rate savings and the heffingskorting changes.
+The heffingskorting interaction can partially offset or amplify bracket-rate
+effects. Each scenario comparison therefore shows both the marginal-rate and
+heffingskorting effects, with assumptions and uncertainty, without ranking the
+scenarios.
 
-## Warning: this skill suggests options, not optimal strategy
+## Warning: this skill compares options but never selects one
 
 This skill generates allocation scenarios with estimated tax impact. The final allocation choice requires human review because:
 
@@ -118,7 +125,9 @@ This skill generates allocation scenarios with estimated tax impact. The final a
 4. Box 3 allocation interacts with deduction allocation (both change taxable income).
 5. The tariefsaanpassing complicates the straightforward "highest bracket" rule.
 
-The calling skill (annual return or provisional assessment) must present the allocation options to the taxpayer for review, not select one automatically.
+The calling skill must present labeled allocation scenarios to the taxpayer for
+review, not rank, recommend, or select one automatically. Record an allocation
+only after the taxpayer explicitly chooses it; otherwise leave it unresolved.
 
 ## Allocation arithmetic check
 
@@ -139,7 +148,9 @@ wrapped payload. Python availability does not block preparation.
 
 1. **Allocating employment income between partners.** Employment income is not allocatable. It stays with the earner.
 2. **Forgetting to consider heffingskorting impact.** Moving deductions to the higher-bracket partner reduces their income, which may change their heffingskorting. The net benefit may be smaller than the bracket-rate difference suggests.
-3. **Assuming 50/50 split is automatically optimal.** It may be right in some cases, but the workpack should show alternatives when the amounts are material.
+3. **Treating 50/50 as a preferred split.** It may be one useful Scenario A,
+   but the workpack should show alternatives when the amounts are material and
+   leave the choice to the taxpayers.
 4. **Ignoring tariefsaanpassing for listed deductions.** Treating deductible own-home costs, gifts, healthcare costs, or partneralimentatie at the full 49.50% marginal rate overstates the benefit for higher-bracket partners.
 5. **Treating the eigen woning result as tied to ownership share for fiscal partners.** Fiscal partners may allocate the saldo of own-home income and deductions in any split totaling 100%. Ownership-share rules matter when people are not fiscal partners.
 6. **Not verifying that both partners file consistently.** Both partners must use the same allocation in their returns. Inconsistent filing leads to rejection.

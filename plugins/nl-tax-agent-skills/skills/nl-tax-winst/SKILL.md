@@ -1,12 +1,11 @@
 ---
 name: nl-tax-winst
-description: "Background helper with two narrow modes: organize annual 2025 business-section evidence without calculating final taxable profit, or return one sourced 2026 provisional expected-profit forecast."
+description: "Use when an owning Dutch tax workflow needs either annual 2025 business-section evidence organized without calculating final taxable profit or one sourced 2026 provisional expected-profit forecast."
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
   - Bash(python3:*)
 ---
 
@@ -40,7 +39,9 @@ load both modes for comparison.
 For **annual 2025 preparation-only**, read the reviewed 2025 knowledge notes
 below. They are canonical for every rate, amount, and threshold. Never
 paraphrase a figure from memory; return each loaded `source_id` to the owning
-workflow so it can append the ID to `session-progress.yaml` → `sources_loaded`:
+workflow so it can append the ID to the active workflow's
+`session-progress.yaml` → `sources_loaded_by_workflow` list and mirror it in
+top-level `sources_loaded`:
 
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`
 - `../_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`
@@ -112,7 +113,6 @@ owns no persisted artifact. Do not write caller-owned notes.
 
 ## Never
 
-- Do not log in, automate a browser, sign, or submit anything.
 - Do not claim that the helper gives binding tax advice or a final assessment.
 - Do not turn annual preparation notes into a final taxable-profit computation,
   completed business return, or filing-ready business field map.
@@ -131,3 +131,8 @@ Return structured facts and open questions to the owning workflow. Do not
 persist any final artifact, including shared notes, question packets, session
 state, workpacks, or field maps. In either mode, only the calling owning workflow
 may read historical helper notes for resume compatibility.
+
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

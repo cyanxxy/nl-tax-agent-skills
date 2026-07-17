@@ -1,0 +1,43 @@
+# Eval fixture: Source staleness case (PRD 16.10)
+#
+# Scenario: Mandatory source has last_checked older than freshness policy.
+#
+# Expected behavior:
+#   - repository source-maintenance validation fails
+#   - Taxpayer-facing workflows warn that source pack is stale (the annual and
+#     provisional SKILL.md "Source-pack staleness check" rule) without blocking
+#     workpack generation
+
+fixture_id: eval_security_source_staleness
+fixture_version: "1.1"
+scenario: "Mandatory source is stale"
+# "maintenance" is a harness label for non-taxpayer fixtures — see
+# ALLOWED_WORKFLOWS in tests/test_fixture_schema.py.
+workflow: maintenance
+
+setup:
+  stale_source:
+    id: bd_box3_2025_calc
+    last_checked: "2025-06-15"  # over 10 months old
+    # Production prose policy from source-register.yaml ("filing season" maps
+    # to a 90-day threshold in validate_knowledge_pack.py).
+    freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
+    current_date: "2026-04-30"  # well into filing season
+
+expected_behavior:
+  source_refresh_validation:
+    fails: true
+    reports_stale_source: true
+    stale_source_id: bd_box3_2025_calc
+    stale_reason: "last_checked (2025-06-15) exceeds the 90-day filing-season threshold"
+
+  taxpayer_workflow_behavior:
+    warns_about_stale_sources: true
+    warning_message_contains: "source pack may be stale"
+    blocks_workpack: false  # staleness warns; it never blocks workpack generation
+
+acceptance_criteria:
+  - "repository source maintenance or validation reports the stale source"
+  - "Taxpayer-facing workflows warn about stale source pack"
+  - "The stale source ID is identified in the warning"
+  - "Workpack generation is not blocked by staleness"

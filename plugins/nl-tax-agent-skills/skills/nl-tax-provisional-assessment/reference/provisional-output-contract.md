@@ -77,6 +77,10 @@ accounts, zelfstandigenaftrek, startersaftrek, ondernemersaftrek,
 MKB-winstvrijstelling, KIA, Zvw, cessation profit, or final tax. Complex forms
 and events route to terminal manual review.
 
+When a forecast applies, it MUST also appear as its own row in the change
+delta and in the Box 1 income-before-own-home rollup. A workpack that records
+`onderneming.geschatte_winst` but drops it from those review totals is invalid.
+
 ### Examples
 
 - "Employment income: EUR 45,000 (estimate)" — correct
@@ -105,7 +109,10 @@ The box 3 section MUST follow this structure:
 
 1. Categorie I: Banktegoeden — amount as of 1 January 2026
 2. Categorie II: Overige bezittingen — amount as of 1 January 2026
-3. Categorie III: Schulden — amount as of 1 January 2026 (excluding eigenwoningschuld)
+3. Categorie III: qualifying Box 3 schulden — amount as of 1 January 2026,
+   after the official inclusion/exclusion screen. A generic non-own-home debt
+   is not accepted automatically; unresolved debts remain manual-review rows
+   outside the totals
 4. Aftrekbare schulden after the debt threshold
 5. Belastbaar rendement
 6. Rendementsgrondslag
@@ -113,6 +120,12 @@ The box 3 section MUST follow this structure:
 8. Aandeel in rendementsgrondslag
 9. Box 3 income
 10. Box 3 tax at the rate from `box3-provisional.md`
+
+The official 2026 page says 3 decimals in its general step but shows 2 decimals
+in worked examples. If a review estimate displays the aandeel, the workpack
+MUST identify the convention used and state that the live portal calculation
+and resulting beschikking are authoritative; it must not claim either display
+rule is the binding portal algorithm.
 
 ### Required box 3 note
 
@@ -173,7 +186,11 @@ The change subflow MUST produce a delta summary file at `workspace/provisional/2
 - Baseline values (from existing voorlopige aanslag)
 - Current estimate values (from user input)
 - Delta per category (difference between baseline and current estimate)
-- Expected impact on monthly payment or refund
+- A non-binding possible direction for future payment/refund, or `uncertain`,
+  plus the live-portal/replacement-beschikking caveat
+- A separate expected-business-profit row when applicable
+- Separate own-home component rows for eigenwoningforfait, total deductible
+  own-home costs, any Hillen deduction, and `box1_own_home_balance`
 
 A change-subflow workpack without a delta summary is invalid.
 
@@ -190,7 +207,8 @@ For review/change context, an **unsolicited** VA from earlier data **may be issu
 Before writing stopzetten instructions, compare the current date to 2026-10-01.
 If the current date is on or after 2026-10-01, the workpack MUST NOT include a
 stopzetten checklist. It must state that the 2026 stopzetten cutoff has passed
-and route the user to review/change or annual-return settlement as applicable.
+and route the user to review/change or to a separate filing-status review and,
+when a return will be filed, annual settlement.
 
 ### Structured stopzetten body -- REQUIRED
 
@@ -199,8 +217,10 @@ the body. For a refund case before the cutoff, it MUST include:
 
 - current cash-flow direction: monthly refund
 - current-date cutoff result
-- expected effect of stopping
-- annual-return settlement note
+- the selected refund component and expected effect of stopping: deductions,
+  IACK, or algemene heffingskorting
+- a separate annual-filing-status note; stopzetten itself does not create a
+  universal filing obligation
 - manual checklist for the official stopzetten process
 
 For non-stopzetten outcomes, the same section must explicitly state the route
@@ -220,13 +240,24 @@ If the user currently PAYS a monthly amount and the amount is incorrect:
 If the user currently RECEIVES a monthly refund:
 
 - The workpack MUST include a manual checklist for the official Mijn Belastingdienst stopzetten process
-- The workpack MUST explain the consequences (refunds stop, settlement at annual return)
+- For deductions and IACK, it MUST state that the stop is retroactive to
+  1 January 2026 and show already-received amounts as a possible repayment
+  controlled by a separate Belastingdienst notice
+- For the algemene heffingskorting, it MUST record the chosen first day of the
+  month and describe the payment effect as prospective from that selected/next
+  payment month
+- It MUST keep annual filing conditional on the taxpayer's separate filing
+  obligation or choice/eligibility to file
 
 ---
 
 ## Sources used section — REQUIRED
 
-Every workpack MUST list the `source_id` values of all knowledge sources used in producing the workpack. This provides traceability and allows verification against the knowledge base.
+Every workpack MUST list exactly the `source_id` values in
+`session-progress.yaml` → `sources_loaded_by_workflow.provisional_2026`. Do not
+copy IDs from the annual ledger; the same ID may appear in both only when it was
+independently consulted for both workflows. This provides traceability and
+allows verification against the knowledge base.
 
 ### Example
 
@@ -243,7 +274,10 @@ Every workpack MUST list the `source_id` values of all knowledge sources used in
 
 Every workpack MUST end with the following footer:
 
-> This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting or changing a voorlopige aanslag.
+> This workpack is a preparation aid. You, the taxpayer or an authorized human,
+> must review the figures and perform all portal entry, signing, sending, or
+> changes yourself. The assistant must not access or operate Mijn
+> Belastingdienst.
 
 A workpack without this footer is invalid.
 Do not expand this footer into generic credential boilerplate.
@@ -281,6 +315,11 @@ Before delivering any workpack, verify:
 - [ ] All amounts are labeled (estimate or from-baseline)
 - [ ] Box 2 amounts are labeled estimate or from-baseline, when applicable
 - [ ] Box 3 uses fictitious method only, with only the required explanatory note for werkelijk rendement
+- [ ] Candidate Box 3 debts passed the official inclusion/exclusion screen; unresolved debts remain manual-review rows outside accepted totals
+- [ ] Any displayed Box 3 aandeel records the estimate's rounding convention and defers to the live portal/beschikking
+- [ ] AOW status is `below_all_year`, `reaches_during_year`, or `aow_all_year`; a transition-year month and manual portal result replace a whole-year table estimate
+- [ ] Expected business profit, when applicable, is included in the Box 1 rollup and change delta
+- [ ] Own-home review shows the 1 January 2025 WOZ peildatum and all components of `box1_own_home_balance`
 - [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Change subflow includes full re-entry reminder
 - [ ] Change subflow includes delta summary file
@@ -288,7 +327,9 @@ Before delivering any workpack, verify:
 - [ ] Stopzetten subflow includes a structured `Stopzetten outcome` body
 - [ ] Stopzetten cutoff was evaluated against the current date before any checklist was included
 - [ ] Stopzetten routes payment users to change subflow
-- [ ] Sources used section lists all source_ids
+- [ ] Stopzetten distinguishes retroactive deductions/IACK from the prospective monthly algemene-heffingskorting stop, keeps prior repayment in a separate notice, and treats annual filing as a separate question
+- [ ] Sources used section lists exactly
+  `sources_loaded_by_workflow.provisional_2026`, without copying the annual ledger
 - [ ] Not submission advice footer is present
 - [ ] No output files written to workspace/annual/
 - [ ] Assumptions section is present and complete

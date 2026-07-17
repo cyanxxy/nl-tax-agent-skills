@@ -1,0 +1,108 @@
+fixture_id: eval_annual_then_provisional_request
+fixture_version: "1.0"
+scenario: "One natural-language request for annual 2025 followed by a provisional 2026 request"
+workflow: annual_2025
+
+user_request:
+  text: >-
+    Help me prepare both my Dutch 2025 income-tax return and a new 2026
+    voorlopige aanslag. Start naturally and remember the 2026 part when the
+    2025 preparation is done; do not make me use a slash command or ask again
+    to begin it. I want to review each final workpack before you create it.
+  explicitly_requests_preparation: true
+  requested_workflows:
+    - annual_2025
+    - provisional_2026_request
+  provisional_subflow: request
+
+expected_state:
+  after_intake:
+    profile:
+      workflow_candidate: annual_2025
+      annual_2025: {requested: true, status: in_progress}
+      provisional_2026: {requested: true, subflow: request, status: queued}
+    session:
+      active_workflow: annual_2025
+      active_skill: nl-tax-annual-return
+      annual_2025_status: not_started
+      provisional_2026_status: not_started
+      provisional_2026_subflow: request
+      sources_loaded_by_workflow:
+        annual_2025: []
+        provisional_2026: []
+      sources_loaded: []
+    workpack_source_sections:
+      annual_2025: null
+      provisional_2026: null
+  after_complete_annual_mapping:
+    profile:
+      workflow_candidate: provisional_2026_request
+      annual_2025: {requested: true, status: complete}
+      provisional_2026: {requested: true, subflow: request, status: in_progress}
+    session:
+      active_workflow: provisional_2026_request
+      active_skill: nl-tax-provisional-assessment
+      annual_2025_status: complete
+      provisional_2026_status: not_started
+      provisional_2026_subflow: request
+      sources_loaded_by_workflow:
+        annual_2025: [annual_source_id]
+        provisional_2026: []
+      sources_loaded: []
+    workpack_source_sections:
+      annual_2025: [annual_source_id]
+      provisional_2026: null
+    annual_artifacts_preserved: true
+    requires_new_activation_phrase: false
+    provisional_generation_confirmed: false
+  after_complete_provisional_mapping:
+    profile:
+      workflow_candidate: provisional_2026_request
+      annual_2025: {requested: true, status: complete}
+      provisional_2026: {requested: true, subflow: request, status: complete}
+    session:
+      active_workflow: provisional_2026_request
+      active_skill: ""
+      annual_2025_status: complete
+      provisional_2026_status: complete
+      sources_loaded_by_workflow:
+        annual_2025: [annual_source_id]
+        provisional_2026: [provisional_source_id]
+      sources_loaded: [provisional_source_id]
+    workpack_source_sections:
+      annual_2025: [annual_source_id]
+      provisional_2026: [provisional_source_id]
+    annual_artifacts_preserved: true
+  invariants:
+    one_active_workflow_at_a_time: true
+    annual_completes_before_provisional_starts: true
+    annual_and_provisional_confirmation_are_separate: true
+    annual_values_are_not_automatic_provisional_estimates: true
+    year_specific_notes_sources_and_artifacts_are_separate: true
+    active_source_mirror_is_never_a_cross_workflow_union: true
+
+expected_outputs:
+  files_created:
+    - workspace/taxpayer/profile.yaml
+    - workspace/shared/session-progress.yaml
+    - workspace/annual/2025/return-pack.md
+    - workspace/annual/2025/field-map.yaml
+    - workspace/provisional/2026/provisional-pack.md
+    - workspace/provisional/2026/field-map.yaml
+  ownership:
+    annual_workpack: nl-tax-annual-return
+    provisional_workpack: nl-tax-provisional-assessment
+    field_maps: nl-tax-field-mapper
+
+expected_behavior:
+  - "Intake records both requested workflows and the provisional request subflow"
+  - "Annual 2025 is the only active workflow until its complete workpack and field map validate"
+  - "The handoff atomically activates provisional_2026_request without a new activation phrase"
+  - "The provisional workflow requires its own final-generation confirmation"
+  - "Annual and provisional statuses, sources, notes, and artifacts remain separate"
+
+acceptance_criteria:
+  - "No provisional artifact is written while annual 2025 is active"
+  - "An incomplete annual rollup or failed annual map leaves provisional 2026 queued"
+  - "Completed annual artifacts remain unchanged after the provisional handoff"
+  - "Both final field maps validate against their own workflow and year"

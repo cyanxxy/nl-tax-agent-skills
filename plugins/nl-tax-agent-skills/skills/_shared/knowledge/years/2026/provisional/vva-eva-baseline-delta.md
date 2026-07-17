@@ -4,7 +4,7 @@ source_id: bd_algoritmeregister_vva_eva
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -15,7 +15,10 @@ The Belastingdienst algorithm register describes VVA selection rules and EVA bus
 
 ### VVA -- Verzoek Voorlopige Aanslag
 
-A VVA is a request for a provisional assessment submitted by the taxpayer. The taxpayer provides estimated income, deductions, and assets/debts for the current year. The Belastingdienst processes this into a monthly payment or refund schedule.
+A VVA is a request for a provisional assessment submitted by the taxpayer. The
+taxpayer provides estimated income, deductions, and assets/qualifying debts for
+the current year. The portal gives an estimate; the resulting beschikking
+controls the actual payment or refund amount and schedule.
 
 ### EVA -- Eerste Voorlopige Aanslag
 
@@ -68,7 +71,9 @@ When modeling the provisional assessment workflow:
 3. Do not state that the Belastingdienst processes or receives a delta
 4. Present any comparison as informational; the official portal recalculates from the complete submitted data
 5. Do not reuse annual return data structures or flows for the provisional assessment -- build separate, purpose-built flows
-6. Accept estimates and indicate that precision is lower than in the annual return, because final settlement occurs through the 2026 annual return
+6. Accept estimates and label their limits. If a 2026 annual return is filed,
+   its assessment can reconcile the provisional amounts; do not infer from the
+   VVA alone that filing is mandatory
 7. When an EVA is present, use it as the current assessment to review and allow the user to adjust it through a VVA
 
 ## Common failure

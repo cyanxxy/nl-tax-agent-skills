@@ -25,10 +25,14 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 
 1. **Scope** — tax year, workflow, taxpayer identification, partner status, timestamp
 2. **Unsupported-case checks** — checklist confirming the case is within v1 scope
-3. **Sources used** — list of `source_id`s from `_shared/source-register.yaml` that were actually loaded during this session (taken verbatim from `session-progress.yaml` → `sources_loaded`)
+3. **Sources used** — list of `source_id`s from `_shared/source-register.yaml`
+   actually loaded for the annual workflow (taken verbatim from
+   `session-progress.yaml` → `sources_loaded_by_workflow.annual_2025`)
 4. **Taxpayer profile summary** — summary of the profile data used, including household composition (DOB, partner DOB, children, AOW status, single-parent status)
 5. **Evidence summary** — summary of the evidence index used, including any `chat_only` values
-6. **Filing status and late-filing exposure** — on-time / uitstel / late, plus quoted verzuimboete and belastingrente when applicable
+6. **Filing status and late-filing exposure** — one of the four filing-route
+   labels, timing facts, route-specific potential penalty, and belastingrente
+   review when applicable
 7. **Income notes** — all box 1 income categories (employment, pension, benefits, other)
 8. **Winst uit onderneming notes** — preparation-only organization of finalized profit-and-loss and balance evidence, facts, questions, and manual-review triggers
 9. **Own-home notes** — WOZ, mortgage interest, eigenwoningforfait, tariefsaanpassing, Hillenregeling, plus verkoopregeling / aankoopregeling when applicable
@@ -77,21 +81,47 @@ Every assumption made during workpack generation MUST appear in the Assumptions 
 - The impact on the return if the assumption is incorrect
 - A recommendation for how to resolve the assumption (e.g., "provide jaaropgaaf from employer X")
 
-### Sources used must match sources_loaded
+### Sources used must match the annual source ledger
 
-The Sources Used section MUST list exactly the `source_id`s that appear in `session-progress.yaml` → `sources_loaded`. Do not pad the list with sources that were not consulted, and do not omit sources that were consulted. The list is canonical, not aspirational.
+The Sources Used section MUST list exactly the `source_id`s that appear in
+`session-progress.yaml` → `sources_loaded_by_workflow.annual_2025`. Do not
+pad the list with sources that were not consulted, do not omit consulted annual
+sources, and do not include provisional IDs. The list is canonical, not
+aspirational.
 
 ---
 
 ## Filing status and late-filing exposure
 
-The "Filing status and late-filing exposure" section MUST appear in every workpack and take one of three forms:
+The "Filing status and late-filing exposure" section MUST appear in every
+workpack. First record exactly one evidence-backed route label:
 
-- **On time** — one line: "Filing status: on time. No late-filing exposure." No further detail required.
-- **Uitstel granted** — quote the granted uitsteldatum, note that belastingrente still accrues from 1 July 2026 if tax is owed, and quote the rate from `_shared/knowledge/years/2025/annual/late-filing.md`.
-- **Late (deadline passed, no uitstel)** — present EUR 469 first / EUR 6,709 maximum only as **potential exposure**. Record the escalation status for **herinnering**, **aanmaning**, and the **10 werkdagen** period after the aanmaning. State that missing the deadline alone does not impose a boete and that exposure remains conditional unless the return is still missing after that sequence. Quote the applicable belastingrente rate with citations to `bd_verzuimboete` and `bd_belastingrente_overview`; do not compute or promise a final figure.
+- `invited`: use the deadline on the aangiftebrief. If late, present EUR 469
+  first / EUR 6,709 repeated maximum only as potential exposure and record the
+  herinnering, aanmaning, and **10 werkdagen** (10-workday) response-period facts.
+- `no_letter_but_mandatory`: record which test applies—EUR 58 or more to pay, or
+  entitlement to an income-dependent scheme with relevant assets above EUR
+  37,395 (EUR 74,790 with a fiscal partner)—and the 14 July 2026 guardrail. If
+  late, ask whether and when an aangifte was requested and present the separate
+  EUR 3,354 failure-to-request amount, 6-month request period, and 2-week grace
+  only as potential official exposure. Do not apply the invited-return
+  reminder/aanmaning narrative to this route.
+- `refund_claim_only`: record EUR 19 or more back and that neither mandatory
+  no-letter test applies. Describe submission as a refund claim, not a mandatory
+  invitation-based filing.
+- `filing_obligation_unresolved`: state which official calculation or
+  scheme/assets facts remain open. Do not invent a deadline or classify the
+  taxpayer as late.
 
-In all three cases, do not present the section as legal advice. The Belastingdienst determines whether the escalation conditions are met and sets any actual boete and rente.
+For `invited`, also record any granted uitsteldatum. "On time" means no
+late-filing **penalty** exposure; it must not promise zero belastingrente.
+Belastingrente can apply when the return was received on or after 1 May or when
+the Belastingdienst deviates from the return, even if it was filed before
+1 May. Quote applicable facts from `late-filing.md` without computing a final
+amount.
+
+Do not present the section as legal advice. The Belastingdienst determines
+whether the relevant conditions are met and sets any actual boete and rente.
 
 ---
 
@@ -196,18 +226,35 @@ calculation and selection.
 ### Partner allocation
 
 If fiscal partners are present, the box 3 section must include:
-- The default allocation (typically 50/50)
-- An optimized allocation recommendation
-- A note that the chosen percentage applies to the entire box 3 base
+- At least two labeled, traceable comparison scenarios (for example, 50/50 and
+  one materially different eligible split), without calling either scenario a
+  default, recommendation, optimum, or best result
+- Each scenario's percentages, estimated individual and combined effects,
+  difference versus Scenario A, assumptions, uncertainty, and provenance
+- `Taxpayer-selected allocation: [not selected / user-confirmed split]` with
+  `U:` provenance; leave it unresolved until the taxpayer explicitly chooses
+- A note that any taxpayer-selected percentage applies to the entire box 3 base
+
+The workpack must not rank, recommend, or automatically select an allocation.
+It supplies comparison scenarios; the taxpayers review them and make the
+choice themselves in the official filing environment.
 
 ---
 
 ## Credits screening requirements
 
-The Credits screening section MUST list, for each of the four manual-review credits, whether the taxpayer's household composition triggers the credit. Compute the trigger from `profile.yaml` → `person`, `partner`, and `household`:
+The Credits screening section MUST list `candidate`, `not applicable`, or
+`unresolved` for each credit below. Profile data starts the questions; it does
+not determine the outcome by itself:
 
-- **IACK (inkomensafhankelijke combinatiekorting)** — triggered when the taxpayer (or their partner with lower arbeidsinkomen) has at least one child younger than 12 on 1 January 2025 and meets the arbeidsinkomen threshold.
-- **Ouderenkorting** — triggered when the taxpayer reaches AOW age in the tax year.
+- **IACK (inkomensafhankelijke combinatiekorting)** — record child age,
+  including whether the child was **younger than 12 on 1 January 2025**,
+  6-month household status or exact co-parent day/rhythm facts, the child-death
+  exception when relevant, arbeidsinkomen above EUR 6,145, fiscal-partner
+  duration, both partners' arbeidsinkomen, and the older partner for equal
+  incomes. Missing facts make the result `unresolved`, not `not applicable`.
+- **Ouderenkorting** — candidate when the taxpayer has reached AOW age by
+  31 December 2025; verify the amount in the official return.
 - **Alleenstaande-ouderenkorting** — triggered only when the taxpayer is entitled
   to an AOW benefit for a single person; ask for the AOW entitlement and do not
   infer it from household or fiscal-partner fields.
@@ -217,8 +264,15 @@ The Credits screening section MUST list, for each of the four manual-review cred
   that Wajong entitlement or work support. Ask the dedicated yes/no question
   `annual.credits.young_disabled_status`; do not infer the answer from age or a
   broad denial of other benefits, deductions, or credits.
+- **Possible payout of unused algemene heffingskorting** — when low/no income
+  leaves an apparently unused credit, screen own unused credit, being born before
+  1963, more than 6 months with the same fiscal partner (with the partner-death
+  exception), and sufficient Dutch tax/premium liability of that partner after
+  the partner's own credits. Do not assume the EUR 3,068 maximum is payable.
 
-For each triggered credit, list the trigger that fired and instruct the user to verify the calculated amount in Mijn Belastingdienst. Do not compute the credit amount unless an exact reviewed 2025 source is registered and all inputs are present.
+For each candidate credit, list the answered conditions and instruct the user
+to verify the calculated amount in Mijn Belastingdienst. Keep unanswered
+conditions visible; do not force an eligibility result.
 
 For each credit that did **not** trigger, emit one line: "Not applicable — [reason in one phrase]". Do not collapse the section to a single "no credits" line; the taxpayer needs to see each trigger was considered.
 
@@ -257,7 +311,9 @@ script is a convenience check, not the only way to satisfy the contract.
 
 Every workpack MUST include the "Not submission advice" section with the following concise review note (minor wording variations are acceptable, but the substance must be preserved):
 
-> This workpack is a preparation aid. Review all information against the official Mijn Belastingdienst portal before submitting.
+> This workpack is a preparation aid. You, the taxpayer or an authorized human,
+> must review the figures and perform all portal entry, signing, and submission
+> yourself. The assistant must not access or operate Mijn Belastingdienst.
 
 This section must not be:
 - Omitted
@@ -270,12 +326,15 @@ This section must not be:
 
 ## Status banner
 
-Every workpack MUST open with a deterministic STATUS banner derived from `session-progress.yaml` (not from the model's free-form judgment). Compute it from the rollup of the active workflow's subsections:
+Every workpack MUST open with a STATUS banner that the owning agent reconciles
+with the reviewed `session-progress.yaml` conversation ledger. This is a
+consistency and resumability check, not an independent workflow or tax-decision
+engine. Use the rollup of the active workflow's subsections:
 
 - If any applicable subsection is `deferred` or has `unknown`/open blocking items, the banner reads: `STATUS: DRAFT — N deferred section(s)` where `N` is the count of deferred/incomplete subsections.
 - If every applicable subsection is `complete` or `chat_only`, the banner reads: `STATUS: COMPLETE DRAFT FOR REVIEW`.
 
-In both cases the banner MUST also state that the workpack is **not for filing** (e.g. append "not for filing — review and submit manually via Mijn Belastingdienst"). The banner is recomputed from disk on every assembly, so it never drifts from the recorded session state.
+In both cases the banner MUST also state that the workpack is **not for filing** (e.g. append "not for filing — review and submit manually via Mijn Belastingdienst"). Reconcile the banner with the saved ledger on every assembly so the two do not drift.
 
 `field-map.yaml` MUST carry a matching **top-level** `readiness` field:
 `draft` when this banner is `DRAFT`, and `review_ready` when this banner is
@@ -300,16 +359,20 @@ Before writing the workpack, the skill MUST run the following self-check and rep
 - [ ] Every monetary amount has an `evidence_id`, `assumption_id`, or `quote`+`stated_at`
 - [ ] Every `assumption_id` referenced in the body appears in the Assumptions section
 - [ ] Every `evidence_id` referenced in the body exists in `workspace/taxpayer/evidence-index.yaml`
-- [ ] The Sources Used section lists exactly the IDs in `session-progress.yaml` → `sources_loaded`
+- [ ] The Sources Used section lists exactly the IDs in `session-progress.yaml`
+  → `sources_loaded_by_workflow.annual_2025`, without copying the provisional ledger
 - [ ] Winst uit onderneming uses the canonical "not applicable" line or a preparation-only review of finalized profit-and-loss and balance evidence
 - [ ] Complex business facts (partnerships, DGA/BV winst, agrarisch, zeevarenden, staking, resultaat uit overige werkzaamheden) are routed to manual review or unsupported
 - [ ] Box 2 section uses the canonical "not applicable" line or the full 11-field set
 - [ ] Complex Box 2 facts are routed to manual review or unsupported
 - [ ] Box 3 section includes both fictitious and actual return notes, with rates quoted from the knowledge file
-- [ ] Credits screening lists each of the 4 credits with trigger result
+- [ ] Credits screening lists IACK, ouderenkorting,
+  alleenstaande-ouderenkorting, jonggehandicaptenkorting, and possible payout of
+  unused algemene heffingskorting, with answered and unresolved conditions
 - [ ] A complete set of chat-supplied Box 3 actual-return inputs is `chat_only`, not deferred, and every value appears in the user-stated values index
 - [ ] Jonggehandicaptenkorting is backed by the dedicated explicit Wajong/young-disabled answer, not a broad "no other benefits or credits" inference
-- [ ] Partner allocation is addressed (even if no partner — state "not applicable")
+- [ ] Partner filing mode (together or separate) and allocation consistency are
+  addressed (even if no partner — state "not applicable")
 - [ ] Own-home notes use `total_deductible_own_home_costs` for Hillen, keep `tariefsaanpassing` separate, and route every complex home case to manual review
 - [ ] IACK, ouderenkorting, alleenstaande-ouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Annual business preparation does not derive taxable profit or deductions; its field map remains draft with the business-section schema-review blocker

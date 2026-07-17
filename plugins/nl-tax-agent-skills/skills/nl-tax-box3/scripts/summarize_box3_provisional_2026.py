@@ -117,9 +117,9 @@ def _require_finite_non_negative(name, value):
 
 # 2026 provisional box 3 fictitious return percentages and thresholds.
 #
-# These values duplicate the canonical knowledge pack so this script can act as a
-# deterministic calculator. The knowledge notes are canonical; keep these in sync
-# with the reviewed rule note and bump them in the same commit it changes:
+# These values duplicate the canonical knowledge pack so this optional mechanical
+# arithmetic check can run offline. The knowledge notes are canonical; keep these
+# in sync with the reviewed rule note and bump them in the same commit it changes:
 #   _shared/knowledge/years/2026/provisional/box3-provisional.md
 #   (source bd_box3_2026_provisional).
 # Decimal constants: all money math below runs in Decimal end-to-end so that
@@ -134,7 +134,9 @@ SCHULDEN_DREMPEL_PER_PERSON = 3_800
 
 
 def nearest_euro(value):
-    return int(Decimal(str(value)).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
+    # Avoid ambient Decimal precision failures for large but finite values while
+    # preserving the same HALF_UP whole-euro rule.
+    return int(Decimal(str(value)).to_integral_value(rounding=ROUND_HALF_UP))
 
 
 def floor_euro(value):
@@ -142,10 +144,12 @@ def floor_euro(value):
 
 
 def aandeel_percentage(grondslag_sparen_en_beleggen, rendementsgrondslag):
-    """Return the three-decimal percentage from the official 2026 step model.
+    """Return the helper's three-decimal 2026 working percentage.
 
     The general provisional 2026 instruction says to round the share percentage
-    to three decimals.
+    to three decimals, while published examples display two decimals. This
+    optional check follows the general instruction and labels the convention;
+    Mijn Belastingdienst and the beschikking remain authoritative.
     """
     if rendementsgrondslag <= 0 or grondslag_sparen_en_beleggen <= 0:
         return 0.0
@@ -184,18 +188,29 @@ def check_prohibited_arguments():
 
 
 def validate_allocation_pct(allocation_pct):
-    if allocation_pct < 0 or allocation_pct > 100:
+    if isinstance(allocation_pct, bool):
+        raise ValueError("allocation_pct must be a finite number between 0 and 100")
+    try:
+        normalized = Decimal(str(allocation_pct))
+    except (ArithmeticError, TypeError, ValueError) as exc:
+        raise ValueError(
+            "allocation_pct must be a finite number between 0 and 100"
+        ) from exc
+    if not normalized.is_finite():
+        raise ValueError("allocation_pct must be a finite number between 0 and 100")
+    if normalized < 0 or normalized > 100:
         raise ValueError("allocation_pct must be between 0 and 100")
+    return normalized
 
 
 def allocated_amount(total, has_partner, allocation_pct):
-    validate_allocation_pct(allocation_pct)
-    if not has_partner and allocation_pct != 100:
+    allocation_pct = validate_allocation_pct(allocation_pct)
+    if not has_partner and allocation_pct != Decimal("100"):
         raise ValueError("allocation_pct can only differ from 100 when has_partner is true")
     total = Decimal(str(total))
     if not has_partner:
         return total
-    return total * Decimal(str(allocation_pct)) / Decimal("100")
+    return total * allocation_pct / Decimal("100")
 
 
 def calculate_provisional_fictitious(
@@ -212,7 +227,7 @@ def calculate_provisional_fictitious(
     _require_finite_non_negative("overige", overige)
     _require_finite_non_negative("schulden", schulden)
     _require_finite_non_negative("heffingsvrij", heffingsvrij)
-    validate_allocation_pct(allocation_pct)
+    allocation_pct = validate_allocation_pct(allocation_pct)
     if has_partner and not partner_full_year_confirmed:
         raise ValueError(
             "has_partner requires --partner-full-year-confirmed "
@@ -272,7 +287,7 @@ def calculate_provisional_fictitious(
         },
     }
     if has_partner:
-        result["partner_allocation_pct"] = allocation_pct
+        result["partner_allocation_pct"] = float(allocation_pct)
         result["partner_eligibility_note"] = (
             "Doubling of the heffingsvrij vermogen and the schulden drempel "
             "assumes a confirmed full-year (or elected full-year) fiscal "
@@ -351,7 +366,7 @@ def main():
                     ensure_ascii=False,
                 )
             )
-            return
+            return 1
         totals = row_check["trusted_totals"]
         result = calculate_provisional_fictitious(
             banktegoeden=totals["banktegoeden"],
@@ -382,7 +397,23 @@ def main():
             "schulden": float(PERC_SCHULDEN),
         },
         "box3_provisional_actual_return_note": "Werkelijk rendement is not part of provisional 2026.",
-        "rounding_note": "Displayed amounts use portal-style whole-euro rounding.",
+        "share_percentage_rounding": {
+            "working_convention": "three_decimals",
+            "published_examples_convention": "two_decimals",
+            "estimate_may_differ_due_to_rounding": True,
+            "official_instruction_note": (
+                "The general 2026 provisional instruction says three decimals, "
+                "while published examples display two."
+            ),
+            "authoritative_result": "Mijn Belastingdienst and the beschikking",
+        },
+        "rounding_note": (
+            "This is an optional working estimate, not a guaranteed portal result. "
+            "The official page's three-decimal instruction and two-decimal "
+            "examples can produce different working outcomes. "
+            "Displayed money amounts use the helper's documented whole-euro "
+            "convention; Mijn Belastingdienst and the beschikking are authoritative."
+        ),
     }
 
     if args.has_partner:
@@ -395,7 +426,8 @@ def main():
         )
 
     print(json.dumps(output, indent=2, ensure_ascii=False))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

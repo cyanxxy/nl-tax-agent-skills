@@ -4,12 +4,16 @@ source_id: bd_provisional_stopzetten_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
 
-Stopzetten is available for a voorlopige aanslag where the taxpayer RECEIVES a monthly refund (teruggaaf) and wants to stop that refund. If the taxpayer pays a monthly amount, they cannot use stopzetten; they must change the voorlopige aanslag instead. Stopping a refund does not mean the taxpayer no longer owes tax -- final settlement happens through the annual return.
+Stopzetten is available for a voorlopige aanslag where the taxpayer RECEIVES a
+monthly refund (teruggaaf) and wants to stop all or an eligible part of that
+refund. If the taxpayer pays a monthly amount, they cannot use stopzetten; they
+must change the voorlopige aanslag instead. Stopping a refund does not cancel
+the underlying 2026 tax position.
 
 ## When stopzetten is appropriate
 
@@ -20,17 +24,24 @@ Moving abroad requires a residency review and is **not a categorical stopzetten 
 Before offering a stopzetten checklist, compare the current date to 2026-10-01.
 If the current date is on or after 2026-10-01, do not generate a stopzetten
 checklist. Record that the cutoff has passed and route the user to review/change
-if estimates are wrong, or to annual-return settlement if no provisional change
-is available.
+if estimates are wrong, or to a separate filing-status review and annual
+settlement only when a return will be filed.
 
 ### Receiving a monthly refund (teruggaaf)
 
-Stopzetten is the correct action when:
+Stopzetten can be available for review when:
 
 - The deductions that justified the refund no longer apply (e.g., mortgage paid off, alimony ended)
 - The taxpayer wants to avoid receiving money that will need to be repaid later
 - The taxpayer's situation has changed and the refund is no longer justified
-- The taxpayer prefers to settle everything at annual return time
+- The taxpayer understands whether the selected stop has a retroactive or
+  prospective effect and wants to prevent further overpayment
+
+If a deduction applied for part of 2026 and the taxpayer wants that part-year
+amount retained in the provisional estimate, discuss the change form as an
+alternative to a full deductions stop that is backdated to 1 January. The
+agent presents both effects and records the taxpayer's choice; it does not make
+the choice automatically.
 
 ### Paying a monthly amount (betaling)
 
@@ -38,7 +49,8 @@ If the taxpayer currently PAYS a monthly amount and the amount is wrong:
 
 - The correct path is to CHANGE the voorlopige aanslag (see change-flow.md), not to stop it
 - Official stopzetten guidance does not allow stopping a monthly payment case
-- Stopping payments when tax is owed can result in a large bill at annual return time
+- Simply ceasing payments can create arrears under the current beschikking; it
+  does not correct the estimate
 
 ## How to stop
 
@@ -50,11 +62,27 @@ If the taxpayer currently PAYS a monthly amount and the amount is wrong:
 
 ## Effect of stopzetten
 
-- Monthly refunds stop after processing
-- No further refund amounts are paid out for the remainder of the year
-- The final settlement happens when the annual return for 2026 is filed (in 2027)
-- Any tax owed or overpaid is reconciled at that time
-- Interest may apply on underpayments at annual return time
+First identify what is being stopped; the effects are not interchangeable:
+
+- **Deductions / the refund based on deductions:** stopzetten works
+  retroactively from **1 January 2026**.
+- **Inkomensafhankelijke combinatiekorting (IACK):** stopzetten also works
+  retroactively from **1 January 2026**.
+- **Algemene heffingskorting:** this can be stopped from the first day of a
+  selected month. Treat the effect as prospective from that selected/next
+  payment month, not as the 1 January retroactive rule used for deductions and
+  IACK.
+- When deductions or IACK are stopped after payments have already been made,
+  the taxpayer must repay the amount already received in 2026. The
+  Belastingdienst sends a **separate notice** about that repayment; do not fold
+  it into a guessed next monthly amount.
+- The Belastingdienst usually responds within 5 weeks and always within 8
+  weeks. Actual payment cessation and any repayment timing are controlled by
+  that notice, not by the workpack estimate.
+- If the taxpayer must file a 2026 annual return, or later chooses/qualifies to
+  file one, the annual result can reconcile the provisional amounts. Stopping
+  a refund does **not by itself** establish that every taxpayer must file an
+  annual return.
 
 ## Warning
 
@@ -62,24 +90,35 @@ Stopping a voorlopige aanslag does NOT mean:
 
 - That no tax is owed for 2026
 - That the Belastingdienst will not collect what is due
-- That the annual return is not required
+- That prior 2026 payments disappear; deductions/IACK may create a separate
+  repayment notice because the stop is backdated to 1 January 2026
 
-It only means that monthly refunds are stopped. The full tax obligation is determined and settled when the annual return is filed.
+It changes the selected provisional refund stream. Whether a 2026 annual
+return must be filed is a separate filing-obligation question; do not state
+that stopzetten itself makes filing universally required.
 
 ## Developer instruction
 
 When a user asks about stopping their voorlopige aanslag:
 
 1. First determine whether the user is receiving a refund or making payments
-2. If receiving a refund: first apply the current-date cutoff gate, then explain that refunds will cease and settlement happens at annual return
+2. If receiving a refund: first apply the current-date cutoff gate, then ask
+   whether the refund is based on deductions, IACK, or the general credit.
+   Explain the correct 1 January retroactive or monthly prospective effect,
+   and keep any prior-payment repayment separate from future cash flow
 3. If making payments: route to CHANGING the voorlopige aanslag; do not offer stopzetten
-   - Explain the risk of a large lump-sum bill at annual return time
+   - Explain that simply ceasing payment can create arrears under the current
+     beschikking and does not correct the estimate
    - Mutate session state before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` complete with `routed_to_change_payment_case`, and reset `confirm` to `not_started`
-4. Warn that stopping a refund does not eliminate the tax obligation
+4. Warn that stopping a refund does not eliminate the tax obligation and does
+   not by itself decide the taxpayer's annual filing obligation
 5. Direct the user to the Mijn Belastingdienst portal for the actual action only when the cutoff gate is before 2026-10-01
 
 ## Common failure
 
-Do not conflate stopzetten with "cancelling" the tax obligation. Stopzetten only stops the monthly cash flow. The underlying tax liability remains and will be settled at annual return time. Never suggest that stopping a voorlopige aanslag means the taxpayer no longer owes anything.
+Do not conflate stopzetten with "cancelling" the tax obligation. Never apply
+the general-credit monthly rule to deductions or IACK, and never hide the
+separate repayment of amounts already received. Do not say every taxpayer must
+file solely because a provisional refund was stopped.
 
 Do not leave a payment case in `provisional_2026_stopzetten` after redirecting it. Copy the payment baseline into the change subflow so the change flow can continue from the same beschikking without re-asking the stopzetten direction question.

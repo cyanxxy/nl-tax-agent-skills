@@ -3,19 +3,24 @@
 This is the maintainer/contributor reference for **NL Tax Agent Skills**. For what the
 plugin does, how to install it, and how to use it, see the [README](README.md).
 
-The product is a skills-only Agent Skills plugin under `plugins/nl-tax-agent-skills/` —
-no backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks.
-Python is optional for taxpayer workflows, and its small deterministic helpers are limited to four conceptual
-components: evidence inventory/hash, field-map checks, source-pinned arithmetic checks,
-and developer consistency/source maintenance. When extending behavior, prefer adding to
-a `SKILL.md` over adding script logic.
+The product is an agent-led plugin under `plugins/nl-tax-agent-skills/` — no
+backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks;
+one Claude-only specialist reviewer provides bounded cross-checks without
+owning the taxpayer conversation or canonical workflow state.
+Python is optional for taxpayer workflows. The installed mechanical helpers
+cover evidence inventory/hash, field-map checks, and source-pinned arithmetic;
+developer consistency and source-maintenance tools stay repository-only. None
+ask questions, select a workflow, classify an ambiguous tax fact, or decide
+readiness. When extending behavior, prefer agent guidance in a `SKILL.md` over
+adding script-owned workflow logic.
 
 ---
 
 ## Repository layout
 
-The plugin is the product package — `plugins/nl-tax-agent-skills/`. The repo root holds
-only the marketplace manifests that point at it, plus project docs.
+The plugin is the product package — `plugins/nl-tax-agent-skills/`. Repository-level
+tests, evaluations, submission tooling, marketplace manifests, and project docs stay
+outside that distributable directory.
 
 ```text
 .claude-plugin/
@@ -28,13 +33,13 @@ plugins/nl-tax-agent-skills/
   .codex-plugin/plugin.json
   README.md
   assets/                           # icon.png (the single packaged image)
+  agents/
+    nl-tax-specialist-reviewer.md   # Claude Cowork specialist reviewer
   skills/
     _shared/
       source-register.yaml          # every cited source_id with metadata
-      supported-workflows.yaml      # active workflow/year gate
       knowledge/                    # bundled source-cited rule notes
       templates/
-      eval-fixtures/
     nl-tax-intake/                  # workflow router and taxpayer profile
     nl-tax-evidence-indexer/        # local evidence cataloging
     nl-tax-annual-return/           # annual 2025 workpack
@@ -46,12 +51,18 @@ plugins/nl-tax-agent-skills/
     nl-tax-partner-deductions/      # background helper
     nl-tax-field-mapper/            # manual-entry field maps
     nl-tax-submit-companion/        # manual submission checklist
-    nl-tax-source-refresh/          # developer-only source maintenance
-  tests/                            # unit tests (validators, box helpers, eval verifier, field-map policy)
+tests/
+  nl_tax_agent_skills/              # repository-only unit and regression tests
+evals/nl-tax-agent-skills/fixtures/ # repository-only structural scenarios
+tools/nl_tax_agent_skills/
+  source_maintenance/               # validators, metadata, workflow gate, planner
 ```
 
-There are no standalone `.claude/skills` or `.agents/skills` trees — skills are bundled
-inside the plugin and are the single discovery surface. The only tracked `.agents/` file is
+There are no standalone `.claude/skills` or `.agents/skills` trees — portable
+skills are bundled inside the plugin and are the workflow discovery surface.
+The plugin-level `agents/` directory is a Claude component, not local assistant
+state; it contains only a specialist reviewer and is deliberately excluded from
+the OpenAI submission bundle. The only tracked root `.agents/` file is
 `.agents/plugins/marketplace.json`; local assistant state under `.agents/`, `.claude/`,
 `.codex/`, plus `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`, is git-ignored
 and is not plugin package content.
@@ -63,7 +74,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -74,9 +85,24 @@ and is not plugin package content.
 }
 ```
 
-`.claude-plugin/plugin.json` is the Anthropic schema-conformant manifest — slimmer, with
-`displayName`, project URLs, `keywords`, and `skills` pointing at the same `./skills`
-directory. Both nested manifests are versioned; both root marketplaces remain unversioned.
+`.claude-plugin/plugin.json` is the Anthropic schema-conformant manifest. Claude
+auto-discovers the plugin-root `agents/` directory; no duplicate manifest key is
+needed. Codex plugin components do not include custom agents;
+Codex custom-agent TOML belongs in user or project `.codex/agents/`, so the
+portable skills request a built-in specialist subagent instead. Both nested
+manifests are versioned; both root marketplaces remain unversioned.
+
+### Reviewer-agent coordination
+
+The owning conversational skill remains the only writer, question asker,
+router, and readiness authority. Its persisted status files are a resumability
+ledger, not an execution engine: they record what the agent has established but
+do not choose the next question or tax treatment. The packaged Claude reviewer
+receives an exact workflow/year and bounded review question, then returns
+findings to the owner. It can use available host tools for official-source
+checks and optional mechanical validators, while the owner retains the
+conversation, canonical state, and readiness decision. Never build a parallel
+Python workflow engine.
 
 ---
 
@@ -117,6 +143,14 @@ prompts for the listed tools but does not deny others, and Codex ignores it. Rea
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
 
+The authenticated-tax-portal boundary does not depend on those host controls.
+Even if Cowork or another host exposes Chrome, browser control, computer use,
+screen interaction, or connectors, a tax skill must never open or operate Mijn
+Belastingdienst, log in, enter or change values, click controls, sign, send,
+submit, retrieve private portal data, or handle credentials/sessions. Public,
+read-only official-source research remains allowed. Generated portal guidance
+must use an explicit human subject such as `Taxpayer:`.
+
 Do not make Bash the discovery path for bundled plugin files. In Cowork, shell/code
 execution runs in an isolated VM and may not see the plugin cache path even when host
 file tools can read the installed skill resources. Skill bodies should resolve
@@ -149,8 +183,9 @@ name is registered only once and cannot collide with a same-named command wrappe
 
 ### Cross-host invocation policy
 
-Non-user-invocable skills (background helpers and manual-only skills) must ship an
-`agents/openai.yaml` with `policy.allow_implicit_invocation: false`. Codex does not honor
+Non-user-invocable background helpers and skills explicitly carrying
+`disable-model-invocation: true` must ship an `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false`. Codex does not honor
 the Claude frontmatter keys (`disable-model-invocation`, `user-invocable`, `allowed-tools`)
 for invocation control, so this file is what keeps those skills from being implicitly
 invoked on Codex. `validate_invocation_policy.py` enforces it.
@@ -194,6 +229,12 @@ Output-path ownership is enforced by the *Never* contracts in each skill:
 `annual-return` must never write to `workspace/provisional/**`; intake alone
 creates taxpayer/session state; the field mapper alone writes canonical field
 maps; and background helpers return facts/questions without persisting files.
+When one request covers annual 2025 and provisional 2026, intake records both
+but activates annual only. A complete validated annual map atomically hands
+ownership to the selected provisional subflow; drafts and failed validation do
+not hand off. `sources_loaded_by_workflow` keeps independent annual and
+provisional source ledgers, while top-level `sources_loaded` mirrors only the
+currently active workflow for backward compatibility.
 
 ---
 
@@ -219,22 +260,31 @@ in `knowledge/` must cite a `source_id` from `source-register.yaml`. An entry lo
     - nl-tax-annual-return
 ```
 
-`source_type` values: `law | official_guidance | official_rates | official_doctrine |
-official_algorithm_register | platform_docs | developer_reference | methodology`.
+Runtime `source_type` values are `law | official_guidance | official_rates |
+official_doctrine | official_algorithm_register`. Platform, future-compatibility,
+and authoring-method research lives under `docs/maintainers/source-notes/`
+rather than in the taxpayer source register.
 
 To add a rate or rule: put it in the right `knowledge/years/<year>/<scope>/*.md`, register
 the source (with `mandatory_for` listing every skill that needs it), then run the validators.
 After editing a reviewed knowledge `.md`, run `build_snapshots.py` to recompute its
-`reviewed_note_hash_sha256` in the relevant `_snapshot-metadata.yaml`. The builder marks a
+`reviewed_note_hash_sha256` in the mirrored repository-only metadata under
+`tools/nl_tax_agent_skills/source_maintenance/metadata/`. The builder marks a
 new or changed note `review_status: needs_review`; only a human who compared the local note
 with the cited official source may change that status to `reviewed`.
+
+The reviewed provisional request/change/stopzetten snapshots are preserved
+byte-for-byte. After a human reattests any of those notes, rebuild their
+human-subject runtime projections with `build_runtime_projections.py`. The
+projection builder inserts only the reversible `**Taxpayer:**` subject, records
+the complete source-note hash and source ids, and never changes review status.
 
 > **Freshness gate.** `validate_knowledge_pack.py` parses prose `freshness_policy` cadences
 > ("check monthly" → 31 days, "quarter" → 92, "prinsjesdag" → 120, "annual" → 365) and a
 > **stale mandatory source fails the gate**. If it goes red on dates, re-verify the source
 > and bump its `last_checked`.
 
-Only `nl-tax-source-refresh` may maintain source snapshots. Active supported pairs are
+Only the repository source-maintenance tools may maintain source snapshots. Active supported pairs are
 **annual return 2025** and **provisional assessment 2026**; annual and provisional **2027 are
 blocked** until official 2027 sources are registered and validated. Never reuse 2025/2026
 rates, thresholds, field maps, or box 3 logic for a future year.
@@ -267,21 +317,23 @@ python3 submission/openai/build_bundle.py
 python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
   dist/openai/nl-tax-agent-skills
 
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_source_register.py \
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_source_register.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_knowledge_pack.py \
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_supported_workflows.py \
-  plugins/nl-tax-agent-skills/skills/_shared/supported-workflows.yaml \
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py \
+  tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
 
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/validate_invocation_policy.py \
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_invocation_policy.py \
   plugins/nl-tax-agent-skills/skills
 
-python3 -m py_compile $(find plugins/nl-tax-agent-skills/skills plugins/nl-tax-agent-skills/tests -name '*.py' -print)
-python3 -m unittest discover -s plugins/nl-tax-agent-skills/tests -p 'test_*.py'
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_projections.py
+
+python3 -m compileall -q plugins/nl-tax-agent-skills/skills tools/nl_tax_agent_skills tests/nl_tax_agent_skills
+python3 -m unittest discover -s tests/nl_tax_agent_skills -p 'test_*.py'
 python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 ```
 
@@ -299,19 +351,22 @@ screenshots, or a Work web/desktop smoke test.
 | `validate_knowledge_pack.py` | Each knowledge note cites only registered `source_id`s; snapshots match referenced paths and hashes; stale mandatory sources fail |
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
 | `validate_invocation_policy.py` | Every non-user-invocable skill ships an `agents/openai.yaml` with `policy.allow_implicit_invocation: false` |
-| `tests/` (unittest) | Unit coverage of the validator/helper logic plus regression and golden tests for audited fixes |
+| `tests/nl_tax_agent_skills/` (unittest) | Repository-only unit coverage of validator/helper logic plus regression and golden tests; it is excluded from the installed plugin |
 | `verify_offline_workspace.py` | Structural contract library is internally consistent; it is not the live conversational grader |
 
 ### Developer utilities
 
 ```bash
 # Report source freshness without live HTTP fetching
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/plan_source_refresh.py all
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/plan_source_refresh.py provisional 2026
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/plan_source_refresh.py all
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/plan_source_refresh.py provisional 2026
 
 # Recompute snapshot metadata after source updates
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-source-refresh/scripts/build_snapshots.py \
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_snapshots.py \
   plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+
+# Rebuild reversible human-only runtime projections without reattesting sources
+python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_projections.py
 
 # Evidence inventory
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-evidence-indexer/scripts/index_evidence.py uploads/
@@ -327,11 +382,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.1.11`):
+Both plugin manifests pin a fixed version (currently `0.1.12`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.11"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.11"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.12"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.12"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -343,11 +398,11 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
 
 ### Release checklist
 
-- The release artifact contains only the plugin package, the repository README, the license,
-  and the two marketplace manifests.
-- Exclude `.git/`, `.claude/`, `.codex/`, `__MACOSX/`, `__pycache__/`, local workspaces,
-  uploads, evidence files, compiled Python, and local `.agents/` state other than
-  `.agents/plugins/marketplace.json`.
+- The release artifact contains only the plugin package, its README and
+  license, and the Claude/Codex plugin manifests.
+- Exclude `.git/`, `.claude/`, `.codex/`, `.plugin-eval/`, `__MACOSX/`,
+  `__pycache__/`, local workspaces, uploads, evidence files, compiled Python,
+  and local `.agents/` state other than `.agents/plugins/marketplace.json`.
 - Run the full validation gate above before release.
 - Run first-party Claude plugin validation for the manifest, skill discovery, and
   frontmatter contracts. This is a package validation gate, not a Cowork UI result.
@@ -360,7 +415,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.1.11')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.1.12')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.1.11'
+git tag --list 'nl-tax-agent-skills--v0.1.12'
 ```

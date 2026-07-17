@@ -2,11 +2,19 @@
 
 Compile all deductible items from evidence and user-provided data.
 
+Entry gate: load this file only after the Box 3 subsections are terminal. While
+any deductions question is open or deductions remains `in_progress`, do not
+load Phase 5.5 or the credits knowledge note. After asking a deductions
+question, stop workflow-resource loading for this turn.
+
 ### 5.1 Alimentatie
 
-- Check for partneralimentatie payments (deductible)
+- Check for potentially qualifying partneralimentatie or another enforceable
+  maintenance obligation; do not assume every transfer to an ex-partner qualifies.
 - Verify: kinderalimentatie is NOT deductible -- flag if the user attempts to claim it
-- Evidence: court order or divorce agreement, plus bank statements showing payments
+- Evidence can be a court order, divorce/cohabitation agreement, notarial deed,
+  or other facts supporting a legally enforceable urgent moral obligation, plus
+  bank statements showing payment. Unclear enforceability remains manual review.
 - Record: total annual amount, evidence_id, assumption_id if amount is estimated
 
 ### 5.2 Specifieke zorgkosten (medical expenses)

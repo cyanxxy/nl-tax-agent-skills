@@ -1,10 +1,10 @@
 # Box 3 — Provisional 2026: Fictitious-Only Rules
 
-source_ids: bd_box3_2026_provisional, bd_provisional_rates_2026
+source_ids: bd_box3_2026_provisional, bd_fisin_box3_assets_debts_2026, bd_provisional_rates_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Method
@@ -36,6 +36,9 @@ Over the calculated box 3 income, the provisional 2026 box 3 tax rate is 36%.
 - All amounts are estimates — the provisional assessment is based on projected values
 - Actual year-end positions will only be known after 31 December 2026
 - Green investments/savings and cash need separate review because exemptions can change the amount included in banktegoeden or overige bezittingen
+- Candidate debts enter `schulden` only after the official Box 3
+  inclusion/exclusion screen. A non-own-home label alone is insufficient;
+  unresolved debt type or purpose stays `manual_review` outside accepted totals.
 - Fiscal partners allocate the joint grondslag sparen en beleggen, not individual assets or debts
 - Workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
 
@@ -46,6 +49,12 @@ values and non-empty provenance, enter trusted totals. Preserve every other row
 in rejected/manual-review rows with a reason. Manual and optional-script paths
 apply identical checks and record `checked_by_agent` or `checked_by_script`.
 Python never classifies a description by keyword.
+
+The official 2026 page is internally inconsistent about the displayed aandeel:
+its general step says 3 decimals while worked examples say and show 2 decimals. A
+workpack review estimate records the convention it used and never represents
+either display rule as the binding portal calculation. The live portal and
+resulting beschikking are authoritative.
 
 Until the direction and relevant facts of a generic loan are confirmed, use:
 

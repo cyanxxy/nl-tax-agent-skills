@@ -4,7 +4,7 @@ source_ids: bd_general_tax_credit_2025, bd_labour_tax_credit_2025, bd_tax_credit
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -107,13 +107,30 @@ For taxpayers who have the AOW age for the whole year, use the AOW table above. 
 
 ## Other heffingskortingen
 
-These credits use reviewed 2025 figures and may be calculated in the workpack when the eligibility conditions are met. Show the calculation step by step and require taxpayer review. The Belastingdienst online system applies these automatically; the workpack states the expected amount for verification.
+Use these credits to ask the complete set of relevant questions and to review
+the result produced by Mijn Belastingdienst. Do not infer eligibility from one
+profile flag. The Belastingdienst online system calculates the credit after the
+taxpayer answers the portal questions; the workpack keeps unresolved conditions
+visible rather than forcing a result.
 
 ### Inkomensafhankelijke combinatiekorting (IACK)
 
 source: bd_iack_2025
 
-For working parents with a child born after 31 December 2012 who is under 12 on 1 January 2025 and belongs to the household for at least 6 months. The child test is therefore **younger than 12 on 1 January 2025**, not "12 or younger." The taxpayer must have arbeidsinkomen above EUR 6,145 and either (a) no fiscal partner, or a fiscal partner for less than 6 months, or (b) a lower arbeidsinkomen than the fiscal partner.
+Screen all of these facts before describing IACK as a candidate:
+
+- a child born after 31 December 2012 (therefore younger than 12 on
+  1 January 2025, not "12 or younger");
+- the child belongs to the taxpayer's household for at least 6 months;
+- arbeidsinkomen above EUR 6,145; and
+- no fiscal partner, a fiscal partner for less than 6 months, or lower
+  arbeidsinkomen than the relevant fiscal partner.
+
+If the child was registered with the other parent, ask about co-parenting. The
+2025 Fiscale Informatie test uses at least 78 days during a 6-month period in a
+repeating rhythm with each parent. Do not convert that into a generic shared-
+custody assumption. If the 6-month household condition fails only because the
+child died, retain the official death exception for manual review.
 
 | Arbeidsinkomen (non-AOW-age) | IACK 2025 |
 |---|---:|
@@ -121,22 +138,26 @@ For working parents with a child born after 31 December 2012 who is under 12 on 
 | EUR 6,146 up to and including EUR 32,223 | 11.45% x (arbeidsinkomen - EUR 6,145) |
 | EUR 32,224 or more | EUR 2,986 (maximum) |
 
-- Only the partner with the lower arbeidsinkomen claims the IACK. If both partners' arbeidsinkomen is equal, only the older partner claims it.
+- With a fiscal partner of 6 months or longer, the lower-arbeidsinkomen partner
+  is the candidate. If both partners' arbeidsinkomen is equal, only the older
+  partner is the candidate. Multiple-partner or part-year cases stay manual
+  review.
 - Payout of the IACK to the least-earning partner was abolished from 2023.
-- Co-ouderschap (co-parenting) has specific day-count conditions (the child stays with each parent in a repeating rhythm). Flag co-parenting cases for manual review rather than auto-calculating.
+- Co-ouderschap and the child-death exception are manual-review cases; ask the
+  exact facts and verify the portal result rather than auto-calculating.
 - If the taxpayer reaches AOW age during 2025, the adjusted amount is calculated by the Belastingdienst — mark it as a manual-review item.
 
 ### Ouderenkorting
 
 source: bd_heffingskortingen_aow_2025_2026
 
-For taxpayers who have reached the AOW age by the end of 2025.
+For taxpayers who have reached the AOW age by **31 December 2025**.
 
 | Verzamelinkomen | Ouderenkorting 2025 |
 |---|---:|
 | Up to and including EUR 45,308 | EUR 2,035 |
-| EUR 45,309 up to and including EUR 58,874 | EUR 2,035 - 15% x (verzamelinkomen - EUR 45,308) |
-| EUR 58,875 or more | EUR 0 |
+| EUR 45,309 up to and including EUR 58,875 | EUR 2,035 - 15% x (verzamelinkomen - EUR 45,308) |
+| EUR 58,876 or more | EUR 0 |
 
 ### Alleenstaande-ouderenkorting
 
@@ -177,7 +198,19 @@ as employment income.
 - The algemene heffingskorting is personal and cannot be allocated
 - The arbeidskorting is personal and based on individual arbeidsinkomen
 - Some credits (e.g., IACK) have specific partner allocation rules
-- For the lesser-earning partner, payout of unused algemene heffingskorting requires BOTH: (a) the partner's algemene heffingskorting exceeds their own income tax due (so there is an unused portion), AND (b) the partner was born before 1963. In 2025, taxpayers born after 1962 receive no payout. Taxpayers born before 1963 may receive up to EUR 3,068 (the 2025 maximum), depending on their own income and the partner's tax due. Flag this as a manual-review item rather than assuming payout applies.
+- For possible payout of unused algemene heffingskorting to a low/no-income
+  taxpayer, ask all of the following rather than using a "lesser earner" label:
+  - Is there an unused portion after the taxpayer's own income tax and premiums?
+  - Was the taxpayer born before 1963?
+  - Did the taxpayer have the **same fiscal partner for more than 6 months**?
+    Electing full-year treatment does not satisfy this duration test when the
+    underlying partnership conditions lasted less than 6 months. The duration
+    test is waived when that partner died in 2025.
+  - Is the fiscal partner, after their own credits, sufficiently liable for
+    Dutch tax and premiums to support a payout?
+- The 2025 payout is at most EUR 3,068 and can be lower because of either
+  partner's tax position. Keep the result as a portal-review item and never
+  assume the maximum is payable.
 
 ## Notes
 

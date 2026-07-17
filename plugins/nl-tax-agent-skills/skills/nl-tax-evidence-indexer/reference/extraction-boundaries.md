@@ -43,7 +43,7 @@ Tax treatment decisions are outside the scope of this skill. The indexer must NO
 |---|---|
 | Whether an amount is deductible | Annual return skill |
 | Which box (1, 2, or 3) an item belongs to | Annual return skill |
-| Optimal partner allocation | Annual return skill |
+| Selecting a partner allocation | Taxpayer, after annual-return scenario review |
 | Whether a voorlopige aanslag amount is correct | Provisional assessment skill |
 | Whether a gift qualifies for the giftenaftrek | Annual return skill |
 | Whether medical expenses exceed the drempel | Annual return skill |

@@ -2,7 +2,12 @@
 
 Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, emit the canonical "not applicable" line from the output contract and continue.
 
-When the taxpayer has an aanmerkelijk belang, read the rates from `_shared/knowledge/years/2025/box2/box2-rates.md` — never paraphrase the 24.5% / 31% box 2 bracket from memory — and append `bd_box2_rates_2025_2026`, `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to `session-progress.yaml` → `sources_loaded`.
+When the taxpayer has an aanmerkelijk belang, read the rates from
+`_shared/knowledge/years/2025/box2/box2-rates.md` — never paraphrase the 24.5% /
+31% box 2 bracket from memory — and append `bd_box2_rates_2025_2026`,
+`bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to
+`session-progress.yaml` → `sources_loaded_by_workflow.annual_2025`, mirrored
+in the active `sources_loaded` list.
 
 ### 3A.1 Substantial-interest status
 

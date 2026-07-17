@@ -1,0 +1,32 @@
+metadata_version: '1.1'
+sources:
+  bd_box3_2025_actual_return:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: bcce0449847753933f69adbcf5e3a6d9fc8083fe677739928c16e29f39b137f8
+    source_id: bd_box3_2025_actual_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/werkelijk-rendement-belastingaangifte
+  bd_box3_2025_calc:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 215ba1751da00d58e53fd39e45ae43bf168e471340ddba7b1d19c484f9868831
+    source_id: bd_box3_2025_calc
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025
+  bd_box3_2025_worked_examples:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-06-24T14:33:42.148461+00:00'
+    reviewed_note_hash_sha256: f164211319a6e4df0954dfed46434196e60023409bde6a34bcd426af57f69268
+    source_id: bd_box3_2025_worked_examples
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025
+  bd_fisin_box3_actual_return_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: bcce0449847753933f69adbcf5e3a6d9fc8083fe677739928c16e29f39b137f8
+    source_id: bd_fisin_box3_actual_return_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/Box_3_Werkelijk_rendement
+  bd_fisin_box3_assets_debts_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 215ba1751da00d58e53fd39e45ae43bf168e471340ddba7b1d19c484f9868831
+    source_id: bd_fisin_box3_assets_debts_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/bezittingen_en_schulden_box_3_

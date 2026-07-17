@@ -2,17 +2,19 @@ session_progress_version: "1.4"
 workspace_root: ""          # absolute path of the working folder; set once at intake, never changed
 created_at: ""
 updated_at: ""
-active_workflow: "unknown"
-active_skill: ""
+active_workflow: "unknown"  # exactly one current candidate; annual_2025 first when both workflows are requested
+active_skill: ""            # exactly one owning workflow skill; a queued workflow is not active
 last_question_asked: ""     # question_id of the most recent question posed to the user;
                             # update on every turn that asks a question (see
                             # _shared/knowledge/methods/interactive-elicitation.md)
 
-# Source IDs from _shared/source-register.yaml that have actually been read
-# during this session. The annual-return and provisional-assessment skills
-# append to this list when they load a knowledge file. The "Sources used"
-# section of every workpack lists exactly these IDs -- never pad the list.
+# Backward-compatible mirror of the currently active workflow's source list.
+# Owners update this together with sources_loaded_by_workflow; never combine
+# annual and provisional IDs in this mirror.
 sources_loaded: []
+sources_loaded_by_workflow:
+  annual_2025: []
+  provisional_2026: []
 
 # Each section/subsection status is one of:
 # not_started | in_progress | complete | chat_only | deferred.
@@ -119,7 +121,7 @@ sections:
 
   provisional_2026:
     status: "not_started"
-    subflow: ""               # request | change | review | stopzetten
+    subflow: ""               # request | change | review | stopzetten; may be set while this workflow is queued
     open_questions: []
     answered: []
     subsections:

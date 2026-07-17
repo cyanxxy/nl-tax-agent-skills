@@ -1,10 +1,10 @@
 # Rule note: Common deductions for annual return 2025
 
-source_ids: bd_fisin_2025_index, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_fisin_zorgkosten_2025, bd_vervoerskosten_ziekte_2025, bd_fisin_lijfrente_2025, bd_fisin_studiekosten_2025, bd_deduction_rate_cap_2025
+source_ids: bd_fisin_2025_index, bd_partneralimentatie_2025, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_fisin_zorgkosten_2025, bd_vervoerskosten_ziekte_2025, bd_fisin_lijfrente_2025, bd_fisin_studiekosten_2025, bd_deduction_rate_cap_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -19,11 +19,18 @@ The persoonsgebonden aftrek is a collection of deductible items that are subtrac
 
 ### Alimentatie (maintenance payments to ex-partner)
 
-- Partneralimentatie paid to an ex-partner is deductible in full (no threshold or cap).
+- Qualifying partneralimentatie paid to an ex-partner is deductible (subject to
+  the general high-income deduction-rate limitation described below).
 - Kinderalimentatie (child maintenance) is NOT deductible.
-- The deduction applies to payments made under a court order, divorce agreement, or notarial deed.
+- A court order, divorce agreement, or notarial deed can establish the
+  obligation, but it is not the only possible basis. Payments arising from an
+  urgent moral obligation can also qualify when that obligation is legally
+  enforceable—for example in some post-cohabitation support situations.
 - The recipient must report the alimentatie received as box 1 income.
-- Evidence required: court order or agreement, plus proof of payments made (bank statements).
+- Collect the instrument/agreement or facts supporting the enforceable
+  obligation, plus proof of the payments made. If the legal enforceability or
+  payment category is unclear, do not reject or claim it automatically; keep it
+  as a manual-review question.
 
 ### Specifieke zorgkosten (specific healthcare costs)
 

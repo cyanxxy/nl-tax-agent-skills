@@ -1,10 +1,10 @@
 # Rule note: Fiscal partnership
 
-source_ids: bd_fiscal_partnership, bd_fiscal_partner_death_return, bd_fiscal_partner_separation
+source_ids: bd_fiscal_partnership, bd_joint_filing_2025, bd_fiscal_partner_death_return, bd_fiscal_partner_separation
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-05-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule

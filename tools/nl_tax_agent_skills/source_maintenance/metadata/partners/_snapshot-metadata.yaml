@@ -1,0 +1,26 @@
+metadata_version: '1.1'
+sources:
+  bd_fiscal_partner_death_return:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06
+    source_id: bd_fiscal_partner_death_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden
+  bd_fiscal_partner_separation:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06
+    source_id: bd_fiscal_partner_separation
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners
+  bd_fiscal_partnership:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06
+    source_id: bd_fiscal_partnership
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap
+  bd_joint_filing_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06
+    source_id: bd_joint_filing_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/samen-met-mijn-partner-aangifte-doen

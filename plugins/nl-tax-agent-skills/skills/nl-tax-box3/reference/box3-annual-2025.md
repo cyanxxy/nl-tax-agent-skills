@@ -49,11 +49,16 @@ debt. Keep it unresolved until the direction and relevant facts are confirmed:
 - Non-exempt green investments
 
 ### Schulden (Debts)
-- Personal loans (persoonlijke leningen)
-- Credit card debt (creditcardschuld)
-- Study debts under the Wet studiefinanciering
-- Other debts (overige schulden)
-- **NOT**: mortgage on own home (hypotheek eigen woning) — this belongs in box 1
+- Screen every debt against the official 2025 included and excluded lists before
+  adding it to category III. Personal/consumer loans, negative bank balances,
+  qualifying study-finance debts, Box 3 asset financing, repayable benefits,
+  and inheritance tax are examples that may belong here.
+- Exclusions are broader than the own-home mortgage: they also include business
+  debts, most Dutch tax debts, short current liabilities, certain maintenance
+  and inheritance obligations, debts tied to Box 2/other work, and debts owed
+  to a fiscal partner or minor child.
+- An unresolved debt stays `unknown`/`manual_review` and outside trusted totals;
+  never turn "non-mortgage debt" into an automatic Box 3 classification.
 
 ## Key Parameters
 
@@ -69,10 +74,17 @@ debt. Keep it unresolved until the direction and relevant facts are confirmed:
 
 ## Important Notes
 
-- For the annual return: need BOTH 1 January AND 31 December positions for actual-return checks, but the fictitious method uses the 1 January 2025 position
-- Debts below the drempel (EUR 3,800 per person) are not deductible from the grondslag
+- The fictitious method uses the 1 January 2025 position. For actual return,
+  ordinary bank accounts require actual 2025 interest rather than a 31
+  December balance; collect a year-end value only for an asset whose value
+  change counts under `box3-actual-2025.md`.
+- Apply the drempel (EUR 3,800 per person) only after the qualifying Box 3 debt
+  total has been established.
 - Partners can freely allocate the joint grondslag sparen en beleggen between them (any split from 0%/100% to 100%/0%); do not split individual assets or debts in the field map
-- The annual return allows choosing between the fictitious return method and the actual return method (werkelijk rendement)
+- The portal asks whether the taxpayer wants to supply actual-return data. If
+  supplied, it calculates both the fictitious and actual-return outcomes and
+  uses the more favorable amount; the taxpayer is not asked to elect the
+  higher-tax method.
 - Werkelijk rendement is calculated without heffingsvrij vermogen and follows the same partner allocation percentage as the joint grondslag sparen en beleggen
 - Fictitious-return workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
 - Manual and optional-script paths use the same row checks and totals. Record
@@ -81,13 +93,13 @@ debt. Keep it unresolved until the direction and relevant facts are confirmed:
 
 ## Required two-method workpack treatment
 
-Every annual 2025 workpack explains both the fictitious (forfaitair) method and
-the actual return (werkelijk rendement) method, and offers to collect the
+Every annual 2025 workpack explains both the fictitious (forfaitair) calculation and
+the actual return (werkelijk rendement) route, and offers to collect the
 actual-return inputs needed for comparison. Indexed files and exact chat answers
 are both valid provenance. When every required input is present, mark the
 subsection `complete` if indexed evidence is used or `chat_only` if the complete
 set is chat-supplied, then show the comparison. If the taxpayer declines this
-optional route, mark it `complete` with `not supplied by choice`; that is not a
-gap. Only facts still missing after the taxpayer chose the comparison may be
+additional data collection, mark it `complete` with `not supplied by choice`;
+that is not a gap. Only facts still missing after the taxpayer requested the comparison may be
 `deferred/manual review`; do not silently omit the explanation or claim that
 both methods were completed.

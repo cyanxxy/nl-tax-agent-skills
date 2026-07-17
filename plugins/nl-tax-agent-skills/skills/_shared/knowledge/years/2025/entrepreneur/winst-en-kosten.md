@@ -1,10 +1,10 @@
 # Rule note: Winstbepaling, kosten en administratie 2025
 
-source_ids: bd_zakelijke_kosten_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werkruimte_2025, bd_privevervoermiddel_2025, bd_oudedagsreserve_2025, bd_administratie_bewaren_2025, bd_bijtelling_auto_2025, law_wet_inkomstenbelasting_2001, law_awr_artikel_52
+source_ids: bd_zakelijke_kosten_2025, bd_zakelijke_kosten_een_jaar_2025, bd_zakelijke_kosten_meerdere_jaren_2025, bd_beperkt_aftrekbare_kosten_2025, bd_werkruimte_2025, bd_privevervoermiddel_2025, bd_oudedagsreserve_2025, bd_administratie_bewaren_2025, bd_bijtelling_auto_2025, law_wet_inkomstenbelasting_2001, law_awr_artikel_52
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -22,10 +22,22 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Deducting costs
 
-- Costs relating to one year are deducted in full in that year (wages, rent,
-  light and heating, annual maintenance). An item costing **EUR 450 or more** is
-  a bedrijfsmiddel and must be depreciated; below EUR 450 it may be deducted at
-  once.
+- Costs relating to one year are generally deducted in full in that year
+  (wages, rent, light and heating, annual maintenance). For a purchase, ask
+  **both** its tax cost basis and how long the enterprise expects to use it:
+  - an item costing less than **EUR 450** may generally be deducted at once;
+  - an item costing **EUR 450 or more** that is used for longer than one year is
+    a durable business asset whose cost is spread through depreciation;
+  - the EUR 450 amount is exclusive of deductible VAT and inclusive of VAT when
+    the VAT cannot be recovered.
+- Do not turn the price threshold alone into a depreciation rule. Costs paid in
+  advance that benefit multiple years (for example multi-year rent, insurance,
+  interest, or a multi-year campaign) are also allocated across the years of
+  expected benefit even when they are not a tangible asset.
+- For a depreciation review, record acquisition cost, costs to make the asset
+  ready for use, expected residual value, expected useful life, and the date it
+  entered use. If any of these is unresolved, preserve the finalized accounts'
+  treatment and flag the schedule for manual review rather than inventing it.
 
 ## Non-deductible and limited costs (art. 3.14 - 3.17)
 
@@ -126,5 +138,6 @@ do not calculate it as a standard entrepreneur case.
 2. Do not compute the exact car bijtelling or werkruimte outcome from memory;
    collect the inputs and read the rates here and in bd_bijtelling_auto_2025,
    flagging anything ambiguous for manual review in Mijn Belastingdienst.
-3. Depreciation schedules, the FOR run-down, and complex mixed-use assets are
-   manual-review items.
+3. For every cost near or above EUR 450, ask whether it benefits only 2025 or is
+   used/benefits multiple years. Depreciation schedules, the FOR run-down, and
+   complex mixed-use assets are manual-review items.

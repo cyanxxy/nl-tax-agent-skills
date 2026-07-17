@@ -24,11 +24,15 @@
 |------------------------|---------------|----------------|------------------|---------------|---------------|-------|
 | Employment income      | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
 | Pension/benefit income | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
+| Expected business profit (`onderneming.geschatte_winst`) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | [N/A if no enterprise] |
 | Other income           | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Own-home deduction     | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
+| Eigenwoningforfait (WOZ peildatum 1 January 2025) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | |
+| Total deductible own-home costs | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | mortgage interest + financing costs + periodic rights |
+| Hillen deduction       | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           | [if applicable] |
+| Box 1 own-home balance (`box1_own_home_balance`) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | EWF - deductible costs - Hillen |
 | Box 3 assets (Cat I)   | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
 | Box 3 assets (Cat II)  | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Box 3 debts (Cat III)  | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
+| Box 3 qualifying debts (Cat III) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | accepted rows only; unresolved candidates excluded |
 | Alimentatie            | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
 | Other deductions       | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
 | Partner changes        | [description] | [F/U/B/?]      | [description]    | [F/U/A/?]     | [description] |       |
@@ -42,13 +46,13 @@
 
 ## Impact
 
-[Summary of expected directional impact on monthly payment or refund based on the workpack comparison]
+[Reviewed possible future payment/refund direction, or `uncertain`; never a cash-flow prediction]
 
-- If net tax position increases: "Based on these changes, your estimated tax liability for 2026 is higher than the current voorlopige aanslag. This may result in higher monthly payments."
-- If net tax position decreases: "Based on these changes, your estimated tax liability for 2026 is lower than the current voorlopige aanslag. This may result in lower monthly payments or a higher monthly refund."
-- If net tax position is unchanged: "Based on these changes, your estimated tax position for 2026 is similar to the current voorlopige aanslag. No significant change in monthly payments is expected."
+- If the reviewed estimate points upward: "The prepared 2026 estimate is higher than the current baseline. The portal may therefore show a higher future payment or lower future refund."
+- If the reviewed estimate points downward: "The prepared 2026 estimate is lower than the current baseline. The portal may therefore show a lower future payment or higher future refund."
+- If the reviewed estimate is similar: "The prepared 2026 estimate is similar to the current baseline, but the portal can still produce a different monthly amount."
 
-Note: The Belastingdienst performs its own recalculation based on the full submitted dataset. The actual adjusted monthly amount may differ from this estimate.
+Note: These are review directions, not predicted cash flows. The Belastingdienst performs its own recalculation based on the full submitted dataset. Only the live portal result and replacement beschikking determine the actual future payment/refund amount and timing.
 
 ## Reminder
 

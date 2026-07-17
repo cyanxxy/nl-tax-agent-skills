@@ -1,7 +1,7 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.11",
-  "description": "Cowork-first, cross-platform Dutch tax workpack preparation for manual Mijn Belastingdienst entry.",
+  "version": "0.1.12",
+  "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
@@ -21,7 +21,7 @@
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
-    "shortDescription": "Step-by-step Dutch tax preparation for manual official form entry.",
+    "shortDescription": "Conversational Dutch tax workpacks for manual official form entry.",
     "longDescription": "Prepare source-traceable Dutch tax workpacks in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The plugin guides intake, evidence indexing, source checks, field maps, and manual-entry checklists without logging in, filing, signing, submitting, or automating Mijn Belastingdienst.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",

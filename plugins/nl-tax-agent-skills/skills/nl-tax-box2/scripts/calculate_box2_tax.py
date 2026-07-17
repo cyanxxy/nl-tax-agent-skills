@@ -17,8 +17,15 @@ Usage:
 from __future__ import annotations
 
 import argparse
-from decimal import Decimal, InvalidOperation, ROUND_FLOOR, ROUND_HALF_UP
+from decimal import (
+    Decimal,
+    InvalidOperation,
+    ROUND_FLOOR,
+    ROUND_HALF_UP,
+    localcontext,
+)
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -29,9 +36,9 @@ EURO = Decimal("1")
 ZERO = Decimal("0")
 
 # Box 2 thresholds and rates. These duplicate the canonical knowledge pack so this
-# script can act as a deterministic calculator; the knowledge notes are canonical.
-# Keep them in sync with the reviewed rule note and bump them in the same commit it
-# changes: _shared/knowledge/years/2025/box2/box2-rates.md
+# optional mechanical arithmetic check can run offline; the knowledge notes are
+# canonical. Keep them in sync with the reviewed rule note and bump them in the
+# same commit it changes: _shared/knowledge/years/2025/box2/box2-rates.md
 # (source bd_box2_rates_2025_2026).
 BOX2_RATES: dict[int, dict[str, Decimal | str]] = {
     2025: {
@@ -73,6 +80,14 @@ def _decimal(value: Any, field_name: str) -> Decimal:
         # NaN/inf would otherwise raise InvalidOperation deep inside the
         # comparisons/quantize instead of a clean input error.
         raise ValueError(f"{field_name} must be a finite number")
+    try:
+        as_float = float(result)
+    except (OverflowError, ValueError) as exc:
+        raise ValueError(
+            f"{field_name} is outside the supported JSON number range"
+        ) from exc
+    if not math.isfinite(as_float):
+        raise ValueError(f"{field_name} is outside the supported JSON number range")
     return result
 
 
@@ -81,16 +96,28 @@ def _ensure_non_negative(value: Decimal, field_name: str) -> None:
         raise ValueError(f"{field_name} must be non-negative")
 
 
+def _quantize(value: Decimal, quantum: Decimal, rounding: str) -> Decimal:
+    """Quantize large but finite values without leaking Decimal context errors."""
+    scale = max(0, -quantum.as_tuple().exponent)
+    integer_digits = max(1, value.adjusted() + 1) if value else 1
+    with localcontext() as context:
+        context.prec = max(28, integer_digits + scale + 2)
+        return value.quantize(quantum, rounding=rounding)
+
+
 def _money(value: Decimal) -> Decimal:
-    return value.quantize(CENT, rounding=ROUND_HALF_UP)
+    return _quantize(value, CENT, ROUND_HALF_UP)
 
 
 def _whole_euro_tax(value: Decimal) -> Decimal:
-    return value.quantize(EURO, rounding=ROUND_FLOOR)
+    return _quantize(value, EURO, ROUND_FLOOR)
 
 
 def _out(value: Decimal) -> float:
-    return float(_money(value))
+    result = float(_money(value))
+    if not math.isfinite(result):
+        raise ValueError("calculation result exceeds the supported JSON number range")
+    return result
 
 
 def _add_flag(flags: list[str], flag: str) -> None:
@@ -523,10 +550,17 @@ def _validate_allocation(
     errors: list[str],
     warnings: list[str],
     manual_review_flags: list[str],
+    partner_status: bool | None,
 ) -> dict[str, float] | None:
-    allocation = payload.get("partner_allocation") or payload.get("allocation")
-    if allocation is None:
+    supplied_keys = [
+        key for key in ("partner_allocation", "allocation") if key in payload
+    ]
+    if len(supplied_keys) > 1:
+        errors.append("provide either partner_allocation or allocation, not both")
         return None
+    if not supplied_keys:
+        return None
+    allocation = payload[supplied_keys[0]]
     if not isinstance(allocation, dict):
         errors.append("partner_allocation must be an object")
         return None
@@ -549,7 +583,6 @@ def _validate_allocation(
         errors.append("partner allocation percentages must total 100")
         return None
 
-    partner_status = _optional_boolean(payload, "full_year_fiscal_partner", errors)
     if partner_status is not True:
         _add_unique(manual_review_flags, "partner_status_unconfirmed")
         warnings.append(
@@ -701,8 +734,17 @@ def validate_and_normalize_payload(
                 "loss_setoff_source before calculation."
             )
 
+    partner_status = _optional_boolean(
+        payload,
+        "full_year_fiscal_partner",
+        errors,
+    )
     allocation = _validate_allocation(
-        payload, errors, warnings, manual_review_flags
+        payload,
+        errors,
+        warnings,
+        manual_review_flags,
+        partner_status,
     )
     manual_review_required = bool(manual_review_flags)
     normalized = {
@@ -717,7 +759,7 @@ def validate_and_normalize_payload(
         "standard_ab_case": standard_ab_case,
         "amounts": {key: float(_money(value)) for key, value in amounts.items()},
         "partner_allocation": allocation,
-        "full_year_fiscal_partner": payload.get("full_year_fiscal_partner"),
+        "full_year_fiscal_partner": partner_status,
         "loss_setoff_reviewed": loss_reviewed,
         "loss_setoff_source": loss_source,
         "manual_review_flags": manual_review_flags,
@@ -772,11 +814,21 @@ def calculate_from_payload(payload: dict[str, Any]) -> dict:
             "result": None,
             "check_performed_by": "checked_by_script",
         }
+    try:
+        result = _calculate_validated(normalized)
+    except (ArithmeticError, OverflowError, ValueError) as exc:
+        return {
+            "errors": [f"Box 2 calculation could not be represented safely: {exc}"],
+            "warnings": warnings,
+            "normalized": normalized,
+            "result": None,
+            "check_performed_by": "checked_by_script",
+        }
     return {
         "errors": [],
         "warnings": warnings,
         "normalized": normalized,
-        "result": _calculate_validated(normalized),
+        "result": result,
         "check_performed_by": "checked_by_script",
     }
 

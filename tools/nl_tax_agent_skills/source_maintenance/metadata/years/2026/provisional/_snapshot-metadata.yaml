@@ -1,0 +1,92 @@
+metadata_version: '1.1'
+sources:
+  bd_algoritmeregister_vva_eva:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 7b6c5aa842476d31fdb6eb8c00dff6ee8ea20a7c99c8c46bb844ac315ca2d536
+    source_id: bd_algoritmeregister_vva_eva
+    source_url: https://over-ons.belastingdienst.nl/onderwerpen/omgaan-met-gegevens/algoritmeregister/weegmodule-verzoek-voorlopige-aanslag-vva-en-bedrijfsregels-eerste-voorlopige-aanslag-eva/
+  bd_box1_rates_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
+    reviewed_note_hash_sha256: 82958b5b361de740807e764fdb99ab7ec2c4b8e4cfbe46790616076976c35464
+    source_id: bd_box1_rates_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+  bd_box2_provisional_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-05-30T10:38:51.138867+00:00'
+    reviewed_note_hash_sha256: 3da4fda00d9b499e87af3d454b2592e22bcdfc1ec7087773b6433e8f38254e62
+    source_id: bd_box2_provisional_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
+  bd_box3_2026_provisional:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 78707e164c10f70f5520087f12e56a1b07ef8dab966d273b12b0cc13074c6601
+    source_id: bd_box3_2026_provisional
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026
+  bd_fisin_aanmerkelijk_belang_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-05-30T10:38:51.138867+00:00'
+    reviewed_note_hash_sha256: 89783b2659883e82850fdb3bf8f0aaa370415859a6cfc1a322453a9d9e41a00f
+    source_id: bd_fisin_aanmerkelijk_belang_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
+  bd_fisin_box3_assets_debts_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 78707e164c10f70f5520087f12e56a1b07ef8dab966d273b12b0cc13074c6601
+    source_id: bd_fisin_box3_assets_debts_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/bezittingen_en_schulden_box_3_
+  bd_own_home_deduction_cap_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 13395f9d8da2821295fd6f2ecf2fedf4a4191c54a80fb3a94c28fbdf25543d8d
+    source_id: bd_own_home_deduction_cap_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
+  bd_provisional_change_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: d67e793652e7dc4b27f0f3797cf2ae49ab285297682e59be1f2fd5d0f5100b54
+    source_id: bd_provisional_change_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen
+  bd_provisional_landing_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: ea5109117bdef9ca6f1ae646e9f852266bcd764b41ebec170bed2f27ac63761c
+    source_id: bd_provisional_landing_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/voorlopige-aanslag
+  bd_provisional_rates_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
+    reviewed_note_hash_sha256: 82958b5b361de740807e764fdb99ab7ec2c4b8e4cfbe46790616076976c35464
+    source_id: bd_provisional_rates_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen
+  bd_provisional_refund_timing_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 2276ed1f38723bbcc3930b1bc2825928291b8ab7f277c259ebbdb45a7bb8a89e
+    source_id: bd_provisional_refund_timing_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-aangevraagd-hoe-en-wanneer-krijg-ik-mijn-geld
+  bd_provisional_request_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: ea5109117bdef9ca6f1ae646e9f852266bcd764b41ebec170bed2f27ac63761c
+    source_id: bd_provisional_request_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-4-stappen-zelf-voorlopige-aanslag-aanvragen
+  bd_provisional_review_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: e137c7a3d7a1a19e058a0884af1497d5d840ccf0e4d07acc1dce486323424efc
+    source_id: bd_provisional_review_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen
+  bd_provisional_stopzetten_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: e6b1cc970721a14a3a8f7ace8ef8c8d518fb33ba8b2d1086dc22352aaee4f729
+    source_id: bd_provisional_stopzetten_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-stoppen
+  bd_woz_value_provisional_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
+    reviewed_note_hash_sha256: 13395f9d8da2821295fd6f2ecf2fedf4a4191c54a80fb3a94c28fbdf25543d8d
+    source_id: bd_woz_value_provisional_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hulp-bij-de-voorlopige-aanslag-wat-neemt-u-mee

@@ -1,6 +1,6 @@
 ## Review subflow
 
-### Decision points
+### Conversational review checkpoints
 
 1. Does the taxpayer profile exist and contain `provisional_2026_review`?
 2. Is there a current voorlopige aanslag available to review?
@@ -22,9 +22,12 @@
    - Housing: new mortgage, sold home, refinanced, paid off mortgage
    - Partner: marriage, separation, divorce, partner income changes
    - Deductions: started/stopped alimentatie, changed premiums, other
-   - Credits: IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting facts requiring manual review
+   - Credits: IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting facts requiring manual review. Alleenstaandeouderenkorting concerns entitlement to an AOW pension for a single person, not children or single-parent status.
    - Box 2: expected dividends, share sales, costs, dividend withholding tax, or partner allocation changed
-   - Box 3: corrections to the estimated asset or debt values on 1 January 2026; later-year changes do not change the 2026 box 3 peildatum
+   - Box 3: corrections to the estimated asset or qualifying debt values on 1 January 2026; apply the official debt inclusion/exclusion screen, and remember that later-year changes do not change the 2026 box 3 peildatum
+   - AOW: below all year, reaches during 2026, or AOW all year. For a
+     transition, record the month and review the live portal result rather than
+     selecting a whole-year table.
 3. **Comparison** — for each category, note whether the current voorlopige aanslag figure still matches reality
 
 ### Output generation

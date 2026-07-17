@@ -35,7 +35,12 @@ sourced entries unless the current workpack/reference makes them obsolete.
 
 A single piece of evidence may provide data for multiple fields. Examples:
 
-- A **jaaropgaaf** provides: `box1.loon`, `box1.loonheffing`, and `box1.arbeidskorting_loon`
+- A **jaaropgaaf** provides `box1.loon` from the amount labelled `loon` or
+  `fiscaal loon`, copied exactly, and `box1.loonheffing`. Never reconstruct
+  `box1.loon` by subtracting employee-insurance premiums or other lines. A
+  displayed arbeidskorting is an informational payroll check, not the wage
+  basis and not a standalone mapper field unless the live portal exposes an
+  exact corresponding field.
 - A **hypotheek_jaaroverzicht** provides: `eigenwoning.hypotheekrente` and `eigenwoning.eigenwoningschuld`
 - A **jaaroverzicht_bank** provides: `box3.banktegoeden` and (for werkelijk rendement) `box3.werkelijk_rendement_rente`
 
@@ -54,38 +59,21 @@ When this happens, the field entry lists all contributing `evidence_id` values a
 
 ## Confidence scoring
 
-Every mapped field receives a confidence score from 0.0 to 1.0 indicating how reliable the mapping is.
+Every mapped field receives a confidence score from 0.0 to 1.0 as a compact
+traceability signal, not as a decision engine. The agent judges the score from
+the source's strength and period, mapping clarity, assumptions, and conflicts,
+and explains material uncertainty in `notes`.
 
-### 0.9 to 1.0 — High confidence
+- A score near 1 suits a direct, current-period value with an unambiguous field
+  match.
+- A middle score suits a value that needs interpretation, extrapolation, or a
+  supported estimate.
+- A score near 0 suits weak, speculative, or materially conflicting support.
 
-- Value comes directly from classified evidence
-- Evidence classification confidence is high (0.85+)
-- The field-to-evidence mapping is unambiguous
-- Example: employment income from a jaaropgaaf classified with 0.95 confidence
-
-### 0.7 to 0.89 — Moderate confidence
-
-- Value comes from evidence, but the classification has some uncertainty
-- OR the value required minor interpretation (e.g., identifying which line item is the correct one)
-- Example: bank balance from a statement where the account type is slightly ambiguous
-
-### 0.5 to 0.69 — Low confidence
-
-- Value is partially estimated or derived from indirect evidence
-- OR the evidence covers a different period and was extrapolated
-- OR multiple conflicting sources exist and one was chosen
-- Example: estimated annual salary based on a recent payslip multiplied by 12
-
-### Below 0.5 — Very low confidence
-
-- Value is highly estimated with little supporting evidence
-- OR the mapping is speculative (e.g., user mentioned an amount verbally without documentation)
-- Manual review is CRITICAL for these fields
-- Example: estimated other income based on a rough user statement
-
-### Confidence inheritance
-
-When a field's value derives from evidence, the field confidence cannot exceed the evidence classification confidence. If the evidence was classified with 0.80 confidence, the field confidence is at most 0.80 even if the mapping itself is straightforward.
+When a source already has a classification-confidence score, normally do not
+score the mapped field above it unless `notes` explain why that judgment is
+appropriate. Never use a confidence cutoff by itself to decide readiness or
+manual review.
 
 ---
 
@@ -108,10 +96,10 @@ provenance, not a missing-data state.
 
 - `quote`: required -- short verbatim text supporting the value
 - `stated_at`: required -- date of the statement
-- Add the field to `user_chat_values_index` and set
-  `manual_review_required: true` for spot-checking before entry
+- Add the field to `user_chat_values_index` for spot-checking before entry
 - Do not lower confidence merely because the source is chat; distinguish an
-  exact answer from a rough estimate
+  exact answer from a rough estimate. Flag manual review only when the answer
+  is rough, ambiguous, conflicting, or otherwise needs verification.
 
 ### `estimate`
 
@@ -141,7 +129,7 @@ The value was computed from other field values using tax rules.
 
 The value uses a user-confirmed default that is not fully determined by sourced
 facts. It requires `assumption_id` and remains a human-review item. Do not label
-deterministic derivations, such as an AOW-age screen from sourced DOB plus tax
+rule-derived values, such as an AOW-age screen from sourced DOB plus tax
 year and a reviewed rule, as assumptions; use `calculated`.
 
 ---
@@ -181,10 +169,11 @@ rows, so the mapper NEVER creates entries (in `fields` or `missing_fields`) for:
 - **Session identifiers** or portal navigation state
 - **Portal-prefilled personal/identifier rows** -- BSN, IBAN, name, address, and date of birth
 
-This is mapping scope, not a security control — the host environment owns
-sensitive-data handling. The validator does still flag a browser/session/submission
-(portal-automation) field if one slips into `fields`, because the tool is
-prep-only.
+This is the human-only authenticated-portal product boundary in
+`../_shared/runtime-contract.md`, regardless of host permissions. The validator
+flags browser, Chrome, computer-use, login/session, form-filling, clicking,
+signing, sending, or submission actions if they appear in either `fields` or
+`missing_fields`, because the mapper is preparation-only.
 
 ### Prefilled personal/identifier fields: omit, never value
 
@@ -198,15 +187,23 @@ unpopulated.
 
 ## Review flagging rules
 
-A field is flagged as `manual_review_required: true` when any of the following apply:
+A field is flagged as `manual_review_required: true` when the agent judges that
+taxpayer verification is materially useful before entry. Relevant signals
+include:
 
-1. Confidence is below 0.7
-2. The source type is `estimate` and the value exceeds EUR 5,000
-3. Multiple conflicting evidence items exist for the same field
-4. The evidence item was flagged for review in the evidence index
-5. The field involves a tax choice (e.g., werkelijk rendement vs forfaitair, partner allocation percentage)
-6. The value is an assumption or was derived from an assumption
-7. The field is in a section the taxpayer did not explicitly confirm
+- meaningful uncertainty, estimation, extrapolation, or assumptions;
+- conflicting evidence or an evidence item already flagged for review;
+- a significant change from a baseline whose source or explanation needs
+  confirmation;
+- a taxpayer decision or portal-dependent review (e.g.,
+   whether to supply werkelijk-rendement data, or a partner allocation
+   percentage). Supplying actual-return data is not a tax-method election: the
+   2025 portal compares both calculations and uses the favorable amount; or
+- a section the taxpayer did not explicitly confirm.
+
+There is no universal euro amount, percentage change, or confidence cutoff.
+Judge materiality in the context of the taxpayer's case and explain the reason
+in `notes`.
 
 ---
 
@@ -225,7 +222,9 @@ A field is flagged as `manual_review_required: true` when any of the following a
 - NEVER include werkelijk rendement fields
 - Apply peildatum 1 January 2026 for box 3
 - Map summary fields only (totals, not per-employer breakdowns)
-- Set `manual_review_required: true` for any estimate exceeding the baseline by more than 20%
+- Compare estimates with any available baseline and flag material,
+  insufficiently explained differences for review using the case-sensitive
+  rules above.
 
 ## Manual validation checklist
 

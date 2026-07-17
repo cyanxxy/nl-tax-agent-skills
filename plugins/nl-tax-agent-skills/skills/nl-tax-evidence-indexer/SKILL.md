@@ -1,6 +1,6 @@
 ---
 name: nl-tax-evidence-indexer
-description: Use when the user explicitly wants to index or organize Dutch tax documents and chat-stated amounts into an evidence index for an annual or provisional preparation workflow.
+description: Use when the user explicitly wants Dutch tax documents or chat amounts organized into a source-traceable evidence index.
 argument-hint: "[path-to-upload-folder]"
 allowed-tools:
   - Read
@@ -14,155 +14,98 @@ allowed-tools:
 
 # NL Tax Evidence Indexer
 
-Catalog whatever evidence the user has - files in a folder the user selects,
-**and values stated in chat** - into a single structured index. This skill is
-conversational: it does not assume the user has dropped a complete folder of
-documents.
+Organize the evidence the user actually supplies—selected files, host
+attachments, and values stated in chat—without requiring a complete document
+folder. Keep the interaction conversational and ask only for evidence that
+matters to the active annual or provisional workflow.
 
-## When to use
+## Activation
 
-- The user mentions having (or being about to share) tax documents.
-- A workflow skill (annual / provisional) needs evidence for a section.
-- New files appear in `uploads/` or `evidence/`.
-- The user wants to record a value in chat ("my 2025 employer paid me EUR 52,400") that should be tracked alongside files.
+Use this skill when the user asks to index or organize Dutch tax evidence, when
+an active workflow needs evidence for a section, or when selected files or chat
+amounts need source-traceable recording. Credit everything already supplied;
+do not restart intake or turn the exchange into a fixed upload checklist.
 
-## Read first (every turn)
+## Read before acting
 
-Read `../_shared/runtime-contract.md` first. Bundled paths below are relative to
-this skill's own directory: `reference/` and `templates/` are subfolders, and
-`_shared/` is the plugin-shared folder at `../_shared/`. Use the host's
-skill-resource or file tools to resolve them, and do not depend on shell
-visibility or vendor-specific environment variables. Resolve every
-`workspace/...` path against `workspace_root` recorded in
-`session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree.
+Resolve bundled paths relative to this skill directory and every `workspace/...`
+path against the saved `workspace_root`.
 
-1. `_shared/knowledge/methods/interactive-elicitation.md` - the conversational contract.
-2. `reference/evidence-types.md`, `reference/extraction-boundaries.md`
-3. `workspace/shared/session-progress.yaml` - to see which evidence questions are open.
-4. `workspace/taxpayer/evidence-index.yaml` if it exists. Otherwise prepare to create it from `templates/evidence-index.yaml`.
+1. Read `../_shared/runtime-contract.md` first.
+2. Read `../_shared/knowledge/methods/interactive-elicitation.md` for the shared
+   conversational and session-state contract.
+3. Read [reference/indexing-flow.md](reference/indexing-flow.md) whenever this
+   skill is active; it owns the attachment, indexing, provenance, and update
+   procedure.
+4. Read [reference/evidence-types.md](reference/evidence-types.md) before
+   assigning a canonical `evidence_type`, such as `woz_beschikking`,
+   `hypotheek_jaaroverzicht`, or `voorlopige_aanslag_beschikking`.
+5. Read [reference/extraction-boundaries.md](reference/extraction-boundaries.md)
+   before classifying or extracting document facts.
+6. Read `workspace/shared/session-progress.yaml` and the existing
+   `workspace/taxpayer/evidence-index.yaml`. If the index does not exist, seed
+   it from `templates/evidence-index.yaml`.
 
-Items 2-3 are internal rules. Do not quote or summarize them to the user unless
-the user offers credentials, asks for login/submission help, or a specific
-uploaded item needs review.
+Keep resource loading, file maintenance, and orchestration invisible to the
+user unless a specific evidence item needs review.
 
-## How files arrive (selected folder and host attachments)
+## Core contract
 
-Ask which visible folder or attachments the user wants included. `uploads/` and
-`evidence/` are convenient defaults, but never expand the inventory beyond the
-user-selected location(s). Accept all of these:
+- Accept a user-selected folder, selected host attachments, values stated in
+  chat, or any combination of these. Never require a file when the active
+  workflow permits a chat value.
+- Inventory only the locations the user selected. The optional Python helper
+  catalogs file metadata and hashes; it does not classify documents, extract
+  tax facts, or choose tax treatment.
+- Assign evidence types and confidence conversationally from the document and
+  the reviewed references. Do not use a deterministic tax-classification or
+  decision engine, compute tax, decide deductibility, or choose a partner
+  allocation.
+- Preserve provenance. A file stays `source: file`; a value stated in chat uses
+  `source: user_chat`, its verbatim `quote`, and `stated_at`; a deferred fact
+  uses `source: unknown` and remains open.
+- Return chat answers to the active workflow for its profile or section notes.
+  An evidence-index chat row is only a resume-compatible record when the
+  indexer was already active. Do not invoke this indexer solely to turn chat
+  into document evidence; pure chat collection does not require an
+  `evidence-index.yaml` entry.
+- Never silently choose between conflicting file and chat values or between
+  competing documents. Mark the item for review, describe the conflict, and
+  ask the user which value or document should control.
+- Ask at most three closely related evidence questions in one turn. Defer an
+  unavailable item to `missing-info.md` and continue with another useful item.
 
-- **Folder drop** - files the user placed in `uploads/` or `evidence/` directly.
-- **Host attachment** - files attached in the chat UI (ChatGPT Work, Codex,
-  Claude, or another supported host). Hosts place these somewhere in the session working directory - often
-  the workspace root or a host-specific attachments path, not `uploads/`.
-- **Stated in chat** - no file at all; record as a `user_chat` item.
+## Optional catalog helper
 
-When the user mentions attaching or sharing a file and it is not in `uploads/`
-or `evidence/`, look for it in the working directory (and any host attachment
-path visible to you). When found, prefer copying it into `uploads/` with its
-original filename before indexing — but only via a byte-faithful mechanism: a
-shell copy (`python3 -c "import shutil; shutil.copy2(src, dst)"` under the
-allowed `Bash(python3:*)` tool) when the shell can see both paths, or a host
-file-copy facility if one exists. Never round-trip a binary file (PDF, image,
-xlsx) through Read + Write — that corrupts it. **If no faithful copy is
-possible** (no shell access to the attachment path, binary content), index the
-file **in place**: record its real path in `file_path`, note
-`location: host_attachment` in the item's notes, and continue — cataloging does
-not require the file to live in `uploads/`. Never ask the user to re-upload a
-file that is already in the session; never treat "it's not in uploads/" as "the
-user has no evidence".
+Run `scripts/index_evidence.py` only from its resolved bundled location and only
+when Python can already access that location and the selected files. The helper
+is optional: never ask the user to install Python, and never copy or execute a
+script from `workspace/`, `uploads/`, or `evidence/`.
 
-## What this skill does
+The helper may populate inventory metadata and `file_sha256`. A null hash does
+not block classification, extraction, or downstream preparation. Record
+`check_performed_by: checked_by_script` when it ran successfully; otherwise use
+`checked_by_agent` after completing the inventory with available file tools.
 
-- **Inventory** the files in the user-selected folder without classifying them.
-- **Hash** each file (sha256) for integrity tracking when Python or another
-  available host facility can do so.
-- **Return chat answers to the owning workflow** for storage in profile or
-  workflow notes with `source: user_chat`. Do not invoke this indexer solely to
-  turn chat into document evidence.
-- **Drive the conversation** when a workflow needs evidence that is not yet present.
-- **Generate** review questions for items the user must verify.
+## Output ownership
 
-## Conversational behavior
+Write or update only:
 
-The indexer never tries to do everything in one shot. Its turn-by-turn loop is:
+- `workspace/taxpayer/evidence-index.yaml`
+- `workspace/shared/evidence-review-questions.md`
+- `workspace/shared/session-progress.yaml`
+- `workspace/shared/missing-info.md` when an item is deferred
 
-1. **Inventory pass.** List what is currently in the user-selected folder(s),
-   including selected host attachments. Diff against existing entries in
-   `evidence-index.yaml`. Add or update items as needed. The optional script
-   supplies inventory metadata and hashes only; you classify and extract.
-2. **Tell the user what was found.** One short sentence per file: "Found `jaaropgaaf-2025.pdf` - looks like a 2025 jaaropgaaf from {employer}, confidence 0.85." Do not paste long extracts.
-3. **Ask only about gaps that are blocking the active workflow.** If the active workflow is `annual_2025` and there is no jaaropgaaf and no employment income recorded, ask: "Do you have a 2025 jaaropgaaf? You can attach it here in the chat, drop it into `uploads/`, or just tell me the amount."
-4. **Accept whichever the user offers** - file or chat - and record it accordingly. For chat, set `sections.evidence.subsections.user_chat_values.status: chat_only`, append the resolved question ID to its `answered` list, and update the evidence rollup.
-5. **Defer politely.** If the user can't provide it now, mark `extraction_status: "deferred"`, keep the question ID in `open_questions` rather than `answered`, add it to `missing-info.md`, and move on.
+Do not write to `workspace/annual/**` or `workspace/provisional/**`. The active
+annual or provisional workflow owns tax treatment and its section artifacts.
 
-Batch at most three evidence questions per turn.
+## User-facing close
 
-## Two paths for every fact
+In two to four sentences, report files added or updated, chat values recorded,
+and the next one or two evidence items that would unblock the active workflow.
+Do not add generic warnings.
 
-Each item in `evidence-index.yaml` carries a `source` field:
-
-- `file` - a real file in `uploads/` or `evidence/`.
-- `user_chat` - a value the user stated. Includes `quote` (verbatim user text) and `stated_at`.
-- `unknown` - promised but not yet provided (deferred). Set `extraction_status: "deferred"`; this matches the `source: unknown` + deferred-status provenance used in `profile.yaml` and the workflow skills.
-
-For `user_chat` items, set `file_path: null`, `file_sha256: null`, `extraction_status: "user_chat"`, and put the stated amounts under `extracted_fields` with a clear key (e.g., `gross_employment_income_eur`).
-This item form is resume compatibility for a chat answer received while the
-indexer was already active; pure chat collection does not require an
-`evidence-index.yaml` entry and is owned by the active workflow.
-
-## Evidence classification
-
-For each file or user-stated item, determine:
-- `evidence_type` (`jaaropgaaf`, `bankafschrift`, `woz_beschikking`, `hypotheek_jaaroverzicht`, `voorlopige_aanslag_beschikking`, `definitieve_aanslag`, etc.)
-- `tax_year`
-- `owner` (taxpayer or partner)
-- `confidence` (0.0-1.0)
-- `review_required` (true if confidence < 0.8 or content is ambiguous)
-
-For `user_chat` items, `confidence` reflects how clearly the user stated the value, not OCR confidence.
-
-## Extraction boundaries
-
-The indexer MAY extract:
-- Document type, tax year, employer/institution name, summary amounts.
-- For chat-sourced items: only what the user explicitly stated.
-
-The indexer MUST NOT:
-- Decide tax treatment (deductible vs not).
-- Compute tax amounts.
-- Override user-provided values with file-derived ones without surfacing the conflict.
-- Extract or store the BSN or similar identity numbers — workpack preparation does
-  not need them; record document type, year, institution, and amounts instead.
-
-If a file value and a user-stated value disagree, do NOT silently pick one. Add a `review_required: true` note and ask the user which to use.
-
-## Safety
-
-- This skill does not log in, submit, or sign anything.
-- Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/index_evidence.py`), and only if Bash can access that path. If Bash cannot see the plugin path, keep indexing manually from the selected file inventory. When Python is already available, you may compute `file_sha256` with `python3 -c "import hashlib,sys; print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" <file>`. If Python is unavailable, that command fails, or no shell can reach the file, use an available host-file hash facility or set `file_sha256: null` and continue; cataloging and classification never depend on the hash. Do not ask the user to install Python. Never copy bundled scripts into `workspace/`, and never execute a `.py` file located under `workspace/`, `uploads/`, or `evidence/`.
-- A null `file_sha256` records only that a hash was unavailable. It never blocks
-  your classification, extraction, questions, or workpack preparation. Record
-  `check_performed_by: checked_by_script` when the bundled inventory ran, or
-  `checked_by_agent` when you completed the inventory with available file tools.
-- Do not add generic safety-warning paragraphs to normal user-facing replies.
-
-## Output files
-
-Write or update:
-- `workspace/taxpayer/evidence-index.yaml` (seed from `templates/evidence-index.yaml` on first write)
-- `workspace/shared/evidence-review-questions.md` (seed from `templates/evidence-review-questions.md` on first write)
-- `workspace/shared/session-progress.yaml` (record answered/open evidence question_ids)
-- `workspace/shared/missing-info.md` (when items are deferred)
-
-Do NOT write to:
-- `workspace/annual/**`
-- `workspace/provisional/**`
-
-## End-of-turn report
-
-After each turn, report to the user in 2-4 sentences:
-- How many files indexed (added / updated).
-- How many user-stated values recorded.
-- The one or two next pieces of evidence that would unblock the active workflow.
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

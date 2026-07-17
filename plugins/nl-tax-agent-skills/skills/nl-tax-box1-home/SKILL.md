@@ -1,12 +1,11 @@
 ---
 name: nl-tax-box1-home
-description: Background helper that returns sourced Box 1 and own-home facts and questions; use annual 2025 evidence for annual workpacks and labeled 2026 estimates for provisional workpacks.
+description: Use when an owning Dutch tax workflow needs sourced Box 1 or own-home facts and questions; use annual 2025 evidence for annual workpacks and labeled 2026 estimates for provisional workpacks.
 user-invocable: false
 allowed-tools:
   - Read
   - Glob
   - Grep
-  - AskUserQuestion
   - Bash(python3:*)
 ---
 
@@ -97,3 +96,8 @@ persist any final artifact, including shared notes, question packets, session
 state, workpacks, or field maps. The annual/provisional workflow owns all
 workspace persistence and may read historical helper notes for resume
 compatibility only.
+
+Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
+computer use, or screen interaction for portal login/authentication, data
+entry, clicking controls, signing, sending, or submitting. Those actions remain
+human-only even with taxpayer permission or available credentials.

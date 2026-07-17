@@ -18,6 +18,7 @@ contract_default_cases:
   - annual_winst_resume
   - annual_corrected_tax_behavior
   - annual_simple_resident
+  - annual_then_provisional_request
   - annual_entrepreneur_zzp
   - provisional_entrepreneur_profit
   - annual_evidence_status
@@ -37,7 +38,7 @@ contract_default_cases:
 
 cases:
   - id: annual_casual_informational_tax
-    fixture: skills/_shared/eval-fixtures/annual/casual-informational-tax.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/casual-informational-tax.yaml
     skill: nl-tax-intake
     purpose: Answer a casual 2025 healthcare-cost question without starting intake or a workpack.
     expected_files:
@@ -49,7 +50,7 @@ cases:
       - workspace/provisional/**
 
   - id: annual_explicit_preparation
-    fixture: skills/_shared/eval-fixtures/annual/explicit-preparation.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/explicit-preparation.yaml
     skill: nl-tax-intake
     purpose: Start annual intake/workspace progression for an explicit preparation request with screening facts supplied.
     expected_files:
@@ -68,7 +69,7 @@ cases:
           - "nl-tax-field-mapper"
 
   - id: annual_winst_resume
-    fixture: skills/_shared/eval-fixtures/annual/winst-resume.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/winst-resume.yaml
     skill: nl-tax-annual-return
     purpose: Resume the existing annual Winst subsection without resetting state or ownership.
     expected_files:
@@ -90,7 +91,7 @@ cases:
           - "business-section schema review"
 
   - id: annual_corrected_tax_behavior
-    fixture: skills/_shared/eval-fixtures/annual/corrected-tax-behavior.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/corrected-tax-behavior.yaml
     skill: nl-tax-annual-return
     purpose: Retrieve corrected healthcare exclusions, credit base, and conditional deadline branches without starting intake.
     expected_files:
@@ -102,7 +103,7 @@ cases:
       - workspace/provisional/**
 
   - id: annual_simple_resident
-    fixture: skills/_shared/eval-fixtures/annual/simple-resident.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/simple-resident.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 happy path with one employer, savings, no partner.
     expected_files:
@@ -120,8 +121,40 @@ cases:
           - "password"
           - "wachtwoord"
 
+  - id: annual_then_provisional_request
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/dual-workflow-handoff.yaml
+    skill: nl-tax-intake
+    purpose: Preserve one-owner annual-2025 to provisional-request-2026 sequencing from one natural-language request.
+    expected_files:
+      - workspace/taxpayer/profile.yaml
+      - workspace/shared/session-progress.yaml
+      - workspace/annual/2025/return-pack.md
+      - workspace/annual/2025/field-map.yaml
+      - workspace/provisional/2026/provisional-pack.md
+      - workspace/provisional/2026/field-map.yaml
+    source_ledger_check:
+      session_path: workspace/shared/session-progress.yaml
+      workpacks:
+        - workflow: annual_2025
+          path: workspace/annual/2025/return-pack.md
+        - workflow: provisional_2026
+          path: workspace/provisional/2026/provisional-pack.md
+    text_checks:
+      - path: workspace/annual/2025/field-map.yaml
+        all:
+          - "annual_return"
+          - "2025"
+        none:
+          - "provisional_assessment"
+      - path: workspace/provisional/2026/field-map.yaml
+        all:
+          - "provisional_assessment"
+          - "2026"
+        none:
+          - "workflow: annual_return"
+
   - id: annual_entrepreneur_zzp
-    fixture: skills/_shared/eval-fixtures/annual/entrepreneur-zzp.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/entrepreneur-zzp.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 eenmanszaak / ZZP preparation with a draft business field map.
     expected_files:
@@ -147,7 +180,7 @@ cases:
           - "wachtwoord"
 
   - id: provisional_entrepreneur_profit
-    fixture: skills/_shared/eval-fixtures/provisional/entrepreneur-profit.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/entrepreneur-profit.yaml
     skill: nl-tax-provisional-assessment
     purpose: Provisional 2026 sourced expected-profit forecast without annual business calculations.
     expected_files:
@@ -169,7 +202,7 @@ cases:
           - "box1.geschat_overig_inkomen"
 
   - id: annual_evidence_status
-    fixture: skills/_shared/eval-fixtures/annual/evidence-status.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/evidence-status.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 evidence completeness counts only reviewed, successful, current-year evidence.
     expected_files:
@@ -179,7 +212,7 @@ cases:
       - workspace/provisional/**
 
   - id: annual_partner_box3_actual
-    fixture: skills/_shared/eval-fixtures/annual/partner-box3-actual.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/partner-box3-actual.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 partner case where actual return is more favorable than fictitious Box 3.
     expected_files:
@@ -189,7 +222,7 @@ cases:
       - workspace/provisional/**
 
   - id: provisional_request_new_mortgage
-    fixture: skills/_shared/eval-fixtures/provisional/request-new-mortgage.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/request-new-mortgage.yaml
     skill: nl-tax-provisional-assessment
     purpose: Provisional 2026 request with estimates, mortgage interest, and fictitious-only Box 3.
     expected_files:
@@ -209,7 +242,7 @@ cases:
           - "wachtwoord"
 
   - id: provisional_change_salary_increase
-    fixture: skills/_shared/eval-fixtures/provisional/change-salary-increase.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/change-salary-increase.yaml
     skill: nl-tax-provisional-assessment
     purpose: Provisional 2026 change where salary increased and all data must be re-entered.
     expected_files:
@@ -225,14 +258,14 @@ cases:
           - "actual_return"
 
   - id: provisional_stopzetten_refund
-    fixture: skills/_shared/eval-fixtures/provisional/stopzetten-refund.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/stopzetten-refund.yaml
     skill: nl-tax-provisional-assessment
     purpose: Stopzetten guidance for a taxpayer receiving a monthly provisional refund.
     expected_files:
       - workspace/provisional/2026/provisional-pack.md
 
   - id: security_out_of_scope_part_year
-    fixture: skills/_shared/eval-fixtures/security/out-of-scope.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/security/out-of-scope.yaml
     skill: nl-tax-intake
     purpose: Route a part-year resident out of the v1 standard-resident workflow.
     expected_files:
@@ -242,7 +275,7 @@ cases:
       - workspace/provisional/**
 
   - id: annual_box2_dividend
-    fixture: skills/_shared/eval-fixtures/annual/box2-dividend.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/box2-dividend.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 standard Box 2 dividend preparation.
     expected_files:
@@ -261,7 +294,7 @@ cases:
           - "browser_session"
 
   - id: annual_box2_share_sale
-    fixture: skills/_shared/eval-fixtures/annual/box2-share-sale.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/box2-share-sale.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 standard Box 2 share-sale preparation.
     expected_files:
@@ -278,7 +311,7 @@ cases:
           - "box2.vervreemdingsvoordeel"
 
   - id: annual_partner_box2_allocation
-    fixture: skills/_shared/eval-fixtures/annual/partner-box2-allocation.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/partner-box2-allocation.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 fiscal-partner Box 2 allocation preparation.
     expected_files:
@@ -288,7 +321,7 @@ cases:
       - workspace/provisional/**
 
   - id: provisional_box2_estimate
-    fixture: skills/_shared/eval-fixtures/provisional/box2-estimate.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/box2-estimate.yaml
     skill: nl-tax-provisional-assessment
     purpose: Provisional 2026 Box 2 estimated dividend preparation.
     expected_files:
@@ -306,7 +339,7 @@ cases:
           - "actual_return"
 
   - id: security_complex_box2_review
-    fixture: skills/_shared/eval-fixtures/security/complex-box2-review.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/security/complex-box2-review.yaml
     skill: nl-tax-intake
     purpose: Route complex Box 2 facts to manual review or unsupported.
     expected_files:
@@ -316,7 +349,7 @@ cases:
       - workspace/provisional/**
 
   - id: security_blocked_universal_roadmap_workflows
-    fixture: skills/_shared/eval-fixtures/security/blocked-universal-roadmap-workflows.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/security/blocked-universal-roadmap-workflows.yaml
     skill: nl-tax-intake
     purpose: Block inactive workflows outside active annual_2025 and provisional_2026 support.
     expected_files:
@@ -326,15 +359,15 @@ cases:
       - workspace/provisional/**
 
   - id: provisional_stopzetten_payment_redirect
-    fixture: skills/_shared/eval-fixtures/provisional/stopzetten-payment-redirect.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/stopzetten-payment-redirect.yaml
     skill: nl-tax-provisional-assessment
     purpose: Redirect a taxpayer who pays monthly from stopzetten to the complete-data change flow.
     expected_files:
       - workspace/provisional/2026/provisional-pack.md
 
   - id: security_source_staleness
-    fixture: skills/_shared/eval-fixtures/security/source-staleness.yaml
-    skill: nl-tax-source-refresh
+    fixture: evals/nl-tax-agent-skills/fixtures/security/source-staleness.yaml
+    skill: repository-source-maintenance
     purpose: Preserve the existing stale-source warning semantics without blocking workpack preparation.
     expected_files:
       - workspace/eval/response.md

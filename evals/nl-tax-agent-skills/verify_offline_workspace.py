@@ -120,6 +120,121 @@ def check_text_rule(workspace: Path, case_id: str, rule: dict[str, Any], errors:
             errors.append(f"{case_id}: {rule['path']} contains forbidden text: {needle!r}")
 
 
+def _active_ledger_key(active_workflow: Any) -> str | None:
+    if not isinstance(active_workflow, str):
+        return None
+    if active_workflow == "annual_2025":
+        return "annual_2025"
+    if active_workflow.startswith("provisional_2026_"):
+        return "provisional_2026"
+    return None
+
+
+def _markdown_h2_section(text: str, heading: str) -> str | None:
+    match = re.search(
+        rf"(?im)^##[ \t]+{re.escape(heading)}[ \t]*$",
+        text,
+    )
+    if match is None:
+        return None
+    remainder = text[match.end():]
+    next_heading = re.search(r"(?m)^##[ \t]+", remainder)
+    return remainder[: next_heading.start()] if next_heading else remainder
+
+
+def _source_ids_from_workpack(text: str) -> list[str] | None:
+    section = _markdown_h2_section(text, "Sources used")
+    if section is None:
+        return None
+
+    source_ids: list[str] = []
+    for line in section.splitlines():
+        match = re.match(r"^[ \t]*-[ \t]+`?([A-Za-z][A-Za-z0-9_-]*)`?", line)
+        if match:
+            source_ids.append(match.group(1))
+    return source_ids
+
+
+def check_source_ledger(
+    workspace: Path,
+    case_id: str,
+    case: dict[str, Any],
+    errors: list[str],
+) -> None:
+    config = case.get("source_ledger_check")
+    if not config:
+        return
+
+    session_relative = config.get(
+        "session_path",
+        "workspace/shared/session-progress.yaml",
+    )
+    session_path = resolve_workspace_path(workspace, session_relative)
+    if not session_path.is_file():
+        errors.append(f"{case_id}: source-ledger session missing: {session_relative}")
+        return
+
+    try:
+        session = load_yaml(session_path)
+    except (OSError, ValueError) as exc:
+        errors.append(f"{case_id}: source-ledger session invalid: {exc}")
+        return
+
+    ledgers = session.get("sources_loaded_by_workflow")
+    if not isinstance(ledgers, dict):
+        errors.append(
+            f"{case_id}: {session_relative} missing sources_loaded_by_workflow mapping"
+        )
+        return
+
+    normalized_ledgers: dict[str, list[str]] = {}
+    for workflow in ("annual_2025", "provisional_2026"):
+        values = ledgers.get(workflow)
+        if not isinstance(values, list) or not all(
+            isinstance(value, str) for value in values
+        ):
+            errors.append(
+                f"{case_id}: sources_loaded_by_workflow.{workflow} must be a string list"
+            )
+            continue
+        normalized_ledgers[workflow] = values
+
+    active_key = _active_ledger_key(session.get("active_workflow"))
+    if active_key is None:
+        errors.append(
+            f"{case_id}: cannot select active source ledger from "
+            f"active_workflow={session.get('active_workflow')!r}"
+        )
+    elif active_key in normalized_ledgers:
+        mirror = session.get("sources_loaded")
+        if mirror != normalized_ledgers[active_key]:
+            errors.append(
+                f"{case_id}: sources_loaded must exactly mirror "
+                f"sources_loaded_by_workflow.{active_key}"
+            )
+
+    for workpack in config.get("workpacks", []) or []:
+        workflow = workpack.get("workflow")
+        relative_path = workpack.get("path")
+        if workflow not in normalized_ledgers or not isinstance(relative_path, str):
+            errors.append(f"{case_id}: invalid source-ledger workpack rule: {workpack!r}")
+            continue
+        path = resolve_workspace_path(workspace, relative_path)
+        if not path.is_file():
+            errors.append(f"{case_id}: source-ledger workpack missing: {relative_path}")
+            continue
+        actual = _source_ids_from_workpack(read_text(path))
+        if actual is None:
+            errors.append(f"{case_id}: {relative_path} missing Sources used section")
+            continue
+        expected = normalized_ledgers[workflow]
+        if sorted(actual) != sorted(expected):
+            errors.append(
+                f"{case_id}: {relative_path} Sources used {actual!r} must equal "
+                f"sources_loaded_by_workflow.{workflow} {expected!r}"
+            )
+
+
 # Memo for the forbidden-regex sweep: the output tree is static during a
 # verification run, so scan it once per (root, patterns) instead of once per
 # case when --all or a multi-case marker is used.
@@ -260,6 +375,7 @@ def verify_case(
     for rule in case.get("text_checks", []) or []:
         check_text_rule(workspace, case_id, rule, errors)
 
+    check_source_ledger(workspace, case_id, case, errors)
     check_field_maps(workspace, dataset, case_id, case, errors, warnings)
     check_generated_output_regex(workspace, dataset, case_id, errors)
     return errors
@@ -295,21 +411,22 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
     if len(fixture_paths) != len(set(fixture_paths)):
         errors.append("each dataset case must reference a unique fixture path")
 
-    fixture_root = plugin_root / "skills/_shared/eval-fixtures"
+    repo_root = SCRIPT_DIR.parents[1]
+    fixture_root = repo_root / "evals/nl-tax-agent-skills/fixtures"
     shipped = {
-        path.relative_to(plugin_root).as_posix()
+        path.relative_to(repo_root).as_posix()
         for path in fixture_root.glob("*/*.yaml")
     }
     referenced = {path for path in fixture_paths if isinstance(path, str)}
     if referenced != shipped:
         errors.append(
-            "dataset fixture paths must equal shipped fixture paths "
+            "dataset fixture paths must equal repository fixture paths "
             f"(missing={sorted(shipped - referenced)}, extra={sorted(referenced - shipped)})"
         )
 
     for case in cases:
         fixture = case.get("fixture")
-        if fixture and not (plugin_root / fixture).is_file():
+        if fixture and not (repo_root / fixture).is_file():
             errors.append(f"{case.get('id', '<unknown>')}: fixture does not exist: {fixture}")
     return errors
 

@@ -1,10 +1,10 @@
 # Rule note: Filing flow for annual return 2025
 
-source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index, bd_annual_deadline_2025, bd_annual_extension_2025, bd_annual_extension_eligibility_2025
+source_ids: bd_annual_return_landing_2025, bd_annual_return_4_steps_2025, bd_fisin_2025_index, bd_annual_deadline_2025, bd_annual_filing_obligation_2025, bd_annual_extension_2025, bd_annual_extension_eligibility_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -53,13 +53,48 @@ These are reference notes for workpack preparation -- not final tax advice.
 
 ## Filing deadline
 
-- If an invitation letter (aangiftebrief) exists, the filing deadline is the date shown in that letter.
-- If there is no invitation and the taxpayer establishes that tax is due, apply the reviewed voluntary-filing guardrail: submit before **14 July 2026**. This date is conditional on the no-invitation/tax-due route.
-- If neither route applies, do not invent a filing deadline; record the facts and verify the position in Mijn Belastingdienst.
-- Extension eligibility requires an invitation letter. With **no invitation**, extension is unavailable; keep the separate conditional 14 July filing guardrail when tax due is established.
-- For the standard online route, request extension **before 1 May 2026**; the granted extension normally adds **4 months**, so the standard date becomes **1 September 2026**.
-- If the invitation letter shows **another date**, request extension by that letter date using the **official form** route. Use the granted uitsteldatum rather than substituting the standard dates.
-- Late filing may result in a verzuimboete (penalty for late filing).
+- Record one of these review labels after asking the taxpayer and checking the
+  completed-but-not-yet-submitted return in Mijn Belastingdienst. These labels
+  organize evidence; they are not an automatic decision engine:
+  - `invited`: an aangiftebrief exists. Filing is mandatory and the applicable
+    deadline is the date in the letter.
+  - `no_letter_but_mandatory`: no aangiftebrief exists, but the completed 2025
+    return shows **EUR 58 or more to pay**, or the separate asset/scheme screen
+    below applies. Submit before **14 July 2026**.
+  - `refund_claim_only`: no aangiftebrief exists, the completed return shows
+    **EUR 19 or more back**, and neither mandatory no-letter test applies. The
+    taxpayer may submit to claim the refund; do not describe this as an
+    invitation-based filing obligation.
+  - `filing_obligation_unresolved`: no aangiftebrief exists and the return has
+    not been completed far enough to establish the payable/refund result, or
+    the asset/scheme facts are unresolved. Do not invent a deadline or label the
+    taxpayer late; ask them to complete the official calculation without
+    submitting and resolve the open facts.
+- The separate asset/scheme screen makes filing mandatory without a letter when
+  the taxpayer has a right to an income-dependent scheme (for example benefits
+  or subsidized legal aid) and the relevant assets of the taxpayer, partner, or
+  minor child(ren) exceed **EUR 37,395**, or **EUR 74,790 with a fiscal partner**.
+  This applies even when the ordinary result is less than EUR 19 back or less
+  than EUR 58 to pay. Ask about both parts; do not infer either from a bank total
+  alone.
+- A result below EUR 58 to pay or below EUR 19 back does not, by itself, settle
+  the separate asset/scheme test.
+- Extension eligibility requires an invitation letter. With **no invitation**,
+  extension is unavailable.
+- **Current as of 16 July 2026:** the ordinary online window closed on
+  **1 May 2026**; historically the request had to be made **before 1 May 2026**.
+  Do not tell the taxpayer they can still use it. If extension
+  was already granted through that route, verify the confirmation; the standard
+  granted date is **1 September 2026** (4 months extra).
+- If the aangiftebrief shows another date—a different, still-future filing date—extension
+  may be requested up to that printed date through the **official form** route;
+  online extension is unavailable for this exception. Use the date in the
+  decision. If that printed date has passed, do not present extension as still
+  available; recommend filing promptly and reviewing official correspondence.
+- Penalty screening differs by route. An invited return uses the
+  reminder/aanmaning filing regime; a no-letter mandatory return can raise the
+  separate failure-to-request-an-aangifte regime. Load `late-filing.md` before
+  describing either exposure and never merge their amounts or conditions.
 - Always use the date in the invitation letter or Mijn Belastingdienst rather than assuming a default date.
 
 ## Workpack purpose

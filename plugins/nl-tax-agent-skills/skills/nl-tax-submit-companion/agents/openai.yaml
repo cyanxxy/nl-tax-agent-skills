@@ -5,13 +5,15 @@
 # (disable-model-invocation, user-invocable, allowed-tools), so this openai.yaml
 # policy governs implicit invocation.
 #
-# nl-tax-submit-companion is manual-only: it must never be auto-invoked by the
-# model. The user (or an owning workflow) triggers it explicitly. Explicit
-# `$nl-tax-submit-companion` invocation still works when implicit invocation is
-# disabled.
+# nl-tax-submit-companion is model-invocable only when the user's natural
+# language expresses explicit checklist intent, including a clear affirmative
+# reply to the field mapper's immediate checklist offer. Its SKILL.md description
+# carries that narrow trigger.
 interface:
   display_name: "Dutch Tax Manual-entry Checklist"
-  short_description: "Explicit-only checklist from a reviewed workpack and field map."
+  short_description: "Human-only portal checklist from reviewed tax artifacts."
+  brand_color: "#1F6FEB"
+  default_prompt: "Create my human-only manual-entry checklist from the reviewed Dutch tax workpack and any applicable field map."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

@@ -60,7 +60,9 @@ One ordinary main residence may receive a review estimate. Two homes, sale/purch
 ### 3.9 Partner handling for own home
 
 - If fiscal partners co-own the property: allocate based on ownership shares (typically 50/50)
-- Note that the net eigen woning result can be allocated differently for tax optimization
+- When legally available, show traceable alternative allocation scenarios for
+  the net eigen woning result without ranking or selecting one; the taxpayers
+  make the allocation choice
 - Both partners must report their share in their individual return
 
 ---

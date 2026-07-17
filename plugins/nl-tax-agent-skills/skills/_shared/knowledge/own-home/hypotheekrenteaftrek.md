@@ -1,10 +1,10 @@
 # Rule note: Hypotheekrenteaftrek and own-home deductible costs
 
-source_ids: bd_hypotheekrenteaftrek_conditions, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
+source_ids: bd_hypotheekrenteaftrek_conditions, bd_hypotheek_oversluiten, bd_own_home_deductible_costs, bd_temporary_two_homes_interest
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-10"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -40,6 +40,19 @@ For a mortgage or loan taken out before 1 January 2013 and not later increased:
 - The maximum deduction period is 30 years.
 - If the loan already existed before 1 January 2001, the 30-year period starts on 1 January 2001.
 - Existing conditions continue to apply.
+
+Refinancing is not by itself a loss of the pre-2013 transitional treatment:
+
+- If a pre-2013 own-home mortgage is refinanced for the **same outstanding
+  amount**, the existing interest-deduction treatment continues, including for
+  an interest-only mortgage. The original 30-year period does not restart.
+- If the refinanced mortgage is increased, separate the preserved old balance
+  from the increase. Interest on the increase qualifies only when that increase
+  is used for the own home and is repaid within 30 years under the applicable
+  post-2013 conditions; an interest-only increase does not qualify.
+- Ask for the original start date, balance immediately before refinancing, new
+  balance, use of any increase, and repayment terms. Do not use a generic
+  "refinanced/changed" flag to disallow the preserved balance.
 
 ## Deductible and non-deductible costs
 

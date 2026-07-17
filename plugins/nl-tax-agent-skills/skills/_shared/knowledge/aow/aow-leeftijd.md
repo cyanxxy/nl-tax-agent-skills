@@ -1,15 +1,19 @@
 # Rule note: AOW-leeftijd (Dutch state-pension age) for routing
 
-source_ids: svb_aow_leeftijd, rijksoverheid_aow_leeftijd
+source_ids: svb_aow_leeftijd, rijksoverheid_aow_leeftijd, bd_heffingskortingen_aow_2025_2026
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-02"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
 
-The AOW-leeftijd (Dutch state-pension age) determines whether a taxpayer reaches AOW age in or before a tax year. This routes which box 1 rate table applies (the reduced pensioner first-bracket rate, lower premie volksverzekeringen, lower heffingskortingen) and which elderly credits apply (ouderenkorting, alleenstaande-ouderenkorting). These are reference notes for workpack preparation — not an AOW entitlement determination.
+The AOW-leeftijd (Dutch state-pension age) determines whether a taxpayer is
+below AOW age all year, reaches it during the tax year, or has it for the whole
+tax year. That distinction informs which Box 1 rate material and credit review
+applies. These are workpack-preparation notes, not an AOW entitlement
+determination.
 
 ## AOW-leeftijd by year
 
@@ -21,15 +25,41 @@ The AOW-leeftijd (Dutch state-pension age) determines whether a taxpayer reaches
 
 ## How to use in the workpack
 
-1. From the taxpayer's date of birth and the tax year, determine whether they have the AOW age for the **whole** year, reach it **during** the year, or are **below** it.
-2. **Whole year at AOW age** → use the AOW-age box 1 rate and heffingskorting tables (see `years/2025/annual/box1-rates.md` and `years/2025/annual/credits.md`), and consider ouderenkorting / alleenstaande-ouderenkorting.
-3. **Reaches AOW age during the year** → do not interpolate in the workpack; the Belastingdienst calculates the month-dependent transitional amount. Flag the box 1 rate and any affected heffingskortingen as manual-review items.
-4. **Below AOW age** → use the standard (non-AOW) tables.
+1. From the sourced date of birth and tax year, record exactly one reviewed
+   `aow_by_tax_year.<tax_year>.status` value under `person` or `partner`:
+   `below_all_year`, `reaches_during_year`, or `aow_all_year`.
+2. **`aow_all_year`** → use the whole-year AOW-age material for that tax year
+   and review ouderenkorting. Review alleenstaandeouderenkorting separately
+   against entitlement to an AOW pension for a single person; family or
+   single-parent status does not establish it.
+3. **`reaches_during_year`** → record the same year's `transition_month` from
+   the sourced date of birth. Use the applicable annual or provisional
+   year-specific note's published month rate; do not use either whole-year
+   table. Do not interpolate an affected credit. Review the credit result in
+   the active workflow's official environment: the annual income-tax return
+   for annual work or `Verzoek of wijziging voorlopige aanslag` for provisional
+   work. Mark affected credits for manual portal review.
+4. **`below_all_year`** → use the standard non-AOW material for that tax year.
+
+Older scalar `aow_age_in_tax_year`, `aow_status_in_tax_year`, and
+`aow_transition_month` fields may remain in an existing profile for resume
+compatibility, but they are not authoritative when more than one tax year is
+active. Normalize them into the applicable year entry before use.
 
 ## Developer instruction
 
-Intake derives `aow_age_in_tax_year` deterministically from the sourced date of birth, tax year, and this reviewed rule. Store it with `source: calculated` and `calculated_from`; do not create an assumption or request separate confirmation. Ask the user only when the DOB is missing or disputed. Never collect or store the AOW administration number or BSN.
+The conversational intake agent records `person.aow_by_tax_year.<tax_year>`
+and the partner equivalent from the sourced date of birth, tax year, and this
+reviewed rule. Store the classification with `source: calculated` and
+`calculated_from`; do not invent an assumption or ask for a second confirmation
+of undisputed date arithmetic. Ask the user only when the date of birth is
+missing or disputed. Never collect or store the AOW administration number or
+BSN.
 
 ## Common failure
 
-Do not assume a fixed age of 67 for future years — 67 applies only through 2027; for 2028-2031 the AOW age is fixed at 67 years and 3 months, and beyond 2031 it is provisional. For tax years 2025 and 2026 specifically it is 67.
+Do not reduce AOW handling to a boolean. A taxpayer who reaches AOW age during
+the year has a distinct, month-dependent position. Also do not assume a fixed
+age of 67 for future years — 67 applies only through 2027; for 2028-2031 the
+AOW age is fixed at 67 years and 3 months, and beyond 2031 it is provisional.
+For tax years 2025 and 2026 specifically it is 67.

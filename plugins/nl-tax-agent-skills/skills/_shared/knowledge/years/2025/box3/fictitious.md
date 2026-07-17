@@ -4,7 +4,7 @@ source_ids: bd_box3_2025_calc, bd_fisin_box3_assets_debts_2025
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-05-15"
+last_reviewed: "2026-07-16"
 review_status: reviewed
 
 ## Rule
@@ -49,7 +49,20 @@ Three categories determine the belastbaar rendement:
 
 ### Categorie III -- Schulden (debts)
 
-- Includes: all debts EXCEPT mortgage debt on the own home (eigenwoningschuld, which belongs in box 1)
+- Include only debts that the official 2025 Box 3 guidance says belong in Box
+  3, after an explicit qualification screen. Examples include consumer loans,
+  negative bank balances, study-finance debts, financing for Box 3 assets,
+  repayable benefits, and inheritance tax.
+- Do **not** use the shortcut "all debts except the own-home mortgage." Excluded
+  items include qualifying own-home debt and qualifying former-home residual
+  debt in Box 1, non-callable surviving-spouse inheritance debt, short current
+  liabilities, deductible maintenance obligations, most Dutch tax debts,
+  business debts, debts connected with Box 2/terbeschikkingstelling/other work,
+  and debts owed to a fiscal partner or minor child. The official list contains
+  further conditions and exceptions.
+- Keep any debt whose category or callability is unresolved out of trusted
+  totals and ask a focused question or mark it for manual portal review. Apply
+  the debt threshold only after qualifying debts have been identified.
 - Fictitious return percentage for 2025: **2.70%**
 
 ## Calculation method

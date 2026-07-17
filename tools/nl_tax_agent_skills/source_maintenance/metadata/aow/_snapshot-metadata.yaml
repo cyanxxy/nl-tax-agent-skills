@@ -1,0 +1,14 @@
+metadata_version: '1.1'
+sources:
+  rijksoverheid_aow_leeftijd:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
+    reviewed_note_hash_sha256: 8f3c74a5b4afd17685ef39f638f6648b9ca55711b288cb62d74601dec16d8fb5
+    source_id: rijksoverheid_aow_leeftijd
+    source_url: https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd
+  svb_aow_leeftijd:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
+    reviewed_note_hash_sha256: 8f3c74a5b4afd17685ef39f638f6648b9ca55711b288cb62d74601dec16d8fb5
+    source_id: svb_aow_leeftijd
+    source_url: https://www.svb.nl/nl/aow/aow-leeftijd/uw-aow-leeftijd
