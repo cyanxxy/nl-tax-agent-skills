@@ -24,6 +24,13 @@ provisional request, and provisional change checklists use their field maps,
 while review and stopzetten checklists work from their own reviewed artifacts
 without falsely requiring a map.
 
+The final release contracts remove two natural-language ambiguities: Box 3's
+annual comparison is informational rather than a taxpayer method election, and
+an annual-to-provisional handoff no longer asks a checklist question before the
+first provisional question. Field-map drafts use structural validation by
+default, while the optional specialist reviewer is restricted to a positive
+read/research-only tool allowlist.
+
 One natural-language request can now retain both supported workflows: annual
 2025 runs first, then a selected provisional 2026 subflow starts collection
 after validated annual outputs without requiring another activation phrase.
@@ -43,4 +50,6 @@ boundary applies even when Chrome, computer use, connectors, credentials, or
 user permission are available: the assistant creates an explicitly human-owned
 checklist, and the taxpayer or an authorized human performs every authenticated
 portal action. Dedicated Cowork evaluations cover both natural-language
-checklist activation and refusal of portal control. Python remains optional.
+checklist activation and refusal of portal control. The release passes 423
+repository tests and validates all 99 registered runtime sources without errors
+or warnings. Python remains optional.

@@ -154,13 +154,36 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertEqual(metadata["model"], "inherit")
         self.assertEqual(metadata["effort"], "high")
         self.assertEqual(metadata["maxTurns"], 12)
-        self.assertNotIn("tools", metadata)
-        self.assertEqual(metadata["disallowedTools"], "Write, Edit")
+        self.assertEqual(
+            {tool.strip() for tool in metadata["tools"].split(",")},
+            {"Read", "Grep", "Glob", "WebSearch", "WebFetch"},
+        )
+        self.assertNotIn("disallowedTools", metadata)
         body = agent_paths[0].read_text(encoding="utf-8")
         self.assertIn("official sources", body)
-        self.assertIn("optional mechanical validators", body)
+        self.assertIn("outside the frontmatter\nallowlist", body)
+        self.assertIn("Do not use Bash, Write, Edit, Agent", body)
+        self.assertIn("connectors, MCP tools", body)
+        self.assertIn("return that request to the owner", body)
+        self.assertNotIn("run the plugin's optional mechanical validators", body)
         self.assertIn("Do not decide final readiness", body)
-        self.assertIn("Do not use Write or Edit", body)
+        self.assertIn("Do not write or mutate any file", body)
+
+    def test_public_box3_copy_preserves_the_non_election_boundary(self):
+        readme = (REPO / "README.md").read_text(encoding="utf-8")
+        examples = (
+            SKILLS / "_shared/knowledge/years/2025/box3/examples.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("informational comparison", readme)
+        self.assertIn("not a tax-method election", readme)
+        self.assertIn("uses the more favorable amount", readme)
+        self.assertNotIn("comparison for the user to choose from", readme)
+        self.assertIn("recommendation note", examples)
+        runtime = (SKILLS / "_shared/runtime-contract.md").read_text(encoding="utf-8")
+        self.assertIn("legacy “recommendation note” shorthand", runtime)
+        self.assertIn("does not create a taxpayer method election", runtime)
+        self.assertIn("Preserve\nthe reviewed source note byte-for-byte", runtime)
 
     def test_every_skill_loads_the_cross_runtime_contract(self):
         contract = SKILLS / "_shared/runtime-contract.md"

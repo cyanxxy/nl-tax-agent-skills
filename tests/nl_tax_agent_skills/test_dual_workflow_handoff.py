@@ -111,6 +111,34 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertIn("Never require exact wording", provisional_skill)
         self.assertIn("reuse the opening preparation request as final consent", provisional_skill)
 
+    def test_handoff_suppresses_the_ambiguous_annual_checklist_question(self):
+        assembly = flattened(
+            "skills/nl-tax-annual-return/reference/phases/10-assembly.md"
+        ).lower()
+        mapper_skill = flattened("skills/nl-tax-field-mapper/SKILL.md").lower()
+        mapper_flow = flattened(
+            "skills/nl-tax-field-mapper/reference/mapper-flow.md"
+        ).lower()
+
+        self.assertIn("do not ask the checklist question", assembly)
+        self.assertIn("non-question sentence", assembly)
+        self.assertIn("provisional-subflow question", assembly)
+        self.assertIn("never reinterpret it as annual-checklist authorization", assembly)
+        for mapper in (mapper_skill, mapper_flow):
+            with self.subTest(mapper=mapper[:80]):
+                self.assertIn("provisional 2026", mapper)
+                self.assertIn("`queued`", mapper)
+                self.assertIn("non-question", mapper)
+                self.assertIn("bare", mapper)
+                self.assertIn("checklist", mapper)
+
+        fixture = yaml.safe_load(FIXTURE_PATH.read_text(encoding="utf-8"))
+        handoff = fixture["expected_state"]["after_complete_annual_mapping"]
+        self.assertIs(handoff["annual_checklist_question_suppressed"], True)
+        self.assertIs(handoff["annual_checklist_availability_is_non_question"], True)
+        self.assertIs(handoff["bare_yes_activates_annual_checklist"], False)
+        self.assertEqual(handoff["first_question_owner"], "provisional_2026_request")
+
     def test_owner_contracts_preserve_year_specific_state_and_artifacts(self):
         runtime = flattened("skills/_shared/runtime-contract.md")
         annual = flattened("skills/nl-tax-annual-return/SKILL.md")

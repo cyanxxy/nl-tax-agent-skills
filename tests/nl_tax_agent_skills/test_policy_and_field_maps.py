@@ -762,12 +762,11 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "Claude in Chrome",
             "computer use",
             "screen interaction",
-            "portal login/authentication",
-            "data entry",
-            "clicking controls",
-            "signing",
-            "sending",
-            "submitting",
+            "a connector",
+            "another tool",
+            "authenticated tax portal",
+            "retrieve private account data",
+            "credentials or sessions",
             "human-only",
             "taxpayer permission",
         )
@@ -778,6 +777,32 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 for phrase in required:
                     self.assertIn(phrase, helper)
 
+    def test_every_user_facing_skill_repeats_the_full_portal_tool_boundary(self):
+        public_paths = (
+            "skills/nl-tax-annual-return/SKILL.md",
+            "skills/nl-tax-evidence-indexer/SKILL.md",
+            "skills/nl-tax-field-mapper/SKILL.md",
+            "skills/nl-tax-intake/SKILL.md",
+            "skills/nl-tax-provisional-assessment/SKILL.md",
+            "skills/nl-tax-submit-companion/SKILL.md",
+        )
+        required = (
+            "browser",
+            "Claude in Chrome",
+            "computer use",
+            "screen interaction",
+            "connector",
+            "another tool",
+            "credentials",
+            "sessions",
+        )
+
+        for public_path in public_paths:
+            with self.subTest(public_path=public_path):
+                skill = " ".join(read_text(public_path).split())
+                for phrase in required:
+                    self.assertIn(phrase, skill)
+
     def test_cowork_portal_boundary_is_central_and_procedures_are_human_only(self):
         runtime = read_text("skills/_shared/runtime-contract.md")
         runtime_flat = " ".join(runtime.split())
@@ -786,6 +811,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "Claude in Chrome",
             "computer use",
             "screen interaction",
+            "a connector",
+            "another tool",
             "taxpayer or an authorized representative",
             "does not override",
             "reviewed tax-rule note may quote an official process",
@@ -800,6 +827,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 owner_text = read_text(owner)
                 self.assertIn("Claude in Chrome", owner_text)
                 self.assertIn("computer\nuse", owner_text)
+                self.assertIn("a connector", owner_text)
+                self.assertIn("credentials or sessions", owner_text)
                 self.assertIn("taxpayer or an authorized human", owner_text)
 
         procedure_paths = (
@@ -1231,6 +1260,25 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("validate_field_map.py", skill)
         self.assertIn("render_field_map.py", skill)
         self.assertNotIn("\npython ", skill)
+
+    def test_field_mapper_defaults_to_structural_validation_for_drafts(self):
+        structural = (
+            "validate_field_map.py <path-to-field-map.yaml>"
+        )
+        strict = (
+            "validate_field_map.py --require-ready <path-to-field-map.yaml>"
+        )
+        for relative_path in (
+            "skills/nl-tax-field-mapper/SKILL.md",
+            "skills/nl-tax-field-mapper/reference/mapper-flow.md",
+        ):
+            with self.subTest(relative_path=relative_path):
+                text = read_text(relative_path)
+                self.assertIn(structural, text)
+                self.assertIn(strict, text)
+                self.assertLess(text.index(structural), text.index(strict))
+                self.assertIn("intentional draft", text)
+                self.assertIn("Never use `--require-ready` to promote", text)
 
     def test_source_refresh_docs_describe_fetch_as_plan_only(self):
         maintenance = read_repo_text(

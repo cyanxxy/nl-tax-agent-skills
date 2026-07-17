@@ -296,7 +296,7 @@ and release mechanics are documented in [CONTRIBUTING.md](CONTRIBUTING.md#releas
 | 🚫 Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |
 
 > [!WARNING]
-> **Box 3 rule split.** Annual 2025 collects both methods — **fictitious (forfaitair)** and **werkelijk rendement** — and presents a comparison for the user to choose from. Provisional 2026 uses **fictitious only**; werkelijk rendement is never requested in any provisional flow.
+> **Box 3 rule split.** Annual 2025 collects the inputs needed for the **fictitious (forfaitair)** calculation and, when the taxpayer supplies them, the **werkelijk rendement** calculation. The workpack presents an informational comparison; supplying actual-return data is not a tax-method election, and the official filing environment performs the binding comparison and uses the more favorable amount. Provisional 2026 uses **fictitious only**; werkelijk rendement is never requested in any provisional flow.
 
 Annual 2025 also includes reviewed deduction guidance for the income-dependent
 specific-healthcare-cost threshold and increase, the EUR 925 limited-mobility

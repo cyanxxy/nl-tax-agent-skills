@@ -76,7 +76,8 @@ User: "Give me the Manual-entry checklist for my 2025 return." → Read `return-
 
 Apply the authenticated-portal boundary in `../_shared/runtime-contract.md`.
 Never open or navigate Mijn Belastingdienst with a browser, Claude in Chrome,
-computer use, screen interaction, or another tool; never log in, enter or change
-values, sign, send, or submit; and never ask for or process credentials. Write
-every portal action with an explicit human subject. Mention authorization only
-when someone else helps the taxpayer file.
+computer use, screen interaction, a connector, or another tool; never log in,
+enter or change values, click controls, sign, send, submit, or retrieve private
+account data; and never ask for, accept, store, or process credentials or
+sessions. Write every portal action with an explicit human subject. Mention
+authorization only when someone else helps the taxpayer file.

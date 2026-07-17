@@ -110,14 +110,23 @@ If `python3` and the resolved bundled paths are available, optionally validate
 and render with:
 
 ```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
-Omit `--require-ready` for a declared draft. If either script is unavailable,
-use the agent validation and direct-YAML rendering fallbacks in
-`mapper-flow.md`; never skip the checks or copy a bundled script into the
-workspace.
+Structural validation without a readiness flag is the default and is the
+correct check for every declared `draft`, including an intentionally draft map
+with a business-schema or other manual-review blocker. Only for a map already
+declared `review_ready`, add the stricter readiness assertion:
+
+```bash
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
+```
+
+Never use `--require-ready` to promote or fight an intentional draft. If either
+script is unavailable, use the agent validation and direct-YAML rendering
+fallbacks in `mapper-flow.md`; never skip the checks or copy a bundled script
+into the workspace.
 
 ## Boundaries
 
@@ -134,14 +143,25 @@ workspace.
 
 In two to four sentences, report the sourced-field count, the unknown or
 low-confidence count, and the next decision: answer open questions or finalize
-those rows as `MISSING - enter manually`. After a canonical map is successfully
-created or updated, offer to create the human-only manual-entry checklist. Do
-not invoke the checklist merely because a map exists. If the user already asked
-for it in the current request, or gives an unambiguous affirmative reply to the
-immediately preceding offer, continue into the checklist without requiring a
-slash command or a second wording formula.
+those rows as `MISSING - enter manually`.
 
-Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
-computer use, or screen interaction for portal login/authentication, data
-entry, clicking controls, signing, sending, or submitting. Those actions remain
-human-only even with taxpayer permission or available credentials.
+After a canonical map is successfully created or updated:
+
+- If this mapper was invoked from annual 2025 while a provisional 2026 workflow
+  is `queued`, do not ask whether to create the annual checklist unless the
+  user already requested that checklist in the current request. State, as a
+  non-question, that the annual checklist remains available on request, then
+  return to the annual owner for the atomic provisional handoff. A later bare
+  “yes” must not be interpreted as accepting this non-question notice.
+- Otherwise, offer to create the human-only manual-entry checklist. Do not
+  invoke it merely because a map exists. If the user already asked for it in
+  the current request, or gives an unambiguous affirmative reply to the
+  immediately preceding offer, continue into the checklist without requiring
+  a slash command or a second wording formula.
+
+Authenticated-portal boundary: Never use a browser, Claude in Chrome, computer
+use, screen interaction, a connector, or another tool to open or operate an
+authenticated tax portal; never log in, enter or change values, click controls,
+sign, send, submit, retrieve private account data, or ask for, accept, store, or
+process credentials or sessions. Those actions remain human-only even with
+taxpayer permission or available credentials.

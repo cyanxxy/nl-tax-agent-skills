@@ -104,6 +104,18 @@ every other government filing service.
 Host permissions and host safeguards are defense in depth, not authorization to
 cross this product boundary.
 
+## Box 3 actual-return comparison boundary
+
+A reviewed Box 3 source note may use legacy “recommendation note” shorthand
+when describing the annual actual-return comparison. That wording is source
+context only. It means to identify the arithmetically lower outcome for the
+taxpayer's review; it does not authorize the assistant to recommend or select a
+tax method, and it does not create a taxpayer method election. When complete
+actual-return inputs are supplied, explain that the official filing environment
+performs the binding comparison and uses the more favorable amount. Preserve
+the reviewed source note byte-for-byte and apply this runtime boundary to every
+response and generated artifact.
+
 ## Human-owned allocation boundary
 
 Partner-allocation tax notes may use comparative or superlative shorthand when
@@ -255,10 +267,14 @@ workflow or a requirement for completing the workpack.
 
 - Pass the exact workflow, tax year, bounded review question, relevant logical
   workspace paths, and reviewed source IDs or rule-note paths.
-- A reviewer may use the host capabilities available to it to inspect the
-  named material, consult official sources, or run the plugin's optional
-  mechanical checks. It returns findings to the owner rather than updating
-  canonical taxpayer state or deciding final readiness.
+- Give a reviewer only read/research capabilities for the named material and
+  public official sources. Never grant Bash, Write, Edit, computer use,
+  connectors, MCP tools, or another write-capable tool. It may inspect
+  validation results already supplied by the owner; if a fresh mechanical check
+  is needed, it returns that request to the owner rather than running it.
+- If the host cannot constrain a reviewer to that read/research-only surface,
+  do the review inline instead. A reviewer always returns findings to the owner
+  rather than updating canonical taxpayer state or deciding final readiness.
 - Reviewers return structured findings: scope checked, fact/source conflicts,
   missing or ambiguous facts, source IDs consulted, and a concise no-finding
   result when appropriate.
@@ -267,10 +283,11 @@ workflow or a requirement for completing the workpack.
   persists accepted facts itself, and asks any resulting user question in the
   main conversation.
 
-Claude Cowork may use the packaged `nl-tax-specialist-reviewer` agent. ChatGPT
-Work or Codex may use a built-in specialist subagent under this same contract;
-custom Codex agents live in user/project configuration rather than inside a
-plugin. Hosts without subagents simply continue inline.
+Claude Cowork may use the packaged, allowlisted
+`nl-tax-specialist-reviewer` agent. ChatGPT Work or Codex may use a constrained
+built-in specialist subagent under this same contract; custom Codex agents live
+in user/project configuration rather than inside a plugin. Hosts without a
+constrained subagent simply continue inline.
 
 When the host supports scheduled tasks, the user may ask for deadline reminders,
 missing-document check-ins, source-freshness reports, or a resumed draft review.

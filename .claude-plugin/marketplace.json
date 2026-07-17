@@ -4,12 +4,12 @@
     "name": "Tax Skill Developers",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
-  "description": "Cowork-first, cross-platform Dutch tax preparation skills for reviewable manual-entry workpacks.",
+  "description": "Conversational, source-traceable Dutch tax preparation skills for reviewable manual-entry workpacks.",
   "plugins": [
     {
       "name": "nl-tax-agent-skills",
       "source": "./plugins/nl-tax-agent-skills",
-      "description": "Prepare source-cited Dutch tax workpacks in Cowork and other Agent Skills hosts for manual Mijn Belastingdienst entry.",
+      "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
       "author": {
         "name": "Tax Skill Developers",
         "url": "https://github.com/cyanxxy/nl-tax-agent-skills"

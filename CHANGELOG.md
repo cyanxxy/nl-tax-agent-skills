@@ -95,10 +95,23 @@ fixed interview, tax decision engine, or Python-owned workflow.
 - Provisional progressive loading and intake's informational fast path now use
   exact human-only projection paths for portal procedures instead of exposing
   the raw imperative snapshots as runtime alternatives.
+- Public Box 3 copy now describes the annual comparison as informational rather
+  than a taxpayer method election; the unchanged reviewed examples note is
+  neutralized by an explicit runtime overlay instead of being reattested.
+- The Claude specialist reviewer now uses a positive read/research-only tool
+  allowlist, and the shared cross-host contract forbids reviewer shell, write,
+  connector, MCP, computer-use, and other mutation-capable tools.
+- Field-map instructions now lead with structural validation for intentional
+  drafts and reserve `--require-ready` for maps already declared review-ready.
+- The annual-to-provisional handoff suppresses the ambiguous annual-checklist
+  question, states checklist availability as a non-question, and scopes the
+  first actual question to the queued provisional flow.
+- Marketplace descriptions and every user-facing skill's local portal boundary
+  now match the canonical conversational and connector-aware runtime contract.
 
 ### Validation
 
-- The integrated suite contains 418 passing tests.
+- The integrated suite contains 423 passing tests.
 - The static plugin inventory estimate fell from 363,174 to 229,407 tokens;
   tests, developer/evaluation assets, maintainer notes, source metadata, and the
   workflow gate account for the reduction and remain available in repository

@@ -108,7 +108,9 @@ state, workpacks, or field maps. The annual/provisional workflow owns all
 workspace persistence and may read historical helper notes for resume
 compatibility only.
 
-Authenticated-portal boundary: Do not use a browser, Claude in Chrome,
-computer use, or screen interaction for portal login/authentication, data
-entry, clicking controls, signing, sending, or submitting. Those actions remain
-human-only even with taxpayer permission or available credentials.
+Authenticated-portal boundary: Never use a browser, Claude in Chrome, computer
+use, screen interaction, a connector, or another tool to open or operate an
+authenticated tax portal; never log in, enter or change values, click controls,
+sign, send, submit, retrieve private account data, or ask for, accept, store, or
+process credentials or sessions. Those actions remain human-only even with
+taxpayer permission or available credentials.

@@ -18,6 +18,16 @@ profile. This skill is **conversational, not a fixed interview**: credit facts
 and evidence already supplied, ask only the smallest useful follow-up, and let
 the conversation determine the order.
 
+## Always-on authenticated-portal boundary
+
+Never use a browser, Claude in Chrome, computer use, screen interaction, a
+connector, or another tool to open or operate an authenticated tax portal;
+never log in, enter or change values, click controls, sign, send, submit,
+retrieve private account data, or ask for, accept, store, or process credentials
+or sessions. Those actions remain human-only even with taxpayer permission or
+available credentials. This boundary also applies on the informational fast
+path before any shared runtime resource is loaded.
+
 ## Informational fast path — no intake state
 
 Before reading or creating taxpayer/session files, decide whether the user is

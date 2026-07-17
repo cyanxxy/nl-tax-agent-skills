@@ -55,6 +55,10 @@ expected_state:
     annual_artifacts_preserved: true
     requires_new_activation_phrase: false
     provisional_generation_confirmed: false
+    annual_checklist_question_suppressed: true
+    annual_checklist_availability_is_non_question: true
+    bare_yes_activates_annual_checklist: false
+    first_question_owner: provisional_2026_request
   after_complete_provisional_mapping:
     profile:
       workflow_candidate: provisional_2026_request
@@ -98,6 +102,8 @@ expected_behavior:
   - "Intake records both requested workflows and the provisional request subflow"
   - "Annual 2025 is the only active workflow until its complete workpack and field map validate"
   - "The handoff atomically activates provisional_2026_request without a new activation phrase"
+  - "The handoff states annual-checklist availability without asking a checklist question"
+  - "The first actual question after handoff belongs to the provisional subflow"
   - "The provisional workflow requires its own final-generation confirmation"
   - "Annual and provisional statuses, sources, notes, and artifacts remain separate"
 
@@ -105,4 +111,5 @@ acceptance_criteria:
   - "No provisional artifact is written while annual 2025 is active"
   - "An incomplete annual rollup or failed annual map leaves provisional 2026 queued"
   - "Completed annual artifacts remain unchanged after the provisional handoff"
+  - "A bare yes after the handoff cannot activate the annual checklist"
   - "Both final field maps validate against their own workflow and year"

@@ -129,16 +129,25 @@ The agent owns the mapping and readiness decision. After writing, use the
 optional bundled validator when `python3` and its resolved path are available:
 
 ```bash
+python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
+```
+
+That structural check is the default and is sufficient for a declared `draft`,
+including an intentional draft held by a business-schema or other manual-review
+blocker. Only when the map is already declared `review_ready`, run the stricter
+assertion:
+
+```bash
 python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
 ```
 
-Omit `--require-ready` for a draft. The validator checks metadata, workflow and
-tax year, source provenance, confidence, duplicate IDs, finite values,
-reference coverage, `unknown`/`missing_fields` alignment, the
-`user_chat_values_index`, omitted portal-prefilled rows, provisional
-werkelijk-rendement exclusion, and whether declared `review_ready` is
-structurally possible. It may reject false readiness but never promotes a
-draft.
+Never use `--require-ready` to promote or fight an intentional draft. The
+validator checks metadata, workflow and tax year, source provenance,
+confidence, duplicate IDs, finite values, reference coverage,
+`unknown`/`missing_fields` alignment, the `user_chat_values_index`, omitted
+portal-prefilled rows, provisional werkelijk-rendement exclusion, and whether
+declared `review_ready` is structurally possible. It may reject false readiness
+but never promotes a draft.
 
 After a successful script check, set
 `check_performed_by: checked_by_script`. If the script cannot run, complete
@@ -165,8 +174,16 @@ End the turn in two to four sentences with:
 2. the number unknown or low-confidence; and
 3. the next decision: answer open questions or finalize the missing markers.
 
-After a canonical map is successfully created or updated, offer to create the
-human-only manual-entry checklist. Do not create it solely because the map now
-exists. A direct natural-language request, or an unambiguous affirmative reply
-to that immediately preceding offer, authorizes the checklist without a slash
-command or magic phrase.
+After a canonical map is successfully created or updated, inspect the saved
+workflow state before offering the human-only manual-entry checklist:
+
+- If this is the annual map and provisional 2026 is `queued`, suppress the
+  checklist question unless the user explicitly requested that checklist in
+  the current request. Say only, as a non-question, that the annual checklist
+  remains available on request, then return to the annual owner for the atomic
+  handoff. That availability notice cannot make a later bare “yes” checklist
+  authorization.
+- Otherwise, offer the checklist. Do not create it solely because the map now
+  exists. A direct natural-language request, or an unambiguous affirmative reply
+  to that immediately preceding offer, authorizes the checklist without a slash
+  command or magic phrase.

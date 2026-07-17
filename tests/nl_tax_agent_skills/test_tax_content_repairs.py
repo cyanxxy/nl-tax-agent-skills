@@ -630,7 +630,9 @@ class TaxContentRepairTests(unittest.TestCase):
                 with self.subTest(relative=relative, marker=marker):
                     self.assertIn(marker, text)
 
-        runtime = self.read_skill_text("_shared/runtime-contract.md")
+        runtime = " ".join(
+            self.read_skill_text("_shared/runtime-contract.md").split()
+        ).lower()
         for required in (
             "comparative or superlative shorthand",
             "that shorthand is source context",
@@ -654,6 +656,27 @@ class TaxContentRepairTests(unittest.TestCase):
         for marker in ("lowest combined result", "optimal allocation"):
             with self.subTest(generated_output_marker=marker):
                 self.assertNotIn(marker, generated)
+
+    def test_runtime_overlay_neutralizes_reviewed_box3_recommendation_shorthand(self):
+        reviewed = self.read_skill_text(
+            "_shared/knowledge/years/2025/box3/examples.md"
+        )
+        self.assertIn("clear recommendation note", reviewed)
+
+        runtime = " ".join(
+            self.read_skill_text("_shared/runtime-contract.md").split()
+        ).lower()
+        for required in (
+            "legacy “recommendation note” shorthand",
+            "that wording is source context only",
+            "does not authorize the assistant to recommend or select a tax method",
+            "does not create a taxpayer method election",
+            "official filing environment",
+            "uses the more favorable amount",
+            "preserve the reviewed source note byte-for-byte",
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, runtime)
 
     def test_invitation_deadline_and_conditional_14_july(self):
         self.assert_claim(

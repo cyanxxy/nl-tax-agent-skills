@@ -173,13 +173,26 @@ class MarketplaceConsistencyTests(unittest.TestCase):
         and (REPO_ROOT / ".agents" / "plugins" / "marketplace.json").is_file(),
         "dev-repo marketplace manifests not present — standalone package run",
     )
-    def test_marketplaces_agree_on_name_and_path(self):
-        claude = self._plugin_entry(REPO_ROOT / ".claude-plugin" / "marketplace.json")
+    def test_marketplaces_agree_on_name_path_and_description(self):
+        claude_marketplace_path = REPO_ROOT / ".claude-plugin" / "marketplace.json"
+        claude_marketplace = json.loads(
+            claude_marketplace_path.read_text(encoding="utf-8")
+        )
+        claude = self._plugin_entry(claude_marketplace_path)
         agents = self._plugin_entry(REPO_ROOT / ".agents" / "plugins" / "marketplace.json")
+        canonical = json.loads(
+            (ROOT / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8")
+        )["description"]
         self.assertEqual(claude.get("name"), agents.get("name"))
         self.assertEqual(self._source_path(claude), self._source_path(agents))
         self.assertEqual(claude.get("name"), "nl-tax-agent-skills")
         self.assertEqual(self._source_path(claude), "./plugins/nl-tax-agent-skills")
+        self.assertEqual(claude.get("description"), canonical)
+        self.assertEqual(agents.get("description"), canonical)
+        self.assertIn(
+            "Conversational, source-traceable",
+            claude_marketplace.get("description", ""),
+        )
 
 
 class EvidenceIndexerTests(unittest.TestCase):

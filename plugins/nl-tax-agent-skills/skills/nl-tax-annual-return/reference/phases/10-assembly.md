@@ -90,7 +90,11 @@ deferred annual question remains open and is never also answered.
 After a successful queued handoff, continue the 2026 collection naturally
 under the provisional owner without asking for a new activation phrase. The
 original request for both workflows does not satisfy the provisional
-final-generation confirmation gate.
+final-generation confirmation gate. Do not ask an annual-checklist question at
+the handoff. State only that the annual checklist remains available on request,
+then make the first actual question a provisional-subflow question. A bare
+“yes” can answer only that immediately preceding provisional question; never
+reinterpret it as annual-checklist authorization.
 
 ### 10.5 Summary to user
 
@@ -100,9 +104,12 @@ After writing:
 - Report the count of assumptions made
 - Remind the user to review the human review checklist
 - Remind the user that filing happens through Mijn Belastingdienst
-- After the field mapper reports success, offer to create the human-only
-  manual-entry checklist. An unambiguous affirmative reply to that immediate
-  offer counts as an explicit natural-language checklist request.
-- When a provisional workflow was queued, mention that the annual checklist
-  remains available on request, but do not pause the requested
-  annual-to-provisional continuation for a second activation question.
+- When no provisional workflow is queued, offer to create the human-only
+  manual-entry checklist after the field mapper reports success. An
+  unambiguous affirmative reply to that immediate offer counts as an explicit
+  natural-language checklist request.
+- When a provisional workflow is queued, do not ask the checklist question.
+  Mention in a non-question sentence that the annual checklist remains
+  available on request, then immediately continue with a clearly scoped
+  provisional-subflow question. Only a direct checklist request activates the
+  annual checklist after that handoff.

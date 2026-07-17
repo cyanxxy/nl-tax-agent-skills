@@ -17,9 +17,11 @@ allowed-tools:
 Prepare a local, source-traceable 2026 voorlopige-aanslag workpack for manual
 entry or review. The taxpayer or an authorized human performs every
 authenticated portal action. Do not use a browser, Claude in Chrome, computer
-use, screen interaction, or another tool to open or operate the portal; do not
-log in, enter values, click controls, sign, send, submit, collect credentials or
-BSN, present a final calculation, or describe the workpack as official advice.
+use, screen interaction, a connector, or another tool to open or operate the
+portal; do not log in, enter or change values, click controls, sign, send,
+submit, retrieve private account data, ask for, accept, store, or process
+credentials or sessions, collect BSN, present a final calculation, or describe
+the workpack as official advice.
 
 This is an agent-led conversation, not a fixed interview or tax-decision
 engine. Credit facts and evidence already supplied, ask the smallest useful
