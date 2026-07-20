@@ -254,6 +254,12 @@ asking a taxpayer to install Python.
 
 Cowork's organization marketplace accepts only **private or internal** GitHub repositories. Fork or mirror this repository privately under your organization, then open **Organization settings → Plugins → Add plugin → GitHub**, enter `your-org/your-fork`, and set availability to *Available*, *Installed by default*, *Not available*, or *Required*.
 
+The Claude GitHub App must be installed on the fork, and organization
+auto-sync only triggers on a merged pull request that bumps the plugin
+version in `plugin.json` — so pull upstream releases (which always bump the
+version) through a PR rather than pushing directly to the fork's default
+branch.
+
 #### Community directory
 
 Open-source plugins can be submitted to the Anthropic community directory at [clau.de/plugin-directory-submission](https://clau.de/plugin-directory-submission). Accepted plugins install from the in-product catalog without marketplace setup or forking.

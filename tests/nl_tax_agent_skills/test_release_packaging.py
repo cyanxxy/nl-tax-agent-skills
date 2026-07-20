@@ -123,8 +123,8 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.1.12")
-        self.assertEqual(codex["version"], "0.1.12")
+        self.assertEqual(claude["version"], "0.1.13")
+        self.assertEqual(codex["version"], "0.1.13")
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -297,11 +297,11 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.1.12\')" = ""',
+            'test "$(git tag --list \'nl-tax-agent-skills--v0.1.13\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.12'", text)
+        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.1.13'", text)
 
     def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")

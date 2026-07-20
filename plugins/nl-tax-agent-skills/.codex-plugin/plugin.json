@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",

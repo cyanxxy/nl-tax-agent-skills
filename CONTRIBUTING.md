@@ -74,7 +74,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -382,11 +382,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.1.12`):
+Both plugin manifests pin a fixed version (currently `0.1.13`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.12"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.12"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.13"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.13"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -415,7 +415,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.1.12')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.1.13')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.1.12'
+git tag --list 'nl-tax-agent-skills--v0.1.13'
 ```
