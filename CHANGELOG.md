@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.13] — 2026-07-20
+
+Cross-host task-resumption and Cowork organization-sync guidance release.
+
+### Changed
+
+- Dispatched, background, and child tasks must resume from the recorded
+  workspace and conversation ledger, return results to the owning conversation,
+  and never become competing workflow owners or canonical-state writers.
+- Cowork organization-marketplace setup now documents the Claude GitHub App,
+  pull-request version-bump requirement for automatic sync, and the need to
+  merge upstream releases instead of pushing them directly to the default branch.
+
+### Validation
+
+- The complete repository suite contains 423 passing tests.
+- Release manifests, packaging contracts, and repository whitespace checks pass.
+
 ## [0.1.12] — 2026-07-17
 
 Full tax-content, agent-experience, source-provenance, and release-readiness audit.

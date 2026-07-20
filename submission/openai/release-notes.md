@@ -1,9 +1,19 @@
-# OpenAI Plugin Directory release 0.1.12
+# OpenAI Plugin Directory release 0.1.13
 
 NL Tax Agent Skills is a skills-only plugin for preparing source-traceable Dutch
 individual income-tax workpacks for manual Mijn Belastingdienst entry. The
 release supports annual 2025 preparation and 2026 voorlopige aanslag
 request, change, review, and stopzetten workflows.
+
+This patch strengthens task resumption across supported hosts. A dispatched,
+background, scheduled, or child task continues from the recorded workspace and
+conversation ledger, returns findings to the owning conversation, and never
+becomes a competing workflow owner, canonical-state writer, question asker, or
+readiness authority. If saved state is unavailable, the task stops and reports
+the missing state instead of replaying intake or creating a second workspace.
+
+Cowork organization-marketplace documentation now also records the GitHub App
+and merged pull-request version-bump requirements for automatic plugin sync.
 
 Finite-choice intake now prefers a return-capable native control or compact
 in-chat form when the active surface provides one. Codex may render an inline

@@ -295,6 +295,15 @@ The scheduled task should continue from the saved conversation ledger and
 surface its result for review; it does not turn the workpack into a fixed or
 Python-owned workflow.
 
+The same rule governs a dispatched, background, or child task on any host: it
+is never a second workflow owner. It must resume from the recorded
+`workspace_root` and the saved conversation-ledger artifacts, keep the single
+owning agent as the sole writer, question asker, and readiness authority, and
+surface its result for review in the main conversation. If it cannot read the
+saved state, it reports that and stops; it never re-runs intake, creates a
+competing `workspace/` tree, or generates canonical outputs outside the
+documented confirmation gates.
+
 ## Capability mapping
 
 The `allowed-tools` key in `SKILL.md` supports hosts that recognize that
