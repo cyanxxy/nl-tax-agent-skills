@@ -33,11 +33,32 @@ The following taxpayer situations are not supported in version 1 of the Dutch ta
 
 ## 4. Complex Business Forms (Winst uit onderneming)
 
-- **Supported bounded preparation:** A full-year resident individual with an **eenmanszaak** may use `annual_2025` to organize finalized profit-and-loss and balance evidence, facts, and questions. This is preparation-only; the business field map stays draft and no final taxable business profit is produced. A `provisional_2026_request` or `provisional_2026_change` may record only the sourced, user-reviewed expected-profit forecast in `onderneming.geschatte_winst`.
-- **Profile candidate:** `annual_2025_entrepreneurs`
-- **Manual review / unsupported boundary:** Route the case to the blocked candidate (or manual review) when the business form or event is outside standard scope: partnerships (VOF, maatschap, CV) and their profit-share allocation, medegerechtigdheid, DGA / BV winst, agrarische ondernemingen (landbouwvrijstelling), zeevarenden, and business-cessation events (staking, herinvesteringsreserve, oudedagsreserve wind-down). Resultaat uit overige werkzaamheden (a freelancer who is not an ondernemer for the inkomstenbelasting) is also a manual-review item, not standard winst uit onderneming.
-- **Why the boundary:** the complete zakelijke schema and complex-form/event rules are not reviewed. Annual deductions and final business-profit calculations are therefore outside the supported preparation, while provisional support is limited to one reviewed forecast.
-- **Advice:** For complex business cases, use accounting software (e.g., Exact, Moneybird) with tax-filing integration, or consult a boekhouder / belastingadviseur.
+This section is the one place in this file where recognising the case does **not**
+end the preparation. Only the named computations below are terminal; everything
+else about the business is prepared, so do not apply the numbered stop rules at
+the top of this file to a business case before checking the lists here.
+
+- **Supported preparation:** A full-year resident individual with an **eenmanszaak** uses `annual_2025` for the complete business section: the reviewed zakelijke schema (winst-en-verliesrekening rubrieken, both balans columns, the entrepreneur questions, and the priveonttrekkingen en -stortingen), and the ordered profit chain from winst uit onderneming through the investeringsaftrek, the ondernemersaftrek and the MKB-winstvrijstelling to the belastbare winst uit onderneming that feeds the box 1 income total. The business field map can reach `readiness: review_ready`. An IB-ondernemer also receives a **second, separate aanslag** for the inkomensafhankelijke bijdrage Zorgverzekeringswet alongside the aanslag inkomstenbelasting; prepare both from the same return. Amounts, percentages and hour counts stay in `_shared/knowledge/years/2025/entrepreneur/`; never restate them here. A `provisional_2026_request` or `provisional_2026_change` may record only the sourced, user-reviewed expected-profit forecast in `onderneming.geschatte_winst`.
+- **Resultaat uit overige werkzaamheden is a supported prepared path, not a dead end.** A freelancer who is not an ondernemer voor de inkomstenbelasting keeps `business.has_onderneming` false and has the ROW result prepared from `_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, which also carries the bron-van-inkomen pre-screen that runs before any category question and the explain-only Wet DBA account. Ondernemersaftrek, MKB-winstvrijstelling and investeringsaftrek never apply to a ROW result; the bijdrage Zvw does. Do not route a ROW case to the blocked candidate, and do not judge the arbeidsrelatie or draft a modelovereenkomst for the taxpayer.
+- **Every other IB business form is recognised and routed, not dead-ended.** A vof, maatschap, man-vrouwfirma, cv, medegerechtigdheid, an agrarische onderneming, a zeevarende, a staking, a herinvesteringsreserve, an oudedagsreserve wind-down, or terbeschikkingstelling is named, its effect on the ondernemer tests and on the deductions is explained, its facts are recorded with provenance, and the parts of the return it does not block are still prepared.
+- **Active profile candidate:** keep `workflow_candidate: annual_2025` so the
+  annual owner can prepare unaffected sections. Record
+  `annual_2025_entrepreneurs` only in `routing.blocked_profile_candidate` as the
+  roadmap marker for the blocked business computation; it is not an active
+  terminal workflow.
+- **Terminal manual review -- the computations that stay out of scope:** the profit-share computation of a samenwerkingsverband (VOF, maatschap, man-vrouwfirma, CV), including the winstaandeel, the KIA apportionment and the per-participant figures; the loss caps applying to a medegerechtigde or a profit-sharing geldverstrekker; DGA / BV winst and its corporate-tax interaction; agrarische ondernemingen (landbouwvrijstelling); zeevarenden (zeescheepvaart); the stakingswinst computation, the doorschuiffaciliteiten and the stakingslijfrente; any herinvesteringsreserve or kostenegalisatiereserve movement; the oudedagsreserve wind-down computation; and terbeschikkingstelling of assets to a connected company or enterprise. Record the facts collected so far, name the figure that could not be computed and why, and hand that figure to professional review without producing a partial calculation.
+- **How to route it:** keep `annual_2025` active in every case in this section.
+  Set `routing.blocked_profile_candidate.value: annual_2025_entrepreneurs` when
+  the blocked computation is the business section itself (partnership profit
+  share, medegerechtigdheid, DGA/BV winst, agrarisch or zeevarende). For a
+  supported eenmanszaak with one blocked item, the roadmap marker may remain
+  empty. In either case set `routing.complex_business_screening.value:
+  manual_review`, `manual_review.required.value: true`, record the triggers, keep
+  the business field map `draft`, and continue to the annual workflow. Do **not**
+  follow the terminal-route steps and do not suppress the workpack; the blocked
+  figure remains `?` while unaffected annual sections are prepared.
+- **Why the boundary:** these figures need taxpayer-specific balance-sheet history, a per-participant allocation, or a formal request that no reviewed source settles. The Belastingdienst itself describes the stakingswinst computation as very complicated and advises taking advice.
+- **Advice:** For the blocked computations, use accounting software (e.g., Exact, Moneybird) with tax-filing integration, or consult a boekhouder / belastingadviseur.
 
 ## 5. M-Aangifte (Migration Return)
 

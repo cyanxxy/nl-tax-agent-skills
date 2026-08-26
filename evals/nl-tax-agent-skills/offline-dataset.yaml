@@ -156,7 +156,7 @@ cases:
   - id: annual_entrepreneur_zzp
     fixture: evals/nl-tax-agent-skills/fixtures/annual/entrepreneur-zzp.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 eenmanszaak / ZZP preparation with a draft business field map.
+    purpose: Annual 2025 eenmanszaak / ZZP with the computed winst chain and a review-ready business field map.
     expected_files:
       - workspace/taxpayer/profile.yaml
       - workspace/annual/2025/return-pack.md
@@ -167,8 +167,8 @@ cases:
       - path: workspace/annual/2025/field-map.yaml
         all:
           - "annual_return"
-          - "readiness: draft"
-          - "business-section schema review"
+          - "readiness: review_ready"
+          - "onderneming.wv."
         none:
           - "onderneming.belastbare_winst"
           - "onderneming.zelfstandigenaftrek"
@@ -200,6 +200,8 @@ cases:
           - "Zvw"
           - "final tax"
           - "box1.geschat_overig_inkomen"
+          - "zvw."
+          - "Zorgverzekeringswet"
 
   - id: annual_evidence_status
     fixture: evals/nl-tax-agent-skills/fixtures/annual/evidence-status.yaml

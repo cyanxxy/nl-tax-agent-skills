@@ -62,13 +62,26 @@ Compile all box 1 income from evidence and user-provided data.
 ### 2.4 Other box 1 income
 
 - Check for **winst uit onderneming** (eenmanszaak / ZZP). If present, set `business.has_onderneming: true` and prepare it in Phase 2A, not here. Distinguish it from resultaat uit overige werkzaamheden: winst uit onderneming is the ondernemer case; resultaat uit overige werkzaamheden is the residual freelance case.
-- Check for income from other activities (resultaat uit overige werkzaamheden) and record it as manual-review data; do not calculate or map it as standard Box 1 support without reviewed sources.
+- Check for income from other activities (**resultaat uit overige
+  werkzaamheden**). This is a prepared path, not a dead end: load
+  `_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, run its bron
+  van inkomen pre-screen, and prepare the ROW result from the opbrengsten and
+  the costs that note allows. Ondernemersaftrek, MKB-winstvrijstelling and
+  investeringsaftrek are ondernemer facilities and never apply to a ROW result;
+  the bijdrage Zvw does, per `zvw-2025.md`. Keep the canonical
+  `business.has_onderneming: no` hook for the winst section, and route anything
+  the note leaves open to manual review rather than estimating it.
 - Check for alimentatie received (taxable as box 1 income) and route to manual review unless exact reviewed sources and field-map support have been added.
 - Check for any other income sources mentioned in the profile or evidence and keep them out of standard calculations until source-backed.
 
 ### 2.5 Income summary
 
-- Total only the supported box 1 income sources. Do not feed a derived taxable-business-profit result from Phase 2A into this total.
+- Total the supported box 1 income sources. The **belastbare winst uit
+  onderneming** derived in Phase 2A is one of them: include it in this total,
+  cited to the Phase 2A chain, and include a prepared resultaat uit overige
+  werkzaamheden alongside it. A business line still under a Phase 2A
+  manual-review routing marker stays outside the total and is shown as a
+  blocker row.
 - Total all loonheffing withheld (this contributes to the official result; do
   not predict the refund or amount due from withholding alone)
 - Note any income items without supporting evidence

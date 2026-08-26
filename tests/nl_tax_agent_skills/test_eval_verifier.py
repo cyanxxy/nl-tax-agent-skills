@@ -105,8 +105,8 @@ class OfflineVerifierTests(unittest.TestCase):
             for rule in entrepreneur["text_checks"]
             if rule["path"] == "workspace/annual/2025/field-map.yaml"
         )
-        self.assertIn("readiness: draft", entrepreneur_map["all"])
-        self.assertIn("business-section schema review", entrepreneur_map["all"])
+        self.assertIn("readiness: review_ready", entrepreneur_map["all"])
+        self.assertIn("onderneming.wv.", entrepreneur_map["all"])
         filing_ready_business_ids = {
             "onderneming.belastbare_winst",
             "onderneming.zelfstandigenaftrek",

@@ -19,7 +19,7 @@ ROOT = (
     / "nl-tax-agent-skills"
 )
 REPO_ROOT = ROOT.parents[1]
-VALIDATOR_SCRIPT = ROOT / "skills/nl-tax-field-mapper/scripts/validate_field_map.py"
+VALIDATOR_SCRIPT = ROOT / "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
 
 
 def read_text(relative_path):
@@ -79,7 +79,7 @@ def section_text(relative_path, section_heading):
 class PolicyAndFieldMapTests(unittest.TestCase):
     def setUp(self):
         self.validator = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_policy",
         )
 
@@ -1165,7 +1165,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         common_paths = (
             "nl-tax-field-mapper/templates/field-map-template.yaml",
             "nl-tax-field-mapper/reference/mapping-principles.md",
-            "nl-tax-field-mapper/scripts/validate_field_map.py",
+            "nl-tax-field-mapper/reference/field-map-rules.yaml",
         )
         workflow_paths = {
             "skills/nl-tax-annual-return/reference/phases/10-assembly.md": (
@@ -1257,28 +1257,27 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         skill = read_text("skills/nl-tax-field-mapper/SKILL.md")
 
         self.assertIn("python3 ", skill)
-        self.assertIn("validate_field_map.py", skill)
         self.assertIn("render_field_map.py", skill)
         self.assertNotIn("\npython ", skill)
+        # The runtime check is the agent checklist, not a bundled validator.
+        self.assertNotIn("validate_field_map.py", skill)
 
-    def test_field_mapper_defaults_to_structural_validation_for_drafts(self):
-        structural = (
-            "validate_field_map.py <path-to-field-map.yaml>"
-        )
-        strict = (
-            "validate_field_map.py --require-ready <path-to-field-map.yaml>"
-        )
+    def test_field_mapper_runtime_check_is_the_agent_checklist(self):
+        """Agent checklist + human review is the runtime check: the docs must
+        instruct the checklist against field-map-rules.yaml, never a bundled
+        validator run, and never allow promotion to review_ready."""
         for relative_path in (
             "skills/nl-tax-field-mapper/SKILL.md",
             "skills/nl-tax-field-mapper/reference/mapper-flow.md",
         ):
             with self.subTest(relative_path=relative_path):
                 text = read_text(relative_path)
-                self.assertIn(structural, text)
-                self.assertIn(strict, text)
-                self.assertLess(text.index(structural), text.index(strict))
-                self.assertIn("intentional draft", text)
-                self.assertIn("Never use `--require-ready` to promote", text)
+                self.assertNotIn("validate_field_map.py", text)
+                self.assertNotIn("--require-ready", text)
+                self.assertIn("field-map-rules.yaml", text)
+                self.assertIn("checked_by_agent", text)
+        flow = read_text("skills/nl-tax-field-mapper/reference/mapper-flow.md")
+        self.assertIn("promote a draft", flow)
 
     def test_source_refresh_docs_describe_fetch_as_plan_only(self):
         maintenance = read_repo_text(

@@ -1,6 +1,6 @@
 # Rule note: Rates and credits for voorlopige aanslag 2026
 
-source_ids: bd_provisional_rates_2026, bd_box1_rates_2026, bd_heffingskortingen_aow_2025_2026
+source_ids: bd_provisional_rates_2026, bd_box1_rates_2026, bd_fisin_2026_belastingberekening, bd_heffingskortingen_aow_2025_2026
 workflow: provisional_assessment
 tax_year: 2026
 status: active
@@ -45,15 +45,30 @@ EUR 38,883; brackets 2 and 3 remain 37.56% and 49.50%.
 | January | 17.85% |
 | February | 19.34% |
 | March | 20.83% |
-| April | 22.33% |
-| May | 23.82% |
-| June | 25.31% |
+| April | 22.32% |
+| May | 23.81% |
+| June | 25.30% |
 | July | 26.80% |
 | August | 28.29% |
 | September | 29.78% |
-| October | 31.28% |
-| November | 32.77% |
-| December | 34.26% |
+| October | 31.27% |
+| November | 32.76% |
+| December | 34.25% |
+
+**Two official pages disagree on six of these rows.** The Belastingdienst
+belastingberekening page (`bd_fisin_2026_belastingberekening`) prints the series
+above. The general box 1 tarieven page (`bd_box1_rates_2026`) prints April,
+May, June, October, November and December each **0.01 percentage point higher**
+(22.33, 23.82, 25.31, 31.28, 32.77, 34.26). The series above is used because it
+is the one the belastingberekening reference gives and because it keeps the
+convention both official 2025 pages use: for 2025 the box 1 tarieven page and
+the belastingberekening page agree with each other, and both cut the third
+decimal rather than rounding it up. Only the 2026 box 1 page departs from that.
+
+The gap is at most 0.01 percentage point over the first bracket, so it changes a
+voorlopige-aanslag estimate by a few euro at most. Do not present either series
+as exact to the cent, and do not restate this as a taxpayer-facing choice: the
+official filing environment applies its own percentage and remains binding.
 
 ### Taxpayers at AOW age throughout 2026, born on or after 1 January 1946
 

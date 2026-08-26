@@ -6,10 +6,22 @@ sources:
     reviewed_note_hash_sha256: 7b6c5aa842476d31fdb6eb8c00dff6ee8ea20a7c99c8c46bb844ac315ca2d536
     source_id: bd_algoritmeregister_vva_eva
     source_url: https://over-ons.belastingdienst.nl/onderwerpen/omgaan-met-gegevens/algoritmeregister/weegmodule-verzoek-voorlopige-aanslag-vva-en-bedrijfsregels-eerste-voorlopige-aanslag-eva/
+  bd_belastingrente_pay_ib:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_belastingrente_pay_ib
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting
+  bd_belastingrente_percentages:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_belastingrente_percentages
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente
   bd_box1_rates_2026:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
-    reviewed_note_hash_sha256: 82958b5b361de740807e764fdb99ab7ec2c4b8e4cfbe46790616076976c35464
+    reviewed_note_hash_recorded_at: '2026-08-15T13:58:21.563773+00:00'
+    reviewed_note_hash_sha256: b7085bb1cc6d1557c19bdd004f460fbaac6d7476d7de365e01efbebb18fe81bb
     source_id: bd_box1_rates_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
   bd_box2_provisional_2026:
@@ -24,6 +36,18 @@ sources:
     reviewed_note_hash_sha256: 78707e164c10f70f5520087f12e56a1b07ef8dab966d273b12b0cc13074c6601
     source_id: bd_box3_2026_provisional
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026
+  bd_fisin2026_h8:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_fisin2026_h8
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/ondernemersaftrek_en_investeringsaftrek
+  bd_fisin_2026_belastingberekening:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T13:58:21.563773+00:00'
+    reviewed_note_hash_sha256: b7085bb1cc6d1557c19bdd004f460fbaac6d7476d7de365e01efbebb18fe81bb
+    source_id: bd_fisin_2026_belastingberekening
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/belastingberekening
   bd_fisin_aanmerkelijk_belang_2026:
     review_status: reviewed
     reviewed_note_hash_recorded_at: '2026-05-30T10:38:51.138867+00:00'
@@ -36,18 +60,48 @@ sources:
     reviewed_note_hash_sha256: 78707e164c10f70f5520087f12e56a1b07ef8dab966d273b12b0cc13074c6601
     source_id: bd_fisin_box3_assets_debts_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/bezittingen_en_schulden_box_3_
+  bd_fisin_zvw_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 22b781dc76054d7f3d57637e0782076028805c4fcdee6a6d71a8aede5bd9a0a6
+    source_id: bd_fisin_zvw_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+  bd_mkb_winstvrijstelling_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_mkb_winstvrijstelling_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/mkb-winstvrijstelling-2026
   bd_own_home_deduction_cap_2026:
     review_status: reviewed
     reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
     reviewed_note_hash_sha256: 13395f9d8da2821295fd6f2ecf2fedf4a4191c54a80fb3a94c28fbdf25543d8d
     source_id: bd_own_home_deduction_cap_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
+  bd_privevervoermiddel_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_privevervoermiddel_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/zakelijk-gebruik-privevervoermiddel-2026
+  bd_provisional_annual_renewal:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_provisional_annual_renewal
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/moet-ik-ieder-jaar-opnieuw-een-maandelijkse-voorlopige-aanslag-aanvragen
   bd_provisional_change_2026:
     review_status: reviewed
     reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
     reviewed_note_hash_sha256: d67e793652e7dc4b27f0f3797cf2ae49ab285297682e59be1f2fd5d0f5100b54
     source_id: bd_provisional_change_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen
+  bd_provisional_check_and_change_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_provisional_check_and_change_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen
   bd_provisional_landing_2026:
     review_status: reviewed
     reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
@@ -56,8 +110,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/voorlopige-aanslag
   bd_provisional_rates_2026:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T13:03:08.292772+00:00'
-    reviewed_note_hash_sha256: 82958b5b361de740807e764fdb99ab7ec2c4b8e4cfbe46790616076976c35464
+    reviewed_note_hash_recorded_at: '2026-08-15T13:58:21.563773+00:00'
+    reviewed_note_hash_sha256: b7085bb1cc6d1557c19bdd004f460fbaac6d7476d7de365e01efbebb18fe81bb
     source_id: bd_provisional_rates_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen
   bd_provisional_refund_timing_2026:
@@ -90,3 +144,39 @@ sources:
     reviewed_note_hash_sha256: 13395f9d8da2821295fd6f2ecf2fedf4a4191c54a80fb3a94c28fbdf25543d8d
     source_id: bd_woz_value_provisional_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hulp-bij-de-voorlopige-aanslag-wat-neemt-u-mee
+  bd_zelfstandigenaftrek_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: bd_zelfstandigenaftrek_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026
+  bd_zvw_provisional_aanslag_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 22b781dc76054d7f3d57637e0782076028805c4fcdee6a6d71a8aede5bd9a0a6
+    source_id: bd_zvw_provisional_aanslag_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/voorlopige-aanslag-zvw
+  ola_va2026_schatting_winst:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: ola_va2026_schatting_winst
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/invulhulp/inkwinstondbdrg.htm
+  ola_va2026_winst_als_ondernemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: be96251b31fe686f547f1ddc851cfdca9cf16208136cc63435eb2766b1131166
+    source_id: ola_va2026_winst_als_ondernemer
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/wa/winst_als_ondernemer.htm
+  reg_zorgverzekering_h5_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 22b781dc76054d7f3d57637e0782076028805c4fcdee6a6d71a8aede5bd9a0a6
+    source_id: reg_zorgverzekering_h5_2026
+    source_url: https://wetten.overheid.nl/BWBR0018715
+  wet_zvw_art41_49_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 22b781dc76054d7f3d57637e0782076028805c4fcdee6a6d71a8aede5bd9a0a6
+    source_id: wet_zvw_art41_49_2026
+    source_url: https://wetten.overheid.nl/BWBR0018450/2026-01-01

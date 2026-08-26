@@ -9,6 +9,13 @@ review_status: reviewed
 
 This reference defines how workpack findings are mapped to submission form fields. These principles apply to both annual and provisional field maps.
 
+The rule data behind this policy -- prohibitions, special identifiers, and
+readiness disqualifiers -- is canonical in
+[`field-map-rules.yaml`](field-map-rules.yaml). The agent applies that file
+directly through the checklist below; the repository's offline eval harness
+grades produced maps against the same file, so the runtime and the evals can
+never enforce different rules.
+
 Only `nl-tax-field-mapper` creates or updates the canonical `field-map.yaml`
 next to an annual or provisional workpack. Owning workflow skills pass their
 workpack and context to the mapper; they never seed or rewrite the map. The most
@@ -168,6 +175,9 @@ rows, so the mapper NEVER creates entries (in `fields` or `missing_fields`) for:
 - **Passwords or tokens** of any kind
 - **Session identifiers** or portal navigation state
 - **Portal-prefilled personal/identifier rows** -- BSN, IBAN, name, address, and date of birth
+- **Bijdrage Zvw rows** -- the Zvw is a separate aanslag computed from the
+  same return, with no entry screen and no box to type into. Keep it in the
+  workpack narrative (rule `zvw_entry_row` in `field-map-rules.yaml`).
 
 This is the human-only authenticated-portal product boundary in
 `../_shared/runtime-contract.md`, regardless of host permissions. The validator
@@ -215,6 +225,11 @@ in `notes`.
 - Include werkelijk rendement fields if data is available
 - Apply peildatum 1 January 2025 for box 3
 - Map all detail fields (per-employer, per-account)
+- For a business case, map the rubrieken, both balans columns, the entrepreneur
+  questions and the priveonttrekkingen from `annual-field-map.md`. Keep every
+  `onderneming.*` row conditional or optional, never required, and create no id
+  for a figure the aangifte computes itself -- those belong in the workpack
+  narrative as expectations the taxpayer checks on screen.
 
 ### Provisional assessment fields
 
@@ -222,21 +237,26 @@ in `notes`.
 - NEVER include werkelijk rendement fields
 - Apply peildatum 1 January 2026 for box 3
 - Map summary fields only (totals, not per-employer breakdowns)
+- Map exactly one business figure, `onderneming.geschatte_winst`, with the
+  semantic documented in `provisional-field-map.md`. Never add another
+  `onderneming.*` field and never carry an annual business deduction into a
+  provisional map.
 - Compare estimates with any available baseline and flag material,
   insufficiently explained differences for review using the case-sensitive
   rules above.
 
 ## Manual validation checklist
 
-Use this checklist when the optional validator cannot run. The IDs are the
-stable `CHECK_IDS` exposed by `scripts/validate_field_map.py`; complete every
-item and record `check_performed_by: checked_by_agent` in the artifact.
+This checklist is the check: the agent completes it for every map, reading
+the rule data from `field-map-rules.yaml`, and records
+`check_performed_by: checked_by_agent` in the artifact. The IDs are stable so
+session notes and evals can reference individual checks.
 The checklist validates the map mechanically; session state remains the sole
 readiness authority.
 
 - [ ] `FM-METADATA` — required metadata and the check trail are present and valid.
 - [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are the supported annual 2025 or provisional 2026 pair.
-- [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields exist.
+- [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields and no Zvw entry rows exist.
 - [ ] `FM-SOURCE` — every populated row has a valid source type and its required provenance fields.
 - [ ] `FM-CONFIDENCE-FINITE` — confidence is numeric within 0–1 and numeric values are finite.
 - [ ] `FM-REFERENCE-COVERAGE` — every required non-prefilled reference field appears in fields or missing fields.

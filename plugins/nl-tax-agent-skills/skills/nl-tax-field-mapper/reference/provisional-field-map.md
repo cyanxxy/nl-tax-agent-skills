@@ -78,6 +78,31 @@ must not access or operate Mijn Belastingdienst.
   other-income field and never add annual deductions, Zvw, cessation
   profit, or final tax. Preserve it in the workpack's Box 1 rollup and change
   delta even though the field map keeps it as its own portal section.
+- **What that one figure means.** The form asks for the profit the taxpayer
+  expects to earn as ondernemer in 2026, taken **before** the ondernemersaftrek
+  and **before** the mkb-winstvrijstelling, **excluding** the btw payable and
+  the btw reclaimable, and entered with a **minus sign** when a loss is
+  expected. `_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`
+  is canonical for this semantic; never restate it from memory. An estimate that
+  has already been reduced by an ondernemersfaciliteit is too low, because the
+  portal applies those itself. There is exactly one business figure on the form:
+  do not widen the field, do not split it per onderneming, and do not emit any
+  other `onderneming.*` field. Ask for the figure rather than deriving it, and
+  record a missing forecast as an open question instead of entering a zero.
+- **A separate voorlopige aanslag Zvw exists.** An ondernemer normally receives
+  two assessments: one for the inkomstenbelasting and premie
+  volksverzekeringen, and another for the inkomensafhankelijke bijdrage
+  Zorgverzekeringswet. They are separate documents with separate change routes.
+  No reviewed source establishes whether a change to the income-tax voorlopige
+  aanslag is coupled to the Zvw assessment, so raise this and require the
+  taxpayer to check the Zvw assessment separately. Carry any resulting change as
+  its own human-only action in the workpack: **you (the taxpayer) or an authorized
+  human** change that assessment through its own route. It is never mapped: the
+  income-tax field map MUST contain no Zvw field or value, including no Zvw
+  `field_id`, label, note, amount, baseline, estimate, or manual-entry row.
+  `_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is
+  canonical; its payment terms and timing are not established there, so route a
+  timing question to manual review rather than reusing the income-tax dates.
 - If the taxpayer reaches AOW age during 2026, preserve the reviewed transition
   month in the workpack and use the live portal result for affected rates and
   credits. Do not select a whole-year table from a legacy yes/no AOW flag.

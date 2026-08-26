@@ -1,152 +1,884 @@
 metadata_version: '1.1'
 sources:
+  bd_aangifte_loonheffingen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_aangifte_loonheffingen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/loonaangifte-aangifte-loonheffingen
   bd_aangifte_ondernemers_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
-    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
     source_id: bd_aangifte_ondernemers_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
+  bd_aanmelden_werkgever:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_aanmelden_werkgever
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/aanmelden-als-werkgever
   bd_administratie_bewaren_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_administratie_bewaren_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/administratie_bewaren
+  bd_afschrijving_bedrijfspand:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_afschrijving_bedrijfspand
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/afschrijving_bedrijfspand
+  bd_afschrijving_bedrijfspand_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_afschrijving_bedrijfspand_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/afschrijving-bedrijfspand-2025
+  bd_afschrijving_berekening:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_afschrijving_berekening
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/hoe_berekent_u_het_bedrag_van_de_afschrijving
+  bd_aftrekken_lijfrentepremies:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: bd_aftrekken_lijfrentepremies
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/lijfrente/aftrekken-lijfrentepremies/aftrekken-lijfrentepremies
+  bd_aov_prive_aftrek:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: bd_aov_prive_aftrek
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/arbeidsongeschiktheidsverzekering/arbeidsongeschiktheidsverzekering
+  bd_aov_voor_ondernemers:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: bd_aov_voor_ondernemers
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsongeschiktheidsverzekering-voor-ondernemers
+  bd_arbeidsbeloning_fiscale_partner:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_arbeidsbeloning_fiscale_partner
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsbeloning_aan_fiscale_partner
+  bd_becon_uitstel_fiscaal_dienstverleners:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    source_id: bd_becon_uitstel_fiscaal_dienstverleners
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/intermediairs/aangifte_doen/uitstel-aanvragen-voor-fiscaal-dienstverleners-becon-uitstel/
+  bd_beoordeel_samen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_beoordeel_samen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/beoordeel-samen-uw-arbeidsrelatie
   bd_beperkt_aftrekbare_kosten_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_beperkt_aftrekbare_kosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
+  bd_bestelauto_niet_prive_gebruiken:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bestelauto_niet_prive_gebruiken
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/uitsluitend_zakelijk_gebruik_bestelauto/bestelauto_niet_prive_gebruiken
+  bd_bijtelling_privegebruik_auto_2021:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bijtelling_privegebruik_auto_2021
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2021
+  bd_bijtelling_privegebruik_auto_2022:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bijtelling_privegebruik_auto_2022
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2022
+  bd_bijtelling_privegebruik_auto_2023:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bijtelling_privegebruik_auto_2023
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2023
+  bd_bijtelling_privegebruik_auto_2024:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bijtelling_privegebruik_auto_2024
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2024/bijtelling-privegebruik-auto-2024
+  bd_bijtelling_woning_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_bijtelling_woning_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-woning-2025
+  bd_bijzondere_situaties_privegebruik_auto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_bijzondere_situaties_privegebruik_auto
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/bijzondere_situaties
+  bd_bron_van_inkomen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_bron_van_inkomen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/bron-van-inkomen
+  bd_btw_onderneming_wijzigen_of_beeindigen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_btw_onderneming_wijzigen_of_beeindigen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-onderneming-wijzigen-of-beeindigen
+  bd_cv_rechtsvorm:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_cv_rechtsvorm
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/commanditaire-vennootschap-cv
+  bd_desinvesteringsbijtelling:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
+    source_id: bd_desinvesteringsbijtelling
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/desinvesteringsbijtelling
+  bd_desinvesteringsbijtelling_bij_staking:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_desinvesteringsbijtelling_bij_staking
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/desinvesteringsbijtelling-bij-verkoop-bedrijfsmiddel-na-staken-bedrijf
+  bd_doorschuiven_nieuwe_bestaande_onderneming:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_doorschuiven_nieuwe_bestaande_onderneming
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/doorschuiven-naar-een-nieuwe-of-bestaande-onderneming
+  bd_egalisatiereserve:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_egalisatiereserve
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/egalisatiereserve
   bd_eia_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-06T12:00:00+00:00'
-    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
     source_id: bd_eia_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/investeringsaftrek-2025/energie-investeringsaftrek-2025
   bd_eia_mia_vamil_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
     source_id: bd_eia_mia_vamil_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/milieu_investeringsaftrek_mia_willekeurige_afschrijving_milieu_investeringen_vamil
+  bd_extra_lijfrenteaftrek_staking_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: bd_extra_lijfrenteaftrek_staking_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/extra-lijfrentepremieaftrek-bij-stakende-ondernemers-2025
+  bd_fisin2025_h6_winst_uit_onderneming:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_fisin2025_h6_winst_uit_onderneming
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming
+  bd_fisin2025_row:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_fisin2025_row
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomsten_uit_overig_werk
+  bd_fisin2025_zvw_hfst28:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_fisin2025_zvw_hfst28
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+  bd_fisin_2025_h25:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: bd_fisin_2025_h25
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/te_verrekenen_verliezen
+  bd_fisin_2025_h7:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_fisin_2025_h7
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans
+  bd_fisin_2025_h8:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
+    source_id: bd_fisin_2025_h8
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/ondernemersaftrek_en_investeringsaftrek
+  bd_gedeeltelijke_doorschuiving_of_staking:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_gedeeltelijke_doorschuiving_of_staking
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/gedeeltelijke_doorschuiving_of_staking_onderneming
+  bd_geen_nieuwe_modelovereenkomsten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_geen_nieuwe_modelovereenkomsten
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/geen-nieuwe-modelovereenkomsten-meer
+  bd_geen_recht_op_investeringsaftrek:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
+    source_id: bd_geen_recht_op_investeringsaftrek
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/geen_recht_op_investeringsaftrek
+  bd_gevolgen_opdrachtnemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_gevolgen_opdrachtnemer
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-in-loondienst-gevolgen-opdrachtnemer
+  bd_handhaving_arbeidsrelaties:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_handhaving_arbeidsrelaties
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/handhaving
+  bd_handhavingsplan_landing:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_handhavingsplan_landing
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/handhavingsplan-arbeidsrelaties
+  bd_herinvesteringsreserve:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_herinvesteringsreserve
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/herinvesteringsreserve
+  bd_hoe_aangifte_doen_online_app_papier:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    source_id: bd_hoe_aangifte_doen_online_app_papier
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/hoe-aangifte-inkomstenbelasting-doen
+  bd_hoe_bereken_ik_mijn_jaarruimte:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: bd_hoe_bereken_ik_mijn_jaarruimte
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/hoe-bereken-ik-mijn-jaarruimte
+  bd_ib_aangifte_voor_ondernemers:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    source_id: bd_ib_aangifte_voor_ondernemers
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/
+  bd_keuzemogelijkheden_auto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_keuzemogelijkheden_auto
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/auto_en_vervoer/auto_van_de_onderneming/autokosten/keuzemogelijkheden_auto
   bd_kia_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: ccfb3b59be511e770c8fc4c65d530e4a9efaae54b1ccfdacc211392c4214783b
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
     source_id: bd_kia_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/kleinschaligheidsinvesteringsaftrek_kia
+  bd_kosten_aanloopfase:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: aeee4f1ced5ea0d4b956c02c236c67135c1c4256e4c6ea85208d2ba849b6bfd3
+    source_id: bd_kosten_aanloopfase
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_gemaakt_in_de_aanloopfase
+  bd_loondienst_na_ondernemerschap:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_loondienst_na_ondernemerschap
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/loondienst-na-ondernemerschap
+  bd_maatschap_rechtsvorm:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_maatschap_rechtsvorm
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/maatschap
+  bd_medegerechtigde:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_medegerechtigde
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/medegerechtigde_in_onderneming_of_geldverstrekker
   bd_meewerkaftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_meewerkaftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/meewerkaftrek-2025
+  bd_meewerkaftrek_algemeen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_meewerkaftrek_algemeen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/meewerkaftrek
+  bd_middeling_aanvragen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: bd_middeling_aanvragen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-kan-ik-mijn-inkomen-middelen-en-geld-terugkrijgen
+  bd_middeling_teruggaaf:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: bd_middeling_teruggaaf
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/bijzondere_situaties/teruggaaf_door_middeling_berekenen/teruggaaf-door-middeling-berekenen
   bd_mkb_winstvrijstelling_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: 5ccba15f44e764749b479a1b0edb74c1b56c918b523e057426b064e26bbf1192
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 02b01bd6fe96c392dcc0a0931bdf15d29da0e9890237794c3e53a0cd5a3aecde
     source_id: bd_mkb_winstvrijstelling_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/mkb-winstvrijstelling-2025
+  bd_mkb_winstvrijstelling_general:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 02b01bd6fe96c392dcc0a0931bdf15d29da0e9890237794c3e53a0cd5a3aecde
+    source_id: bd_mkb_winstvrijstelling_general
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling
+  bd_niet_in_loondienst_werken:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_niet_in_loondienst_werken
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/niet-in-loondienst-werken
+  bd_ola_ih2025_activa_materieel:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_activa_materieel
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wactmatvapan.htm
+  bd_ola_ih2025_passiva_ondernemingsvermogen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_passiva_ondernemingsvermogen
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wpasvermpan.htm
+  bd_ola_ih2025_urencriterium_vraag:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_urencriterium_vraag
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wondaftuur.htm
+  bd_ola_ih2025_winstberekening:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 9d402b59f2adea56be94dad6fe385e3318ef4b2a6e8de6e1bc14b9b7150d923d
+    source_id: bd_ola_ih2025_winstberekening
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wberwv.htm
+  bd_ola_ih2025_wv_afschrijvingen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_ola_ih2025_wv_afschrijvingen
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvafschpan.htm
+  bd_ola_ih2025_wv_buitengewoon:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_wv_buitengewoon
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvbgewpan.htm
+  bd_ola_ih2025_wv_opbrengsten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_wv_opbrengsten
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvopbpan.htm
+  bd_ola_ih2025_wv_overige_bedrijfskosten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 97a96c6bc6adbd4face91093e987b40bfdada01a79265852d0a5c586217f741a
+    source_id: bd_ola_ih2025_wv_overige_bedrijfskosten
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvovrpan.htm
   bd_ondernemer_cijfers_aangifte_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
-    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
     source_id: bd_ondernemer_cijfers_aangifte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
   bd_ondernemer_criteria_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7824167c92e99e72268530a71ffdbb30dcb99341d9b85cdc4c25c20f58afc080
     source_id: bd_ondernemer_criteria_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
   bd_ondernemer_voorbereiden_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T04:07:05.272493+00:00'
-    reviewed_note_hash_sha256: 936a8b478c7f0cd06015ede5fd3f11b40280523518d0a20d00d42c202d4fac88
+    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
+    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
     source_id: bd_ondernemer_voorbereiden_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/voorbereid-op-uw-belastingaangifte-voor-ondernemers
   bd_ondernemersaftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_ondernemersaftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/
   bd_ondernemerscheck_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7824167c92e99e72268530a71ffdbb30dcb99341d9b85cdc4c25c20f58afc080
     source_id: bd_ondernemerscheck_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/checken-of-ik-ondernemer-ben-voor-de-inkomstenbelasting
   bd_oudedagsreserve_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_oudedagsreserve_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve
+  bd_oudedagsreserve_afrekenen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_oudedagsreserve_afrekenen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/oudedagsreserve_afrekenen
+  bd_overdracht_medeondernemer_werknemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_overdracht_medeondernemer_werknemer
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_draagt_uw_onderneming_over/uw-onderneming-overdragen-aan-een-medeondernemer-of-werknemer
+  bd_overzicht_aftrekbare_zakelijke_kosten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_overzicht_aftrekbare_zakelijke_kosten
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/overzicht-mogelijk-aftrekbare-zakelijke-kosten
+  bd_partner_gaat_meewerken:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_partner_gaat_meewerken
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/uw_partner_gaat_meewerken/uw_partner_gaat_meewerken
+  bd_personeel_in_uw_onderneming:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_personeel_in_uw_onderneming
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/personeel_in_uw_onderneming/
+  bd_privegebruik_andere_vervoermiddelen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_privegebruik_andere_vervoermiddelen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_andere_vervoermiddelen/privegebruik_van_andere_vervoermiddelen_dan_autos
+  bd_privegebruik_auto_ondernemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_privegebruik_auto_ondernemer
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/privegebruik_auto
+  bd_privegebruik_woning:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_privegebruik_woning
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_woning/privegebruik_woning
   bd_privevervoermiddel_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_privevervoermiddel_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/zakelijk-gebruik-privevervoermiddel-2025
+  bd_rechtsvorm_wijzigen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_rechtsvorm_wijzigen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/uw_onderneming_wijzigt_van_rechtsvorm/
+  bd_rittenregistratie:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_rittenregistratie
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/rittenregistratie
   bd_so_aftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_so_aftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/aftrek-voor-speur-en-ontwikkelingswerk-2025
   bd_stakingsaftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_stakingsaftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/stakingsaftrek-2025
+  bd_stakingsaftrek_algemeen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_stakingsaftrek_algemeen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/stakingsaftrek
+  bd_stakingswinst_berekenen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_stakingswinst_berekenen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/stakingswinst_berekenen
   bd_startersaftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-06T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_startersaftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek
   bd_startersaftrek_ao_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_startersaftrek_ao_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek_bij_arbeidsongeschiktheid
+  bd_stoppende_ondernemers:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_stoppende_ondernemers
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/stoppende-ondernemers/
+  bd_tariefsaanpassing_aftrekposten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 9d402b59f2adea56be94dad6fe385e3318ef4b2a6e8de6e1bc14b9b7150d923d
+    source_id: bd_tariefsaanpassing_aftrekposten
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
+  bd_tbs_bezittingen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_tbs_bezittingen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/ter_beschikking_stellen_van_bezittingen/ter_beschikking_stellen_van_bezittingen
+  bd_u_staakt_uw_onderneming:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: bd_u_staakt_uw_onderneming
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/u_staakt_uw_onderneming
+  bd_uitsluitend_zakelijk_gebruik_bestelauto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_uitsluitend_zakelijk_gebruik_bestelauto
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/uitsluitend_zakelijk_gebruik_bestelauto/uitsluitend_zakelijk_gebruik_bestelauto
   bd_urencriterium_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: 390af86b46da9f089ff4f070065730230dca70c150c6d16e2c820945d4d7e55b
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7824167c92e99e72268530a71ffdbb30dcb99341d9b85cdc4c25c20f58afc080
     source_id: bd_urencriterium_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+  bd_verklaring_geen_privegebruik_auto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_verklaring_geen_privegebruik_auto
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/verklaring-geen-privegebruik-auto-aanvragen-wijzigen-intrekken
+  bd_verlies_uit_onderneming:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: bd_verlies_uit_onderneming
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/verlies_uit_onderneming
+  bd_vermogensetikettering:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: aeee4f1ced5ea0d4b956c02c236c67135c1c4256e4c6ea85208d2ba849b6bfd3
+    source_id: bd_vermogensetikettering
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/vermogensetikettering-bedrijfsmiddel
+  bd_verrekenen_ngz:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: bd_verrekenen_ngz
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/zelfstandigenaftrek1/verrekenen_niet_gerealiseerde_zelfstandigenaftrek
+  bd_vof_rechtsvorm:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_vof_rechtsvorm
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/vennootschap-onder-firma-vof
+  bd_voorwaarden_investeringsregelingen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
+    source_id: bd_voorwaarden_investeringsregelingen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/voorwaarden_investeringsregelingen
+  bd_waar_moet_ik_me_uitschrijven:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: ce05c463ed13a17423b4773dd8042ae846a38943c6583a9078057ae1df8ba0be
+    source_id: bd_waar_moet_ik_me_uitschrijven
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/waar-moet-ik-me-uitschrijven
+  bd_waarde_van_de_auto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_waarde_van_de_auto
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/waarde_van_de_auto
+  bd_wanneer_loondienst:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_wanneer_loondienst
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/wanneer-is-sprake-van-loondienst
+  bd_wat_is_afschrijven:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 5c589650f7b870f79f2f163f3ca5aefeddc44266d5b412e977341d30521bf89e
+    source_id: bd_wat_is_afschrijven
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/wat_is_afschrijven
+  bd_wat_zijn_inkomsten_overig_werk:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: bd_wat_zijn_inkomsten_overig_werk
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/wat-zijn-inkomsten-uit-overig-werk
+  bd_weet_wanneer_ondernemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_weet_wanneer_ondernemer
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/weet-wanneer-u-ondernemer-bent/
+  bd_welke_kosten_bijverdiensten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_welke_kosten_bijverdiensten
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/welke-kosten-mag-ik-aftrekken-van-mijn-bijverdiensten
+  bd_werken_met_modelovereenkomsten:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_werken_met_modelovereenkomsten
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-met-modelovereenkomsten
   bd_werkruimte_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_werkruimte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/werkruimte_in_de_woning
+  bd_willekeurige_afschrijving_algemeen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: aeee4f1ced5ea0d4b956c02c236c67135c1c4256e4c6ea85208d2ba849b6bfd3
+    source_id: bd_willekeurige_afschrijving_algemeen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/willekeurige_afschrijving
+  bd_willekeurige_afschrijving_starters:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: aeee4f1ced5ea0d4b956c02c236c67135c1c4256e4c6ea85208d2ba849b6bfd3
+    source_id: bd_willekeurige_afschrijving_starters
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/startende_ondernemer
+  bd_zakelijk_gebruik_privevervoermiddel:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: bd_zakelijk_gebruik_privevervoermiddel
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel
   bd_zakelijke_kosten_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_zakelijke_kosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/zakelijke_kosten
   bd_zakelijke_kosten_een_jaar_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_zakelijke_kosten_een_jaar_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_in_1_jaar_mag_aftrekken
   bd_zakelijke_kosten_meerdere_jaren_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 436be7233c5eda0f537f6293bed8c0e75eb1410c4798b663106b8e93aa2e3fb1
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
     source_id: bd_zakelijke_kosten_meerdere_jaren_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_gespreid_over_een_aantal_jaren_moet_aftrekken
   bd_zelfstandigenaftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-04T12:00:00+00:00'
-    reviewed_note_hash_sha256: d3907502a95df7f36c9bb35e6b1f485797765daae658e60104c0d4c1c0299ee8
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 040d32cbc5443da76c2d0afe31cd99d3101186e4569f325d2bf2fdc23730a6f3
     source_id: bd_zelfstandigenaftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/zelfstandigenaftrek-2025
+  bd_zorgverzekering_starter_ondernemer:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_zorgverzekering_starter_ondernemer
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/wat_u_verder_wilt_weten/zorgverzekering/
+  bd_zvw_hoe_betalen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_zvw_hoe_betalen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-betaal-ik-mijn-bijdrage-zorgverzekeringswet
+  bd_zvw_inkomensafhankelijke_bijdrage:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 9d402b59f2adea56be94dad6fe385e3318ef4b2a6e8de6e1bc14b9b7150d923d
+    source_id: bd_zvw_inkomensafhankelijke_bijdrage
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+  bd_zvw_percentages_2025_2026:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_zvw_percentages_2025_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/veranderingen-bijdrage-zvw/percentages-zvw
+  bd_zvw_resultaat_overig_werk:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bdd60dae1c1abce05437f54ffaae27de14e120daecf3613522162545cd830d26
+    source_id: bd_zvw_resultaat_overig_werk
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/zorgverzekeringswet
+  bd_zvw_teruggaaf:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_zvw_teruggaaf
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/teruggaaf_bijdrage_zvw/teruggaaf_bijdrage_zvw
+  bd_zvw_werkgeversheffing_of_bijdrage_tabel:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: bd_zvw_werkgeversheffing_of_bijdrage_tabel
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/tabel_werkgeversheffing_zvw_of_bijdrage_zvw/tabel_werkgeversheffing_zvw_of_bijdrage_zvw
+  fisin2025_beschikbaar_stellen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: fisin2025_beschikbaar_stellen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/beschikbaar_stellen_van_bezittingen
+  fisin2025_fiscaal_partnerschap:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: fisin2025_fiscaal_partnerschap
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/fiscaal_partnerschap
+  law_besluit_ngz_staking:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 556ef75f0d51dac6a8cc5932982d25ac905305b574b8c55656b2438879b57f10
+    source_id: law_besluit_ngz_staking
+    source_url: https://wetten.overheid.nl/BWBR0037558
+  ola_ih2025_wa_privegebruik_auto:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: ola_ih2025_wa_privegebruik_auto
+    source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/wa/onttrekking_privegebruik_auto_van_de_onderneming.htm
+  reg_zorgverzekering_h5_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: reg_zorgverzekering_h5_2025
+    source_url: https://wetten.overheid.nl/jci1.3:c:BWBR0018715&hoofdstuk=5&artikel=5.4&z=2025-01-01&g=2025-01-01
+  rvo_mia_vamil_2025_maximum:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:21:35+00:00'
+    reviewed_note_hash_sha256: fe3bb2d3233904cdb84b4ec5eba5216adb30a3a85feb555d8ebcd00a449fc694
+    source_id: rvo_mia_vamil_2025_maximum
+    source_url: https://www.rvo.nl/sites/default/files/2025-10/BrochureMilieulijst2025v3.pdf
+  urib_2001_art_7_werkkleding:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T13:11:09.356250+00:00'
+    reviewed_note_hash_sha256: 04609cb177301e3d91f20b44edf4958d20bc52a4c3a04e3631972179f347aa59
+    source_id: urib_2001_art_7_werkkleding
+    source_url: https://wetten.overheid.nl/BWBR0012031/2025-01-01/0/Hoofdstuk3/Artikel7/afdrukken
+  wet_ib2001_2022_for_artikelen:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: wet_ib2001_2022_for_artikelen
+    source_url: https://wetten.overheid.nl/BWBR0011353/2022-12-31/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.3/Artikel3.70
+  wet_ib2001_2023_art3127:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: wet_ib2001_2023_art3127
+    source_url: https://wetten.overheid.nl/jci1.3:c:BWBR0011353&hoofdstuk=3&afdeling=3.7&artikel=3.127&z=2023-12-31&g=2023-12-31
+  wet_ib2001_2025_geldend:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: wet_ib2001_2025_geldend
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.7/Artikel3.127
+  wet_ib_3_14_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: wet_ib_3_14_2025
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.14/afdrukken
+  wet_ib_3_20_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: wet_ib_3_20_2025
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.20/afdrukken
+  wet_ib_3_20a_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T15:17:57+00:00'
+    reviewed_note_hash_sha256: c03bcaf439b59d6f0d5d68934a646e556298478916d1b0643f65baf02db20e62
+    source_id: wet_ib_3_20a_2025
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.20a/afdrukken
+  wet_ib_3_3:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: wet_ib_3_3
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.3/afdrukken
+  wet_ib_3_4:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: wet_ib_3_4
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.4/afdrukken
+  wet_ib_3_41_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: wet_ib_3_41_2025
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.41/afdrukken
+  wet_ib_3_63:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: wet_ib_3_63
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.63/afdrukken
+  wet_ib_3_9:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T14:10:22.575755+00:00'
+    reviewed_note_hash_sha256: 375a534d5121861c8f1fbcdfd5b3f295def6d757b9dad9363753a8db68d01364
+    source_id: wet_ib_3_9
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.9/afdrukken
+  wet_zvw_art41_49_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: 635da4dd4a1c4d0babc67be0cbec3f5c552e317d6980de7af90dcbf65d713600
+    source_id: wet_zvw_art41_49_2025
+    source_url: https://wetten.overheid.nl/BWBR0018450/2025-01-01
+  wetib_consolidated_2025:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 7cde39b507cc482ae17127d18d5b5eb1cb61710cff1a5dc70cc7d6f4b1e9ed55
+    source_id: wetib_consolidated_2025
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01
+  wetten_ib_10a_29_for_overgangsrecht:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: e2aae304990a9f16e0aebf972e7ff9e070fadc9acf9e6804dd32f2c22308eb7f
+    source_id: wetten_ib_10a_29_for_overgangsrecht
+    source_url: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk10A/Artikel10a.29/afdrukken

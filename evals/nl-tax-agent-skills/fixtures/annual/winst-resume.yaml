@@ -29,6 +29,14 @@ existing_state:
   finalized_business_evidence:
     - winst_verlies_rekening_2025
     - balans_2025
+  # The saved state already carries the schema anchors the readiness gate
+  # requires; a resume must not have to re-ask for them.
+  existing_business_facts:
+    legal_form: eenmanszaak
+    saldo_winst_en_verliesrekening: 48000.00
+    ondernemingsvermogen_begin: 20000.00
+    ondernemingsvermogen_eind: 24500.00
+    urencriterium_met: true
 
 expected_outputs:
   files_updated:
@@ -39,11 +47,11 @@ expected_outputs:
     - workspace/provisional/**
   workpack_checks:
     - contains: "Winst"
-    - contains: "preparation-only"
+    - contains: "belastbare winst"
     - contains: "finalized profit-and-loss and balance"
   field_map_checks:
-    - readiness: "draft"
-    - contains_blocker: "business-section schema review"
+    - readiness: "review_ready"
+    - has_no_blockers: true
 
 expected_state:
   session_progress_version: "1.4"
@@ -56,5 +64,5 @@ expected_state:
 acceptance_criteria:
   - "Resume at the existing annual Winst subsection without restarting intake"
   - "Preserve schema 1.4, completed subsection state, and canonical owners"
-  - "Keep entrepreneur output preparation-only and the business field map draft"
-  - "Do not derive final taxable business profit or a complete filing-ready business return"
+  - "Resume the computed winst chain and reach review_ready without re-asking answered questions"
+  - "Do not compute a stakingswinst, reserve movement, terbeschikkingstelling, or per-vennoot winstaandeel"

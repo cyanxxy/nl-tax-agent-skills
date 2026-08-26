@@ -273,14 +273,15 @@ def check_generated_output_regex(
 
 
 def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
-    plugin_root = dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
-    # SCRIPT_DIR is evals/nl-tax-agent-skills; parents[1] is the repo root. Anchoring on the
-    # script location keeps the validator discoverable regardless of the current working
-    # directory (e.g. when the suite is run from plugins/nl-tax-agent-skills).
+    # The field-map grader is repository tooling, not a plugin script: the
+    # runtime check is the agent checklist plus human review. This harness
+    # uses the grader after the fact to measure that agent-produced maps obey
+    # the canonical rules in reference/field-map-rules.yaml.
+    # SCRIPT_DIR is evals/nl-tax-agent-skills; parents[1] is the repo root.
+    grader_rel = "tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
     candidates = [
-        workspace / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
-        SCRIPT_DIR.parents[1] / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
-        Path.cwd() / plugin_root / "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+        SCRIPT_DIR.parents[1] / grader_rel,
+        Path.cwd() / grader_rel,
     ]
     for script in candidates:
         if script.is_file():

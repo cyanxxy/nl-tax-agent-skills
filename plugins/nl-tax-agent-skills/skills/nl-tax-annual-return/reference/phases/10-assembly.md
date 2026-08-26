@@ -54,10 +54,27 @@ invoke `nl-tax-field-mapper`; it alone writes and validates
 `nl-tax-field-mapper/templates/field-map-template.yaml`,
 `nl-tax-field-mapper/reference/mapping-principles.md`,
 `nl-tax-field-mapper/reference/annual-field-map.md`, and
-`nl-tax-field-mapper/scripts/validate_field_map.py`. Derive map readiness from
-the same saved rollup; an optional validator may reject a false declaration but
-never promote a draft. Treat structural/provenance errors and readiness mismatch
+`nl-tax-field-mapper/reference/field-map-rules.yaml`. Derive map readiness from
+the same saved rollup; the mapper's checklist may reject a false declaration but
+never promotes a draft. Treat structural/provenance errors and readiness mismatch
 as blocking.
+
+An entrepreneur map rolls up like any other. When the annual rollup is complete
+and the reviewed zakelijke schema covers every business rubriek and question the
+case needs, a map carrying `onderneming.*` rows reaches `readiness:
+review_ready` in the ordinary way. Add the blocker `business-section schema
+review` and keep the map `draft` only when a needed rubriek, question or
+identifier falls outside the reviewed schema, or when a Phase 2A routing marker
+applies (samenwerkingsverband profit share, medegerechtigde loss caps, DGA/BV
+winst, agrarisch, zeevarenden, stakingswinst, herinvesteringsreserve,
+oudedagsreserve wind-down, terbeschikkingstelling). A business case is no longer
+a standing reason to withhold `review_ready`.
+
+For a business map, require the mapper's per-identifier coverage notes before
+accepting that rollup: every W&V, balance, private, prior-year-set-off and question
+identifier must be mapped, sourced not applicable, or unresolved. Any unresolved
+or omitted classification forces `draft`; the optional validator is only a
+structural backstop and cannot waive this gate.
 
 After successful mapping of a complete rollup, inspect the saved provisional
 request before the final profile/session write. Then apply exactly one of these

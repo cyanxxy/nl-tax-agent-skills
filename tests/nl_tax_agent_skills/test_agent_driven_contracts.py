@@ -18,7 +18,7 @@ def read_text(relative_path):
 
 
 def load_validator():
-    path = ROOT / "skills/nl-tax-field-mapper/scripts/validate_field_map.py"
+    path = ROOT / "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
     spec = importlib.util.spec_from_file_location("agent_driven_validator", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

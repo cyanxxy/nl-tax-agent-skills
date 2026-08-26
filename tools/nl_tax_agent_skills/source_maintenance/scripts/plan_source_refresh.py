@@ -81,6 +81,8 @@ ALLOWED_DOMAINS = {
     "www.svb.nl",
     "rijksoverheid.nl",
     "www.rijksoverheid.nl",
+    "rvo.nl",
+    "www.rvo.nl",
 }
 
 # ---------------------------------------------------------------------------

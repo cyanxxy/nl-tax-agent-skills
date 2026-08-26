@@ -31,6 +31,19 @@ estimated_data:
       evidence_id: ev_profit_forecast_2026
       description: "Current bookkeeping plus a full-year forecast reviewed by the taxpayer"
     manual_review_required: true
+  rollover_check:
+    opened_prefilled: true
+    source_year: 2025
+    prefilled_profit_estimate: 48000.00
+    taxpayer_reasoning_uses_zelfstandigenaftrek: 2470.00
+    source:
+      type: user_chat
+      quote: "The request opened with my 2025 figures, including EUR 48,000 profit and the EUR 2,470 zelfstandigenaftrek."
+      stated_at: "2026-07-11"
+  zvw_companion:
+    assessment_received: unknown
+    income_estimate: unknown
+    status: open_question
 
 expected_outputs:
   files_created:
@@ -43,6 +56,15 @@ expected_outputs:
     - section: "Winst uit onderneming forecast"
       contains: "EUR 54,000"
       contains_also: "user-reviewed expected-profit forecast"
+    - section: "Winst uit onderneming forecast"
+      contains: "before ondernemersaftrek"
+      contains_also: "before MKB-winstvrijstelling"
+    - section: "Zvw companion"
+      contains: "separate change routes"
+      contains_also: "not established in the reviewed sources"
+    - section: "Rollover check"
+      contains: "opened pre-filled"
+      contains_also: "zelfstandigenaftrek"
   field_map_checks:
     - workflow: provisional_assessment
     - tax_year: 2026
@@ -57,6 +79,10 @@ expected_state:
   session_progress_version: "1.4"
   provisional_2026_subsection: winst_forecast
   provisional_2026_winst_forecast_status: complete
+  profit_semantics_confirmed: true
+  zvw_companion_status: open_question
+  rollover_check_status: complete
+  rollover_check_trigger: opened_prefilled
   required_field_ids:
     - onderneming.geschatte_winst
   forbidden_outputs:
@@ -70,4 +96,7 @@ acceptance_criteria:
   - "The agent records the sourced, user-reviewed full-year expected-profit forecast"
   - "The field mapper emits only onderneming.geschatte_winst for the business forecast"
   - "No annual entrepreneur deductions, Zvw calculation, or final tax calculation is produced"
+  - "The estimate is stated as the winst before ondernemersaftrek and mkb-winstvrijstelling, excluding btw"
+  - "The separate voorlopige aanslag Zorgverzekeringswet is raised as a companion item, without calculating it; separate routes are stated and coupling is left unestablished"
+  - "The pre-filled earlier-year estimate is checked against the current-year zelfstandigenaftrek"
   - "Session progress remains schema 1.4 and the owning workflow persists helper results"

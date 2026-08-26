@@ -13,11 +13,16 @@ Checks:
     - Source types are valid (v1.1 schema: includes user_chat, assumption, unknown)
     - Per-source-type required fields are present
     - For provisional: no werkelijk rendement field
+    - No Zvw entry row in any workflow (separate aanslag, no entry screen)
     - source.type = unknown rows are listed in missing_fields
     - Structural guards: root must be a mapping; fields/missing_fields must be lists;
       duplicate field_id detection; non-finite numeric values rejected
     - Structural readiness candidate: a false agent declaration is rejected, but
       the script never promotes an agent-declared draft to review-ready
+
+Policy data (prohibitions, special identifiers, readiness disqualifiers) is
+canonical in reference/field-map-rules.yaml — the same file the model applies
+directly on hosts without a Python runtime. This script only mechanizes it.
 
 Exit codes:
     Default exit stays unchanged (nonzero only on errors). Pass --strict /
@@ -39,7 +44,17 @@ VALID_SOURCE_TYPES = {
     "assumption",
     "unknown",
 }
-REFERENCE_DIR = Path(__file__).resolve().parents[1] / "reference"
+# Repository-only developer/eval grader. This script is NOT part of the
+# installed plugin: the runtime check is the agent checklist in
+# reference/mapping-principles.md plus human review, applying the canonical
+# rule data in reference/field-map-rules.yaml. The offline eval harness and
+# CI use this grader to measure that the agent-produced maps obey the same
+# rules; it grades outputs after the fact and plays no part in the workflow.
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+REFERENCE_DIR = (
+    _REPO_ROOT
+    / "plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/reference"
+)
 SUPPORTED_WORKFLOW_YEARS = {
     ("annual_return", 2025): REFERENCE_DIR / "annual-field-map.md",
     ("provisional_assessment", 2026): REFERENCE_DIR / "provisional-field-map.md",
@@ -116,26 +131,104 @@ PORTAL_AUTOMATION_METADATA_KEY_TERMS = (
     "locator",
     "locators",
 )
-# Catch every common spelling of "actual return" — Dutch and English, joined and
-# space-separated — so a provisional field cannot smuggle werkelijk rendement past
-# the box-3 fictitious-only guard via a clean field_id plus a prose label.
-WERKELIJK_KEYWORDS = {
-    "werkelijk", "werkelijk rendement", "werkelijk_rendement",
-    "actual_return", "actual-return", "actual return",
-    "actueel rendement", "echt rendement",
+# --------------------------------------------------------------------------
+# Policy data lives in reference/field-map-rules.yaml -- the file the model
+# reads directly on hosts without a Python runtime (Cowork, ChatGPT Work,
+# Codex without shell). This script loads that same file so both enforcement
+# paths apply the identical policy; nothing policy-shaped is hard-coded here.
+# --------------------------------------------------------------------------
+RULES_PATH = REFERENCE_DIR / "field-map-rules.yaml"
+
+
+def _load_rules(path=RULES_PATH):
+    try:
+        import yaml
+    except ImportError:
+        raise SystemExit(
+            "PyYAML is required to load field-map-rules.yaml (pip install pyyaml)"
+        )
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            rules = yaml.safe_load(handle)
+    except OSError as exc:
+        raise SystemExit(f"Cannot read canonical rules file {path}: {exc}")
+    if not isinstance(rules, dict):
+        raise SystemExit(f"Canonical rules file {path} must be a mapping")
+    return rules
+
+
+_RULES = _load_rules()
+_PROHIBITIONS = {
+    str(rule.get("id")): rule
+    for rule in (_RULES.get("prohibitions") or [])
+    if isinstance(rule, dict)
 }
+_ANNUAL_BUSINESS_RULES = _RULES.get("annual_business") or {}
+
+# Werkelijk-rendement wording in a PROVISIONAL map is a critical error. The
+# keyword list (canonical in field-map-rules.yaml) is broad on purpose and is
+# matched against id, label, notes, and quotes -- a provisional field cannot
+# smuggle werkelijk rendement past the box-3 fictitious-only guard via a clean
+# field_id plus a prose label.
+WERKELIJK_KEYWORDS = set(
+    _PROHIBITIONS.get("provisional_werkelijk_rendement", {}).get("keywords") or ()
+)
 # Provisional 2026 has one dedicated business field. Every other onderneming
 # field or entrepreneur-deduction term remains rejected.
-PROVISIONAL_EXPECTED_PROFIT_FIELD = "onderneming.geschatte_winst"
+PROVISIONAL_EXPECTED_PROFIT_FIELD = str(
+    (_RULES.get("special_ids") or {}).get("provisional_expected_profit")
+    or "onderneming.geschatte_winst"
+)
 PARTNER_ALLOCATION_TOKENS = {"allocation", "verdeling", "toedeling"}
-ENTREPRENEUR_KEYWORDS = {
-    "onderneming.", "zelfstandigenaftrek", "startersaftrek",
-    "mkb-winstvrijstelling", "mkb_winstvrijstelling", "ondernemersaftrek",
-    "investeringsaftrek", "kleinschaligheidsinvesteringsaftrek",
+ENTREPRENEUR_DEDUCTION_KEYWORDS = set(
+    _PROHIBITIONS.get("provisional_entrepreneur_deduction", {}).get("keywords") or ()
+)
+ENTREPRENEUR_KEYWORDS = ENTREPRENEUR_DEDUCTION_KEYWORDS | {
+    str(_ANNUAL_BUSINESS_RULES.get("section_prefix") or "onderneming."),
 }
-ENTREPRENEUR_DEDUCTION_KEYWORDS = ENTREPRENEUR_KEYWORDS - {"onderneming."}
-ENTREPRENEUR_TOKEN_PATTERNS = (
-    re.compile(r"\bkia\b"),
+ENTREPRENEUR_TOKEN_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in (
+        _PROHIBITIONS.get("provisional_entrepreneur_deduction", {}).get(
+            "token_patterns"
+        )
+        or ()
+    )
+)
+# A Zvw entry row is prohibited in every workflow: the bijdrage Zvw arrives as
+# a second, separate aanslag with no entry screen inside the return.
+_ZVW_RULE = _PROHIBITIONS.get("zvw_entry_row", {})
+ZVW_ID_PATTERNS = tuple(
+    re.compile(pattern) for pattern in (_ZVW_RULE.get("id_patterns") or ())
+)
+ZVW_LABEL_KEYWORDS = set(_ZVW_RULE.get("label_keywords") or ())
+# Annual 2025 business disqualifiers. Demote-only: each condition keeps the
+# map draft with the named blocker; their absence proves nothing, because
+# completeness of a business section is established in the taxpayer
+# conversation and recorded in session progress, never by this script.
+ANNUAL_BUSINESS_BLOCKER = str(
+    _ANNUAL_BUSINESS_RULES.get("blocker") or "business-section schema review"
+)
+ANNUAL_SIMPLE_LEGAL_FORMS = {
+    str(form).lower()
+    for form in (_ANNUAL_BUSINESS_RULES.get("simple_legal_forms") or ())
+}
+ANNUAL_LEGAL_FORM_FIELD = str(
+    _ANNUAL_BUSINESS_RULES.get("legal_form_id") or "business.legal_form"
+)
+ANNUAL_COMPLEX_BUSINESS_FIELD = str(
+    _ANNUAL_BUSINESS_RULES.get("complex_case_id")
+    or "onderneming.routing.complex_case"
+)
+ANNUAL_UNESTABLISHED_DEDUCTION_FIELDS = tuple(
+    _ANNUAL_BUSINESS_RULES.get("unestablished_screen_ids") or ()
+)
+COVERAGE_NOTE_PREFIX = str(
+    _ANNUAL_BUSINESS_RULES.get("coverage_note_prefix")
+    or "business_schema_coverage:"
+)
+COVERAGE_UNRESOLVED_TOKEN = str(
+    _ANNUAL_BUSINESS_RULES.get("coverage_unresolved_token") or "unresolved"
 )
 BUSINESS_PROFIT_PATTERNS = (
     re.compile(r"\bwinst[\s_.-]*uit[\s_.-]*onderneming\b"),
@@ -506,6 +599,20 @@ def contains_business_profit_indicator(scanned_texts):
     )
 
 
+def is_zvw_entry(field_id, label_text):
+    """True when an entry addresses the bijdrage Zvw, prohibited in every map.
+
+    The bijdrage Zvw arrives as a second, separate aanslag computed from the
+    same return; there is no Zvw entry screen. Policy is canonical in
+    reference/field-map-rules.yaml (zvw_entry_row).
+    """
+    fid_lower = str(field_id or "").lower()
+    if any(pattern.search(fid_lower) for pattern in ZVW_ID_PATTERNS):
+        return True
+    label_lower = str(label_text or "").lower()
+    return any(kw in label_lower for kw in ZVW_LABEL_KEYWORDS)
+
+
 def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
     raw_fid = field.get("field_id")
     if not isinstance(raw_fid, str) or not raw_fid.strip():
@@ -521,6 +628,12 @@ def validate_field(field, index, workflow, missing_field_ids, errors, warnings):
         errors,
     )
     validate_portal_automation_metadata(field, fid, "fields", errors)
+
+    if is_zvw_entry(fid, field.get("label")):
+        errors.append(
+            f"CRITICAL: Zvw entry row in field map: {fid} — the bijdrage Zvw "
+            "is a separate aanslag with no entry screen in the return"
+        )
 
     value = field.get("value")
     if (
@@ -629,6 +742,12 @@ def validate_missing_fields(missing, workflow, errors, warnings):
         ]
         validate_portal_automation_fields(fid, scanned_texts, errors)
         validate_portal_automation_metadata(m, fid, "missing_fields", errors)
+        if is_zvw_entry(m.get("field_id"), m.get("label")):
+            errors.append(
+                f"CRITICAL: Zvw entry row in missing_fields: {fid} — the "
+                "bijdrage Zvw is a separate aanslag with no entry screen in "
+                "the return"
+            )
         if _is_provisional(workflow):
             # A missing_fields entry is an instruction to go COLLECT the data,
             # so the werkelijk-rendement ban applies here just as hard as it
@@ -782,7 +901,7 @@ def portal_prefilled_reference_fields(reference_path):
     return prefilled
 
 
-def assess_readiness(fields, missing, workflow, parsed_tax_year):
+def assess_readiness(fields, missing, workflow, parsed_tax_year, notes=None):
     """Assess whether map structure could support review-ready status.
 
     This mechanical candidate never overrides the agent declaration derived from
@@ -796,6 +915,10 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year):
       - ready: at least one populated field, no required reference field left
         unpopulated, and no blocker.
     """
+    if notes is None:
+        notes = []
+    elif not isinstance(notes, list):
+        notes = [notes]
     populated_ids = {
         field.get("field_id")
         for field in fields
@@ -838,7 +961,56 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year):
             for field in fields
         )
         if has_annual_business:
-            blockers.append("business-section schema review")
+            by_id = {}
+            for field in fields:
+                if isinstance(field, dict):
+                    by_id.setdefault(str(field.get("field_id") or ""), field)
+
+            # Demote-only disqualifiers from field-map-rules.yaml. This script
+            # cannot prove a business section complete — completeness is
+            # established in the taxpayer conversation and recorded in session
+            # progress — so it checks only for conditions that positively
+            # disqualify review_ready.
+
+            # The form must be positively established as an eenmanszaak. An
+            # ABSENT legal form is a disqualifier too: an unanswered form
+            # question must not buy what a stated "vof" would have blocked.
+            legal_form = by_id.get(ANNUAL_LEGAL_FORM_FIELD)
+            legal_form_value = legal_form.get("value") if legal_form else None
+            simple_form = (
+                isinstance(legal_form_value, str)
+                and legal_form_value.strip().lower() in ANNUAL_SIMPLE_LEGAL_FORMS
+            )
+
+            complex_marker = by_id.get(ANNUAL_COMPLEX_BUSINESS_FIELD)
+            complex_case = bool(complex_marker and complex_marker.get("value"))
+
+            # A claimed deduction whose screen the reviewed schema does not
+            # establish leaves the manual-entry checklist possibly incomplete.
+            unestablished_screen = any(
+                by_id.get(fid) is not None and bool(by_id[fid].get("value"))
+                for fid in ANNUAL_UNESTABLISHED_DEDUCTION_FIELDS
+            )
+
+            # The agent's own coverage audit reporting an unresolved
+            # identifier is an explicit disqualifier. The notes are never
+            # required to exist and never prove completeness.
+            unresolved_coverage = any(
+                COVERAGE_UNRESOLVED_TOKEN
+                in note.split("=", 1)[1].split(";", 1)[0].strip().lower()
+                for note in notes
+                if isinstance(note, str)
+                and note.strip().lower().startswith(COVERAGE_NOTE_PREFIX)
+                and "=" in note
+            )
+
+            if (
+                complex_case
+                or not simple_form
+                or unestablished_screen
+                or unresolved_coverage
+            ):
+                blockers.append(ANNUAL_BUSINESS_BLOCKER)
 
     ready = populated_count > 0 and not required_unpopulated and not blockers
     return {
@@ -915,7 +1087,10 @@ def validate(data):
     validate_missing_fields(clean_missing, workflow, errors, warnings)
     validate_top_level_notes(data, workflow, errors)
 
-    readiness = assess_readiness(clean_fields, clean_missing, workflow, parsed_tax_year)
+    readiness = assess_readiness(
+        clean_fields, clean_missing, workflow, parsed_tax_year,
+        notes=data.get("notes"),
+    )
     if readiness_decl == "review_ready" and not readiness["ready"]:
         blocker_detail = (
             f", blockers={', '.join(readiness['blockers'])}"
@@ -948,7 +1123,9 @@ def _readiness_for(data):
     fields = [f for f in fields if isinstance(f, dict)] if isinstance(fields, list) else []
     missing = data.get("missing_fields", []) or []
     missing = [m for m in missing if isinstance(m, dict)] if isinstance(missing, list) else []
-    result = assess_readiness(fields, missing, workflow, parsed_tax_year)
+    result = assess_readiness(
+        fields, missing, workflow, parsed_tax_year, notes=data.get("notes")
+    )
     structurally_ready = result["ready"]
     declared = data.get("readiness")
     result["declared"] = declared
@@ -1008,7 +1185,9 @@ def main():
             print(f"  - {w}")
 
     print()
-    if readiness["ready"]:
+    if errors:
+        print("READINESS: NOT_ASSESSED (validation failed; fix errors first)")
+    elif readiness["ready"]:
         print(
             f"READINESS: REVIEW_READY "
             f"(populated_count={readiness['populated_count']})"

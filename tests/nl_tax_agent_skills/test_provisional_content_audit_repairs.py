@@ -90,18 +90,24 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
             ("January", "17.85%"),
             ("February", "19.34%"),
             ("March", "20.83%"),
-            ("April", "22.33%"),
-            ("May", "23.82%"),
-            ("June", "25.31%"),
+            ("April", "22.32%"),
+            ("May", "23.81%"),
+            ("June", "25.30%"),
             ("July", "26.80%"),
             ("August", "28.29%"),
             ("September", "29.78%"),
-            ("October", "31.28%"),
-            ("November", "32.77%"),
-            ("December", "34.26%"),
+            ("October", "31.27%"),
+            ("November", "32.76%"),
+            ("December", "34.25%"),
         ):
             with self.subTest(month=month):
                 self.assertIn(f"| {month} | {percentage} |", rates)
+        # Two official pages disagree on six of these rows by 0.01pp. The
+        # belastingberekening series is used because it keeps the convention
+        # both official 2025 pages share; the note must record the conflict
+        # rather than silently pick a side.
+        self.assertIn("bd_fisin_2026_belastingberekening", rates)
+        self.assertIn("0.01 percentage point higher", rates)
         self.assertIn("published month-specific first-bracket rate", compact)
         self.assertIn("official portal result for affected credits", compact)
 

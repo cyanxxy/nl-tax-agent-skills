@@ -86,24 +86,67 @@ box2:
     source: "unknown"
 
 business:
-  # Winst uit onderneming (eenmanszaak / ZZP) is supported in annual_2025.
-  # The annual workflow gates the Winst uit onderneming phase (2A) on
-  # has_onderneming, the way box2.has_aanmerkelijk_belang gates the Box 2 phase.
-  # Only a straightforward eenmanszaak is in standard scope; complex business
-  # forms are screened to manual review via routing.complex_business_screening.
+  # Winst uit onderneming (eenmanszaak / ZZP) has full supported preparation in
+  # annual_2025, through to the belastbare winst uit onderneming. The annual
+  # workflow gates the Winst uit onderneming phase (2A) on has_onderneming, the
+  # way box2.has_aanmerkelijk_belang gates the Box 2 phase.
+  # Every IB business form is now recognised and routed rather than dead-ended:
+  # record the form and its facts here and keep preparing what it does not
+  # block. Only the named computations stay terminal manual review, screened via
+  # routing.complex_business_screening. The computation boundaries, and every
+  # threshold, hour count, year count and amount behind the fields below, live
+  # in the knowledge notes under
+  # _shared/knowledge/years/2025/entrepreneur/ -- never restate them here.
   has_onderneming:
-    value: null                  # true | false
+    value: null                  # true | false; false also covers a prepared
+                                 # resultaat uit overige werkzaamheden, which is
+                                 # a supported path and not a terminal route
     source: "unknown"
   legal_form:
     value: null                  # eenmanszaak | vof | maatschap | cv | bv | other
-                                 # (only eenmanszaak is standard scope; the rest
-                                 # route to manual review / the blocked candidate)
+                                 # (eenmanszaak is the fully prepared form; the
+                                 # rest are recognised and recorded, with only
+                                 # the blocked computations routed to manual
+                                 # review / the blocked candidate)
     source: "unknown"
   urencriterium_met:
     value: null                  # true | false; urencriterium per entrepreneur knowledge note -- gates zelfstandigenaftrek
     source: "unknown"
   starter_status:
     value: null                  # true | false; derived from startersaftrek conditions collected by the winst helper
+    source: "unknown"
+  so_verklaring:
+    value: null                  # true | false; RVO S&O-verklaring held for the tax year
+    source: "unknown"
+  meewerkende_partner:
+    value: null                  # true | false; the fiscale partner worked in the onderneming.
+                                 # Hours, unpaid versus vergoeding, and the route between
+                                 # meewerkaftrek, arbeidsbeloning, dienstbetrekking and
+                                 # medeondernemerschap are collected by the winst helper
+    source: "unknown"
+  business_car:
+    value: null                  # true | false; a car in the ondernemingsvermogen, or a private
+                                 # car driven for business trips -- record which, since the two
+                                 # are entered on different screens
+    source: "unknown"
+  werkruimte_thuis:
+    value: null                  # true | false; a werkruimte in the taxpayer's own home is claimed
+    source: "unknown"
+  started_during_year:
+    value: null                  # true | false; the onderneming started during the tax year
+    source: "unknown"
+  stopped_during_year:
+    value: null                  # true | false; the onderneming stopped during the tax year.
+                                 # The staking itself is recorded; the stakingswinst computation
+                                 # stays manual review
+    source: "unknown"
+  has_business_loss:
+    value: null                  # true | false; the year produced a business loss
+    source: "unknown"
+  bookkeeping_finalized:
+    value: null                  # true | false; the bookkeeping and jaarstukken for the year are
+                                 # final. Unfinalized books limit what can be prepared now;
+                                 # never treat an unanswered item as a "no" or a zero
     source: "unknown"
 
 workflows:
@@ -132,7 +175,7 @@ routing:
     value: "not_screened"        # not_screened | standard | manual_review
     source: "unknown"
   blocked_profile_candidate:
-    value: null                  # e.g. annual_2025_migration_m_form
+    value: null                  # terminal candidate for unsupported whole cases; annual_2025_entrepreneurs is a nonterminal roadmap marker while annual_2025 stays active
     source: "unknown"
 
 manual_review:

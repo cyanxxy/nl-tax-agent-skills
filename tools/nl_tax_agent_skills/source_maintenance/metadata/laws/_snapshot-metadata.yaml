@@ -14,13 +14,19 @@ sources:
     source_url: https://wetten.overheid.nl/BWBR0012066/
   law_uitvoeringsregeling_ib_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
-    reviewed_note_hash_sha256: 2578eb5d20909c73fd81f15bc0e82c9a80ea5df7629ba83d6ec0c440d73a378f
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 874f97f18f30c274d80fa2d6925bf41d17bda4a9b08d7b62957ba5ba5c07e769
     source_id: law_uitvoeringsregeling_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012031/
+  law_uwa_2001:
+    review_status: reviewed
+    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
+    reviewed_note_hash_sha256: 91e834f6e67a4e945a36675c607e222909a640182d2bcf280cca60714134a9e3
+    source_id: law_uwa_2001
+    source_url: https://wetten.overheid.nl/BWBR0012035
   law_wet_inkomstenbelasting_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 2253aec7887b3abdeaabbbfed708200dbae5232ccd343f326bdcc63ca763b662
+    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
+    reviewed_note_hash_sha256: bf556f06dc947c20f628539cb8a6a0f2cb5002744e0f8dcb7c114091abc3880c
     source_id: law_wet_inkomstenbelasting_2001
     source_url: https://wetten.overheid.nl/BWBR0011353/

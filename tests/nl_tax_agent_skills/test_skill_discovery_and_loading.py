@@ -36,7 +36,7 @@ MAPPER_PATHS = (
     "nl-tax-field-mapper/reference/mapping-principles.md",
     "nl-tax-field-mapper/reference/annual-field-map.md",
     "nl-tax-field-mapper/reference/provisional-field-map.md",
-    "nl-tax-field-mapper/scripts/validate_field_map.py",
+    "nl-tax-field-mapper/reference/field-map-rules.yaml",
 )
 
 

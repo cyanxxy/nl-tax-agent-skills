@@ -57,7 +57,8 @@ validation, rendering, and the completion report. It delegates field policy to:
 
 - [`reference/mapping-principles.md`](reference/mapping-principles.md) for
   provenance, confidence, omissions, readiness checks, and stable validation
-  IDs;
+  IDs, with the machine-checkable rule data canonical in
+  [`reference/field-map-rules.yaml`](reference/field-map-rules.yaml);
 - [`reference/annual-field-map.md`](reference/annual-field-map.md) for the 2025
   annual submission fields; or
 - [`reference/provisional-field-map.md`](reference/provisional-field-map.md)
@@ -87,6 +88,12 @@ map in the order defined by `mapper-flow.md`.
   `session-progress.yaml`. Use `review_ready` only when that workflow is
   complete without blocking or manual-review blockers; otherwise use `draft`.
   Structural checks may reject false readiness but never promote a draft.
+- For an annual business map, carry `business.legal_form` and
+  `onderneming.routing.complex_case` as sourced `internal_routing` records, not
+  portal-entry rows. Independently audit every applicable W&V, balance, private,
+  prior-year-set-off and entrepreneur-question identifier as required by the
+  annual reference. Omission never means false or not applicable, and no optional
+  validator result can replace this audit.
 - Preserve valid sourced entries when updating the canonical map unless the
   current workpack or field reference makes them obsolete. The most recently validated
   map at the canonical workflow path is authoritative; never create
@@ -106,27 +113,22 @@ update:
 - `workspace/shared/field-map-open-questions.yaml`
 - `workspace/shared/missing-info.md`
 
-If `python3` and the resolved bundled paths are available, optionally validate
-and render with:
+Check the finished map yourself: complete every stable check ID in the manual
+checklist in `mapping-principles.md`, applying the rule data in
+`reference/field-map-rules.yaml`, and record
+`check_performed_by: checked_by_agent`. The taxpayer's review before manual
+entry is the final check. There is no bundled validator: no script result can
+replace this checklist, and nothing may promote a draft to `review_ready`.
+
+If `python3` and the resolved bundled path are available, optionally render
+the human-readable view with:
 
 ```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
 python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
 ```
 
-Structural validation without a readiness flag is the default and is the
-correct check for every declared `draft`, including an intentionally draft map
-with a business-schema or other manual-review blocker. Only for a map already
-declared `review_ready`, add the stricter readiness assertion:
-
-```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
-```
-
-Never use `--require-ready` to promote or fight an intentional draft. If either
-script is unavailable, use the agent validation and direct-YAML rendering
-fallbacks in `mapper-flow.md`; never skip the checks or copy a bundled script
-into the workspace.
+If the script is unavailable, use the direct-YAML rendering fallback in
+`mapper-flow.md`; never copy a bundled script into the workspace.
 
 ## Boundaries
 
@@ -135,9 +137,8 @@ into the workspace.
 - Do not write workpacks or modify the evidence index or taxpayer profile.
 - Keep maps preparation-only: never add browser-automation metadata such as
   selectors, XPath, CSS selectors, or DOM/browser locators.
-- Only execute the already-resolved bundled `scripts/validate_field_map.py` and
-  `scripts/render_field_map.py`. Never execute Python from `workspace/`,
-  `uploads/`, or `evidence/`.
+- Only execute the already-resolved bundled `scripts/render_field_map.py`.
+  Never execute Python from `workspace/`, `uploads/`, or `evidence/`.
 
 ## End of turn
 

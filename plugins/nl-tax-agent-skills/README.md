@@ -101,14 +101,14 @@ agent-driven manual checks in each `SKILL.md` apply.
 |---|---|---|
 | `nl-tax-intake` | user entry | Screen scope, select a supported workflow, create `workspace/taxpayer/profile.yaml` |
 | `nl-tax-evidence-indexer` | user entry | Index local evidence files, compute hashes, produce review questions |
-| `nl-tax-annual-return` | user entry | Prepare the annual 2025 workpack and invoke the mapper for its field map (incl. preparation-only winst) |
+| `nl-tax-annual-return` | user entry | Prepare the annual 2025 workpack and invoke the mapper for its field map (incl. the belastbare winst for a straightforward eenmanszaak) |
 | `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, or stopzetten packages |
 | `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps |
 | `nl-tax-submit-companion` | explicit user entry | Create a human-only manual-entry checklist when the user asks naturally or accepts the mapper's immediate offer |
 | `nl-tax-box1-home` | background | Return sourced Box 1 and own-home facts/questions to the owning workflow |
 | `nl-tax-box2` | background | Return standard Box 2 facts/questions to the owning workflow |
 | `nl-tax-box3` | background | Return trusted-row, method-specific Box 3 facts without method mixing |
-| `nl-tax-winst` | background | Return annual-2025 preparation facts or one sourced provisional-2026 expected-profit forecast |
+| `nl-tax-winst` | background | Return annual-2025 business findings, incl. the ordered belastbare-winst chain for a straightforward eenmanszaak, or one sourced provisional-2026 expected-profit forecast |
 | `nl-tax-partner-deductions` | background | Return fiscal-partner, deduction, and allocation facts/questions |
 
 The `skills/_shared/` directory is packaged as the hidden
@@ -137,9 +137,13 @@ jaarruimte/reserveringsruimte. The agent uses the official Belastingdienst
 Hulpmiddel Lijfrentepremie for lijfrente limits and retains its result; no local
 universal pension-room calculator replaces the official tool.
 The provisional workflow has four separate subflows: request, change, review, and
-stopzetten. `nl-tax-winst` supports straightforward annual-2025 preparation and
-the single bounded provisional field `onderneming.geschatte_winst`; it is not a
-provisional tax engine or final business-tax calculator.
+stopzetten. `nl-tax-winst` determines the annual-2025 belastbare winst uit
+onderneming for a straightforward eenmanszaak from a finalized profit-and-loss
+statement and balance, and supports the single bounded provisional field
+`onderneming.geschatte_winst`. Every other IB business form is recognised and
+routed to manual review; it never computes a stakingswinst, a reserve movement,
+a terbeschikkingstellingsresultaat, a medegerechtigde loss cap, or a per-vennoot
+winstaandeel, and it is not a provisional tax engine or final-tax calculator.
 
 The package passes manifest and discovery checks, including host-specific
 validation when the relevant CLI capability is installed. Those checks do not

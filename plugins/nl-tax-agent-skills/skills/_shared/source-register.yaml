@@ -45,7 +45,7 @@ sources:
     url: "https://wetten.overheid.nl/BWBR0011353/"
     source_type: law
     snapshot_path: "skills/_shared/knowledge/laws/wet-inkomstenbelasting-2001.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-08-15"
     freshness_policy: "check after Prinsjesdag (3rd Tuesday of September) and after Staatsblad publication of tax-plan amendments"
     owner: "tax-content"
     mandatory_for:
@@ -75,7 +75,7 @@ sources:
     url: "https://wetten.overheid.nl/BWBR0012031/"
     source_type: law
     snapshot_path: "skills/_shared/knowledge/laws/uitvoeringsregeling-inkomstenbelasting-2001.md"
-    last_checked: "2026-07-01"
+    last_checked: "2026-08-15"
     freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
     owner: "tax-content"
     mandatory_for:
@@ -1203,6 +1203,21 @@ sources:
       - nl-tax-annual-return
       - nl-tax-winst
 
+  - id: rvo_mia_vamil_2025_maximum
+    title: "Milieulijst 2025 - annual MIA/Vamil investment maximum"
+    domain: www.rvo.nl
+    url: "https://www.rvo.nl/sites/default/files/2025-10/BrochureMilieulijst2025v3.pdf"
+    source_type: official_rates
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "fixed annual Milieulijst; recheck only if RVO republishes the 2025 list"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
   - id: bd_zakelijke_kosten_2025
     title: "Zakelijke kosten"
     domain: belastingdienst.nl
@@ -1563,3 +1578,2060 @@ sources:
     owner: "tax-content"
     mandatory_for:
       - nl-tax-provisional-assessment
+
+
+  # ===========================================================================
+  #  ZZP / IB-ondernemer coverage
+  #
+  #  Winst uit onderneming for every IB business form, plus the Zorgverzekeringswet
+  #  bijdrage, uitgaven voor inkomensvoorzieningen, verliesverrekening, the
+  #  aanloopfase, bedrijfsmiddelen, vervoer, staking, samenwerkingsverbanden, and
+  #  resultaat uit overige werkzaamheden. Entries without workflow/tax_year are
+  #  evergreen pages cited from both the 2025 annual and 2026 provisional notes.
+  # ===========================================================================
+
+  - id: bd_aangifte_loonheffingen
+    title: "Aangifte loonheffingen (loonaangifte) doen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/loonaangifte-aangifte-loonheffingen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_aanmelden_werkgever
+    title: "Personeel in dienst nemen en aanmelden als werkgever"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/aanmelden-als-werkgever"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_afschrijving_bedrijfspand
+    title: "Afschrijving bedrijfspand - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/afschrijving_bedrijfspand"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_afschrijving_bedrijfspand_2025
+    title: "Afschrijving bedrijfspand 2025 - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/afschrijving-bedrijfspand-2025"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_afschrijving_berekening
+    title: "Hoe berekent u het bedrag van de afschrijving? - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/hoe_berekent_u_het_bedrag_van_de_afschrijving"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_aftrekken_lijfrentepremies
+    title: "Aftrekken lijfrentepremies"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/lijfrente/aftrekken-lijfrentepremies/aftrekken-lijfrentepremies"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_aov_prive_aftrek
+    title: "Arbeidsongeschiktheidsverzekering (Prive - Werk en inkomen)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/arbeidsongeschiktheidsverzekering/arbeidsongeschiktheidsverzekering"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_aov_voor_ondernemers
+    title: "Arbeidsongeschiktheidsverzekering voor ondernemers"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsongeschiktheidsverzekering-voor-ondernemers"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_arbeidsbeloning_fiscale_partner
+    title: "Belastingdienst - Arbeidsbeloning aan fiscale partner"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsbeloning_aan_fiscale_partner"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_becon_uitstel_fiscaal_dienstverleners
+    title: "Uitstel aanvragen voor fiscaal dienstverleners (becon-uitstel)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/intermediairs/aangifte_doen/uitstel-aanvragen-voor-fiscaal-dienstverleners-becon-uitstel/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_belastingrente_pay_ib
+    title: "Belastingrente betalen bij inkomstenbelasting"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_belastingrente_percentages
+    title: "Overzicht percentages belastingrente"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_beoordeel_samen
+    title: "Samen verantwoordelijk voor uw arbeidsrelatie"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/beoordeel-samen-uw-arbeidsrelatie"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bestelauto_niet_prive_gebruiken
+    title: "Bestelauto niet prive gebruiken"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/uitsluitend_zakelijk_gebruik_bestelauto/bestelauto_niet_prive_gebruiken"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijtelling_privegebruik_auto_2021
+    title: "Bijtelling privegebruik auto 2021"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2021"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijtelling_privegebruik_auto_2022
+    title: "Bijtelling privegebruik auto 2022"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2022"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijtelling_privegebruik_auto_2023
+    title: "Bijtelling privegebruik auto 2023"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/bijtelling-privegebruik-auto-2023"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijtelling_privegebruik_auto_2024
+    title: "Bijtelling privegebruik auto 2024"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2024/bijtelling-privegebruik-auto-2024"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijtelling_woning_2025
+    title: "Belastingdienst - Bijtelling privegebruik woning 2025"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-woning-2025"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bijzondere_situaties_privegebruik_auto
+    title: "Bijzondere situaties privegebruik auto"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/bijzondere_situaties"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_bron_van_inkomen
+    title: "Bron van inkomen - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/bron-van-inkomen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_btw_onderneming_wijzigen_of_beeindigen
+    title: "Onderneming wijzigen of beeindigen: hoe zit het met de btw?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-onderneming-wijzigen-of-beeindigen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_cv_rechtsvorm
+    title: "Commanditaire vennootschap (cv) en gevolgen voor uw belastingen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/commanditaire-vennootschap-cv"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_desinvesteringsbijtelling
+    title: "Desinvesteringsbijtelling"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/desinvesteringsbijtelling"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_desinvesteringsbijtelling_bij_staking
+    title: "Desinvesteringsbijtelling bij verkoop bedrijfsmiddel na staken bedrijf"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/desinvesteringsbijtelling-bij-verkoop-bedrijfsmiddel-na-staken-bedrijf"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_doorschuiven_nieuwe_bestaande_onderneming
+    title: "Doorschuiven naar een nieuwe of bestaande onderneming"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/doorschuiven-naar-een-nieuwe-of-bestaande-onderneming"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_egalisatiereserve
+    title: "Egalisatiereserve (kostenegalisatiereserve) - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/egalisatiereserve"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_extra_lijfrenteaftrek_staking_2025
+    title: "Extra lijfrentepremieaftrek bij stakende ondernemers 2025"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/extra-lijfrentepremieaftrek-bij-stakende-ondernemers-2025"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin2025_h6_winst_uit_onderneming
+    title: "Fiscale informatie 2025, hoofdstuk 6 - Winst uit onderneming"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming"
+    source_type: official_doctrine
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin2025_row
+    title: "Fiscale informatie 2025, hoofdstuk 5 Inkomsten uit overig werk"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomsten_uit_overig_werk"
+    source_type: official_doctrine
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin2025_zvw_hfst28
+    title: "Fiscale informatie 2025, hoofdstuk 28 - Inkomensafhankelijke bijdrage Zorgverzekeringswet"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomensafhankelijke_bijdrage_zorgverzekeringswet"
+    source_type: official_doctrine
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin2026_h8
+    title: "Fiscale informatie 2026, hoofdstuk 8 - Ondernemersaftrek en investeringsaftrek"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/ondernemersaftrek_en_investeringsaftrek"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_fisin_2025_h25
+    title: "Fiscale informatie 2025, hoofdstuk 25 - Te verrekenen verliezen - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/te_verrekenen_verliezen"
+    source_type: official_doctrine
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin_2025_h7
+    title: "Fiscale informatie 2025 - 7 Winst-en-verliesrekening en balans | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin_2025_h8
+    title: "Fiscale informatie 2025 - 8 Ondernemersaftrek en investeringsaftrek | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/ondernemersaftrek_en_investeringsaftrek"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin_zvw_2026
+    title: "Fiscale informatie 2026, hoofdstuk 28: Inkomensafhankelijke bijdrage Zorgverzekeringswet"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/inkomensafhankelijke_bijdrage_zorgverzekeringswet"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_gedeeltelijke_doorschuiving_of_staking
+    title: "(Gedeeltelijke) doorschuiving of staking onderneming"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/gedeeltelijke_doorschuiving_of_staking_onderneming"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_geen_nieuwe_modelovereenkomsten
+    title: "Geen nieuwe modelovereenkomsten meer"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/geen-nieuwe-modelovereenkomsten-meer"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_geen_recht_op_investeringsaftrek
+    title: "Geen recht op investeringsaftrek | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/geen_recht_op_investeringsaftrek"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_gevolgen_opdrachtnemer
+    title: "Werken in loondienst - gevolgen voor de opdrachtnemer"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-in-loondienst-gevolgen-opdrachtnemer"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_handhaving_arbeidsrelaties
+    title: "Arbeidsrelaties en handhaving door de Belastingdienst (einde handhavingsmoratorium)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/handhaving"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_handhavingsplan_landing
+    title: "Handhavingsplan arbeidsrelaties (downloadoverzicht)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/handhavingsplan-arbeidsrelaties"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_herinvesteringsreserve
+    title: "Herinvesteringsreserve - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/herinvesteringsreserve"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_hoe_aangifte_doen_online_app_papier
+    title: "Aangifte inkomstenbelasting doen: online, met de app of op papier"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/hoe-aangifte-inkomstenbelasting-doen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_hoe_bereken_ik_mijn_jaarruimte
+    title: "Hoe bereken ik mijn jaarruimte voor aftrek van lijfrente?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/hoe-bereken-ik-mijn-jaarruimte"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ib_aangifte_voor_ondernemers
+    title: "Aangifte inkomstenbelasting voor ondernemers"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_keuzemogelijkheden_auto
+    title: "Keuzemogelijkheden auto"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/auto_en_vervoer/auto_van_de_onderneming/autokosten/keuzemogelijkheden_auto"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_kosten_aanloopfase
+    title: "Kosten gemaakt in de aanloopfase - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_gemaakt_in_de_aanloopfase"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_loondienst_na_ondernemerschap
+    title: "In loondienst nadat u bent gestopt met uw onderneming"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/loondienst-na-ondernemerschap"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_maatschap_rechtsvorm
+    title: "Maatschap en gevolgen voor uw belastingen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/maatschap"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_medegerechtigde
+    title: "Medegerechtigde in onderneming of geldverstrekker"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/medegerechtigde_in_onderneming_of_geldverstrekker"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_meewerkaftrek_algemeen
+    title: "Meewerkaftrek (algemene pagina, Inkomstenbelasting voor ondernemers > Ondernemersaftrek)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/meewerkaftrek"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_middeling_aanvragen
+    title: "Hoe kan ik mijn inkomen middelen en geld terugkrijgen? - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-kan-ik-mijn-inkomen-middelen-en-geld-terugkrijgen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_middeling_teruggaaf
+    title: "Teruggaaf door middeling berekenen - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/bijzondere_situaties/teruggaaf_door_middeling_berekenen/teruggaaf-door-middeling-berekenen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_mkb_winstvrijstelling_2026
+    title: "Mkb-winstvrijstelling 2026"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/mkb-winstvrijstelling-2026"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_mkb_winstvrijstelling_general
+    title: "Mkb-winstvrijstelling"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_niet_in_loondienst_werken
+    title: "Niet in loondienst werken"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/niet-in-loondienst-werken"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_activa_materieel
+    title: "Online aangifte IH 2025 - invulhulp 'Materiele vaste activa' (balans, activa)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wactmatvapan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_passiva_ondernemingsvermogen
+    title: "Online aangifte IH 2025 - invulhulp 'Ondernemingsvermogen' (balans, passiva)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wpasvermpan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_urencriterium_vraag
+    title: "Online aangifte IH 2025 - invulhulp urencriterium-vraag in de ondernemersaftrek"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wondaftuur.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_winstberekening
+    title: "Online aangifte IH 2025 - invulhulp 'Winstberekening' (vermogensvergelijking)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wberwv.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_wv_afschrijvingen
+    title: "Online aangifte IH 2025 - invulhulp 'Afschrijvingen' (winst-en-verliesrekening)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvafschpan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_wv_buitengewoon
+    title: "Online aangifte IH 2025 - invulhulp 'Buitengewone baten en lasten' (winst-en-verliesrekening)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvbgewpan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_wv_opbrengsten
+    title: "Online aangifte IH 2025 - invulhulp 'Opbrengsten' (winst-en-verliesrekening)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvopbpan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_ola_ih2025_wv_overige_bedrijfskosten
+    title: "Online aangifte IH 2025 - invulhulp 'Overige bedrijfskosten' (winst-en-verliesrekening)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvovrpan.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_oudedagsreserve_afrekenen
+    title: "Oudedagsreserve afrekenen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/oudedagsreserve_afrekenen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_overdracht_medeondernemer_werknemer
+    title: "Uw onderneming overdragen aan een medeondernemer of werknemer"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_draagt_uw_onderneming_over/uw-onderneming-overdragen-aan-een-medeondernemer-of-werknemer"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_overzicht_aftrekbare_zakelijke_kosten
+    title: "Overzicht mogelijk aftrekbare zakelijke kosten"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/overzicht-mogelijk-aftrekbare-zakelijke-kosten"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_partner_gaat_meewerken
+    title: "Uw partner gaat meewerken (Meewerkende partner)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/uw_partner_gaat_meewerken/uw_partner_gaat_meewerken"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_personeel_in_uw_onderneming
+    title: "Belastingdienst - Personeel in uw onderneming? Misschien moet u loonheffingen betalen."
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/personeel_in_uw_onderneming/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_privegebruik_andere_vervoermiddelen
+    title: "Privegebruik van andere vervoermiddelen dan auto's"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_andere_vervoermiddelen/privegebruik_van_andere_vervoermiddelen_dan_autos"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_privegebruik_auto_ondernemer
+    title: "Privegebruik auto (inkomstenbelasting voor ondernemers)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/privegebruik_auto"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_privegebruik_woning
+    title: "Belastingdienst - Privegebruik woning (woningforfait bij ondernemingsvermogen)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_woning/privegebruik_woning"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_privevervoermiddel_2026
+    title: "Zakelijk gebruik privevervoermiddel 2026"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/zakelijk-gebruik-privevervoermiddel-2026"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_provisional_annual_renewal
+    title: "Moet ik ieder jaar opnieuw een voorlopige aanslag aanvragen?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/moet-ik-ieder-jaar-opnieuw-een-maandelijkse-voorlopige-aanslag-aanvragen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_provisional_check_and_change_2026
+    title: "Hoe controleer ik mijn voorlopige aanslag en in welke situaties moet ik hem wijzigen?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_rechtsvorm_wijzigen
+    title: "Uw onderneming wijzigt van rechtsvorm"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/uw_onderneming_wijzigt_van_rechtsvorm/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_rittenregistratie
+    title: "Rittenregistratie (inkomstenbelasting voor ondernemers)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/rittenregistratie"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_stakingsaftrek_algemeen
+    title: "Stakingsaftrek"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/stakingsaftrek"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_stakingswinst_berekenen
+    title: "Stakingswinst berekenen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/stakingswinst_berekenen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_stoppende_ondernemers
+    title: "Stoppende ondernemers (themadossier belastingdienst.nl/staken)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/stoppende-ondernemers/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_tariefsaanpassing_aftrekposten
+    title: "Belastingdienst - Afbouw tarief aftrekposten als u een hoog inkomen hebt (tariefsaanpassing)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_tbs_bezittingen
+    title: "Ter beschikking stellen van bezittingen (Prive > Werken > Niet in loondienst werken)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/ter_beschikking_stellen_van_bezittingen/ter_beschikking_stellen_van_bezittingen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_u_staakt_uw_onderneming
+    title: "Wat moet u regelen als u stopt met uw onderneming?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/u_staakt_uw_onderneming"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_uitsluitend_zakelijk_gebruik_bestelauto
+    title: "Uitsluitend zakelijk gebruik bestelauto (Verklaring)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/uitsluitend_zakelijk_gebruik_bestelauto/uitsluitend_zakelijk_gebruik_bestelauto"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_verklaring_geen_privegebruik_auto
+    title: "Verklaring geen privegebruik auto aanvragen, wijzigen of intrekken"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/verklaring-geen-privegebruik-auto-aanvragen-wijzigen-intrekken"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_verlies_uit_onderneming
+    title: "Verlies uit onderneming | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/verlies_uit_onderneming"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_vermogensetikettering
+    title: "Vermogensetikettering bedrijfsmiddel | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/vermogensetikettering-bedrijfsmiddel"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_verrekenen_ngz
+    title: "Verrekenen niet-gerealiseerde zelfstandigenaftrek"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/zelfstandigenaftrek1/verrekenen_niet_gerealiseerde_zelfstandigenaftrek"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_vof_rechtsvorm
+    title: "Vennootschap onder firma (vof) en gevolgen voor uw belastingen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/vennootschap-onder-firma-vof"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_voorwaarden_investeringsregelingen
+    title: "Voorwaarden investeringsregelingen | Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/voorwaarden_investeringsregelingen"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_waar_moet_ik_me_uitschrijven
+    title: "Waar moet ik me uitschrijven?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/waar-moet-ik-me-uitschrijven"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/staking-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_waarde_van_de_auto
+    title: "Waarde van de auto (grondslag bijtelling)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_auto/waarde_van_de_auto"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_wanneer_loondienst
+    title: "Wanneer is sprake van loondienst?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/wanneer-is-sprake-van-loondienst"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_wat_is_afschrijven
+    title: "Belastingdienst - Wat is afschrijven?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/wat_is_afschrijven"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_wat_zijn_inkomsten_overig_werk
+    title: "Wat zijn inkomsten uit overig werk?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/wat-zijn-inkomsten-uit-overig-werk"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_weet_wanneer_ondernemer
+    title: "Weet wanneer u ondernemer bent voor de Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/weet-wanneer-u-ondernemer-bent/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_welke_kosten_bijverdiensten
+    title: "Welke zakelijke kosten mag ik aftrekken? (bijverdiensten / inkomsten uit overig werk)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/welke-kosten-mag-ik-aftrekken-van-mijn-bijverdiensten"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_werken_met_modelovereenkomsten
+    title: "Werken met modelovereenkomsten"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-met-modelovereenkomsten"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_willekeurige_afschrijving_algemeen
+    title: "Willekeurige afschrijving - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/willekeurige_afschrijving"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_willekeurige_afschrijving_starters
+    title: "Willekeurige afschrijving - Startende ondernemer - Belastingdienst"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/startende_ondernemer"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_zakelijk_gebruik_privevervoermiddel
+    title: "Zakelijk gebruik privevervoermiddel (inkomstenbelasting voor ondernemers)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijk-gebruik-privevervoermiddel"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_zelfstandigenaftrek_2026
+    title: "Zelfstandigenaftrek 2026"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zorgverzekering_starter_ondernemer
+    title: "Zorgverzekering (onderneming starten - wat u verder wilt weten)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/wat_u_verder_wilt_weten/zorgverzekering/"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_zvw_hoe_betalen
+    title: "Hoe betaal ik mijn bijdrage Zorgverzekeringswet (Zvw)?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-betaal-ik-mijn-bijdrage-zorgverzekeringswet"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_inkomensafhankelijke_bijdrage
+    title: "Inkomensafhankelijke bijdrage Zvw"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/inkomensafhankelijke_bijdrage_zorgverzekeringswet"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_percentages_2025_2026
+    title: "Percentages inkomensafhankelijke bijdrage Zvw"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/veranderingen-bijdrage-zvw/percentages-zvw"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_provisional_aanslag_2026
+    title: "Voorlopige aanslag Zorgverzekeringswet (Zvw)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/voorlopige-aanslag-zvw"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_resultaat_overig_werk
+    title: "Bijdrage Zorgverzekeringswet over resultaat uit overig werk"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/zorgverzekeringswet"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_teruggaaf
+    title: "Teruggaaf bijdrage Zvw"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/teruggaaf_bijdrage_zvw/teruggaaf_bijdrage_zvw"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: bd_zvw_werkgeversheffing_of_bijdrage_tabel
+    title: "Werkgeversheffing Zvw of bijdrage Zvw?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/tabel_werkgeversheffing_zvw_of_bijdrage_zvw/tabel_werkgeversheffing_zvw_of_bijdrage_zvw"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: fisin2025_beschikbaar_stellen
+    title: "Fiscale informatie 2025 - hoofdstuk 9 Beschikbaar stellen van bezittingen"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/beschikbaar_stellen_van_bezittingen"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: fisin2025_fiscaal_partnerschap
+    title: "Fiscale informatie 2025 - hoofdstuk 1 Fiscaal partnerschap"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/fiscaal_partnerschap"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: law_besluit_ngz_staking
+    title: "Besluit Inkomstenbelasting, staking gehele onderneming; verrekening niet gerealiseerde zelfstandigenaftrek (art. 3.76 Wet IB 2001), BWBR0037558"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0037558"
+    source_type: official_doctrine
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: law_uwa_2001
+    title: "Uitvoeringsregeling willekeurige afschrijving 2001 (BWBR0012035)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0012035"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/laws/uitvoeringsregeling-willekeurige-afschrijving-2001.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: ola_ih2025_wa_privegebruik_auto
+    title: "Online aangifte IH 2025 - hulponderwerp 'Onttrekking privegebruik auto van de onderneming'"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/wa/onttrekking_privegebruik_auto_van_de_onderneming.htm"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: ola_va2026_schatting_winst
+    title: "Voorlopige aanslag 2026 online - invulhulp 'Winst als ondernemer' (schatting)"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/invulhulp/inkwinstondbdrg.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: ola_va2026_winst_als_ondernemer
+    title: "Voorlopige aanslag 2026 online - hulponderwerp 'Winst uit onderneming'"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/wa/winst_als_ondernemer.htm"
+    source_type: official_guidance
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/winst-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and when the Belastingdienst updates the entrepreneur guidance"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: reg_zorgverzekering_h5_2025
+    title: "Regeling zorgverzekering, hoofdstuk 5 (versie geldend van 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/jci1.3:c:BWBR0018715&hoofdstuk=5&artikel=5.4&z=2025-01-01&g=2025-01-01"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: reg_zorgverzekering_h5_2026
+    title: "Regeling zorgverzekering, hoofdstuk 5 (geldende tekst 29-07-2026)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0018715"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: urib_2001_art_7_werkkleding
+    title: "Uitvoeringsregeling inkomstenbelasting 2001, artikel 7 - werkkleding (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0012031/2025-01-01/0/Hoofdstuk3/Artikel7/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib2001_2022_for_artikelen
+    title: "Wet inkomstenbelasting 2001 (versie geldend van 01-04-2022 t/m 31-12-2022) - artt. 3.67-3.71 oudedagsreserve"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2022-12-31/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.3/Artikel3.70"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib2001_2023_art3127
+    title: "Wet inkomstenbelasting 2001, artikel 3.127 (versie geldend van 01-07-2023 t/m 31-12-2023) - pre-Wtp factor A rule"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/jci1.3:c:BWBR0011353&hoofdstuk=3&afdeling=3.7&artikel=3.127&z=2023-12-31&g=2023-12-31"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib2001_2025_geldend
+    title: "Wet inkomstenbelasting 2001 (versie geldend van 01-01-2025) - artt. 3.125, 3.126a, 3.127, 3.129, 3.130"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.7/Artikel3.127"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_14_2025
+    title: "Artikel 3.14 Wet IB 2001 - Algemeen niet aftrekbare kosten (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.14/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_20_2025
+    title: "Artikel 3.20 Wet IB 2001 - Bijtelling privegebruik auto (geldend 1-1-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.20/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_20a_2025
+    title: "Artikel 3.20a Wet IB 2001 - Bijtelling privegebruik fiets (geldend 1-1-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.20a/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_3
+    title: "Artikel 3.3 Wet IB 2001 - Medegerechtigden en schuldeisers (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.3/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_4
+    title: "Artikel 3.4 Wet IB 2001 - Begrip ondernemer (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.4/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_41_2025
+    title: "Artikel 3.41 Wet IB 2001 - Kleinschaligheidsinvesteringsaftrek (versie 1 januari 2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.41/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_63
+    title: "Artikel 3.63 Wet IB 2001 - Doorschuiving naar ondernemers (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.63/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_ib_3_9
+    title: "Artikel 3.9 Wet IB 2001 - Maximum verlies medegerechtigden (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.9/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_zvw_art41_49_2025
+    title: "Zorgverzekeringswet, artikelen 41-49 (geldende tekst 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0018450/2025-01-01"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/zvw-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wet_zvw_art41_49_2026
+    title: "Zorgverzekeringswet, artikelen 41-49 (geldende tekst 01-01-2026)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0018450/2026-01-01"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst
+
+  - id: wetib_consolidated_2025
+    title: "Wet inkomstenbelasting 2001 (BWBR0011353), geldende tekst per 2025-01-01"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: wetten_ib_10a_29_for_overgangsrecht
+    title: "Artikel 10a.29 Wet inkomstenbelasting 2001 - Overgangsbepaling oudedagsreserve (geldend 01-01-2025)"
+    domain: wetten.overheid.nl
+    url: "https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk10A/Artikel10a.29/afdrukken"
+    source_type: law
+    snapshot_path: "skills/_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag and after Staatsblad publication of tax-plan amendments"
+    owner: "tax-content"
+    workflow: annual_return
+    tax_year: 2025
+    mandatory_for:
+      - nl-tax-annual-return
+      - nl-tax-winst
+
+  - id: bd_fisin_2026_belastingberekening
+    title: "Fiscale informatie 2026 -- Hoe wordt de belasting berekend?"
+    domain: www.belastingdienst.nl
+    url: "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/belastingberekening"
+    source_type: official_rates
+    snapshot_path: "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
+    last_checked: "2026-08-15"
+    freshness_policy: "check after Prinsjesdag; rates are fixed for the calendar year once published"
+    owner: "tax-content"
+    workflow: provisional_assessment
+    tax_year: 2026
+    mandatory_for:
+      - nl-tax-provisional-assessment
+      - nl-tax-winst

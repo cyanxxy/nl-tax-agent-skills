@@ -137,16 +137,16 @@ class FixtureSchemaTests(unittest.TestCase):
             "evals/nl-tax-agent-skills/fixtures/security/source-staleness.yaml",
         )
 
-    def test_annual_entrepreneur_fixture_keeps_field_map_draft(self):
+    def test_annual_entrepreneur_fixture_reaches_review_ready(self):
+        """A complete eenmanszaak case now reaches review_ready: the reviewed
+        zakelijke schema exists, so the business-section schema-review blocker no
+        longer fires merely because the case has an onderneming."""
         data = load_fixture("annual/entrepreneur-zzp.yaml")
         state = data["expected_state"]
 
         self.assertEqual(state["session_progress_version"], "1.4")
-        self.assertEqual(state["field_map_readiness"], "draft")
-        self.assertIn(
-            "business-section schema review",
-            state["field_map_blockers"],
-        )
+        self.assertEqual(state["field_map_readiness"], "review_ready")
+        self.assertEqual(state["field_map_blockers"], [])
         self.assertEqual(state["annual_2025_subsection"], "winst")
         self.assertEqual(state["workpack_owner"], "nl-tax-annual-return")
         self.assertEqual(state["field_map_owner"], "nl-tax-field-mapper")

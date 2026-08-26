@@ -5,6 +5,7 @@
 - Purpose
 - Core concepts
 - Delta categories
+- Companion item -- voorlopige aanslag Zorgverzekeringswet
 - Visual format
 - Impact summary
 - Important distinction
@@ -98,6 +99,41 @@ The delta summary must cover the following categories:
 | Other deductions        | Lijfrentepremie, specific care, gifts, other   |
 | Partner changes         | Any change in partner status or partner data   |
 
+The expected-business-profit row keeps its own category. Read its definition and
+every 2026 business figure from
+`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`: the row
+holds the winst expected as ondernemer in 2026, taken before the
+ondernemersaftrek and before the MKB-winstvrijstelling, excluding btw, with a
+minus sign for an expected loss. Never fold it into generic other income.
+
+---
+
+## Companion item -- voorlopige aanslag Zorgverzekeringswet
+
+The bijdrage Zorgverzekeringswet is **not** a delta category. Where the taxpayer
+has winst uit onderneming or income from work performed outside employment, the
+delta summary reports the separate voorlopige aanslag Zvw **alongside** the
+table as a companion item and never merges it into an income-tax row or total.
+
+- The income-tax voorlopige aanslag and the voorlopige aanslag Zvw are two
+  separate aanslagen with two separate change routes. No reviewed source
+  establishes whether an income-tax change is coupled to the Zvw assessment,
+  so the taxpayer checks the Zvw assessment separately and the workpack records
+  what they find.
+- Record whether the taxpayer holds a voorlopige aanslag Zvw 2026 and what
+  income estimate it uses, with provenance -- or keep it as an open question.
+  Never assume there is none and never enter a zero.
+- Do not compute a bijdrage amount, do not create a baseline, estimate, or delta
+  row for it, and do not state its instalment, deadline, payment, or refund
+  timing.
+- The Zvw base is the belastbare winst, a different figure from the expected
+  business profit row, which is taken before the ondernemersaftrek and the
+  MKB-winstvrijstelling. Never reuse one figure for the other, and never
+  subtract the bijdrage from the profit estimate.
+
+`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
+for every Zvw figure; read them there and never restate one from memory.
+
 ---
 
 ## Visual format
@@ -122,6 +158,9 @@ The delta summary must present the comparison in a table format:
 ```
 
 **Notes column:** Include brief reasons for significant changes when the user has provided them (e.g., "salary increase", "mortgage paid off", "started pension").
+
+**Zvw companion:** the voorlopige aanslag Zorgverzekeringswet is reported in
+prose below the table, never as a row in it and never inside a total.
 
 ---
 

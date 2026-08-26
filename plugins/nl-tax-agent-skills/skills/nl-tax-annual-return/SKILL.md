@@ -99,9 +99,16 @@ after its explicit generation gate opens.
 - Never silently treat a missing value as zero. A chat value is valid sourced
   input; a deferred value stays open; an assumption requires explicit user
   acceptance.
-- Standard eenmanszaak/ZZP support is preparation-only: organize finalized
-  profit-and-loss and balance evidence, keep the business field map draft, and
-  never derive final taxable business profit or entrepreneur deductions.
+- Standard eenmanszaak/ZZP support determines the belastbare winst uit
+  onderneming from a finalized profit-and-loss statement and balance, following
+  the ordered chain in `winstberekening-2025.md`, and feeds it into the Box 1
+  total. Recognise and route every other IB business form; never compute a
+  stakingswinst, a reserve movement, a terbeschikkingstellingsresultaat, a
+  medegerechtigde loss cap, or a per-vennoot winstaandeel.
+- The business field map reaches `review_ready` only for a straightforward
+  eenmanszaak whose reviewed zakelijke schema is complete; any other business
+  form, or a deduction screen the reviewed schema does not establish, keeps it
+  `draft` with the `business-section schema review` blocker.
 - Annual Box 3 collects fictitious and actual-return data for the official
   comparison; supplying actual-return data is not a taxpayer method election.
 - Apply the three-state AOW review (`below_all_year`, `reaches_during_year`, or

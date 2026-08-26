@@ -24,8 +24,11 @@ choose the clearest conversational order.
   relevant asset total.
 - **What the user needs:** Relevant 2025 evidence (jaaropgaven, WOZ-beschikking,
   bank statements for applicable Box 3 dates, mortgage annual statement, and
-  deduction evidence). Values may be supplied in chat when the user chooses not
-  to upload a document.
+  deduction evidence). For an IB-ondernemer, also the business evidence: the
+  finalized winst-en-verliesrekening, the balans with both the opening and the
+  closing column, the urenadministratie, and the investeringsfacturen for
+  bedrijfsmiddelen bought in the year. Values may be supplied in chat when the
+  user chooses not to upload a document.
 - **Trigger phrases:** "aangifte doen", "belastingaangifte 2025", "file my taxes", "income tax return"
 
 ## Voorlopige Aanslag 2026 — Request

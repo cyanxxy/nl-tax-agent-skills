@@ -43,6 +43,14 @@ current provisional estimate.
 8. Derive top-level readiness from session progress, then write the one
    canonical workflow map.
 
+For an annual business map, also add the two sourced internal-routing records
+defined by `annual-field-map.md`. Give them `entry_mode: internal_routing`; never
+render them as portal fields. Then perform the business schema coverage audit:
+record one `notes` entry for every W&V, balance, private, prior-year-set-off and
+entrepreneur-question identifier, marking it `applicable_mapped`,
+`not_applicable_sourced`, or `unresolved`. Silence does not establish a zero, a
+false answer, or non-applicability.
+
 Do not merge annual and provisional data, cross-reference one map as a source
 for the other, or create an alternate output. Annual 2025 may map supplied
 actual-return inputs; provisional 2026 must contain only estimates or explicit
@@ -69,6 +77,11 @@ Each mapped field uses the template and these attributes:
 | `confidence` | 0.0 to 1.0 under `mapping-principles.md`. |
 | `manual_review_required` | `true` when taxpayer verification is required. |
 | `notes` | Entry mode, warnings, and context. |
+
+The annual-only internal routing records also carry
+`entry_mode: internal_routing`. All ordinary records have portal/checklist entry
+semantics from the annual reference; internal routing records are excluded from
+the manual-entry rendering.
 
 Apply the full provenance rules in `mapping-principles.md`. In particular,
 `user_chat` is sourced data rather than a missing document: preserve its quote
@@ -109,7 +122,9 @@ questionnaire.
 Use the active workflow rollup in `session-progress.yaml` as authoritative:
 
 - `review_ready` requires a complete active workflow with no blocking or
-  manual-review blocker;
+  manual-review blocker. For an annual business case it additionally requires a
+  complete case-by-case coverage note for every business-schema identifier, with
+  no `unresolved` result;
 - every other state maps to `draft`.
 
 Mechanical completeness does not change this declaration. Write only:
@@ -123,38 +138,17 @@ Preserve still-valid source records and resolved questions. Remove a stale
 entry only when the current workpack or selected field reference makes it
 obsolete. Never write a versioned copy or second map.
 
-## 6. Validate
+## 6. Check the map
 
-The agent owns the mapping and readiness decision. After writing, use the
-optional bundled validator when `python3` and its resolved path are available:
-
-```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py <path-to-field-map.yaml>
-```
-
-That structural check is the default and is sufficient for a declared `draft`,
-including an intentional draft held by a business-schema or other manual-review
-blocker. Only when the map is already declared `review_ready`, run the stricter
-assertion:
-
-```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/validate_field_map.py --require-ready <path-to-field-map.yaml>
-```
-
-Never use `--require-ready` to promote or fight an intentional draft. The
-validator checks metadata, workflow and tax year, source provenance,
-confidence, duplicate IDs, finite values, reference coverage,
-`unknown`/`missing_fields` alignment, the `user_chat_values_index`, omitted
-portal-prefilled rows, provisional werkelijk-rendement exclusion, and whether
-declared `review_ready` is structurally possible. It may reject false readiness
-but never promotes a draft.
-
-After a successful script check, set
-`check_performed_by: checked_by_script`. If the script cannot run, complete
-every stable check ID in the manual checklist in `mapping-principles.md`, then
-set `check_performed_by: checked_by_agent`. Those are the only accepted check
-trails. The manual fallback is required; never skip validation or copy the
-script into the workspace.
+The agent owns the mapping and the readiness decision, and the agent performs
+the check: complete every stable check ID in the manual checklist in
+`mapping-principles.md`, applying the canonical rule data in
+`field-map-rules.yaml`, then set `check_performed_by: checked_by_agent`. That
+is the only accepted check trail; the taxpayer's own review before manual
+entry is the final check. Never skip the checklist and never delegate it to a
+script — there is no bundled validator in the installed plugin, and no script
+result can replace or overrule the agent's checklist or promote a draft to
+`review_ready`.
 
 ## 7. Render and report
 

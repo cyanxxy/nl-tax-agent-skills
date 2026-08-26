@@ -7,6 +7,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-08-26
+
+Full winst-uit-onderneming coverage for the annual 2025 return, and the
+field-map check moved to the agent checklist plus human review.
+
+### Added
+
+- Sixteen reviewed knowledge notes covering the IB business chain for 2025:
+  `winstberekening-2025.md` (the canonical ordered profit chain),
+  `afschrijving-en-bedrijfsmiddelen-2025.md`, `vervoer-2025.md`, `zvw-2025.md`,
+  `inkomensvoorzieningen-2025.md`, `verlies-en-verrekening-2025.md`,
+  `staking-2025.md`, `samenwerkingsverband-2025.md`, `row-en-dba-2025.md`,
+  `partner-en-meewerken-2025.md`, `aanloopfase-en-starters-2025.md`,
+  `zakelijke-schema-2025.md`, plus `winst-provisional-2026.md`,
+  `zvw-provisional-2026.md` and the willekeurige-afschrijving law note.
+- `nl-tax-field-mapper/reference/field-map-rules.yaml` as canonical field-map
+  policy data: prohibitions, special identifiers, and readiness disqualifiers.
+  The agent applies it directly on every host; the repository grader loads the
+  same file, so both readers share one source.
+- A `zvw_entry_row` prohibition in every workflow. The bijdrage Zvw arrives as
+  a second, separate aanslag with no entry screen, so no field map carries a
+  Zvw row.
+- `rvo.nl` added to the official-source domain allowlist.
+
+### Changed
+
+- **Annual 2025 winst is no longer preparation-only.** The annual return now
+  determines the belastbare winst uit onderneming for a straightforward
+  eenmanszaak from a finalized profit-and-loss statement and balance, following
+  the ordered chain in `winstberekening-2025.md`, and carries it into the Box 1
+  total. Every other IB business form is recognised and routed to manual
+  review; stakingswinst, reserve movements, terbeschikkingstellingsresultaat,
+  medegerechtigde loss caps and per-vennoot winstaandelen are never computed.
+- An annual business field map reaches `review_ready` only for a straightforward
+  eenmanszaak whose reviewed zakelijke schema is complete. Any other business
+  form, or a deduction screen the reviewed schema does not establish, keeps it
+  `draft` with the `business-section schema review` blocker.
+- The provisional expected-profit field is specified as the winst before
+  ondernemersaftrek and mkb-winstvrijstelling, excluding btw, negative for a
+  loss. The separate voorlopige aanslag Zorgverzekeringswet is surfaced as a
+  companion item the taxpayer checks separately; no Zvw amount is sized.
+
+### Removed
+
+- `validate_field_map.py` no longer ships inside the plugin. The runtime check
+  is the agent checklist in `mapping-principles.md` plus human review, applying
+  `field-map-rules.yaml`. The script now lives at
+  `tools/nl_tax_agent_skills/field_mapper/validate_field_map.py` as repository
+  eval tooling that grades produced maps after the fact. `render_field_map.py`
+  remains bundled as an optional renderer.
+
+### Validation
+
+- The complete repository suite contains 438 passing tests.
+- Source-register, knowledge-pack, supported-workflows and invocation-policy
+  validators pass; all 237 registered sources resolve with matching reviewed-note
+  hashes and none stale.
+- Rates and thresholds in the new 2025/2026 notes were verified against
+  belastingdienst.nl, wetten.overheid.nl and rvo.nl. Where official pages
+  disagree — the desinvesteringsbijtelling threshold, the MIA/Vamil ceiling, the
+  stakingslijfrente age brackets, the exact EUR 450 boundary, the zonnecelauto
+  test and the AOW-transition series — the conflict is recorded in the note and
+  the case routed to manual review rather than resolved silently.
+
 ## [0.1.13] — 2026-07-20
 
 Cross-host task-resumption and Cowork organization-sync guidance release.

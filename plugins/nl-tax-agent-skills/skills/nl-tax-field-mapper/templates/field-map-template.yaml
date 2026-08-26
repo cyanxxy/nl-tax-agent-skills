@@ -9,13 +9,14 @@ updated_at: ""
 readiness: "draft"    # Canonical agent declaration derived from session-progress.yaml:
                       # "review_ready" only for a complete active workflow with no
                       # blocker; otherwise "draft". A validator never promotes it.
-check_performed_by: "checked_by_agent"  # checked_by_agent after completing every manual CHECK_ID;
-                                        # checked_by_script only after the bundled validator passes
+check_performed_by: "checked_by_agent"  # Always checked_by_agent, recorded after completing every
+                                        # CHECK_ID in mapping-principles.md against field-map-rules.yaml
 
 fields: []
 # Each field entry:
 #   field_id: ""                    # Unique identifier from the field reference
 #   label: ""                       # Dutch label as shown on the portal
+#   entry_mode: "manual_entry"      # annual internal routing controls instead use internal_routing and are never rendered as portal rows
 #   value: null                     # The value to enter on the form (null when source.type = "unknown")
 #   source:
 #     type: ""                      # One of: evidence | user_chat | estimate | baseline | calculated | assumption | unknown
@@ -47,4 +48,7 @@ user_chat_values_index: []
 #   stated_at: ""
 
 notes: []
-# Free-form map-level notes, warnings, or context strings.
+# Free-form map-level notes, warnings, or context strings. Annual business maps
+# include one business-schema coverage entry per referenced W&V, balance,
+# private, prior-year-set-off, and question identifier:
+# "business_schema_coverage: <field_id> = applicable_mapped|not_applicable_sourced|unresolved; source=<...>"

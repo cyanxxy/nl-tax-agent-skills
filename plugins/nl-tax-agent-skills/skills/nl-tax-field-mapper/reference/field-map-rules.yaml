@@ -1,0 +1,139 @@
+# Field-map validation rules -- canonical policy data
+#
+# This file is the single source for the field-map policy that both readers
+# apply:
+#
+#   - the agent, which applies these rules on every host via the checklist in
+#     reference/mapping-principles.md (the runtime check is that checklist
+#     plus human review -- no bundled validator runs in the workflow), and
+#   - the repository's offline eval harness, whose grader
+#     (tools/nl_tax_agent_skills/field_mapper/validate_field_map.py) loads
+#     this file to measure produced maps after the fact.
+#
+# What belongs here: prohibitions, identifiers that carry special meaning, and
+# readiness disqualifiers. What does NOT belong here: the field inventory.
+# Identifiers live in annual-field-map.md and provisional-field-map.md, and a
+# field map may legitimately carry an identifier neither file lists -- portal
+# sections move between filing seasons. An unrecognised identifier is a
+# question for the taxpayer conversation, never a mechanical rejection.
+#
+# Readiness direction (load-bearing): `readiness` in the artifact is the
+# agent's declaration derived from session state. A check -- scripted or
+# manual -- may REJECT a declared review_ready via a disqualifier below, but
+# nothing here can prove completeness or promote a draft. Completeness is
+# established in the taxpayer conversation and recorded in session progress.
+
+rules_version: "1.0"
+
+# --------------------------------------------------------------------------
+# Identifiers that carry special meaning
+# --------------------------------------------------------------------------
+special_ids:
+  # Provisional 2026 has exactly one business figure. Every other onderneming
+  # identifier and every entrepreneur deduction stays out of a provisional map.
+  provisional_expected_profit: onderneming.geschatte_winst
+  # Annual business routing hook -- a portal question, not a portal amount.
+  annual_business_hook: business.has_onderneming
+
+# --------------------------------------------------------------------------
+# Prohibitions -- closed-world deny rules, enforced as errors
+#
+# These stay correct no matter what identifier the agent writes, which is why
+# they are errors while identifier validity is not. Each rule is matched
+# against the field identifier, the label, and (where noted) notes and quotes.
+# --------------------------------------------------------------------------
+prohibitions:
+  - id: zvw_entry_row
+    applies_to: [annual_return, provisional_assessment]
+    id_patterns:
+      - '(?:^|[._-])zvw(?:[._-]|$)'
+    label_keywords:
+      - zorgverzekeringswet
+      - bijdrage zvw
+      - inkomensafhankelijke bijdrage
+    message: >-
+      The bijdrage Zvw arrives as a second, separate aanslag computed from the
+      same return. There is no Zvw entry screen and no Zvw box to type into,
+      so a field map never carries a Zvw row. Keep it in the workpack
+      narrative.
+
+  - id: provisional_werkelijk_rendement
+    applies_to: [provisional_assessment]
+    # Matched against identifier, label, notes, and quotes, so a clean
+    # identifier cannot smuggle werkelijk rendement past the box 3
+    # fictitious-only guard through prose.
+    keywords:
+      - werkelijk
+      - werkelijk rendement
+      - werkelijk_rendement
+      - actual_return
+      - actual-return
+      - actual return
+      - actueel rendement
+      - echt rendement
+    message: >-
+      Provisional 2026 uses the fictitious (forfaitair) method only. Werkelijk
+      rendement may become relevant when filing the annual 2026 return in
+      2027.
+
+  - id: provisional_entrepreneur_deduction
+    applies_to: [provisional_assessment]
+    keywords:
+      - zelfstandigenaftrek
+      - startersaftrek
+      - mkb-winstvrijstelling
+      - mkb_winstvrijstelling
+      - ondernemersaftrek
+      - investeringsaftrek
+      - kleinschaligheidsinvesteringsaftrek
+    token_patterns:
+      - '\bkia\b'
+    message: >-
+      A provisional map carries the expected profit only. Annual entrepreneur
+      deductions never enter a voorlopige-aanslag dataset.
+
+# --------------------------------------------------------------------------
+# Annual business readiness disqualifiers -- demote-only
+#
+# When an annual 2025 map carries a business section, each condition below
+# keeps (or forces) the map draft with the named blocker. Their absence proves
+# nothing: completeness of the business section is established by auditing the
+# reference inventory in the taxpayer conversation, as annual-field-map.md
+# requires, and is recorded in session progress -- a saldo, two equity anchors
+# and an hours answer are never sufficient to grant review_ready.
+# --------------------------------------------------------------------------
+annual_business:
+  section_prefix: onderneming.
+  blocker: business-section schema review
+  # Sourced control records that route the case. They belong to the annual
+  # identifier inventory but describe no box in Mijn Belastingdienst, so they
+  # never reach the human manual-entry checklist. They carry
+  # entry_mode: internal_routing.
+  internal_routing_ids:
+    - business.legal_form
+    - onderneming.routing.complex_case
+  # Only an eenmanszaak is prepared end to end. Every other IB business form
+  # is recognised and routed, which keeps its map draft for human review. An
+  # ABSENT legal form is a disqualifier too: an unanswered form question must
+  # not buy the review_ready that a stated "vof" would have blocked.
+  legal_form_id: business.legal_form
+  simple_legal_forms:
+    - eenmanszaak
+  complex_case_id: onderneming.routing.complex_case
+  # Deduction screens the reviewed zakelijke schema does not establish as
+  # form-computed. The Belastingdienst confirms the zelfstandigenaftrek (and
+  # the startersaftrek added to it) is applied automatically from the
+  # eligibility answers, but no reviewed page establishes that for the
+  # S&O-aftrek, the meewerkaftrek, the stakingsaftrek or the KIA. A case that
+  # claims one of those has an unestablished screen and stays draft.
+  unestablished_screen_ids:
+    - onderneming.vraag.so_verklaring
+    - onderneming.vraag.meewerkende_partner_uren
+    - onderneming.vraag.investeringen
+    - onderneming.vraag.staking
+  # The agent's coverage audit is recorded as map-level notes with this
+  # prefix (see templates/field-map-template.yaml). A note reporting an
+  # unresolved identifier is an explicit disqualifier; the check never
+  # requires the notes to exist and never infers completeness from them.
+  coverage_note_prefix: 'business_schema_coverage:'
+  coverage_unresolved_token: unresolved

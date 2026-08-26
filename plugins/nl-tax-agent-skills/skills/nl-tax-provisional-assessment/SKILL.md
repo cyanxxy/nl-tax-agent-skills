@@ -134,9 +134,17 @@ subflow's additional template.
   first-bracket rate, and defer affected credits to the live portal result
   instead of choosing a whole-year credit table.
 - For an eenmanszaak/ZZP, collect only a sourced, user-reviewed full-year
-  `onderneming.geschatte_winst` forecast with manual review. Include it in the
-  Box 1 rollup and change delta; do not prepare annual accounts, entrepreneur
-  deductions, Zvw, cessation profit, or final tax.
+  `onderneming.geschatte_winst` forecast with manual review -- the winst before
+  ondernemersaftrek and mkb-winstvrijstelling, excluding btw, with a minus sign
+  for a loss. Include it in the Box 1 rollup and change delta; do not prepare
+  annual accounts, entrepreneur deductions, a Zvw amount, cessation profit, or
+  final tax.
+- Surface the separate voorlopige aanslag Zorgverzekeringswet as a companion
+  item: it is a second aanslag with its own change route. Coupling between an
+  income-tax change and the Zvw assessment is not established in the reviewed
+  sources, so naming it, requiring the taxpayer to check it separately, and
+  recording what they find is required; sizing or merging a Zvw amount stays
+  out of scope.
 - Own-home review uses the WOZ value with peildatum 1 January 2025 and preserves
   all reviewed `box1_own_home_balance` components. Candidate Box 3 debts enter
   accepted totals only after the official inclusion/exclusion screen.
@@ -179,6 +187,9 @@ that companion map without a second activation or consent phrase. A script may
 check structure and provenance but cannot promote a draft. If a sourced fact
 changes after generation, reset confirmation, present the updated summary, and
 require fresh contextual confirmation before overwriting canonical outputs.
+The income-tax field map MUST NOT contain a Zvw field or value: no Zvw
+`field_id`, label, note, amount, baseline, estimate, or manual-entry row. The Zvw
+companion remains workpack prose and a separate human check only.
 
 After every output required for the active subflow validates and the
 provisional rollup is complete, set

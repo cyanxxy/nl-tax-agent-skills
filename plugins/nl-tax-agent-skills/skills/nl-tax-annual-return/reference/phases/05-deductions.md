@@ -54,6 +54,15 @@ question, stop workflow-resource loading for this turn.
   inputs and use the official Belastingdienst Hulpmiddel Lijfrentepremie
 - For reserveringsruimte, gather 2015-2024 unused-jaarruimte and actual-payment
   history; apply the official tool result and the EUR 42,108 2025 cap
+- For an IB-ondernemer, load
+  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`; it
+  is canonical for the jaarruimte formula, the reserveringsruimte, the timing
+  rules, and the extra lijfrentepremieaftrek on staking. The winst component of
+  the premiegrondslag is the **winst before ondernemersaftrek**, taken from the
+  **preceding calendar year** (art. 3.127 lid 3 Wet IB 2001). For the 2025
+  return that is the **2024** figure, which the Phase 2A chain does not produce:
+  ask the taxpayer for it as a separate 2024 fact. Do not hand this year's line
+  B to the jaarruimte, and never reuse the Zvw base for it.
 - Evidence: provider annual statement, UPO/factor-A evidence, historical room
   and payment records, and saved official-tool result
 
@@ -61,7 +70,11 @@ question, stop workflow-resource loading for this turn.
 
 - A qualifying private AOV premium belongs to the **private income-provision category**, **not ordinary business costs**. Inventory the policy and annual
   insurer statement; ambiguous policy types and exact deductibility are manual
-  review. Do not reduce business profit by the AOV premium.
+  review. Do not reduce business profit by the AOV premium. For an
+  IB-ondernemer,
+  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` is
+  canonical for AOV treatment; it sits beside the lijfrente ruimte in the same
+  uitgaven voor inkomensvoorzieningen category.
 - Studiekosten: ordinary expenses are not deductible. Screen only for the narrow
   pre-1 July 2015 prestatiebeurs exception, requiring a final DUO notice that
   the grant was not converted into a gift after the diploma period expired

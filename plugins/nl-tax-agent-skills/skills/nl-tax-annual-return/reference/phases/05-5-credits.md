@@ -13,6 +13,23 @@ Load `_shared/knowledge/years/2025/annual/credits.md`. Load
 `_shared/knowledge/aow/aow-leeftijd.md` only if stored AOW-age facts must be
 checked.
 
+### Arbeidsinkomen when there is winst uit onderneming
+
+`credits.md` is canonical for the arbeidskorting bands and for the components of
+arbeidsinkomen. One component is easy to get wrong: the winst component of
+arbeidsinkomen is the **winst uit onderneming before ondernemersaftrek and
+before the MKB-winstvrijstelling** -- line B of the Phase 2A chain, and **not**
+the belastbare winst that the bijdrage Zvw uses. Arbeidsinkomen is a
+current-year figure: it sits at the same position in the chain as the lijfrente
+premiegrondslag but is taken from a different year, so do not treat the two as
+one amount.
+`_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md` is canonical
+for which line each downstream base is read off. Take the figure from Phase 2A
+rather than recomputing it, and record which line it came from. Profit enjoyed
+as a medegerechtigde or a winstdelende schuldeiser does not count towards
+arbeidsinkomen. The same definition applies wherever arbeidsinkomen is used
+below, including the IACK screen.
+
 ### 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
 
 Do not mark IACK from age alone. Ask and record:

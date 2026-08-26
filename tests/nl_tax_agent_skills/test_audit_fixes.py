@@ -46,7 +46,7 @@ class FieldMapWerkelijkScanTests(unittest.TestCase):
 
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_werkelijk_scan",
         )
 

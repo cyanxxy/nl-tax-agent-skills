@@ -20,7 +20,6 @@ EXPECTED_SCRIPT_GROUPS = {
         "nl-tax-evidence-indexer/scripts/index_evidence.py",
     },
     "field_map": {
-        "nl-tax-field-mapper/scripts/validate_field_map.py",
         "nl-tax-field-mapper/scripts/render_field_map.py",
     },
     "arithmetic": {
@@ -42,7 +41,7 @@ class OptionalPythonContractTests(unittest.TestCase):
         expected = set().union(*EXPECTED_SCRIPT_GROUPS.values())
 
         self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), 8)
+        self.assertEqual(len(actual), 7)
 
     def test_developer_source_tools_are_not_runtime_scripts(self):
         source_tools = (

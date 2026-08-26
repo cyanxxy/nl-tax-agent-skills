@@ -74,7 +74,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.1.13",
+  "version": "0.2.0",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -371,8 +371,8 @@ python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_proje
 # Evidence inventory
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-evidence-indexer/scripts/index_evidence.py uploads/
 
-# Field-map guardrails and Markdown rendering
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/validate_field_map.py \
+# Field-map grading (repository tooling; runtime uses the agent checklist)
+python3 tools/nl_tax_agent_skills/field_mapper/validate_field_map.py \
   workspace/annual/2025/field-map.yaml
 python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_field_map.py \
   workspace/annual/2025/field-map.yaml
@@ -382,11 +382,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.1.13`):
+Both plugin manifests pin a fixed version (currently `0.2.0`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.1.13"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.1.13"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.2.0"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.2.0"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -415,7 +415,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.1.13')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.2.0')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.1.13'
+git tag --list 'nl-tax-agent-skills--v0.2.0'
 ```

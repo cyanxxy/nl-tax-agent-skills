@@ -1,5 +1,5 @@
 version: 1
-last_reviewed: "2026-07-16"
+last_reviewed: "2026-08-15"
 
 policy:
   source_backed_only: true
@@ -14,8 +14,8 @@ active_workflows:
     workflow: annual_return
     tax_year: 2025
     status: active
-    business_scope: preparation_only_finalized_profit_and_loss_and_balance
-    business_field_map_readiness: draft_manual_review
+    business_scope: full_profit_determination_from_reviewed_zakelijke_schema
+    business_field_map_readiness: review_ready_when_schema_complete
     profile_candidates:
       - annual_2025
     knowledge_dirs:
@@ -88,6 +88,7 @@ active_workflows:
       - bd_kia_2025
       - bd_eia_2025
       - bd_eia_mia_vamil_2025
+      - rvo_mia_vamil_2025_maximum
       - bd_zakelijke_kosten_2025
       - bd_zakelijke_kosten_een_jaar_2025
       - bd_zakelijke_kosten_meerdere_jaren_2025
@@ -117,11 +118,139 @@ active_workflows:
       - bd_machtigen_authorization
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
+      - bd_aangifte_loonheffingen
+      - bd_aanmelden_werkgever
+      - bd_afschrijving_bedrijfspand
+      - bd_afschrijving_bedrijfspand_2025
+      - bd_afschrijving_berekening
+      - bd_aftrekken_lijfrentepremies
+      - bd_aov_prive_aftrek
+      - bd_aov_voor_ondernemers
+      - bd_arbeidsbeloning_fiscale_partner
+      - bd_becon_uitstel_fiscaal_dienstverleners
+      - bd_beoordeel_samen
+      - bd_bestelauto_niet_prive_gebruiken
+      - bd_bijtelling_privegebruik_auto_2021
+      - bd_bijtelling_privegebruik_auto_2022
+      - bd_bijtelling_privegebruik_auto_2023
+      - bd_bijtelling_privegebruik_auto_2024
+      - bd_bijtelling_woning_2025
+      - bd_bijzondere_situaties_privegebruik_auto
+      - bd_bron_van_inkomen
+      - bd_btw_onderneming_wijzigen_of_beeindigen
+      - bd_cv_rechtsvorm
+      - bd_desinvesteringsbijtelling
+      - bd_desinvesteringsbijtelling_bij_staking
+      - bd_doorschuiven_nieuwe_bestaande_onderneming
+      - bd_egalisatiereserve
+      - bd_extra_lijfrenteaftrek_staking_2025
+      - bd_fisin2025_h6_winst_uit_onderneming
+      - bd_fisin2025_row
+      - bd_fisin2025_zvw_hfst28
+      - bd_fisin_2025_h25
+      - bd_fisin_2025_h7
+      - bd_fisin_2025_h8
+      - bd_gedeeltelijke_doorschuiving_of_staking
+      - bd_geen_nieuwe_modelovereenkomsten
+      - bd_geen_recht_op_investeringsaftrek
+      - bd_gevolgen_opdrachtnemer
+      - bd_handhaving_arbeidsrelaties
+      - bd_handhavingsplan_landing
+      - bd_herinvesteringsreserve
+      - bd_hoe_aangifte_doen_online_app_papier
+      - bd_hoe_bereken_ik_mijn_jaarruimte
+      - bd_ib_aangifte_voor_ondernemers
+      - bd_keuzemogelijkheden_auto
+      - bd_kosten_aanloopfase
+      - bd_loondienst_na_ondernemerschap
+      - bd_maatschap_rechtsvorm
+      - bd_medegerechtigde
+      - bd_meewerkaftrek_algemeen
+      - bd_middeling_aanvragen
+      - bd_middeling_teruggaaf
+      - bd_mkb_winstvrijstelling_general
+      - bd_niet_in_loondienst_werken
+      - bd_ola_ih2025_activa_materieel
+      - bd_ola_ih2025_passiva_ondernemingsvermogen
+      - bd_ola_ih2025_urencriterium_vraag
+      - bd_ola_ih2025_winstberekening
+      - bd_ola_ih2025_wv_afschrijvingen
+      - bd_ola_ih2025_wv_buitengewoon
+      - bd_ola_ih2025_wv_opbrengsten
+      - bd_ola_ih2025_wv_overige_bedrijfskosten
+      - bd_oudedagsreserve_afrekenen
+      - bd_overdracht_medeondernemer_werknemer
+      - bd_overzicht_aftrekbare_zakelijke_kosten
+      - bd_partner_gaat_meewerken
+      - bd_personeel_in_uw_onderneming
+      - bd_privegebruik_andere_vervoermiddelen
+      - bd_privegebruik_auto_ondernemer
+      - bd_privegebruik_woning
+      - bd_rechtsvorm_wijzigen
+      - bd_rittenregistratie
+      - bd_stakingsaftrek_algemeen
+      - bd_stakingswinst_berekenen
+      - bd_stoppende_ondernemers
+      - bd_tariefsaanpassing_aftrekposten
+      - bd_tbs_bezittingen
+      - bd_u_staakt_uw_onderneming
+      - bd_uitsluitend_zakelijk_gebruik_bestelauto
+      - bd_verklaring_geen_privegebruik_auto
+      - bd_verlies_uit_onderneming
+      - bd_vermogensetikettering
+      - bd_verrekenen_ngz
+      - bd_vof_rechtsvorm
+      - bd_voorwaarden_investeringsregelingen
+      - bd_waar_moet_ik_me_uitschrijven
+      - bd_waarde_van_de_auto
+      - bd_wanneer_loondienst
+      - bd_wat_is_afschrijven
+      - bd_wat_zijn_inkomsten_overig_werk
+      - bd_weet_wanneer_ondernemer
+      - bd_welke_kosten_bijverdiensten
+      - bd_werken_met_modelovereenkomsten
+      - bd_willekeurige_afschrijving_algemeen
+      - bd_willekeurige_afschrijving_starters
+      - bd_zakelijk_gebruik_privevervoermiddel
+      - bd_zorgverzekering_starter_ondernemer
+      - bd_zvw_hoe_betalen
+      - bd_zvw_inkomensafhankelijke_bijdrage
+      - bd_zvw_percentages_2025_2026
+      - bd_zvw_resultaat_overig_werk
+      - bd_zvw_teruggaaf
+      - bd_zvw_werkgeversheffing_of_bijdrage_tabel
+      - fisin2025_beschikbaar_stellen
+      - fisin2025_fiscaal_partnerschap
+      - law_besluit_ngz_staking
+      - law_uwa_2001
+      - ola_ih2025_wa_privegebruik_auto
+      - reg_zorgverzekering_h5_2025
+      - urib_2001_art_7_werkkleding
+      - wet_ib2001_2022_for_artikelen
+      - wet_ib2001_2023_art3127
+      - wet_ib2001_2025_geldend
+      - wet_ib_3_14_2025
+      - wet_ib_3_20_2025
+      - wet_ib_3_20a_2025
+      - wet_ib_3_3
+      - wet_ib_3_4
+      - wet_ib_3_41_2025
+      - wet_ib_3_63
+      - wet_ib_3_9
+      - wet_zvw_art41_49_2025
+      - wetib_consolidated_2025
+      - wetten_ib_10a_29_for_overgangsrecht
 
   - id: provisional_2026
     workflow: provisional_assessment
     tax_year: 2026
     status: active
+    # The voorlopige aanslag asks an ondernemer for ONE figure: the estimated
+    # winst BEFORE ondernemersaftrek and mkb-winstvrijstelling, excluding btw,
+    # with a minus sign for a loss. It carries no balans and no
+    # winst-en-verliesrekening, so this stays a single field. The separate
+    # voorlopige aanslag Zorgverzekeringswet is raised with the taxpayer as a
+    # companion item and is changed through its own route.
     business_scope: sourced_expected_profit_forecast_only
     business_field_id: onderneming.geschatte_winst
     profile_candidates:
@@ -188,6 +317,29 @@ active_workflows:
       - bd_machtigen_authorization
       - svb_aow_leeftijd
       - rijksoverheid_aow_leeftijd
+      - bd_belastingrente_pay_ib
+      - bd_belastingrente_percentages
+      - bd_fisin2026_h8
+      - bd_fisin_zvw_2026
+      - bd_mkb_winstvrijstelling_2026
+      - bd_privevervoermiddel_2026
+      - bd_provisional_annual_renewal
+      - bd_provisional_check_and_change_2026
+      - bd_tariefsaanpassing_aftrekposten
+      - bd_zelfstandigenaftrek_2026
+      - bd_zvw_hoe_betalen
+      - bd_zvw_inkomensafhankelijke_bijdrage
+      - bd_zvw_percentages_2025_2026
+      - bd_zvw_provisional_aanslag_2026
+      - bd_zvw_resultaat_overig_werk
+      - bd_zvw_teruggaaf
+      - bd_zvw_werkgeversheffing_of_bijdrage_tabel
+      - law_uwa_2001
+      - ola_va2026_schatting_winst
+      - ola_va2026_winst_als_ondernemer
+      - reg_zorgverzekering_h5_2026
+      - wet_zvw_art41_49_2026
+      - bd_fisin_2026_belastingberekening
 
 terminal_workflows:
   - id: manual_review
@@ -225,23 +377,29 @@ blocked_workflows:
     case_scope: complex_business_profit
     allowed_output: workspace/shared/missing-info.md
     reason: >-
-      An eenmanszaak/ZZP has preparation-only support in annual_2025: finalized
-      profit-and-loss and balance facts and questions, with the business field
-      map kept draft. This blocked candidate covers complex forms/events and any
-      final taxable-profit or completed-business-return work that still needs
-      dedicated official sources, snapshots, field maps, and tests before a
-      workpack can be prepared: partnerships (VOF, maatschap, CV) and their
-      profit-share allocation, medegerechtigdheid, DGA/BV winst, agrarische
-      ondernemingen (landbouwvrijstelling), zeevarenden, and complex-event
-      calculations such as staking, herinvesteringsreserve, and oudedagsreserve
-      wind-down. (The supported eenmanszaak flow still loads
-      bd_oudedagsreserve_2025 to explain to the user that FOR build-up was
-      abolished in 2023; only an actual reserve wind-down calculation is routed
-      to manual review.)
+      An eenmanszaak/ZZP now has full supported preparation in annual_2025: the
+      reviewed zakelijke schema, the ordered profit chain through
+      investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the
+      belastbare winst, the Zorgverzekeringswet bijdrage, and a business field
+      map that reaches review_ready when the schema is complete. Every other IB
+      business form is recognised and routed rather than dead-ended. This
+      blocked candidate now covers only the COMPUTATIONS that remain outside
+      automated scope because they need taxpayer-specific balance-sheet history
+      or a formal request: partnership profit-share allocation between vennoten,
+      medegerechtigde loss caps, DGA/BV winst and corporate-tax interaction,
+      agrarische ondernemingen (landbouwvrijstelling), zeevarenden, stakingswinst
+      computation and the doorschuiffaciliteiten, herinvesteringsreserve and
+      kostenegalisatiereserve movements, oudedagsreserve wind-down computation,
+      and terbeschikkingstelling. The Belastingdienst itself describes the
+      stakingswinst computation as very complicated and advises taking advice;
+      the supported flow explains these positions and collects the facts, but
+      does not compute them.
     unlock_condition: >-
-      Add reviewed Belastingdienst/wetten.overheid.nl sources for partnership
-      profit allocation, DGA/agrarisch/zeevarenden regimes, and business-cessation
-      events, update knowledge snapshots and field maps, then pass validation.
+      Add reviewed Belastingdienst/wetten.overheid.nl sources for per-vennoot
+      profit allocation, the DGA/agrarisch/zeevarenden regimes, stakingswinst
+      valuation and the doorschuiffaciliteiten, and the reserve movements; add
+      per-partner field maps and the samenwerkingsverband screens; update
+      knowledge snapshots and tests, then pass validation.
 
   - id: annual_2025_nonresidents_c_form_roadmap
     workflow: annual_return

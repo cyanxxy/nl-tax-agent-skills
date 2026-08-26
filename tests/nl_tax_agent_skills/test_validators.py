@@ -29,7 +29,7 @@ def load_module(relative_path, name):
 class ValidatorSmokeTests(unittest.TestCase):
     def test_field_map_rejects_empty_fields_and_empty_missing_fields(self):
         module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_empty",
         )
 
@@ -47,7 +47,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_field_map_rejects_unsupported_workflow_year_combinations(self):
         module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_workflow_year",
         )
 
@@ -85,7 +85,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_field_map_requires_required_reference_fields_to_be_represented(self):
         module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_required_reference_fields",
         )
 
@@ -116,7 +116,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_field_map_accepts_required_reference_fields_in_fields_or_missing_fields(self):
         module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map_required_reference_fields_valid",
         )
 
@@ -148,7 +148,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_provisional_field_map_rejects_actual_return_field(self):
         module = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "validate_field_map",
         )
         errors, _ = module.validate(

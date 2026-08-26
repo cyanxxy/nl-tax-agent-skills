@@ -4,7 +4,7 @@ source_ids: bd_ondernemersaftrek_2025, bd_zelfstandigenaftrek_2025, bd_startersa
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-06"
+last_reviewed: "2026-08-15"
 review_status: reviewed
 
 ## Rule
@@ -18,14 +18,41 @@ zelfstandigenaftrek, aftrek voor speur- en ontwikkelingswerk, meewerkaftrek,
 startersaftrek bij arbeidsongeschiktheid, and stakingsaftrek. The "gewone"
 startersaftrek is not a sixth component -- it is an increase of the
 zelfstandigenaftrek (art. 3.76 lid 3). Most components require the urencriterium.
+This note is canonical for the amounts and their conditions;
+`winstberekening-2025.md` is canonical for the order in which they are applied.
 
 These are reference notes for workpack preparation -- not final tax advice.
+
+## Where the ondernemersaftrek sits in the calculation order
+
+The order is load-bearing. `winstberekening-2025.md` is canonical for it and for
+the lines below; this table exists so the amounts in this note are never applied
+against the wrong base.
+
+| Line | Step                                                                                 |
+|------|--------------------------------------------------------------------------------------|
+| A    | Winst uit onderneming after the fiscal corrections (`winst-en-kosten.md`)             |
+| B    | A minus investeringsaftrek, plus any desinvesteringsbijtelling (`investeringsaftrek.md`) |
+| C    | B minus the ondernemersaftrek in this note                                           |
+| D    | C minus the MKB-winstvrijstelling, whose base is line C (`mkb-winstvrijstelling.md`) |
+| E    | D = belastbare winst uit onderneming                                                 |
+
+Three consequences the agent must not get the wrong way round:
+
+- The MKB-winstvrijstelling is taken over **line C**, so it is computed after the
+  ondernemersaftrek -- never over line A or line B.
+- The winst cap on the zelfstandigenaftrek below is measured against **line B**,
+  the winst before ondernemersaftrek, not against line A.
+- The downstream bases for the bijdrage Zvw, the lijfrente premiegrondslag and
+  the arbeidsinkomen are each read off a different line. Read
+  `winstberekening-2025.md` before quoting any of them.
 
 ## Zelfstandigenaftrek (art. 3.76)
 
 - Zelfstandigenaftrek 2025: **EUR 2,470**.
 - Halved to **EUR 1,235** when the ondernemer has reached the AOW-leeftijd at the
-  start of the calendar year (see `aow/aow-leeftijd.md` for the AOW-age test).
+  start of the calendar year (see `../../../aow/aow-leeftijd.md` for the
+  AOW-age test).
 - Conditions: ondernemer voor de inkomstenbelasting AND meets the urencriterium.
   Not granted over profit earned as medegerechtigde.
 - **Winst cap:** the zelfstandigenaftrek is limited to the winst before
@@ -39,6 +66,29 @@ The 2025 figure sits on a statutory phase-down path (EUR 3,750 in 2024 ->
 EUR 2,470 in 2025 -> EUR 1,200 in 2026). Only EUR 2,470 is used for the 2025
 return; do not substitute another year's amount.
 
+### Niet-gerealiseerde zelfstandigenaftrek is never applied automatically
+
+- The inspecteur fixes the niet-gerealiseerde zelfstandigenaftrek by voor bezwaar
+  vatbare beschikking (art. 3.76 lid 6), stated separately on the aanslagbiljet.
+- It is settled in the following **9** calendar years, in the order in which it
+  arose (oldest first), as an increase of the zelfstandigenaftrek in the set-off
+  year -- and only up to the amount by which that year's winst exceeds that
+  year's zelfstandigenaftrek. The set-off year therefore needs its own
+  entitlement to the zelfstandigenaftrek, and so its own urencriterium.
+- **It is not applied automatically.** The Belastingdienst is explicit that the
+  taxpayer tracks what has already been settled and enters the amount in the
+  aangifte. Ask the taxpayer for the niet-gerealiseerde-zelfstandigenaftrek
+  beschikking and read the running balance off it. Do not reconstruct the balance
+  from earlier returns, and never enter nil because no beschikking has been
+  produced -- ask, and record "not established" if the taxpayer cannot find it.
+- A year in which the winst cap reduces the zelfstandigenaftrek to nil still
+  counts as a year in which the zelfstandigenaftrek was applied when the
+  startersaftrek conditions below are counted.
+- `verlies-en-verrekening-2025.md` is canonical for the carry-forward window, the
+  set-off condition and the official worked example. This carry-forward is
+  separate from the verliesverrekening rules in that note -- it arises from the
+  winst cap, not from a loss.
+
 ## Startersaftrek (art. 3.76 lid 3)
 
 - Startersaftrek 2025: **EUR 2,123** on top of the zelfstandigenaftrek. The
@@ -51,7 +101,12 @@ return; do not substitute another year's amount.
   applied at most twice; (4) no geruisloze terugkeer uit een BV in the relevant
   window. Usable at most three times in the first five years of entrepreneurship.
 - When the startersaftrek applies, the winst cap on the zelfstandigenaftrek does
-  not apply, so the combined aftrek may exceed the winst and create a loss.
+  not apply, so the combined aftrek may exceed the winst and create a loss. No
+  niet-gerealiseerde zelfstandigenaftrek arises in such a year, because the cap
+  that creates it is switched off.
+- `aanloopfase-en-starters-2025.md` is the companion note for a first or early
+  year: pre-start costs, assets brought in, and the urencriterium in a partial
+  first year.
 
 ## Aftrek voor speur- en ontwikkelingswerk (S&O) (art. 3.77)
 
@@ -80,6 +135,10 @@ not income for the partner and not deductible for the ondernemer). Table for 202
 | 1,225 to 1,750                  | 3%            |
 | 1,750 or more                   | 4%            |
 
+`partner-en-meewerken-2025.md` is canonical for the four routes a working fiscal
+partner can take, the winst base the percentage is applied to, and the evidence
+to ask for.
+
 ## Startersaftrek bij arbeidsongeschiktheid (art. 3.78a)
 
 For a starting ondernemer entitled to an arbeidsongeschiktheidsuitkering who does
@@ -99,7 +158,9 @@ not meet the normal urencriterium but does meet the **verlaagd urencriterium of
   for a later staking.
 - Applies when the ondernemer realises profit on the complete cessation of one or
   more whole ondernemingen. A staking event is complex -- prepare the fact and
-  route the calculation to manual review.
+  route the calculation to manual review. `staking-2025.md` carries the
+  explain-only account of what a staking is, what falls into the stakingswinst,
+  and what the taxpayer must collect for a human reviewer.
 
 ## Oudedagsreserve
 
@@ -117,16 +178,50 @@ the schijf 3 threshold in `../annual/box1-rates.md`). The cap is applied as a
 belastingvermeerdering, not by refusing the deduction. See the shared
 deduction-rate cap in `../annual/deductions.md` (bd_deduction_rate_cap_2025).
 
+**What is in scope, and what is not:**
+
+- **In scope:** the five ondernemersaftrek components in this note --
+  zelfstandigenaftrek (the gewone startersaftrek is absorbed in that line rather
+  than listed separately), aftrek voor speur- en ontwikkelingswerk,
+  meewerkaftrek, startersaftrek bij arbeidsongeschiktheid and stakingsaftrek --
+  **and** the MKB-winstvrijstelling in `mkb-winstvrijstelling.md`.
+- **Not in scope: ordinary business costs.** Zakelijke kosten are subtracted in
+  line A and keep their full effect at the taxpayer's own rate. Never present a
+  37.48% ceiling on business costs.
+- **Not in scope: the investeringsaftrek.** KIA, EIA and MIA sit in line B and
+  are likewise untouched by the tariefsaanpassing.
+- Lines C, D and E are unchanged by the correction; only the tax due moves. The
+  aangifte computes the correction itself and shows it on the aanslag under
+  "tariefsaanpassing". Present the inputs and the mechanism, and do not present a
+  self-computed correction as the amount that will be assessed.
+
 ## Developer instruction
 
-1. Apply components only after confirming ondernemer status and the urencriterium
-   (verlaagd urencriterium for the startersaftrek bij arbeidsongeschiktheid).
-2. Order of calculation: winst uit onderneming after investeringsaftrek, minus
-   ondernemersaftrek, then the MKB-winstvrijstelling in
-   `mkb-winstvrijstelling.md`.
+1. Apply components only after confirming that the activity is a bron van inkomen
+   and that the taxpayer is an ondernemer voor de inkomstenbelasting, never a
+   medegerechtigde -- `ondernemer-criteria.md`. The urencriterium is a further
+   condition for the zelfstandigenaftrek (and so for the gewone startersaftrek,
+   which rides on it), the S&O-aftrek and the meewerkaftrek; the startersaftrek
+   bij arbeidsongeschiktheid runs on the verlaagd urencriterium instead.
+   **The stakingsaftrek carries no urencriterium condition (art. 3.79) -- do not
+   add one**, and do not drop it because the taxpayer stopped mid-year and fell
+   short of the hours. `staking-2025.md` is canonical for that point.
+2. Follow the order in `winstberekening-2025.md`: winst uit onderneming after the
+   investeringsaftrek (line B), minus the ondernemersaftrek (line C), then the
+   MKB-winstvrijstelling over line C (`mkb-winstvrijstelling.md`). Do not apply
+   the MKB-winstvrijstelling to a pre-ondernemersaftrek figure, and do not read a
+   Zvw, lijfrente or arbeidskorting base off the wrong line.
 3. Do not compute the tariefsaanpassing correction from memory; read the top
    bracket threshold from `../annual/box1-rates.md` and the cap from
-   `../annual/deductions.md`.
-4. Staking, niet-gerealiseerde zelfstandigenaftrek carry-forward, and
-   samenwerkingsverband allocation are manual-review items; record the facts and
-   direct the taxpayer to verify amounts in Mijn Belastingdienst.
+   `../annual/deductions.md`. State that it reaches the ondernemersaftrek and the
+   MKB-winstvrijstelling only -- not ordinary business costs, not the
+   investeringsaftrek.
+4. For the niet-gerealiseerde zelfstandigenaftrek, ask the taxpayer for the
+   beschikking and read the balance off it. It is not applied automatically and
+   it is not carried over by the aangifte. If the beschikking cannot be produced,
+   record the balance as not established and route it to manual review rather
+   than entering a figure. `verlies-en-verrekening-2025.md` carries the rules.
+5. Staking and any samenwerkingsverband allocation stay manual-review items;
+   record the facts and hand the checking step to the taxpayer with an explicit
+   human subject -- "You (the taxpayer) check these amounts in Mijn
+   Belastingdienst." This plugin never opens or operates the portal.

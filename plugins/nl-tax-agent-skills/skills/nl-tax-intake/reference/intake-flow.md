@@ -102,14 +102,46 @@ If screening is complete, gather the applicable follow-ups:
 - **Fiscal partner:** yes/no only; never collect a partner BSN.
 - **Business:** for an `eenmanszaak`/ZZP, set
   `business.has_onderneming.value: true` and record the legal form. Annual 2025
-  support is preparation-only organization of finalized profit-and-loss and
-  balance evidence; the business field map remains draft. A provisional 2026
-  request/change supports only the sourced expected-profit forecast
-  `onderneming.geschatte_winst`.
-- **Complex business:** a partnership (VOF/maatschap/CV), BV/DGA profit,
-  agrarian business, seafarer, resultaat uit overige werkzaamheden, cessation,
-  herinvesteringsreserve, or oudedagsreserve wind-down triggers the terminal
-  business route under `unsupported-cases.md`.
+  prepares the complete business section, from the reviewed zakelijke schema
+  through the ordered profit chain to the belastbare winst uit onderneming that
+  feeds the box 1 total, and the business field map can reach `review_ready`. A
+  provisional 2026 request/change supports only the sourced expected-profit
+  forecast `onderneming.geschatte_winst`.
+- **ZZP screening depth:** the paragraph below is coverage prose for the business
+  facts the annual workflow will need. It is not a decision tree, not a fixed
+  interview, and not an order to work through. Cover only what is still
+  unresolved, fold it into the questions you were already going to ask, and stop
+  as soon as the picture is clear enough to route.
+
+  Establish whether the taxpayer actually ran an onderneming in the tax year and
+  under which legal form; whether the urencriterium and the verlaagd
+  urencriterium were met, from the taxpayer's own urenadministratie rather than
+  an estimate; the starter history the entrepreneur notes ask for, meaning the
+  earlier years without ondernemerschap and how often the zelfstandigenaftrek
+  has already been applied; whether RVO issued an S&O-verklaring and how much
+  recognised speur- en ontwikkelingswerk was done; whether the fiscale partner
+  worked in the enterprise, for how many hours, and unpaid or for a vergoeding;
+  whether the onderneming invested in bedrijfsmiddelen; whether the bookkeeping
+  and the jaarstukken for the year are finalized, since an unfinalized set of
+  books changes what can be prepared now; whether a car belongs to the
+  onderneming or a private car is driven for business trips; whether a
+  werkruimte in the taxpayer's own home is claimed; whether the year produced a
+  business loss; and whether the enterprise started or stopped during the year.
+  Read every threshold, hour count, year count and amount behind these questions
+  from `../_shared/knowledge/years/2025/entrepreneur/`; never quote one from
+  memory in the conversation.
+
+  Record each answer with provenance and keep the whole batch optional: an
+  unanswered item is a gap for `missing-info.md`, never a "no", a zero, or an
+  absent history the agent supplies.
+- **Complex business:** a partnership (VOF/maatschap/man-vrouwfirma/CV),
+  medegerechtigdheid, BV/DGA profit, agrarian business, seafarer, cessation,
+  herinvesteringsreserve, oudedagsreserve wind-down, or terbeschikkingstelling is
+  recognised and routed rather than dead-ended: name the form, record its facts,
+  and apply the computation boundary in `unsupported-cases.md`, which keeps only
+  the blocked figures terminal. Resultaat uit overige werkzaamheden is a
+  supported prepared path, not a terminal route: record
+  `business.has_onderneming.value: false` and continue.
 - **Box 2 existence:** ask explicitly whether the taxpayer owns at least 5% of
   a company (`BV`/aanmerkelijk belang), and record
   `box2.has_aanmerkelijk_belang` with provenance.
@@ -195,6 +227,12 @@ Before closing, assert:
   `intake_status: complete`; and
 - both state files have an updated `updated_at`.
 
+For a complex business case governed by section 4 of `unsupported-cases.md`,
+`annual_2025` remains the active supported workflow. Complete intake and hand off
+to `nl-tax-annual-return`; preserve the manual-review triggers and optional
+`annual_2025_entrepreneurs` roadmap marker, but do not clear `active_skill` and do
+not apply the terminal no-workpack steps below.
+
 For a request covering both workflows, also assert that annual 2025 is the only
 active owner, its profile status is `in_progress`, the provisional profile
 status is `queued`, and the same provisional subflow appears in the profile and
@@ -225,7 +263,10 @@ contextual natural-language generation confirmation at final review.
 ## Unsupported and terminal routes
 
 When a possible unsupported case appears, load `unsupported-cases.md`. A
-standard `eenmanszaak`/ZZP is supported and must not be routed here.
+standard `eenmanszaak`/ZZP is supported and must not be routed here, and neither
+is a resultaat uit overige werkzaamheden. Section 4 of that file is the only
+section where recognising the case does not end the preparation: apply its
+computation boundary before setting a terminal business route.
 
 For an unsupported or terminal case:
 
@@ -237,8 +278,8 @@ For an unsupported or terminal case:
    `manual_review`, or `unsupported` only when none fits.
 3. Record the appropriate unsupported reason. For a blocked roadmap candidate,
    also set `routing.blocked_profile_candidate`.
-4. For complex business, set `routing.complex_business_screening.value:
-   manual_review`. For complex Box 2, set
+4. For a whole-case terminal route outside complex-business section 4, set the
+   relevant routing marker. For complex Box 2, set
    `routing.complex_box2_screening.value: manual_review`. In either case set
    `manual_review.required.value: true` and record the triggers.
 5. Mirror the terminal candidate to `active_workflow`, leave `active_skill`
@@ -246,6 +287,10 @@ For an unsupported or terminal case:
    `sections.intake.status: complete`.
 6. Suggest a tax adviser or the official Belastingdienst portal. Do not invoke
    annual/provisional workflows or prepare partial calculations.
+
+These terminal steps do not apply to section 4 complex-business computation
+boundaries. Those keep `annual_2025` active and produce a draft workpack with the
+blocked business figure named and the unaffected sections prepared.
 
 ## Boundaries, outputs, and handoff
 

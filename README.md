@@ -292,7 +292,7 @@ and release mechanics are documented in [CONTRIBUTING.md](CONTRIBUTING.md#releas
 | Workflow | Year | What you receive |
 |---|:---:|---|
 | ✅ Annual income-tax return | **2025** | Reviewable tax workpack and manual-entry field guide |
-| ✅ Winst uit onderneming (eenmanszaak / ZZP), within the annual return | **2025** | Preparation notes integrated into the annual workpack |
+| ✅ Winst uit onderneming (eenmanszaak / ZZP), within the annual return | **2025** | Belastbare winst determined from your finalized profit-and-loss statement and balance, carried into the Box 1 total of the annual workpack |
 | ✅ Voorlopige aanslag — request | **2026** | Estimate workpack and manual-entry field guide |
 | ✅ Voorlopige aanslag — change | **2026** | Updated estimates and a clear change summary |
 | ✅ Voorlopige aanslag — review | **2026** | Review summary and unresolved questions |

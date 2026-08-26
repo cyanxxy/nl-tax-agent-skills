@@ -17,6 +17,8 @@ svb.nl                      -- SVB state-pension authority
 www.svb.nl                  -- SVB (AOW-leeftijd)
 rijksoverheid.nl            -- central government portal
 www.rijksoverheid.nl        -- Rijksoverheid (AOW-leeftijd schedule)
+rvo.nl                      -- RVO (Energielijst / Milieulijst)
+www.rvo.nl                  -- RVO (EIA, MIA and Vamil lists and maxima)
 ```
 
 ## Rules
@@ -42,3 +44,5 @@ www.rijksoverheid.nl        -- Rijksoverheid (AOW-leeftijd schedule)
 | `code.claude.com`            | Anthropic           | Claude Code documentation        |
 | `www.svb.nl`                  | Government (SVB)    | AOW-leeftijd (state-pension age)  |
 | `www.rijksoverheid.nl`        | Government          | AOW-leeftijd schedule             |
+| `rvo.nl`                      | Government (RVO)    | Redirects to www subdomain        |
+| `www.rvo.nl`                  | Government (RVO)    | Energielijst / Milieulijst, EIA, MIA and Vamil maxima |

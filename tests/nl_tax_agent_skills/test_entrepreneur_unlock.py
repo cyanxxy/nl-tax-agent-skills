@@ -37,34 +37,179 @@ ENTREPRENEUR_NOTES = [
     "investeringsaftrek.md",
     "winst-en-kosten.md",
     "entrepreneur-aangifte.md",
+    "winstberekening-2025.md",
+    "zakelijke-schema-2025.md",
+    "zvw-2025.md",
+    "inkomensvoorzieningen-2025.md",
+    "verlies-en-verrekening-2025.md",
+    "aanloopfase-en-starters-2025.md",
+    "afschrijving-en-bedrijfsmiddelen-2025.md",
+    "vervoer-2025.md",
+    "staking-2025.md",
+    "partner-en-meewerken-2025.md",
+    "samenwerkingsverband-2025.md",
+    "row-en-dba-2025.md",
 ]
-ENTREPRENEUR_SOURCE_IDS = {
-    "bd_ondernemer_criteria_2025",
-    "bd_ondernemerscheck_2025",
-    "bd_urencriterium_2025",
-    "bd_ondernemersaftrek_2025",
-    "bd_zelfstandigenaftrek_2025",
-    "bd_startersaftrek_2025",
-    "bd_startersaftrek_ao_2025",
-    "bd_meewerkaftrek_2025",
-    "bd_stakingsaftrek_2025",
-    "bd_so_aftrek_2025",
-    "bd_mkb_winstvrijstelling_2025",
-    "bd_kia_2025",
+# Sources whose reviewed note lives in years/2025/entrepreneur/ and that are
+# scoped to the annual 2025 workflow.
+ENTREPRENEUR_ANNUAL_SOURCE_IDS = {
+    "bd_aangifte_loonheffingen",
+    "bd_aangifte_ondernemers_2025",
+    "bd_aanmelden_werkgever",
+    "bd_administratie_bewaren_2025",
+    "bd_afschrijving_bedrijfspand",
+    "bd_afschrijving_bedrijfspand_2025",
+    "bd_afschrijving_berekening",
+    "bd_aftrekken_lijfrentepremies",
+    "bd_aov_prive_aftrek",
+    "bd_aov_voor_ondernemers",
+    "bd_arbeidsbeloning_fiscale_partner",
+    "bd_becon_uitstel_fiscaal_dienstverleners",
+    "bd_beoordeel_samen",
+    "bd_beperkt_aftrekbare_kosten_2025",
+    "bd_bestelauto_niet_prive_gebruiken",
+    "bd_bijtelling_privegebruik_auto_2021",
+    "bd_bijtelling_privegebruik_auto_2022",
+    "bd_bijtelling_privegebruik_auto_2023",
+    "bd_bijtelling_privegebruik_auto_2024",
+    "bd_bijtelling_woning_2025",
+    "bd_bijzondere_situaties_privegebruik_auto",
+    "bd_bron_van_inkomen",
+    "bd_btw_onderneming_wijzigen_of_beeindigen",
+    "bd_cv_rechtsvorm",
+    "bd_desinvesteringsbijtelling",
+    "bd_desinvesteringsbijtelling_bij_staking",
+    "bd_doorschuiven_nieuwe_bestaande_onderneming",
+    "bd_egalisatiereserve",
     "bd_eia_2025",
     "bd_eia_mia_vamil_2025",
+    "bd_extra_lijfrenteaftrek_staking_2025",
+    "bd_fisin2025_h6_winst_uit_onderneming",
+    "bd_fisin2025_row",
+    "bd_fisin2025_zvw_hfst28",
+    "bd_fisin_2025_h25",
+    "bd_fisin_2025_h7",
+    "bd_fisin_2025_h8",
+    "bd_gedeeltelijke_doorschuiving_of_staking",
+    "bd_geen_nieuwe_modelovereenkomsten",
+    "bd_geen_recht_op_investeringsaftrek",
+    "bd_gevolgen_opdrachtnemer",
+    "bd_handhaving_arbeidsrelaties",
+    "bd_handhavingsplan_landing",
+    "bd_herinvesteringsreserve",
+    "bd_hoe_aangifte_doen_online_app_papier",
+    "bd_hoe_bereken_ik_mijn_jaarruimte",
+    "bd_ib_aangifte_voor_ondernemers",
+    "bd_keuzemogelijkheden_auto",
+    "bd_kia_2025",
+    "bd_kosten_aanloopfase",
+    "bd_loondienst_na_ondernemerschap",
+    "bd_maatschap_rechtsvorm",
+    "bd_medegerechtigde",
+    "bd_meewerkaftrek_2025",
+    "bd_meewerkaftrek_algemeen",
+    "bd_middeling_aanvragen",
+    "bd_middeling_teruggaaf",
+    "bd_mkb_winstvrijstelling_2025",
+    "bd_mkb_winstvrijstelling_general",
+    "bd_niet_in_loondienst_werken",
+    "bd_ola_ih2025_activa_materieel",
+    "bd_ola_ih2025_passiva_ondernemingsvermogen",
+    "bd_ola_ih2025_urencriterium_vraag",
+    "bd_ola_ih2025_winstberekening",
+    "bd_ola_ih2025_wv_afschrijvingen",
+    "bd_ola_ih2025_wv_buitengewoon",
+    "bd_ola_ih2025_wv_opbrengsten",
+    "bd_ola_ih2025_wv_overige_bedrijfskosten",
+    "bd_ondernemer_cijfers_aangifte_2025",
+    "bd_ondernemer_criteria_2025",
+    "bd_ondernemer_voorbereiden_2025",
+    "bd_ondernemersaftrek_2025",
+    "bd_ondernemerscheck_2025",
+    "bd_oudedagsreserve_2025",
+    "bd_oudedagsreserve_afrekenen",
+    "bd_overdracht_medeondernemer_werknemer",
+    "bd_overzicht_aftrekbare_zakelijke_kosten",
+    "bd_partner_gaat_meewerken",
+    "bd_personeel_in_uw_onderneming",
+    "bd_privegebruik_andere_vervoermiddelen",
+    "bd_privegebruik_auto_ondernemer",
+    "bd_privegebruik_woning",
+    "bd_privevervoermiddel_2025",
+    "bd_rechtsvorm_wijzigen",
+    "bd_rittenregistratie",
+    "bd_so_aftrek_2025",
+    "bd_stakingsaftrek_2025",
+    "bd_stakingsaftrek_algemeen",
+    "bd_stakingswinst_berekenen",
+    "bd_startersaftrek_2025",
+    "bd_startersaftrek_ao_2025",
+    "bd_stoppende_ondernemers",
+    "bd_tbs_bezittingen",
+    "bd_u_staakt_uw_onderneming",
+    "bd_uitsluitend_zakelijk_gebruik_bestelauto",
+    "bd_urencriterium_2025",
+    "bd_verklaring_geen_privegebruik_auto",
+    "bd_verlies_uit_onderneming",
+    "bd_vermogensetikettering",
+    "bd_verrekenen_ngz",
+    "bd_vof_rechtsvorm",
+    "bd_voorwaarden_investeringsregelingen",
+    "bd_waar_moet_ik_me_uitschrijven",
+    "bd_waarde_van_de_auto",
+    "bd_wanneer_loondienst",
+    "bd_wat_is_afschrijven",
+    "bd_wat_zijn_inkomsten_overig_werk",
+    "bd_weet_wanneer_ondernemer",
+    "bd_welke_kosten_bijverdiensten",
+    "bd_werken_met_modelovereenkomsten",
+    "bd_werkruimte_2025",
+    "bd_willekeurige_afschrijving_algemeen",
+    "bd_willekeurige_afschrijving_starters",
+    "bd_zakelijk_gebruik_privevervoermiddel",
     "bd_zakelijke_kosten_2025",
     "bd_zakelijke_kosten_een_jaar_2025",
     "bd_zakelijke_kosten_meerdere_jaren_2025",
-    "bd_beperkt_aftrekbare_kosten_2025",
-    "bd_werkruimte_2025",
-    "bd_privevervoermiddel_2025",
-    "bd_oudedagsreserve_2025",
-    "bd_administratie_bewaren_2025",
-    "bd_aangifte_ondernemers_2025",
-    "bd_ondernemer_cijfers_aangifte_2025",
-    "bd_ondernemer_voorbereiden_2025",
+    "bd_zelfstandigenaftrek_2025",
+    "bd_zorgverzekering_starter_ondernemer",
+    "fisin2025_beschikbaar_stellen",
+    "fisin2025_fiscaal_partnerschap",
+    "law_besluit_ngz_staking",
+    "ola_ih2025_wa_privegebruik_auto",
+    "reg_zorgverzekering_h5_2025",
+    "rvo_mia_vamil_2025_maximum",
+    "urib_2001_art_7_werkkleding",
+    "wet_ib2001_2022_for_artikelen",
+    "wet_ib2001_2023_art3127",
+    "wet_ib2001_2025_geldend",
+    "wet_ib_3_14_2025",
+    "wet_ib_3_20_2025",
+    "wet_ib_3_20a_2025",
+    "wet_ib_3_3",
+    "wet_ib_3_4",
+    "wet_ib_3_41_2025",
+    "wet_ib_3_63",
+    "wet_ib_3_9",
+    "wet_zvw_art41_49_2025",
+    "wetib_consolidated_2025",
+    "wetten_ib_10a_29_for_overgangsrecht",
 }
+
+# Evergreen pages cited from both the 2025 entrepreneur notes and the 2026
+# provisional notes. They carry no workflow/tax_year, exactly like
+# bd_box2_rates_2025_2026, but their reviewed note lives in the entrepreneur
+# directory so they appear in that directory's snapshot metadata.
+ENTREPRENEUR_SHARED_SOURCE_IDS = {
+    "bd_tariefsaanpassing_aftrekposten",
+    "bd_zvw_hoe_betalen",
+    "bd_zvw_inkomensafhankelijke_bijdrage",
+    "bd_zvw_percentages_2025_2026",
+    "bd_zvw_resultaat_overig_werk",
+    "bd_zvw_teruggaaf",
+    "bd_zvw_werkgeversheffing_of_bijdrage_tabel",
+}
+
+ENTREPRENEUR_SOURCE_IDS = ENTREPRENEUR_ANNUAL_SOURCE_IDS | ENTREPRENEUR_SHARED_SOURCE_IDS
 
 
 def read_text(relative_path):
@@ -141,7 +286,7 @@ class SourceRegisterTests(unittest.TestCase):
         self.assertTrue(ENTREPRENEUR_SOURCE_IDS.issubset(self.by_id.keys()))
 
     def test_entrepreneur_sources_are_annual_2025_and_mandatory(self):
-        for sid in ENTREPRENEUR_SOURCE_IDS:
+        for sid in ENTREPRENEUR_ANNUAL_SOURCE_IDS:
             src = self.by_id[sid]
             with self.subTest(source=sid):
                 self.assertEqual(src["workflow"], "annual_return")
@@ -213,7 +358,7 @@ class WinstHelperTests(unittest.TestCase):
 
     def test_winst_helper_has_bounded_annual_and_provisional_modes(self):
         skill = read_text("skills/nl-tax-winst/SKILL.md").lower()
-        self.assertIn("preparation-only", skill)
+        self.assertIn("profit determination", skill)
         self.assertIn("finalized profit-and-loss", skill)
         self.assertIn("finalized balance", skill)
         self.assertIn("provisional 2026", skill)
@@ -222,7 +367,7 @@ class WinstHelperTests(unittest.TestCase):
 
     def test_winst_helper_loads_only_the_active_mode(self):
         skill = read_text("skills/nl-tax-winst/SKILL.md").lower()
-        annual = skill.split("for **annual 2025 preparation-only**", 1)[1].split(
+        annual = skill.split("for **annual 2025 profit determination**", 1)[1].split(
             "for **provisional 2026 expected-profit forecast**", 1
         )[0]
         provisional = skill.split(
@@ -251,7 +396,7 @@ class AnnualWorkflowTests(unittest.TestCase):
 
     def test_annual_flow_has_winst_phase(self):
         flow = read_text("skills/nl-tax-annual-return/reference/annual-flow.md")
-        self.assertIn("Phase 2A — Winst uit onderneming preparation-only", flow)
+        self.assertIn("Phase 2A — Winst uit onderneming", flow)
         self.assertIn("business.has_onderneming", flow)
 
     def test_output_contract_has_winst_requirements(self):
@@ -259,9 +404,30 @@ class AnnualWorkflowTests(unittest.TestCase):
         self.assertIn("Winst uit onderneming requirements", contract)
         self.assertIn("profit-and-loss", contract.lower())
         self.assertIn("balance", contract.lower())
-        self.assertIn("preparation-only", contract.lower())
         self.assertNotIn("calculate final taxable business profit", contract.lower())
         self.assertIn("business.has_onderneming: no", contract)
+
+    def test_output_contract_carries_the_computed_chain(self):
+        """The prep-only ceiling is deliberately retired: the workpack now walks
+        winst -> investeringsaftrek -> ondernemersaftrek -> MKB-winstvrijstelling
+        -> belastbare winst, and says so."""
+        contract = read_text(
+            "skills/nl-tax-annual-return/reference/annual-output-contract.md"
+        ).lower()
+        for token in ("ondernemersaftrek", "mkb-winstvrijstelling", "belastbare winst"):
+            with self.subTest(token=token):
+                self.assertIn(token, contract)
+
+    def test_output_contract_keeps_the_computation_boundary(self):
+        """Recognising every business form is in scope; computing the hard ones
+        is not. The Belastingdienst itself calls the stakingswinst computation
+        very complicated."""
+        contract = read_text(
+            "skills/nl-tax-annual-return/reference/annual-output-contract.md"
+        ).lower()
+        for token in ("staking", "herinvesteringsreserve", "manual review"):
+            with self.subTest(token=token):
+                self.assertIn(token, contract)
 
     def test_template_has_winst_section_and_hook(self):
         template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
@@ -272,9 +438,205 @@ class AnnualWorkflowTests(unittest.TestCase):
 class FieldMapTests(unittest.TestCase):
     def setUp(self):
         self.validator = load_module(
-            "skills/nl-tax-field-mapper/scripts/validate_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
             "vfm_entrepreneur",
         )
+
+    ANNUAL_BUSINESS_MAP = [
+        {"field_id": "business.has_onderneming", "value": True,
+         "source": {"type": "user_chat"}},
+        {"field_id": "business.legal_form", "value": "eenmanszaak",
+         "source": {"type": "user_chat"}},
+        {"field_id": "onderneming.wv.netto_omzet", "value": 62000,
+         "source": {"type": "evidence", "evidence_id": "ev_001"}},
+        {"field_id": "onderneming.wv.saldo", "value": 48000,
+         "source": {"type": "evidence"}},
+        {"field_id": "onderneming.balans.ondernemingsvermogen_begin",
+         "value": 20000, "source": {"type": "evidence"}},
+        {"field_id": "onderneming.balans.ondernemingsvermogen_eind",
+         "value": 24500, "source": {"type": "evidence"}},
+        {"field_id": "onderneming.vraag.urencriterium", "value": True,
+         "source": {"type": "user_chat"}},
+    ]
+
+    def _blockers(self, fields):
+        return self.validator.assess_readiness(
+            fields, [], "annual_return", 2025
+        )["blockers"]
+
+    def test_complete_eenmanszaak_map_has_no_schema_blocker(self):
+        """The reviewed zakelijke schema exists, so a complete eenmanszaak map is
+        no longer blocked merely for having a business section."""
+        self.assertEqual(self._blockers(list(self.ANNUAL_BUSINESS_MAP)), [])
+
+    def test_incomplete_business_schema_is_not_mechanically_judged(self):
+        """Demote-only contract: the script cannot prove or disprove
+        completeness of a business section — that is established in the
+        taxpayer conversation and recorded in session progress. A partial
+        eenmanszaak map therefore carries no mechanical blocker; the agent's
+        own readiness declaration (derived from session state) governs."""
+        partial = list(self.ANNUAL_BUSINESS_MAP)[:4]
+        self.assertEqual(self._blockers(partial), [])
+
+    def test_unresolved_coverage_note_blocks(self):
+        """The agent's own coverage audit reporting an unresolved identifier
+        is an explicit disqualifier the script does enforce."""
+        blockers = self.validator.assess_readiness(
+            list(self.ANNUAL_BUSINESS_MAP),
+            [],
+            "annual_return",
+            2025,
+            notes=[
+                "business_schema_coverage: onderneming.wv.netto_omzet = applicable_mapped; source=ev_001",
+                "business_schema_coverage: onderneming.prive.onttrekkingen = unresolved",
+            ],
+        )["blockers"]
+        self.assertIn("business-section schema review", blockers)
+
+    def test_resolved_coverage_notes_do_not_block(self):
+        blockers = self.validator.assess_readiness(
+            list(self.ANNUAL_BUSINESS_MAP),
+            [],
+            "annual_return",
+            2025,
+            notes=[
+                "business_schema_coverage: onderneming.wv.netto_omzet = applicable_mapped; source=ev_001",
+                "business_schema_coverage: onderneming.prive.onttrekkingen = not_applicable_sourced; source=profile.business",
+            ],
+        )["blockers"]
+        self.assertEqual(blockers, [])
+
+    def test_non_eenmanszaak_form_still_blocks(self):
+        """Every other IB business form is recognised and routed, not computed."""
+        for form in ("vof", "maatschap", "cv"):
+            with self.subTest(form=form):
+                fields = [
+                    dict(f, value=form) if f["field_id"] == "business.legal_form" else f
+                    for f in self.ANNUAL_BUSINESS_MAP
+                ]
+                self.assertIn(
+                    "business-section schema review", self._blockers(fields)
+                )
+
+    def test_null_or_unsourced_rows_do_not_count_as_populated(self):
+        """Presence is not population: a null row sourced from 'unknown' is an
+        open question. It carries no mechanical blocker (completeness is the
+        conversation's job), but it must not count as a populated field."""
+        fields = [
+            dict(f, value=None, source={"type": "unknown"})
+            if str(f["field_id"]).startswith("onderneming.") else f
+            for f in self.ANNUAL_BUSINESS_MAP
+        ]
+        result = self.validator.assess_readiness(
+            fields, [], "annual_return", 2025
+        )
+        populated_onderneming = [
+            f for f in fields
+            if str(f["field_id"]).startswith("onderneming.")
+            and self.validator._has_usable_provenance(f)
+        ]
+        self.assertEqual(populated_onderneming, [])
+        self.assertEqual(result["blockers"], [])
+
+    def test_missing_legal_form_blocks(self):
+        """An unanswered form question must not buy what a stated 'vof' blocks."""
+        fields = [
+            f for f in self.ANNUAL_BUSINESS_MAP
+            if f["field_id"] != "business.legal_form"
+        ]
+        self.assertIn("business-section schema review", self._blockers(fields))
+
+    def test_unestablished_deduction_screen_blocks(self):
+        """No reviewed page establishes whether the form asks for the S&O,
+        meewerk, staking or KIA amounts, so a case claiming one keeps the
+        blocker rather than shipping a possibly incomplete entry checklist."""
+        for fid, value in (
+            ("onderneming.vraag.so_verklaring", True),
+            ("onderneming.vraag.meewerkende_partner_uren", 900),
+            ("onderneming.vraag.investeringen", True),
+            ("onderneming.vraag.staking", True),
+        ):
+            with self.subTest(field=fid):
+                fields = list(self.ANNUAL_BUSINESS_MAP) + [
+                    {"field_id": fid, "value": value,
+                     "source": {"type": "user_chat"}}
+                ]
+                self.assertIn(
+                    "business-section schema review", self._blockers(fields)
+                )
+
+    def test_explicit_complex_marker_blocks(self):
+        fields = list(self.ANNUAL_BUSINESS_MAP) + [
+            {"field_id": "onderneming.routing.complex_case", "value": True,
+             "source": {"type": "user_chat"}}
+        ]
+        self.assertIn("business-section schema review", self._blockers(fields))
+
+    def test_zvw_entry_row_is_rejected_in_both_workflows(self):
+        """The bijdrage Zvw is a separate aanslag with no entry screen in the
+        return, so a Zvw row is prohibited in fields and missing_fields alike
+        (rule zvw_entry_row in reference/field-map-rules.yaml)."""
+        for workflow in ("annual_return", "provisional_assessment"):
+            with self.subTest(workflow=workflow, where="fields"):
+                errors, warnings = [], []
+                self.validator.validate_field(
+                    {"field_id": "zvw.bijdrage", "label": "Bijdrage Zvw",
+                     "value": 1234, "source": {"type": "estimate"}},
+                    0, workflow, set(), errors, warnings,
+                )
+                self.assertTrue(
+                    any("Zvw entry row" in e for e in errors), errors
+                )
+            with self.subTest(workflow=workflow, where="missing_fields"):
+                errors, warnings = [], []
+                self.validator.validate_missing_fields(
+                    [{"field_id": "premie.zorg",
+                      "label": "Inkomensafhankelijke bijdrage Zorgverzekeringswet",
+                      "reason": "no beschikking yet", "blocking": False}],
+                    workflow, errors, warnings,
+                )
+                self.assertTrue(
+                    any("Zvw entry row" in e for e in errors), errors
+                )
+
+    def test_ordinary_rows_are_not_mistaken_for_zvw(self):
+        errors, warnings = [], []
+        self.validator.validate_field(
+            {"field_id": "aftrek.zorgkosten", "label": "Zorgkosten",
+             "value": 500, "source": {"type": "user_chat", "quote": "500 euro",
+                                      "stated_at": "2026-08-01"}},
+            0, "annual_return", set(), errors, warnings,
+        )
+        self.assertFalse(any("Zvw" in e for e in errors), errors)
+
+    def test_rules_file_is_canonical_for_policy_constants(self):
+        """The script must load its policy from reference/field-map-rules.yaml
+        so the model-read path and the script path can never diverge."""
+        rules = yaml.safe_load(
+            read_text("skills/nl-tax-field-mapper/reference/field-map-rules.yaml")
+        )
+        prohibitions = {r["id"]: r for r in rules["prohibitions"]}
+        self.assertEqual(
+            set(prohibitions["provisional_werkelijk_rendement"]["keywords"]),
+            self.validator.WERKELIJK_KEYWORDS,
+        )
+        self.assertEqual(
+            set(prohibitions["provisional_entrepreneur_deduction"]["keywords"]),
+            self.validator.ENTREPRENEUR_DEDUCTION_KEYWORDS,
+        )
+        business = rules["annual_business"]
+        self.assertEqual(
+            tuple(business["unestablished_screen_ids"]),
+            self.validator.ANNUAL_UNESTABLISHED_DEDUCTION_FIELDS,
+        )
+        self.assertEqual(
+            business["blocker"], self.validator.ANNUAL_BUSINESS_BLOCKER
+        )
+
+    def test_non_business_map_is_unaffected(self):
+        fields = [{"field_id": "box1.loon", "value": 40000,
+                   "source": {"type": "evidence"}}]
+        self.assertEqual(self._blockers(fields), [])
 
     def test_reference_has_onderneming_section_never_required(self):
         ref = read_text("skills/nl-tax-field-mapper/reference/annual-field-map.md")

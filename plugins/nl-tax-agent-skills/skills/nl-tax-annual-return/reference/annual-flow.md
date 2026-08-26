@@ -21,7 +21,7 @@ Load this common index when the annual workflow starts. Then load exactly one ac
 1. [Phase 1 — Pre-flight checks](phases/01-preflight.md)
 2. [Phase 1.5 — Filing status and late-filing exposure](phases/01-5-filing-status.md)
 3. [Phase 2 — Income compilation](phases/02-income.md)
-4. [Phase 2A — Winst uit onderneming preparation-only](phases/02a-winst.md)
+4. [Phase 2A — Winst uit onderneming](phases/02a-winst.md)
 5. [Phase 3 — Own-home compilation](phases/03-own-home.md)
 6. [Phase 3A — Box 2 compilation](phases/03a-box2.md)
 7. [Phase 4 — Box 3 compilation](phases/04-box3.md)
@@ -102,9 +102,12 @@ answers. Keep the delegation invisible and speak in one voice.
 
 - Box 1 / own home: `nl-tax-box1-home`
 - Winst uit onderneming: `nl-tax-winst` only when
-  `business.has_onderneming.value` is true; organize finalized profit-and-loss
-  and balance evidence, keep the field map draft, and never derive final taxable
-  business profit.
+  `business.has_onderneming.value` is true. It runs the income-category
+  pre-screen, then the ordered chain from the saldo fiscale winstberekening
+  through investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the
+  belastbare winst uit onderneming, which feeds the box 1 total. It also returns
+  the vermogensvergelijking self-check, the bijdrage Zvw and lijfrente handoffs,
+  the loss path, and the per-form routing markers that stay manual review.
 - Box 2: `nl-tax-box2` only when an aanmerkelijk belang exists.
 - Box 3: `nl-tax-box3`, collecting both fictitious and actual-return data for
   the official comparison.

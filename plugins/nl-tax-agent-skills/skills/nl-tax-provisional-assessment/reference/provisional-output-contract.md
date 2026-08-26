@@ -5,6 +5,9 @@
 - Purpose
 - Required sections
 - Amount labeling rules
+- Winst uit onderneming forecast rule
+- Voorlopige aanslag Zorgverzekeringswet -- REQUIRED companion item
+- Rollover-trap check -- REQUIRED
 - Box 3 validation rule — CRITICAL
 - Box 2 validation rule
 - Field map requirements
@@ -72,10 +75,26 @@ full-year forecast in the portal section `Winst uit onderneming`:
 from-baseline label, and manual review. Do not use the generic Box 1
 other-income field as a business-profit substitute.
 
+`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md` is
+canonical for this field and for every 2026 business figure named anywhere in
+this contract. Read each figure there; never restate one from memory.
+
+**Confirmed field semantics -- REQUIRED.** The workpack MUST record the estimate
+on exactly these terms, and the agent MUST state them to the taxpayer before the
+amount is recorded:
+
+- the winst the taxpayer expects to earn as ondernemer in 2026;
+- taken **before** the ondernemersaftrek and **before** the
+  MKB-winstvrijstelling -- an estimate already reduced by either one is too low;
+- excluding the btw payable and the btw reclaimable;
+- an expected loss entered as a negative amount, with a minus sign;
+- one business figure, and only one.
+
 The provisional workpack MUST NOT prepare annual profit-and-loss or balance
 accounts, zelfstandigenaftrek, startersaftrek, ondernemersaftrek,
-MKB-winstvrijstelling, KIA, Zvw, cessation profit, or final tax. Complex forms
-and events route to terminal manual review.
+MKB-winstvrijstelling, KIA, a bijdrage Zvw amount, cessation profit, or final
+tax. The 2026 form has no amount field for any of them. Complex forms and events
+route to terminal manual review.
 
 When a forecast applies, it MUST also appear as its own row in the change
 delta and in the Box 1 income-before-own-home rollup. A workpack that records
@@ -86,6 +105,85 @@ delta and in the Box 1 income-before-own-home rollup. A workpack that records
 - "Employment income: EUR 45,000 (estimate)" — correct
 - "Employment income: EUR 45,000 (from-baseline)" — correct
 - "Employment income: EUR 45,000" — INVALID, missing label
+
+---
+
+## Voorlopige aanslag Zorgverzekeringswet -- REQUIRED companion item
+
+`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
+for the 2026 percentage, the maximumbijdrage-inkomen, and every other figure in
+this section. Read them there; never restate one from memory, and never multiply
+the percentage by the ceiling.
+
+Where the taxpayer has winst uit onderneming or income from work performed
+outside employment, the workpack MUST raise the inkomensafhankelijke bijdrage
+Zorgverzekeringswet without waiting to be asked, and MUST record:
+
+- that such a taxpayer receives **two** aanslagen -- one for the
+  inkomstenbelasting/premie volksverzekeringen and a separate one for the
+  bijdrage Zvw -- and may hold a separate **voorlopige aanslag
+  Zorgverzekeringswet 2026** alongside the income-tax one;
+- that the voorlopige aanslag Zvw has its **own change route**. No reviewed
+  source establishes whether a change to the income-tax voorlopige aanslag is
+  coupled to the Zvw assessment, so the taxpayer must check the Zvw assessment
+  separately and the workpack records what they find;
+- the answer to the direct question "Have you (the taxpayer) received a
+  voorlopige aanslag Zorgverzekeringswet for 2026, and what income estimate does
+  it use?", with provenance -- or an open row in Missing information when the
+  taxpayer does not know. Never assume there is none and never enter a zero;
+- a human-subject action line, for example: "You (the taxpayer) also check your
+  voorlopige aanslag Zorgverzekeringswet 2026 in Mijn Belastingdienst and change
+  it separately if its estimate is no longer right.";
+- that the Zvw base is the belastbare winst, a different figure from
+  `onderneming.geschatte_winst`, which is taken before the ondernemersaftrek and
+  the MKB-winstvrijstelling;
+- that the bijdrage Zvw is not deductible and is never subtracted from the
+  profit estimate.
+
+The Zvw is reported **alongside** the income-tax dataset and is never merged into
+it. The workpack MUST NOT compute a bijdrage Zvw amount, MUST NOT emit a field,
+portal instruction, or checklist row that has the taxpayer entering a Zvw amount
+in the income-tax voorlopige-aanslag form, and MUST NOT state Zvw instalment,
+deadline, payment, or refund timing. Those, and any exception regime, are
+manual-review items; the Belastingdienst calculates the bijdrage.
+
+The income-tax `field-map.yaml` MUST contain no Zvw field or value whatsoever:
+no Zvw `field_id`, label, note, amount, baseline, estimate, or manual-entry row.
+The separate assessment belongs only in the workpack companion section and the
+human review action.
+
+---
+
+## Rollover-trap check -- REQUIRED
+
+A voorlopige aanslag 2026 that the Belastingdienst extended automatically, or
+that opened pre-filled from an earlier return, rests on an earlier year's
+figures. No reviewed source states that a carried-over business estimate is
+recalculated for the new year's ondernemersaftrek, and the zelfstandigenaftrek
+has fallen sharply between the two years -- both amounts are in
+`winst-provisional-2026.md`. A 2026 calculation still resting on the older,
+higher zelfstandigenaftrek overstates the deduction, so the taxpayer pays too
+little through the year and owes the difference when the final 2026 assessment
+is made up.
+
+For every taxpayer whose 2026 voorlopige aanslag was extended automatically or
+opened pre-filled, the workpack MUST record the answers to:
+
+1. Which year's figures does the current voorlopige aanslag 2026 rest on?
+2. What profit estimate does it use, and is that still the taxpayer's own best
+   estimate for 2026?
+3. Does the taxpayer's own reasoning about the amount still use a
+   zelfstandigenaftrek from an earlier year?
+
+Flag any calculation that still rests on a zelfstandigenaftrek above the 2026
+amount in `winst-provisional-2026.md`, and put the finding in words the taxpayer
+can act on. An unanswered question stays an open row in Missing information;
+never fill the gap with an assumption and never enter a zero.
+
+A change made to the voorlopige aanslag 2025 after the cut-off date stated in
+`winst-provisional-2026.md` is not carried into 2026 automatically. Where the
+taxpayer made such a late correction, re-derive the 2026 estimate from their own
+current forecast rather than assuming it followed.
 
 ---
 
@@ -159,11 +257,10 @@ Every Box 2 amount must be labeled as estimate or from-baseline. Route valuation
 The `field-map.yaml` MUST conform to
 `nl-tax-field-mapper/templates/field-map-template.yaml` and
 `nl-tax-field-mapper/reference/provisional-field-map.md`; `field_id`s must come
-from that provisional reference. Where Bash can reach the plugin path, confirm
-conformance with `nl-tax-field-mapper/scripts/validate_field_map.py`; otherwise
-verify it manually against
-`nl-tax-field-mapper/reference/mapping-principles.md`. The script is a
-convenience check, not the only way to satisfy the contract.
+from that provisional reference. Conformance is checked by the mapper's own
+agent checklist in `nl-tax-field-mapper/reference/mapping-principles.md`,
+applying the rule data in `nl-tax-field-mapper/reference/field-map-rules.yaml`;
+the taxpayer's review before manual entry is the final check.
 
 ---
 
@@ -319,6 +416,16 @@ Before delivering any workpack, verify:
 - [ ] Any displayed Box 3 aandeel records the estimate's rounding convention and defers to the live portal/beschikking
 - [ ] AOW status is `below_all_year`, `reaches_during_year`, or `aow_all_year`; a transition-year month and manual portal result replace a whole-year table estimate
 - [ ] Expected business profit, when applicable, is included in the Box 1 rollup and change delta
+- [ ] `onderneming.geschatte_winst` is recorded and explained as the winst before
+  ondernemersaftrek and before MKB-winstvrijstelling, excluding btw, with a minus
+  sign for an expected loss, and the definition was stated to the taxpayer before
+  the amount was recorded
+- [ ] The separate voorlopige aanslag Zorgverzekeringswet is raised as a
+  companion item with its own change route, no bijdrage amount is computed, and
+  no Zvw row enters the income-tax dataset
+- [ ] The rollover-trap check was performed when the 2026 voorlopige aanslag was
+  extended automatically or opened pre-filled, and any zelfstandigenaftrek above
+  the 2026 amount was flagged
 - [ ] Own-home review shows the 1 January 2025 WOZ peildatum and all components of `box1_own_home_balance`
 - [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
 - [ ] Change subflow includes full re-entry reminder

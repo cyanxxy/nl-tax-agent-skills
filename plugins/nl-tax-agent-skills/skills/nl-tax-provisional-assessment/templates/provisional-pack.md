@@ -122,7 +122,14 @@ aanslag 2026` result as a manual-review item.
 
 This is the taxpayer's sourced, user-reviewed forecast only. Do not substitute
 a generic other-income field. Do not prepare annual accounts, entrepreneur
-deductions, Zvw, cessation profit, or final tax.
+deductions, a bijdrage Zvw amount, cessation profit, or final tax.
+
+The amount is the winst expected as ondernemer in 2026, taken **before** the
+ondernemersaftrek and **before** the MKB-winstvrijstelling, excluding the btw
+payable and the btw reclaimable, with a minus sign for an expected loss. State
+that definition to the taxpayer before recording the amount. See the `Winst uit
+onderneming forecast` section below for the rollover check and the separate
+voorlopige aanslag Zorgverzekeringswet.
 
 ## Delta summary
 
@@ -209,6 +216,69 @@ Stopping payments does not reduce the tax obligation. Route to the change subflo
 [Repeat or reference the sourced `onderneming.geschatte_winst` forecast above.
 If not applicable, state that explicitly. Preserve manual review and do not
 include annual deduction or final-tax calculations.]
+
+Definition confirmed with the taxpayer before the amount was recorded: the winst
+expected as ondernemer in 2026, **before** the ondernemersaftrek and **before**
+the MKB-winstvrijstelling, excluding the btw payable and the btw reclaimable,
+with a minus sign for an expected loss. It is the only business figure the 2026
+form asks for; the Belastingdienst applies the ondernemersaftrek and the
+MKB-winstvrijstelling itself. Every 2026 business figure is read from
+`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`.
+
+### Rollover check
+
+| Item | Value | Src |
+|------|-------|-----|
+| 2026 voorlopige aanslag extended automatically or opened pre-filled | [yes / no / unknown] | [F/U/?] |
+| Year whose figures the current 2026 voorlopige aanslag rests on | [year / unknown] | [F/U/?] |
+| Profit estimate the current 2026 voorlopige aanslag uses | EUR [amount / unknown] (from-baseline) | [F/U/B/?] |
+| Still the taxpayer's own best estimate for 2026 | [yes / no / unknown] | [F/U/?] |
+| Reasoning still uses an earlier year's zelfstandigenaftrek | [yes / no / unknown] | [F/U/?] |
+| Finding | [carried-over zelfstandigenaftrek above the 2026 amount in `winst-provisional-2026.md` / no rollover issue found / unresolved] | C:review |
+
+A carried-over zelfstandigenaftrek above the 2026 amount overstates the
+deduction, so too little is paid through the year and the difference is owed
+when the final 2026 assessment is made up. Leave an unanswered row as `?` and
+list it under Missing information; never assume and never enter a zero. A change
+made to the voorlopige aanslag 2025 after the cut-off date stated in
+`winst-provisional-2026.md` is not carried into 2026 automatically.
+
+### Zvw companion -- separate voorlopige aanslag Zorgverzekeringswet
+
+[Required whenever there is winst uit onderneming or income from work performed
+outside employment. Otherwise state "N/A -- no winst uit onderneming or income
+from work outside employment reported."]
+
+| Item | Value | Src |
+|------|-------|-----|
+| Voorlopige aanslag Zorgverzekeringswet 2026 received | [yes / no / unknown] | [F/U/?] |
+| Income estimate that voorlopige aanslag Zvw uses | EUR [amount / unknown] (from-baseline) | [F/U/B/?] |
+| Still matches the taxpayer's own 2026 expectation | [yes / no / unknown] | [F/U/?] |
+| Handling | separate aanslag, separate change route -- manual review | C:review |
+
+You (the taxpayer) receive two aanslagen: one for the inkomstenbelasting/premie
+volksverzekeringen and a separate one for the bijdrage Zorgverzekeringswet. At
+this stage there can be two voorlopige aanslagen, with separate change routes.
+Whether a change to the income-tax voorlopige aanslag is coupled to the Zvw
+assessment is not established in the reviewed sources. You therefore check the
+Zvw assessment separately, and this workpack records what you find.
+
+- [ ] You (the taxpayer) also check your voorlopige aanslag Zorgverzekeringswet
+  2026 in Mijn Belastingdienst and change it through its own route if its
+  estimate is no longer right.
+
+The Zvw base is the belastbare winst -- a different figure from
+`onderneming.geschatte_winst`, which is taken before the ondernemersaftrek and
+the MKB-winstvrijstelling. The bijdrage is not deductible and is never
+subtracted from the profit estimate. This section reports the Zvw alongside the
+income-tax dataset and never inside it: no bijdrage amount, no Zvw row in the
+income-tax form, and no Zvw instalment, deadline, payment, or refund timing.
+Percentages and the maximumbijdrage-inkomen are read from
+`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
+Belastingdienst calculates the bijdrage.
+
+The income-tax field map contains no Zvw field or value: no Zvw `field_id`,
+label, note, amount, baseline, estimate, or manual-entry row.
 
 ### Estimated tax credits
 
@@ -424,6 +494,9 @@ portal check or action is performed personally, never by the assistant.
 
 - [ ] All income estimates are reasonable and based on current knowledge
 - [ ] Expected business profit, when applicable, is included in the Box 1 rollup and change delta rather than only shown in a side section
+- [ ] The business estimate was recorded as the winst before ondernemersaftrek and before MKB-winstvrijstelling, excluding btw, with a minus sign for an expected loss
+- [ ] The rollover check was completed for an automatically extended or pre-filled 2026 voorlopige aanslag
+- [ ] The separate voorlopige aanslag Zorgverzekeringswet was raised, with its own change route, no bijdrage amount, and no Zvw field or value inside the income-tax dataset
 - [ ] Deduction estimates are based on the current situation for 2026
 - [ ] AOW status uses below_all_year / reaches_during_year / aow_all_year; a transition month uses the manual portal result
 - [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, and jonggehandicaptenkorting reviewed manually unless exact reviewed sources are registered; alleenstaandeouderenkorting is based on a single-person AOW pension entitlement, not single-parent status

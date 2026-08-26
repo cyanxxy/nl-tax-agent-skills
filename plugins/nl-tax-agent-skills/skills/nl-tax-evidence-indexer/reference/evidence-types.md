@@ -61,6 +61,24 @@ Evidence for an IB-ondernemer with an eenmanszaak / ZZP. Used by the annual
 `nl-tax-winst` helper (Phase 2A). Collect only what the winst section needs; never
 gather the BSN.
 
+Three Belastingdienst documents that belong to a business case are listed under
+**Tax Authority Documents** rather than here, because they are aanslag/beschikking
+documents: `verliesbeschikking`,
+`beschikking_niet_gerealiseerde_zelfstandigenaftrek`, and `zvw_aanslag`.
+
+### jaarrekening
+- **Description:** Complete annual accounts (jaarrekening / jaarstukken) for the
+  enterprise, carrying both the winst-en-verliesrekening and the balans in a
+  single document; usually produced by a boekhouder or a boekhoudprogramma.
+- **Typical fields:** saldo winst-en-verliesrekening, omzet, kosten by category, afschrijvingen, activa en passiva at the begin and the einde of the boekjaar, ondernemingsvermogen, priveonttrekkingen en -stortingen, tax year.
+- **Boundary:** When one file carries both statements, classify it as
+  `jaarrekening`; that token takes precedence over `winst_verlies_rekening` and
+  `balans`, which are for a document holding only one of the two statements.
+  Record whether the jaarstukken are finalized -- a draft set is a review
+  question, not a source of final figures.
+- **Workflow:** annual
+- **Common naming patterns:** `jaarrekening*.pdf`, `jaarstukken*.pdf`, `annual*accounts*.pdf`
+
 ### winst_verlies_rekening
 - **Description:** Profit-and-loss statement (winst-en-verliesrekening) for the enterprise, usually from a boekhoudprogramma; the basis for winst uit onderneming.
 - **Typical fields:** omzet (turnover), inkoopwaarde, zakelijke kosten by category, afschrijvingen, resultaat (winst/verlies), tax year.
@@ -96,6 +114,74 @@ gather the BSN.
 - **Typical fields:** KvK-nummer, handelsnaam, rechtsvorm (eenmanszaak), startdatum, activiteiten (SBI).
 - **Workflow:** annual
 - **Common naming patterns:** `kvk*.pdf`, `uittreksel*.pdf`, `handelsregister*.pdf`
+
+### kilometerregistratie
+- **Description:** Kilometre record for business use of a **private** vehicle,
+  supporting the per-kilometre business cost. The per-kilometre amount stays in
+  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
+- **Typical fields:** datum, vertrek- en aankomstadres, doel van de rit, zakelijke kilometers, running total, vervoermiddel.
+- **Workflow:** annual
+- **Common naming patterns:** `kilometer*.xlsx`, `km*registratie*.csv`, `kilometeradministratie*.pdf`
+
+### rittenregistratie
+- **Description:** Trip record for a car in the ondernemingsvermogen, supporting
+  the taxpayer's position on private kilometres for the bijtelling. Required
+  record content and the bijtelling rules stay in
+  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
+- **Typical fields:** datum, begin- en eindstand kilometerteller, vertrek- en aankomstadres, zakelijke of prive rit, afwijking van de gebruikelijke route, kenteken.
+- **Boundary:** A rittenregistratie evidences the private-kilometre position; it
+  does not by itself settle the bijtelling. Keep the treatment as an agent
+  review question, and never read a missing record as zero private kilometres.
+- **Workflow:** annual
+- **Common naming patterns:** `ritten*.xlsx`, `rittenregistratie*.pdf`, `trip*log*.csv`
+
+### woz_beschikking_bedrijfspand
+- **Description:** WOZ valuation notice for a building held in the
+  ondernemingsvermogen, used for the bodemwaarde that limits depreciation on the
+  pand.
+- **Typical fields:** gemeente, adres, WOZ-waarde, waardepeildatum, belastingjaar, object-aanduiding.
+- **Boundary:** Distinct from `woz_beschikking`, which is the taxpayer's own
+  home. Copy the labelled waardepeildatum and value exactly; the waardepeildatum
+  the aangifte asks for stays in
+  `_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md`.
+- **Workflow:** annual
+- **Common naming patterns:** `woz*bedrijf*.pdf`, `woz*pand*.pdf`, `waardebeschikking*bedrijfspand*.pdf`
+
+### rvo_beschikking
+- **Description:** RVO decision supporting a research or investment facility --
+  an S&O-verklaring for the aftrek speur- en ontwikkelingswerk, or an EIA / MIA /
+  Vamil verklaring for a qualifying investment.
+- **Typical fields:** type verklaring (S&O / EIA / MIA / Vamil), beschikkingsnummer, dagtekening, periode, goedgekeurd investeringsbedrag or toegekende S&O-uren, omschrijving bedrijfsmiddel.
+- **Boundary:** The facility is only claimable with the matching RVO verklaring.
+  Without one, record the gap as an open question; never assume a verklaring
+  exists because the investment looks eligible.
+- **Workflow:** annual
+- **Common naming patterns:** `rvo*.pdf`, `so*verklaring*.pdf`, `eia*.pdf`, `mia*.pdf`, `vamil*.pdf`
+
+### aov_jaaropgaaf
+- **Description:** Annual statement for an arbeidsongeschiktheidsverzekering
+  (AOV) held by the ondernemer, showing the premiums paid in the year.
+- **Typical fields:** verzekeraar, polisnummer, betaalde premie, verzekerd bedrag, tax year.
+- **Boundary:** AOV premiums are **never** a business cost. They belong to the
+  uitgaven voor inkomensvoorzieningen in the privedeel, so do not index this
+  document against a cost rubriek of the winst-en-verliesrekening.
+- **Workflow:** annual
+- **Common naming patterns:** `aov*.pdf`, `arbeidsongeschiktheid*.pdf`, `jaaropgaaf*aov*.pdf`
+
+### lijfrente_jaaroverzicht
+- **Description:** Annual statement from the insurer or bank for lijfrente
+  premiums or inleg paid by the ondernemer, used for the jaarruimte and
+  reserveringsruimte.
+- **Typical fields:** aanbieder, polis- of rekeningnummer, betaalde premie of inleg, producttype, tax year.
+- **Boundary:** Same document family as `lijfrente_overzicht` under Deductions &
+  Gifts -- index the file once. Use `lijfrente_jaaroverzicht` for the
+  ondernemer's annual statement feeding the jaarruimte and `lijfrente_overzicht`
+  for a privedeel premium overview. The premiegrondslag comes off a specific
+  line of the profit chain, not off this statement; take that line from
+  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`.
+  Lijfrente premiums are never a business cost.
+- **Workflow:** annual
+- **Common naming patterns:** `lijfrente*jaaroverzicht*.pdf`, `jaaropgave*lijfrente*.pdf`, `banksparen*.pdf`
 
 ---
 
@@ -232,6 +318,44 @@ gather the BSN.
 - **Typical fields:** belastingjaar, vastgesteld inkomen box 1/2/3, verschuldigde belasting, heffingskortingen, te betalen/ontvangen, dagtekening.
 - **Workflow:** annual
 - **Common naming patterns:** `definitieve_aanslag*.pdf`, `aanslag*.pdf`, `final_assessment*.pdf`
+
+### zvw_aanslag
+- **Description:** Aanslag inkomensafhankelijke bijdrage Zorgverzekeringswet --
+  the **second, separate aanslag** an IB-ondernemer receives alongside the
+  aanslag inkomstenbelasting. One return covers both.
+- **Typical fields:** belastingjaar, bijdrage-inkomen, verschuldigde bijdrage, al betaald of ingehouden, te betalen/ontvangen, dagtekening.
+- **Boundary:** Keep it distinct from `definitieve_aanslag` and
+  `voorlopige_aanslag_beschikking`: it is a different aanslag with its own
+  bijdrage-inkomen. The bijdrage is never a business cost, in either direction.
+  Percentages and the maximumbijdrage-inkomen stay in
+  `_shared/knowledge/years/2025/entrepreneur/zvw-2025.md`.
+- **Workflow:** annual
+- **Common naming patterns:** `zvw*.pdf`, `zorgverzekeringswet*.pdf`, `bijdrage*zvw*.pdf`
+
+### verliesbeschikking
+- **Description:** Belastingdienst decision fixing a verlies uit werk en woning
+  or an ondernemingsverlies for a year, together with the balance still
+  available for set-off.
+- **Typical fields:** belastingjaar, vastgesteld verlies, reeds verrekend, resterend saldo, dagtekening.
+- **Boundary:** A carry-forward loss is usable only when the taxpayer can
+  evidence it with the beschikking. Without it, record the gap as an open
+  question; never carry a loss forward on recollection or on an earlier
+  workpack. The carry-back and carry-forward windows stay in
+  `_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
+- **Workflow:** annual
+- **Common naming patterns:** `verliesbeschikking*.pdf`, `verlies*.pdf`, `beschikking*verlies*.pdf`
+
+### beschikking_niet_gerealiseerde_zelfstandigenaftrek
+- **Description:** Belastingdienst decision on the aanslagbiljet fixing the part
+  of the zelfstandigenaftrek that the winst cap blocked, and carrying it forward.
+- **Typical fields:** belastingjaar, vastgesteld bedrag niet-gerealiseerde zelfstandigenaftrek, reeds verrekend, resterend saldo, dagtekening.
+- **Boundary:** The Belastingdienst does not apply this balance automatically --
+  the taxpayer enters it in a later aangifte. Index the beschikking and record
+  the running balance from it; never reconstruct the balance from an earlier
+  workpack. The set-off condition stays in
+  `_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
+- **Workflow:** annual
+- **Common naming patterns:** `niet*gerealiseerde*zelfstandigenaftrek*.pdf`, `ngz*.pdf`, `beschikking*zelfstandigenaftrek*.pdf`
 
 ---
 
