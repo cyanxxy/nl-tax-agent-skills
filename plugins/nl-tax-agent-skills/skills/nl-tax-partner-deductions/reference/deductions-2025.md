@@ -97,7 +97,7 @@ Allocation choices affect the heffingskortingen because they can change each par
 
 ### Algemene heffingskorting (general tax credit)
 
-- Use the exact 2025 algemene heffingskorting table in `_shared/knowledge/years/2025/annual/credits.md`.
+- Use the exact 2025 algemene heffingskorting table in `../nl-tax-shared-resources/knowledge/years/2025/annual/credits.md`.
 - If allocating deductions to the higher-income partner reduces their verzamelinkomen below the phase-out threshold, it may increase their algemene heffingskorting.
 - Conversely, not allocating deductions to the lower-income partner keeps their verzamelinkomen higher, potentially reducing their algemene heffingskorting.
 - Do not estimate the phase-out rate from memory; use the reviewed source-backed table.
@@ -105,7 +105,7 @@ Allocation choices affect the heffingskortingen because they can change each par
 ### Arbeidskorting (employment tax credit)
 
 - The arbeidskorting is based on individual employment income and cannot be affected by deduction allocation.
-- However, the arbeidskorting phases out at higher incomes under the exact 2025 table in `_shared/knowledge/years/2025/annual/credits.md`.
+- However, the arbeidskorting phases out at higher incomes under the exact 2025 table in `../nl-tax-shared-resources/knowledge/years/2025/annual/credits.md`.
 - Deduction allocation does not change employment income, so it does not directly affect the arbeidskorting.
 
 ### Net effect

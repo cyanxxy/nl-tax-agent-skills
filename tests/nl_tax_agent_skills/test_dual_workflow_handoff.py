@@ -35,9 +35,9 @@ def flattened(relative_path):
 class DualWorkflowHandoffTests(unittest.TestCase):
     def test_templates_represent_one_active_and_one_queued_workflow(self):
         profile = load_plugin_yaml("skills/nl-tax-intake/templates/taxpayer-profile.yaml")
-        progress = load_plugin_yaml("skills/_shared/templates/session-progress.yaml")
+        progress = load_plugin_yaml("skills/nl-tax-shared-resources/templates/session-progress.yaml")
         profile_text = read_plugin("skills/nl-tax-intake/templates/taxpayer-profile.yaml")
-        progress_text = read_plugin("skills/_shared/templates/session-progress.yaml")
+        progress_text = read_plugin("skills/nl-tax-shared-resources/templates/session-progress.yaml")
 
         self.assertEqual(
             set(profile["workflows"]), {"annual_2025", "provisional_2026"}
@@ -55,7 +55,7 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertEqual(progress["sources_loaded"], [])
 
     def test_intake_records_both_but_activates_annual_only(self):
-        runtime = flattened("skills/_shared/runtime-contract.md")
+        runtime = flattened("skills/nl-tax-shared-resources/runtime-contract.md")
         intake = flattened("skills/nl-tax-intake/reference/intake-flow.md")
         filing_paths = flattened("skills/nl-tax-intake/reference/filing-paths.md")
 
@@ -74,7 +74,7 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertIn("queue `change`, not `stopzetten`", intake)
 
     def test_annual_handoff_is_atomic_and_requires_complete_validated_outputs(self):
-        runtime = flattened("skills/_shared/runtime-contract.md")
+        runtime = flattened("skills/nl-tax-shared-resources/runtime-contract.md")
         assembly = flattened(
             "skills/nl-tax-annual-return/reference/phases/10-assembly.md"
         )
@@ -96,7 +96,7 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertIn("`updated_at` values in the same write", assembly)
 
     def test_handoff_needs_no_reactivation_but_keeps_generation_gates_separate(self):
-        runtime = flattened("skills/_shared/runtime-contract.md")
+        runtime = flattened("skills/nl-tax-shared-resources/runtime-contract.md")
         intake_skill = flattened("skills/nl-tax-intake/SKILL.md")
         annual_skill = flattened("skills/nl-tax-annual-return/SKILL.md")
         provisional_skill = flattened("skills/nl-tax-provisional-assessment/SKILL.md")
@@ -140,7 +140,7 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertEqual(handoff["first_question_owner"], "provisional_2026_request")
 
     def test_owner_contracts_preserve_year_specific_state_and_artifacts(self):
-        runtime = flattened("skills/_shared/runtime-contract.md")
+        runtime = flattened("skills/nl-tax-shared-resources/runtime-contract.md")
         annual = flattened("skills/nl-tax-annual-return/SKILL.md")
         provisional = flattened("skills/nl-tax-provisional-assessment/SKILL.md")
 
@@ -152,7 +152,7 @@ class DualWorkflowHandoffTests(unittest.TestCase):
         self.assertIn("preserve `workflows.annual_2025.status: complete`", provisional)
 
     def test_source_ledgers_do_not_union_annual_and_provisional_ids(self):
-        runtime = flattened("skills/_shared/runtime-contract.md")
+        runtime = flattened("skills/nl-tax-shared-resources/runtime-contract.md")
         annual_output = flattened(
             "skills/nl-tax-annual-return/reference/annual-output-contract.md"
         )

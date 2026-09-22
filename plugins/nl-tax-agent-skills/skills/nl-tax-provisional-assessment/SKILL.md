@@ -30,7 +30,7 @@ writer and readiness authority.
 
 ## Activation and paths
 
-Read `../_shared/runtime-contract.md` first. Resolve bundled resources relative
+Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled resources relative
 to this skill directory and every `workspace/...` path against the saved
 `workspace_root`; never depend on vendor-specific environment variables or
 create a second workspace tree.
@@ -87,19 +87,19 @@ Load only the exact source resource required by the active subflow or topic:
 - request procedure: `reference/source-projections/request-flow-human.md`
 - change procedure: `reference/source-projections/change-flow-human.md`
 - stopzetten procedure: `reference/source-projections/stopzetten-flow-human.md`
-- review procedure: `../_shared/knowledge/years/2026/provisional/review-flow.md`
-- rates and credits: `../_shared/knowledge/years/2026/provisional/rates-and-credits.md`
-- Box 2: `../_shared/knowledge/years/2026/provisional/box2.md`
-- FISIN / substantial-interest classification: `../_shared/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md`
-- Box 3: `../_shared/knowledge/years/2026/provisional/box3-provisional.md`
-- own home: `../_shared/knowledge/years/2026/provisional/own-home.md`
-- request/change baseline and delta: `../_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md`
-- payment/refund timing: `../_shared/knowledge/years/2026/provisional/refund-payment-timing.md`
+- review procedure: `../nl-tax-shared-resources/knowledge/years/2026/provisional/review-flow.md`
+- rates and credits: `../nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md`
+- Box 2: `../nl-tax-shared-resources/knowledge/years/2026/provisional/box2.md`
+- FISIN / substantial-interest classification: `../nl-tax-shared-resources/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md`
+- Box 3: `../nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`
+- own home: `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`
+- request/change baseline and delta: `../nl-tax-shared-resources/knowledge/years/2026/provisional/vva-eva-baseline-delta.md`
+- payment/refund timing: `../nl-tax-shared-resources/knowledge/years/2026/provisional/refund-payment-timing.md`
 - shared own-home details, only when applicable:
-  `../_shared/knowledge/own-home/eigenwoningforfait.md` and
-  `../_shared/knowledge/own-home/hypotheekrenteaftrek.md`
+  `../nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md` and
+  `../nl-tax-shared-resources/knowledge/own-home/hypotheekrenteaftrek.md`
 - fiscal-partner details, only when applicable:
-  `../_shared/knowledge/partners/fiscal-partnership.md`
+  `../nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md`
 
 The three `*-human.md` resources are mechanically reversible runtime
 projections of reviewed source notes. Use the projection header's `source_ids`

@@ -30,7 +30,7 @@ writer and readiness authority.
 
 ## Activation and paths
 
-Read `../_shared/runtime-contract.md` first. Resolve bundled resources relative
+Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled resources relative
 to this skill directory and every `workspace/...` path against the saved
 `workspace_root`; never depend on vendor-specific environment variables or
 create a second workspace tree.
@@ -51,7 +51,7 @@ requested with status `queued`. Do not load provisional resources or write
 provisional artifacts before the completed annual handoff in Phase 10.
 
 For a pre-1.4 progress file, apply the legacy migration in
-`../_shared/knowledge/methods/interactive-elicitation.md` without changing
+`../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md` without changing
 existing answers. Use the saved conversation ledger to resume; it records facts
 and gaps but does not dictate question order.
 

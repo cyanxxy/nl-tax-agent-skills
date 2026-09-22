@@ -87,7 +87,7 @@ class RuntimeProjectionTests(unittest.TestCase):
             encoding="utf-8"
         )
         runtime = (
-            PLUGIN / "skills/_shared/runtime-contract.md"
+            PLUGIN / "skills/nl-tax-shared-resources/runtime-contract.md"
         ).read_text(encoding="utf-8")
 
         for name in (

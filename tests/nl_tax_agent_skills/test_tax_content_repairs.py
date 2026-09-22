@@ -17,7 +17,7 @@ class TaxContentRepairTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         register = yaml.safe_load(
-            (SKILLS / "_shared/source-register.yaml").read_text(encoding="utf-8")
+            (SKILLS / "nl-tax-shared-resources/source-register.yaml").read_text(encoding="utf-8")
         )
         cls.sources = {item["id"]: item for item in register["sources"]}
 
@@ -156,7 +156,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_healthcare_threshold_and_increase_are_reviewed_agent_guidance(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
@@ -202,7 +202,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_mobility_forfait_is_screened_not_inferred(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
@@ -221,7 +221,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_lijfrente_uses_official_tool_and_preserves_agent_reasoning(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
@@ -246,7 +246,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_study_costs_default_to_no_deduction_with_narrow_exception(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/deductions.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
         )
@@ -273,10 +273,10 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_own_home_balance_excludes_tariefsaanpassing(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/own-home.md",
-            "_shared/knowledge/own-home/eigenwoningforfait.md",
-            "_shared/knowledge/own-home/hypotheekrenteaftrek.md",
-            "_shared/knowledge/years/2026/provisional/own-home.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md",
+            "nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md",
+            "nl-tax-shared-resources/knowledge/own-home/hypotheekrenteaftrek.md",
+            "nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md",
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
@@ -320,10 +320,10 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_hillen_uses_all_qualifying_costs(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/own-home.md",
-            "_shared/knowledge/own-home/eigenwoningforfait.md",
-            "_shared/knowledge/own-home/hypotheekrenteaftrek.md",
-            "_shared/knowledge/years/2026/provisional/own-home.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md",
+            "nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md",
+            "nl-tax-shared-resources/knowledge/own-home/hypotheekrenteaftrek.md",
+            "nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md",
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
@@ -352,8 +352,8 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_company_car_boundary_and_first_admission(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/box1-rates.md",
-            "_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md",
+            "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-winst/reference/winst-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
@@ -382,7 +382,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_stock_options_use_tradability_or_election(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/box1-rates.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -408,8 +408,8 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_annual_data_checklist_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/evidence-checklist.md",
-                "_shared/knowledge/years/2025/annual/credits.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
                 "nl-tax-box1-home/reference/box1-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -419,7 +419,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_zw_wazo_arbeidskorting_is_conditional(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/credits.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -445,7 +445,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_iack_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/credits.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/reference/annual-output-contract.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -460,7 +460,7 @@ class TaxContentRepairTests(unittest.TestCase):
     def test_elderly_single_credit_uses_aow_single_person_entitlement(self):
         source_id = "bd_heffingskortingen_aow_2025_2026"
         relatives = (
-            "_shared/knowledge/years/2025/annual/credits.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -491,7 +491,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_annual_data_checklist_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/evidence-checklist.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
                 "nl-tax-box1-home/reference/box1-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -504,7 +504,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_giften_aftrek_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/deductions.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -518,8 +518,8 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_zakelijke_kosten_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/deductions.md",
-                "_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
+                "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
             ),
@@ -536,7 +536,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_deduction_rate_cap_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/deductions.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -560,7 +560,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_deduction_rate_cap_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/deductions.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -581,7 +581,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-provisional-assessment/templates/provisional-pack.md",
             "nl-tax-partner-deductions/reference/deductions-2025.md",
             "nl-tax-partner-deductions/reference/provisional-deductions-2026.md",
-            "_shared/runtime-contract.md",
+            "nl-tax-shared-resources/runtime-contract.md",
         )
         combined = "\n".join(
             self.read_skill_text(path) for path in relatives
@@ -614,13 +614,13 @@ class TaxContentRepairTests(unittest.TestCase):
     def test_runtime_overlay_neutralizes_reviewed_allocation_shorthand(self):
         """Reviewed source wording never becomes an assistant recommendation."""
         reviewed_notes = {
-            "_shared/knowledge/years/2025/box3/fictitious.md": (
+            "nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md": (
                 "lowest combined result",
             ),
-            "_shared/knowledge/years/2026/provisional/box3-provisional.md": (
+            "nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md": (
                 "lowest combined result",
             ),
-            "_shared/knowledge/years/2025/annual/deductions.md": (
+            "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md": (
                 "optimal allocation",
             ),
         }
@@ -631,7 +631,7 @@ class TaxContentRepairTests(unittest.TestCase):
                     self.assertIn(marker, text)
 
         runtime = " ".join(
-            self.read_skill_text("_shared/runtime-contract.md").split()
+            self.read_skill_text("nl-tax-shared-resources/runtime-contract.md").split()
         ).lower()
         for required in (
             "comparative or superlative shorthand",
@@ -659,12 +659,12 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_runtime_overlay_neutralizes_reviewed_box3_recommendation_shorthand(self):
         reviewed = self.read_skill_text(
-            "_shared/knowledge/years/2025/box3/examples.md"
+            "nl-tax-shared-resources/knowledge/years/2025/box3/examples.md"
         )
         self.assertIn("clear recommendation note", reviewed)
 
         runtime = " ".join(
-            self.read_skill_text("_shared/runtime-contract.md").split()
+            self.read_skill_text("nl-tax-shared-resources/runtime-contract.md").split()
         ).lower()
         for required in (
             "legacy “recommendation note” shorthand",
@@ -683,13 +683,13 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_annual_deadline_2025",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/filing-flow.md",
-                "_shared/knowledge/years/2025/annual/late-filing.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
                 "nl-tax-intake/reference/filing-paths.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
                 "nl-tax-submit-companion/reference/annual-submit-steps.md",
-                "_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
+                "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
             ),
             required=("invitation letter", "no invitation", "14 july 2026"),
             forbidden=(
@@ -701,11 +701,11 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_extension_is_invitation_only_with_fixed_2025_dates(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/filing-flow.md",
-            "_shared/knowledge/years/2025/annual/late-filing.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
-            "_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
+            "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
         )
         self.assert_official_source(
             "bd_annual_extension_eligibility_2025", 2025, relatives
@@ -733,7 +733,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_verzuimboete",
             2025,
             (
-                "_shared/knowledge/years/2025/annual/late-filing.md",
+                "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/reference/annual-output-contract.md",
                 "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -747,7 +747,7 @@ class TaxContentRepairTests(unittest.TestCase):
         self.assert_official_source(
             "bd_own_home_deduction_cap_2026", 2026,
             (
-                "_shared/knowledge/years/2026/provisional/own-home.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md",
                 "nl-tax-partner-deductions/reference/provisional-deductions-2026.md",
             ),
         )
@@ -771,8 +771,8 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_provisional_review_2026",
             2026,
             (
-                "_shared/knowledge/years/2026/provisional/review-flow.md",
-                "_shared/knowledge/years/2026/provisional/vva-eva-baseline-delta.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/review-flow.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/vva-eva-baseline-delta.md",
                 "nl-tax-provisional-assessment/SKILL.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
@@ -788,9 +788,9 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_provisional_change_2026",
             2026,
             (
-                "_shared/knowledge/years/2026/provisional/change-flow.md",
-                "_shared/knowledge/years/2026/provisional/refund-payment-timing.md",
-                "_shared/knowledge/years/2026/provisional/review-flow.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/change-flow.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/refund-payment-timing.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/review-flow.md",
                 "nl-tax-provisional-assessment/SKILL.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
@@ -808,7 +808,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "bd_provisional_stopzetten_2026",
             2026,
             (
-                "_shared/knowledge/years/2026/provisional/stopzetten-flow.md",
+                "nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md",
                 "nl-tax-provisional-assessment/reference/stopzetten-guidance.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
@@ -820,7 +820,7 @@ class TaxContentRepairTests(unittest.TestCase):
 
     def test_annual_box3_explains_both_methods_and_records_actual_complete_or_deferred(self):
         relatives = (
-            "_shared/knowledge/years/2025/box3/actual-return.md",
+            "nl-tax-shared-resources/knowledge/years/2025/box3/actual-return.md",
             "nl-tax-box3/reference/box3-annual-2025.md",
             "nl-tax-box3/reference/box3-actual-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",

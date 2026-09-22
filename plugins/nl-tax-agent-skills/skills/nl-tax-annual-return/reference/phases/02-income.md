@@ -1,6 +1,6 @@
 ## Phase 2 — Income compilation
 
-Load `_shared/knowledge/years/2025/annual/box1-rates.md` when this phase starts.
+Load `../nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md` when this phase starts.
 
 Compile all box 1 income from evidence and user-provided data.
 
@@ -64,7 +64,7 @@ Compile all box 1 income from evidence and user-provided data.
 - Check for **winst uit onderneming** (eenmanszaak / ZZP). If present, set `business.has_onderneming: true` and prepare it in Phase 2A, not here. Distinguish it from resultaat uit overige werkzaamheden: winst uit onderneming is the ondernemer case; resultaat uit overige werkzaamheden is the residual freelance case.
 - Check for income from other activities (**resultaat uit overige
   werkzaamheden**). This is a prepared path, not a dead end: load
-  `_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, run its bron
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, run its bron
   van inkomen pre-screen, and prepare the ROW result from the opbrengsten and
   the costs that note allows. Ondernemersaftrek, MKB-winstvrijstelling and
   investeringsaftrek are ondernemer facilities and never apply to a ROW result;

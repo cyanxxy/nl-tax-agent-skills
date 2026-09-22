@@ -55,7 +55,7 @@ question, stop workflow-resource loading for this turn.
 - For reserveringsruimte, gather 2015-2024 unused-jaarruimte and actual-payment
   history; apply the official tool result and the EUR 42,108 2025 cap
 - For an IB-ondernemer, load
-  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`; it
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`; it
   is canonical for the jaarruimte formula, the reserveringsruimte, the timing
   rules, and the extra lijfrentepremieaftrek on staking. The winst component of
   the premiegrondslag is the **winst before ondernemersaftrek**, taken from the
@@ -72,7 +72,7 @@ question, stop workflow-resource loading for this turn.
   insurer statement; ambiguous policy types and exact deductibility are manual
   review. Do not reduce business profit by the AOV premium. For an
   IB-ondernemer,
-  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` is
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` is
   canonical for AOV treatment; it sits beside the lijfrente ruimte in the same
   uitgaven voor inkomensvoorzieningen category.
 - Studiekosten: ordinary expenses are not deductible. Screen only for the narrow

@@ -48,7 +48,7 @@ use the review-question rows; for stopzetten, do not invent field-map rows.]
 - [ ] I noted the submission date.
 - [ ] If annual: I recorded the expected definitieve-aanslag timeframe.
 - [ ] If provisional: I noted the response timing shown in Mijn Belastingdienst or the confirmation.
-- [ ] I kept evidence files for my records; for winst uit onderneming, I followed AWR article 52 (`law_awr_artikel_52`) via `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md`.
+- [ ] I kept evidence files for my records; for winst uit onderneming, I followed AWR article 52 (`law_awr_artikel_52`) via `nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md`.
 
 ## Authorization check
 

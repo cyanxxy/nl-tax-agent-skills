@@ -1,6 +1,6 @@
 ---
 name: nl-tax-intake
-description: Use when the user explicitly wants to start Dutch annual 2025/provisional 2026 tax work or asks a bundled-rule question. Do not use after intake is complete; informational questions create no state.
+description: Use when the user explicitly wants to start Dutch annual 2025/provisional 2026 tax preparation. Do not use after intake is complete; informational rule questions go to nl-tax-knowledge.
 argument-hint: "[annual|request|change|review|stopzetten]"
 allowed-tools:
   - Read
@@ -45,9 +45,11 @@ organize, request, change, review, or stop a workpack:
      `../nl-tax-provisional-assessment/reference/source-projections/change-flow-human.md`
    - stopzetten:
      `../nl-tax-provisional-assessment/reference/source-projections/stopzetten-flow-human.md`
-   For another topic, load only its directly relevant reviewed note under
-   `../_shared/knowledge/`. Read the selected resource's `source_ids`, then
-   search `../_shared/source-register.yaml` for only those matching entries;
+   For another topic, use `../nl-tax-shared-resources/knowledge-index.md` to
+   pick the directly relevant reviewed note under
+   `../nl-tax-shared-resources/knowledge/` and load only that note. Read the
+   selected resource's `source_ids`, then
+   search `../nl-tax-shared-resources/source-register.yaml` for only those matching entries;
    do not read the complete register. Never open the raw reviewed
    `request-flow.md`, `change-flow.md`, or `stopzetten-flow.md` in this fast
    path; their registered `snapshot_path` values are maintainer provenance.
@@ -72,9 +74,9 @@ intake and applies the documented checks directly.
 
 ## Load for explicit preparation
 
-Read `../_shared/runtime-contract.md` first on every turn. Then read:
+Read `../nl-tax-shared-resources/runtime-contract.md` first on every turn. Then read:
 
-1. `../_shared/knowledge/methods/interactive-elicitation.md` for the shared
+1. `../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md` for the shared
    conversation, state, provenance, and generation contracts.
 2. [`reference/intake-flow.md`](reference/intake-flow.md) for the complete
    screening, follow-up, terminal-routing, and closing contract.

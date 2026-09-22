@@ -1,8 +1,8 @@
 # Human-only runtime projection: stopzetten-flow.md
 
 projection_version: "1"
-derived_from: skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md
-derived_note_sha256: e6b1cc970721a14a3a8f7ace8ef8c8d518fb33ba8b2d1086dc22352aaee4f729
+derived_from: skills/nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md
+derived_note_sha256: 13ee1e24669a8b1ce7210a895a2bb29ab78bbfb4ab51b618eb4bde72020c46e0
 source_ids: bd_provisional_stopzetten_2026
 
 This is a mechanically reversible runtime projection, not an independently reviewed tax note. The cited reviewed snapshot remains the provenance authority. The only permitted body transformation is inserting `**Taxpayer:**` before portal-action imperatives.

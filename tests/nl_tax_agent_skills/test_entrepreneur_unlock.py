@@ -20,7 +20,7 @@ ROOT = (
     / "nl-tax-agent-skills"
 )
 
-ENTREPRENEUR_DIR = ROOT / "skills/_shared/knowledge/years/2025/entrepreneur"
+ENTREPRENEUR_DIR = ROOT / "skills/nl-tax-shared-resources/knowledge/years/2025/entrepreneur"
 ENTREPRENEUR_METADATA = (
     ROOT.parents[1]
     / "tools/nl_tax_agent_skills/source_maintenance/metadata"
@@ -279,7 +279,7 @@ class KnowledgePackTests(unittest.TestCase):
 
 class SourceRegisterTests(unittest.TestCase):
     def setUp(self):
-        self.register = load_yaml("skills/_shared/source-register.yaml")
+        self.register = load_yaml("skills/nl-tax-shared-resources/source-register.yaml")
         self.by_id = {s["id"]: s for s in self.register["sources"]}
 
     def test_all_entrepreneur_sources_registered(self):
@@ -307,7 +307,7 @@ class WorkflowGateTests(unittest.TestCase):
 
     def test_entrepreneur_dir_in_annual_knowledge_dirs(self):
         self.assertIn(
-            "skills/_shared/knowledge/years/2025/entrepreneur",
+            "skills/nl-tax-shared-resources/knowledge/years/2025/entrepreneur",
             self.annual["knowledge_dirs"],
         )
 

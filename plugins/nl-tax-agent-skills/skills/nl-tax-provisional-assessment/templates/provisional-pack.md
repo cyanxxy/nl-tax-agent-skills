@@ -223,7 +223,7 @@ the MKB-winstvrijstelling, excluding the btw payable and the btw reclaimable,
 with a minus sign for an expected loss. It is the only business figure the 2026
 form asks for; the Belastingdienst applies the ondernemersaftrek and the
 MKB-winstvrijstelling itself. Every 2026 business figure is read from
-`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`.
+`nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`.
 
 ### Rollover check
 
@@ -274,7 +274,7 @@ subtracted from the profit estimate. This section reports the Zvw alongside the
 income-tax dataset and never inside it: no bijdrage amount, no Zvw row in the
 income-tax form, and no Zvw instalment, deadline, payment, or refund timing.
 Percentages and the maximumbijdrage-inkomen are read from
-`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
+`nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
 Belastingdienst calculates the bijdrage.
 
 The income-tax field map contains no Zvw field or value: no Zvw `field_id`,
@@ -397,7 +397,7 @@ out, and unresolved debts remain in the manual-review table above.
 
 | Item                                  | Amount            | Src |
 |---------------------------------------|-------------------|-----|
-| Heffingsvrij vermogen (single)        | EUR [from `_shared/knowledge/years/2026/provisional/box3-provisional.md`] | C:from_2026_table |
+| Heffingsvrij vermogen (single)        | EUR [from `nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`] | C:from_2026_table |
 | Heffingsvrij vermogen (partners)      | EUR [from `box3-provisional.md`] | C:from_2026_table |
 | Applied heffingsvrij vermogen         | EUR               | C:depends_on_partner_status |
 

@@ -9,7 +9,7 @@ and continue. The owning workflow persists all state and artifacts; background
 helpers return facts and questions only.
 
 Every time a knowledge file or rate sheet is loaded, record its matching
-`source_id` from `_shared/source-register.yaml` once in
+`source_id` from `../nl-tax-shared-resources/source-register.yaml` once in
 `session-progress.yaml` → `sources_loaded_by_workflow.annual_2025` and mirror
 that list in the top-level `sources_loaded`. Only the annual workflow-specific
 IDs may appear in the annual workpack's Sources used section.
@@ -42,7 +42,7 @@ reply completes or defers the active Phase N+1 work.
 
 ## Common contract
 
-- Apply `../_shared/runtime-contract.md` throughout. Keep resource loading,
+- Apply `../nl-tax-shared-resources/runtime-contract.md` throughout. Keep resource loading,
   helper selection, validation implementation, and state-file maintenance
   invisible to the taxpayer.
 - Keep annual and provisional notes and output paths separate.
@@ -95,27 +95,30 @@ review checklist. Never stale-check an inapplicable branch.
 ### Helper and reviewer delegation
 
 For the active phase, prefer a host Skill/Task invocation when available;
-otherwise inline the helper's instructions. In either mode, a helper writes
+otherwise inline the helper's instructions by reading its `SKILL.md` at the
+path listed below (resolved from this skill directory). These helper paths are
+part of this workflow's resource allowlist. In either mode, a helper writes
 nothing and returns structured facts and open questions. The owning workflow
 persists those results, asks the user, and re-runs the helper after newly sourced
 answers. Keep the delegation invisible and speak in one voice.
 
-- Box 1 / own home: `nl-tax-box1-home`
-- Winst uit onderneming: `nl-tax-winst` only when
+- Box 1 / own home: `nl-tax-box1-home` (`../nl-tax-box1-home/SKILL.md`)
+- Winst uit onderneming: `nl-tax-winst` (`../nl-tax-winst/SKILL.md`) only when
   `business.has_onderneming.value` is true. It runs the income-category
   pre-screen, then the ordered chain from the saldo fiscale winstberekening
   through investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the
   belastbare winst uit onderneming, which feeds the box 1 total. It also returns
   the vermogensvergelijking self-check, the bijdrage Zvw and lijfrente handoffs,
   the loss path, and the per-form routing markers that stay manual review.
-- Box 2: `nl-tax-box2` only when an aanmerkelijk belang exists.
-- Box 3: `nl-tax-box3`, collecting both fictitious and actual-return data for
+- Box 2: `nl-tax-box2` (`../nl-tax-box2/SKILL.md`) only when an aanmerkelijk belang exists.
+- Box 3: `nl-tax-box3` (`../nl-tax-box3/SKILL.md`), collecting both fictitious and actual-return data for
   the official comparison.
-- Partner / deductions: `nl-tax-partner-deductions`.
+- Partner / deductions: `nl-tax-partner-deductions`
+  (`../nl-tax-partner-deductions/SKILL.md`).
 
 After independent sections have been collected, the owning agent may request a
 bounded specialist cross-check under the optional reviewer contract in
-`../_shared/runtime-contract.md`. The reviewer returns conflicts, missing facts,
+`../nl-tax-shared-resources/runtime-contract.md`. The reviewer returns conflicts, missing facts,
 and source checks without selecting a Box 3 result, partner allocation, or
 readiness. The owning agent reconciles every finding and remains the canonical-
 state writer and readiness authority. Review inline when a specialist agent is

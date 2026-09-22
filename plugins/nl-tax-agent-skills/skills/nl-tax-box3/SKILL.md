@@ -44,9 +44,9 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 
 ## Loading bundled files
 
-`_shared/` is the plugin-shared folder at this skill's `../_shared/`. Resolve
+The plugin-shared folder is this skill's `../nl-tax-shared-resources/`. Resolve
 bundled files relative to this skill directory with the host's skill-resource
-or file tools. Read `../_shared/runtime-contract.md` first. Do not depend on
+or file tools. Read `../nl-tax-shared-resources/runtime-contract.md` first. Do not depend on
 shell visibility or vendor-specific environment variables.
 
 Bundled references — read the ones matching the active workflow before computing or asking anything:
@@ -55,7 +55,7 @@ Bundled references — read the ones matching the active workflow before computi
 - `reference/box3-actual-2025.md` — annual 2025 werkelijk-rendement (actual return) data rules, for the annual comparison only
 - `reference/box3-provisional-2026.md` — 2026 provisional fictitious-method rules (the only box 3 reference a provisional flow may use)
 
-The knowledge files those references point at (`_shared/knowledge/years/2025/box3/*.md`, `_shared/knowledge/years/2026/provisional/box3-provisional.md`) stay canonical for every numeric value.
+The knowledge files those references point at (`../nl-tax-shared-resources/knowledge/years/2025/box3/*.md`, `../nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`) stay canonical for every numeric value.
 
 Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/compare_box3_annual_2025.py` and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. Python is optional: if Bash cannot see the plugin path, total accepted rows and apply the sourced arithmetic manually; never ask the taxpayer to install Python, never copy bundled scripts into `workspace/`, and never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
 

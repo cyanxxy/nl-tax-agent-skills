@@ -96,7 +96,7 @@ business:
   # routing.complex_business_screening. The computation boundaries, and every
   # threshold, hour count, year count and amount behind the fields below, live
   # in the knowledge notes under
-  # _shared/knowledge/years/2025/entrepreneur/ -- never restate them here.
+  # nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ -- never restate them here.
   has_onderneming:
     value: null                  # true | false; false also covers a prepared
                                  # resultaat uit overige werkzaamheden, which is

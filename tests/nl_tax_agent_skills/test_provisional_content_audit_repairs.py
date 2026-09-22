@@ -22,7 +22,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_stopzetten_separates_timing_repayment_and_filing(self):
         core_paths = (
-            "skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md",
             "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/stopzetten.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
@@ -54,9 +54,9 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_aow_has_three_states_and_transition_month(self):
         profile = read("skills/nl-tax-intake/templates/taxpayer-profile.yaml")
-        aow = read("skills/_shared/knowledge/aow/aow-leeftijd.md")
+        aow = read("skills/nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md")
         rates = read(
-            "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md"
         )
         skill = read("skills/nl-tax-provisional-assessment/SKILL.md")
         pack = read(
@@ -83,7 +83,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_2026_aow_transition_month_rates_are_bundled(self):
         rates = read(
-            "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md"
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md"
         )
         compact = " ".join(rates.split())
         for month, percentage in (
@@ -113,7 +113,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_shared_aow_note_routes_to_the_active_workflow(self):
         aow = " ".join(
-            read("skills/_shared/knowledge/aow/aow-leeftijd.md").split()
+            read("skills/nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md").split()
         )
         self.assertIn("annual income-tax return", aow)
         self.assertIn("Verzoek of wijziging voorlopige aanslag", aow)
@@ -121,7 +121,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_shared_2026_own_home_note_names_the_woz_valuation_date(self):
         own_home = " ".join(
-            read("skills/_shared/knowledge/own-home/eigenwoningforfait.md").split()
+            read("skills/nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md").split()
         )
         self.assertIn("valuation date 1 January 2025", own_home)
         self.assertIn("labelled estimate", own_home)
@@ -156,7 +156,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_own_home_woz_uses_1_january_2025(self):
         paths = (
-            "skills/_shared/knowledge/years/2026/provisional/own-home.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/request.md",
             "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
@@ -184,7 +184,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_alleenstaandeouderenkorting_is_an_aow_pension_test(self):
         paths = (
-            "skills/_shared/knowledge/years/2026/provisional/rates-and-credits.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/review.md",
             "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
             "skills/nl-tax-provisional-assessment/templates/review-questions.md",
@@ -199,7 +199,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_box3_rounding_inconsistency_defers_to_portal(self):
         paths = (
-            "skills/_shared/knowledge/years/2026/provisional/box3-provisional.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md",
             "skills/nl-tax-box3/reference/box3-provisional-2026.md",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
@@ -215,7 +215,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_box3_debts_require_qualification_screen(self):
         paths = (
-            "skills/_shared/knowledge/years/2026/provisional/box3-provisional.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md",
             "skills/nl-tax-box3/SKILL.md",
             "skills/nl-tax-box3/reference/box3-provisional-2026.md",
             "skills/nl-tax-provisional-assessment/SKILL.md",

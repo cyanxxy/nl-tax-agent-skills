@@ -577,7 +577,7 @@ threshold only to the qualifying total.
 
 ### Heffingsvrij vermogen
 
-- Single taxpayer: EUR [from `_shared/knowledge/years/2025/box3/fictitious.md`]
+- Single taxpayer: EUR [from `nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md`]
 - Fiscal partners (combined): EUR [from `fictitious.md`]
 - Applicable heffingsvrij vermogen: EUR [amount] -- Src: C:depends_on_partner_status
 

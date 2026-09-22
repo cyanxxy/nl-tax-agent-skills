@@ -23,7 +23,7 @@ ROOT = (
     / "plugins"
     / "nl-tax-agent-skills"
 )
-KNOWLEDGE = ROOT / "skills" / "_shared" / "knowledge"
+KNOWLEDGE = ROOT / "skills" / "nl-tax-shared-resources" / "knowledge"
 
 
 def load_module(relative_path, name):

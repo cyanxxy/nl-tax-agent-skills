@@ -26,7 +26,7 @@ command or magic phrase.
 
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree. Read `../_shared/runtime-contract.md` first. Resolve bundled files
+tree. Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled files
 relative to this skill directory with the host's skill-resource or file tools.
 Do not depend on shell visibility or vendor-specific environment variables.
 
@@ -74,7 +74,7 @@ User: "Give me the Manual-entry checklist for my 2025 return." → Read `return-
 
 ## Safety
 
-Apply the authenticated-portal boundary in `../_shared/runtime-contract.md`.
+Apply the authenticated-portal boundary in `../nl-tax-shared-resources/runtime-contract.md`.
 Never open or navigate Mijn Belastingdienst with a browser, Claude in Chrome,
 computer use, screen interaction, a connector, or another tool; never log in,
 enter or change values, click controls, sign, send, submit, or retrieve private

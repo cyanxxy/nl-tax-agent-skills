@@ -2,31 +2,31 @@ metadata_version: '1.1'
 sources:
   law_awr_artikel_52:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
-    reviewed_note_hash_sha256: 86449210f1bcac96f1b6cffe873f50a2ce7c412eceedcdcf694486074f67c644
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: e2b05cdfddb7f15e9a7b915363ce42317faa08d5efbcff99fe302bb546e5b157
     source_id: law_awr_artikel_52
     source_url: https://wetten.overheid.nl/jci1.3:c:BWBR0002320&artikel=52
   law_uitvoeringsbesluit_ib_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-11T06:31:41.415411+00:00'
-    reviewed_note_hash_sha256: 2a62ab981ea2cbebebf36a25c5dd6adf4085a24a190346fe2d51b27a63c297ef
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: 15302d4040288f7384183d78678c6229bc85a4d165a0259163d9c7f27f17c028
     source_id: law_uitvoeringsbesluit_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012066/
   law_uitvoeringsregeling_ib_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
-    reviewed_note_hash_sha256: 874f97f18f30c274d80fa2d6925bf41d17bda4a9b08d7b62957ba5ba5c07e769
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: ee21404fd11c0e70d99d2682711548f99c0504d2a5430bc0c3509e59e30d4011
     source_id: law_uitvoeringsregeling_ib_2001
     source_url: https://wetten.overheid.nl/BWBR0012031/
   law_uwa_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
-    reviewed_note_hash_sha256: 91e834f6e67a4e945a36675c607e222909a640182d2bcf280cca60714134a9e3
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: af3671a412ea40bbbd6569eb4536d52660635dc06bd831e47f5e8934f9973ded
     source_id: law_uwa_2001
     source_url: https://wetten.overheid.nl/BWBR0012035
   law_wet_inkomstenbelasting_2001:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-26T13:47:42.767762+00:00'
-    reviewed_note_hash_sha256: bf556f06dc947c20f628539cb8a6a0f2cb5002744e0f8dcb7c114091abc3880c
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: 359c8c22d3a7831a2217721483e450c0484efe801e9539ca7fceedeaa1e6f0cb
     source_id: law_wet_inkomstenbelasting_2001
     source_url: https://wetten.overheid.nl/BWBR0011353/

@@ -24,8 +24,7 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second
-`workspace/` tree. `_shared/` is the plugin-shared folder at this skill's
-`../_shared/`. Read `../_shared/runtime-contract.md` first. Resolve bundled
+`workspace/` tree. The plugin-shared folder is this skill's `../nl-tax-shared-resources/`. Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
 files relative to this skill directory with the host's skill-resource or file
 tools. Do not depend on shell visibility or vendor-specific environment
 variables.

@@ -107,14 +107,14 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         for required in (
             "do not create or update",
             "source-register.yaml",
-            "_shared/knowledge/",
+            "nl-tax-shared-resources/knowledge/",
             "not model memory",
             "do not read the complete register",
             "do not ask screening questions",
         ):
             self.assertIn(required, informational)
         self.assertLess(
-            informational.index("_shared/knowledge/"),
+            informational.index("nl-tax-shared-resources/knowledge/"),
             informational.index("source-register.yaml"),
         )
 

@@ -38,7 +38,7 @@ class WorkflowSourceValidationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
             (root / ".codex-plugin").mkdir()
-            shared = root / "skills/_shared"
+            shared = root / "skills/nl-tax-shared-resources"
             (shared / "knowledge/years/2025/annual").mkdir(parents=True)
             (shared / "knowledge/years/2025/box2").mkdir(parents=True)
 
@@ -54,8 +54,8 @@ active_workflows:
     profile_candidates:
       - annual_2025
     knowledge_dirs:
-      - skills/_shared/knowledge/years/2025/annual
-      - skills/_shared/knowledge/years/2025/box2
+      - skills/nl-tax-shared-resources/knowledge/years/2025/annual
+      - skills/nl-tax-shared-resources/knowledge/years/2025/box2
     output_paths:
       - workspace/annual/2025/return-pack.md
     required_source_ids:
@@ -74,7 +74,7 @@ sources:
     source_type: official_guidance
     workflow: annual_return
     tax_year: 2025
-    snapshot_path: skills/_shared/knowledge/years/2025/annual/test.md
+    snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/test.md
     last_checked: "2026-01-01"
     freshness_policy: check annually
     owner: tax-content
@@ -86,7 +86,7 @@ sources:
     source_type: official_rates
     workflow: annual_return
     tax_year: 2025
-    snapshot_path: skills/_shared/knowledge/years/2025/box2/box2-rates.md
+    snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md
     last_checked: "2026-01-01"
     freshness_policy: check annually
     owner: tax-content
@@ -112,10 +112,10 @@ sources:
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
             (root / ".codex-plugin").mkdir()
-            snapshot = root / "skills/_shared/knowledge/years/2025/box2/box2-rates.md"
+            snapshot = root / "skills/nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md"
             snapshot.parent.mkdir(parents=True)
             snapshot.write_text("source_id: bd_box2_rates_test\n", encoding="utf-8")
-            register = root / "skills/_shared/source-register.yaml"
+            register = root / "skills/nl-tax-shared-resources/source-register.yaml"
             register.write_text(
                 """
 sources:
@@ -123,7 +123,7 @@ sources:
     title: Box 2 rates test source
     url: https://www.belastingdienst.nl/box2
     source_type: official_rates
-    snapshot_path: skills/_shared/knowledge/years/2025/box2/box2-rates.md
+    snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md
     last_checked: "2026-01-01"
     freshness_policy: check annually
     owner: tax-content
@@ -146,7 +146,7 @@ sources:
             "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py",
             "validate_knowledge_pack_box2_2026_note",
         )
-        register = module.load_yaml_or_json(str(ROOT / "skills/_shared/source-register.yaml"))
+        register = module.load_yaml_or_json(str(ROOT / "skills/nl-tax-shared-resources/source-register.yaml"))
         sources = register.get("sources", [])
         source_by_id = {source.get("id"): source for source in sources}
 
@@ -155,7 +155,7 @@ sources:
         self.assertIsNotNone(source)
         self.assertEqual(
             source.get("snapshot_path"),
-            "skills/_shared/knowledge/years/2026/provisional/box2.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/box2.md",
         )
         self.assertEqual(source.get("workflow"), "provisional_assessment")
         self.assertEqual(source.get("tax_year"), 2026)
@@ -168,7 +168,7 @@ sources:
         )
 
     def test_source_register_documents_snapshot_path_base_conventions(self):
-        register = (ROOT / "skills/_shared/source-register.yaml").read_text(
+        register = (ROOT / "skills/nl-tax-shared-resources/source-register.yaml").read_text(
             encoding="utf-8"
         )
         refresh_skill = (
@@ -179,18 +179,18 @@ sources:
 
         self.assertIn("repo root", combined)
         self.assertIn("skill-relative", combined)
-        self.assertIn("_shared/", combined)
+        self.assertIn("nl-tax-shared-resources/", combined)
 
     def test_box3_examples_have_direct_register_coverage(self):
         module = load_module(
             "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py",
             "validate_knowledge_pack_box3_examples",
         )
-        register = module.load_yaml_or_json(str(ROOT / "skills/_shared/source-register.yaml"))
+        register = module.load_yaml_or_json(str(ROOT / "skills/nl-tax-shared-resources/source-register.yaml"))
         sources = register.get("sources", [])
         matching = [
             source for source in sources
-            if source.get("snapshot_path") == "skills/_shared/knowledge/years/2025/box3/examples.md"
+            if source.get("snapshot_path") == "skills/nl-tax-shared-resources/knowledge/years/2025/box3/examples.md"
         ]
 
         self.assertEqual(len(matching), 1)
@@ -212,7 +212,7 @@ sources:
             "url": "https://www.belastingdienst.nl/example",
             "source_type": "official_guidance",
             "last_checked": "2025-01-01",
-            "snapshot_path": "skills/_shared/knowledge/years/2026/provisional/box2.md",
+            "snapshot_path": "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/box2.md",
         }
 
         report = module.build_report(
@@ -220,7 +220,7 @@ sources:
             [source],
             datetime(2026, 5, 25, tzinfo=timezone.utc),
             str(ROOT),
-            str(ROOT / "skills/_shared/source-register.yaml"),
+            str(ROOT / "skills/nl-tax-shared-resources/source-register.yaml"),
             "all",
             None,
             True,

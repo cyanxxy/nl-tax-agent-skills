@@ -262,7 +262,7 @@ def find_source_register():
         "plugins",
         "nl-tax-agent-skills",
         "skills",
-        "_shared",
+        "nl-tax-shared-resources",
         "source-register.yaml",
     )
     resolved = os.path.normpath(path)
@@ -447,7 +447,7 @@ def main():
     register_path = find_source_register()
     if register_path is None:
         print("Error: Could not find source-register.yaml.", file=sys.stderr)
-        print("Expected at: plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml",
+        print("Expected at: plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml",
               file=sys.stderr)
         sys.exit(1)
 

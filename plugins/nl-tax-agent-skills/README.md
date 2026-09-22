@@ -38,6 +38,12 @@ change, review, or stopzetten a 2026 voorlopige aanslag. A direct advanced invoc
 `/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request` (replace `request` with
 the desired subflow).
 
+To ask how a rule works without preparing anything, ask directly, for example
+"What is the Box 3 heffingsvrij vermogen for 2025?" The read-only
+`nl-tax-knowledge` skill picks the matching reviewed note from
+`nl-tax-shared-resources/knowledge-index.md`, answers with the tax year and
+official source, and writes no files.
+
 A user may request annual 2025 and one provisional 2026 subflow together in
 natural language. The agent keeps annual as the sole active owner until its
 complete workpack and field map validate, then continues into the recorded 2026
@@ -67,8 +73,9 @@ nl-tax-agent-skills/
   agents/
     nl-tax-specialist-reviewer.md # optional Claude Cowork section reviewer
   skills/
-    _shared/                    # source-register.yaml, knowledge/, templates/
+    nl-tax-shared-resources/        # knowledge-index.md, source-register.yaml, knowledge/, templates/
     nl-tax-intake/                  # workflow router and taxpayer profile
+    nl-tax-knowledge/               # read-only rule lookup from the reviewed notes
     nl-tax-evidence-indexer/        # local evidence cataloging
     nl-tax-annual-return/           # annual 2025 workpack
     nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
@@ -100,6 +107,7 @@ agent-driven manual checks in each `SKILL.md` apply.
 | Skill | Type | Main responsibility |
 |---|---|---|
 | `nl-tax-intake` | user entry | Screen scope, select a supported workflow, create `workspace/taxpayer/profile.yaml` |
+| `nl-tax-knowledge` | user entry | Answer 2025 annual and 2026 provisional rule questions from the reviewed notes; read-only, writes no files |
 | `nl-tax-evidence-indexer` | user entry | Index local evidence files, compute hashes, produce review questions |
 | `nl-tax-annual-return` | user entry | Prepare the annual 2025 workpack and invoke the mapper for its field map (incl. the belastbare winst for a straightforward eenmanszaak) |
 | `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, or stopzetten packages |
@@ -111,10 +119,16 @@ agent-driven manual checks in each `SKILL.md` apply.
 | `nl-tax-winst` | background | Return annual-2025 business findings, incl. the ordered belastbare-winst chain for a straightforward eenmanszaak, or one sourced provisional-2026 expected-profit forecast |
 | `nl-tax-partner-deductions` | background | Return fiscal-partner, deduction, and allocation facts/questions |
 
-The `skills/_shared/` directory is packaged as the hidden
-`nl-tax-shared-resources` internal skill so OpenAI plugin ingestion can validate
-the shared runtime contract and resources. It is not a taxpayer workflow and
-cannot be invoked implicitly.
+The `skills/nl-tax-shared-resources/` directory is packaged as the hidden
+`nl-tax-shared-resources` internal skill; its folder name matches its skill
+name as the Agent Skills spec requires. It is not a taxpayer workflow and cannot
+be invoked implicitly. Its `knowledge-index.md` maps every topic, year, and
+workflow to the reviewed note that answers it, so any agent that reads skills
+on demand can find the right note without searching the package.
+
+Install the plugin as one package. Skills reference the shared folder and each
+other through sibling paths such as `../nl-tax-shared-resources/`, so copying a
+single skill folder on its own leaves those references unresolved.
 
 Only the annual and provisional workflow skills write main workpacks. Intake
 creates taxpayer/session state, the field mapper alone writes canonical field

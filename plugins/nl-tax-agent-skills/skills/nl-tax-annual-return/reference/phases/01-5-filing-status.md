@@ -2,7 +2,7 @@
 
 Before compiling income, establish the taxpayer's invitation-letter status and applicable deadline. This drives whether the workpack carries a top-level exposure section (see output contract § Filing status).
 
-Load `_shared/knowledge/years/2025/annual/filing-flow.md` for deadlines and
+Load `../nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md` for deadlines and
 extension routing. Do not load `late-filing.md` yet.
 
 ### 1.5.1 Determine filing status
@@ -72,7 +72,7 @@ extension date, and filing date/planned date needed to support that result.
   filing as soon as possible, and cite `bd_verzuimboete` and
   `bd_belastingrente_ib`.
 
-Load `_shared/knowledge/years/2025/annual/late-filing.md` only for the
+Load `../nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md` only for the
 granted-extension/outstanding or late branches above. An on-time case must not
 load, stale-check, cite, or warn about penalty or interest sources.
 

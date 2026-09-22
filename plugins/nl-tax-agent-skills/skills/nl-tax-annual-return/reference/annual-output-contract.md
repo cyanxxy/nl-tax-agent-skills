@@ -25,7 +25,7 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 
 1. **Scope** — tax year, workflow, taxpayer identification, partner status, timestamp
 2. **Unsupported-case checks** — checklist confirming the case is within v1 scope
-3. **Sources used** — list of `source_id`s from `_shared/source-register.yaml`
+3. **Sources used** — list of `source_id`s from `../nl-tax-shared-resources/source-register.yaml`
    actually loaded for the annual workflow (taken verbatim from
    `session-progress.yaml` → `sources_loaded_by_workflow.annual_2025`)
 4. **Taxpayer profile summary** — summary of the profile data used, including household composition (DOB, partner DOB, children, AOW status, single-parent status)
@@ -147,7 +147,7 @@ print every line with its inputs, its derivation and its provenance.
 
 ### The ordered profit chain
 
-`_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md` is canonical
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md` is canonical
 for the order of the chain and for the component notes each amount comes from.
 Read every rate, percentage, cap and threshold from those notes; this contract
 deliberately restates none of them. Run the lines in this order and
@@ -192,7 +192,7 @@ Never reuse one of those amounts for another.
 
 ### Computed by the aangifte, not typed by the taxpayer
 
-`_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md` is canonical
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md` is canonical
 for the split. The taxpayer types the winst-en-verliesrekening rubrieken, the two
 balans columns, the priveonttrekkingen en -stortingen, and the yes/no
 eligibility answers. The **aangifte computes** the ondernemersaftrek components,
@@ -229,7 +229,7 @@ inkomstenbelasting, and the return the taxpayer files covers both. The section
 MUST say so, name the belastbare winst uit onderneming as the bijdrage-inkomen
 component, and take the percentage, the maximumbijdrage-inkomen, the interaction
 with loon, and the resultaat-uit-overige-werkzaamheden treatment from
-`_shared/knowledge/years/2025/entrepreneur/zvw-2025.md`. The bijdrage is never a
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md`. The bijdrage is never a
 business cost and never re-enters the profit chain in either direction.
 
 ### Loss outcome
@@ -239,7 +239,7 @@ that the MKB-winstvrijstelling made the loss smaller, that the loss is first set
 off within 2025 against positive box 1 income such as loon, and that a loss year
 still requires a filed return. Take the carry-back and carry-forward windows,
 the beschikking, and the niet-gerealiseerde zelfstandigenaftrek settlement from
-`_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`; do
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`; do
 not restate them here.
 
 ### Field-map readiness for a business case
@@ -265,8 +265,8 @@ optional validator cannot replace or relax this audit.
 Recognising a business form is no longer terminal. Name the form, state what it
 does to the ondernemer tests, and continue preparing the parts of the return it
 does not block, using
-`_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` and
-`_shared/knowledge/years/2025/entrepreneur/staking-2025.md` for the recognition
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` and
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/staking-2025.md` for the recognition
 and routing. What stays terminal is the **computation**. The workpack MUST route
 to manual review, without producing a partial calculation, for:
 
@@ -288,7 +288,7 @@ computed and why, and hand the case to professional review.
 
 Resultaat uit overige werkzaamheden is **not** on that list. It is a prepared
 path: when the income-category screen in
-`_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` places the
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` places the
 activity outside winst uit onderneming and outside dienstbetrekking, prepare the
 ROW result in the Income notes section under that note, still emitting the
 canonical `business.has_onderneming: no` hook here. Ondernemersaftrek,
@@ -342,7 +342,7 @@ If fiscal partners allocate Box 2 income, the workpack MUST show the allocation 
 
 The box 3 section MUST include notes for BOTH methods:
 
-1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, aftrekbare schulden, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax amount. Use the rates from `_shared/knowledge/years/2025/box3/fictitious.md` — never paraphrase from memory.
+1. **Fictitious return (forfaitair rendement):** Full calculation with asset categories, percentages, aftrekbare schulden, belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax amount. Use the rates from `../nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md` — never paraphrase from memory.
 2. **Actual return (werkelijk rendement) data collection:** Data gathered or gaps identified for interest, dividends, rental income, capital gains/losses, unrealized value changes, interest paid on box 3 debts, and qualifying WOZ-value investment correction.
 
 If all required actual-return inputs are available, file and chat provenance are

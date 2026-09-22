@@ -22,7 +22,7 @@ For explicit preparation, read the shared interactive-elicitation contract,
 then the saved state:
 
 1. Read `workspace/shared/session-progress.yaml` if it exists. Otherwise copy
-   `../_shared/templates/session-progress.yaml` there and stamp `created_at`.
+   `../nl-tax-shared-resources/templates/session-progress.yaml` there and stamp `created_at`.
 2. Read `workspace/taxpayer/profile.yaml` if it exists. Otherwise create it from
    `templates/taxpayer-profile.yaml` as facts are established.
 3. Set `workspace_root` on the first turn to the active working folder and write
@@ -128,7 +128,7 @@ If screening is complete, gather the applicable follow-ups:
   werkruimte in the taxpayer's own home is claimed; whether the year produced a
   business loss; and whether the enterprise started or stopped during the year.
   Read every threshold, hour count, year count and amount behind these questions
-  from `../_shared/knowledge/years/2025/entrepreneur/`; never quote one from
+  from `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/`; never quote one from
   memory in the conversation.
 
   Record each answer with provenance and keep the whole batch optional: an

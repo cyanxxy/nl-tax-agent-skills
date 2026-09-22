@@ -1,8 +1,8 @@
 # Human-only runtime projection: change-flow.md
 
 projection_version: "1"
-derived_from: skills/_shared/knowledge/years/2026/provisional/change-flow.md
-derived_note_sha256: d67e793652e7dc4b27f0f3797cf2ae49ab285297682e59be1f2fd5d0f5100b54
+derived_from: skills/nl-tax-shared-resources/knowledge/years/2026/provisional/change-flow.md
+derived_note_sha256: 6724f4ffd5d0da362383a5f265f860dadcd08f346bf65904a4050ff95361c65a
 source_ids: bd_provisional_change_2026
 
 This is a mechanically reversible runtime projection, not an independently reviewed tax note. The cited reviewed snapshot remains the provenance authority. The only permitted body transformation is inserting `**Taxpayer:**` before portal-action imperatives.

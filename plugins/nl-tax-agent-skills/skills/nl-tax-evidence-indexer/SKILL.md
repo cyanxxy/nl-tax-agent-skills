@@ -31,8 +31,8 @@ do not restart intake or turn the exchange into a fixed upload checklist.
 Resolve bundled paths relative to this skill directory and every `workspace/...`
 path against the saved `workspace_root`.
 
-1. Read `../_shared/runtime-contract.md` first.
-2. Read `../_shared/knowledge/methods/interactive-elicitation.md` for the shared
+1. Read `../nl-tax-shared-resources/runtime-contract.md` first.
+2. Read `../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md` for the shared
    conversational and session-state contract.
 3. Read [reference/indexing-flow.md](reference/indexing-flow.md) whenever this
    skill is active; it owns the attachment, indexing, provenance, and update

@@ -54,7 +54,7 @@ Off-the-shelf tax software wraps the official forms in its own interface. This
 plugin leaves you in control of Mijn Belastingdienst while handling gathering,
 classification, and field mapping up to the point of human-only manual entry.
 
-There is no autonomous filing. By design, the skills read a bundled, source-cited knowledge pack instead of fetching live web pages at runtime.
+There is no autonomous filing. By design, the skills read a bundled, source-cited knowledge pack instead of fetching live web pages at runtime. You can also use that knowledge pack on its own: ask how a 2025 or 2026 rule works and the agent answers from the reviewed notes, citing the year and official source, without preparing a workpack.
 
 ---
 
@@ -149,6 +149,10 @@ You can also request both in one sentence, for example: “Help me prepare my
 validates the annual workpack first, then continues naturally with the chosen
 2026 subflow without asking you to activate it again. Each workpack still has
 its own final-generation confirmation, facts, sources, and output folder.
+
+You can also just ask how a rule works, for example: “What is the Box 3
+heffingsvrij vermogen for 2025?” The agent answers from the reviewed,
+source-cited notes, names the year and official source, and creates no files.
 
 <details>
 <summary><strong>Advanced: invoke a skill directly</strong></summary>
@@ -297,6 +301,7 @@ and release mechanics are documented in [CONTRIBUTING.md](CONTRIBUTING.md#releas
 | ✅ Voorlopige aanslag — change | **2026** | Updated estimates and a clear change summary |
 | ✅ Voorlopige aanslag — review | **2026** | Review summary and unresolved questions |
 | ✅ Voorlopige aanslag — stopzetten | **2026** | Guided support checklist |
+| ✅ Rule questions (annual 2025 / voorlopige aanslag 2026) | **2025 / 2026** | Direct answer from the reviewed notes with the tax year and official source; no files created |
 | 🚫 Complex business forms (VOF / maatschap / CV, DGA / BV winst, agrarisch, zeevarenden, staking) | 2025 | *blocked — routed to manual review; only a straightforward eenmanszaak / ZZP is supported* |
 | 🚫 Annual income-tax return | 2026 | *blocked — filed in 2027; only the provisional 2026 flows are active for tax year 2026* |
 | 🚫 Annual return / Voorlopige aanslag | 2027 | *blocked until 2027 sources are registered and validated* |

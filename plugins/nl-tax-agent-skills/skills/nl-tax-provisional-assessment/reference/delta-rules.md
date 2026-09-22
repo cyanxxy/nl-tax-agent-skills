@@ -101,7 +101,7 @@ The delta summary must cover the following categories:
 
 The expected-business-profit row keeps its own category. Read its definition and
 every 2026 business figure from
-`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`: the row
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`: the row
 holds the winst expected as ondernemer in 2026, taken before the
 ondernemersaftrek and before the MKB-winstvrijstelling, excluding btw, with a
 minus sign for an expected loss. Never fold it into generic other income.
@@ -131,7 +131,7 @@ table as a companion item and never merges it into an income-tax row or total.
   MKB-winstvrijstelling. Never reuse one figure for the other, and never
   subtract the bijdrage from the profit estimate.
 
-`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
 for every Zvw figure; read them there and never restate one from memory.
 
 ---

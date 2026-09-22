@@ -43,7 +43,7 @@ offer to continue the matching annual or provisional workflow.
 
 ## Required context
 
-Read [`../_shared/runtime-contract.md`](../_shared/runtime-contract.md) first.
+Read [`../nl-tax-shared-resources/runtime-contract.md`](../nl-tax-shared-resources/runtime-contract.md) first.
 Resolve `workspace/...` against `workspace_root` in
 `workspace/shared/session-progress.yaml` (or `profile.yaml`); never create a
 second workspace tree. Bundled paths are relative to this skill directory and

@@ -72,7 +72,7 @@ class AgentDrivenContractTests(unittest.TestCase):
 
     def test_chat_values_update_evidence_ledger(self):
         shared = read_text(
-            "skills/_shared/knowledge/methods/interactive-elicitation.md"
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
         annual = read_text(
             "skills/nl-tax-annual-return/reference/annual-flow.md"
@@ -118,7 +118,7 @@ class AgentDrivenContractTests(unittest.TestCase):
 
     def test_aow_screen_uses_calculated_provenance(self):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
-        aow = read_text("skills/_shared/knowledge/aow/aow-leeftijd.md")
+        aow = read_text("skills/nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md")
         profile = read_text(
             "skills/nl-tax-intake/templates/taxpayer-profile.yaml"
         )
@@ -163,7 +163,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertIn("Never preload this phase", credits)
 
     def test_taxpayer_turns_do_not_scan_package_or_eval_surfaces(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
 
         for phrase in (
             "resource allowlist",
@@ -185,7 +185,7 @@ class AgentDrivenContractTests(unittest.TestCase):
             "skills/nl-tax-box3/reference/box3-actual-2025.md"
         )
         checklist = read_text(
-            "skills/_shared/knowledge/years/2025/annual/evidence-checklist.md"
+            "skills/nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md"
         )
 
         for label, text in {
@@ -310,7 +310,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertNotIn("Confidence is below 0.7", principles)
 
     def test_internal_orchestration_is_invisible(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         intake = read_text("skills/nl-tax-intake/SKILL.md")
         mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
         self.assertIn("Invisible orchestration", runtime)
@@ -318,11 +318,11 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertIn("never announce", mapper)
 
     def test_subagent_reviews_preserve_one_agent_owned_workflow(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         annual = read_text("skills/nl-tax-annual-return/SKILL.md")
         provisional = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
         elicitation = read_text(
-            "skills/_shared/knowledge/methods/interactive-elicitation.md"
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
         runtime_flat = " ".join(runtime.split())
         self.assertIn("only writer, user-question asker", runtime)
@@ -342,10 +342,10 @@ class AgentDrivenContractTests(unittest.TestCase):
         )
 
     def test_progress_files_record_state_without_owning_the_dialogue(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         runtime_flat = " ".join(runtime.split())
         elicitation = read_text(
-            "skills/_shared/knowledge/methods/interactive-elicitation.md"
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
         contributing = (ROOT.parents[1] / "CONTRIBUTING.md").read_text(
             encoding="utf-8"
@@ -358,7 +358,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertNotIn("small deterministic helpers", contributing)
 
     def test_failed_commands_and_speculative_paths_are_forbidden(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         annual = read_text("skills/nl-tax-annual-return/SKILL.md")
         runtime_flat = " ".join(runtime.split())
         plugin_text = "\n".join(

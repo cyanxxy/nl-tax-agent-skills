@@ -23,8 +23,8 @@ Use annual 2025 references for annual workpacks and provisional 2026 references 
 
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`.
-Read `../_shared/runtime-contract.md` first. Resolve bundled files relative to
+tree. The plugin-shared folder is this skill's `../nl-tax-shared-resources/`.
+Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled files relative to
 this skill directory with the host's skill-resource or file tools. Do not
 depend on shell visibility or vendor-specific environment variables.
 

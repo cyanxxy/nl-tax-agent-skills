@@ -45,7 +45,7 @@ class InvocationPolicyTests(unittest.TestCase):
         self.assertEqual(
             set(checked),
             {
-                "_shared",
+                "nl-tax-shared-resources",
                 "nl-tax-box1-home",
                 "nl-tax-box2",
                 "nl-tax-box3",

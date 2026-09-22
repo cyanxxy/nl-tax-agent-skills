@@ -98,7 +98,7 @@ documents: `verliesbeschikking`,
 - **Common naming patterns:** `factuur*.pdf`, `invoice*.pdf`, `verkoop*.pdf`, `inkoop*.pdf`
 
 ### urenadministratie
-- **Description:** Hours administration supporting the urencriterium for the zelfstandigenaftrek and related deductions; use the threshold in `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`.
+- **Description:** Hours administration supporting the urencriterium for the zelfstandigenaftrek and related deductions; use the threshold in `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`.
 - **Typical fields:** date, hours, activity (direct and indirect business hours), running total.
 - **Workflow:** annual
 - **Common naming patterns:** `uren*.xlsx`, `uren*.csv`, `urenregistratie*.pdf`, `hours*.xlsx`
@@ -118,7 +118,7 @@ documents: `verliesbeschikking`,
 ### kilometerregistratie
 - **Description:** Kilometre record for business use of a **private** vehicle,
   supporting the per-kilometre business cost. The per-kilometre amount stays in
-  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
 - **Typical fields:** datum, vertrek- en aankomstadres, doel van de rit, zakelijke kilometers, running total, vervoermiddel.
 - **Workflow:** annual
 - **Common naming patterns:** `kilometer*.xlsx`, `km*registratie*.csv`, `kilometeradministratie*.pdf`
@@ -127,7 +127,7 @@ documents: `verliesbeschikking`,
 - **Description:** Trip record for a car in the ondernemingsvermogen, supporting
   the taxpayer's position on private kilometres for the bijtelling. Required
   record content and the bijtelling rules stay in
-  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/vervoer-2025.md`.
 - **Typical fields:** datum, begin- en eindstand kilometerteller, vertrek- en aankomstadres, zakelijke of prive rit, afwijking van de gebruikelijke route, kenteken.
 - **Boundary:** A rittenregistratie evidences the private-kilometre position; it
   does not by itself settle the bijtelling. Keep the treatment as an agent
@@ -143,7 +143,7 @@ documents: `verliesbeschikking`,
 - **Boundary:** Distinct from `woz_beschikking`, which is the taxpayer's own
   home. Copy the labelled waardepeildatum and value exactly; the waardepeildatum
   the aangifte asks for stays in
-  `_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md`.
 - **Workflow:** annual
 - **Common naming patterns:** `woz*bedrijf*.pdf`, `woz*pand*.pdf`, `waardebeschikking*bedrijfspand*.pdf`
 
@@ -178,7 +178,7 @@ documents: `verliesbeschikking`,
   ondernemer's annual statement feeding the jaarruimte and `lijfrente_overzicht`
   for a privedeel premium overview. The premiegrondslag comes off a specific
   line of the profit chain, not off this statement; take that line from
-  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md`.
   Lijfrente premiums are never a business cost.
 - **Workflow:** annual
 - **Common naming patterns:** `lijfrente*jaaroverzicht*.pdf`, `jaaropgave*lijfrente*.pdf`, `banksparen*.pdf`
@@ -328,7 +328,7 @@ documents: `verliesbeschikking`,
   `voorlopige_aanslag_beschikking`: it is a different aanslag with its own
   bijdrage-inkomen. The bijdrage is never a business cost, in either direction.
   Percentages and the maximumbijdrage-inkomen stay in
-  `_shared/knowledge/years/2025/entrepreneur/zvw-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md`.
 - **Workflow:** annual
 - **Common naming patterns:** `zvw*.pdf`, `zorgverzekeringswet*.pdf`, `bijdrage*zvw*.pdf`
 
@@ -341,7 +341,7 @@ documents: `verliesbeschikking`,
   evidence it with the beschikking. Without it, record the gap as an open
   question; never carry a loss forward on recollection or on an earlier
   workpack. The carry-back and carry-forward windows stay in
-  `_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
 - **Workflow:** annual
 - **Common naming patterns:** `verliesbeschikking*.pdf`, `verlies*.pdf`, `beschikking*verlies*.pdf`
 
@@ -353,7 +353,7 @@ documents: `verliesbeschikking`,
   the taxpayer enters it in a later aangifte. Index the beschikking and record
   the running balance from it; never reconstruct the balance from an earlier
   workpack. The set-off condition stays in
-  `_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
 - **Workflow:** annual
 - **Common naming patterns:** `niet*gerealiseerde*zelfstandigenaftrek*.pdf`, `ngz*.pdf`, `beschikking*zelfstandigenaftrek*.pdf`
 

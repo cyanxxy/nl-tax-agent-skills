@@ -804,7 +804,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                     self.assertIn(phrase, skill)
 
     def test_cowork_portal_boundary_is_central_and_procedures_are_human_only(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         runtime_flat = " ".join(runtime.split())
         for required in (
             "Human-only authenticated portal boundary",
@@ -890,7 +890,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/resume-contract.md"
         )
         elicitation = read_text(
-            "skills/_shared/knowledge/methods/interactive-elicitation.md"
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
         combined = f"{skill}\n{resume}\n{elicitation}"
 
@@ -935,7 +935,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md"
         )
         flow = read_text(
-            "skills/_shared/knowledge/years/2026/provisional/stopzetten-flow.md"
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md"
         )
 
         combined = "\n".join([skill, contract, template, guidance, flow])
@@ -952,8 +952,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "all applicable categories, not only the changed item"
         )
         for relative_path in (
-            "skills/_shared/knowledge/years/2026/provisional/change-flow.md",
-            "skills/_shared/knowledge/years/2026/provisional/refund-payment-timing.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/change-flow.md",
+            "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/refund-payment-timing.md",
         ):
             with self.subTest(path=relative_path):
                 self.assertIn(canonical, read_text(relative_path))
@@ -1343,9 +1343,10 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         skill_paths = sorted((ROOT / "skills").glob("*/SKILL.md"))
         names = [skill_frontmatter(path.parent.name)["name"] for path in skill_paths]
 
-        self.assertEqual(len(names), 12)
-        self.assertEqual(len(set(names)), 12)
+        self.assertEqual(len(names), 13)
+        self.assertEqual(len(set(names)), 13)
         self.assertIn("nl-tax-shared-resources", names)
+        self.assertIn("nl-tax-knowledge", names)
 
     def test_public_skills_retain_exact_argument_hints(self):
         expected = {
