@@ -120,7 +120,7 @@ def _require_finite_non_negative(name, value):
 # These values duplicate the canonical knowledge pack so this optional mechanical
 # arithmetic check can run offline. The knowledge notes are canonical; keep these
 # in sync with the reviewed rule note and bump them in the same commit it changes:
-#   _shared/knowledge/years/2026/provisional/box3-provisional.md
+#   nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md
 #   (source bd_box3_2026_provisional).
 # Decimal constants: all money math below runs in Decimal end-to-end so that
 # rounding happens exactly once per output figure (no binary-float drift).

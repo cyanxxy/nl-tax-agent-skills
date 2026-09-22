@@ -5,7 +5,7 @@ the belastbare winst uit onderneming, which feeds the box 1 income total in
 Phase 2. If the taxpayer has no onderneming, emit the canonical "not applicable"
 line and continue.
 
-Invoke or inline `nl-tax-winst`. Require a finalized profit-and-loss statement
+Invoke or inline `nl-tax-winst` (`../nl-tax-winst/SKILL.md`). Require a finalized profit-and-loss statement
 and finalized balance for 2025. Preserve their evidence provenance and append
 only actually consulted entrepreneur `source_id`s to
 `sources_loaded_by_workflow.annual_2025` and the active `sources_loaded` mirror.
@@ -17,8 +17,8 @@ the knowledge pack states the figures.
 ### 2A.1 Pre-screen: which income category the activity belongs to
 
 Run this before any profit figure is collected. Load
-`_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` and
-`_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`.
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` and
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemer-criteria.md`.
 
 - Apply the **bron van inkomen** screen first. Activity that is not a source of
   income at all produces neither winst nor resultaat, and neither its income nor
@@ -47,7 +47,7 @@ Run this before any profit figure is collected. Load
 
 ### 2A.2 Collect the chain inputs
 
-Load `_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md`; it is
+Load `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md`; it is
 canonical for the order and names the component note behind each amount. Collect
 these before starting the chain, each one as a question and never as an
 assumption or a supplied zero:
@@ -149,7 +149,7 @@ in the workpack and re-read `winstberekening-2025.md` before emitting them.
   in the workpack that the ondernemer receives a **second, separate aanslag**
   for the inkomensafhankelijke bijdrage Zorgverzekeringswet alongside the
   aanslag inkomstenbelasting, and that the return covers both. Hand line 5 to
-  `_shared/knowledge/years/2025/entrepreneur/zvw-2025.md` for the percentage,
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md` for the percentage,
   the maximumbijdrage-inkomen, the interaction with loon, and the treatment of
   an oudedagsreserve release. The bijdrage is never a business cost and never
   re-enters the chain.
@@ -157,7 +157,7 @@ in the workpack and re-read `winstberekening-2025.md` before emitting them.
   the **preceding calendar year** -- for the 2025 return, the 2024 figure, which
   this 2025 chain does not produce. Ask the taxpayer for it separately; record
   this year's line 2 only as an input to the 2026 jaarruimte. Hand the question to
-  `_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` for
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` for
   the jaarruimte and reserveringsruimte, and record the result for Phase 5. AOV
   premiums belong there too; they are never a business cost.
 - **Arbeidsinkomen for the arbeidskorting** uses that same line 2 figure. Pass
@@ -179,7 +179,7 @@ this chain.
 - Route the carry-back and carry-forward windows, the beschikking, the early
   loss set-off request, and the niet-gerealiseerde zelfstandigenaftrek
   settlement to
-  `_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
 - A loss year still requires a filed return. Never treat a loss as a reason to
   skip the aangifte.
 
@@ -188,8 +188,8 @@ this chain.
 Recognising a business form is no longer terminal. Name the form, say what it
 does to the ondernemer tests, and continue preparing the parts of the return it
 does not block, using
-`_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` and
-`_shared/knowledge/years/2025/entrepreneur/staking-2025.md`.
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` and
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/staking-2025.md`.
 
 Route to manual review, without producing a partial calculation:
 
@@ -210,7 +210,7 @@ For each, record the collected facts, name the figure that could not be computed
 and why, and hand it to professional review.
 
 Where the fiscale partner works in the enterprise, use
-`_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md` to pick
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md` to pick
 between meewerkaftrek, arbeidsbeloning, a real dienstbetrekking, and the partner
 becoming medeondernemer. A real dienstbetrekking is payroll and stays manual
 review. Winst uit onderneming is not a gemeenschappelijk inkomensbestanddeel, so

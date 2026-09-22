@@ -117,8 +117,8 @@ def find_content_root(register_path):
     """Find the repo/plugin root that snapshot_path values are relative to.
 
     Register paths are serialized from this root (for example
-    skills/_shared/knowledge/...), not from an individual skill directory where
-    the same file may be referenced as _shared/knowledge/...
+    skills/nl-tax-shared-resources/knowledge/...), not from an individual skill directory where
+    the same file may be referenced as nl-tax-shared-resources/knowledge/...
     """
     base_dir = os.path.dirname(os.path.abspath(register_path))
     candidates = [
@@ -164,7 +164,7 @@ def metadata_path_for_snapshot(abs_snapshot, project_root, metadata_root=None):
         raise ValueError("repository-only snapshot metadata root is unavailable")
 
     knowledge_root = os.path.join(
-        project_root, "skills", "_shared", "knowledge"
+        project_root, "skills", "nl-tax-shared-resources", "knowledge"
     )
     snapshot_dir = os.path.dirname(abs_snapshot)
     try:

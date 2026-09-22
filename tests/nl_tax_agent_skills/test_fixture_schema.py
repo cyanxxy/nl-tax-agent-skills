@@ -273,7 +273,7 @@ class FixtureSchemaTests(unittest.TestCase):
         skills_dir = REPO_ROOT / "plugins/nl-tax-agent-skills/skills"
         session_template = yaml.safe_load(
             (
-                skills_dir / "_shared/templates/session-progress.yaml"
+                skills_dir / "nl-tax-shared-resources/templates/session-progress.yaml"
             ).read_text(encoding="utf-8")
         )
         canonical = set(

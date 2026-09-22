@@ -36,11 +36,13 @@ plugins/nl-tax-agent-skills/
   agents/
     nl-tax-specialist-reviewer.md   # Claude Cowork specialist reviewer
   skills/
-    _shared/
+    nl-tax-shared-resources/
+      knowledge-index.md            # topic → note map for every reviewed note
       source-register.yaml          # every cited source_id with metadata
       knowledge/                    # bundled source-cited rule notes
       templates/
     nl-tax-intake/                  # workflow router and taxpayer profile
+    nl-tax-knowledge/               # read-only rule lookup from the reviewed notes
     nl-tax-evidence-indexer/        # local evidence cataloging
     nl-tax-annual-return/           # annual 2025 workpack
     nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
@@ -74,7 +76,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -154,8 +156,11 @@ must use an explicit human subject such as `Taxpayer:`.
 Do not make Bash the discovery path for bundled plugin files. In Cowork, shell/code
 execution runs in an isolated VM and may not see the plugin cache path even when host
 file tools can read the installed skill resources. Skill bodies should resolve
-`reference/`, `templates/`, `_shared/`, and other bundled files with `Read` plus
-`Glob`/`Grep` fallback. Bundled Python helpers are best-effort: run them only when Bash can
+`reference/`, `templates/`, `../nl-tax-shared-resources/`, and sibling `../nl-tax-*/` files
+relative to the skill directory with `Read`. Write every bundled path in a `SKILL.md` or
+`reference/` file in that skill-relative form, and name each file a skill needs, including
+helper `SKILL.md` paths. The runtime contract forbids package-wide `Glob`/`Grep`; the only
+permitted search is a narrow term search inside `../nl-tax-shared-resources/knowledge/`. Bundled Python helpers are best-effort: run them only when Bash can
 access the resolved plugin `skills/.../scripts/` path, and otherwise use the manual
 validation path documented in the skill. Never copy bundled scripts into `workspace/`.
 
@@ -249,7 +254,7 @@ in `knowledge/` must cite a `source_id` from `source-register.yaml`. An entry lo
   domain: belastingdienst.nl
   url: "https://www.belastingdienst.nl/..."
   source_type: official_guidance
-  snapshot_path: "skills/_shared/knowledge/years/2025/box3/box3-calc.md"
+  snapshot_path: "skills/nl-tax-shared-resources/knowledge/years/2025/box3/box3-calc.md"
   last_checked: "2026-06-23"
   freshness_policy: "check quarterly; rate review January annually"
   owner: "tax-content"
@@ -266,12 +271,28 @@ and authoring-method research lives under `docs/maintainers/source-notes/`
 rather than in the taxpayer source register.
 
 To add a rate or rule: put it in the right `knowledge/years/<year>/<scope>/*.md`, register
-the source (with `mandatory_for` listing every skill that needs it), then run the validators.
-After editing a reviewed knowledge `.md`, run `build_snapshots.py` to recompute its
-`reviewed_note_hash_sha256` in the mirrored repository-only metadata under
-`tools/nl_tax_agent_skills/source_maintenance/metadata/`. The builder marks a
-new or changed note `review_status: needs_review`; only a human who compared the local note
-with the cited official source may change that status to `reviewed`.
+the source (with `mandatory_for` listing every skill that needs it), add a row to
+`nl-tax-shared-resources/knowledge-index.md` (topic, key terms that occur in the note, and
+the skill-relative path), then run the validators and the unit suite.
+`test_knowledge_base_access.py` fails when a note is missing from the index or an index
+key term does not occur in its note. Keep note headers on the uniform `source_ids:` and
+`tax_year:` keys.
+Every edit to a reviewed knowledge `.md` changes its `reviewed_note_hash_sha256` in the
+mirrored repository-only metadata under
+`tools/nl_tax_agent_skills/source_maintenance/metadata/`. Pick the path by what changed:
+
+- **Substantive edit** (any rule, amount, percentage, threshold, date, condition,
+  example, or cited source changes): run `build_snapshots.py`. It recomputes the hash and
+  marks the note `review_status: needs_review`; only a human who compared the local note
+  with the cited official source may change that status back to `reviewed`.
+- **Maintainer-only edit** (a folder or path rename, a header-key rename such as
+  `source_id:` → `source_ids:`, or whitespace): no rule text changes, so the existing
+  attestation still holds. Show that the diff contains nothing else, for example by
+  applying the same rename to `git show HEAD:<old path>` and comparing the result
+  byte-for-byte with the new file. Then update `reviewed_note_hash_sha256` and
+  `reviewed_note_hash_recorded_at` for every `source_id` the note backs, keeping
+  `review_status: reviewed`. Do not run `build_snapshots.py` for this: it would demote
+  the note and fail the gate. If any line of rule text changed, use the substantive path.
 
 The reviewed provisional request/change/stopzetten snapshots are preserved
 byte-for-byte. After a human reattests any of those notes, rebuild their
@@ -318,14 +339,14 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
   dist/openai/nl-tax-agent-skills
 
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_source_register.py \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py \
   tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_invocation_policy.py \
   plugins/nl-tax-agent-skills/skills
@@ -363,7 +384,7 @@ python3 tools/nl_tax_agent_skills/source_maintenance/scripts/plan_source_refresh
 
 # Recompute snapshot metadata after source updates
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_snapshots.py \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
 # Rebuild reversible human-only runtime projections without reattesting sources
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_projections.py
@@ -382,11 +403,11 @@ python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_fi
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.2.0`):
+Both plugin manifests pin a fixed version (currently `0.3.0`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.2.0"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.2.0"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.0"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.0"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -415,7 +436,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.2.0')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.3.0')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.2.0'
+git tag --list 'nl-tax-agent-skills--v0.3.0'
 ```

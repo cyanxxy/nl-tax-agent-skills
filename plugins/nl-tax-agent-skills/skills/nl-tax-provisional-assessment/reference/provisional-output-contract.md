@@ -75,7 +75,7 @@ full-year forecast in the portal section `Winst uit onderneming`:
 from-baseline label, and manual review. Do not use the generic Box 1
 other-income field as a business-profit substitute.
 
-`_shared/knowledge/years/2026/provisional/winst-provisional-2026.md` is
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md` is
 canonical for this field and for every 2026 business figure named anywhere in
 this contract. Read each figure there; never restate one from memory.
 
@@ -110,7 +110,7 @@ delta and in the Box 1 income-before-own-home rollup. A workpack that records
 
 ## Voorlopige aanslag Zorgverzekeringswet -- REQUIRED companion item
 
-`_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md` is canonical
 for the 2026 percentage, the maximumbijdrage-inkomen, and every other figure in
 this section. Read them there; never restate one from memory, and never multiply
 the percentage by the ceiling.

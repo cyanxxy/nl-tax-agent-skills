@@ -86,7 +86,7 @@ must not access or operate Mijn Belastingdienst.
 
 Resultaat uit overige werkzaamheden is a prepared path in this workflow, not a
 routing marker. Prepare it from
-`_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, which is
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/row-en-dba-2025.md`, which is
 canonical: run its bron van inkomen pre-screen first, then record the gross
 inkomsten uit overig werk and the costs that note allows, and map the resulting
 resultaat to this single row. The category decision itself (loon, winst uit
@@ -101,13 +101,13 @@ onderneming, or resultaat uit overige werkzaamheden) stays with the taxpayer.
   count in order to settle this category.
 - Costs, afschrijving, goed koopmansgebruik and the limited-deductible-cost
   drempel do apply, on the rules in
-  `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` and
-  `_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md` and
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md`.
 - A bijdrage Zvw is due on the resultaat and arrives as a **second, separate
   aanslag** alongside the aanslag inkomstenbelasting. One return feeds both;
   there is no Zvw entry screen and no Zvw field. Keep it in the workpack
   narrative and never create a field-map row for a bijdrage amount. Read
-  `_shared/knowledge/years/2025/entrepreneur/zvw-2025.md` for the percentage and
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md` for the percentage and
   the maximumbijdrage-inkomen.
 - Terbeschikkingstelling van bezittingen and the special categories that note
   names (gastouder, artiest, beroepssporter, kostgangers, pgb-zorg,
@@ -122,10 +122,10 @@ onderneming, or resultaat uit overige werkzaamheden) stays with the taxpayer.
 
 Preparation-only for an IB-ondernemer with an eenmanszaak. The rubrieken,
 questions and identifiers below are taken from
-`_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md`, which stays
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md`, which stays
 canonical for the schema and for the identifier naming scheme; the ordered chain
 behind the figures is in
-`_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md`. Amounts,
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md`. Amounts,
 limits and thresholds stay in the sibling knowledge notes named below -- never
 restate one here.
 
@@ -187,17 +187,17 @@ private movements, or entrepreneur questions are complete.
   taxpayer checks on screen, never as an instruction to type a number.
 - Business use of a **private** vehicle is a cost under
   `onderneming.wv.auto_transportkosten`, at the per-kilometre amount in
-  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md`. The **bijtelling**
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/vervoer-2025.md`. The **bijtelling**
   for private use of a business car is not a cost row: it belongs to
   `onderneming.wv.overige_buitengewone_baten` and to
   `onderneming.prive.onttrekking_auto`. Never map it under auto- en
   transportkosten.
 - `onderneming.wv.arbeidsbeloning_partner` is filled only when the vergoeding to
   the fiscale partner reaches the threshold in
-  `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`; below it, the
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`; below it, the
   amount is not entered here.
 - A werkruimte in the taxpayer's own home is usually not deductible; apply the
-  test in `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` before
+  test in `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md` before
   mapping any part of `onderneming.wv.huisvestingskosten`.
 - Dividend received in the enterprise is entered gross, including the
   dividendbelasting. An upward revaluation under
@@ -264,15 +264,15 @@ These rows carry answers, not amounts.
 #### Notes on the question rows
 
 - The hour tests, the starter conditions and the meewerkaftrek bands live in
-  `_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` and
-  `_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`. Read them
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` and
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemersaftrek.md`. Read them
   there; do not restate a count in a mapped label or note.
 - Ask the taxpayer for each answer. Never infer a "no", an absent starter
   history, or a nil hours count from missing evidence -- record the unanswered
   question in `missing_fields`.
 - Per-asset investment detail, the per-asset minima and any
   desinvesteringsbijtelling stay in
-  `_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/investeringsaftrek.md`.
 
 ### Priveonttrekkingen en -stortingen
 
@@ -291,8 +291,8 @@ These rows carry answers, not amounts.
 - The full sub-field inventory of this screen is not captured in the reviewed
   schema. Ask the taxpayer to record the boxes the form actually presents.
 - The onttrekking amounts follow
-  `_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md` (auto, fiets) and
-  `_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` (woning).
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/vervoer-2025.md` (auto, fiets) and
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md` (woning).
 
 ### Double-entry rows -- one value, two screen paths
 
@@ -318,7 +318,7 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
 
 - Present each of those as a computed expectation in the workpack narrative that
   the taxpayer checks against the screen, with the line it comes from in
-  `_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md`.
+  `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md`.
 - The belastbare winst uit onderneming feeds the box 1 income total in the
   workpack; it is still not a mapped entry box.
 - Carry the vermogensvergelijking self-check as a workpack line: the
@@ -328,7 +328,7 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
   inkomensafhankelijke bijdrage Zvw alongside the aanslag inkomstenbelasting.
   One return feeds both, there is no Zvw entry screen and no Zvw field: keep it
   in the workpack narrative and never create a field-map row for a bijdrage
-  amount. `_shared/knowledge/years/2025/entrepreneur/zvw-2025.md` is canonical.
+  amount. `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md` is canonical.
 
 ### Notes on winst uit onderneming fields
 
@@ -377,7 +377,7 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
 | `eigenwoning.eigenwoningschuld` | Eigenwoningschuld (restschuld) | Mortgage debt (outstanding) | Eigen woning | conditional | `hypotheek_jaaroverzicht` |
 
 ### Notes on eigen woning fields
-- Eigenwoningforfait is calculated as a percentage of the WOZ-waarde. The percentage depends on the WOZ value range (see `_shared/knowledge/years/2025/annual/own-home.md`).
+- Eigenwoningforfait is calculated as a percentage of the WOZ-waarde. The percentage depends on the WOZ value range (see `../nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md`).
 - Hypotheekrente (mortgage interest) is deductible only for qualifying mortgages (annuitair or lineair for post-2013 mortgages).
 - The net eigen woning result (eigenwoningforfait minus hypotheekrente) flows into box 1.
 

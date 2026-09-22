@@ -18,6 +18,7 @@ ARGUMENT_HINTS = {
     "nl-tax-evidence-indexer": "[path-to-upload-folder]",
     "nl-tax-field-mapper": "[annual|provisional] [year]",
     "nl-tax-intake": "[annual|request|change|review|stopzetten]",
+    "nl-tax-knowledge": "[tax-rule question]",
     "nl-tax-provisional-assessment": (
         "[2026] [request|change|review|stopzetten|confirm]"
     ),
@@ -29,6 +30,7 @@ PUBLIC_OPENAI_SKILLS = {
     "nl-tax-evidence-indexer",
     "nl-tax-field-mapper",
     "nl-tax-intake",
+    "nl-tax-knowledge",
     "nl-tax-provisional-assessment",
     "nl-tax-submit-companion",
 }
@@ -52,8 +54,8 @@ class ReleasePackagingTests(unittest.TestCase):
 
     def test_runtime_plugin_excludes_source_maintenance_and_eval_fixtures(self):
         self.assertFalse((SKILLS / "nl-tax-source-refresh").exists())
-        self.assertFalse((SKILLS / "_shared/eval-fixtures").exists())
-        self.assertFalse((SKILLS / "_shared/supported-workflows.yaml").exists())
+        self.assertFalse((SKILLS / "nl-tax-shared-resources/eval-fixtures").exists())
+        self.assertFalse((SKILLS / "nl-tax-shared-resources/supported-workflows.yaml").exists())
         self.assertTrue(
             (
                 REPO
@@ -62,7 +64,7 @@ class ReleasePackagingTests(unittest.TestCase):
         )
 
     def test_runtime_plugin_excludes_maintainer_source_notes(self):
-        knowledge = SKILLS / "_shared/knowledge"
+        knowledge = SKILLS / "nl-tax-shared-resources/knowledge"
         self.assertEqual(list(knowledge.glob("**/_snapshot-metadata.yaml")), [])
         for directory in ("platform", "compat"):
             with self.subTest(directory=directory):
@@ -79,7 +81,7 @@ class ReleasePackagingTests(unittest.TestCase):
 
         runtime_registry = "\n".join(
             (
-                (SKILLS / "_shared/source-register.yaml").read_text(encoding="utf-8"),
+                (SKILLS / "nl-tax-shared-resources/source-register.yaml").read_text(encoding="utf-8"),
                 (
                     REPO
                     / "tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml"
@@ -98,16 +100,16 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_no_legacy_commands(self):
         self.assertFalse((PLUGIN / "commands").exists())
 
-    def test_exactly_11_runtime_skills_plus_hidden_shared_resources(self):
+    def test_exactly_12_runtime_skills_plus_hidden_shared_resources(self):
         paths = list(SKILLS.glob("*/SKILL.md"))
         names = [frontmatter(path)["name"] for path in paths]
         workflow_names = [
-            frontmatter(path)["name"] for path in paths if path.parent.name != "_shared"
+            frontmatter(path)["name"] for path in paths if path.parent.name != "nl-tax-shared-resources"
         ]
-        self.assertEqual(len(workflow_names), 11)
-        self.assertEqual(len(names), 12)
-        self.assertEqual(len(set(names)), 12)
-        shared = frontmatter(SKILLS / "_shared/SKILL.md")
+        self.assertEqual(len(workflow_names), 12)
+        self.assertEqual(len(names), 13)
+        self.assertEqual(len(set(names)), 13)
+        shared = frontmatter(SKILLS / "nl-tax-shared-resources/SKILL.md")
         self.assertFalse(shared["user-invocable"])
         self.assertTrue(shared["disable-model-invocation"])
 
@@ -123,8 +125,8 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.2.0")
-        self.assertEqual(codex["version"], "0.2.0")
+        self.assertEqual(claude["version"], "0.3.0")
+        self.assertEqual(codex["version"], "0.3.0")
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -172,7 +174,7 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_public_box3_copy_preserves_the_non_election_boundary(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
         examples = (
-            SKILLS / "_shared/knowledge/years/2025/box3/examples.md"
+            SKILLS / "nl-tax-shared-resources/knowledge/years/2025/box3/examples.md"
         ).read_text(encoding="utf-8")
 
         self.assertIn("informational comparison", readme)
@@ -180,13 +182,13 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertIn("uses the more favorable amount", readme)
         self.assertNotIn("comparison for the user to choose from", readme)
         self.assertIn("recommendation note", examples)
-        runtime = (SKILLS / "_shared/runtime-contract.md").read_text(encoding="utf-8")
+        runtime = (SKILLS / "nl-tax-shared-resources/runtime-contract.md").read_text(encoding="utf-8")
         self.assertIn("legacy “recommendation note” shorthand", runtime)
         self.assertIn("does not create a taxpayer method election", runtime)
         self.assertIn("Preserve\nthe reviewed source note byte-for-byte", runtime)
 
     def test_every_skill_loads_the_cross_runtime_contract(self):
-        contract = SKILLS / "_shared/runtime-contract.md"
+        contract = SKILLS / "nl-tax-shared-resources/runtime-contract.md"
         self.assertTrue(contract.is_file())
         contract_text = contract.read_text(encoding="utf-8")
         for required in (
@@ -202,8 +204,8 @@ class ReleasePackagingTests(unittest.TestCase):
         for path in SKILLS.glob("*/SKILL.md"):
             with self.subTest(skill=path.parent.name):
                 text = path.read_text(encoding="utf-8")
-                if path.parent.name != "_shared":
-                    self.assertIn("../_shared/runtime-contract.md", text)
+                if path.parent.name != "nl-tax-shared-resources":
+                    self.assertIn("../nl-tax-shared-resources/runtime-contract.md", text)
                 self.assertNotIn("${CLAUDE_", text)
                 self.assertNotIn("in Cowork's isolated VM", text)
                 self.assertNotIn("requires Claude Code", text)
@@ -297,11 +299,11 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.2.0\')" = ""',
+            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.0\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.2.0'", text)
+        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.0'", text)
 
     def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")

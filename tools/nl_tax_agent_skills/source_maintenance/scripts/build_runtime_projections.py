@@ -16,7 +16,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[4]
 PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
-KNOWLEDGE = PLUGIN / "skills/_shared/knowledge/years/2026/provisional"
+KNOWLEDGE = PLUGIN / "skills/nl-tax-shared-resources/knowledge/years/2026/provisional"
 OUTPUT = (
     PLUGIN
     / "skills/nl-tax-provisional-assessment/reference/source-projections"

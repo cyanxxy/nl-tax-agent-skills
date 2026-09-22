@@ -82,7 +82,7 @@ must not access or operate Mijn Belastingdienst.
   expects to earn as ondernemer in 2026, taken **before** the ondernemersaftrek
   and **before** the mkb-winstvrijstelling, **excluding** the btw payable and
   the btw reclaimable, and entered with a **minus sign** when a loss is
-  expected. `_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`
+  expected. `../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`
   is canonical for this semantic; never restate it from memory. An estimate that
   has already been reduced by an ondernemersfaciliteit is too low, because the
   portal applies those itself. There is exactly one business figure on the form:
@@ -100,7 +100,7 @@ must not access or operate Mijn Belastingdienst.
   human** change that assessment through its own route. It is never mapped: the
   income-tax field map MUST contain no Zvw field or value, including no Zvw
   `field_id`, label, note, amount, baseline, estimate, or manual-entry row.
-  `_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` is
+  `../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md` is
   canonical; its payment terms and timing are not established there, so route a
   timing question to manual review rather than reusing the income-tax dates.
 - If the taxpayer reaches AOW age during 2026, preserve the reviewed transition

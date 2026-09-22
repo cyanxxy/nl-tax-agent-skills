@@ -9,8 +9,8 @@ not as a credit decision. For each credit below, record `candidate`, `not
 applicable`, or `unresolved`, with the answered conditions and provenance. The
 live return calculates the result.
 
-Load `_shared/knowledge/years/2025/annual/credits.md`. Load
-`_shared/knowledge/aow/aow-leeftijd.md` only if stored AOW-age facts must be
+Load `../nl-tax-shared-resources/knowledge/years/2025/annual/credits.md`. Load
+`../nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md` only if stored AOW-age facts must be
 checked.
 
 ### Arbeidsinkomen when there is winst uit onderneming
@@ -23,7 +23,7 @@ the belastbare winst that the bijdrage Zvw uses. Arbeidsinkomen is a
 current-year figure: it sits at the same position in the chain as the lijfrente
 premiegrondslag but is taken from a different year, so do not treat the two as
 one amount.
-`_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md` is canonical
+`../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md` is canonical
 for which line each downstream base is read off. Take the figure from Phase 2A
 rather than recomputing it, and record which line it came from. Profit enjoyed
 as a medegerechtigde or a winstdelende schuldeiser does not count towards

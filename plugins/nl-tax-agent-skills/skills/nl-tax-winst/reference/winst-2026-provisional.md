@@ -15,11 +15,11 @@ forecast for the portal section `Winst uit onderneming`.
 
 Two reviewed knowledge notes are canonical here and own every figure:
 
-- `_shared/knowledge/years/2026/provisional/winst-provisional-2026.md` -- the
+- `../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md` -- the
   meaning of the single business field, what the form does and does not contain,
   the items the invulhulp says the estimate must take into account, and the
   rollover trap on a carried-forward estimate.
-- `_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md` -- the
+- `../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md` -- the
   bijdrage Zorgverzekeringswet and the separate voorlopige aanslag Zvw.
 
 Read both there and never restate a figure from memory. Do not load annual

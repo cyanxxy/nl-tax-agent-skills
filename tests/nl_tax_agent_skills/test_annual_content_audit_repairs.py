@@ -26,7 +26,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
 
     def test_no_letter_routes_are_evidence_labels_not_a_state_machine(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/filing-flow.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
             "nl-tax-intake/reference/filing-paths.md",
             "nl-tax-annual-return/reference/phases/01-5-filing-status.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
@@ -52,7 +52,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
         )
 
     def test_penalty_routes_and_interest_are_not_conflated(self):
-        relative = "_shared/knowledge/years/2025/annual/late-filing.md"
+        relative = "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md"
         self.assert_contains_all(
             relative,
             "invited return",
@@ -74,8 +74,8 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
 
     def test_expired_standard_extension_is_not_offered(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/filing-flow.md",
-            "_shared/knowledge/years/2025/annual/late-filing.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
             "nl-tax-annual-return/reference/phases/01-5-filing-status.md",
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
         )
@@ -97,7 +97,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
             "nl-tax-field-mapper/reference/annual-field-map.md",
             "nl-tax-field-mapper/reference/mapping-principles.md",
             "nl-tax-evidence-indexer/reference/evidence-types.md",
-            "_shared/knowledge/years/2025/annual/evidence-checklist.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
         )
         for relative in relatives:
             self.assert_contains_all(relative, "fiscaal loon")
@@ -112,7 +112,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
 
     def test_credit_screens_keep_all_conditions_and_portal_review(self):
         relatives = (
-            "_shared/knowledge/years/2025/annual/credits.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-annual-return/reference/phases/05-5-credits.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
             "nl-tax-annual-return/templates/annual-return-pack.md",
@@ -141,7 +141,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-annual-return/reference/phases/06-partner.md",
             "nl-tax-field-mapper/reference/annual-field-map.md",
-            "_shared/knowledge/years/2025/annual/evidence-checklist.md",
+            "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
         )
         for relative in relatives:
@@ -155,7 +155,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
         self.assert_contains_all(relatives[0], "it is not mandatory")
 
     def test_evidence_checklist_has_current_woz_study_and_alimony_boundaries(self):
-        relative = "_shared/knowledge/years/2025/annual/evidence-checklist.md"
+        relative = "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md"
         self.assert_contains_all(
             relative,
             "completeness checklist, not an upload list",
@@ -170,7 +170,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
 
     def test_box3_is_data_supply_not_method_election(self):
         relatives = (
-            "_shared/knowledge/years/2025/box3/actual-return.md",
+            "nl-tax-shared-resources/knowledge/years/2025/box3/actual-return.md",
             "nl-tax-box3/reference/box3-actual-2025.md",
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
             "nl-tax-field-mapper/reference/annual-field-map.md",

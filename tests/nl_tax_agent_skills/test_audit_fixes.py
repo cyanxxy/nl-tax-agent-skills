@@ -117,7 +117,7 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
     SCRIPT = ROOT / "../../tools/nl_tax_agent_skills/source_maintenance/scripts/build_snapshots.py"
 
     def run_build(self, project_root):
-        register = project_root / "skills" / "_shared" / "source-register.yaml"
+        register = project_root / "skills" / "nl-tax-shared-resources" / "source-register.yaml"
         return subprocess.run(
             [sys.executable, str(self.SCRIPT), str(register)],
             capture_output=True,
@@ -147,7 +147,7 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
             project_root = repo_root / "nl-tax-agent-skills"
             metadata_root = None
         (project_root / ".claude-plugin").mkdir(parents=True)
-        knowledge = project_root / "skills" / "_shared" / "knowledge"
+        knowledge = project_root / "skills" / "nl-tax-shared-resources" / "knowledge"
         knowledge.mkdir(parents=True)
         (knowledge / "note.md").write_text(snapshot_text, encoding="utf-8")
         if metadata_text is not None:
@@ -159,11 +159,11 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
             target.write_text(
                 metadata_text, encoding="utf-8"
             )
-        (project_root / "skills" / "_shared" / "source-register.yaml").write_text(
+        (project_root / "skills" / "nl-tax-shared-resources" / "source-register.yaml").write_text(
             "sources:\n"
             "  - id: test_source\n"
             "    url: \"https://www.belastingdienst.nl/test\"\n"
-            "    snapshot_path: \"skills/_shared/knowledge/note.md\"\n",
+            "    snapshot_path: \"skills/nl-tax-shared-resources/knowledge/note.md\"\n",
             encoding="utf-8",
         )
         return project_root
@@ -268,7 +268,7 @@ class BuildSnapshotsReviewStatusTests(unittest.TestCase):
             runtime_metadata = (
                 project_root
                 / "skills"
-                / "_shared"
+                / "nl-tax-shared-resources"
                 / "knowledge"
                 / "_snapshot-metadata.yaml"
             )

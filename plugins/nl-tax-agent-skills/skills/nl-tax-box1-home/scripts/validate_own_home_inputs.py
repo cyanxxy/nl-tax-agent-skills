@@ -68,9 +68,9 @@ def _finite_float(value, field_name: str, *, non_negative: bool) -> float:
 # arithmetic check can run offline. The knowledge notes are canonical; this table
 # is a convenience copy. Keep them in sync with the reviewed rule notes (and bump
 # them in the same commit a note changes):
-#   - eigenwoningforfait brackets: _shared/knowledge/own-home/eigenwoningforfait.md
+#   - eigenwoningforfait brackets: nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md
 #                                  (source bd_eigenwoningforfait_2025_2026)
-#   - tariefsaanpassing / Hillen:  _shared/knowledge/years/2025/annual/own-home.md
+#   - tariefsaanpassing / Hillen:  nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md
 #                                  and years/2026/provisional/own-home.md
 #                                  (sources bd_own_home_deduction_cap_2025 / _2026)
 # ---------------------------------------------------------------------------

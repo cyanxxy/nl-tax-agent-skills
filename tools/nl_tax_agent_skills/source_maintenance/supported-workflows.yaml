@@ -19,16 +19,16 @@ active_workflows:
     profile_candidates:
       - annual_2025
     knowledge_dirs:
-      - skills/_shared/knowledge/aow
-      - skills/_shared/knowledge/laws
-      - skills/_shared/knowledge/methods
-      - skills/_shared/knowledge/own-home
-      - skills/_shared/knowledge/partners
-      - skills/_shared/knowledge/security
-      - skills/_shared/knowledge/years/2025/annual
-      - skills/_shared/knowledge/years/2025/box2
-      - skills/_shared/knowledge/years/2025/box3
-      - skills/_shared/knowledge/years/2025/entrepreneur
+      - skills/nl-tax-shared-resources/knowledge/aow
+      - skills/nl-tax-shared-resources/knowledge/laws
+      - skills/nl-tax-shared-resources/knowledge/methods
+      - skills/nl-tax-shared-resources/knowledge/own-home
+      - skills/nl-tax-shared-resources/knowledge/partners
+      - skills/nl-tax-shared-resources/knowledge/security
+      - skills/nl-tax-shared-resources/knowledge/years/2025/annual
+      - skills/nl-tax-shared-resources/knowledge/years/2025/box2
+      - skills/nl-tax-shared-resources/knowledge/years/2025/box3
+      - skills/nl-tax-shared-resources/knowledge/years/2025/entrepreneur
     output_paths:
       - workspace/annual/2025/return-pack.md
       - workspace/annual/2025/field-map.yaml
@@ -259,21 +259,21 @@ active_workflows:
       - provisional_2026_review
       - provisional_2026_stopzetten
     knowledge_dirs:
-      - skills/_shared/knowledge/aow
-      - skills/_shared/knowledge/laws
-      - skills/_shared/knowledge/methods
-      - skills/_shared/knowledge/own-home
-      - skills/_shared/knowledge/partners
-      - skills/_shared/knowledge/security
-      - skills/_shared/knowledge/years/2026/provisional
+      - skills/nl-tax-shared-resources/knowledge/aow
+      - skills/nl-tax-shared-resources/knowledge/laws
+      - skills/nl-tax-shared-resources/knowledge/methods
+      - skills/nl-tax-shared-resources/knowledge/own-home
+      - skills/nl-tax-shared-resources/knowledge/partners
+      - skills/nl-tax-shared-resources/knowledge/security
+      - skills/nl-tax-shared-resources/knowledge/years/2026/provisional
       # The next two 2025 directories host all-year snapshots this workflow's
       # required sources point at (bd_box2_rates_2025_2026 and
       # bd_box2_income_ab_guidance under years/2025/box2, and the belastingrente
       # notes in years/2025/annual/late-filing.md). They are listed so every
       # required snapshot is reachable; the provisional workflow still uses only
       # 2026 provisional rates and never reuses 2025 annual rate sheets.
-      - skills/_shared/knowledge/years/2025/box2
-      - skills/_shared/knowledge/years/2025/annual
+      - skills/nl-tax-shared-resources/knowledge/years/2025/box2
+      - skills/nl-tax-shared-resources/knowledge/years/2025/annual
     output_paths:
       - workspace/provisional/2026/provisional-pack.md
       - workspace/provisional/2026/field-map.yaml

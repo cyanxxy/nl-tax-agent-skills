@@ -37,18 +37,18 @@ jobs:
       - name: Validate source register
         run: |
           python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_source_register.py \
-            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
       - name: Validate knowledge pack
         run: |
           python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py \
-            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
       - name: Validate supported workflows
         run: |
           python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py \
             tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml \
-            plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 
       - name: Validate cross-host invocation policy
         run: |

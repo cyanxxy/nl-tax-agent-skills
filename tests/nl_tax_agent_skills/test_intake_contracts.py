@@ -34,14 +34,14 @@ REVIEW_READY_STATUSES = {"complete", "chat_only"}
 
 
 def completed_annual_state():
-    state = load_yaml("skills/_shared/templates/session-progress.yaml")
+    state = load_yaml("skills/nl-tax-shared-resources/templates/session-progress.yaml")
     for subsection in state["sections"]["annual_2025"]["subsections"].values():
         subsection["status"] = "complete"
     return state
 
 
 def completed_provisional_state():
-    state = load_yaml("skills/_shared/templates/session-progress.yaml")
+    state = load_yaml("skills/nl-tax-shared-resources/templates/session-progress.yaml")
     for subsection in state["sections"]["provisional_2026"]["subsections"].values():
         subsection["status"] = "complete"
     return state
@@ -58,8 +58,8 @@ def readiness(state, workflow="annual_2025"):
 
 class IntakeContractTests(unittest.TestCase):
     def test_finite_choice_intake_prefers_return_capable_controls(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
         intake = read_text("skills/nl-tax-intake/SKILL.md")
 
         for text in (runtime, contract, intake):
@@ -72,7 +72,7 @@ class IntakeContractTests(unittest.TestCase):
         self.assertIn("source: user_chat", intake)
 
     def test_claude_host_rules_distinguish_cowork_from_claude_code(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         intake = read_text("skills/nl-tax-intake/SKILL.md")
 
         for text in (runtime, intake):
@@ -85,8 +85,8 @@ class IntakeContractTests(unittest.TestCase):
                 self.assertIn("Codex", text)
 
     def test_session_progress_schema_version_and_chat_only_gate_match_template(self):
-        template = load_yaml("skills/_shared/templates/session-progress.yaml")
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        template = load_yaml("skills/nl-tax-shared-resources/templates/session-progress.yaml")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
 
         self.assertEqual(template["session_progress_version"], "1.4")
         self.assertIn("Schema (v1.4", contract)
@@ -169,7 +169,7 @@ class IntakeContractTests(unittest.TestCase):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
         filing_paths = read_text("skills/nl-tax-intake/reference/filing-paths.md")
         contract = read_text(
-            "skills/_shared/knowledge/methods/interactive-elicitation.md"
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
 
         self.assertIn("conversational, not a fixed interview", intake)
@@ -179,7 +179,7 @@ class IntakeContractTests(unittest.TestCase):
         self.assertNotIn("Decision Tree for Workflow Selection", filing_paths)
 
     def test_explicit_preparation_continues_without_internal_reactivation(self):
-        runtime = read_text("skills/_shared/runtime-contract.md")
+        runtime = read_text("skills/nl-tax-shared-resources/runtime-contract.md")
         intake = read_text("skills/nl-tax-intake/SKILL.md")
 
         self.assertIn("continue naturally", runtime)
@@ -187,7 +187,7 @@ class IntakeContractTests(unittest.TestCase):
         self.assertIn("do not\nrequire a second activation phrase", intake)
 
     def test_interactive_contract_aligns_draft_generation_with_output_contracts(self):
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
 
         self.assertNotIn('explicit "DRAFT - incomplete" markers', contract)
         self.assertIn("output contract", contract)
@@ -203,8 +203,8 @@ class IntakeContractTests(unittest.TestCase):
         self.assertNotIn("March-April 2026", filing_paths)
 
     def test_session_tracks_annual_and_provisional_winst(self):
-        state = load_yaml("skills/_shared/templates/session-progress.yaml")
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        state = load_yaml("skills/nl-tax-shared-resources/templates/session-progress.yaml")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
 
         self.assertEqual(state["session_progress_version"], "1.4")
         self.assertIn("winst", state["sections"]["annual_2025"]["subsections"])
@@ -242,7 +242,7 @@ class IntakeContractTests(unittest.TestCase):
 
     def test_intake_alone_creates_session_state(self):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
         annual = read_text("skills/nl-tax-annual-return/SKILL.md")
         provisional = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
 
@@ -254,7 +254,7 @@ class IntakeContractTests(unittest.TestCase):
                 self.assertNotIn("reconstruct it from `profile.yaml`", workflow)
 
     def test_schema_14_documents_legacy_resume_migration(self):
-        contract = read_text("skills/_shared/knowledge/methods/interactive-elicitation.md")
+        contract = read_text("skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md")
 
         self.assertIn("migrate older\nsession state in place", contract)
         self.assertIn("annual_2025.subsections.winst", contract)

@@ -180,7 +180,7 @@ rows, so the mapper NEVER creates entries (in `fields` or `missing_fields`) for:
   workpack narrative (rule `zvw_entry_row` in `field-map-rules.yaml`).
 
 This is the human-only authenticated-portal product boundary in
-`../_shared/runtime-contract.md`, regardless of host permissions. The validator
+`../nl-tax-shared-resources/runtime-contract.md`, regardless of host permissions. The validator
 flags browser, Chrome, computer-use, login/session, form-filling, clicking,
 signing, sending, or submission actions if they appear in either `fields` or
 `missing_fields`, because the mapper is preparation-only.

@@ -43,7 +43,7 @@ The provisional assessment is forward-looking. It covers a tax year that is eith
 
 ## Rates and credits
 
-Use the 2026 provisional rates from `_shared/knowledge/years/2026/provisional/rates-and-credits.md`.
+Use the 2026 provisional rates from `../nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md`.
 
 Do NOT use 2025 rates for the provisional 2026 calculation. Use the 2026 provisional values in `rates-and-credits.md`.
 
@@ -108,7 +108,7 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 - If that notice was not yet available when the estimate was prepared, use the
   latest available notice only as a labelled fallback and create a review item
   to replace it. Do not silently call the fallback the 2026 WOZ value.
-- Apply the reviewed 2026 eigenwoningforfait table from `_shared/knowledge/years/2026/provisional/own-home.md`. Do not carry forward 2025 thresholds.
+- Apply the reviewed 2026 eigenwoningforfait table from `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`. Do not carry forward 2025 thresholds.
 
 ### Hypotheekrenteaftrek
 
@@ -121,12 +121,12 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 ### Tariefsaanpassing
 
 - If estimated 2026 income exceeds the schijf 3 threshold (EUR 78,426), note that tariefsaanpassing will apply
-- Use the 2026 cap rate of 37.56% and tariefsaanpassing percentage of 11.94% from `_shared/knowledge/years/2026/provisional/own-home.md`
+- Use the 2026 cap rate of 37.56% and tariefsaanpassing percentage of 11.94% from `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`
 
 ### Hillenregeling
 
 - If the eigenwoningforfait exceeds the estimated `total_deductible_own_home_costs`, the aftrek wegens geen of geringe eigenwoningschuld may apply.
-- Use the reviewed 2026 percentage from `_shared/knowledge/years/2026/provisional/own-home.md`: 71.867% of the difference between eigenwoningforfait and deductible own-home costs.
+- Use the reviewed 2026 percentage from `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`: 71.867% of the difference between eigenwoningforfait and deductible own-home costs.
 - Mark as estimated
 
 ### Manual/script parity

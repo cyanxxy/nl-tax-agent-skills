@@ -2,19 +2,19 @@ metadata_version: '1.1'
 sources:
   bd_box2_income_ab_guidance:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
-    reviewed_note_hash_sha256: 21ef8d171bfb26b533ff799eff40aa0ab3296329b7eefede9d9eb5a358caeaa0
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: 01d3f0aa91bd32a067d4dd5e899fb7c7d6cbef258ef7ca5acee4046aeca5a349
     source_id: bd_box2_income_ab_guidance
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang
   bd_box2_rates_2025_2026:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
-    reviewed_note_hash_sha256: 99a2c384adc9add2ee7db123069a04afeea902edaaea62eb8b24dee5b955dc75
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: c1046cd4f86cbe450744feb248e2d87bfed7b60d2a5c9dac1a63a2bb5a3f031e
     source_id: bd_box2_rates_2025_2026
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
   bd_fisin_aanmerkelijk_belang_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-05-26T19:13:32.798384+00:00'
-    reviewed_note_hash_sha256: 9f0e55ede0d1ec6125b7e3b6d9f611bc0e4b06760367881ed26fae9474333743
+    reviewed_note_hash_recorded_at: '2026-09-22T19:55:51.816929+00:00'
+    reviewed_note_hash_sha256: c0476418f71a187e7cb56654275dea71033948450c135ddad9a6ab0ffc80649e
     source_id: bd_fisin_aanmerkelijk_belang_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aanmerkelijk_belang

@@ -34,7 +34,7 @@ workflow contract: it says which inputs have to exist, in which order the lines
 are combined, which note owns each rule, and where computation stops and manual
 review begins.
 
-The reviewed knowledge notes under `_shared/knowledge/years/2025/entrepreneur/`
+The reviewed knowledge notes under `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/`
 are canonical for every amount, percentage, and threshold; read them and never
 paraphrase a figure from memory. Where this contract and a knowledge note both
 mention a rule, the knowledge note wins. Bare file names below refer to that
@@ -115,8 +115,8 @@ arithmetic stays traceable for the taxpayer and for a later reviewer.
 | B | A minus the investeringsaftrek (KIA, EIA, MIA), plus any desinvesteringsbijtelling | `investeringsaftrek.md` |
 | C | B minus the ondernemersaftrek | `ondernemersaftrek.md` |
 | D | C minus the MKB-winstvrijstelling | `mkb-winstvrijstelling.md` |
-| E | The result at line D, being the belastbare winst uit onderneming and a component of box 1 | `winstberekening-2025.md`, with `_shared/knowledge/years/2025/annual/box1-rates.md` for the bracket structure |
-| F | The tariefsaanpassing on the grondslagverminderende posten, charged as a belastingvermeerdering | `winstberekening-2025.md`, with `_shared/knowledge/years/2025/annual/deductions.md` |
+| E | The result at line D, being the belastbare winst uit onderneming and a component of box 1 | `winstberekening-2025.md`, with `../nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md` for the bracket structure |
+| F | The tariefsaanpassing on the grondslagverminderende posten, charged as a belastingvermeerdering | `winstberekening-2025.md`, with `../nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md` |
 
 Two order rules must never be relaxed: the investeringsaftrek is subtracted
 **before** the ondernemersaftrek, and the MKB-winstvrijstelling base is the
@@ -151,7 +151,7 @@ be waived, and cannot be allocated between fiscal partners.
 State the tariefsaanpassing qualitatively whenever the income threshold is in
 play, reading the threshold, the adjustment percentage and the resulting maximum
 rate from `winstberekening-2025.md` and
-`_shared/knowledge/years/2025/annual/deductions.md`.
+`../nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md`.
 
 - It is charged as a belastingvermeerdering on the aanslag; it does not reduce
   the deduction itself, and lines C, D and E are unchanged by it.
@@ -183,7 +183,7 @@ re-read the chain note before emitting either.
   with its line in the workpack.
 - The arbeidsinkomen used for the arbeidskorting takes the same line as the
   lijfrente base, not the belastbare winst.
-  `_shared/knowledge/years/2025/annual/credits.md` is canonical for it.
+  `../nl-tax-shared-resources/knowledge/years/2025/annual/credits.md` is canonical for it.
 
 An ondernemer receives a **second, separate aanslag for the bijdrage Zvw**
 alongside the aanslag inkomstenbelasting, and one return feeds both. Carry that

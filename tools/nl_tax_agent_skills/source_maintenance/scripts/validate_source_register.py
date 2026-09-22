@@ -26,6 +26,7 @@ REQUIRED_FIELDS = {
 VALID_SKILL_NAMES = {
     "nl-tax-shared-resources",
     "nl-tax-intake",
+    "nl-tax-knowledge",
     "nl-tax-evidence-indexer",
     "nl-tax-annual-return",
     "nl-tax-provisional-assessment",
@@ -97,8 +98,8 @@ def find_content_root(register_path):
     """Find the repo/plugin root that snapshot_path values are relative to.
 
     Register paths are serialized from this root (for example
-    skills/_shared/knowledge/...), not from an individual skill directory where
-    the same file may be referenced as _shared/knowledge/...
+    skills/nl-tax-shared-resources/knowledge/...), not from an individual skill directory where
+    the same file may be referenced as nl-tax-shared-resources/knowledge/...
     """
     base_dir = os.path.dirname(os.path.abspath(register_path))
     candidates = [

@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Tax Rules Lookup"
+  short_description: "Answer 2025 annual and 2026 voorlopige-aanslag rule questions from reviewed, source-cited notes."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "How does Box 3 work for my 2025 Dutch income-tax return?"
+
+policy:
+  allow_implicit_invocation: true

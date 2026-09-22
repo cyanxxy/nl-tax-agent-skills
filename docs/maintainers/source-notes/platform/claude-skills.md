@@ -47,22 +47,22 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 
 ## Shared resources
 
-- Shared resources in `_shared/` are project-level, loaded on demand
-- Knowledge files, templates, and registers in `_shared/` are available to all skills
+- Shared resources in `nl-tax-shared-resources/` are project-level, loaded on demand
+- Knowledge files, templates, and registers in `nl-tax-shared-resources/` are available to all skills
 - Skills reference shared resources by relative path from the skill directory. Claude Code may expose a current skill-directory path at runtime, but project instructions should prefer host-neutral relative paths.
 
 ## Developer instruction
 
 When creating or modifying skills in this project:
 
-1. Keep SKILL.md concise -- move detailed rules, rates, and procedures to knowledge files in `_shared/knowledge/`
+1. Keep SKILL.md concise -- move detailed rules, rates, and procedures to knowledge files in `nl-tax-shared-resources/knowledge/`
 2. Do NOT set `context: fork` on the workpack or intake skills. These are interactive workflows that need to ask the user follow-up questions and iterate across turns; a forked subagent cannot do that. Reserve `context: fork` for stateless one-shot analysis only
 3. Set `disable-model-invocation: true` for skills that modify source data or perform destructive operations
 4. Always declare `allowed-tools` as a YAML list (space-separated strings also work, but lists are unambiguous). Use `python3` (not `python`) in `Bash(...)` patterns -- macOS does not ship a bare `python` interpreter
-5. Register any new external sources in `_shared/source-register.yaml`
+5. Register any new external sources in `nl-tax-shared-resources/source-register.yaml`
 6. Keep natural-language Cowork prompts as the primary usage path; document direct namespaced invocation only as an advanced path
 7. Distinguish first-party Claude package validation from a human Cowork UI smoke test; one does not prove the other
 
 ## Common failure
 
-Do not put year-specific rates or thresholds directly in SKILL.md. These change annually and belong in year-specific knowledge files under `_shared/knowledge/years/`.
+Do not put year-specific rates or thresholds directly in SKILL.md. These change annually and belong in year-specific knowledge files under `nl-tax-shared-resources/knowledge/years/`.

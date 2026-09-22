@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-09-22
+
+Skills now work as an on-demand knowledge base for Claude, Codex, and other
+Agent Skills hosts.
+
+### Added
+
+- `nl-tax-knowledge`, a read-only, implicitly invocable skill that answers 2025
+  annual and 2026 provisional rule questions from the reviewed notes and writes
+  no files.
+- `nl-tax-shared-resources/knowledge-index.md`, a topic map that links every
+  reviewed note (including the law, machtigen, and Box 3 example notes that no
+  skill previously reached) with the Dutch and English terms that select it.
+- `tests/nl_tax_agent_skills/test_knowledge_base_access.py` covering index
+  coverage, key-term accuracy, skill-relative paths, helper paths, folder/name
+  parity, and uniform note headers.
+
+### Changed
+
+- Renamed `skills/_shared/` to `skills/nl-tax-shared-resources/` so the folder
+  matches its declared skill name (Agent Skills spec). All references,
+  validators, metadata, and tests follow the new path.
+- Every bundled path in `SKILL.md` and `reference/` files is now written
+  relative to the skill directory (`../nl-tax-shared-resources/...`); 121 bare
+  `_shared/...` references were fixed.
+- The annual and provisional flows name each helper's `SKILL.md` path so the
+  inline fallback works on hosts without a Skill/Task tool, such as Codex.
+- The runtime contract allows index-guided lookups and a narrow text search
+  inside the knowledge folder, and reports an incomplete install instead of
+  guessing.
+- Intake's description now routes rule-only questions to `nl-tax-knowledge`;
+  its informational fast path uses the knowledge index.
+- Knowledge note headers use one key set: `source_ids` and `tax_year`.
+- CONTRIBUTING now separates substantive knowledge-note edits (rehash with
+  `build_snapshots.py`, human re-attestation) from maintainer-only edits such as
+  path or header-key renames (verified byte-for-byte, hash updated, attestation
+  kept). The 17 reviewed notes touched by this release changed only by the
+  folder rename or header-key normalization and were handled on the second path.
+
 ## [0.2.0] — 2026-08-26
 
 Full winst-uit-onderneming coverage for the annual 2025 return, and the

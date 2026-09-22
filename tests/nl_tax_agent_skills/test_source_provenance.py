@@ -17,8 +17,8 @@ PLUGIN = (
 )
 REPO = PLUGIN.parents[1]
 SKILLS = PLUGIN / "skills"
-KNOWLEDGE = SKILLS / "_shared/knowledge"
-REGISTER_PATH = SKILLS / "_shared/source-register.yaml"
+KNOWLEDGE = SKILLS / "nl-tax-shared-resources/knowledge"
+REGISTER_PATH = SKILLS / "nl-tax-shared-resources/source-register.yaml"
 METADATA = REPO / "tools/nl_tax_agent_skills/source_maintenance/metadata"
 MAINTAINER_NOTES = REPO / "docs/maintainers/source-notes"
 

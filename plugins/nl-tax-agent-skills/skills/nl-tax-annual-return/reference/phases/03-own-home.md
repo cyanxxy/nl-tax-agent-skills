@@ -30,22 +30,22 @@ One ordinary main residence may receive a review estimate. Two homes, sale/purch
 
 ### 3.5 Eigenwoningforfait calculation
 
-- Apply the rate from `_shared/knowledge/own-home/eigenwoningforfait.md` based on the WOZ-waarde bracket — that file is canonical for the bracket table (the common middle bracket and its rate included)
+- Apply the rate from `../nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md` based on the WOZ-waarde bracket — that file is canonical for the bracket table (the common middle bracket and its rate included)
 - Show the calculation explicitly (WOZ-waarde * percentage)
 
 ### 3.6 Tariefsaanpassing
 
 - Treat `tariefsaanpassing` as a separate tax-benefit adjustment; it is never part of `box1_own_home_balance` and is not added to taxable Box 1 income.
-- If the taxpayer's box 1 income falls in the top bracket (threshold per `_shared/knowledge/years/2025/annual/box1-rates.md`):
+- If the taxpayer's box 1 income falls in the top bracket (threshold per `../nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md`):
   - Calculate the portion of deductible own-home costs that falls in the top bracket
-  - Cap the effective deduction rate at the 2025 deduction-rate cap from `_shared/knowledge/years/2025/annual/deductions.md` (bd_own_home_deduction_cap_2025 / bd_deduction_rate_cap_2025)
+  - Cap the effective deduction rate at the 2025 deduction-rate cap from `../nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md` (bd_own_home_deduction_cap_2025 / bd_deduction_rate_cap_2025)
   - Calculate the tariefsaanpassing amount (difference between the top bracket rate and the capped deduction rate)
 - If income is below the top bracket: no tariefsaanpassing applies
 
 ### 3.7 Hillenregeling
 
 - If the eigenwoningforfait exceeds `total_deductible_own_home_costs`:
-  - Apply the Hillenregeling correction using the 2025 percentage from `_shared/knowledge/own-home/eigenwoningforfait.md`
+  - Apply the Hillenregeling correction using the 2025 percentage from `../nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md`
   - The correction reduces the net positive eigenwoningforfait
 - If total deductible own-home costs equal or exceed eigenwoningforfait: Hillenregeling does not apply
 

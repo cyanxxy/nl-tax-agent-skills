@@ -7,8 +7,8 @@ installed in Claude, Cowork, ChatGPT Work, or Codex.
 
 The canonical runtime data remains under:
 
-- `plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml`
-- `plugins/nl-tax-agent-skills/skills/_shared/knowledge/`
+- `plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml`
+- `plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/`
 
 Reviewed-note hashes live in repository-only mirrored directories under
 `tools/nl_tax_agent_skills/source_maintenance/metadata/`. They are release
@@ -21,9 +21,9 @@ Run scripts from the repository root. For example:
 
 ```bash
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_source_register.py \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py \
-  plugins/nl-tax-agent-skills/skills/_shared/source-register.yaml
+  plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/plan_source_refresh.py all
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_projections.py
 ```

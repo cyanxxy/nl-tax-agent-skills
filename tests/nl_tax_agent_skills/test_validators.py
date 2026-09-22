@@ -458,7 +458,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
-            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot = root / "skills/nl-tax-shared-resources/knowledge/example.md"
             snapshot.parent.mkdir(parents=True)
             snapshot.write_text("source_id: source_one\nstatus: active\n", encoding="utf-8")
 
@@ -466,7 +466,7 @@ class ValidatorSmokeTests(unittest.TestCase):
                 [
                     {
                         "id": "source_one",
-                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "snapshot_path": "skills/nl-tax-shared-resources/knowledge/example.md",
                         "url": "https://www.belastingdienst.nl/example",
                     }
                 ],
@@ -482,7 +482,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
-            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot = root / "skills/nl-tax-shared-resources/knowledge/example.md"
             snapshot.parent.mkdir(parents=True)
             snapshot.write_text("source_id: source_one\nstatus: active\n", encoding="utf-8")
             metadata = snapshot.parent / "_snapshot-metadata.yaml"
@@ -507,7 +507,7 @@ class ValidatorSmokeTests(unittest.TestCase):
                 [
                     {
                         "id": "source_one",
-                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "snapshot_path": "skills/nl-tax-shared-resources/knowledge/example.md",
                         "url": "https://www.belastingdienst.nl/example",
                     }
                 ],
@@ -523,7 +523,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         )
         with tempfile.TemporaryDirectory() as tmp:
             root = pathlib.Path(tmp)
-            snapshot = root / "skills/_shared/knowledge/example.md"
+            snapshot = root / "skills/nl-tax-shared-resources/knowledge/example.md"
             snapshot.parent.mkdir(parents=True)
             snapshot.write_text(
                 "source_id: different_source\nstatus: active\nreview_status: reviewed\n",
@@ -552,7 +552,7 @@ class ValidatorSmokeTests(unittest.TestCase):
                 [
                     {
                         "id": "source_one",
-                        "snapshot_path": "skills/_shared/knowledge/example.md",
+                        "snapshot_path": "skills/nl-tax-shared-resources/knowledge/example.md",
                         "url": "https://www.belastingdienst.nl/example",
                     }
                 ],

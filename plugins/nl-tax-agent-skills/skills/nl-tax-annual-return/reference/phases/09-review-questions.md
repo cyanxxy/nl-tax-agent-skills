@@ -2,7 +2,7 @@
 
 ### 9.1 Generate review questions
 
-Use the entry format from `_shared/templates/review-questions.md`. Create questions for each area of uncertainty:
+Use the entry format from `../nl-tax-shared-resources/templates/review-questions.md`. Create questions for each area of uncertainty:
 - "Can you confirm the WOZ-waarde on your beschikking is EUR [amount]?"
 - "Did you receive any income from other sources not yet mentioned?"
 - "Do you have the actual interest statements from your bank for 2025?"

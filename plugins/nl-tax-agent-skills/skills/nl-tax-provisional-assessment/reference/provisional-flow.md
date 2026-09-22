@@ -91,16 +91,24 @@ may appear in both ledgers only when it was independently consulted for both.
 
 ## Helper and reviewer delegation
 
-Use the active subflow to select only the relevant background helpers:
-`nl-tax-box1-home`, `nl-tax-winst`, `nl-tax-box2`, `nl-tax-box3`, or
-`nl-tax-partner-deductions`. Prefer a host Skill/Task invocation when available;
-otherwise inline the helper's instructions. In either mode, the helper writes
+Use the active subflow to select only the relevant background helpers. Each
+helper's `SKILL.md` path is resolved from this skill directory and is part of
+this workflow's resource allowlist:
+
+- `nl-tax-box1-home`: `../nl-tax-box1-home/SKILL.md`
+- `nl-tax-winst`: `../nl-tax-winst/SKILL.md`
+- `nl-tax-box2`: `../nl-tax-box2/SKILL.md`
+- `nl-tax-box3`: `../nl-tax-box3/SKILL.md`
+- `nl-tax-partner-deductions`: `../nl-tax-partner-deductions/SKILL.md`
+
+Prefer a host Skill/Task invocation when available; otherwise inline the
+helper's instructions by reading that `SKILL.md`. In either mode, the helper writes
 nothing and returns structured facts and open questions. The owning provisional
 workflow persists those results in its section notes, asks the user, and
 re-runs the helper after newly sourced answers. Keep the handoff invisible.
 
 After independent facts are collected, the owner may request a bounded
-specialist review under `../_shared/runtime-contract.md`. The reviewer returns
+specialist review under `../nl-tax-shared-resources/runtime-contract.md`. The reviewer returns
 conflicts, missing facts, and source checks without choosing estimates,
 allocations, or readiness. The owner reconciles every finding and remains the
 canonical-state writer and readiness authority; review inline when a specialist

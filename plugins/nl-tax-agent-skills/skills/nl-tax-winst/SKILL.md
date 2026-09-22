@@ -32,8 +32,8 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
 
 Resolve every `workspace/...` path against `workspace_root` from
 `session-progress.yaml` (or `profile.yaml`); never create a second `workspace/`
-tree. `_shared/` is the plugin-shared folder at this skill's `../_shared/`.
-Read `../_shared/runtime-contract.md` first. Resolve bundled files relative to
+tree. The plugin-shared folder is this skill's `../nl-tax-shared-resources/`.
+Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled files relative to
 this skill directory with the host's skill-resource or file tools. Do not
 depend on shell visibility or vendor-specific environment variables.
 
@@ -49,32 +49,32 @@ top-level `sources_loaded`. Always read the first three. Open each remaining
 note when the taxpayer's own facts touch it, and report the exact path when one
 cannot be opened:
 
-- `../_shared/knowledge/years/2025/entrepreneur/winstberekening-2025.md` -- the ordered chain, the winst cap, and the line each downstream base is read off
-- `../_shared/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md` -- the winst-en-verliesrekening and balans rubrieken, the entrepreneur questions, the double-entry facts, and the `onderneming.*` identifiers
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winstberekening-2025.md` -- the ordered chain, the winst cap, and the line each downstream base is read off
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zakelijke-schema-2025.md` -- the winst-en-verliesrekening and balans rubrieken, the entrepreneur questions, the double-entry facts, and the `onderneming.*` identifiers
 - `reference/winst-2025.md` -- the annual computation contract this helper follows
-- `../_shared/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` -- ondernemer status and the urencriterium
-- `../_shared/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` -- the components and their conditions
-- `../_shared/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md` -- the exemption and its base
-- `../_shared/knowledge/years/2025/entrepreneur/investeringsaftrek.md` -- KIA, EIA, MIA, and the desinvesteringsbijtelling
-- `../_shared/knowledge/years/2025/entrepreneur/winst-en-kosten.md` -- turnover, deductible and beperkt aftrekbare kosten, and the fiscal corrections
-- `../_shared/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md` -- vermogensetikettering, depreciation, and the fiscale-reserves boundary
-- `../_shared/knowledge/years/2025/entrepreneur/vervoer-2025.md` -- car, bestelauto, private vehicle, and fiets treatment
-- `../_shared/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md` -- aanloopkosten, a first partial year, and the starter reliefs
-- `../_shared/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md` -- the meewerkende-partner routes and the arbeidsbeloning boundary
-- `../_shared/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` -- recognition and routing of vof, maatschap, cv, medegerechtigde, agrarisch, and zeevarenden
-- `../_shared/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` -- the bron van inkomen pre-screen and the prepared resultaat uit overige werkzaamheden path
-- `../_shared/knowledge/years/2025/entrepreneur/staking-2025.md` -- what a staking is, and where computation stops
-- `../_shared/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md` -- a negative outcome and the niet-gerealiseerde zelfstandigenaftrek carry-forward
-- `../_shared/knowledge/years/2025/entrepreneur/zvw-2025.md` -- the bijdrage Zorgverzekeringswet and its base
-- `../_shared/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` -- lijfrente ruimte, AOV premiums, and the oudedagsreserve run-down
-- `../_shared/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md` -- portal, channel, deadlines, and the evidence list
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemer-criteria.md` -- ondernemer status and the urencriterium
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/ondernemersaftrek.md` -- the components and their conditions
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/mkb-winstvrijstelling.md` -- the exemption and its base
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/investeringsaftrek.md` -- KIA, EIA, MIA, and the desinvesteringsbijtelling
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md` -- turnover, deductible and beperkt aftrekbare kosten, and the fiscal corrections
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/afschrijving-en-bedrijfsmiddelen-2025.md` -- vermogensetikettering, depreciation, and the fiscale-reserves boundary
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/vervoer-2025.md` -- car, bestelauto, private vehicle, and fiets treatment
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/aanloopfase-en-starters-2025.md` -- aanloopkosten, a first partial year, and the starter reliefs
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/partner-en-meewerken-2025.md` -- the meewerkende-partner routes and the arbeidsbeloning boundary
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/samenwerkingsverband-2025.md` -- recognition and routing of vof, maatschap, cv, medegerechtigde, agrarisch, and zeevarenden
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/row-en-dba-2025.md` -- the bron van inkomen pre-screen and the prepared resultaat uit overige werkzaamheden path
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/staking-2025.md` -- what a staking is, and where computation stops
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md` -- a negative outcome and the niet-gerealiseerde zelfstandigenaftrek carry-forward
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/zvw-2025.md` -- the bijdrage Zorgverzekeringswet and its base
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/inkomensvoorzieningen-2025.md` -- lijfrente ruimte, AOV premiums, and the oudedagsreserve run-down
+- `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md` -- portal, channel, deadlines, and the evidence list
 
 For **provisional 2026 expected-profit forecast**, load
 `reference/winst-2026-provisional.md` together with the two 2026 knowledge notes
 it names:
 
-- `../_shared/knowledge/years/2026/provisional/winst-provisional-2026.md`
-- `../_shared/knowledge/years/2026/provisional/zvw-provisional-2026.md`
+- `../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`
+- `../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md`
 
 Do not load the annual 2025 entrepreneur notes or `reference/winst-2025.md`;
 this mode needs one sourced, user-reviewed forecast, not annual rates,
