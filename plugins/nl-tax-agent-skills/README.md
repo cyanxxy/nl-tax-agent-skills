@@ -1,188 +1,84 @@
-# NL Tax Agent Skills — Plugin Package
+# NL Tax Agent Skills
 
-This directory is the product package for **NL Tax Agent Skills**: a
-Cowork-first, cross-platform, agent-led plugin for Claude, ChatGPT Work, and
-Codex that prepares Dutch individual income-tax workpacks and manual Mijn
-Belastingdienst entry guidance (annual 2025 and voorlopige aanslag 2026). It
-ships portable Agent Skills plus one optional Claude Cowork specialist reviewer;
-Codex and ChatGPT Work can use their built-in subagents under
-the same single-writer contract.
+Prepare your Dutch income tax with an assistant that reads your documents,
+asks only the questions that matter, and produces a reviewable, source-cited
+workpack for manual entry in Mijn Belastingdienst. It covers the **annual
+return 2025** and the **voorlopige aanslag 2026** (request, change, review, or
+stopzetten), and answers rule questions for both years.
 
-> **Not tax advice.** This plugin prepares local workpacks and manual-entry
-> guidance only. It never logs in, signs, or submits anything, and its output is
-> not official advice or a final calculation — the taxpayer reviews everything
-> and enters it manually in Mijn Belastingdienst.
+> **Not tax advice.** This plugin prepares workpacks and manual-entry guidance
+> only. It never logs in, signs, or submits anything, and its output is not an
+> official calculation. You review everything and enter it yourself.
 
-> **Install, usage, workflows, architecture, and privacy live in the repository
-> docs** at <https://github.com/cyanxxy/nl-tax-agent-skills> (`README.md`,
-> `CONTRIBUTING.md`, `PRIVACY.md`). This file only orients you inside the
-> package. Licensed under Apache-2.0 — see the bundled [`LICENSE`](LICENSE)
-> file (also declared in both plugin manifests).
+## How to use it
 
-In the development repository, the repository root additionally holds the
-marketplace manifests that point at this package: `.claude-plugin/marketplace.json`
-(Claude) and `.agents/plugins/marketplace.json` (repo-scoped Codex). Neither
-ships inside this package.
-
-## Claude Cowork, ChatGPT Work, and Codex quickstart
-
-After installing the plugin, attach or select the relevant documents and ask:
+Attach or select your documents (jaaropgaaf, mortgage statement, bank
+overview, and so on) and ask in plain language:
 
 ```text
 Help me prepare my 2025 Dutch income-tax workpack. I have my year statement and mortgage summary.
 ```
 
-The LLM agent runs intake, asks for missing facts, loads only the needed rule notes,
-and drafts the review artifacts. For a provisional workflow, ask naturally to request,
-change, review, or stopzetten a 2026 voorlopige aanslag. A direct advanced invocation is
-`/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request` (replace `request` with
-the desired subflow).
-
-To ask how a rule works without preparing anything, ask directly, for example
-"What is the Box 3 heffingsvrij vermogen for 2025?" The read-only
-`nl-tax-knowledge` skill picks the matching reviewed note from
-`nl-tax-shared-resources/knowledge-index.md`, answers with the tax year and
-official source, and writes no files.
-
-A user may request annual 2025 and one provisional 2026 subflow together in
-natural language. The agent keeps annual as the sole active owner until its
-complete workpack and field map validate, then continues into the recorded 2026
-subflow without a new activation phrase. The two workflows keep independent
-status, source, confirmation, and artifact ledgers.
-
-For finite-choice intake questions, the skills prefer a native question control
-or compact form when the host can return selections to the same conversation.
-If it cannot, the agent asks the same short question batch in chat; the workflow
-never depends on an interactive UI.
-In Claude Cowork, the preferred path is Claude's native interactive inputs when
-offered; a custom HTML visual is not used as the answer-submission mechanism.
-
-Tasks may use local or cloud execution environments, so file availability
-depends on the active surface. Work web/mobile uses uploaded or project files;
-desktop tasks can also use a selected local folder. No shell or Python is
-needed on any surface.
-
-## Package contents
-
 ```text
-nl-tax-agent-skills/
-  .claude-plugin/plugin.json    # Claude Code plugin manifest
-  .codex-plugin/plugin.json     # Codex plugin manifest
-  LICENSE                       # Apache-2.0 license text
-  assets/                       # plugin icon
-  agents/
-    nl-tax-specialist-reviewer.md # optional Claude Cowork section reviewer
-  skills/
-    nl-tax-shared-resources/        # knowledge-index.md, source-register.yaml, knowledge/, templates/
-    nl-tax-intake/                  # workflow router and taxpayer profile
-    nl-tax-knowledge/               # read-only rule lookup from the reviewed notes
-    nl-tax-evidence-indexer/        # local evidence cataloging
-    nl-tax-annual-return/           # annual 2025 workpack
-    nl-tax-provisional-assessment/  # provisional 2026 workpack and review flows
-    nl-tax-box1-home/               # background helper
-    nl-tax-box2/                    # background helper
-    nl-tax-box3/                    # background helper
-    nl-tax-winst/                   # background helper (winst uit onderneming)
-    nl-tax-partner-deductions/      # background helper
-    nl-tax-field-mapper/            # manual-entry field maps
-    nl-tax-submit-companion/        # manual submission checklist
+Help me request a 2026 voorlopige aanslag. Ask me for the estimates you still need.
 ```
 
-Unit tests, structural fixtures, source metadata, the workflow-support gate,
-and source-maintenance tooling live outside this installed package under
-repository-level `tests/`, `evals/`, and `tools/`.
+```text
+What is the Box 3 heffingsvrij vermogen for 2025?
+```
 
-### What the plugin runs, reads, and writes
+The assistant sorts your evidence, asks for missing facts, and writes a
+workpack in which every amount shows its source. It then maps each amount to its
+Mijn Belastingdienst field and can produce a manual-entry checklist. A rule
+question gets a sourced answer with the tax year, and creates no files.
+
+## What the plugin runs, reads, and writes
 
 - **Runs:** nothing. The package ships Markdown and YAML only: no scripts,
-  hooks, MCP servers, or package installs. Skills pre-approve no shell
-  commands; every arithmetic and structural check is an agent checklist.
-- **Reads:** its own bundled skill files, plus the documents and folders the
-  taxpayer selects or attaches.
+  hooks, MCP servers, or package installs. No shell or Python is needed, and
+  skills pre-approve no shell commands.
+- **Reads:** its bundled, source-cited Dutch tax notes, plus the documents and
+  folders you select or attach.
 - **Writes:** only under `workspace/` in the task's working folder (skills
   pre-approve `Write`/`Edit` for `./workspace/**` only).
-- **Fetches:** when a workflow calls for a freshness check, the agent may read
-  public official pages such as belastingdienst.nl. It sends no taxpayer data
-  anywhere and never opens Mijn Belastingdienst or any authenticated portal.
+- **Fetches:** skills answer from the bundled notes. The optional Claude
+  reviewer agent may read public official pages such as belastingdienst.nl to
+  check freshness. The plugin sends no taxpayer data anywhere and never opens
+  Mijn Belastingdienst or any other authenticated portal.
 
-## Skill inventory
+## What is supported
 
-| Skill | Type | Main responsibility |
-|---|---|---|
-| `nl-tax-intake` | user entry | Screen scope, select a supported workflow, create `workspace/taxpayer/profile.yaml` |
-| `nl-tax-knowledge` | user entry | Answer 2025 annual and 2026 provisional rule questions from the reviewed notes; read-only, writes no files |
-| `nl-tax-evidence-indexer` | user entry | Index local evidence files, compute hashes, produce review questions |
-| `nl-tax-annual-return` | user entry | Prepare the annual 2025 workpack and invoke the mapper for its field map (incl. the belastbare winst for a straightforward eenmanszaak) |
-| `nl-tax-provisional-assessment` | user entry | Prepare 2026 request, change, review, or stopzetten packages |
-| `nl-tax-field-mapper` | user entry | Convert workpack findings into manual-entry field maps |
-| `nl-tax-submit-companion` | explicit user entry | Create a human-only manual-entry checklist when the user asks naturally or accepts the mapper's immediate offer |
-| `nl-tax-box1-home` | background | Return sourced Box 1 and own-home facts/questions to the owning workflow |
-| `nl-tax-box2` | background | Return standard Box 2 facts/questions to the owning workflow |
-| `nl-tax-box3` | background | Return trusted-row, method-specific Box 3 facts without method mixing |
-| `nl-tax-winst` | background | Return annual-2025 business findings, incl. the ordered belastbare-winst chain for a straightforward eenmanszaak, or one sourced provisional-2026 expected-profit forecast |
-| `nl-tax-partner-deductions` | background | Return fiscal-partner, deduction, and allocation facts/questions |
+| Workflow | Year |
+|---|---|
+| Annual income-tax return, including Box 1 and own home, Box 2, Box 3, and deductions | 2025 |
+| Winst uit onderneming for a straightforward eenmanszaak / ZZP | 2025 |
+| Voorlopige aanslag: request, change, review, stopzetten | 2026 |
+| Rule questions | 2025 / 2026 |
 
-The `skills/nl-tax-shared-resources/` directory is packaged as the hidden
-`nl-tax-shared-resources` internal skill; its folder name matches its skill
-name as the Agent Skills spec requires. It is not a taxpayer workflow and cannot
-be invoked implicitly. Its `knowledge-index.md` maps every topic, year, and
-workflow to the reviewed note that answers it, so any agent that reads skills
-on demand can find the right note without searching the package.
+For Box 3, annual 2025 compares the fictitious and actual-return methods as
+information only; provisional 2026 uses the fictitious method only. Other
+business forms (VOF, maatschap, CV, DGA/BV, staking), part-year residence, and
+tax year 2027 are routed to manual review or blocked.
 
-Install the plugin as one package. Skills reference the shared folder and each
-other through sibling paths such as `../nl-tax-shared-resources/`, so copying a
-single skill folder on its own leaves those references unresolved.
+## Skills
 
-Only the annual and provisional workflow skills write main workpacks. Intake
-creates taxpayer/session state, the field mapper alone writes canonical field
-maps, and background helpers write no artifacts. A host may use specialist
-subagents to cross-check already-collected, independent sections, but the main
-conversational agent remains the only writer, question asker, workflow router,
-and readiness authority. Subagents never create a second taxpayer workflow.
-Persisted statuses are a resumability and completeness ledger, not a state
-machine that chooses questions or tax treatment.
+| Skill | Role |
+|---|---|
+| `nl-tax-intake` | Checks scope and starts the right workflow |
+| `nl-tax-knowledge` | Answers 2025 / 2026 rule questions; writes nothing |
+| `nl-tax-evidence-indexer` | Catalogs your documents and chat amounts with their sources |
+| `nl-tax-annual-return` | Prepares the annual 2025 workpack |
+| `nl-tax-provisional-assessment` | Prepares the 2026 voorlopige aanslag workpacks |
+| `nl-tax-field-mapper` | Maps workpack amounts to Mijn Belastingdienst fields |
+| `nl-tax-submit-companion` | Writes a manual-entry checklist when you ask for one |
+| `nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-winst`, `nl-tax-partner-deductions` | Background helpers the workflows consult; they write nothing |
 
-The annual workflow uses a coverage checklist (intake gate, evidence review,
-Box 1/own home, optional winst, Box 2, Box 3, partner allocations, field
-mapping, and final review). The agent may change the conversational order when
-the taxpayer's facts make another order clearer; the checklist prevents
-omissions rather than scripting an interview.
-Its reviewed 2025 deduction guidance includes the specific-healthcare-cost
-threshold and increase, the EUR 925 limited-mobility transport forfait, the
-narrow legacy DUO prestatiebeurs study-cost exception, and
-jaarruimte/reserveringsruimte. The agent uses the official Belastingdienst
-Hulpmiddel Lijfrentepremie for lijfrente limits and retains its result; no local
-universal pension-room calculator replaces the official tool.
-The provisional workflow has four separate subflows: request, change, review, and
-stopzetten. `nl-tax-winst` determines the annual-2025 belastbare winst uit
-onderneming for a straightforward eenmanszaak from a finalized profit-and-loss
-statement and balance, and supports the single bounded provisional field
-`onderneming.geschatte_winst`. Every other IB business form is recognised and
-routed to manual review; it never computes a stakingswinst, a reserve movement,
-a terbeschikkingstellingsresultaat, a medegerechtigde loss cap, or a per-vennoot
-winstaandeel, and it is not a provisional tax engine or final-tax calculator.
+`skills/nl-tax-shared-resources/` holds the reviewed knowledge notes, the source
+register, and the shared runtime contract. Install the plugin as one package:
+the skills reference each other through sibling paths.
 
-The package passes manifest and discovery checks, including host-specific
-validation when the relevant CLI capability is installed. Those checks do not
-replace fresh-task smoke tests in Work web, Work desktop, Codex, and Claude.
+## More
 
-On hosts with scheduled tasks, users can request deadline reminders,
-missing-document check-ins, source-freshness reports, or resumed draft reviews.
-These continue from the saved conversation ledger; they do not introduce a
-fixed questionnaire or script-owned tax workflow.
-
-## Scope
-
-The plugin intentionally has **no** backend service, web app, browser/Chrome or
-computer-use portal control, signing, filing, Digipoort transport, or autonomous submission. It helps the
-taxpayer collect information, review it, and follow source-traceable guidance
-while filling the official forms manually.
-
-The taxpayer or an authorized human performs every authenticated portal action
-on their own device. Host permissions, browser tools, screen interaction, and
-user consent do not override that boundary. Public read-only research on
-official sources is still allowed.
-
-It must not prepare 2027 annual or provisional workpacks from 2025/2026 values — future tax
-years become active only after exact official source snapshots are added and all validators
-pass.
+Install steps, privacy, and contributor docs live in the repository:
+<https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;
+see the bundled [LICENSE](LICENSE).
