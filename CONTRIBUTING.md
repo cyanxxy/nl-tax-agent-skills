@@ -29,9 +29,8 @@ outside that distributable directory.
   plugins/
     marketplace.json               # repo-scoped Codex marketplace → nested plugin
 plugins/nl-tax-agent-skills/
-  plugin.json                       # portable Agent Plugins manifest (Codex reads it first)
   .claude-plugin/plugin.json
-  .codex-plugin/plugin.json         # Codex compatibility fallback
+  .codex-plugin/plugin.json
   README.md
   assets/                           # icon.png (the single packaged image)
   agents/
@@ -72,18 +71,16 @@ and is not plugin package content.
 
 ### Plugin manifests
 
-The plugin root `plugin.json` is the portable [Agent Plugins](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json)
-manifest. Codex 0.146+ reads it first and takes OpenAI settings from
-`extensions["com.openai"].interface`. Its schema forbids extra keys, so it has
-no `skills` field; hosts discover `skills/` by path. `.codex-plugin/plugin.json`
-remains as the fallback for older Codex builds and carries the same identity and
-`interface`; `test_portable_agent_plugins_manifest_mirrors_the_codex_overlay`
-keeps the two identical. The overlay looks like this:
+`.codex-plugin/plugin.json` exposes interface metadata for hosts that surface a catalog.
+Do not add a portable Agent Plugins `plugin.json` at the plugin root: the Claude
+directory portal then reads no manifest, README, or skills from the folder and
+greys out Cowork and the Claude apps. Codex still reads `.codex-plugin/plugin.json`.
+`test_plugin_root_has_no_portable_manifest` enforces this:
 
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -98,7 +95,7 @@ keeps the two identical. The overlay looks like this:
 auto-discovers the plugin-root `agents/` directory; no duplicate manifest key is
 needed. Codex plugin components do not include custom agents;
 Codex custom-agent TOML belongs in user or project `.codex/agents/`, so the
-portable skills request a built-in specialist subagent instead. All three plugin
+portable skills request a built-in specialist subagent instead. Both plugin
 manifests are versioned; both root marketplaces remain unversioned.
 
 ### Reviewer-agent coordination
@@ -338,7 +335,6 @@ CI (`.github/workflows/ci.yml`) runs the full gate on every push/PR, from both t
 and the plugin directory.
 
 ```bash
-python3 -m json.tool plugins/nl-tax-agent-skills/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
@@ -414,15 +410,14 @@ python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
 
 ## Release process
 
-All three plugin manifests pin a fixed version (currently `0.3.1`):
+Both plugin manifests pin a fixed version (currently `0.3.2`):
 
 ```text
-plugins/nl-tax-agent-skills/plugin.json                  # "version": "0.3.1"
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.1"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.1"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.2"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.2"
 ```
 
-Each release bumps **all three** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
+Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
 the same commit, so Claude Code, Cowork, and Codex installs pin to semver. The two
 marketplace files (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`)
 omit a version; for those GitHub-synced marketplaces Claude falls back to the git commit SHA,
@@ -462,24 +457,24 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.3.1')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.3.2')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.3.1'
+git tag --list 'nl-tax-agent-skills--v0.3.2'
 ```
 
 ### Publish the GitHub release
 
 Pushing an annotated `vX.Y.Z` tag publishes the GitHub release through
 `.github/workflows/release.yml`. The workflow fails unless the tag matches the
-version in all three plugin manifests and `CHANGELOG.md` has a `## [X.Y.Z]`
+version in both plugin manifests and `CHANGELOG.md` has a `## [X.Y.Z]`
 section. It runs the unit suite, attaches
 `nl-tax-agent-skills-X.Y.Z-cowork.zip` (the tracked plugin files) and
 `nl-tax-agent-skills-X.Y.Z-openai.zip` (the OpenAI bundle), uses the changelog
 section as the notes, and takes the title from the tag message:
 
 ```bash
-git tag -a v0.3.1 -m "v0.3.1 — <short release title>"
-git push origin v0.3.1
+git tag -a v0.3.2 -m "v0.3.2 — <short release title>"
+git push origin v0.3.2
 ```
 
 A version bump is not a release until this tag is pushed.

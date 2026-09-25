@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] — 2026-09-26
+
+### Removed
+
+- The portable Agent Plugins `plugin.json` at the plugin root, added in 0.3.1.
+  With it beside `.claude-plugin/plugin.json`, the Claude directory portal read
+  no manifest, README, or skills from the plugin folder and could not list the
+  plugin for Cowork or the Claude apps. Codex keeps reading
+  `.codex-plugin/plugin.json`, which carries the same identity and interface, so
+  nothing changes for Codex users. A test now keeps the root manifest out.
+
 ## [0.3.1] — 2026-09-25
 
 The installed plugin now ships no executable code, and its manifests match the

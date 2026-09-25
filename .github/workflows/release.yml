@@ -1,7 +1,7 @@
 name: Release
 
 # Pushing an annotated vX.Y.Z tag publishes the GitHub release: it checks the
-# tag against all three plugin manifests, builds the Cowork and OpenAI ZIPs,
+# tag against both plugin manifests, builds the Cowork and OpenAI ZIPs,
 # and uses the matching CHANGELOG.md section as the release notes.
 
 on:
@@ -38,7 +38,7 @@ jobs:
       - name: Check tag matches every plugin manifest
         run: |
           version="${GITHUB_REF_NAME#v}"
-          for manifest in plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json; do
+          for manifest in .claude-plugin/plugin.json .codex-plugin/plugin.json; do
             actual=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['version'])" \
               "plugins/nl-tax-agent-skills/$manifest")
             if [ "$actual" != "$version" ]; then

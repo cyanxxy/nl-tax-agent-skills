@@ -122,40 +122,17 @@ class ReleasePackagingTests(unittest.TestCase):
         }
         self.assertEqual(actual, ARGUMENT_HINTS)
 
-    def test_portable_agent_plugins_manifest_mirrors_the_codex_overlay(self):
-        # Codex (0.146+) reads the root Agent Plugins manifest first; the
-        # .codex-plugin overlay stays as the fallback for older builds. The
-        # schema sets additionalProperties: false, so no "skills" key.
-        root = load_json(PLUGIN / "plugin.json")
-        codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(
-            root["$schema"],
-            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-        )
-        self.assertLessEqual(
-            set(root),
-            {
-                "$schema", "name", "version", "description", "author",
-                "homepage", "repository", "license", "keywords", "extensions",
-            },
-        )
-        self.assertLessEqual(set(root["author"]), {"name", "email", "url"})
-        self.assertRegex(
-            root["name"], r"^(?!.*(?:--|\.\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$"
-        )
-        for key in (
-            "name", "version", "description", "author",
-            "homepage", "repository", "license", "keywords",
-        ):
-            with self.subTest(key=key):
-                self.assertEqual(root[key], codex[key])
-        self.assertEqual(root["extensions"], {"com.openai": {"interface": codex["interface"]}})
+    def test_plugin_root_has_no_portable_manifest(self):
+        # With an Agent Plugins plugin.json beside .claude-plugin/, the Claude
+        # directory portal read no manifest, README, or skills from the folder
+        # and greyed out Cowork and the Claude apps. Codex reads .codex-plugin.
+        self.assertFalse((PLUGIN / "plugin.json").exists())
 
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.3.1")
-        self.assertEqual(codex["version"], "0.3.1")
+        self.assertEqual(claude["version"], "0.3.2")
+        self.assertEqual(codex["version"], "0.3.2")
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -333,11 +310,11 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.1\')" = ""',
+            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.2\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.1'", text)
+        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.2'", text)
 
     def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
