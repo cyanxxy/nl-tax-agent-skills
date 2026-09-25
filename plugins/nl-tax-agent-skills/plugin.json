@@ -1,0 +1,49 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "nl-tax-agent-skills",
+  "version": "0.3.1",
+  "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
+  "author": {
+    "name": "Tax Skill Developers",
+    "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
+  },
+  "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills#readme",
+  "repository": "https://github.com/cyanxxy/nl-tax-agent-skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "tax",
+    "dutch-tax",
+    "agent-skills",
+    "workpacks",
+    "voorlopige-aanslag",
+    "zzp",
+    "winst-uit-onderneming"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "NL Tax Agent Skills",
+        "shortDescription": "Conversational Dutch tax prep",
+        "longDescription": "Prepare source-traceable Dutch tax workpacks in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The plugin guides intake, evidence indexing, source checks, field maps, and manual-entry checklists without logging in, filing, signing, submitting, or automating Mijn Belastingdienst.",
+        "developerName": "Tax Skill Developers",
+        "category": "Productivity",
+        "capabilities": [
+          "Agent Skills",
+          "Reviewable Workpacks",
+          "Source-Backed Guidance"
+        ],
+        "defaultPrompt": [
+          "Prepare my 2025 Dutch income-tax workpack.",
+          "Prepare a 2026 voorlopige aanslag workpack.",
+          "Index my Dutch tax documents for review."
+        ],
+        "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
+        "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
+        "brandColor": "#1F6FEB",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/icon.png"
+      }
+    }
+  }
+}

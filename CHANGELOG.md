@@ -13,6 +13,16 @@ The installed plugin now ships no executable code, and its manifests match the
 current Claude and OpenAI directory rules. No tax rule, rate, threshold, or
 cited source changed.
 
+### Added
+
+- A portable [Agent Plugins](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json)
+  manifest at the plugin root (`plugin.json`), with the OpenAI settings under
+  `extensions["com.openai"].interface`. Codex 0.146+ reads it first (confirmed
+  with Codex 0.156.1); `.codex-plugin/plugin.json` stays as the fallback for
+  older builds, and a test keeps both identical. The OpenAI bundle now ships it.
+- A sibling-path release check in CONTRIBUTING for Cowork and claude.ai chat,
+  where reading `../nl-tax-shared-resources/` is not yet documented as supported.
+
 ### Changed
 
 - The installed plugin ships no executable code. The seven optional Python

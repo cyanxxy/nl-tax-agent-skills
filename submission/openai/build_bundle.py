@@ -13,7 +13,7 @@ REPO = Path(__file__).resolve().parents[2]
 SOURCE_PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 DEFAULT_OUTPUT = REPO / "dist" / "openai" / "nl-tax-agent-skills"
 PLUGIN_DIRS = (".codex-plugin", "assets", "skills")
-PLUGIN_FILES = ("LICENSE", "README.md")
+PLUGIN_FILES = ("LICENSE", "README.md", "plugin.json")
 CLAUDE_ONLY_KEYS = {
     "allowed-tools",
     "argument-hint",

@@ -28,6 +28,7 @@ jobs:
 
       - name: Parse plugin and marketplace manifests
         run: |
+          python -m json.tool plugins/nl-tax-agent-skills/plugin.json > /dev/null
           python -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json > /dev/null
           python -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json > /dev/null
           python -m json.tool .claude-plugin/marketplace.json > /dev/null

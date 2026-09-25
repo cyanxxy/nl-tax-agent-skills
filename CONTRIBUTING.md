@@ -29,8 +29,9 @@ outside that distributable directory.
   plugins/
     marketplace.json               # repo-scoped Codex marketplace → nested plugin
 plugins/nl-tax-agent-skills/
+  plugin.json                       # portable Agent Plugins manifest (Codex reads it first)
   .claude-plugin/plugin.json
-  .codex-plugin/plugin.json
+  .codex-plugin/plugin.json         # Codex compatibility fallback
   README.md
   assets/                           # icon.png (the single packaged image)
   agents/
@@ -71,7 +72,13 @@ and is not plugin package content.
 
 ### Plugin manifests
 
-`.codex-plugin/plugin.json` exposes interface metadata for hosts that surface a catalog:
+The plugin root `plugin.json` is the portable [Agent Plugins](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json)
+manifest. Codex 0.146+ reads it first and takes OpenAI settings from
+`extensions["com.openai"].interface`. Its schema forbids extra keys, so it has
+no `skills` field; hosts discover `skills/` by path. `.codex-plugin/plugin.json`
+remains as the fallback for older Codex builds and carries the same identity and
+`interface`; `test_portable_agent_plugins_manifest_mirrors_the_codex_overlay`
+keeps the two identical. The overlay looks like this:
 
 ```json
 {
@@ -91,7 +98,7 @@ and is not plugin package content.
 auto-discovers the plugin-root `agents/` directory; no duplicate manifest key is
 needed. Codex plugin components do not include custom agents;
 Codex custom-agent TOML belongs in user or project `.codex/agents/`, so the
-portable skills request a built-in specialist subagent instead. Both nested
+portable skills request a built-in specialist subagent instead. All three plugin
 manifests are versioned; both root marketplaces remain unversioned.
 
 ### Reviewer-agent coordination
@@ -331,6 +338,7 @@ CI (`.github/workflows/ci.yml`) runs the full gate on every push/PR, from both t
 and the plugin directory.
 
 ```bash
+python3 -m json.tool plugins/nl-tax-agent-skills/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null
 python3 -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json >/dev/null
 python3 -m json.tool .claude-plugin/marketplace.json >/dev/null
@@ -406,14 +414,15 @@ python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.3.1`):
+All three plugin manifests pin a fixed version (currently `0.3.1`):
 
 ```text
+plugins/nl-tax-agent-skills/plugin.json                  # "version": "0.3.1"
 plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.1"
 plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.1"
 ```
 
-Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
+Each release bumps **all three** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
 the same commit, so Claude Code, Cowork, and Codex installs pin to semver. The two
 marketplace files (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`)
 omit a version; for those GitHub-synced marketplaces Claude falls back to the git commit SHA,
@@ -433,6 +442,20 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
 - In Cowork, install/update the plugin, open a fresh local or remote task, verify that
   bundled references load, and run one annual and one provisional natural-language smoke
   prompt. Record this separately; do not claim it from static or CLI validation alone.
+- **Sibling-path check (Cowork, then claude.ai chat).** Skills read each other and the
+  knowledge pack through sibling paths such as `../nl-tax-shared-resources/`. Claude's
+  docs only describe files inside a skill's own folder, and claude.ai chat copies just
+  that folder into its sandbox, so verify on each surface before a directory review:
+  1. Ask "What is the Box 3 heffingsvrij vermogen for 2025?". Expect EUR 57,684 per
+     person with the tax year and a `bd_` source, read from
+     `../nl-tax-shared-resources/knowledge-index.md` and the matching note.
+  2. Ask "Help me prepare my 2025 Dutch income-tax workpack." Expect intake to load
+     `../nl-tax-shared-resources/runtime-contract.md` and ask its first screening
+     question, not to report a missing resource.
+  3. A pass answers from the bundled notes. A fail is the agent reporting an incomplete
+     install (the runtime contract's required behavior) or answering from memory without
+     a source ID. Record the surface, app version, and result in the release notes, and
+     do not list a surface as supported until it passes.
 - Verify invocation-policy metadata in the target Claude Code and Codex builds.
 
 Guard against a retroactive or duplicate tag before letting Claude create the

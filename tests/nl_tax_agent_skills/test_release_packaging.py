@@ -122,6 +122,35 @@ class ReleasePackagingTests(unittest.TestCase):
         }
         self.assertEqual(actual, ARGUMENT_HINTS)
 
+    def test_portable_agent_plugins_manifest_mirrors_the_codex_overlay(self):
+        # Codex (0.146+) reads the root Agent Plugins manifest first; the
+        # .codex-plugin overlay stays as the fallback for older builds. The
+        # schema sets additionalProperties: false, so no "skills" key.
+        root = load_json(PLUGIN / "plugin.json")
+        codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
+        self.assertEqual(
+            root["$schema"],
+            "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        )
+        self.assertLessEqual(
+            set(root),
+            {
+                "$schema", "name", "version", "description", "author",
+                "homepage", "repository", "license", "keywords", "extensions",
+            },
+        )
+        self.assertLessEqual(set(root["author"]), {"name", "email", "url"})
+        self.assertRegex(
+            root["name"], r"^(?!.*(?:--|\.\.))[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$"
+        )
+        for key in (
+            "name", "version", "description", "author",
+            "homepage", "repository", "license", "keywords",
+        ):
+            with self.subTest(key=key):
+                self.assertEqual(root[key], codex[key])
+        self.assertEqual(root["extensions"], {"com.openai": {"interface": codex["interface"]}})
+
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
