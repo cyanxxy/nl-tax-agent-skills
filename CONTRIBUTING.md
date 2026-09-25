@@ -80,7 +80,7 @@ greys out Cowork and the Claude apps. Codex still reads `.codex-plugin/plugin.js
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -410,11 +410,11 @@ python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.3.2`):
+Both plugin manifests pin a fixed version (currently `0.3.3`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.2"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.2"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.3"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.3"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -457,9 +457,9 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.3.2')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.3.3')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.3.2'
+git tag --list 'nl-tax-agent-skills--v0.3.3'
 ```
 
 ### Publish the GitHub release
@@ -473,8 +473,8 @@ section. It runs the unit suite, attaches
 section as the notes, and takes the title from the tag message:
 
 ```bash
-git tag -a v0.3.2 -m "v0.3.2 — <short release title>"
-git push origin v0.3.2
+git tag -a v0.3.3 -m "v0.3.3 — <short release title>"
+git push origin v0.3.3
 ```
 
 A version bump is not a release until this tag is pushed.

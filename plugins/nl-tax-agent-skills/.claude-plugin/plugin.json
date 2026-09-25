@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "displayName": "NL Tax Agent Skills",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills",
@@ -19,6 +19,5 @@
     "voorlopige-aanslag",
     "zzp",
     "winst-uit-onderneming"
-  ],
-  "skills": "./skills"
+  ]
 }

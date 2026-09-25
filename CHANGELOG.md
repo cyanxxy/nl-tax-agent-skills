@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] — 2026-09-26
+
+### Changed
+
+- The Claude manifest no longer declares `"skills": "./skills"`. `skills/` is
+  the default location Claude scans anyway, and with the extra entry the Claude
+  directory portal reported "No skills found under skills/ (or the manifest's
+  skills paths)". The Codex manifest keeps its `skills` field.
+
 ## [0.3.2] — 2026-09-26
 
 ### Removed

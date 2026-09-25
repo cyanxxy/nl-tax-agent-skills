@@ -131,8 +131,11 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.3.2")
-        self.assertEqual(codex["version"], "0.3.2")
+        self.assertEqual(claude["version"], "0.3.3")
+        # skills/ is scanned by default; the directory portal found no skills
+        # while the Claude manifest also declared "skills": "./skills".
+        self.assertNotIn("skills", claude)
+        self.assertEqual(codex["version"], "0.3.3")
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -310,11 +313,11 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.2\')" = ""',
+            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.3\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.2'", text)
+        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.3'", text)
 
     def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
