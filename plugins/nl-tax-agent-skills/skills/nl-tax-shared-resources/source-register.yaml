@@ -271,7 +271,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente"
     source_type: official_rates
     snapshot_path: "skills/nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-09-25"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
     owner: "tax-content"
     mandatory_for:
@@ -285,7 +285,7 @@ sources:
     url: "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting"
     source_type: official_guidance
     snapshot_path: "skills/nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-09-25"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter"
     owner: "tax-content"
     mandatory_for:
@@ -301,7 +301,7 @@ sources:
     # All-year guidance (like the two belastingrente sources sharing this
     # snapshot): no workflow/tax_year scoping.
     snapshot_path: "skills/nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md"
-    last_checked: "2026-06-23"
+    last_checked: "2026-09-25"
     freshness_policy: "check after Prinsjesdag and at start of each calendar quarter; rate is set by ministerial decree"
     owner: "tax-content"
     mandatory_for:
@@ -952,7 +952,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: "skills/nl-tax-shared-resources/knowledge/years/2025/box3/examples.md"
-    last_checked: "2026-06-24"
+    last_checked: "2026-09-25"
     freshness_policy: "check at start of filing season when official Box 3 examples or calculation steps change"
     owner: "tax-content"
     mandatory_for:
