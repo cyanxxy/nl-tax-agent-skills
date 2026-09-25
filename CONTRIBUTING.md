@@ -76,7 +76,7 @@ and is not plugin package content.
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -136,14 +136,15 @@ argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
   - Grep
-  - Write(./workspace/**)
   - Edit(./workspace/**)
 ---
 ```
 
-Scope every `Write`/`Edit` grant to `./workspace/**` and never pre-approve `Bash`:
+Pre-approve file writes only as `Edit(./workspace/**)` and never pre-approve `Bash`:
 the Claude directory scan holds unscoped write grants and broad shell grants for
-human review. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
+human review. Do not list `Write` at all: Claude Code never consults a
+`Write(path)` rule (it warns at startup), and `Edit` rules already cover every
+built-in tool that creates or changes files. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
 prompts for the listed tools but does not deny others, and Codex ignores it. Real capability
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
@@ -405,11 +406,11 @@ python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.3.0`):
+Both plugin manifests pin a fixed version (currently `0.3.1`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.0"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.0"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.3.1"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.3.1"
 ```
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
@@ -438,7 +439,7 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.3.0')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.3.1')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.3.0'
+git tag --list 'nl-tax-agent-skills--v0.3.1'
 ```

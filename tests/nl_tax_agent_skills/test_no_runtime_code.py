@@ -67,8 +67,11 @@ class NoRuntimeCodeContractTests(unittest.TestCase):
             with self.subTest(skill=skill.parent.name):
                 for tool in tools:
                     self.assertFalse(tool.startswith("Bash"), tool)
-                    if tool.split("(")[0] in {"Write", "Edit"}:
-                        self.assertEqual(tool.split("(")[1:], ["./workspace/**)"])
+                    # Claude Code never consults Write(path) rules; Edit rules
+                    # cover every built-in tool that creates or changes files.
+                    self.assertFalse(tool.startswith("Write"), tool)
+                    if tool.startswith("Edit"):
+                        self.assertEqual(tool, "Edit(./workspace/**)")
 
     def test_runtime_docs_run_no_code(self):
         shipped = "\n".join(

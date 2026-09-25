@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] — 2026-09-25
+
+The installed plugin now ships no executable code, and its manifests match the
+current Claude and OpenAI directory rules. No tax rule, rate, threshold, or
+cited source changed.
+
 ### Changed
 
 - The installed plugin ships no executable code. The seven optional Python
@@ -14,14 +20,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   arithmetic) moved to `tools/nl_tax_agent_skills/` as repository graders, and
   every runtime check is now an agent checklist that records
   `check_performed_by: checked_by_agent`.
-- Skills no longer pre-approve `Bash(python3:*)`, and `Write`/`Edit` grants are
-  scoped to `./workspace/**`. This clears the Claude directory scan holds
+- Skills no longer pre-approve `Bash(python3:*)`, and file-edit grants are
+  scoped to `Edit(./workspace/**)`. This clears the Claude directory scan holds
   `ALLOWED_TOOLS_BROAD` and `ALLOWED_TOOLS_UNSCOPED_WRITE`.
 - Evidence items get sequential IDs (`ev_001`, ...) and `file_sha256: null`;
   hashing was always non-blocking.
 - The package README no longer names bundled image paths (scan hold
   `UNREAD_ASSET_REFERENCED`) and now states what the plugin runs, reads,
-  writes, and fetches.
+  writes, and fetches. Both READMEs are shorter, and the root README drops the
+  retired community-directory form link.
+- Skills pre-approve file edits only as `Edit(./workspace/**)`. `Write` is no
+  longer listed: Claude Code never consults a `Write(path)` rule and warns at
+  startup, while `Edit` rules cover every built-in tool that creates or changes
+  files.
+- The Codex `interface.shortDescription` is now "Conversational Dutch tax prep"
+  (29 characters); OpenAI final directory submission caps it at 30.
+
+### Maintenance
+
+- Re-verified four stale mandatory sources against the live Belastingdienst
+  pages (`bd_belastingrente_overview`, `bd_belastingrente_ib`,
+  `bd_invorderingsrente`, `bd_box3_2025_worked_examples`); the reviewed notes
+  still match, so only `last_checked` moved.
 
 ## [0.3.0] — 2026-09-22
 

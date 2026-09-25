@@ -40,7 +40,7 @@ question gets a sourced answer with the tax year, and creates no files.
 - **Reads:** its bundled, source-cited Dutch tax notes, plus the documents and
   folders you select or attach.
 - **Writes:** only under `workspace/` in the task's working folder (skills
-  pre-approve `Write`/`Edit` for `./workspace/**` only).
+  pre-approve file edits for `./workspace/**` only).
 - **Fetches:** skills answer from the bundled notes. The optional Claude
   reviewer agent may read public official pages such as belastingdienst.nl to
   check freshness. The plugin sends no taxpayer data anywhere and never opens

@@ -6,7 +6,6 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write(./workspace/**)
   - Edit(./workspace/**)
 ---
 
