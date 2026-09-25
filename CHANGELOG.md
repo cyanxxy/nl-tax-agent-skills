@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.4] — 2026-09-26
+
+### Added
+
+- `privacyPolicyUrl` in the Claude manifest and a Privacy link in the plugin
+  README, both pointing at `PRIVACY.md`, which the Claude directory portal asks
+  for.
+
+### Changed
+
+- `PRIVACY.md` is now a complete privacy policy: what the plugin reads and
+  stores, that it sends nothing to the authors or any third party, retention
+  and deletion, children, contact, and changes. It and `SECURITY.md` no longer
+  mention the helper scripts removed in 0.3.1.
+
 ## [0.3.3] — 2026-09-26
 
 ### Changed

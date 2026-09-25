@@ -1,79 +1,73 @@
-# Privacy and Data Handling
+# Privacy Policy
 
-This document describes how the `nl-tax-agent-skills` plugin handles data. It is
-not a corporate privacy policy for a hosted service — the plugin is not a hosted
-service. It runs inside whatever LLM agent host (Claude Code, Cowork, Codex, or
-another compatible host) you choose to run it in.
+This policy covers the `nl-tax-agent-skills` plugin. The plugin is a set of
+skills (Markdown and YAML instructions) that runs inside the AI host you choose:
+Claude (Cowork, Claude Code, or the Claude apps), ChatGPT Work, or Codex. It has
+no backend, no server, and no account. The plugin authors receive none of your
+data.
 
-## Important: this is not a "local-only" guarantee
+## What the plugin reads
 
-The plugin is a set of skills and small helper scripts. It runs inside an LLM
-agent host that reads your files in order to help you. Any taxpayer data you
-place in the workspace, or paste into the conversation, is read by that host and
-its model, and may be processed according to that host's own privacy terms.
-Review your host provider's privacy policy for how prompts, files, and tool
-output are handled. This plugin does not, by itself, send your data to the
-Belastingdienst, to the plugin authors, or to any third party.
+When you ask it to prepare a tax workpack, the plugin instructs the host's AI
+model to read:
 
-## What the plugin does and does not do
+- the documents you attach or select, such as a jaaropgaaf, mortgage statement,
+  or bank overview, which contain personal and financial data; and
+- the facts you state in the conversation.
 
-- It **does** guide intake, evidence indexing, source checks, field maps, and
-  manual-submission checklists, writing working files into the local workspace.
-- It **does not** perform Mijn Belastingdienst portal access, signing,
-  submission, filing, or portal automation. It never uses Chrome, browser
-  control, computer use, screen interaction, or a connector to operate an
-  authenticated portal. You or an authorized human types and verifies the
-  prepared figures and decides whether to submit.
+It reads only what you provide for your own tax preparation. It never asks for
+DigiD details, passwords, verification codes, or portal sessions, and never
+opens Mijn Belastingdienst.
 
-## Portal Access
+## What the plugin stores
 
-Portal credentials are not part of this plugin's data model. The plugin must
-not request, collect, store, or process DigiD details, passwords, verification
-codes, app approvals, cookies, or authenticated sessions. User permission does
-not change this boundary. Public read-only research on official tax sources is
-separate and remains allowed.
+The plugin instructs the model to write working files only under `workspace/` in
+your task's working folder: your taxpayer profile, an evidence index, workpacks,
+and field maps. These are plaintext Markdown and YAML files. They stay wherever
+your host keeps that folder: on your computer for a local task, or in the
+task's environment for a cloud task. The plugin does not encrypt them.
 
-## Evidence Content
+## What the plugin sends, and to whom
 
-Uploaded documents are used as evidence for workpack preparation. The host model
-reads them; prompt-injection resistance and sensitive-data handling are the
-host's responsibility, not the plugin's.
+The plugin sends your data to no one: not to the plugin authors, not to the
+Belastingdienst, and not to any other third party. It has no connectors, MCP
+servers, scripts, or network calls. An optional Claude reviewer agent may read
+public official pages, such as belastingdienst.nl, to check that tax sources are
+current; it sends no taxpayer data.
 
-## Where data lives
+Your AI host does process everything you share with it, under its own terms.
+This plugin is **not** a local-only or offline guarantee. See your host's
+privacy policy for how it handles prompts and files.
 
-Real taxpayer data — BSNs, IBANs, jaaropgaven, beschikkingen, screenshots, and
-any prepared workpacks — belongs only in the gitignored local directories:
+## Retention and deletion
 
-```text
-workspace/
-uploads/
-evidence/
-```
-
-These paths, plus common document types (`*.pdf`, `*.xlsx`, `*.csv`, `*.zip`,
-and similar), are excluded from version control by `.gitignore`. The single
-allow-listed binary exception is the plugin icon/logo under
-`plugins/**/assets/*.png`. Do not place real evidence under any other path.
-
-Files the plugin writes are **plaintext on your local filesystem** (Markdown and
-YAML). They are not encrypted at rest by the plugin. Anyone with access to your
-machine, backups, or sync folders can read them.
-
-## Retention and cleanup
-
-The plugin does not auto-delete anything. You are responsible for retention.
-
-- When you finish a tax task, remove generated working files you no longer need,
-  for example `workspace/`, `uploads/`, and `evidence/`.
-- Be mindful of cloud-sync folders, machine backups, and shared drives that may
-  copy these plaintext files elsewhere.
-- Keep only what you need for your own records, and store it securely.
-
-A simple cleanup, run from the repository root, removes the local working
-directories:
+The plugin keeps no data of its own, so there is nothing for the authors to
+retain or delete. The files under `workspace/` stay until you delete them; the
+plugin never deletes them automatically. When you are done, delete the working
+folders you no longer need, for example:
 
 ```bash
 rm -rf workspace/ uploads/ evidence/
 ```
 
-Verify the contents before deleting; this is irreversible.
+Check the contents before deleting, because this cannot be undone. Remember
+that cloud-sync folders, backups, and shared drives may hold copies.
+
+## Children
+
+The plugin is intended for adults preparing their own Dutch income tax. It is
+not intended for people under 18.
+
+## Contact
+
+Ask privacy questions or report a concern through
+[GitHub Issues](https://github.com/cyanxxy/nl-tax-agent-skills/issues). For a
+sensitive report, use a private
+[GitHub Security Advisory](https://github.com/cyanxxy/nl-tax-agent-skills/security/advisories/new),
+as described in [SECURITY.md](SECURITY.md). Never include real taxpayer data,
+BSNs, IBANs, or official documents in a report.
+
+## Changes
+
+Changes to this policy are recorded in the repository history and in
+[CHANGELOG.md](CHANGELOG.md).

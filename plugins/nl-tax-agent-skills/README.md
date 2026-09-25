@@ -79,6 +79,8 @@ the skills reference each other through sibling paths.
 
 ## More
 
-Install steps, privacy, and contributor docs live in the repository:
-<https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;
+- [Privacy](https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md):
+  what the plugin reads, stores, and sends (it sends nothing), and how to delete
+  your working files.
+- Install steps and contributor docs: <https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;
 see the bundled [LICENSE](LICENSE).

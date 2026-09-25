@@ -3,8 +3,8 @@
 ## Scope
 
 This repository ships the `nl-tax-agent-skills` plugin: a skills-only package
-(LLM playbooks plus small deterministic Python helpers for file inventory,
-hashing, schema validation, simple math, and freshness checks). There is no
+of LLM playbooks in Markdown and YAML, with no scripts, hooks, or MCP
+servers. There is no
 backend service, web app, authentication layer, or network filing path. The
 plugin does not perform Mijn Belastingdienst portal access, signing, submission,
 or tax-return transmission. It must not use Chrome, browser control, computer

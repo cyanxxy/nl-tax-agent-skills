@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "displayName": "NL Tax Agent Skills",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills",
@@ -11,6 +11,7 @@
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
   "license": "Apache-2.0",
+  "privacyPolicyUrl": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
   "keywords": [
     "tax",
     "dutch-tax",
