@@ -6,8 +6,8 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
   - AskUserQuestion
 ---
 
@@ -69,8 +69,7 @@ a local workpack and ask the questions currently needed. If the workflow and
 documents are already clear, ask for the relevant tax files instead of asking
 for workspace/state files. Never mention internal skill names or handoffs.
 
-Python is optional. Do not ask the taxpayer to install Python; the agent owns
-intake and applies the documented checks directly.
+The agent owns intake and applies the documented checks directly.
 
 ## Load for explicit preparation
 

@@ -57,10 +57,10 @@ never depends on an interactive UI.
 In Claude Cowork, the preferred path is Claude's native interactive inputs when
 offered; a custom HTML visual is not used as the answer-submission mechanism.
 
-Tasks may use local or cloud execution environments, so file availability and
-shell tooling depend on the active surface. Work web/mobile uses uploaded or
-project files; desktop tasks can also use a selected local folder. Python is
-optional; the agent follows the manual check path whenever a helper cannot run.
+Tasks may use local or cloud execution environments, so file availability
+depends on the active surface. Work web/mobile uses uploaded or project files;
+desktop tasks can also use a selected local folder. No shell or Python is
+needed on any surface.
 
 ## Package contents
 
@@ -69,7 +69,7 @@ nl-tax-agent-skills/
   .claude-plugin/plugin.json    # Claude Code plugin manifest
   .codex-plugin/plugin.json     # Codex plugin manifest
   LICENSE                       # Apache-2.0 license text
-  assets/                       # icon.png
+  assets/                       # plugin icon
   agents/
     nl-tax-specialist-reviewer.md # optional Claude Cowork section reviewer
   skills/
@@ -92,15 +92,18 @@ Unit tests, structural fixtures, source metadata, the workflow-support gate,
 and source-maintenance tooling live outside this installed package under
 repository-level `tests/`, `evals/`, and `tools/`.
 
-### Optional script prerequisites
+### What the plugin runs, reads, and writes
 
-Python is optional at runtime. Do not ask the taxpayer to install Python: the
-agent applies the same explicit checks from the bundled knowledge and skill
-instructions. The bundled scripts are best-effort mechanical accelerators, not
-the primary mechanism. Runtime scripts cover evidence inventory/hash, field-map
-checks, and source-pinned arithmetic checks. Repository-only validators and
-source-maintenance tooling are not installed. On hosts without Python, the
-agent-driven manual checks in each `SKILL.md` apply.
+- **Runs:** nothing. The package ships Markdown and YAML only: no scripts,
+  hooks, MCP servers, or package installs. Skills pre-approve no shell
+  commands; every arithmetic and structural check is an agent checklist.
+- **Reads:** its own bundled skill files, plus the documents and folders the
+  taxpayer selects or attaches.
+- **Writes:** only under `workspace/` in the task's working folder (skills
+  pre-approve `Write`/`Edit` for `./workspace/**` only).
+- **Fetches:** when a workflow calls for a freshness check, the agent may read
+  public official pages such as belastingdienst.nl. It sends no taxpayer data
+  anywhere and never opens Mijn Belastingdienst or any authenticated portal.
 
 ## Skill inventory
 
@@ -166,7 +169,7 @@ replace fresh-task smoke tests in Work web, Work desktop, Codex, and Claude.
 On hosts with scheduled tasks, users can request deadline reminders,
 missing-document check-ins, source-freshness reports, or resumed draft reviews.
 These continue from the saved conversation ledger; they do not introduce a
-fixed questionnaire or Python-owned tax workflow.
+fixed questionnaire or script-owned tax workflow.
 
 ## Scope
 

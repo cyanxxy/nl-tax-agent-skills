@@ -198,7 +198,7 @@ class MarketplaceConsistencyTests(unittest.TestCase):
 class EvidenceIndexerTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
-            "skills/nl-tax-evidence-indexer/scripts/index_evidence.py",
+            "../../tools/nl_tax_agent_skills/evidence_indexer/index_evidence.py",
             "index_evidence",
         )
 

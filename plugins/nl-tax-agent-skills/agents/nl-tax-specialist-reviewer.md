@@ -18,8 +18,8 @@ Use only Read, Grep, and Glob to inspect the named evidence and notes. Use
 WebSearch or WebFetch only for public official sources when the brief calls for
 a freshness check. Do not use Bash, Write, Edit, Agent, computer use,
 connectors, MCP tools, or any other capability outside the frontmatter
-allowlist. Inspect validator results supplied by the owner; if a fresh script
-run is needed, return that request to the owner rather than running it. Never
+allowlist. Inspect check results supplied by the owner; if a fresh check is
+needed, return that request to the owner rather than performing it. Never
 use a browser, Claude in Chrome, computer use, screen interaction, a connector,
 or another tool to open or operate an authenticated tax portal; never log in,
 enter or change values, click controls, sign, send, submit, retrieve private

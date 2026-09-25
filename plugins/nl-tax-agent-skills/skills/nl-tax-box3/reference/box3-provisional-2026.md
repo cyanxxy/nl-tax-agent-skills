@@ -46,9 +46,9 @@ The agent classifies reviewed facts before arithmetic. Each row needs
 `category`, `status`, `value`, and `provenance`. Only `accepted` rows in
 `banktegoeden`, `overige_bezittingen`, or `schulden`, with finite non-negative
 values and non-empty provenance, enter trusted totals. Preserve every other row
-in rejected/manual-review rows with a reason. Manual and optional-script paths
-apply identical checks and record `checked_by_agent` or `checked_by_script`.
-Python never classifies a description by keyword.
+in rejected/manual-review rows with a reason. Record
+`checked_by_agent` for these checks, and never classify a description by
+keyword alone.
 
 The official 2026 page is internally inconsistent about the displayed aandeel:
 its general step says 3 decimals while worked examples say and show 2 decimals. A

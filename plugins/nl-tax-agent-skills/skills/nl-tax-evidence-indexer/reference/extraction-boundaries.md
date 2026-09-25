@@ -85,15 +85,15 @@ Each evidence item has an `extraction_status` field:
 
 | Status | Meaning |
 |---|---|
-| `indexed_only` | File has been cataloged and hashed but content has not been read |
+| `indexed_only` | File has been cataloged but content has not been read |
 | `classified` | File content has been examined and an evidence type assigned |
 | `extracted` | Summary fields have been extracted from the document |
 | `failed` | File could not be read or processed (corrupt, encrypted, unsupported format) |
 
-The optional inventory script assigns only `indexed_only` (or `failed` when the
-file itself cannot be read). It does not infer document type, year, confidence,
-or extracted values. A missing hash may remain `null`; hashing availability is
-not a prerequisite for agent classification or downstream workpack preparation.
+Inventory alone assigns only `indexed_only` (or `failed` when the file itself
+cannot be read); document type, year, confidence, and extracted values come
+from the agent's review. `file_sha256` stays `null`; hashing is not a
+prerequisite for classification or downstream workpack preparation.
 
 ---
 

@@ -145,20 +145,12 @@ the check: complete every stable check ID in the manual checklist in
 `mapping-principles.md`, applying the canonical rule data in
 `field-map-rules.yaml`, then set `check_performed_by: checked_by_agent`. That
 is the only accepted check trail; the taxpayer's own review before manual
-entry is the final check. Never skip the checklist and never delegate it to a
-script — there is no bundled validator in the installed plugin, and no script
-result can replace or overrule the agent's checklist or promote a draft to
+entry is the final check. Never skip the checklist, and never promote a draft to
 `review_ready`.
 
 ## 7. Render and report
 
-When available, render the checked YAML with:
-
-```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
-```
-
-Otherwise read the written YAML directly and present each field's Dutch label,
+Read the written YAML directly and present each field's Dutch label,
 manual-entry value or `MISSING - enter manually` marker, and source. Rendering
 is presentation only and cannot change the map.
 

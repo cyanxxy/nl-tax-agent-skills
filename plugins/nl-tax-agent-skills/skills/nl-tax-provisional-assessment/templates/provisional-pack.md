@@ -356,8 +356,7 @@ totals below.]
 |----|-------------|----------|--------|-------|------------|--------|
 | [row id] | [description] | [category/unknown] | [manual_review/rejected] | EUR [estimate] | [F/U/A/B/?] | [why excluded] |
 
-Check trail: `check_performed_by: "[checked_by_agent | checked_by_script]"`.
-The manual path and optional script apply the same row checks. Preserve this
+Check trail: `check_performed_by: "checked_by_agent"`. Preserve this
 trail and both tables even when there are no rejected rows.
 
 ### Assets on 1 January 2026

@@ -53,8 +53,8 @@ because the indexer was already active. In that row set:
 
 ## 3. Inventory, classify, and extract
 
-1. Inventory selected files. The bundled script may supply file metadata and a
-   SHA-256 hash only; an unavailable hash remains null and is nonblocking.
+1. Inventory selected files with the host's file tools: record path and size,
+   assign the next sequential `evidence_id`, and leave `file_sha256: null`.
 2. Review each new or changed file and assign the exact canonical token from
    `reference/evidence-types.md`, plus `tax_year`, `owner`, `confidence`, and
    `review_required`.
@@ -82,8 +82,8 @@ Ask no more than three closely related questions per turn.
 
 Update the evidence index, review questions, session progress, and any deferred
 items together so a later turn can resume from disk. Keep totals and review
-counts consistent with the item rows. Record whether the inventory was checked
-by the bundled script or by the agent. Seed a missing review-questions file
+counts consistent with the item rows. Record `check_performed_by:
+checked_by_agent` for the inventory. Seed a missing review-questions file
 from `templates/evidence-review-questions.md` before its first update.
 
 Finish with a two-to-four-sentence report covering:

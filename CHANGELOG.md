@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The installed plugin ships no executable code. The seven optional Python
+  helpers (evidence inventory, field-map renderer, Box 1/2/3 and allocation
+  arithmetic) moved to `tools/nl_tax_agent_skills/` as repository graders, and
+  every runtime check is now an agent checklist that records
+  `check_performed_by: checked_by_agent`.
+- Skills no longer pre-approve `Bash(python3:*)`, and `Write`/`Edit` grants are
+  scoped to `./workspace/**`. This clears the Claude directory scan holds
+  `ALLOWED_TOOLS_BROAD` and `ALLOWED_TOOLS_UNSCOPED_WRITE`.
+- Evidence items get sequential IDs (`ev_001`, ...) and `file_sha256: null`;
+  hashing was always non-blocking.
+- The package README no longer names bundled image paths (scan hold
+  `UNREAD_ASSET_REFERENCED`) and now states what the plugin runs, reads,
+  writes, and fetches.
+
 ## [0.3.0] — 2026-09-22
 
 Skills now work as an on-demand knowledge base for Claude, Codex, and other

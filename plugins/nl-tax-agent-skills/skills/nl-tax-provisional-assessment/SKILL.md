@@ -6,10 +6,9 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
   - AskUserQuestion
-  - Bash(python3:*)
 ---
 
 # NL Tax Provisional Assessment
@@ -183,8 +182,8 @@ before mapping and retain this skill as active through validation.
 For request and change only, invoke `nl-tax-field-mapper` after the confirmed
 workpack is written. It alone writes and validates
 `workspace/provisional/2026/field-map.yaml`; the confirmed workpack authorizes
-that companion map without a second activation or consent phrase. A script may
-check structure and provenance but cannot promote a draft. If a sourced fact
+that companion map without a second activation or consent phrase. Nothing may
+promote a draft map to `review_ready`. If a sourced fact
 changes after generation, reset confirmation, present the updated summary, and
 require fresh contextual confirmation before overwriting canonical outputs.
 The income-tax field map MUST NOT contain a Zvw field or value: no Zvw

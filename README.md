@@ -244,8 +244,9 @@ The plugin is Cowork-first and supports **Claude Cowork**, **ChatGPT Work**,
 knowledge. File access follows the active surface: upload or project files on
 Work web/mobile, and user-selected local files or attachments on desktop.
 
-Python is optional. The agent can complete the documented workflow without
-asking a taxpayer to install Python.
+No shell or Python is needed. The installed plugin ships no scripts, and
+every check is an agent checklist; skills pre-approve writes only under
+`./workspace/**`.
 
 <details>
 <summary><strong>Other installation paths</strong> — Cowork team/organization, community directory, and ZIP fallback</summary>

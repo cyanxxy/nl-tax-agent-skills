@@ -116,9 +116,7 @@ real boolean `allocatable`. A row name never determines that classification.
 Check that `taxpayer_pct` and `partner_pct` are finite numbers from 0 through
 100 and total 100. A non-allocatable row must be 100/0 or 0/100, and
 `partner_pct` must be 0 when `has_fiscal_partner` is false. Record
-`check_performed_by: checked_by_agent` for this manual check or
-`check_performed_by: checked_by_script` after the optional helper checks the
-same explicit payload.
+`check_performed_by: checked_by_agent` for this check.
 
 ## Notes
 

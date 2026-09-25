@@ -40,7 +40,7 @@ class Box3TrustedRowDocumentationTests(unittest.TestCase):
                 for phrase in required:
                     self.assertIn(phrase, text)
 
-    def test_box3_templates_have_manual_and_script_check_trails(self):
+    def test_box3_templates_have_an_agent_check_trail(self):
         for relative_path in (
             "skills/nl-tax-annual-return/templates/annual-return-pack.md",
             "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
@@ -50,7 +50,7 @@ class Box3TrustedRowDocumentationTests(unittest.TestCase):
                 self.assertIn("accepted rows", text.lower())
                 self.assertIn("rejected/manual-review rows", text.lower())
                 self.assertIn("checked_by_agent", text)
-                self.assertIn("checked_by_script", text)
+                self.assertNotIn("checked_by_script", text)
 
 
 class InvocationPolicyFrontmatterTests(unittest.TestCase):
@@ -133,7 +133,7 @@ class PlanSourceRefreshUrlAllowlistTests(unittest.TestCase):
 class Box2InputHardeningTests(unittest.TestCase):
     def setUp(self):
         self.calc = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_review",
         )
 
@@ -268,7 +268,7 @@ class FieldMapWerkelijkScanTests(unittest.TestCase):
 class Box1NanGuardTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
-            "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+            "../../tools/nl_tax_agent_skills/box1_home/validate_own_home_inputs.py",
             "validate_own_home_inputs_review",
         )
 

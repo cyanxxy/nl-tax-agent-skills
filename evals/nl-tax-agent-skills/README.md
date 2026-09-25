@@ -118,8 +118,9 @@ always-on context. Compare it with `claude --plugin-dir ... plugin details`, and
 state clearly whether any token figure is static, cumulative benchmark usage,
 or Claude package inventory.
 
-Python is optional in taxpayer workflows. The supported maintainer runtime is
-Python 3.10+. Eight installed helpers remain mechanical accelerators for
-inventory, field-map checks, and source-pinned arithmetic; seven developer
-consistency/source-maintenance tools stay repository-only. Agentic
-evaluation must never assume a helper owns tax interpretation.
+Taxpayer workflows need no Python: the installed plugin ships no scripts. The
+supported maintainer runtime is Python 3.10+. The former inventory,
+field-map, and source-pinned arithmetic helpers are repository graders under
+`tools/nl_tax_agent_skills/`, next to seven developer
+consistency/source-maintenance tools. Agentic evaluation must never assume a
+grader owns tax interpretation.

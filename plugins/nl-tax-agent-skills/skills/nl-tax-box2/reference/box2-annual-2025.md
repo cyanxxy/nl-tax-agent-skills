@@ -28,11 +28,8 @@ review_status: reviewed
 Use these notes for standard full-year Dutch resident annual 2025 preparation
 workpacks. Outputs are for manual Mijn Belastingdienst entry and review only.
 
-Python is optional. Do not ask the taxpayer to install it. The agent can apply
-the checks below directly and record `check_performed_by: checked_by_agent`; an
-optional run of `calculate_box2_tax.py` records
-`check_performed_by: checked_by_script` and must produce the same boundary
-decision.
+The agent applies the checks below directly and records
+`check_performed_by: checked_by_agent`.
 
 Before any calculation, require the explicit pair `workflow: annual_2025` and
 integer `tax_year: 2025`, a supplied `substantial_interest_pct`, actual `true`
@@ -112,7 +109,7 @@ apply Dutch dividend withholding tax as a credit.
 - Do not decide carry-back, carry-forward, or formal loss-determination issues
   in this helper.
 - A positive `loss_setoff` blocks calculation until a reviewer confirms the
-  amount and the payload records the actual boolean
+  amount and the inputs record the actual boolean
   `loss_setoff_reviewed: true` and a non-empty `loss_setoff_source` (for
   example, the relevant assessment loss statement).
 
@@ -120,7 +117,7 @@ apply Dutch dividend withholding tax as a credit.
 
 - Full-year fiscal partners may allocate Box 2 income in any split totaling
   100%.
-- Calculate an allocation only when the payload sets the actual boolean
+- Calculate an allocation only when the inputs record the actual boolean
   `full_year_fiscal_partner: true`; otherwise return no calculated result and
   ask for confirmation before presenting a split.
 - Validate the selected percentages before calculation and show each partner's

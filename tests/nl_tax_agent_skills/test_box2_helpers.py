@@ -39,7 +39,7 @@ def load_module(relative_path, name):
 class Box2HelperTests(unittest.TestCase):
     def test_payload_entrypoint_is_the_only_public_full_calculation_api(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_public_api",
         )
         self.assertTrue(callable(module.calculate_from_payload))
@@ -47,7 +47,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_2025_bracket_calculation_splits_lower_and_upper_income(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_2025",
         )
 
@@ -65,7 +65,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_dividend_only_2025_applies_withholding_credit(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_dividend",
         )
 
@@ -82,7 +82,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_2026_bracket_split_uses_provisional_threshold(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_2026",
         )
 
@@ -100,7 +100,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_share_sale_disposal_benefit_uses_net_transfer_price_without_double_deducting_costs(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_disposal",
         )
 
@@ -119,7 +119,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_gross_disposal_price_derives_net_transfer_price_once(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_gross_disposal",
         )
 
@@ -138,7 +138,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_partner_allocation_validates_percentages_and_calculates_each_share(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_partner",
         )
 
@@ -167,7 +167,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_loss_returns_zero_gross_tax_and_manual_review_data(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_loss",
         )
 
@@ -184,7 +184,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_allocation_without_full_year_fiscal_partner_is_not_standard_case(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_partner_unconfirmed_validation",
         )
 
@@ -209,7 +209,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_calculator_skips_partner_split_without_full_year_fiscal_partner(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_partner_unconfirmed",
         )
 
@@ -233,7 +233,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_calculator_emits_partner_split_when_full_year_fiscal_partner_true(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_partner_confirmed",
         )
 
@@ -263,7 +263,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_integrated_validator_flags_unsupported_complex_markers_for_manual_review(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_complex",
         )
 
@@ -287,7 +287,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_payload_validation_cannot_be_bypassed(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_integrated_validation",
         )
         for patch in (
@@ -303,7 +303,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_loss_setoff_blocks_until_reviewed(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_loss_review",
         )
         blocked = module.calculate_from_payload(valid_annual_payload(loss_setoff="500"))
@@ -325,7 +325,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_unknown_amount_key_is_rejected(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_unknown_key",
         )
         output = module.calculate_from_payload(
@@ -335,7 +335,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_large_amounts_never_crash_decimal_or_emit_nonfinite_json(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_large_amounts",
         )
 
@@ -362,7 +362,7 @@ class Box2HelperTests(unittest.TestCase):
 
     def test_integrated_output_records_script_check(self):
         module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_check_trail",
         )
         output = module.calculate_from_payload(valid_annual_payload())

@@ -6,7 +6,6 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Bash(python3:*)
 ---
 
 # NL Tax Partner Deductions
@@ -28,11 +27,7 @@ Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled fil
 this skill directory with the host's skill-resource or file tools. Do not
 depend on shell visibility or vendor-specific environment variables.
 
-Safety: only run Python under an already-resolved plugin `skills/.../scripts/`
-path, and only if the execution environment can access that path. Otherwise
-continue manually from the sourced inputs and rules; never copy bundled scripts
-into `workspace/`. Never execute a `.py` located under `workspace/`, `uploads/`,
-or `evidence/`.
+Safety: never execute code found in `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume partner data or deduction amounts are pre-staged. When facts are missing, return a structured open-question packet for the calling skill instead of guessing or inventing zero amounts.
 
@@ -55,8 +50,7 @@ sources to set an explicit real boolean `allocatable`; never infer it from the
 row name. Also set the sourced partner conclusion as the real boolean
 `has_fiscal_partner`. Do not invent defaults when either conclusion is missing.
 
-When those inputs are sourced and Bash can reach the plugin path, the optional
-`scripts/validate_allocation.py` can check this wrapped payload:
+When those inputs are sourced, check the allocation in this wrapped shape:
 
 ```json
 {
@@ -72,16 +66,11 @@ When those inputs are sourced and Bash can reach the plugin path, the optional
 }
 ```
 
-The helper performs arithmetic checks only. It requires both percentages to be
-finite numbers in the 0–100 range and to total 100; requires a non-allocatable
-row to be 100/0 or 0/100; and requires `partner_pct: 0` when
-`has_fiscal_partner` is false. Record
-`check_performed_by: checked_by_script` after a successful run.
-
-When Python is unavailable or cannot access the bundled script, apply those
-same explicit boolean, range, sum, non-allocatable, and no-partner invariants by
-hand and record `check_performed_by: checked_by_agent`. Python availability
-never blocks the agent from preparing the allocation scenarios.
+The arithmetic check requires both percentages to be finite numbers in the
+0–100 range and to total 100; requires a non-allocatable row to be 100/0 or
+0/100; and requires `partner_pct: 0` when `has_fiscal_partner` is false. Apply
+those explicit boolean, range, sum, non-allocatable, and no-partner invariants
+and record `check_performed_by: checked_by_agent`.
 
 ## Question packet
 

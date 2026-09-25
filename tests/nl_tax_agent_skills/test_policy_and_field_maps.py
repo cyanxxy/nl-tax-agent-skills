@@ -1253,12 +1253,11 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("resultaat uit overige werkzaamheden", annual_field_map)
         self.assertIn("manual review only", annual_field_map)
 
-    def test_field_mapper_skill_commands_use_python3(self):
+    def test_field_mapper_runs_no_scripts(self):
         skill = read_text("skills/nl-tax-field-mapper/SKILL.md")
 
-        self.assertIn("python3 ", skill)
-        self.assertIn("render_field_map.py", skill)
-        self.assertNotIn("\npython ", skill)
+        self.assertNotIn("python3", skill)
+        self.assertNotIn("render_field_map.py", skill)
         # The runtime check is the agent checklist, not a bundled validator.
         self.assertNotIn("validate_field_map.py", skill)
 

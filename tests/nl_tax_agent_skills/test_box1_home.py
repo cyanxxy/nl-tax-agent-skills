@@ -25,7 +25,7 @@ def load_module(relative_path, name):
 
 def _load():
     return load_module(
-        "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+        "../../tools/nl_tax_agent_skills/box1_home/validate_own_home_inputs.py",
         "validate_own_home_inputs",
     )
 
@@ -285,7 +285,7 @@ class Box1OwnHomeDocumentationTests(unittest.TestCase):
         for non_closing_status in ("indexed_only", "deferred", "failed", "wrong-year"):
             self.assertIn(non_closing_status, behavior)
 
-    def test_manual_and_script_paths_have_parity_and_check_trail(self):
+    def test_own_home_docs_share_one_agent_check_trail(self):
         paths = (
             "skills/nl-tax-box1-home/SKILL.md",
             "skills/nl-tax-box1-home/reference/own-home-2025.md",
@@ -299,13 +299,13 @@ class Box1OwnHomeDocumentationTests(unittest.TestCase):
             "hillen_deduction",
             "review_adjustments",
             "checked_by_agent",
-            "checked_by_script",
         )
         for relative in paths:
             with self.subTest(path=relative):
                 text = (ROOT / relative).read_text(encoding="utf-8")
                 for phrase in required:
                     self.assertIn(phrase, text)
+                self.assertNotIn("checked_by_script", text)
 
 
 if __name__ == "__main__":

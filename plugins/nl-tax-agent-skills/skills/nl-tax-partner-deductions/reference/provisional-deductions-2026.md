@@ -133,9 +133,7 @@ row name or use a missing-value default.
 For each row, `taxpayer_pct` and `partner_pct` must be finite numbers from 0
 through 100 and total 100. An explicitly non-allocatable row must be 100/0 or
 0/100, and `partner_pct` must be 0 when `has_fiscal_partner` is false. Apply
-these invariants manually and record `check_performed_by: checked_by_agent`, or
-record `check_performed_by: checked_by_script` after the optional helper checks
-the same explicit payload. Python availability never blocks the workpack.
+these invariants and record `check_performed_by: checked_by_agent`.
 
 ## Notes
 

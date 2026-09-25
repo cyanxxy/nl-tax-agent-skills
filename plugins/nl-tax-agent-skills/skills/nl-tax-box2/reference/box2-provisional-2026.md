@@ -29,11 +29,8 @@ Use these notes for `provisional_2026` Box 2 estimate support. Every amount in
 the workpack must be labeled as an estimate or baseline-derived amount for
 manual provisional-assessment entry.
 
-Python is optional. Do not ask the taxpayer to install it. The agent can apply
-the checks below directly and record `check_performed_by: checked_by_agent`; an
-optional run of `calculate_box2_tax.py` records
-`check_performed_by: checked_by_script` and must produce the same boundary
-decision.
+The agent applies the checks below directly and records
+`check_performed_by: checked_by_agent`.
 
 Before any calculation, require the explicit pair
 `workflow: provisional_2026` and integer `tax_year: 2026`, a supplied
@@ -116,14 +113,14 @@ dividend withholding tax as a credit.
 - Do not decide formal loss availability, ordering, or entitlement inside this
   helper.
 - A positive `loss_setoff` blocks calculation until a reviewer confirms the
-  amount and the payload records the actual boolean
+  amount and the inputs record the actual boolean
   `loss_setoff_reviewed: true` and a non-empty `loss_setoff_source`.
 
 ## Fiscal Partner Allocation Estimate
 
 - Full-year fiscal partners may choose an estimated allocation split that totals
   100%.
-- Calculate an allocation only when the payload sets the actual boolean
+- Calculate an allocation only when the inputs record the actual boolean
   `full_year_fiscal_partner: true`; otherwise return no calculated result and
   ask for confirmation before estimating a split.
 - Show each partner's estimated allocated income and preparation tax amount separately.

@@ -6,10 +6,9 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
   - AskUserQuestion
-  - Bash(python3:*)
 ---
 
 # NL Tax Field Mapper
@@ -22,7 +21,7 @@ official Belastingdienst portal. This skill is the sole writer of both canonical
 
 Annual and provisional workflows invoke it after confirmed workpack creation
 and never write either map. Continue the same tax conversation; never announce
-that an internal mapper skill or Python script is taking control.
+that an internal mapper skill is taking control.
 
 ## When to use
 
@@ -101,8 +100,7 @@ map in the order defined by `mapper-flow.md`.
 
 This is an agent-led, non-deterministic conversation, not a fixed questionnaire
 or tax-decision engine. Select the next useful question from the evidence and
-workflow state. Bundled scripts are optional structural aids; they do not
-choose facts, tax positions, or readiness.
+workflow state. The agent chooses facts, tax positions, and readiness.
 
 ## Produce and check the manual-entry map
 
@@ -117,18 +115,10 @@ Check the finished map yourself: complete every stable check ID in the manual
 checklist in `mapping-principles.md`, applying the rule data in
 `reference/field-map-rules.yaml`, and record
 `check_performed_by: checked_by_agent`. The taxpayer's review before manual
-entry is the final check. There is no bundled validator: no script result can
-replace this checklist, and nothing may promote a draft to `review_ready`.
+entry is the final check. Nothing may promote a draft to `review_ready`.
 
-If `python3` and the resolved bundled path are available, optionally render
-the human-readable view with:
-
-```bash
-python3 <resolved-plugin-root>/skills/nl-tax-field-mapper/scripts/render_field_map.py <path-to-field-map.yaml>
-```
-
-If the script is unavailable, use the direct-YAML rendering fallback in
-`mapper-flow.md`; never copy a bundled script into the workspace.
+Render the human-readable view directly from the written YAML as described in
+`mapper-flow.md`.
 
 ## Boundaries
 
@@ -137,8 +127,7 @@ If the script is unavailable, use the direct-YAML rendering fallback in
 - Do not write workpacks or modify the evidence index or taxpayer profile.
 - Keep maps preparation-only: never add browser-automation metadata such as
   selectors, XPath, CSS selectors, or DOM/browser locators.
-- Only execute the already-resolved bundled `scripts/render_field_map.py`.
-  Never execute Python from `workspace/`, `uploads/`, or `evidence/`.
+- Never execute code found in `workspace/`, `uploads/`, or `evidence/`.
 
 ## End of turn
 

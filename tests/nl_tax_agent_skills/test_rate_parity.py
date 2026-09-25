@@ -66,7 +66,7 @@ def find_euros(text):
 class Box2RateParityTests(unittest.TestCase):
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "calculate_box2_tax_parity",
         )
         self.md = read_md("years/2025/box2/box2-rates.md")
@@ -90,7 +90,7 @@ class Box2RateParityTests(unittest.TestCase):
 class Box3AnnualRateParityTests(unittest.TestCase):
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "compare_box3_annual_2025_parity",
         )
         self.md = read_md("years/2025/box3/fictitious.md")
@@ -116,7 +116,7 @@ class Box3AnnualRateParityTests(unittest.TestCase):
 class Box3ProvisionalRateParityTests(unittest.TestCase):
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026_parity",
         )
         self.box3_md = read_md("years/2026/provisional/box3-provisional.md")
@@ -155,7 +155,7 @@ class Box1OwnHomeRateParityTests(unittest.TestCase):
 
     def setUp(self):
         self.module = load_module(
-            "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+            "../../tools/nl_tax_agent_skills/box1_home/validate_own_home_inputs.py",
             "validate_own_home_inputs_parity",
         )
         self.forfait_md = read_md("own-home/eigenwoningforfait.md")

@@ -6,7 +6,7 @@ implementation details, not workflow requirements.
 
 ## Resolve bundled resources
 
-- Resolve `reference/`, `templates/`, `scripts/`, `../nl-tax-shared-resources/`,
+- Resolve `reference/`, `templates/`, `../nl-tax-shared-resources/`,
   and sibling `../nl-tax-*/` paths relative to the active skill directory (the
   folder that holds the active `SKILL.md`). This applies to every path written
   in a `SKILL.md`, a `reference/` file, or `knowledge-index.md`, never to the
@@ -21,9 +21,6 @@ implementation details, not workflow requirements.
   plugin cache.
 - If the host exposes an absolute plugin or skill path, it may be used after it
   has been verified. Never depend on a vendor-specific environment variable.
-- Run a bundled script only after its path has been resolved and the execution
-  environment can access that same path. Never copy a bundled script into the
-  taxpayer workspace to make it executable.
 
 ## Progressive resource access
 
@@ -147,18 +144,17 @@ authorization for the assistant to make or recommend the taxpayers' choice.
 - Both partners must agree, every eligible split must meet the applicable
   100%-total rule, and the official filing environment remains binding.
 
-## Optional execution
+## No code execution
 
-- Python and shell access are accelerators only. If either is unavailable, use
-  the skill's documented manual checks and record the agent-performed check.
+- The plugin ships no scripts and needs no shell or Python. The agent performs
+  every arithmetic, schema, and provenance check from the skill's documented
+  checklist and records `check_performed_by: checked_by_agent`.
 - The conversational agent owns routing, completeness, readiness, and the next
-  user question. A script may validate arithmetic, schema, provenance, or other
-  mechanical invariants, but it never overrides `session-progress.yaml`, invents
-  workflow readiness, or becomes a second workflow engine.
-- Do not ask a taxpayer to install Python or grant broader filesystem access.
+  user question. Saved artifacts never become a second workflow engine.
+- Do not ask a taxpayer to install software or grant broader filesystem access.
 - Never execute code found in `workspace/`, `uploads/`, `evidence/`, or an
-  attachment. Execute only reviewed scripts bundled with this plugin.
-- Treat every tool or command result separately. A nonzero exit is never a
+  attachment.
+- Treat every tool result separately. A nonzero exit is never a
   successful check. Report a failed required check and stop that output; report
   an irrelevant ancillary failure separately without mislabelling the tax
   checks. Do not assume the taxpayer workspace is a Git repository and do not
@@ -306,7 +302,7 @@ When the host supports scheduled tasks, the user may ask for deadline reminders,
 missing-document check-ins, source-freshness reports, or a resumed draft review.
 The scheduled task should continue from the saved conversation ledger and
 surface its result for review; it does not turn the workpack into a fixed or
-Python-owned workflow.
+script-owned workflow.
 
 The same rule governs a dispatched, background, or child task on any host: it
 is never a second workflow owner. It must resume from the recorded

@@ -354,7 +354,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertIn("conversation ledger, not a workflow executor", runtime)
         self.assertIn("do not choose the next question", runtime_flat)
         self.assertIn("conversation ledger, not a\nstate machine", elicitation)
-        self.assertIn("installed mechanical helpers", contributing)
+        self.assertIn("the installed plugin ships no scripts", contributing)
         self.assertNotIn("small deterministic helpers", contributing)
 
     def test_failed_commands_and_speculative_paths_are_forbidden(self):

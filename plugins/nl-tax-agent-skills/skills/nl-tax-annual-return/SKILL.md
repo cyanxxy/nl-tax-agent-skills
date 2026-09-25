@@ -6,10 +6,9 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
   - AskUserQuestion
-  - Bash(python3:*)
 ---
 
 # NL Tax Annual Return

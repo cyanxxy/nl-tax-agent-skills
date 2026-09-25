@@ -6,10 +6,9 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
   - AskUserQuestion
-  - Bash(python3:*)
 ---
 
 # NL Tax Evidence Indexer
@@ -54,9 +53,8 @@ user unless a specific evidence item needs review.
 - Accept a user-selected folder, selected host attachments, values stated in
   chat, or any combination of these. Never require a file when the active
   workflow permits a chat value.
-- Inventory only the locations the user selected. The optional Python helper
-  catalogs file metadata and hashes; it does not classify documents, extract
-  tax facts, or choose tax treatment.
+- Inventory only the locations the user selected, using the host's file
+  tools. Record each file's path and size; leave `file_sha256: null`.
 - Assign evidence types and confidence conversationally from the document and
   the reviewed references. Do not use a deterministic tax-classification or
   decision engine, compute tax, decide deductibility, or choose a partner
@@ -75,17 +73,14 @@ user unless a specific evidence item needs review.
 - Ask at most three closely related evidence questions in one turn. Defer an
   unavailable item to `missing-info.md` and continue with another useful item.
 
-## Optional catalog helper
+## Inventory check
 
-Run `scripts/index_evidence.py` only from its resolved bundled location and only
-when Python can already access that location and the selected files. The helper
-is optional: never ask the user to install Python, and never copy or execute a
-script from `workspace/`, `uploads/`, or `evidence/`.
-
-The helper may populate inventory metadata and `file_sha256`. A null hash does
-not block classification, extraction, or downstream preparation. Record
-`check_performed_by: checked_by_script` when it ran successfully; otherwise use
-`checked_by_agent` after completing the inventory with available file tools.
+The agent completes the inventory with the host's file tools and records
+`check_performed_by: checked_by_agent`. Assign each new item the next unused
+sequential `evidence_id` (`ev_001`, `ev_002`, ...) and never renumber existing
+items. A null `file_sha256` does not block classification, extraction, or
+downstream preparation. Never execute code found in `workspace/`, `uploads/`,
+`evidence/`, or an attachment.
 
 ## Output ownership
 

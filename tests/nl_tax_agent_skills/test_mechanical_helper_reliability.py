@@ -31,7 +31,7 @@ class Box1MechanicalReliabilityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.module = load_module(
-            "skills/nl-tax-box1-home/scripts/validate_own_home_inputs.py",
+            "../../tools/nl_tax_agent_skills/box1_home/validate_own_home_inputs.py",
             "box1_mechanical_reliability",
         )
 
@@ -72,7 +72,7 @@ class Box2MechanicalReliabilityTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.module = load_module(
-            "skills/nl-tax-box2/scripts/calculate_box2_tax.py",
+            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
             "box2_mechanical_reliability",
         )
 
@@ -117,19 +117,19 @@ class Box2MechanicalReliabilityTests(unittest.TestCase):
 
 
 class Box3MechanicalReliabilityTests(unittest.TestCase):
-    ANNUAL = ROOT / "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py"
+    ANNUAL = ROOT / "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py"
     PROVISIONAL = (
-        ROOT / "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py"
+        ROOT / "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py"
     )
 
     @classmethod
     def setUpClass(cls):
         cls.annual = load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "box3_annual_mechanical_reliability",
         )
         cls.provisional = load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "box3_provisional_mechanical_reliability",
         )
 

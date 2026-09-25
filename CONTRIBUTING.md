@@ -7,10 +7,10 @@ The product is an agent-led plugin under `plugins/nl-tax-agent-skills/` — no
 backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks;
 one Claude-only specialist reviewer provides bounded cross-checks without
 owning the taxpayer conversation or canonical workflow state.
-Python is optional for taxpayer workflows. The installed mechanical helpers
-cover evidence inventory/hash, field-map checks, and source-pinned arithmetic;
-developer consistency and source-maintenance tools stay repository-only. None
-ask questions, select a workflow, classify an ambiguous tax fact, or decide
+Taxpayer workflows need no Python: the installed plugin ships no scripts and
+pre-approves no shell commands. The mechanical graders for evidence inventory,
+field maps, and source-pinned arithmetic live under `tools/nl_tax_agent_skills/`
+with the developer consistency and source-maintenance tools. None ask questions, select a workflow, classify an ambiguous tax fact, or decide
 readiness. When extending behavior, prefer agent guidance in a `SKILL.md` over
 adding script-owned workflow logic.
 
@@ -102,7 +102,7 @@ ledger, not an execution engine: they record what the agent has established but
 do not choose the next question or tax treatment. The packaged Claude reviewer
 receives an exact workflow/year and bounded review question, then returns
 findings to the owner. It can use available host tools for official-source
-checks and optional mechanical validators, while the owner retains the
+checks, while the owner retains the
 conversation, canonical state, and readiness decision. Never build a parallel
 Python workflow engine.
 
@@ -119,8 +119,10 @@ skills/nl-tax-annual-return/
     annual-flow.md
     annual-output-contract.md
   templates/           # output templates (review-questions, missing-info, …)
-  scripts/             # optional Python helpers (validators, renderers)
 ```
+
+Skills ship Markdown and YAML only. Do not add a `scripts/` folder or any other
+executable code to the plugin package; `test_no_runtime_code.py` enforces this.
 
 `SKILL.md` opens with frontmatter that the host parses to register the skill and
 pre-approve a tool allowlist (so listed tools run without a per-call prompt on hosts that
@@ -134,13 +136,14 @@ argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
   - Grep
-  - Write
-  - Edit
-  - Bash(python3 ${CLAUDE_PLUGIN_ROOT}/skills/nl-tax-annual-return/scripts/*.py:*)
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
 ---
 ```
 
-`allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
+Scope every `Write`/`Edit` grant to `./workspace/**` and never pre-approve `Bash`:
+the Claude directory scan holds unscoped write grants and broad shell grants for
+human review. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
 prompts for the listed tools but does not deny others, and Codex ignores it. Real capability
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
@@ -160,9 +163,8 @@ file tools can read the installed skill resources. Skill bodies should resolve
 relative to the skill directory with `Read`. Write every bundled path in a `SKILL.md` or
 `reference/` file in that skill-relative form, and name each file a skill needs, including
 helper `SKILL.md` paths. The runtime contract forbids package-wide `Glob`/`Grep`; the only
-permitted search is a narrow term search inside `../nl-tax-shared-resources/knowledge/`. Bundled Python helpers are best-effort: run them only when Bash can
-access the resolved plugin `skills/.../scripts/` path, and otherwise use the manual
-validation path documented in the skill. Never copy bundled scripts into `workspace/`.
+permitted search is a narrow term search inside `../nl-tax-shared-resources/knowledge/`. Every
+arithmetic and structural check is an agent checklist documented in the skill.
 
 The body then specifies the *Do / Never* contract that constrains the skill, for example:
 
@@ -322,8 +324,8 @@ rates, thresholds, field maps, or box 3 logic for a future year.
 ## Validation
 
 Maintainer checks use Python 3.10+ and PyYAML (`pip install -r requirements.txt`).
-Python remains optional for taxpayer workflows because every runtime check has an
-agent-executable manual path. Run the following commands from the repo root.
+Taxpayer workflows need no Python because every runtime check is an
+agent checklist. Run the following commands from the repo root.
 CI (`.github/workflows/ci.yml`) runs the full gate on every push/PR, from both the repo root
 and the plugin directory.
 
@@ -389,13 +391,13 @@ python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_snapshots.py 
 # Rebuild reversible human-only runtime projections without reattesting sources
 python3 tools/nl_tax_agent_skills/source_maintenance/scripts/build_runtime_projections.py
 
-# Evidence inventory
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-evidence-indexer/scripts/index_evidence.py uploads/
+# Evidence inventory (repository grader)
+python3 tools/nl_tax_agent_skills/evidence_indexer/index_evidence.py uploads/
 
 # Field-map grading (repository tooling; runtime uses the agent checklist)
 python3 tools/nl_tax_agent_skills/field_mapper/validate_field_map.py \
   workspace/annual/2025/field-map.yaml
-python3 plugins/nl-tax-agent-skills/skills/nl-tax-field-mapper/scripts/render_field_map.py \
+python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
   workspace/annual/2025/field-map.yaml
 ```
 

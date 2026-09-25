@@ -9,8 +9,8 @@ review_status: reviewed
 
 ## Asset Classification
 
-The agent applies these official categories to reviewed facts. It does not ask
-Python to classify descriptions. Before totals, each already-classified row has
+The agent applies these official categories to reviewed facts. It never
+classifies a description by keyword alone. Before totals, each already-classified row has
 `category`, `status`, `value`, and `provenance`. Only accepted rows in one of the
 three categories below, with a finite non-negative value and non-empty
 provenance, enter arithmetic. Preserve all other rows with rejection reasons.
@@ -87,9 +87,8 @@ debt. Keep it unresolved until the direction and relevant facts are confirmed:
   higher-tax method.
 - Werkelijk rendement is calculated without heffingsvrij vermogen and follows the same partner allocation percentage as the joint grondslag sparen en beleggen
 - Fictitious-return workpacks must show the official steps: belastbaar rendement, rendementsgrondslag, grondslag sparen en beleggen, aandeel in rendementsgrondslag, box 3 income, and tax
-- Manual and optional-script paths use the same row checks and totals. Record
-  `checked_by_agent` for a manual check or `checked_by_script` for the optional
-  script; never infer categories from keywords.
+- Apply these row checks and totals and record `checked_by_agent`; never infer
+  categories from keywords.
 
 ## Required two-method workpack treatment
 

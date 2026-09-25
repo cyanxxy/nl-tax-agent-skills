@@ -131,7 +131,7 @@ only after the taxpayer explicitly chooses it; otherwise leave it unresolved.
 
 ## Allocation arithmetic check
 
-The agent, not the optional Python helper, decides fiscal-partner status and
+The agent decides fiscal-partner status and
 whether each proposed row is legally allocatable from the reviewed sources.
 Record both decisions as real booleans: `has_fiscal_partner` for the wrapped
 scenario and `allocatable` for every row. Do not infer allocatability from a
@@ -140,9 +140,7 @@ label or silently default missing decisions.
 For every row, check that `taxpayer_pct` and `partner_pct` are finite numbers in
 the 0–100 range and total 100. A row explicitly marked non-allocatable must be
 100/0 or 0/100; when `has_fiscal_partner` is false, `partner_pct` must be 0.
-Record `check_performed_by: checked_by_agent` for the manual path or
-`check_performed_by: checked_by_script` when the optional helper checks the same
-wrapped payload. Python availability does not block preparation.
+Record `check_performed_by: checked_by_agent` for this check.
 
 ## Common errors
 

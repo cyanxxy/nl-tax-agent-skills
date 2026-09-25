@@ -654,7 +654,7 @@ class FieldMapTests(unittest.TestCase):
 
     def test_renderer_groups_onderneming_fields(self):
         renderer = load_module(
-            "skills/nl-tax-field-mapper/scripts/render_field_map.py",
+            "../../tools/nl_tax_agent_skills/field_mapper/render_field_map.py",
             "rfm_entrepreneur",
         )
         self.assertEqual(

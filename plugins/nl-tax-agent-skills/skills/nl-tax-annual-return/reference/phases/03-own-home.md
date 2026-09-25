@@ -54,7 +54,7 @@ One ordinary main residence may receive a review estimate. Two homes, sale/purch
 - `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
 - `total_deductible_own_home_costs` includes mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
 - Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
-- Use the verified optional helper fields `total_deductible_own_home_costs`, `hillen_deduction`, and `box1_own_home_balance` when available. Otherwise the agent derives the review estimate from cited evidence and records missing or uncertain qualification facts for manual review.
+- Use the Box 1 helper's verified `total_deductible_own_home_costs`, `hillen_deduction`, and `box1_own_home_balance`, derived from cited evidence, and record missing or uncertain qualification facts for manual review.
 - Add only `box1_own_home_balance` to taxable Box 1 income. Tariefsaanpassing is separate from box1_own_home_balance: keep it in a separate review table as a tax-benefit adjustment.
 
 ### 3.9 Partner handling for own home

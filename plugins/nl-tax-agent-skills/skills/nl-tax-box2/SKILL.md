@@ -6,7 +6,6 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Bash(python3:*)
 ---
 
 # NL Tax Box 2
@@ -32,38 +31,28 @@ variables.
 - `reference/box2-annual-2025.md`
 - `reference/box2-provisional-2026.md`
 
-Python is optional. Do not ask the taxpayer to install Python and do not make
-completion depend on it. The agent owns classification, questions, and the
-workpack. If an already-resolved bundled script is available, the agent may run
-`scripts/calculate_box2_tax.py input.json` as a mechanical cross-check after it
-has built an explicit, source-backed payload. The script validates before it
-calculates and records `check_performed_by: checked_by_script`.
-
-Whether or not the script is run, apply this same checklist and record
-`check_performed_by: checked_by_agent` for the manual path:
+The agent owns classification, questions, the calculation, and the workpack.
+Before calculating, apply this checklist to the explicit, source-backed inputs
+and record `check_performed_by: checked_by_agent`:
 
 1. Require explicit `workflow` and matching integer `tax_year`; never infer one
    from the other.
 2. Require `substantial_interest_pct`, actual booleans for
    `resident_full_year` and `standard_ab_case`, and explicit source-backed
    values for `regular_benefits`, `disposal_benefit`, and `loss_setoff`.
-3. Reject unknown payload fields instead of treating a misspelled amount as
-   zero. Other amount fields may be included only when collected from evidence.
+3. Never treat an unrecognized or misspelled amount field as zero. Other amount
+   fields may be included only when collected from evidence.
 4. Stop before calculation for a non-standard residence/AB case or any complex
    marker listed under **Never**.
 5. When `loss_setoff` is greater than zero, calculate only after a reviewer has
-   confirmed it and the payload records `loss_setoff_reviewed: true` plus a
+   confirmed it and the inputs record `loss_setoff_reviewed: true` plus a
    non-empty `loss_setoff_source`; otherwise return it as a review question.
 6. For a partner allocation, require an actual
    `full_year_fiscal_partner: true` boolean and percentages totaling 100%.
 7. Apply the year-pinned lower bracket before the upper bracket, then apply
    Dutch dividend withholding tax as a credit. Treat the result as indicative.
 
-Only run Python under the already-resolved plugin
-`skills/nl-tax-box2/scripts/calculate_box2_tax.py` path and only if Bash can
-access it. If Bash cannot see that path, continue with the manual checklist;
-never copy the script into `workspace/`. Never execute a `.py` located under
-`workspace/`, `uploads/`, or `evidence/`.
+Never execute code found in `workspace/`, `uploads/`, or `evidence/`.
 
 ## Do
 
@@ -72,8 +61,8 @@ never copy the script into `workspace/`. Never execute a `.py` located under
 - Distinguish regular benefits, such as dividends, from disposal benefits, such as share-sale gains.
 - Calculate disposal benefit as the official net disposal or transfer price minus acquisition price. If only gross proceeds are available, subtract disposal costs once to derive the net transfer price first.
 - Include Dutch dividend withholding tax as a same-year credit in the indicative calculation.
-- For full-year fiscal partners, support allocation splits that total 100%. The
-  calculator returns no result unless the payload sets the actual boolean
+- For full-year fiscal partners, support allocation splits that total 100%. Do
+  not calculate a split unless the inputs record the actual boolean
   `full_year_fiscal_partner: true`. Do not present a partner split until
   full-year partnership is confirmed.
 - Flag losses, loss setoff, and excessive borrowing from an own BV for manual review.

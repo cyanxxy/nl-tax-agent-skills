@@ -6,16 +6,15 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Bash(python3:*)
 ---
 
 # NL Tax Box 1 And Own Home
 
 Background helper for box 1 income and eigen woning notes.
 
-Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Read `workspace/taxpayer/evidence-index.yaml` directly; the agent, not Python, decides whether evidence is complete. For an annual input, only an evidence entry that is reviewed, successfully processed, and for the correct tax year closes the corresponding gap. A provisional estimate instead needs an explicit source and uncertainty note.
+Use actual evidence and 2025 sources for annual workpacks. Use clearly labeled estimates and 2026 provisional sources for voorlopige aanslag workpacks. Read `workspace/taxpayer/evidence-index.yaml` directly; the agent decides whether evidence is complete. For an annual input, only an evidence entry that is reviewed, successfully processed, and for the correct tax year closes the corresponding gap. A provisional estimate instead needs an explicit source and uncertainty note.
 
-Python is optional. If the agent has already accepted the amounts for one ordinary home and Bash can access the resolved plugin script path, `scripts/validate_own_home_inputs.py` may check the arithmetic. Do not pass eligibility, mortgage qualification, ownership decisions, or complex-home facts to the script. If Python is unavailable, perform the same short manual check below; do not ask the user to install Python. Never copy bundled scripts into `workspace/` or execute a `.py` under `workspace/`, `uploads/`, or `evidence/`.
+The agent performs the own-home arithmetic itself with the short manual check below, only after it has accepted the amounts for one ordinary home. Eligibility, mortgage qualification, ownership decisions, and complex-home facts stay agent decisions, not arithmetic inputs. Never execute code found in `workspace/`, `uploads/`, or `evidence/`.
 
 This helper participates in a conversational workflow. It does not assume all inputs are pre-staged. When values are missing, return a structured open-question packet for the calling skill instead of inventing zeros or treating missing values as not applicable.
 
@@ -63,9 +62,7 @@ For one ordinary home, after the agent has accepted each amount:
 4. Compute `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`.
 5. Put tariefsaanpassing only under `review_adjustments`; never include it in `box1_balance_components` or taxable Box 1 income.
 
-Record `check_performed_by: checked_by_agent` for this manual path or
-`check_performed_by: checked_by_script` when the optional helper checks the same
-accepted amounts. Eligibility and complex own-home cases always remain with the
+Record `check_performed_by: checked_by_agent` for this check. Eligibility and complex own-home cases always remain with the
 agent and may require manual review.
 
 ## Question packet

@@ -167,7 +167,7 @@ All Box 2 values in a provisional 2026 field map are estimates or from-baseline 
 
 Use only this explanatory note: "Werkelijk rendement is not part of provisional 2026."
 
-The validation script rejects provisional field IDs or labels that try to add werkelijk-rendement inputs, calculations, or method choices.
+Never add provisional field IDs or labels for werkelijk-rendement inputs, calculations, or method choices.
 
 ### Notes on box 3 estimates
 - Peildatum for the provisional 2026 is 1 January 2026.

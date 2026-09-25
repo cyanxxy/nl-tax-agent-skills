@@ -6,7 +6,6 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Bash(python3:*)
 ---
 
 # NL Tax Winst uit onderneming

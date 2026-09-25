@@ -6,7 +6,6 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Bash(python3:*)
 ---
 
 # NL Tax Box 3
@@ -33,14 +32,14 @@ This helper may be called through a Skill/Task tool or inlined by an owning work
   mortgage" as a shortcut; unresolved debts remain manual-review rows outside
   accepted totals.
 - Compute only from values with a real source or an explicitly confirmed assumption.
-- The agent classifies each row from the reviewed facts and official rules. Python
-  never infers a category from a description, name, or keyword.
+- The agent classifies each row from the reviewed facts and official rules. Never
+  infer a category from a description, name, or keyword alone.
 - Before arithmetic, represent every row with `category`, `status`, `value`, and
   `provenance`. Only `status: "accepted"` rows in `banktegoeden`,
   `overige_bezittingen`, or `schulden`, with finite non-negative values and
   non-empty provenance, enter trusted totals. Keep every other row in a
   rejected/manual-review table with a reason.
-- The bundled scripts require `--partner-full-year-confirmed` alongside `--has_partner` before they double the heffingsvrij vermogen and the schulden drempel; `--has_partner` on its own raises an error. They also reject negative or non-finite amounts. Do not present a doubled allowance until full-year partnership is confirmed.
+- Double the heffingsvrij vermogen and the schulden drempel only after full-year fiscal partnership is confirmed; a partner without that confirmation is an open question, not a doubled allowance. Reject negative or non-finite amounts.
 
 ## Loading bundled files
 
@@ -57,7 +56,7 @@ Bundled references — read the ones matching the active workflow before computi
 
 The knowledge files those references point at (`../nl-tax-shared-resources/knowledge/years/2025/box3/*.md`, `../nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`) stay canonical for every numeric value.
 
-Only run Python under an already-resolved plugin `skills/.../scripts/` path (for this skill, `scripts/compare_box3_annual_2025.py` and `scripts/summarize_box3_provisional_2026.py`), and only if Bash can access that path. Python is optional: if Bash cannot see the plugin path, total accepted rows and apply the sourced arithmetic manually; never ask the taxpayer to install Python, never copy bundled scripts into `workspace/`, and never execute a `.py` located under `workspace/`, `uploads/`, or `evidence/`.
+The agent totals accepted rows and applies the sourced arithmetic itself. Never execute code found in `workspace/`, `uploads/`, or `evidence/`.
 
 ## Behavior
 
@@ -96,11 +95,10 @@ or outside the standard case:
   provenance: "U:<dated user statement>"
 ```
 
-For the no-Python path, apply the same accepted-category, status, finite
-non-negative value, and provenance checks, then record
-`check_performed_by: "checked_by_agent"`. An optional script run records
-`check_performed_by: "checked_by_script"`. Both paths preserve the accepted
-rows and rejected/manual-review rows in the calling workflow's workpack.
+Apply these accepted-category, status, finite non-negative value, and
+provenance checks, then record `check_performed_by: "checked_by_agent"`.
+Preserve the accepted rows and rejected/manual-review rows in the calling
+workflow's workpack.
 
 Return structured facts and open questions to the owning workflow. Do not
 persist any final artifact, including shared notes, question packets, session

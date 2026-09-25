@@ -194,7 +194,7 @@ class ReleasePackagingTests(unittest.TestCase):
         for required in (
             "ChatGPT Work on web or mobile",
             "ChatGPT Work or Codex on desktop",
-            "Python and shell access are accelerators only",
+            "The plugin ships no scripts and needs no shell or Python",
             "Never depend on a vendor-specific environment variable",
             "The owning conversational agent remains the only writer",
             "the user may ask for deadline reminders",
@@ -256,7 +256,7 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertEqual(codex["interface"]["composerIcon"], "./assets/icon.png")
         self.assertEqual(codex["interface"]["logo"], "./assets/icon.png")
 
-    def test_user_docs_keep_python_optional(self):
+    def test_user_docs_say_no_python_is_needed(self):
         user_doc_paths = (
             REPO / "README.md",
             PLUGIN / "README.md",
@@ -264,7 +264,7 @@ class ReleasePackagingTests(unittest.TestCase):
         for path in user_doc_paths:
             with self.subTest(path=path.relative_to(REPO)):
                 text = path.read_text(encoding="utf-8")
-                self.assertIn("python is optional", text.lower())
+                self.assertRegex(text.lower(), r"no shell or python\s+is\s+needed")
                 self.assertNotIn("Python 3." + "8", text)
 
     def test_public_readme_has_actionable_codex_install_steps(self):
@@ -288,7 +288,9 @@ class ReleasePackagingTests(unittest.TestCase):
             with self.subTest(path=path.relative_to(REPO)):
                 text = path.read_text(encoding="utf-8")
                 self.assertIn("Python 3.10+", text)
-                self.assertIn("python is optional", text.lower())
+                self.assertRegex(
+                    text.lower(), r"taxpayer workflows\s+need\s+no\s+python"
+                )
                 self.assertNotIn("Python 3." + "8", text)
 
     def test_contributor_docs_have_no_current_0_1_2_example(self):

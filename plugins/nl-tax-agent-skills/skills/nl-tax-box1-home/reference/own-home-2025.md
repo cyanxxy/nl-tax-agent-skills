@@ -33,8 +33,8 @@ These are reference notes for workpack preparation -- not final tax advice.
 - `box1_balance_components` contains only eigenwoningforfait, `total_deductible_own_home_costs`, and `hillen_deduction`.
 - Tariefsaanpassing is separate from box1_own_home_balance: it is a tax-benefit adjustment and must not be added to taxable Box 1 income.
 - Put tariefsaanpassing under `review_adjustments`, never in `box1_balance_components`.
-- Record `check_performed_by: checked_by_agent` after the manual check or `check_performed_by: checked_by_script` after the optional helper checks the same accepted amounts.
-- Optional helper fields are review inputs. The agent verifies them against the evidence and keeps missing or uncertain qualification facts visible for manual review.
+- Record `check_performed_by: checked_by_agent` after the manual check.
+- The agent verifies every arithmetic input against the evidence and keeps missing or uncertain qualification facts visible for manual review.
 - One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review.
 
 ---
@@ -133,9 +133,8 @@ For taxpayers whose box 1 income exceeds the schijf 2 boundary (EUR 76,817 in 20
 
 ### Calculation approach
 
-The bundled `scripts/validate_own_home_inputs.py` follows the official
-Belastingdienst grondslag method rather than applying the rate gap directly to the
-own-home costs:
+Follow the official Belastingdienst grondslag method rather than applying the
+rate gap directly to the own-home costs:
 
 1. Determine belastbaar inkomen uit werk en woning (the box 1 taxable income after
    the eigen woning deduction, after the Hillenregeling adjustment).
@@ -152,7 +151,7 @@ own-home costs:
 4. If income context is not yet available when this skill runs, output a WARNING
    that tariefsaanpassing may apply and must be checked by the calling skill.
 
-The optional script accepts only ordinary-home amounts that the agent has
+Apply this arithmetic only to ordinary-home amounts that the agent has
 already reviewed. The agent decides residence status, cost qualification,
 ownership or partner shares, and whether the home situation is too complex for
 this arithmetic check.

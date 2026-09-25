@@ -6,8 +6,8 @@ allowed-tools:
   - Read
   - Glob
   - Grep
-  - Write
-  - Edit
+  - Write(./workspace/**)
+  - Edit(./workspace/**)
 ---
 
 # Manual-entry checklist

@@ -171,7 +171,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_allocation_validator_rejects_split_non_allocatable_income(self):
         module = load_module(
-            "skills/nl-tax-partner-deductions/scripts/validate_allocation.py",
+            "../../tools/nl_tax_agent_skills/partner_deductions/validate_allocation.py",
             "validate_allocation",
         )
         errors = module.validate(
@@ -191,7 +191,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_annual_box3_matches_official_2025_mixed_example(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "compare_box3_annual_2025",
         )
         result = module.calculate_fictitious_box3(
@@ -207,7 +207,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_annual_box3_partner_allocation_matches_official_2025_example(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "compare_box3_annual_2025_partner",
         )
         result = module.calculate_fictitious_box3(
@@ -225,7 +225,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_provisional_box3_uses_official_2026_three_decimal_share_rule(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026",
         )
         result = module.calculate_provisional_fictitious(
@@ -241,7 +241,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_provisional_box3_partner_allocation_uses_official_2026_three_decimal_share_rule(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026_partner",
         )
         result = module.calculate_provisional_fictitious(
@@ -258,7 +258,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         self.assertEqual(result["box3_belasting"], 1_843)
 
     def test_provisional_box3_output_has_only_allowed_actual_return_note(self):
-        script = ROOT / "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py"
+        script = ROOT / "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py"
         output = subprocess.check_output(
             [
                 sys.executable,
@@ -302,7 +302,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_only_accepted_rows_enter_annual_trusted_totals(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "compare_box3_annual_2025_rows",
         )
         rows = [
@@ -356,7 +356,7 @@ class ValidatorSmokeTests(unittest.TestCase):
 
     def test_provisional_row_normalizer_matches_annual_contract(self):
         module = load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026_rows",
         )
         rows = [
@@ -394,11 +394,11 @@ class ValidatorSmokeTests(unittest.TestCase):
     def test_box3_row_normalizers_reject_float_and_total_overflow(self):
         modules = [
             (
-                "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+                "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
                 "compare_box3_annual_2025_overflow",
             ),
             (
-                "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+                "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
                 "summarize_box3_provisional_2026_overflow",
             ),
         ]
@@ -572,13 +572,13 @@ class ValidatorSmokeTests(unittest.TestCase):
 class Box3InputHardeningTests(unittest.TestCase):
     def _compare_module(self):
         return load_module(
-            "skills/nl-tax-box3/scripts/compare_box3_annual_2025.py",
+            "../../tools/nl_tax_agent_skills/box3/compare_box3_annual_2025.py",
             "compare_box3_annual_2025_hardening",
         )
 
     def _provisional_module(self):
         return load_module(
-            "skills/nl-tax-box3/scripts/summarize_box3_provisional_2026.py",
+            "../../tools/nl_tax_agent_skills/box3/summarize_box3_provisional_2026.py",
             "summarize_box3_provisional_2026_hardening",
         )
 
@@ -685,7 +685,7 @@ class Box3InputHardeningTests(unittest.TestCase):
 class AllocationHardeningTests(unittest.TestCase):
     def _module(self):
         return load_module(
-            "skills/nl-tax-partner-deductions/scripts/validate_allocation.py",
+            "../../tools/nl_tax_agent_skills/partner_deductions/validate_allocation.py",
             "validate_allocation_hardening",
         )
 

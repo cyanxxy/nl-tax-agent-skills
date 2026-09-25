@@ -129,7 +129,7 @@ For the provisional assessment, the eigen woning calculation uses projected 2026
 - Use the reviewed 2026 percentage from `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`: 71.867% of the difference between eigenwoningforfait and deductible own-home costs.
 - Mark as estimated
 
-### Manual/script parity
+### Own-home arithmetic check
 
 For one ordinary home, add estimated mortgage interest, qualifying financing
 costs, and periodic erfpacht/opstal/beklemming as
@@ -138,9 +138,7 @@ eigenwoningforfait, that total, and the Hillen amount in
 `box1_balance_components`, then calculate `box1_own_home_balance`. Keep
 tariefsaanpassing under `review_adjustments`, separate from the balance.
 
-Record `check_performed_by: checked_by_agent` for the manual check or
-`check_performed_by: checked_by_script` when the optional helper checks the same
-accepted estimates. Eligibility and complex-home decisions remain with the
+Record `check_performed_by: checked_by_agent` for the check. Eligibility and complex-home decisions remain with the
 agent.
 
 ---
