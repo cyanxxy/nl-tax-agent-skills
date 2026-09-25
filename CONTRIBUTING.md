@@ -466,3 +466,20 @@ test "$(git tag --list 'nl-tax-agent-skills--v0.3.1')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
 git tag --list 'nl-tax-agent-skills--v0.3.1'
 ```
+
+### Publish the GitHub release
+
+Pushing an annotated `vX.Y.Z` tag publishes the GitHub release through
+`.github/workflows/release.yml`. The workflow fails unless the tag matches the
+version in all three plugin manifests and `CHANGELOG.md` has a `## [X.Y.Z]`
+section. It runs the unit suite, attaches
+`nl-tax-agent-skills-X.Y.Z-cowork.zip` (the tracked plugin files) and
+`nl-tax-agent-skills-X.Y.Z-openai.zip` (the OpenAI bundle), uses the changelog
+section as the notes, and takes the title from the tag message:
+
+```bash
+git tag -a v0.3.1 -m "v0.3.1 — <short release title>"
+git push origin v0.3.1
+```
+
+A version bump is not a release until this tag is pushed.

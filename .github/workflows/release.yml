@@ -1,0 +1,84 @@
+name: Release
+
+# Pushing an annotated vX.Y.Z tag publishes the GitHub release: it checks the
+# tag against all three plugin manifests, builds the Cowork and OpenAI ZIPs,
+# and uses the matching CHANGELOG.md section as the release notes.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Publish GitHub release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore the annotated tag
+        # checkout can leave a lightweight copy of the tag; refetch it so the
+        # tag message (the release title) is available.
+        run: git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check tag matches every plugin manifest
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for manifest in plugin.json .claude-plugin/plugin.json .codex-plugin/plugin.json; do
+            actual=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['version'])" \
+              "plugins/nl-tax-agent-skills/$manifest")
+            if [ "$actual" != "$version" ]; then
+              echo "::error::$manifest has version $actual, tag is $GITHUB_REF_NAME"
+              exit 1
+            fi
+          done
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests/nl_tax_agent_skills -p 'test_*.py'
+
+      - name: Build release ZIPs
+        run: |
+          mkdir -p release
+          git archive --format=zip \
+            -o "release/nl-tax-agent-skills-${VERSION}-cowork.zip" \
+            "${GITHUB_REF_NAME}:plugins/nl-tax-agent-skills"
+          python submission/openai/build_bundle.py \
+            --zip-path "release/nl-tax-agent-skills-${VERSION}-openai.zip"
+
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '
+            index($0, "## [" v "]") == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > release/notes.md
+          if [ ! -s release/notes.md ]; then
+            echo "::error::CHANGELOG.md has no ## [$VERSION] section"
+            exit 1
+          fi
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title=$(git tag -l "$GITHUB_REF_NAME" --format='%(contents:subject)')
+          gh release create "$GITHUB_REF_NAME" \
+            --title "${title:-$GITHUB_REF_NAME}" \
+            --notes-file release/notes.md \
+            --verify-tag \
+            release/*.zip
