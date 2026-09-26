@@ -2,7 +2,7 @@
 
 ### Conversational review checkpoints
 
-1. Does the taxpayer profile exist and contain `provisional_2026_stopzetten`?
+1. Is the stopzetten subflow confirmed in the conversation, or in Appendix A of a resumed workpack?
 2. Is the user receiving a monthly refund (teruggaaf) or paying a monthly amount (betaling)?
    - **Refund → stopzetten may be appropriate until 1 October 2026**
    - **Payment + amount is wrong → REDIRECT to change subflow**
@@ -37,13 +37,13 @@
 
 ### Output generation
 
-1. Generate `workspace/provisional/2026/provisional-pack.md` with stopzetten context
-2. Update `workspace/shared/assumptions.md`
+1. At the generation gate, produce the workpack from `templates/provisional-workpack.md` with stopzetten context, including the `Existing baseline, if any` section and the structured `Stopzetten outcome` section; stopzetten produces no field map
+2. Record under `Assumptions` only assumptions the user explicitly accepted
 3. If stopzetten is appropriate: include manual checklist for the Mijn Belastingdienst stopzetten process
    and explain the selected component's retroactive or prospective effect;
    show any repayment of prior 2026 deductions/IACK payments as a separate
    notice item
-4. If redirecting a payment case to change, mutate progress before the next question: set `active_workflow: provisional_2026_change`; set `provisional_2026.subflow: change`; write the known monthly amount and any stated beschikking details with provenance to `workspace/provisional/2026/notes/baseline.yaml`; mark the `baseline` subsection `in_progress`; mark `stopzetten_direction` as `complete` with `answered: ["routed_to_change_payment_case"]`; reset `confirm` to `not_started`; then stop using this file and load only `reference/subflows/change.md`.
+4. If redirecting a payment case to change, record the redirect before the next question: the subflow becomes change in the conversation (and, when saved, in the `Subflow` heading and Appendix A `workflow: provisional_2026_change`); record the known monthly amount and any stated beschikking details with provenance in `Existing baseline, if any` and mark `baseline` `in_progress`; mark `stopzetten_direction` `complete` with the route `change VA (payment case)` in `Stopzetten outcome`; set `confirm` to `not_started` and `generation_confirmed` to `false`; then stop using this file and load only `reference/subflows/change.md`, starting with the full re-entry notice.
 5. Do NOT calculate final tax consequences unless all assumptions are explicit and confirmed
 
 ---

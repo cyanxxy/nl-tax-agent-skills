@@ -8,8 +8,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/loonaangifte-aangifte-loonheffingen
   bd_aangifte_ondernemers_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_aangifte_ondernemers_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
   bd_aanmelden_werkgever:
@@ -68,8 +68,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsbeloning_aan_fiscale_partner
   bd_becon_uitstel_fiscaal_dienstverleners:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_becon_uitstel_fiscaal_dienstverleners
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/intermediairs/aangifte_doen/uitstel-aanvragen-voor-fiscaal-dienstverleners-becon-uitstel/
   bd_beoordeel_samen:
@@ -266,8 +266,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/herinvesteringsreserve
   bd_hoe_aangifte_doen_online_app_papier:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_hoe_aangifte_doen_online_app_papier
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/hoe-aangifte-inkomstenbelasting-doen
   bd_hoe_bereken_ik_mijn_jaarruimte:
@@ -278,8 +278,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/hoe-bereken-ik-mijn-jaarruimte
   bd_ib_aangifte_voor_ondernemers:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T12:13:04.963534+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_ib_aangifte_voor_ondernemers
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/
   bd_keuzemogelijkheden_auto:
@@ -410,8 +410,8 @@ sources:
     source_url: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvovrpan.htm
   bd_ondernemer_cijfers_aangifte_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_ondernemer_cijfers_aangifte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
   bd_ondernemer_criteria_2025:
@@ -422,8 +422,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
   bd_ondernemer_voorbereiden_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-08-15T00:00:00+00:00'
-    reviewed_note_hash_sha256: cb536bbeb6b2093e0dec51e9fda717283804880b6c101abdffff9b38bc0b9244
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 053ff5c56995284189c3254e54ba6e0e5f08773ac4f793a2bc216543e652710b
     source_id: bd_ondernemer_voorbereiden_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/voorbereid-op-uw-belastingaangifte-voor-ondernemers
   bd_ondernemersaftrek_2025:

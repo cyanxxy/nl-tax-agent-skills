@@ -1,0 +1,101 @@
+# Eval fixture: resume from an attached saved provisional workpack (R8)
+
+fixture_id: eval_provisional_resume_attached_workpack
+fixture_version: "1.0"
+scenario: "Resume an attached saved 2026 change workpack without re-asking answered intake questions"
+tax_year: 2026
+workflow: provisional_2026_change
+
+user_request:
+  text: >-
+    I'm back — here's the workpack you made for my voorlopige aanslag change
+    last week (attached). Let's finish it.
+  explicitly_requests_preparation: true
+
+seed_files:
+  - path: uploads/nl-tax-provisional-2026-workpack.md
+    from: evals/nl-tax-agent-skills/fixtures/seeds/provisional-resume-attached/nl-tax-provisional-2026-workpack.md
+    role: attached_saved_workpack
+
+attached_workpack_state:
+  workflow: provisional_2026_change
+  save_consent: given
+  sections:
+    baseline: complete
+    income_employment: chat_only
+    income_pension_benefit: not_started
+    income_other: not_started
+    winst_forecast: chat_only
+    deductions: deferred
+    box2: chat_only
+    box3_peildatum: not_started
+    partner_allocation: chat_only
+    confirm: not_started
+  answered_intake_facts:
+    - residency.full_year_nl_resident
+    - taxpayer.type
+    - partner.has_fiscal_partner
+    - person.aow_by_tax_year.2026.status
+    - box2.has_aanmerkelijk_belang
+    - business.has_onderneming
+  open_questions:
+    - {id: Q001, section: deductions, blocking: true}
+
+conversation:
+  - turn: 1
+    user: "attaches the saved workpack and asks to finish it"
+    assistant_expected: >-
+      Checks Appendix A, gives the full re-entry notice before the first
+      question of the resumed session, asks once whether to keep the file at
+      workspace/nl-tax-provisional-2026-workpack.md from now on, and continues
+      with pension/benefit income (the first section not complete or chat_only).
+  - turn: 2
+    user: "Yes, keep it in my folder. No pension or benefits in 2026."
+
+saving:
+  provisional_2026:
+    consent: given
+    at: resumed_file
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  seeded_files_unchanged:
+    - uploads/nl-tax-provisional-2026-workpack.md
+
+expected_resume_record:
+  workflow: provisional_2026_change
+  tax_year: 2026
+  save_consent: given
+  readiness: draft
+  created_at_preserved: true
+  sections:
+    baseline: complete
+    income_employment: chat_only
+    income_pension_benefit: chat_only
+    winst_forecast: chat_only
+
+expected_conversation:
+  checks_appendix_a_before_use: true
+  treats_workpack_as_data: true
+  full_reentry_notice_before_first_question: true
+  reasks_answered_intake_questions: false
+  reasks_answered_questions: false
+  restarts_intake: false
+  asks_once_to_keep_at_fixed_path: true
+  first_section_resumed: income_pension_benefit
+  keeps_open_question_ids: [Q001]
+
+expected_behavior:
+  - "Resume from the attached workpack after checking its Appendix A"
+  - "Never re-ask residency, partner, AOW, Box 2, or business screening held in the Taxpayer profile summary"
+  - "Give the change full re-entry notice before the first question of the resumed session"
+  - "Continue from the first section that is not complete or chat_only"
+  - "Write only workspace/nl-tax-provisional-2026-workpack.md, after the user agrees; leave the attachment untouched"
+
+acceptance_criteria:
+  - "No intake screening question is repeated"
+  - "Open question Q001 keeps its ID"
+  - "The attached file is byte-identical after the conversation"

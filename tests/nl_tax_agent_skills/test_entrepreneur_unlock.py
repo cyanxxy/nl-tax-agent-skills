@@ -342,12 +342,20 @@ class WinstHelperTests(unittest.TestCase):
     def test_winst_helper_is_internal_and_bounded(self):
         skill = read_text("skills/nl-tax-winst/SKILL.md")
         self.assertIn("user-invocable: false", skill)
-        self.assertIn("called through a Skill/Task tool or inlined by an owning workflow", skill)
-        self.assertIn("Return structured facts and open questions", skill)
-        self.assertIn("Do not\npersist any final artifact", skill)
-        self.assertNotIn("  - Write\n", skill)
-        self.assertNotIn("  - Edit\n", skill)
         normalized = " ".join(skill.lower().split())
+        self.assertIn(
+            "called through a skill/task tool or inlined by an owning workflow",
+            normalized,
+        )
+        self.assertIn("return structured facts and open questions", normalized)
+        # 0.4 (R3): helpers write nothing -- no file, workpack section, field
+        # map, or checklist -- and carry no Edit/Write rule at all.
+        self.assertIn(
+            "do not persist anything: no file, workpack section, field map, or checklist",
+            normalized,
+        )
+        self.assertNotIn("  - Write", skill)
+        self.assertNotIn("  - Edit", skill)
         self.assertIn("the annual workflow owns persistence in annual mode", normalized)
         self.assertIn("the provisional workflow owns persistence in provisional mode", normalized)
         self.assertIn("the helper owns no persisted artifact", normalized)
@@ -390,8 +398,12 @@ class AnnualWorkflowTests(unittest.TestCase):
         )
         self.assertIn("reference/annual-flow.md", skill)
         self.assertIn("nl-tax-winst", flow)
-        self.assertIn("persists those results", flow)
-        self.assertIn("resume-only inputs", flow)
+        compact = " ".join(flow.split())
+        # 0.4: the owning workflow records helper results in the conversation
+        # (and the consented workpack); helpers write nothing.
+        self.assertIn("a helper writes nothing and returns structured facts", compact)
+        self.assertIn("The owning workflow records those results", compact)
+        self.assertNotIn("resume-only inputs", flow)
         self.assertIn("Winst uit onderneming notes", contract)
 
     def test_annual_flow_has_winst_phase(self):
@@ -430,7 +442,7 @@ class AnnualWorkflowTests(unittest.TestCase):
                 self.assertIn(token, contract)
 
     def test_template_has_winst_section_and_hook(self):
-        template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
+        template = read_text("skills/nl-tax-annual-return/templates/annual-workpack.md")
         self.assertIn("## Winst uit onderneming notes", template)
         self.assertIn("business.has_onderneming: no", template)
 
@@ -1043,11 +1055,20 @@ class IntakeAndProvisionalTests(unittest.TestCase):
         self.assertIn("annual_2025_entrepreneurs", unsupported)
         self.assertIn("eenmanszaak", unsupported.lower())
 
-    def test_profile_template_has_business_section(self):
-        profile = load_yaml("skills/nl-tax-intake/templates/taxpayer-profile.yaml")
-        self.assertIn("business", profile)
-        self.assertIn("has_onderneming", profile["business"])
-        self.assertIn("complex_business_screening", profile["routing"])
+    def test_profile_summary_has_business_screening_rows(self):
+        # 0.4: the workpack's Taxpayer profile summary replaces profile.yaml.
+        for template in (
+            "skills/nl-tax-annual-return/templates/annual-workpack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+        ):
+            text = read_text(template)
+            profile = text.split("## Taxpayer profile summary", 1)[1].split("\n## ", 1)[0]
+            with self.subTest(template=template):
+                self.assertIn("| `business.has_onderneming` |", profile)
+                self.assertIn("| `routing.complex_business_screening` |", profile)
+        self.assertFalse(
+            (ROOT / "skills/nl-tax-intake/templates/taxpayer-profile.yaml").exists()
+        )
 
     def test_provisional_supports_only_sourced_expected_profit(self):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
@@ -1064,7 +1085,7 @@ class IntakeAndProvisionalTests(unittest.TestCase):
                 self.assertIn(forbidden, reference.lower())
 
     def test_evidence_types_have_business_category(self):
-        types = read_text("skills/nl-tax-evidence-indexer/reference/evidence-types.md")
+        types = read_text("skills/nl-tax-shared-resources/reference/evidence-types.md")
         self.assertIn("Business / Enterprise", types)
         for token in ("winst_verlies_rekening", "balans", "urenadministratie", "factuur"):
             with self.subTest(token=token):

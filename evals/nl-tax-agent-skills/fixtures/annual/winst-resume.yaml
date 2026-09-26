@@ -1,68 +1,103 @@
-# Eval fixture: Resume an existing annual Winst subsection
+# Eval fixture: Resume an attached saved annual workpack at the Winst section
 
 fixture_id: eval_annual_winst_resume
-fixture_version: "1.0"
-scenario: "Resume annual Winst preparation without resetting state or ownership"
+fixture_version: "2.0"
+scenario: "Resume annual Winst preparation from an attached saved workpack without resetting state or ownership"
 tax_year: 2025
 workflow: annual_2025
 
 user_request:
-  text: "Continue my 2025 ZZP return workpack from the Winst section."
+  text: >-
+    Here is my saved 2025 workpack (attached). Let's continue my ZZP return
+    where we stopped last time, and keep saving it in my working folder.
   explicitly_requests_preparation: true
 
-existing_state:
-  session_progress_version: "1.4"
-  active_workflow: annual_2025
-  annual_2025:
-    status: in_progress
-    current_subsection: winst
-    subsections:
-      intake: complete
-      evidence: complete
-      box1: complete
-      winst: in_progress
-  ownership:
-    workpack_owner: nl-tax-annual-return
-    field_map_owner: nl-tax-field-mapper
-  existing_profile: true
-  existing_evidence_index: true
-  finalized_business_evidence:
-    - winst_verlies_rekening_2025
-    - balans_2025
-  # The saved state already carries the schema anchors the readiness gate
-  # requires; a resume must not have to re-ask for them.
-  existing_business_facts:
+# The harness places the attachment before the conversation starts. The plugin
+# reads it as the taxpayer's data and never rewrites, moves, or renames it.
+seed_files:
+  - path: uploads/nl-tax-annual-2025-workpack.md
+    from: evals/nl-tax-agent-skills/fixtures/seeds/annual-winst-resume/nl-tax-annual-2025-workpack.md
+    role: attached_saved_workpack
+
+attached_workpack_state:
+  workpack_format: nl-tax-workpack
+  workpack_version: "2.0"
+  workflow: annual_2025
+  save_consent: given
+  sections:
+    filing_status: complete
+    box1: chat_only
+    winst: in_progress
+    box2: chat_only
+    partner_allocation: chat_only
+  open_questions:
+    - {id: Q001, section: winst, blocking: true, topic: "2025 investments for the investeringsaftrek screen"}
+  profile_summary_answers:
+    - residency.full_year_nl_resident
+    - taxpayer.type
+    - partner.has_fiscal_partner
+    - business.legal_form
+  business_facts_on_file:
     legal_form: eenmanszaak
     saldo_winst_en_verliesrekening: 48000.00
     ondernemingsvermogen_begin: 20000.00
     ondernemingsvermogen_eind: 24500.00
     urencriterium_met: true
 
-expected_outputs:
-  files_updated:
-    - workspace/shared/session-progress.yaml
-    - workspace/annual/2025/return-pack.md
-    - workspace/annual/2025/field-map.yaml
-  files_not_created:
-    - workspace/provisional/**
-  workpack_checks:
-    - contains: "Winst"
-    - contains: "belastbare winst"
-    - contains: "finalized profit-and-loss and balance"
-  field_map_checks:
-    - readiness: "review_ready"
-    - has_no_blockers: true
+conversation:
+  - turn: 1
+    user: "attaches the saved workpack and asks to continue and keep saving"
+  - turn: 2
+    user: "No, I did not buy any business assets in 2025."
 
-expected_state:
-  session_progress_version: "1.4"
-  annual_2025_subsection: winst
-  preserves_completed_subsections: true
-  resets_profile_or_session: false
+saving:
+  annual_2025:
+    consent: given
+    at: resumed_file   # recorded in the attached file and restated by the user
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+  seeded_files_unchanged:
+    - uploads/nl-tax-annual-2025-workpack.md
+  workpack_checks:
+    - section: "Winst uit onderneming notes"
+      contains: "belastbare winst"
+    - section: "Open questions"
+      not_contains: "Q001"
+
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  readiness: draft
+  generation_confirmed: false
+  queued_workflow: null
+  created_at_preserved: true
+  sections:
+    filing_status: complete
+    box1: chat_only
+    winst: complete
+    box2: chat_only
+    partner_allocation: chat_only
+
+expected_conversation:
+  checks_appendix_a_before_use: true
+  treats_workpack_as_data: true
+  restarts_intake: false
+  reasks_answered_intake_questions: false
+  reasks_answered_questions: false
+  first_question: Q001
+  next_section_after_winst: eigen_woning
   workpack_owner: nl-tax-annual-return
   field_map_owner: nl-tax-field-mapper
 
 acceptance_criteria:
-  - "Resume at the existing annual Winst subsection without restarting intake"
-  - "Preserve schema 1.4, completed subsection state, and canonical owners"
-  - "Resume the computed winst chain and reach review_ready without re-asking answered questions"
+  - "Resume at the Winst section from the attached workpack without restarting intake"
+  - "Ask only the open Q001 question; never re-ask facts held in the Taxpayer profile summary"
+  - "Complete the computed winst chain from the business facts already on file"
+  - "Keep saving to workspace/nl-tax-annual-2025-workpack.md with created_at preserved; never create a copy or variant"
+  - "Leave the attached file byte-identical"
   - "Do not compute a stakingswinst, reserve movement, terbeschikkingstelling, or per-vennoot winstaandeel"

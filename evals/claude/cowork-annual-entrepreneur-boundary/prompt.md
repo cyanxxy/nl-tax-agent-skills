@@ -8,7 +8,7 @@ tags:
 runs: 1
 max_turns: 6
 timeout_seconds: 300
-expected_outcome: Organize finalized Winst evidence while retaining a draft business-section field map and manual review boundary.
+expected_outcome: Organize finalized Winst evidence in the conversation, keep the result preparation-only with a draft business section, and write no file before the user consents to saving.
 ---
 Prepare my Dutch 2025 annual-return workpack. I am a full-year resident filing
 as an individual and I have an eenmanszaak. My finalized profit-and-loss

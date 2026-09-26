@@ -4,19 +4,19 @@ Compile the eigen woning section if applicable.
 
 ### 3.1 Determine own-home status
 
-- Check the profile for property ownership
+- Check the conversation and Taxpayer profile summary for property ownership
 - If no own home: skip this phase and note "geen eigen woning" in the workpack
 
 ### 3.2 WOZ-waarde
 
-- Extract from WOZ-beschikking evidence item
+- Take it from the WOZ-beschikking row in `Documents and sources`
 - The 2025 return uses the WOZ-waarde with waardepeildatum 1 January 2024
-- If WOZ-beschikking is not in evidence: ask the user for the value (subsection becomes `chat_only`) or mark missing
+- If no WOZ-beschikking was shared: ask the user for the value (the section becomes `chat_only`) or mark it missing
 - If the taxpayer filed a bezwaar (objection): use the corrected value
 
 ### 3.3 Mortgage interest (hypotheekrente)
 
-- Extract from jaaroverzicht hypotheek evidence item
+- Take it from the jaaroverzicht hypotheek row in `Documents and sources`
 - Record mortgage interest paid during 2025
 - Itemize qualifying one-off financing costs and periodic erfpacht, opstal, or beklemming payments
 - Set `total_deductible_own_home_costs` to mortgage interest plus qualifying financing costs plus periodic erfpacht/opstal/beklemming; do not use mortgage interest alone for Hillen

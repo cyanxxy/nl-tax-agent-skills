@@ -57,7 +57,7 @@ active_workflows:
       - skills/nl-tax-shared-resources/knowledge/years/2025/annual
       - skills/nl-tax-shared-resources/knowledge/years/2025/box2
     output_paths:
-      - workspace/annual/2025/return-pack.md
+      - workspace/nl-tax-annual-2025-workpack.md
     required_source_ids:
       - bd_annual_test
 blocked_workflows: []
@@ -319,7 +319,14 @@ sources:
         }
         errors, _ = module.validate_terminal_workflow(bad, set())
         self.assertTrue(any("may_prepare_workpack" in e for e in errors), errors)
-        self.assertTrue(any("workspace/shared/" in e for e in errors), errors)
+        # 0.4 (R1): terminal routes write nothing; the only valid output is
+        # the conversation.
+        self.assertTrue(any("conversation_only" in e for e in errors), errors)
+        for legacy in ("workspace/shared/missing-info.md", None):
+            with self.subTest(allowed_output=legacy):
+                shaped = dict(bad, may_prepare_workpack=False, allowed_output=legacy)
+                errors, _ = module.validate_terminal_workflow(shaped, set())
+                self.assertTrue(errors)
 
     def test_stale_workflow_gate_is_blocking(self):
         module = load_module(
@@ -344,7 +351,7 @@ sources:
             "status": "blocked_pending_official_sources",
             "may_prepare_workpack": False,
             "profile_candidates": ["annual_2025_entrepreneurs"],
-            "allowed_output": "workspace/shared/missing-info.md",
+            "allowed_output": "conversation_only",
             "reason": "Entrepreneur workflows need dedicated official sources.",
             "unlock_condition": "Add reviewed entrepreneur sources and tests.",
         }
@@ -353,6 +360,59 @@ sources:
 
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
+
+        # A blocked workflow that still names a 0.3 notes file is rejected.
+        legacy = dict(blocked, allowed_output="workspace/shared/missing-info.md")
+        errors, _ = module.validate_blocked_workflow(legacy, set(), active_pairs)
+        self.assertTrue(any("conversation_only" in e for e in errors), errors)
+
+    def test_active_workflows_write_exactly_one_workpack_file(self):
+        module = load_module(
+            "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py",
+            "validate_supported_workflows_output_paths",
+        )
+        config = module.load_yaml_or_json(
+            str(
+                REPO_ROOT
+                / "tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml"
+            )
+        )
+        expected = {
+            "annual_2025": ["workspace/nl-tax-annual-2025-workpack.md"],
+            "provisional_2026": ["workspace/nl-tax-provisional-2026-workpack.md"],
+        }
+        active = {w["id"]: w for w in config["active_workflows"]}
+        self.assertEqual(set(active), set(expected))
+        for wid, paths in expected.items():
+            with self.subTest(workflow=wid):
+                self.assertEqual(active[wid]["output_paths"], paths)
+                errors = module.validate_active_paths(
+                    active[wid], wid, active[wid]["workflow"], active[wid]["tax_year"], str(ROOT)
+                )
+                self.assertEqual(errors, [])
+        for group in ("terminal_workflows", "blocked_workflows"):
+            for workflow in config[group]:
+                with self.subTest(workflow=workflow["id"]):
+                    self.assertEqual(workflow["allowed_output"], "conversation_only")
+
+        base = dict(active["annual_2025"])
+        for bad_paths in (
+            ["workspace/annual/2025/return-pack.md"],
+            ["workspace/nl-tax-annual-2025-workpack.md", "workspace/annual/2025/field-map.yaml"],
+            ["workspace/nl-tax-provisional-2026-workpack.md"],
+            ["workspace/nl-tax-annual-2025-workpack-v2.md"],
+        ):
+            with self.subTest(output_paths=bad_paths):
+                errors = module.validate_active_paths(
+                    dict(base, output_paths=bad_paths),
+                    "annual_2025",
+                    "annual_return",
+                    2025,
+                    str(ROOT),
+                )
+                self.assertTrue(
+                    any("exactly the one workpack file" in e for e in errors), errors
+                )
 
 
 if __name__ == "__main__":

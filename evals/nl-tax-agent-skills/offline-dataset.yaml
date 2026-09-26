@@ -1,13 +1,30 @@
-dataset_id: nl_tax_agent_skills_structural_contracts_v2
-version: "2.0"
+dataset_id: nl_tax_agent_skills_structural_contracts_v3
+version: "3.0"
 description: >
-  Offline structural contract cases for NL Tax Agent Skills. These fixtures
-  protect hard workflow and artifact invariants; they are not live agent
-  prompts, answer templates, or conversational scoring cases.
+  Offline structural contract cases for NL Tax Agent Skills 0.4
+  (conversation-first; docs/maintainers/0.4-conversation-first-design.md).
+  Nothing is written by default; with the taxpayer's consent the plugin keeps
+  exactly one workpack file per workflow. These fixtures protect hard file,
+  resume-record, field-map, and source-ledger invariants; they are not live
+  agent prompts, answer templates, or conversational scoring cases.
 
 global:
   plugin_root: plugins/nl-tax-agent-skills
   generated_output_root: workspace
+  # R3: the only files the plugin may write, and only after save consent.
+  workpack_paths:
+    annual_2025: workspace/nl-tax-annual-2025-workpack.md
+    provisional_2026: workspace/nl-tax-provisional-2026-workpack.md
+  # Harness captures (final response, a conversation-only workpack); never
+  # plugin output.
+  harness_output_globs:
+    - workspace/eval/**
+  # 0.3 ledger trees. 0.4 never writes them; a seeded copy must stay unchanged.
+  legacy_forbidden_paths:
+    - workspace/taxpayer/**
+    - workspace/shared/**
+    - workspace/annual/**
+    - workspace/provisional/**
   forbidden_generated_output_regex:
     - "(?i)wachtwoord\\s*[:=]\\s*\\S+"
     - "(?i)password\\s*[:=]\\s*\\S+"
@@ -35,118 +52,127 @@ contract_default_cases:
   - security_blocked_universal_roadmap_workflows
   - provisional_stopzetten_payment_redirect
   - security_source_staleness
+  - annual_default_no_write
+  - annual_save_on_request
+  - provisional_resume_attached_workpack
+  - annual_legacy_ledger_ignored
+  - annual_reconfirm_unseen_figure
+  - annual_stale_checklist_after_correction
 
 cases:
   - id: annual_casual_informational_tax
     fixture: evals/nl-tax-agent-skills/fixtures/annual/casual-informational-tax.yaml
-    skill: nl-tax-intake
-    purpose: Answer a casual 2025 healthcare-cost question without starting intake or a workpack.
+    skill: nl-tax-knowledge
+    purpose: Answer a casual 2025 healthcare-cost question without starting intake or writing any file.
     expected_files:
       - workspace/eval/response.md
-    forbidden_files:
-      - workspace/taxpayer/**
-      - workspace/shared/session-progress.yaml
-      - workspace/annual/**
-      - workspace/provisional/**
 
   - id: annual_explicit_preparation
     fixture: evals/nl-tax-agent-skills/fixtures/annual/explicit-preparation.yaml
     skill: nl-tax-intake
-    purpose: Start annual intake/workspace progression for an explicit preparation request with screening facts supplied.
+    purpose: Start annual preparation in the conversation, offer once to keep a workpack file, and write nothing before consent.
     expected_files:
-      - workspace/taxpayer/profile.yaml
-      - workspace/shared/session-progress.yaml
-    forbidden_files:
-      - workspace/provisional/**
-    text_checks:
-      - path: workspace/taxpayer/profile.yaml
-        all:
-          - "annual_2025"
-      - path: workspace/shared/session-progress.yaml
-        all:
-          - 'session_progress_version: "1.4"'
-          - "nl-tax-annual-return"
-          - "nl-tax-field-mapper"
+      - workspace/eval/response.md
 
   - id: annual_winst_resume
     fixture: evals/nl-tax-agent-skills/fixtures/annual/winst-resume.yaml
     skill: nl-tax-annual-return
-    purpose: Resume the existing annual Winst subsection without resetting state or ownership.
+    purpose: Resume an attached saved workpack at the Winst section, keep it at the fixed path, and leave the attachment untouched.
     expected_files:
-      - workspace/shared/session-progress.yaml
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: not_yet_mapped
+        readiness: draft
+        generation_confirmed: false
+        queued_workflow: null
+        updated_after_created: true
+        sections:
+          filing_status: complete
+          box1: chat_only
+          winst: [complete, chat_only]
+          box2: chat_only
+          partner_allocation: chat_only
+        documents:
+          min_rows: 3
+          document_contains_any:
+            - winst-verlies-rekening
+            - balans
     text_checks:
-      - path: workspace/shared/session-progress.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: A
         all:
-          - 'session_progress_version: "1.4"'
-          - "winst"
-          - "nl-tax-annual-return"
-          - "nl-tax-field-mapper"
-      - path: workspace/annual/2025/field-map.yaml
-        all:
-          - "readiness: draft"
-          - "business-section schema review"
+          - 'created_at: "2026-09-18T19:02:00Z"'
+        none:
+          - "provisional_2026"
 
   - id: annual_corrected_tax_behavior
     fixture: evals/nl-tax-agent-skills/fixtures/annual/corrected-tax-behavior.yaml
-    skill: nl-tax-annual-return
-    purpose: Retrieve corrected healthcare exclusions, credit base, and conditional deadline branches without starting intake.
+    skill: nl-tax-knowledge
+    purpose: Retrieve corrected healthcare exclusions, credit base, and conditional deadline branches without starting intake or writing any file.
     expected_files:
       - workspace/eval/response.md
-    forbidden_files:
-      - workspace/taxpayer/**
-      - workspace/shared/session-progress.yaml
-      - workspace/annual/**
-      - workspace/provisional/**
 
   - id: annual_simple_resident
     fixture: evals/nl-tax-agent-skills/fixtures/annual/simple-resident.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 happy path with one employer, savings, no partner.
+    purpose: Annual 2025 happy path (one employer, savings, no partner) saved with consent and mapped.
     expected_files:
-      - workspace/taxpayer/profile.yaml
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
+        generation_confirmed: true
+        queued_workflow: null
+        sections:
+          box3_peildatum: [complete, chat_only]
+          confirm: complete
     text_checks:
-      - path: workspace/annual/2025/field-map.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
         all:
           - "annual_return"
           - "2025"
+          - "box1.loon"
         none:
+          - "provisional_assessment"
           - "password"
           - "wachtwoord"
 
   - id: annual_then_provisional_request
     fixture: evals/nl-tax-agent-skills/fixtures/annual/dual-workflow-handoff.yaml
     skill: nl-tax-intake
-    purpose: Preserve one-owner annual-2025 to provisional-request-2026 sequencing from one natural-language request.
+    purpose: One request for both workflows keeps annual first, records the queued 2026 subflow, and keeps two separate consented files.
     expected_files:
-      - workspace/taxpayer/profile.yaml
-      - workspace/shared/session-progress.yaml
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/field-map.yaml
+      - workspace/nl-tax-annual-2025-workpack.md
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
+        generation_confirmed: true
+        queued_workflow: null
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_request
+        field_map: expected
+        generation_confirmed: true
+        queued_workflow: null
     source_ledger_check:
-      session_path: workspace/shared/session-progress.yaml
       workpacks:
-        - workflow: annual_2025
-          path: workspace/annual/2025/return-pack.md
-        - workflow: provisional_2026
-          path: workspace/provisional/2026/provisional-pack.md
+        - workspace/nl-tax-annual-2025-workpack.md
+        - workspace/nl-tax-provisional-2026-workpack.md
     text_checks:
-      - path: workspace/annual/2025/field-map.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
         all:
           - "annual_return"
           - "2025"
         none:
           - "provisional_assessment"
-      - path: workspace/provisional/2026/field-map.yaml
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: B
         all:
           - "provisional_assessment"
           - "2026"
@@ -156,15 +182,20 @@ cases:
   - id: annual_entrepreneur_zzp
     fixture: evals/nl-tax-agent-skills/fixtures/annual/entrepreneur-zzp.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 eenmanszaak / ZZP with the computed winst chain and a review-ready business field map.
+    purpose: Annual 2025 eenmanszaak / ZZP with the computed winst chain and a review-ready business field map in the saved workpack.
     expected_files:
-      - workspace/taxpayer/profile.yaml
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
+        readiness: review_ready
+        generation_confirmed: true
+        sections:
+          winst: [complete, chat_only]
     text_checks:
-      - path: workspace/annual/2025/field-map.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
         all:
           - "annual_return"
           - "readiness: review_ready"
@@ -182,15 +213,18 @@ cases:
   - id: provisional_entrepreneur_profit
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/entrepreneur-profit.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Provisional 2026 sourced expected-profit forecast without annual business calculations.
+    purpose: Provisional 2026 sourced expected-profit forecast without annual business calculations, saved with consent.
     expected_files:
-      - workspace/shared/session-progress.yaml
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/field-map.yaml
-    forbidden_files:
-      - workspace/annual/**
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_request
+        field_map: expected
+        sections:
+          winst_forecast: [complete, chat_only]
     text_checks:
-      - path: workspace/provisional/2026/field-map.yaml
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: B
         all:
           - "provisional_assessment"
           - "onderneming.geschatte_winst"
@@ -206,34 +240,48 @@ cases:
   - id: annual_evidence_status
     fixture: evals/nl-tax-agent-skills/fixtures/annual/evidence-status.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 evidence completeness counts only reviewed, successful, current-year evidence.
+    purpose: Documents and sources rows keep review status and tax year visible; only the reviewed 2025 document closes the income gap.
     expected_files:
-      - workspace/shared/session-progress.yaml
-      - workspace/annual/2025/return-pack.md
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        readiness: draft
+        sections:
+          box1: [in_progress, deferred]
+        documents:
+          min_rows: 2
+          statuses_present:
+            - extracted
+            - needs review
 
   - id: annual_partner_box3_actual
     fixture: evals/nl-tax-agent-skills/fixtures/annual/partner-box3-actual.yaml
     skill: nl-tax-annual-return
     purpose: Annual 2025 partner case where actual return is more favorable than fictitious Box 3.
     expected_files:
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
+        sections:
+          box3_actual: [complete, chat_only]
+          partner_allocation: [complete, chat_only, deferred]
 
   - id: provisional_request_new_mortgage
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/request-new-mortgage.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Provisional 2026 request with estimates, mortgage interest, and fictitious-only Box 3.
+    purpose: Provisional 2026 request with estimates, mortgage interest, and fictitious-only Box 3, saved with consent.
     expected_files:
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/field-map.yaml
-    forbidden_files:
-      - workspace/annual/**
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_request
+        field_map: expected
     text_checks:
-      - path: workspace/provisional/2026/field-map.yaml
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: B
         all:
           - "provisional_assessment"
           - "2026"
@@ -246,15 +294,18 @@ cases:
   - id: provisional_change_salary_increase
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/change-salary-increase.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Provisional 2026 change where salary increased and all data must be re-entered.
+    purpose: Provisional 2026 change where salary increased; the complete dataset and the delta live in the one saved workpack.
     expected_files:
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/field-map.yaml
-      - workspace/provisional/2026/delta-summary.md
-    forbidden_files:
-      - workspace/annual/**
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_change
+        field_map: expected
+        sections:
+          baseline: [complete, chat_only]
     text_checks:
-      - path: workspace/provisional/2026/field-map.yaml
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: B
         none:
           - "werkelijk_rendement"
           - "actual_return"
@@ -262,31 +313,36 @@ cases:
   - id: provisional_stopzetten_refund
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/stopzetten-refund.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Stopzetten guidance for a taxpayer receiving a monthly provisional refund.
+    purpose: Stopzetten guidance for a taxpayer receiving a monthly refund; the saved workpack never holds a field map.
     expected_files:
-      - workspace/provisional/2026/provisional-pack.md
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_stopzetten
+        field_map: not_yet_mapped
+        sections:
+          stopzetten_direction: [complete, chat_only]
 
   - id: security_out_of_scope_part_year
     fixture: evals/nl-tax-agent-skills/fixtures/security/out-of-scope.yaml
     skill: nl-tax-intake
-    purpose: Route a part-year resident out of the v1 standard-resident workflow.
+    purpose: Route a part-year resident out of the standard-resident workflow without writing a workpack.
     expected_files:
       - workspace/eval/response.md
-    forbidden_files:
-      - workspace/annual/**
-      - workspace/provisional/**
 
   - id: annual_box2_dividend
     fixture: evals/nl-tax-agent-skills/fixtures/annual/box2-dividend.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 standard Box 2 dividend preparation.
+    purpose: Annual 2025 standard Box 2 dividend preparation, saved with consent and mapped.
     expected_files:
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
     text_checks:
-      - path: workspace/annual/2025/field-map.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
         all:
           - "box2.has_aanmerkelijk_belang"
           - "box2.reguliere_voordelen_bruto"
@@ -298,14 +354,16 @@ cases:
   - id: annual_box2_share_sale
     fixture: evals/nl-tax-agent-skills/fixtures/annual/box2-share-sale.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 standard Box 2 share-sale preparation.
+    purpose: Annual 2025 standard Box 2 share-sale preparation, saved with consent and mapped.
     expected_files:
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
     text_checks:
-      - path: workspace/annual/2025/field-map.yaml
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
         all:
           - "box2.vervreemdingsprijs"
           - "box2.verkrijgingsprijs"
@@ -315,24 +373,27 @@ cases:
   - id: annual_partner_box2_allocation
     fixture: evals/nl-tax-agent-skills/fixtures/annual/partner-box2-allocation.yaml
     skill: nl-tax-annual-return
-    purpose: Annual 2025 fiscal-partner Box 2 allocation preparation.
+    purpose: Annual 2025 fiscal-partner Box 2 allocation preparation, saved with consent and mapped.
     expected_files:
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-    forbidden_files:
-      - workspace/provisional/**
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
 
   - id: provisional_box2_estimate
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/box2-estimate.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Provisional 2026 Box 2 estimated dividend preparation.
+    purpose: Provisional 2026 Box 2 estimated dividend preparation, saved with consent and mapped.
     expected_files:
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/field-map.yaml
-    forbidden_files:
-      - workspace/annual/**
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_request
+        field_map: expected
     text_checks:
-      - path: workspace/provisional/2026/field-map.yaml
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: B
         all:
           - "box2.geschatte_reguliere_voordelen"
           - "box2.geschatte_ingehouden_dividendbelasting"
@@ -343,29 +404,32 @@ cases:
   - id: security_complex_box2_review
     fixture: evals/nl-tax-agent-skills/fixtures/security/complex-box2-review.yaml
     skill: nl-tax-intake
-    purpose: Route complex Box 2 facts to manual review or unsupported.
+    purpose: Route complex Box 2 facts to manual review or unsupported without writing a workpack.
     expected_files:
       - workspace/eval/response.md
-    forbidden_files:
-      - workspace/annual/**
-      - workspace/provisional/**
 
   - id: security_blocked_universal_roadmap_workflows
     fixture: evals/nl-tax-agent-skills/fixtures/security/blocked-universal-roadmap-workflows.yaml
     skill: nl-tax-intake
-    purpose: Block inactive workflows outside active annual_2025 and provisional_2026 support.
+    purpose: Block inactive workflows outside active annual_2025 and provisional_2026 support without writing a workpack.
     expected_files:
       - workspace/eval/response.md
-    forbidden_files:
-      - workspace/annual/**
-      - workspace/provisional/**
 
   - id: provisional_stopzetten_payment_redirect
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/stopzetten-payment-redirect.yaml
     skill: nl-tax-provisional-assessment
-    purpose: Redirect a taxpayer who pays monthly from stopzetten to the complete-data change flow.
+    purpose: Redirect a taxpayer who pays monthly from stopzetten to the complete-data change flow and record the redirect in the saved workpack.
     expected_files:
-      - workspace/provisional/2026/provisional-pack.md
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_change
+        field_map: not_yet_mapped
+        generation_confirmed: false
+        sections:
+          stopzetten_direction: complete
+          baseline: [in_progress, complete, chat_only]
+          confirm: not_started
 
   - id: security_source_staleness
     fixture: evals/nl-tax-agent-skills/fixtures/security/source-staleness.yaml
@@ -373,3 +437,112 @@ cases:
     purpose: Preserve the existing stale-source warning semantics without blocking workpack preparation.
     expected_files:
       - workspace/eval/response.md
+
+  - id: annual_default_no_write
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/default-no-write.yaml
+    skill: nl-tax-annual-return
+    purpose: A full annual conversation without save consent, through generation and mapping, writes no file at all; the workpack lives in the conversation, shown with only filled sections and no Appendix A/B YAML.
+    expected_files:
+      - workspace/eval/response.md
+      - workspace/eval/chat-workpack.md
+    workpacks:
+      - path: workspace/eval/chat-workpack.md
+        workflow: annual_2025
+        presentation: chat
+
+  - id: annual_save_on_request
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/save-on-request.yaml
+    skill: nl-tax-annual-return
+    purpose: The user declines the first save offer, later asks to save mid-conversation, and the one file is written then kept current.
+    expected_files:
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: not_yet_mapped
+        readiness: draft
+        generation_confirmed: false
+        updated_after_created: true
+        sections:
+          filing_status: [complete, chat_only]
+          box1: [complete, chat_only]
+          box3_peildatum: [complete, chat_only]
+          confirm: not_started
+
+  - id: provisional_resume_attached_workpack
+    fixture: evals/nl-tax-agent-skills/fixtures/provisional/resume-attached-workpack.yaml
+    skill: nl-tax-provisional-assessment
+    purpose: Resume an attached saved change workpack without re-asking answered intake questions; keep the attachment untouched.
+    expected_files:
+      - workspace/nl-tax-provisional-2026-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        workflow: provisional_2026_change
+        readiness: draft
+        updated_after_created: true
+        sections:
+          baseline: complete
+          income_employment: chat_only
+          income_pension_benefit: [complete, chat_only]
+          winst_forecast: chat_only
+    text_checks:
+      - path: workspace/nl-tax-provisional-2026-workpack.md
+        appendix: A
+        all:
+          - 'created_at: "2026-09-19T08:15:00Z"'
+          - "workflow: provisional_2026_change"
+
+  - id: annual_legacy_ledger_ignored
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/legacy-0-3-ledger.yaml
+    skill: nl-tax-annual-return
+    purpose: A 0.3 ledger in the working folder is neither read nor written; the 0.3 return-pack.md is cited as an ordinary source document.
+    expected_files:
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        readiness: draft
+        documents:
+          min_rows: 1
+          document_contains_any:
+            - return-pack
+
+  - id: annual_reconfirm_unseen_figure
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/reconfirm-unseen-figure.yaml
+    skill: nl-tax-annual-return
+    purpose: A figure no longer visible verbatim after compaction is re-confirmed with the user, never reconstructed; nothing is written without consent.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: annual_stale_checklist_after_correction
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/stale-checklist-after-correction.yaml
+    skill: nl-tax-annual-return
+    purpose: >-
+      Decline saving, generate, save later, correct a figure, request the
+      checklist, and resume. The later save rebuilds the map from the recorded
+      facts (A11); the correction marks the map and checklist STALE until
+      regeneration (A10); the summary always equals Appendix B and a requested
+      checklist never shows the old value (A12).
+    expected_files:
+      - workspace/nl-tax-annual-2025-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        workflow: annual_2025
+        field_map: expected
+        generation_confirmed: true
+        updated_after_created: true
+        sections:
+          box1: [complete, chat_only]
+          confirm: complete
+    text_checks:
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: A
+        all:
+          - "workflow: annual_2025"
+          - "generation_confirmed: true"
+      - path: workspace/nl-tax-annual-2025-workpack.md
+        appendix: B
+        all:
+          - "annual_return"
+          - "box1.loon"
+          - "51400"

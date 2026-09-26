@@ -3,7 +3,9 @@
 ## Contents
 
 - Purpose
+- Where the workpack lives
 - Required sections
+- Status banner and readiness
 - Amount labeling rules
 - Winst uit onderneming forecast rule
 - Voorlopige aanslag Zorgverzekeringswet -- REQUIRED companion item
@@ -12,47 +14,144 @@
 - Box 2 validation rule
 - Field map requirements
 - Change subflow validation rules
+- Review subflow validation rules
 - Stopzetten validation rules
 - Sources used section — REQUIRED
-- Sources used
-- Not submission advice footer — REQUIRED
-- File output rules
+- Not submission advice section — REQUIRED
+- Appendix A — Resume record
 - Validation checklist
 
 ## Purpose
 
-This document defines the mandatory output sections, labeling requirements, and validation rules for every provisional assessment workpack. A workpack that violates any rule in this contract is invalid and must not be delivered.
+This document defines the mandatory sections, labeling requirements, and validation rules for every provisional assessment workpack, whether it is shown in the conversation or saved. A workpack that violates any rule in this contract is invalid and must not be delivered.
+
+---
+
+## Where the workpack lives
+
+- By default the workpack exists only in the conversation, shown as Markdown
+  or on a host surface that creates no file. Presentation never writes:
+  creating a downloadable file counts as saving. In chat, render only filled
+  sections, with no template fill notes, no bracketed instructions, and no
+  Appendix A or Appendix B YAML (the field map appears as its summary table).
+- The only file this workflow may write is
+  `workspace/nl-tax-provisional-2026-workpack.md`, and only while save consent
+  is active in this conversation (a fresh yes, a found file the user confirmed
+  resuming, or an attached copy the user agreed to keep saving). Appendix A
+  `save_consent` records that decision; it never authorizes a write. Update it
+  in place; never create a copy, versioned or dated variant, or second
+  `workspace/` tree. A file at that path that the user did not resume is
+  replaced only after the replace-or-keep question in the runtime contract,
+  never merged into.
+- Never write `workspace/nl-tax-annual-2025-workpack.md` or any path other than
+  the provisional workpack.
+- Section owners inside the one file: this skill writes every section except
+  `Field map summary` and `Appendix B — Field map` (written by
+  `nl-tax-field-mapper`), the mapper's own gap rows in `Open questions` and
+  `Missing information` with their Q-IDs in Appendix A (also written by
+  `nl-tax-field-mapper`), and `Manual-entry checklist` (written by
+  `nl-tax-submit-companion`). The first save writes everything established so
+  far from the facts and provenance recorded in the conversation, and
+  otherwise seeds those sections with their template placeholders. An unsaved
+  field map is not state: for that save, and at every regeneration,
+  `nl-tax-field-mapper` rebuilds the map from the recorded facts and re-runs
+  every FM-* check before writing `Field map summary` and Appendix B; a
+  checklist already shown is carried over only when each of its values matches
+  the rebuilt map, otherwise with the stale line below. After that, this skill
+  never edits those sections except to add the stale line.
+- Stale outputs: when a sourced fact changes after generation,
+  `generation_confirmed` returns to `false`, and this skill adds the line
+  `STALE — predates the change to <fact> (<YYYY-MM-DD>); regenerate before
+  use.` at the top of `Field map summary`, of Appendix B (above the `yaml`
+  block), and of a requested `Manual-entry checklist`, and shows it in the
+  conversation. A stale marker is valid only while `generation_confirmed` is
+  `false`; regeneration re-runs the mapper, which replaces the stale summary
+  and Appendix B.
+- For request and change, once mapping has run `Field map summary` is the
+  checked surface, in the saved file and in the conversation: every
+  `manual_entry` field in Appendix B appears in it with the same value, and
+  every `missing_fields` entry appears as a `MISSING - enter manually` row with
+  its Q-ID.
+- When consent is active and the host has no writable working folder, deliver
+  the same workpack through the host's normal file or document output. When the
+  working folder may not outlast the session, save there and also deliver a
+  download at pauses and at generation. A download at generation is produced
+  after mapping, so it includes the map.
 
 ---
 
 ## Required sections
 
-Every provisional workpack (`workspace/provisional/2026/provisional-pack.md`) MUST contain all of the following sections from the template:
+Every provisional workpack follows `templates/provisional-workpack.md` and
+contains these top-level sections in this order:
 
 | Section                     | Required for subflow(s)                   |
 |-----------------------------|-------------------------------------------|
+| Title + STATUS banner       | all                                       |
+| How to use this file        | all                                       |
+| Contents                    | all                                       |
 | Subflow identifier          | all                                       |
 | Scope                       | all                                       |
+| Unsupported-case checks     | all                                       |
+| Taxpayer profile summary    | all                                       |
+| Documents and sources       | all                                       |
 | Sources used                | all                                       |
 | Existing baseline           | all (may be "No existing baseline" for request) |
 | Current-year estimates      | request, change                           |
 | Delta summary               | change                                    |
 | Review questions            | review                                    |
-| Stopzetten outcome          | stopzetten                                |
+| Stopzetten outcome          | stopzetten; change reached through the stopzetten payment redirect |
 | Income estimate             | request, change                           |
 | Winst uit onderneming forecast | request, change                        |
 | Own-home estimate           | request, change                           |
 | Box 2 provisional estimate  | request, change                           |
 | Box 3 provisional estimate  | request, change                           |
 | Deductions estimate         | request, change                           |
-| Field map summary           | request, change                           |
-| User-stated values index    | all                                       |
+| Change subflow — full re-entry reminder | change                        |
+| Open questions              | all                                       |
 | Missing information         | all                                       |
 | Assumptions                 | all                                       |
+| User-stated values index    | all                                       |
+| Field map summary           | request, change (field mapper)            |
+| Manual-entry checklist      | all ("not requested" until asked)         |
 | Human review checklist      | all                                       |
 | Not submission advice       | all                                       |
+| Appendix A — Resume record  | all                                       |
+| Appendix B — Field map      | all (`not yet mapped` until mapping; review and stopzetten never map) |
 
 Sections not applicable to the current subflow must be explicitly marked as "N/A — not applicable for [subflow]" rather than omitted.
+
+`Taxpayer profile summary` holds residency, taxpayer type, 2026 AOW status
+and transition month (taxpayer and partner), fiscal partner, household,
+Box 2 screening, and business screening, each with provenance, and no BSN,
+IBAN, or names. `Documents and sources` holds one row per document or chat
+value used: `ev_NNN`, document as the user named it, type, tax year, owner,
+location, values taken, and status (`extracted` / `needs review`); no file
+hashes and no copied content beyond the short quote needed for provenance.
+A chat value's row is named `chat YYYY-MM-DD` with type `user_chat`; no row
+records a full BSN, IBAN, policy, contract, or aanslag number.
+`Open questions` uses the columns Q-ID, section, question, blocking, and status;
+`Missing information` uses M-ID, description, workpack row, linked Q-ID, and how
+to resolve; `Assumptions` lists only assumptions the user explicitly accepted,
+each with its A-ID and the `U:` quote and date of that acceptance.
+
+---
+
+## Status banner and readiness
+
+The workpack opens with a STATUS banner derived from the section rollup in
+`reference/provisional-flow.md`:
+
+- `STATUS: DRAFT — N open section(s) — not for filing` while any applicable
+  section is not `complete` or `chat_only`, a blocking open question remains,
+  or a workflow-specific manual-review blocker forces a draft.
+- `STATUS: COMPLETE DRAFT FOR REVIEW — not for filing` only when every
+  applicable section is `complete` or `chat_only` and nothing forces a draft.
+
+Appendix A `readiness` (`draft` / `review_ready`) and the field-map
+`readiness` come from the same rollup. This skill is the single readiness
+authority; a validator may reject an impossible `review_ready` but never
+promotes `draft`.
 
 ---
 
@@ -147,10 +246,10 @@ in the income-tax voorlopige-aanslag form, and MUST NOT state Zvw instalment,
 deadline, payment, or refund timing. Those, and any exception regime, are
 manual-review items; the Belastingdienst calculates the bijdrage.
 
-The income-tax `field-map.yaml` MUST contain no Zvw field or value whatsoever:
-no Zvw `field_id`, label, note, amount, baseline, estimate, or manual-entry row.
-The separate assessment belongs only in the workpack companion section and the
-human review action.
+The income-tax field map (Appendix B and the Field map summary) MUST contain no
+Zvw field or value whatsoever: no Zvw `field_id`, label, note, amount, baseline,
+estimate, or manual-entry row. The separate assessment belongs only in the
+workpack companion section and the human review action.
 
 ---
 
@@ -200,6 +299,10 @@ The workpack MUST be rejected if any of the following are true:
 - Werkelijk rendement is used in any calculation
 - The workpack offers any method choice for box 3
 - Box 3 calculation uses any method other than the three-category fictitious return
+
+If the user asks about werkelijk rendement, answer in the conversation with:
+"Werkelijk rendement may become relevant when filing the annual 2026 return in
+2027." Do not add that exchange to the workpack as an input or option.
 
 ### Required box 3 structure
 
@@ -254,13 +357,21 @@ Every Box 2 amount must be labeled as estimate or from-baseline. Route valuation
 
 ## Field map requirements
 
-The `field-map.yaml` MUST conform to
-`nl-tax-field-mapper/templates/field-map-template.yaml` and
-`nl-tax-field-mapper/reference/provisional-field-map.md`; `field_id`s must come
-from that provisional reference. Conformance is checked by the mapper's own
-agent checklist in `nl-tax-field-mapper/reference/mapping-principles.md`,
-applying the rule data in `nl-tax-field-mapper/reference/field-map-rules.yaml`;
-the taxpayer's review before manual entry is the final check.
+For request and change, the canonical field map is the one fenced `yaml` block
+in `Appendix B — Field map`, with the human-readable table in `Field map
+summary`. `nl-tax-field-mapper` alone authors both, following its own template,
+provisional field reference, mapping principles, and rule data; `field_id`s
+come from its provisional reference and `workflow` is `provisional_assessment`.
+In the field map, `source.evidence_id` points to a `Documents and sources`
+row, `source.profile_path` to a row `Key` in `Taxpayer profile summary`, and
+`missing_fields[].open_question_id` to `Open questions`.
+
+The mapper shows the `Field map summary` table in the conversation and
+performs every check on the YAML it composes; the YAML is never printed in chat
+and is written only into a saved workpack. The mapper adds its own rows to
+`Open questions` and `Missing information` for mapping gaps, continuing the
+Q001/M001 numbering, so every `missing_fields[].open_question_id` resolves. The taxpayer's review before manual
+entry is the final check. Review and stopzetten produce no field map.
 
 ---
 
@@ -276,9 +387,14 @@ The reminder must appear:
 - In the workpack body (not just in footnotes or appendices)
 - Before the field map summary section
 
+The portal may offer to pre-fill figures from the most recent annual return, but
+it does not carry forward the current voorlopige-aanslag figures. Whether the
+form opens blank or pre-filled, the workpack covers every applicable category.
+Never claim that omitted values default to zero.
+
 ### Delta summary — REQUIRED
 
-The change subflow MUST produce a delta summary file at `workspace/provisional/2026/delta-summary.md` containing:
+The change subflow MUST complete the `Delta summary` section of the workpack, following `reference/delta-rules.md`, containing:
 
 - Baseline values (from existing voorlopige aanslag)
 - Current estimate values (from user input)
@@ -289,7 +405,18 @@ The change subflow MUST produce a delta summary file at `workspace/provisional/2
 - Separate own-home component rows for eigenwoningforfait, total deductible
   own-home costs, any Hillen deduction, and `box1_own_home_balance`
 
-A change-subflow workpack without a delta summary is invalid.
+A change-subflow workpack without a completed Delta summary section is invalid.
+
+---
+
+## Review subflow validation rules
+
+The review subflow MUST complete the `Review questions` section of the
+workpack: the category review table (each category `unchanged`, `changed`, or
+`unknown`), the recommended action summary, and the change-subflow trigger.
+Every `unknown` category has a question under `Open questions`. A review that
+finds material changes recommends the change subflow, which collects the
+complete dataset again; the review itself produces no field map.
 
 ---
 
@@ -329,8 +456,8 @@ If the user currently PAYS a monthly amount and the amount is incorrect:
 
 - The workpack MUST redirect to the change subflow
 - The workpack MUST NOT provide stopzetten guidance for payment correction
-- The workpack MUST explain that stopping payments does not reduce the tax obligation
-- The session state MUST be mutated before continuing: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` complete with `routed_to_change_payment_case`, and reset `confirm` to `not_started`. This avoids returning to stopzetten on the next turn.
+- The workpack MUST explain that stopping payments does not reduce the tax obligation and can create arrears under the current beschikking
+- Record the redirect before continuing: the subflow becomes change (in the conversation and, when saved, in the `Subflow` heading and Appendix A `workflow: provisional_2026_change`); the payment baseline goes into `Existing baseline, if any` with provenance and `baseline` is `in_progress`; `stopzetten_direction` is `complete` with the route `change VA (payment case)` recorded in `Stopzetten outcome`; `confirm` returns to `not_started` and `generation_confirmed` to `false`. This avoids returning to stopzetten on the next turn.
 
 ### Refund user guidance — REQUIRED
 
@@ -350,11 +477,11 @@ If the user currently RECEIVES a monthly refund:
 
 ## Sources used section — REQUIRED
 
-Every workpack MUST list exactly the `source_id` values in
-`session-progress.yaml` → `sources_loaded_by_workflow.provisional_2026`. Do not
-copy IDs from the annual ledger; the same ID may appear in both only when it was
-independently consulted for both workflows. This provides traceability and
-allows verification against the knowledge base.
+Every workpack MUST list exactly the `source_id` values consulted for
+provisional 2026, one per line, and that list MUST equal Appendix A
+`sources_loaded`. Do not copy IDs from the annual workflow; the same ID may
+appear in both workpacks only when it was independently consulted for both.
+This provides traceability and allows a check against the knowledge base.
 
 ### Example
 
@@ -367,48 +494,46 @@ allows verification against the knowledge base.
 
 ---
 
-## Not submission advice footer -- REQUIRED
+## Not submission advice section -- REQUIRED
 
-Every workpack MUST end with the following footer:
+Every workpack MUST include the following section immediately before the
+appendices:
 
 > This workpack is a preparation aid. You, the taxpayer or an authorized human,
 > must review the figures and perform all portal entry, signing, sending, or
 > changes yourself. The assistant must not access or operate Mijn
 > Belastingdienst.
 
-A workpack without this footer is invalid.
-Do not expand this footer into generic credential boilerplate.
+A workpack without this section is invalid.
+Do not expand it into generic credential boilerplate.
 
 ---
 
-## File output rules
+## Appendix A — Resume record
 
-| Output file                                       | Subflow(s)       | Required |
-|---------------------------------------------------|------------------|----------|
-| `workspace/provisional/2026/provisional-pack.md`  | all              | yes      |
-| `workspace/provisional/2026/field-map.yaml`       | request, change  | yes      |
-| `workspace/provisional/2026/delta-summary.md`     | change           | yes      |
-| `workspace/provisional/2026/review-questions.md`  | review           | yes      |
-| `workspace/provisional/2026/notes/<section>.yaml` | all              | working files |
-| `workspace/shared/assumptions.md`                 | all              | yes      |
-
-These are the deliverables and working files this skill writes; the
-`notes/<section>.yaml` files are intermediate per-section working notes under the
-skill's own year directory.
-
-### Prohibited output locations
-
-- `workspace/annual/**` — NEVER write to the annual workspace from the provisional skill
-- Any path outside `workspace/` — workpack files belong in the workspace only
+`Appendix A — Resume record` is one fenced `yaml` block with
+`workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
+`plugin_version: "0.4.0"`, `workflow: provisional_2026_<subflow>`,
+`tax_year: 2026`, `created_at`, `updated_at`, `save_consent`, `readiness`,
+`generation_confirmed`, `queued_workflow: null`, `sections`, and
+`sources_loaded`. `save_consent` defaults to `not_given` in the template and is
+`given` in the written file; it is a record, never an authorization to write. `sections` uses the provisional keys from
+`reference/provisional-flow.md` that apply to the subflow, each as
+`{status, open}` where `open` lists the open question IDs for that section.
+Facts never live in the resume record; they live in the readable sections with
+provenance.
 
 ---
 
 ## Validation checklist
 
-Before delivering any workpack, verify:
+Before delivering any workpack, verify (`check_performed_by: checked_by_agent`):
 
-- [ ] All required sections are present for the applicable subflow
+- [ ] All required sections are present in order for the applicable subflow
+- [ ] STATUS banner, Appendix A `readiness`, and any field-map `readiness` come from the same rollup
+- [ ] Taxpayer profile summary and Documents and sources contain no BSN, IBAN, policy, contract, or aanslag number, file hash, or copied document content
 - [ ] User-stated values index lists every `U:` chat-stated value for spot-checking
+- [ ] Every `F:` code points to a Documents and sources row
 - [ ] All amounts are labeled (estimate or from-baseline)
 - [ ] Box 2 amounts are labeled estimate or from-baseline, when applicable
 - [ ] Box 3 uses fictitious method only, with only the required explanatory note for werkelijk rendement
@@ -428,17 +553,17 @@ Before delivering any workpack, verify:
   the 2026 amount was flagged
 - [ ] Own-home review shows the 1 January 2025 WOZ peildatum and all components of `box1_own_home_balance`
 - [ ] IACK, ouderenkorting, alleenstaandeouderenkorting, jonggehandicaptenkorting, zorgkosten thresholds, and lijfrente limits are manual-review items unless exact reviewed sources and required inputs are registered
-- [ ] Change subflow includes full re-entry reminder
-- [ ] Change subflow includes delta summary file
-- [ ] Review subflow includes `review-questions.md` following the review-questions template
+- [ ] Partner allocation scenarios are traceable and none is ranked or selected; the split is recorded only after both partners choose it
+- [ ] Change subflow includes the full re-entry reminder
+- [ ] Change subflow includes a completed Delta summary section
+- [ ] Review subflow includes a completed Review questions section
 - [ ] Stopzetten subflow includes a structured `Stopzetten outcome` body
 - [ ] Stopzetten cutoff was evaluated against the current date before any checklist was included
 - [ ] Stopzetten routes payment users to change subflow
 - [ ] Stopzetten distinguishes retroactive deductions/IACK from the prospective monthly algemene-heffingskorting stop, keeps prior repayment in a separate notice, and treats annual filing as a separate question
-- [ ] Sources used section lists exactly
-  `sources_loaded_by_workflow.provisional_2026`, without copying the annual ledger
-- [ ] Not submission advice footer is present
-- [ ] No output files written to workspace/annual/
-- [ ] Assumptions section is present and complete
-- [ ] Missing information section is present
+- [ ] Sources used lists exactly the provisional 2026 source IDs and equals Appendix A `sources_loaded`
+- [ ] Not submission advice section is present before the appendices
+- [ ] Open questions, Missing information, and Assumptions sections are present; Assumptions holds only user-accepted assumptions
 - [ ] Human review checklist is present
+- [ ] Nothing was written except `workspace/nl-tax-provisional-2026-workpack.md`, and only while save consent was active in this conversation
+- [ ] A missing baseline field is `unknown` with a non-blocking note in the Delta summary, not an assumption or a Missing information row

@@ -1,6 +1,8 @@
+# Eval fixture: one request for annual 2025 followed by a provisional 2026 request
+
 fixture_id: eval_annual_then_provisional_request
-fixture_version: "1.0"
-scenario: "One natural-language request for annual 2025 followed by a provisional 2026 request"
+fixture_version: "2.0"
+scenario: "One natural-language request for annual 2025 followed by a provisional 2026 request; two separate files, each kept only with consent"
 workflow: annual_2025
 
 user_request:
@@ -15,101 +17,94 @@ user_request:
     - provisional_2026_request
   provisional_subflow: request
 
-expected_state:
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+  provisional_2026:
+    # Annual consent does not carry over by itself: when 2026 collection starts
+    # the provisional workflow asks once, and the taxpayer agrees.
+    consent: given
+    at: workflow_start
+    asked_separately: true
+
+expected_conversation:
   after_intake:
-    profile:
-      workflow_candidate: annual_2025
-      annual_2025: {requested: true, status: in_progress}
-      provisional_2026: {requested: true, subflow: request, status: queued}
-    session:
-      active_workflow: annual_2025
-      active_skill: nl-tax-annual-return
-      annual_2025_status: not_started
-      provisional_2026_status: not_started
-      provisional_2026_subflow: request
-      sources_loaded_by_workflow:
-        annual_2025: []
-        provisional_2026: []
+    active_workflow: annual_2025
+    queued_workflow: provisional_2026_request
+    provisional_resources_loaded: false
+    provisional_facts_collected: false
+    files_written: []
+  after_annual_save_consent:
+    files_written:
+      - workspace/nl-tax-annual-2025-workpack.md
+    annual_resume_record:
+      queued_workflow: provisional_2026_request
       sources_loaded: []
-    workpack_source_sections:
-      annual_2025: null
-      provisional_2026: null
   after_complete_annual_mapping:
-    profile:
-      workflow_candidate: provisional_2026_request
-      annual_2025: {requested: true, status: complete}
-      provisional_2026: {requested: true, subflow: request, status: in_progress}
-    session:
-      active_workflow: provisional_2026_request
-      active_skill: nl-tax-provisional-assessment
-      annual_2025_status: complete
-      provisional_2026_status: not_started
-      provisional_2026_subflow: request
-      sources_loaded_by_workflow:
-        annual_2025: [annual_source_id]
-        provisional_2026: []
-      sources_loaded: []
-    workpack_source_sections:
-      annual_2025: [annual_source_id]
-      provisional_2026: null
-    annual_artifacts_preserved: true
+    active_workflow: provisional_2026_request
     requires_new_activation_phrase: false
     provisional_generation_confirmed: false
+    # The only handoff change to the saved annual file: queued_workflow is
+    # cleared when provisional collection starts (review amendment A6).
+    annual_workpack_change_at_handoff: queued_workflow_cleared
     annual_checklist_question_suppressed: true
     annual_checklist_availability_is_non_question: true
     bare_yes_activates_annual_checklist: false
+    # Annual consent covered only the annual file, so the provisional workflow
+    # asks once, as its own workflow-start offer, in a reply with no other
+    # yes/no question.
+    provisional_file_consent_asked_once: true
+    one_yes_no_question_per_reply: true
     first_question_owner: provisional_2026_request
+    annual_resume_record:
+      queued_workflow: null
+      generation_confirmed: true
+      sources_loaded: [annual_source_id]
+    provisional_sources_loaded: []
   after_complete_provisional_mapping:
-    profile:
-      workflow_candidate: provisional_2026_request
-      annual_2025: {requested: true, status: complete}
-      provisional_2026: {requested: true, subflow: request, status: complete}
-    session:
-      active_workflow: provisional_2026_request
-      active_skill: ""
-      annual_2025_status: complete
-      provisional_2026_status: complete
-      sources_loaded_by_workflow:
-        annual_2025: [annual_source_id]
-        provisional_2026: [provisional_source_id]
+    files_written:
+      - workspace/nl-tax-annual-2025-workpack.md
+      - workspace/nl-tax-provisional-2026-workpack.md
+    annual_resume_record:
+      queued_workflow: null
+      sources_loaded: [annual_source_id]
+    provisional_resume_record:
+      workflow: provisional_2026_request
+      queued_workflow: null
+      generation_confirmed: true
       sources_loaded: [provisional_source_id]
-    workpack_source_sections:
-      annual_2025: [annual_source_id]
-      provisional_2026: [provisional_source_id]
-    annual_artifacts_preserved: true
   invariants:
     one_active_workflow_at_a_time: true
     annual_completes_before_provisional_starts: true
     annual_and_provisional_confirmation_are_separate: true
+    annual_and_provisional_save_consent_are_separate: true
     annual_values_are_not_automatic_provisional_estimates: true
-    year_specific_notes_sources_and_artifacts_are_separate: true
-    active_source_mirror_is_never_a_cross_workflow_union: true
+    year_specific_facts_sources_and_files_are_separate: true
+    source_ledger_is_never_a_cross_workflow_union: true
 
 expected_outputs:
   files_created:
-    - workspace/taxpayer/profile.yaml
-    - workspace/shared/session-progress.yaml
-    - workspace/annual/2025/return-pack.md
-    - workspace/annual/2025/field-map.yaml
-    - workspace/provisional/2026/provisional-pack.md
-    - workspace/provisional/2026/field-map.yaml
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
   ownership:
     annual_workpack: nl-tax-annual-return
     provisional_workpack: nl-tax-provisional-assessment
     field_maps: nl-tax-field-mapper
 
 expected_behavior:
-  - "Intake records both requested workflows and the provisional request subflow"
-  - "Annual 2025 is the only active workflow until its complete workpack and field map validate"
-  - "The handoff atomically activates provisional_2026_request without a new activation phrase"
+  - "Intake records both requested workflows and the provisional request subflow in the conversation"
+  - "Annual 2025 is the only active workflow; the 2026 request is queued_workflow in the annual resume record"
+  - "The handoff happens only after the annual workpack is generated and mapped, without a new activation phrase"
   - "The handoff states annual-checklist availability without asking a checklist question"
-  - "The first actual question after handoff belongs to the provisional subflow"
+  - "The provisional workflow asks once whether to keep its own file and writes it only after that consent"
   - "The provisional workflow requires its own final-generation confirmation"
-  - "Annual and provisional statuses, sources, notes, and artifacts remain separate"
+  - "Annual and provisional statuses, sources, facts, and files remain separate"
 
 acceptance_criteria:
-  - "No provisional artifact is written while annual 2025 is active"
+  - "No provisional file is written and no provisional facts are collected while annual 2025 is active"
   - "An incomplete annual rollup or failed annual map leaves provisional 2026 queued"
-  - "Completed annual artifacts remain unchanged after the provisional handoff"
+  - "The provisional handoff changes the saved annual workpack only by clearing queued_workflow to null"
   - "A bare yes after the handoff cannot activate the annual checklist"
-  - "Both final field maps validate against their own workflow and year"
+  - "Each file holds its own field map in Appendix B, validated against its own workflow and year"
+  - "Each file's Sources used equals its own Appendix A sources_loaded"

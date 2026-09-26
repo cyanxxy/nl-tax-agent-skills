@@ -14,6 +14,8 @@ SOURCE_PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 DEFAULT_OUTPUT = REPO / "dist" / "openai" / "nl-tax-agent-skills"
 PLUGIN_DIRS = (".codex-plugin", "assets", "skills")
 PLUGIN_FILES = ("LICENSE", "README.md")
+# Skills retired from the plugin. A stale local copy must never ship.
+RETIRED_SKILLS = {"nl-tax-evidence-indexer"}
 CLAUDE_ONLY_KEYS = {
     "allowed-tools",
     "argument-hint",
@@ -75,6 +77,15 @@ def sanitize_skill(path: Path) -> int:
     return removed
 
 
+def _assert_shippable_skills(skills_dir: Path) -> None:
+    """Refuse retired skills and skill folders without a SKILL.md."""
+    for skill_dir in sorted(path for path in skills_dir.iterdir() if path.is_dir()):
+        if skill_dir.name in RETIRED_SKILLS:
+            raise ValueError(f"retired skill must not ship: {skill_dir.name}")
+        if not (skill_dir / "SKILL.md").is_file():
+            raise ValueError(f"skill directory without SKILL.md: {skill_dir.name}")
+
+
 def _assert_safe_output(output_dir: Path) -> None:
     output = output_dir.resolve()
     source = SOURCE_PLUGIN.resolve()
@@ -102,6 +113,7 @@ def build_bundle(output_dir: Path, zip_path: Path | None = None) -> tuple[Path, 
     for name in PLUGIN_FILES:
         shutil.copy2(SOURCE_PLUGIN / name, output_dir / name)
 
+    _assert_shippable_skills(output_dir / "skills")
     removed = sum(sanitize_skill(path) for path in output_dir.glob("skills/*/SKILL.md"))
 
     zip_path.parent.mkdir(parents=True, exist_ok=True)

@@ -2,9 +2,9 @@
 
 ### Conversational review checkpoints
 
-1. Does the taxpayer profile exist and contain `provisional_2026_review`?
+1. Is the review subflow confirmed in the conversation, or in Appendix A of a resumed workpack?
 2. Is there a current voorlopige aanslag available to review?
-   - From evidence index
+   - From a beschikking the user shares, recorded as a `Documents and sources` row
    - From user input
 3. Was the current voorlopige aanslag issued without a taxpayer request (EVA) or user-submitted (VVA)?
    - EVA: especially important to verify, as it is based on prior-year data that may be outdated
@@ -32,9 +32,9 @@
 
 ### Output generation
 
-1. Generate `workspace/provisional/2026/provisional-pack.md` with review context
-2. Generate `workspace/provisional/2026/review-questions.md` — items flagged for user verification
-3. Update `workspace/shared/assumptions.md`
-4. If changes are needed: explicitly recommend running the change subflow and explain what would change
+1. At the generation gate, produce the workpack from `templates/provisional-workpack.md` with review context, including the `Existing baseline, if any` section and the completed `Review questions` section: the category review table, the recommended action summary, and the change-subflow trigger; every `unknown` category has a question under `Open questions`
+2. Review produces no field map; `Field map summary` reads "N/A — no field map is produced for this subflow."
+3. Record under `Assumptions` only assumptions the user explicitly accepted
+4. If changes are needed: explicitly recommend the change subflow, explain what would change, and note that a change collects the complete dataset again rather than only the changed rows
 
 ---

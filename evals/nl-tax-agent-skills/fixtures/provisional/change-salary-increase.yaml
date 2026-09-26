@@ -4,13 +4,13 @@
 #            Salary is higher, mortgage interest changed.
 #
 # Expected behavior:
-#   - Delta summary created
-#   - Workpack reminds user to enter ALL data (not just changes)
-#   - Change field map created
+#   - The Delta summary section of the one workpack is completed
+#   - The workpack reminds the user to enter ALL data (not just changes)
+#   - The change field map lives in Appendix B
 #   - Box 3 fictitious only
 
 fixture_id: eval_provisional_change
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Provisional 2026 change — salary increase, mortgage change"
 tax_year: 2026
 workflow: provisional_2026_change
@@ -44,12 +44,16 @@ current_estimates:
     banktegoeden_1_jan_2026: 30000.00  # unchanged
     overige_bezittingen_1_jan_2026: 50000.00  # unchanged
 
+saving:
+  provisional_2026:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
   files_created:
-    - workspace/provisional/2026/provisional-pack.md
-    - workspace/provisional/2026/field-map.yaml
-    - workspace/provisional/2026/delta-summary.md
-    - workspace/provisional/2026/review-questions.md
+    - workspace/nl-tax-provisional-2026-workpack.md
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
 
   workpack_checks:
     - section: "Subflow"
@@ -58,8 +62,8 @@ expected_outputs:
       present: true
       contains: "baseline"
       contains_also: "current"
-    - section: "Delta summary"
-      contains: "all data"  # reminder about entering all data
+    - section: "Change subflow — full re-entry reminder"
+      contains: "complete dataset"
 
   delta_checks:
     - income_delta: +10000.00
@@ -71,8 +75,15 @@ expected_outputs:
     - no_annual_wording: true
     - change_requires_all_data_reminder: true
 
+expected_resume_record:
+  workflow: provisional_2026_change
+  tax_year: 2026
+  save_consent: given
+  sections:
+    baseline: complete
+
 acceptance_criteria:
-  - "Delta summary created"
+  - "The Delta summary section of the one workpack is completed; there is no separate delta file"
   - "Workpack reminds user to enter all data, not just changes"
-  - "Change field map created"
+  - "The change field map is Appendix B of the same workpack"
   - "Box 3 uses fictitious only"

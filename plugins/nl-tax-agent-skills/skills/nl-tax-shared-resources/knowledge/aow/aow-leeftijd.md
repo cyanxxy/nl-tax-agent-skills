@@ -26,8 +26,8 @@ determination.
 ## How to use in the workpack
 
 1. From the sourced date of birth and tax year, record exactly one reviewed
-   `aow_by_tax_year.<tax_year>.status` value under `person` or `partner`:
-   `below_all_year`, `reaches_during_year`, or `aow_all_year`.
+   AOW status per tax year for the taxpayer and, separately, for a fiscal
+   partner: `below_all_year`, `reaches_during_year`, or `aow_all_year`.
 2. **`aow_all_year`** → use the whole-year AOW-age material for that tax year
    and review ouderenkorting. Review alleenstaandeouderenkorting separately
    against entitlement to an AOW pension for a single person; family or
@@ -41,20 +41,19 @@ determination.
    work. Mark affected credits for manual portal review.
 4. **`below_all_year`** → use the standard non-AOW material for that tax year.
 
-Older scalar `aow_age_in_tax_year`, `aow_status_in_tax_year`, and
-`aow_transition_month` fields may remain in an existing profile for resume
-compatibility, but they are not authoritative when more than one tax year is
-active. Normalize them into the applicable year entry before use.
+When more than one tax year is active, keep a separate status for each year;
+never reuse one year's status or transition month for the other.
 
 ## Developer instruction
 
-The conversational intake agent records `person.aow_by_tax_year.<tax_year>`
-and the partner equivalent from the sourced date of birth, tax year, and this
-reviewed rule. Store the classification with `source: calculated` and
-`calculated_from`; do not invent an assumption or ask for a second confirmation
-of undisputed date arithmetic. Ask the user only when the date of birth is
-missing or disputed. Never collect or store the AOW administration number or
-BSN.
+The conversational intake agent establishes the AOW status per tax year for
+the taxpayer and a fiscal partner from the sourced date of birth, tax year, and
+this reviewed rule; the owning workflow records it in the workpack's
+`Taxpayer profile summary`. Record the classification with
+`source: calculated` and `calculated_from`; do not invent an assumption or ask
+for a second confirmation of undisputed date arithmetic. Ask the user only when
+the date of birth is missing or disputed. Never collect or store the AOW
+administration number or BSN.
 
 ## Common failure
 

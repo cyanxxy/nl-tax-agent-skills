@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
-"""Verify hard workspace contracts for the offline NL tax fixture library."""
+"""Verify hard 0.4 workspace contracts for the offline NL tax fixture library.
+
+0.4 is conversation-first (docs/maintainers/0.4-conversation-first-design.md):
+nothing is written by default, and only with the taxpayer's consent does the
+plugin keep exactly one workpack file per workflow:
+
+- ``workspace/nl-tax-annual-2025-workpack.md``
+- ``workspace/nl-tax-provisional-2026-workpack.md``
+
+For a selected case this verifier checks that the test workspace holds exactly
+the expected workpacks (plus harness captures under ``workspace/eval/``), that
+no 0.3 ledger path or other file was written, that seeded user files and 0.3
+ledgers are byte-identical afterwards, that every expected workpack passes the
+repository workpack grader, that Appendix B passes the field-map grader when
+the case expects a map, and that each workpack's ``## Sources used`` equals its
+Appendix A ``sources_loaded``. A harness capture of the workpack as shown in
+the conversation (``presentation: chat``) is graded in the grader's chat mode:
+only filled sections, no fill notes, and never Appendix A, Appendix B, or YAML
+(review amendment A8). It never scores prose; agent behavior is graded from the
+fixture expectations and the rubric.
+"""
 
 from __future__ import annotations
 
@@ -19,7 +39,47 @@ except ImportError as exc:  # pragma: no cover - local validation environment ha
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+# SCRIPT_DIR is evals/nl-tax-agent-skills; parents[1] is the repository root.
+REPO_ROOT = SCRIPT_DIR.parents[1]
 DEFAULT_DATASET = SCRIPT_DIR / "offline-dataset.yaml"
+
+WORKPACK_GRADER_REL = "tools/nl_tax_agent_skills/workpack/validate_workpack.py"
+FIELD_MAP_GRADER_REL = "tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
+
+DEFAULT_WORKPACK_PATHS = {
+    "annual_2025": "workspace/nl-tax-annual-2025-workpack.md",
+    "provisional_2026": "workspace/nl-tax-provisional-2026-workpack.md",
+}
+DEFAULT_HARNESS_GLOBS = ["workspace/eval/**"]
+DEFAULT_LEGACY_PATHS = [
+    "workspace/taxpayer/**",
+    "workspace/shared/**",
+    "workspace/annual/**",
+    "workspace/provisional/**",
+]
+FIELD_MAP_EXPECTATIONS = {"expected", "not_yet_mapped"}
+SAVE_CONSENT_VALUES = {"given", "not_given"}
+PRESENTATIONS = {"file", "chat"}
+# Keys that describe Appendix A / Appendix B, which a conversation rendering
+# never shows (A8); a chat capture rule must not carry them.
+APPENDIX_RULE_KEYS = (
+    "save_consent",
+    "readiness",
+    "generation_confirmed",
+    "queued_workflow",
+    "sections",
+    "field_map",
+    "updated_after_created",
+)
+ANNUAL_WORKFLOWS = {"annual_2025"}
+PROVISIONAL_WORKFLOWS = {
+    "provisional_2026_request",
+    "provisional_2026_change",
+    "provisional_2026_review",
+    "provisional_2026_stopzetten",
+}
+NO_FIELD_MAP_WORKFLOWS = {"provisional_2026_review", "provisional_2026_stopzetten"}
+SKIPPED_DIRS = {"__pycache__", ".git", ".plugin-eval"}
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -62,7 +122,7 @@ def iter_text_files(root: Path) -> list[Path]:
 
     result: list[Path] = []
     for current_root, dirs, files in os.walk(root):
-        dirs[:] = [d for d in dirs if d not in {"__pycache__", ".git", ".plugin-eval"}]
+        dirs[:] = [d for d in dirs if d not in SKIPPED_DIRS]
         for filename in files:
             path = Path(current_root) / filename
             try:
@@ -74,6 +134,29 @@ def iter_text_files(root: Path) -> list[Path]:
                 continue
             result.append(path)
     return result
+
+
+def _pattern_regex(pattern: str) -> re.Pattern[str]:
+    parts: list[str] = []
+    index = 0
+    while index < len(pattern):
+        if pattern.startswith("**", index):
+            parts.append(".*")
+            index += 2
+        elif pattern[index] == "*":
+            parts.append("[^/]*")
+            index += 1
+        elif pattern[index] == "?":
+            parts.append("[^/]")
+            index += 1
+        else:
+            parts.append(re.escape(pattern[index]))
+            index += 1
+    return re.compile("^" + "".join(parts) + "$")
+
+
+def matches_pattern(relative_path: str, pattern: str) -> bool:
+    return bool(_pattern_regex(pattern).match(relative_path))
 
 
 def selected_case_ids(args: argparse.Namespace, dataset: dict[str, Any]) -> list[str]:
@@ -98,141 +181,190 @@ def contains(text: str, needle: str) -> bool:
     return needle.lower() in text.lower()
 
 
-def check_text_rule(workspace: Path, case_id: str, rule: dict[str, Any], errors: list[str]) -> None:
-    path = resolve_workspace_path(workspace, rule["path"])
-    if not path.is_file():
-        errors.append(f"{case_id}: text check file missing: {rule['path']}")
-        return
+# ---------------------------------------------------------------------------
+# Repository graders
+# ---------------------------------------------------------------------------
 
-    text = read_text(path)
-    for needle in rule.get("all", []) or []:
-        if not contains(text, str(needle)):
-            errors.append(f"{case_id}: {rule['path']} missing required text: {needle!r}")
-
-    for group in rule.get("any", []) or []:
-        options = group if isinstance(group, list) else [group]
-        if not any(contains(text, str(option)) for option in options):
-            rendered = ", ".join(repr(str(option)) for option in options)
-            errors.append(f"{case_id}: {rule['path']} missing one of: {rendered}")
-
-    for needle in rule.get("none", []) or []:
-        if contains(text, str(needle)):
-            errors.append(f"{case_id}: {rule['path']} contains forbidden text: {needle!r}")
+_module_cache: dict[str, Any] = {}
 
 
-def _active_ledger_key(active_workflow: Any) -> str | None:
-    if not isinstance(active_workflow, str):
-        return None
-    if active_workflow == "annual_2025":
-        return "annual_2025"
-    if active_workflow.startswith("provisional_2026_"):
-        return "provisional_2026"
-    return None
+def _load_repo_module(relative_path: str, module_name: str, label: str):
+    if module_name in _module_cache:
+        return _module_cache[module_name]
+    candidates = [REPO_ROOT / relative_path, Path.cwd() / relative_path]
+    for script in candidates:
+        if script.is_file():
+            spec = importlib.util.spec_from_file_location(module_name, script)
+            module = importlib.util.module_from_spec(spec)
+            try:
+                spec.loader.exec_module(module)
+            except Exception as exc:  # a broken grader must not crash the eval
+                raise ImportError(f"{label} failed to load from {script}: {exc}") from exc
+            _module_cache[module_name] = module
+            return module
+    rendered = ", ".join(str(path) for path in candidates)
+    raise FileNotFoundError(f"{label} not found; checked: {rendered}")
 
 
-def _markdown_h2_section(text: str, heading: str) -> str | None:
-    match = re.search(
-        rf"(?im)^##[ \t]+{re.escape(heading)}[ \t]*$",
-        text,
+def load_workpack_grader():
+    return _load_repo_module(
+        WORKPACK_GRADER_REL, "validate_workpack_for_offline_eval", "workpack grader"
     )
-    if match is None:
-        return None
-    remainder = text[match.end():]
-    next_heading = re.search(r"(?m)^##[ \t]+", remainder)
-    return remainder[: next_heading.start()] if next_heading else remainder
 
 
-def _source_ids_from_workpack(text: str) -> list[str] | None:
-    section = _markdown_h2_section(text, "Sources used")
-    if section is None:
-        return None
-
-    source_ids: list[str] = []
-    for line in section.splitlines():
-        match = re.match(r"^[ \t]*-[ \t]+`?([A-Za-z][A-Za-z0-9_-]*)`?", line)
-        if match:
-            source_ids.append(match.group(1))
-    return source_ids
+def load_field_map_validator(workspace: Path | None = None, dataset: dict[str, Any] | None = None):
+    # The field-map grader is repository tooling, not a plugin script: the
+    # runtime check is the agent checklist plus human review. This harness
+    # uses the grader after the fact to measure that the Appendix B map obeys
+    # the canonical rules in reference/field-map-rules.yaml.
+    return _load_repo_module(
+        FIELD_MAP_GRADER_REL, "validate_field_map_for_offline_eval", "field-map validator"
+    )
 
 
-def check_source_ledger(
+def plugin_root_for(dataset: dict[str, Any]) -> Path:
+    plugin_root_rel = (dataset.get("global", {}) or {}).get(
+        "plugin_root", "plugins/nl-tax-agent-skills"
+    )
+    candidates = [REPO_ROOT / plugin_root_rel, Path.cwd() / plugin_root_rel]
+    return next((c for c in candidates if c.is_dir()), candidates[0])
+
+
+# ---------------------------------------------------------------------------
+# Layout, seeds, and generated-output scans
+# ---------------------------------------------------------------------------
+
+
+def _global(dataset: dict[str, Any]) -> dict[str, Any]:
+    return dataset.get("global", {}) or {}
+
+
+def workpack_paths(dataset: dict[str, Any]) -> dict[str, str]:
+    return dict(_global(dataset).get("workpack_paths") or DEFAULT_WORKPACK_PATHS)
+
+
+def harness_globs(dataset: dict[str, Any]) -> list[str]:
+    return list(_global(dataset).get("harness_output_globs", DEFAULT_HARNESS_GLOBS) or [])
+
+
+def legacy_paths(dataset: dict[str, Any]) -> list[str]:
+    return list(_global(dataset).get("legacy_forbidden_paths", DEFAULT_LEGACY_PATHS) or [])
+
+
+def workspace_files(workspace: Path, root_relative: str) -> list[str]:
+    root = workspace / root_relative
+    if not root.exists():
+        return []
+    files: list[str] = []
+    for current_root, dirs, names in os.walk(root):
+        dirs[:] = [d for d in dirs if d not in SKIPPED_DIRS]
+        for name in names:
+            files.append((Path(current_root) / name).relative_to(workspace).as_posix())
+    return sorted(files)
+
+
+def fixture_for_case(case: dict[str, Any]) -> dict[str, Any]:
+    fixture = case.get("fixture")
+    if not isinstance(fixture, str):
+        return {}
+    path = REPO_ROOT / fixture
+    if not path.is_file():
+        return {}
+    try:
+        return load_yaml(path)
+    except (OSError, ValueError, yaml.YAMLError):
+        return {}
+
+
+def seed_files(case: dict[str, Any]) -> list[dict[str, str]]:
+    seeds = fixture_for_case(case).get("seed_files") or []
+    return [seed for seed in seeds if isinstance(seed, dict) and seed.get("path") and seed.get("from")]
+
+
+def check_seeds(workspace: Path, case_id: str, seeds: list[dict[str, str]], errors: list[str]) -> None:
+    for seed in seeds:
+        target = workspace / seed["path"]
+        source = REPO_ROOT / seed["from"]
+        if not source.is_file():
+            errors.append(f"{case_id}: seed source missing from the repository: {seed['from']}")
+            continue
+        if not target.is_file():
+            errors.append(
+                f"{case_id}: seeded file missing: {seed['path']} "
+                "(the plugin never moves, renames, or deletes the user's files)"
+            )
+        elif target.read_bytes() != source.read_bytes():
+            errors.append(
+                f"{case_id}: seeded file changed: {seed['path']} "
+                "(the plugin never rewrites the user's documents or 0.3 ledgers)"
+            )
+
+
+def check_layout(
     workspace: Path,
+    dataset: dict[str, Any],
     case_id: str,
     case: dict[str, Any],
+    seed_paths: set[str],
     errors: list[str],
 ) -> None:
-    config = case.get("source_ledger_check")
-    if not config:
-        return
+    root_relative = _global(dataset).get("generated_output_root", "workspace")
+    allowed_workpacks = set(workpack_paths(dataset).values())
+    expected = set(case.get("expected_files") or [])
+    harness = harness_globs(dataset)
+    legacy = legacy_paths(dataset)
 
-    session_relative = config.get(
-        "session_path",
-        "workspace/shared/session-progress.yaml",
-    )
-    session_path = resolve_workspace_path(workspace, session_relative)
-    if not session_path.is_file():
-        errors.append(f"{case_id}: source-ledger session missing: {session_relative}")
-        return
-
-    try:
-        session = load_yaml(session_path)
-    except (OSError, ValueError) as exc:
-        errors.append(f"{case_id}: source-ledger session invalid: {exc}")
-        return
-
-    ledgers = session.get("sources_loaded_by_workflow")
-    if not isinstance(ledgers, dict):
-        errors.append(
-            f"{case_id}: {session_relative} missing sources_loaded_by_workflow mapping"
-        )
-        return
-
-    normalized_ledgers: dict[str, list[str]] = {}
-    for workflow in ("annual_2025", "provisional_2026"):
-        values = ledgers.get(workflow)
-        if not isinstance(values, list) or not all(
-            isinstance(value, str) for value in values
-        ):
-            errors.append(
-                f"{case_id}: sources_loaded_by_workflow.{workflow} must be a string list"
-            )
+    for relative in workspace_files(workspace, root_relative):
+        if relative in seed_paths:
             continue
-        normalized_ledgers[workflow] = values
-
-    active_key = _active_ledger_key(session.get("active_workflow"))
-    if active_key is None:
-        errors.append(
-            f"{case_id}: cannot select active source ledger from "
-            f"active_workflow={session.get('active_workflow')!r}"
-        )
-    elif active_key in normalized_ledgers:
-        mirror = session.get("sources_loaded")
-        if mirror != normalized_ledgers[active_key]:
+        if any(matches_pattern(relative, pattern) for pattern in legacy):
             errors.append(
-                f"{case_id}: sources_loaded must exactly mirror "
-                f"sources_loaded_by_workflow.{active_key}"
+                f"{case_id}: legacy 0.3 path written: {relative} "
+                "(0.4 writes only the consented workpack file)"
+            )
+        elif relative in allowed_workpacks:
+            if relative not in expected:
+                errors.append(
+                    f"{case_id}: workpack written without this case's save consent: {relative}"
+                )
+        elif any(matches_pattern(relative, pattern) for pattern in harness):
+            continue
+        else:
+            errors.append(
+                f"{case_id}: unexpected file under {root_relative}/: {relative} "
+                f"(the plugin may write only {', '.join(sorted(allowed_workpacks))})"
             )
 
-    for workpack in config.get("workpacks", []) or []:
-        workflow = workpack.get("workflow")
-        relative_path = workpack.get("path")
-        if workflow not in normalized_ledgers or not isinstance(relative_path, str):
-            errors.append(f"{case_id}: invalid source-ledger workpack rule: {workpack!r}")
-            continue
-        path = resolve_workspace_path(workspace, relative_path)
-        if not path.is_file():
-            errors.append(f"{case_id}: source-ledger workpack missing: {relative_path}")
-            continue
-        actual = _source_ids_from_workpack(read_text(path))
-        if actual is None:
-            errors.append(f"{case_id}: {relative_path} missing Sources used section")
-            continue
-        expected = normalized_ledgers[workflow]
-        if sorted(actual) != sorted(expected):
-            errors.append(
-                f"{case_id}: {relative_path} Sources used {actual!r} must equal "
-                f"sources_loaded_by_workflow.{workflow} {expected!r}"
-            )
+    # R3: no copy, versioned or dated variant, or second workspace/ tree
+    # anywhere in the task folder.
+    allowed_names = {Path(path).name for path in allowed_workpacks}
+    for current_root, dirs, names in os.walk(workspace):
+        dirs[:] = [d for d in dirs if d not in SKIPPED_DIRS]
+        current = Path(current_root)
+        for directory in dirs:
+            relative = (current / directory).relative_to(workspace).as_posix()
+            if directory == root_relative and relative != root_relative:
+                errors.append(f"{case_id}: second workspace tree: {relative}/")
+        for name in names:
+            relative = (current / name).relative_to(workspace).as_posix()
+            if relative in seed_paths or relative in allowed_workpacks:
+                continue
+            if name.startswith("nl-tax-") and "workpack" in name:
+                if name in allowed_names and not relative.startswith(root_relative + "/"):
+                    # A file with the fixed name outside workspace/ is only
+                    # acceptable as a seeded attachment (handled above).
+                    errors.append(f"{case_id}: workpack copy outside {root_relative}/: {relative}")
+                elif name not in allowed_names:
+                    errors.append(f"{case_id}: workpack copy or variant: {relative}")
+
+    for pattern in case.get("forbidden_files", []) or []:
+        matches = glob_matches(workspace, pattern) if has_glob(pattern) else []
+        if not has_glob(pattern) and resolve_workspace_path(workspace, pattern).exists():
+            matches = [resolve_workspace_path(workspace, pattern)]
+        matches = [m for m in matches if m.relative_to(workspace).as_posix() not in seed_paths]
+        if matches:
+            rel_matches = ", ".join(str(match.relative_to(workspace)) for match in matches[:5])
+            errors.append(f"{case_id}: forbidden path exists for {pattern}: {rel_matches}")
 
 
 # Memo for the forbidden-regex sweep: the output tree is static during a
@@ -262,7 +394,7 @@ def check_generated_output_regex(
     case_id: str,
     errors: list[str],
 ) -> None:
-    global_config = dataset.get("global", {})
+    global_config = _global(dataset)
     output_root = workspace / global_config.get("generated_output_root", "workspace")
     patterns = global_config.get("forbidden_generated_output_regex", []) or []
     if not patterns:
@@ -272,48 +404,90 @@ def check_generated_output_regex(
         errors.append(f"{case_id}: {rel_path} matches forbidden generated-output regex: {pattern}")
 
 
-def load_field_map_validator(workspace: Path, dataset: dict[str, Any]):
-    # The field-map grader is repository tooling, not a plugin script: the
-    # runtime check is the agent checklist plus human review. This harness
-    # uses the grader after the fact to measure that agent-produced maps obey
-    # the canonical rules in reference/field-map-rules.yaml.
-    # SCRIPT_DIR is evals/nl-tax-agent-skills; parents[1] is the repo root.
-    grader_rel = "tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
-    candidates = [
-        SCRIPT_DIR.parents[1] / grader_rel,
-        Path.cwd() / grader_rel,
-    ]
-    for script in candidates:
-        if script.is_file():
-            spec = importlib.util.spec_from_file_location(
-                "validate_field_map_for_offline_eval",
-                script,
+# ---------------------------------------------------------------------------
+# Workpack, field-map, appendix, and source-ledger checks
+# ---------------------------------------------------------------------------
+
+
+def _kind_for_workflow(workflow: Any) -> str | None:
+    if workflow in ANNUAL_WORKFLOWS:
+        return "annual"
+    if workflow in PROVISIONAL_WORKFLOWS:
+        return "provisional"
+    return None
+
+
+def check_field_map(
+    workspace: Path,
+    case_id: str,
+    relative: str,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    try:
+        grader = load_workpack_grader()
+        validator = load_field_map_validator()
+    except (FileNotFoundError, ImportError, OSError) as exc:
+        errors.append(f"{case_id}: field-map validation unavailable: {exc}")
+        return
+    state, data, extract_errors = grader.extract_field_map(read_text(workspace / relative))
+    if state != "mapped":
+        detail = "; ".join(extract_errors) or "Appendix B holds 'not yet mapped'"
+        errors.append(
+            f"{case_id}: field-map validation failed for {relative}: expected an Appendix B field map ({detail})"
+        )
+        return
+    validation_errors, validation_warnings = validator.validate(data)
+    for error in validation_errors:
+        errors.append(f"{case_id}: field-map validation failed for {relative}: {error}")
+    # Warnings are informational only: surfaced for visibility but never fatal.
+    for warning in validation_warnings:
+        warnings.append(f"{case_id}: field-map validation warning for {relative}: {warning}")
+
+
+def _documents_expectations(
+    grader, text: str, case_id: str, relative: str, rule: dict[str, Any], errors: list[str]
+) -> None:
+    expectations = rule.get("documents") or {}
+    if not expectations:
+        return
+    rows = grader.documents_rows(text)
+    minimum = expectations.get("min_rows")
+    if isinstance(minimum, int) and len(rows) < minimum:
+        errors.append(
+            f"{case_id}: {relative} '## Documents and sources' has {len(rows)} row(s); expected at least {minimum}"
+        )
+    statuses = {
+        _plain(row.get(header, "")).lower()
+        for row in rows
+        for header in row
+        if header.startswith("status")
+    }
+    for status in expectations.get("statuses_present", []) or []:
+        if str(status).lower() not in statuses:
+            errors.append(
+                f"{case_id}: {relative} '## Documents and sources' has no row with status {status!r}"
             )
-            module = importlib.util.module_from_spec(spec)
-            try:
-                spec.loader.exec_module(module)
-            except Exception as exc:  # a SyntaxError in the validator must not crash the eval
-                raise ImportError(f"field-map validator failed to load from {script}: {exc}") from exc
-            return module
-    rendered = ", ".join(str(path) for path in candidates)
-    raise FileNotFoundError(f"field-map validator not found; checked: {rendered}")
+    names = [
+        _plain(row.get(header, "")).lower()
+        for row in rows
+        for header in row
+        if header.startswith("document")
+    ]
+    for needle in expectations.get("document_contains_any", []) or []:
+        options = needle if isinstance(needle, list) else [needle]
+        if not any(str(option).lower() in name for option in options for name in names):
+            rendered = ", ".join(repr(str(option)) for option in options)
+            errors.append(
+                f"{case_id}: {relative} '## Documents and sources' names no document matching {rendered}"
+            )
 
 
-def expected_field_map_paths(workspace: Path, case: dict[str, Any]) -> list[Path]:
-    paths: list[Path] = []
-    for pattern in case.get("expected_files", []) or []:
-        if Path(pattern).name != "field-map.yaml":
-            continue
-        if has_glob(pattern):
-            paths.extend(glob_matches(workspace, pattern))
-        else:
-            path = resolve_workspace_path(workspace, pattern)
-            if path.exists():
-                paths.append(path)
-    return paths
+def _plain(cell: str) -> str:
+    return str(cell).strip().strip("`*").strip()
 
 
-def check_field_maps(
+def check_workpacks(
     workspace: Path,
     dataset: dict[str, Any],
     case_id: str,
@@ -321,29 +495,190 @@ def check_field_maps(
     errors: list[str],
     warnings: list[str],
 ) -> None:
-    field_maps = expected_field_map_paths(workspace, case)
-    if not field_maps:
+    rules = case.get("workpacks") or []
+    if not rules:
         return
-
     try:
-        validator = load_field_map_validator(workspace, dataset)
+        grader = load_workpack_grader()
     except (FileNotFoundError, ImportError, OSError) as exc:
-        errors.append(f"{case_id}: field-map validation unavailable: {exc}")
+        errors.append(f"{case_id}: workpack validation unavailable: {exc}")
         return
+    plugin_root = plugin_root_for(dataset)
 
-    for path in field_maps:
-        rel_path = path.relative_to(workspace)
-        try:
-            data = load_yaml(path)
-            validation_errors, validation_warnings = validator.validate(data)
-        except (OSError, ValueError) as exc:
-            errors.append(f"{case_id}: field-map validation failed for {rel_path}: {exc}")
+    for rule in rules:
+        relative = rule.get("path")
+        workflow = rule.get("workflow")
+        kind = _kind_for_workflow(workflow)
+        if not isinstance(relative, str) or kind is None:
+            errors.append(f"{case_id}: invalid workpack rule: {rule!r}")
             continue
-        for error in validation_errors:
-            errors.append(f"{case_id}: field-map validation failed for {rel_path}: {error}")
-        # Warnings are informational only: surfaced for visibility but never fatal.
-        for warning in validation_warnings:
-            warnings.append(f"{case_id}: field-map validation warning for {rel_path}: {warning}")
+        path = workspace / relative
+        if not path.is_file():
+            errors.append(f"{case_id}: expected workpack missing: {relative}")
+            continue
+        if rule.get("presentation") == "chat":
+            report = grader.validate_workpack_file(
+                path, expected_kind=kind, plugin_root=plugin_root, presentation="chat"
+            )
+            for error in report.errors:
+                errors.append(f"{case_id}: conversation rendering check failed for {relative}: {error}")
+            for warning in report.warnings:
+                warnings.append(f"{case_id}: conversation rendering warning for {relative}: {warning}")
+            _documents_expectations(grader, read_text(path), case_id, relative, rule, errors)
+            continue
+        consent = rule.get("save_consent", "given")
+        report = grader.validate_workpack_file(
+            path,
+            expected_kind=kind,
+            expect_saved=consent == "given",
+            plugin_root=plugin_root,
+        )
+        for error in report.errors:
+            errors.append(f"{case_id}: workpack validation failed for {relative}: {error}")
+        for warning in report.warnings:
+            warnings.append(f"{case_id}: workpack validation warning for {relative}: {warning}")
+
+        record = report.resume_record if isinstance(report.resume_record, dict) else {}
+        if record.get("workflow") != workflow:
+            errors.append(
+                f"{case_id}: {relative} Appendix A workflow {record.get('workflow')!r} != {workflow!r}"
+            )
+        if record.get("save_consent") != consent:
+            errors.append(
+                f"{case_id}: {relative} Appendix A save_consent {record.get('save_consent')!r} != {consent!r}"
+            )
+        for key in ("readiness", "generation_confirmed", "queued_workflow"):
+            if key in rule and record.get(key) != rule[key]:
+                errors.append(
+                    f"{case_id}: {relative} Appendix A {key} {record.get(key)!r} != {rule[key]!r}"
+                )
+        sections = record.get("sections") if isinstance(record.get("sections"), dict) else {}
+        for section, allowed in (rule.get("sections") or {}).items():
+            allowed_list = [allowed] if isinstance(allowed, str) else list(allowed)
+            entry = sections.get(section) if isinstance(sections.get(section), dict) else {}
+            status = entry.get("status")
+            if status not in allowed_list:
+                errors.append(
+                    f"{case_id}: {relative} sections.{section}.status {status!r} not in {allowed_list!r}"
+                )
+        if rule.get("updated_after_created"):
+            created = grader._parse_timestamp(record.get("created_at"))
+            updated = grader._parse_timestamp(record.get("updated_at"))
+            if not (created and updated and updated > created):
+                errors.append(
+                    f"{case_id}: {relative} must have been kept current after it was first "
+                    "saved (updated_at later than created_at)"
+                )
+
+        text = read_text(path)
+        _documents_expectations(grader, text, case_id, relative, rule, errors)
+
+        expectation = rule.get("field_map")
+        if expectation == "expected":
+            check_field_map(workspace, case_id, relative, errors, warnings)
+        elif expectation == "not_yet_mapped" and report.field_map_state != "not_yet_mapped":
+            errors.append(
+                f"{case_id}: {relative} Appendix B must read 'not yet mapped' "
+                f"(found {report.field_map_state})"
+            )
+
+
+def check_text_rule(
+    workspace: Path, case_id: str, rule: dict[str, Any], errors: list[str]
+) -> None:
+    """Contains-checks on one YAML appendix of a workpack, never on prose."""
+    relative = rule.get("path", "")
+    path = resolve_workspace_path(workspace, relative)
+    if not path.is_file():
+        errors.append(f"{case_id}: text check file missing: {relative}")
+        return
+    letter = str(rule.get("appendix", "")).upper()
+    try:
+        grader = load_workpack_grader()
+    except (FileNotFoundError, ImportError, OSError) as exc:
+        errors.append(f"{case_id}: workpack grader unavailable for text checks: {exc}")
+        return
+    if letter not in {"A", "B"}:
+        errors.append(f"{case_id}: text check on {relative} must target appendix A or B")
+        return
+    text = grader.appendix_yaml_text(read_text(path), letter)
+    if text is None:
+        errors.append(f"{case_id}: {relative} has no single Appendix {letter} yaml block to check")
+        return
+    label = f"{relative} Appendix {letter}"
+
+    for needle in rule.get("all", []) or []:
+        if not contains(text, str(needle)):
+            errors.append(f"{case_id}: {label} missing required text: {needle!r}")
+
+    for group in rule.get("any", []) or []:
+        options = group if isinstance(group, list) else [group]
+        if not any(contains(text, str(option)) for option in options):
+            rendered = ", ".join(repr(str(option)) for option in options)
+            errors.append(f"{case_id}: {label} missing one of: {rendered}")
+
+    for needle in rule.get("none", []) or []:
+        if contains(text, str(needle)):
+            errors.append(f"{case_id}: {label} contains forbidden text: {needle!r}")
+
+
+def check_source_ledger(
+    workspace: Path,
+    case_id: str,
+    case: dict[str, Any],
+    errors: list[str],
+    dataset: dict[str, Any] | None = None,
+) -> None:
+    """Each workpack's ``## Sources used`` equals its own Appendix A ledger.
+
+    Ledgers are workflow-scoped: an annual ledger never holds a
+    provisional-assessment source and vice versa, so neither is a union of
+    both workflows' consultations.
+    """
+    config = case.get("source_ledger_check")
+    if not config:
+        return
+    try:
+        grader = load_workpack_grader()
+    except (FileNotFoundError, ImportError, OSError) as exc:
+        errors.append(f"{case_id}: source-ledger check unavailable: {exc}")
+        return
+    register = grader.source_register(str(plugin_root_for(dataset or {})))
+
+    for relative in config.get("workpacks", []) or []:
+        path = resolve_workspace_path(workspace, relative)
+        if not path.is_file():
+            errors.append(f"{case_id}: source-ledger workpack missing: {relative}")
+            continue
+        text = read_text(path)
+        record, record_errors = grader.resume_record_block(text)
+        if record_errors:
+            errors.append(f"{case_id}: source-ledger resume record invalid in {relative}: {record_errors[0]}")
+            continue
+        loaded = record.get("sources_loaded")
+        used = grader.sources_used(text)
+        if used is None:
+            errors.append(f"{case_id}: {relative} missing Sources used section")
+            continue
+        if not isinstance(loaded, list) or sorted(set(used)) != sorted(set(map(str, loaded))):
+            errors.append(
+                f"{case_id}: {relative} Sources used {used!r} must equal Appendix A "
+                f"sources_loaded {loaded!r}"
+            )
+        kind = grader.kind_for_workflow(record.get("workflow"))
+        if register is None or kind is None or not isinstance(loaded, list):
+            continue
+        other = "provisional_assessment" if kind == "annual" else "annual_return"
+        crossed = sorted(
+            str(source_id)
+            for source_id in loaded
+            if (register.get(str(source_id)) or {}).get("workflow") == other
+        )
+        if crossed:
+            errors.append(
+                f"{case_id}: {relative} sources_loaded holds {other} source(s) {crossed}; "
+                "a workflow ledger is never a cross-workflow union"
+            )
 
 
 def verify_case(
@@ -356,7 +691,7 @@ def verify_case(
     # Warnings are informational only and never affect pass/fail. Callers that
     # want to surface them pass a list to accumulate into; otherwise they are
     # collected in a local list and discarded. verify_case's return contract
-    # stays a plain errors list so existing callers/tests are unaffected.
+    # stays a plain errors list.
     if warnings is None:
         warnings = []
     case_id = case["id"]
@@ -365,33 +700,24 @@ def verify_case(
         if not path_exists(workspace, pattern):
             errors.append(f"{case_id}: expected file missing: {pattern}")
 
-    for pattern in case.get("forbidden_files", []) or []:
-        matches = glob_matches(workspace, pattern) if has_glob(pattern) else []
-        if not has_glob(pattern) and resolve_workspace_path(workspace, pattern).exists():
-            matches = [resolve_workspace_path(workspace, pattern)]
-        if matches:
-            rel_matches = ", ".join(str(match.relative_to(workspace)) for match in matches[:5])
-            errors.append(f"{case_id}: forbidden path exists for {pattern}: {rel_matches}")
-
+    seeds = seed_files(case)
+    seed_paths = {seed["path"] for seed in seeds}
+    check_seeds(workspace, case_id, seeds, errors)
+    check_layout(workspace, dataset, case_id, case, seed_paths, errors)
+    check_workpacks(workspace, dataset, case_id, case, errors, warnings)
     for rule in case.get("text_checks", []) or []:
         check_text_rule(workspace, case_id, rule, errors)
-
-    check_source_ledger(workspace, case_id, case, errors)
-    check_field_maps(workspace, dataset, case_id, case, errors, warnings)
+    check_source_ledger(workspace, case_id, case, errors, dataset)
     check_generated_output_regex(workspace, dataset, case_id, errors)
-    return errors
+
+    unique: list[str] = []
+    for error in errors:
+        if error not in unique:
+            unique.append(error)
+    return unique
 
 
 def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[str]:
-    plugin_root_rel = dataset.get("global", {}).get("plugin_root", "plugins/nl-tax-agent-skills")
-    # Anchor on the script location first (like load_field_map_validator), so
-    # --check-dataset works when invoked from any working directory; fall back
-    # to cwd for relocated layouts.
-    candidates = [
-        SCRIPT_DIR.parents[1] / plugin_root_rel,
-        Path.cwd() / plugin_root_rel,
-    ]
-    plugin_root = next((c for c in candidates if c.is_dir()), candidates[0])
     errors: list[str] = []
     cases = dataset.get("cases", []) or []
     case_ids = [case.get("id") for case in cases]
@@ -412,10 +738,9 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
     if len(fixture_paths) != len(set(fixture_paths)):
         errors.append("each dataset case must reference a unique fixture path")
 
-    repo_root = SCRIPT_DIR.parents[1]
-    fixture_root = repo_root / "evals/nl-tax-agent-skills/fixtures"
+    fixture_root = REPO_ROOT / "evals/nl-tax-agent-skills/fixtures"
     shipped = {
-        path.relative_to(repo_root).as_posix()
+        path.relative_to(REPO_ROOT).as_posix()
         for path in fixture_root.glob("*/*.yaml")
     }
     referenced = {path for path in fixture_paths if isinstance(path, str)}
@@ -425,10 +750,118 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
             f"(missing={sorted(shipped - referenced)}, extra={sorted(referenced - shipped)})"
         )
 
+    global_config = _global(dataset)
+    if "case_marker" in global_config:
+        errors.append("global must not define a case marker")
+    workpacks_by_family = workpack_paths(dataset)
+    if workpacks_by_family != DEFAULT_WORKPACK_PATHS:
+        errors.append(
+            f"global.workpack_paths must be the two fixed 0.4 workpack paths {DEFAULT_WORKPACK_PATHS}"
+        )
+    allowed_workpacks = set(workpacks_by_family.values())
+    harness = harness_globs(dataset)
+    legacy = legacy_paths(dataset)
+    if not set(DEFAULT_LEGACY_PATHS) <= set(legacy):
+        errors.append(f"global.legacy_forbidden_paths must include {DEFAULT_LEGACY_PATHS}")
+
     for case in cases:
+        case_id = case.get("id", "<unknown>")
         fixture = case.get("fixture")
-        if fixture and not (repo_root / fixture).is_file():
-            errors.append(f"{case.get('id', '<unknown>')}: fixture does not exist: {fixture}")
+        if fixture and not (REPO_ROOT / fixture).is_file():
+            errors.append(f"{case_id}: fixture does not exist: {fixture}")
+        if "prompt" in case:
+            errors.append(f"{case_id}: structural cases carry no model prompt")
+        expected = case.get("expected_files", []) or []
+        for pattern in expected:
+            if any(matches_pattern(pattern, legacy_pattern) for legacy_pattern in legacy):
+                errors.append(f"{case_id}: expected file is a legacy 0.3 path: {pattern}")
+            elif pattern not in allowed_workpacks and not any(
+                matches_pattern(pattern, glob_pattern) for glob_pattern in harness
+            ):
+                errors.append(
+                    f"{case_id}: expected file is neither a workpack nor a harness capture: {pattern}"
+                )
+            if pattern.endswith("current-case.txt"):
+                errors.append(f"{case_id}: expected files must not include a case marker")
+
+        rules = case.get("workpacks", []) or []
+        rule_paths = set()
+        for rule in rules:
+            relative = rule.get("path")
+            workflow = rule.get("workflow")
+            kind = _kind_for_workflow(workflow)
+            rule_paths.add(relative)
+            if relative not in expected:
+                errors.append(f"{case_id}: workpack rule path {relative!r} is not an expected file")
+            if kind is None:
+                errors.append(f"{case_id}: workpack rule has unknown workflow {workflow!r}")
+            consent = rule.get("save_consent", "given")
+            if consent not in SAVE_CONSENT_VALUES:
+                errors.append(f"{case_id}: workpack rule save_consent must be given or not_given")
+            presentation = rule.get("presentation", "file")
+            if presentation not in PRESENTATIONS:
+                errors.append(f"{case_id}: workpack rule presentation must be one of {sorted(PRESENTATIONS)}")
+            if relative in allowed_workpacks:
+                family = "annual_2025" if kind == "annual" else "provisional_2026"
+                if kind is not None and workpacks_by_family.get(family) != relative:
+                    errors.append(f"{case_id}: {workflow} belongs in {workpacks_by_family.get(family)}, not {relative}")
+                if consent != "given":
+                    errors.append(f"{case_id}: a saved workpack file implies save_consent: given")
+                if presentation == "chat":
+                    errors.append(f"{case_id}: {relative} is a saved file, not a conversation rendering")
+            else:
+                if presentation != "chat":
+                    errors.append(
+                        f"{case_id}: {relative} is a harness capture of the workpack shown in the "
+                        "conversation; use presentation: chat"
+                    )
+                stray = [key for key in APPENDIX_RULE_KEYS if key in rule]
+                if stray:
+                    errors.append(
+                        f"{case_id}: {relative} is a conversation rendering without Appendix A/B; "
+                        f"drop {', '.join(stray)}"
+                    )
+            field_map = rule.get("field_map")
+            if field_map is not None and field_map not in FIELD_MAP_EXPECTATIONS:
+                errors.append(f"{case_id}: field_map must be one of {sorted(FIELD_MAP_EXPECTATIONS)}")
+            if workflow in NO_FIELD_MAP_WORKFLOWS and field_map == "expected":
+                errors.append(f"{case_id}: {workflow} never produces a field map")
+        for relative in expected:
+            if relative in allowed_workpacks and relative not in rule_paths:
+                errors.append(f"{case_id}: expected workpack {relative} has no workpacks rule")
+
+        chat_paths = {
+            rule.get("path") for rule in rules if rule.get("presentation") == "chat"
+        }
+        for rule in case.get("text_checks", []) or []:
+            if str(rule.get("appendix", "")).upper() not in {"A", "B"}:
+                errors.append(f"{case_id}: text checks target a YAML appendix (A or B), never prose")
+            if rule.get("path") not in rule_paths:
+                errors.append(f"{case_id}: text check path {rule.get('path')!r} has no workpacks rule")
+            elif rule.get("path") in chat_paths:
+                errors.append(
+                    f"{case_id}: text check path {rule.get('path')!r} is a conversation rendering, "
+                    "which never shows the YAML appendices"
+                )
+
+        ledger = case.get("source_ledger_check") or {}
+        for relative in ledger.get("workpacks", []) or []:
+            if relative not in rule_paths:
+                errors.append(f"{case_id}: source-ledger workpack {relative!r} has no workpacks rule")
+            elif relative in chat_paths:
+                errors.append(
+                    f"{case_id}: source-ledger workpack {relative!r} is a conversation rendering "
+                    "without Appendix A sources_loaded"
+                )
+
+        for seed in seed_files(case):
+            if not (REPO_ROOT / seed["from"]).is_file():
+                errors.append(f"{case_id}: seed source does not exist: {seed['from']}")
+            if seed["path"] in allowed_workpacks:
+                errors.append(
+                    f"{case_id}: a seed must not occupy a fixed workpack path; put an attached "
+                    "workpack outside workspace/"
+                )
     return errors
 
 

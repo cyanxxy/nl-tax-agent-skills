@@ -1,0 +1,23 @@
+# 0.3 taxpayer profile ledger (seed for the legacy-ledger eval case).
+# 0.4 never reads or writes this file; it must stay byte-identical.
+taxpayer_profile_version: "1.4"
+workspace_root: "/Users/example/Tax 2025"
+intake_status: "complete"
+created_at: "2026-03-02T10:00:00Z"
+updated_at: "2026-03-02T10:20:00Z"
+workflow_candidate: "annual_2025"
+residency:
+  full_year_nl_resident:
+    value: true
+    source: "user_chat"
+    quote: "I lived in Leiden all of 2025"
+    stated_at: "2026-03-02"
+partner:
+  has_fiscal_partner:
+    value: false
+    source: "user_chat"
+    quote: "no partner"
+    stated_at: "2026-03-02"
+workflows:
+  annual_2025: {requested: true, status: in_progress}
+  provisional_2026: {requested: false, status: not_started}

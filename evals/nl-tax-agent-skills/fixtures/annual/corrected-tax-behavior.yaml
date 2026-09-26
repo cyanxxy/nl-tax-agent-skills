@@ -1,7 +1,7 @@
 # Eval fixture: Corrected 2025 healthcare, credit, and deadline rules
 
 fixture_id: eval_annual_corrected_tax_behavior
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Retrieve corrected healthcare exclusions, credit base, and deadline branches"
 tax_year: 2025
 workflow: annual_2025
@@ -26,11 +26,10 @@ facts_to_evaluate:
     - no_invitation_tax_due
 
 expected_outputs:
+  files_created: []
   files_not_created:
-    - workspace/taxpayer/profile.yaml
-    - workspace/shared/session-progress.yaml
-    - workspace/annual/**
-    - workspace/provisional/**
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
   response_checks:
     healthcare_excluded:
       - health_insurance_premium
@@ -49,7 +48,7 @@ expected_behavior:
   - "State all five healthcare items are excluded"
   - "State credits reduce income tax plus national-insurance contributions, not box-1 income tax alone"
   - "Keep the standard, other-letter-date, and no-invitation deadline branches separate"
-  - "Do not start intake for this informational request"
+  - "Do not start intake or write any file for this informational request"
 
 acceptance_criteria:
   - "All corrected healthcare exclusions are retrieved from the bundled notes"

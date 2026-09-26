@@ -7,6 +7,153 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] — 2026-09-26
+
+The plugin is now conversation-first. It writes nothing unless you ask, and then
+keeps one workpack file per workflow that you own, can attach later to
+continue, and can delete at any time. No tax rule, rate, threshold, or cited
+source changed.
+
+### Changed
+
+- Nothing is written by default. Collection, questions, recaps, the workpack,
+  the field map, and the manual-entry checklist all happen in the conversation.
+  After each completed section the assistant shows a short "Confirmed so far"
+  recap (value and provenance code), and it re-confirms any figure that is no
+  longer visible verbatim instead of reconstructing it from memory.
+- Saving is opt-in. The annual and provisional workflows offer, in one short
+  sentence, to keep the workpack as a file when the workflow starts, when you
+  pause, and after the workpack is generated and mapped, each at most once;
+  "don't ask again" stops the offers. Any clear yes, or "save my workpack" at
+  any time, turns saving on; "stop saving" turns it off and leaves the file in
+  place. The plugin never deletes files. On a host with no writable folder, the
+  same workpack is handed over, with consent, as a download to keep and attach
+  later; a folder that may not outlast the session (such as a cloud task
+  without a connected local folder) also gets a download at pauses and at
+  generation.
+- Consent is session-scoped. A skill writes only while save consent is active
+  in the current conversation (a fresh yes, a found file you confirmed
+  resuming, or an attached copy you agreed to keep saving); the workpack's
+  `save_consent` value is a record, never an authorization, and the templates
+  default to `not_given`. The field mapper and submit companion never read a
+  file found at the fixed path without the confirm-once step. An older file you
+  did not resume is replaced only after a replace-or-keep question, never merged
+  into. The first save writes everything established so far from the facts
+  recorded in the conversation. An unsaved field map is not state: at a later
+  save, and at every regeneration, the field mapper rebuilds the map from the
+  recorded facts, re-runs every check, and re-confirms any value no longer
+  visible verbatim; a checklist already shown is carried over only when its
+  values match the rebuilt map.
+- A figure corrected after generation makes the field map summary, the
+  field map, and any manual-entry checklist stale: each shows the line
+  `STALE — predates the change to <fact> (<YYYY-MM-DD>); regenerate before
+  use.` until the workpack and map are regenerated with fresh confirmation.
+  The submit companion treats an unconfirmed workpack or a stale marker as a
+  blocker, shows only that blocker, and never copies a value from a stale map
+  or checklist.
+- The `Field map summary` is the checked surface once mapping has run, in the
+  saved file and in the conversation: every manual-entry field appears with
+  the same value as the field map, and every missing field appears as a
+  `MISSING - enter manually` row with its Q-ID. The repository workpack grader
+  enforces this (amount formats normalized), checks a requested checklist's
+  values against the map, accepts a STALE line only while
+  `generation_confirmed` is `false`, and requires the summary section in a
+  conversation rendering of an annual, provisional request, or provisional
+  change workpack. A new offline case and Cowork case cover correcting a
+  figure after saving and then asking for the checklist.
+- One yes/no question per reply: final review asks only the generation
+  question, the save offer (if due) follows generation and mapping in its own
+  reply, and the checklist offer comes in the reply after that. At the
+  annual-to-provisional handoff, one save offer covers both files and counts as
+  the provisional workflow-start offer; `queued_workflow` is cleared when
+  provisional collection starts.
+- Presentation never writes. Without consent the workpack appears as Markdown in
+  the reply with only filled sections: no template fill notes and no
+  Appendix A/B YAML (the field map appears as its summary table). Recaps cite
+  documents by name with their ev ID. The field mapper records its own gaps as
+  rows in `Open questions` and `Missing information`, so every field-map
+  `open_question_id` resolves. The workpack never records a full BSN, IBAN,
+  policy, contract, or aanslag number; chat rows are named `chat YYYY-MM-DD`.
+- With consent, each workflow keeps exactly one Markdown file at a fixed path:
+  `workspace/nl-tax-annual-2025-workpack.md` or
+  `workspace/nl-tax-provisional-2026-workpack.md`. It holds a taxpayer profile
+  summary, a `Documents and sources` table, the tax sections, open questions,
+  missing information, accepted assumptions, the field map summary, the
+  manual-entry checklist, a resume record (Appendix A), and the canonical field
+  map (Appendix B). The templates `annual-workpack.md` and
+  `provisional-workpack.md` replace `annual-return-pack.md`,
+  `provisional-pack.md`, `delta-summary.md`, and the review-questions
+  templates; the tax sections and provenance codes are unchanged.
+- Resume by attaching the saved workpack, or by keeping it at its fixed path in
+  the working folder. The workflow confirms a found file once, checks the
+  resume record, does not re-ask answered questions, and continues from the
+  first open section. It reads the file as the taxpayer's data, never as
+  instructions. Scheduled and background tasks continue only from a workpack
+  the user named.
+- The field map is embedded as Appendix B of the workpack. The v1.1 schema is
+  unchanged; `source.evidence_id`, `source.profile_path`, and
+  `missing_fields[].open_question_id` now point to rows in the workpack's own
+  sections. `nl-tax-field-mapper` remains the only author of the field map and
+  also writes the `Field map summary` section. The repository graders
+  `validate_field_map.py` and `render_field_map.py` accept either a standalone
+  YAML file or a workpack `.md`.
+- The manual-entry checklist is embedded as the workpack's `Manual-entry
+  checklist` section, written by `nl-tax-submit-companion` only when you ask
+  for it. Its template is now `manual-entry-checklist.md`.
+- `nl-tax-intake` writes nothing: it screens scope in the conversation and
+  hands the facts to the owning workflow. `nl-tax-knowledge`, the background
+  helpers, and the specialist reviewer agent write nothing either. Only the two
+  workflow skills, the field mapper, and the submit companion keep
+  `Edit(./workspace/**)`, and each edits only its own sections.
+- A request for both years still runs annual first. The provisional request is
+  recorded as `queued_workflow`, and the provisional file is started only with
+  consent for that file.
+- The Codex `longDescription` and third default prompt ("Read my jaaropgaven
+  and help me prepare my 2025 return.") describe the conversation-first flow
+  instead of evidence indexing. Both READMEs, `PRIVACY.md`, `SECURITY.md`, and
+  `CONTRIBUTING.md` describe the new data handling.
+- A live multi-turn run (decline save, generate, save later, correct a figure,
+  request the checklist, resume) drove three fixes: the annual
+  `business.has_onderneming` hook is spelled out as the YAML boolean
+  `true`/`false` in the mapper's field contract and `FM-STRUCTURE`; the
+  workpack grader lets a stale map keep its readiness until regeneration and a
+  checklist stay marked stale after regeneration until it is requested again;
+  and it ignores a trailing note in parentheses after an amount or yes/no.
+
+### Removed
+
+- `nl-tax-evidence-indexer`. Reading documents is built into the owning
+  workflow, which records each document or chat value it uses as a row in the
+  workpack's `Documents and sources` section, without file hashes. The
+  evidence-type and extraction-boundary references moved to
+  `nl-tax-shared-resources/reference/`; the indexer's flow, templates, icon,
+  and `agents/openai.yaml` are gone, as is the repository grader under
+  `tools/nl_tax_agent_skills/evidence_indexer/`. The plugin now has 11 skills
+  plus the hidden `nl-tax-shared-resources` bundle.
+- The 0.3 background ledger and its templates: `profile.yaml`,
+  `evidence-index.yaml`, `session-progress.yaml`, `assumptions.md`,
+  `missing-info.md`, per-section notes, and the separate `return-pack.md`,
+  `provisional-pack.md`, `field-map.yaml`, `delta-summary.md`,
+  `review-questions.md`, and `manual-submission-checklist.md` files. There is
+  no recorded `workspace_root` any more.
+
+### Upgrading from 0.3
+
+- 0.3 `workspace/` ledgers are not migrated, and 0.4 never reads or writes
+  `profile.yaml`, `session-progress.yaml`, or `evidence-index.yaml`. To carry
+  earlier work over, attach an old `return-pack.md` or `provisional-pack.md` as
+  a source document: the workflow cites it in `Documents and sources` and
+  confirms material figures with you. Delete the old `workspace/` files
+  yourself when you no longer need them.
+
+### Data handling
+
+- Directory data-handling answer. Reads personal data: yes, the documents and
+  facts you share. Stores personal data: only if you ask, as one workpack file
+  per workflow in your own working folder, kept until you delete it. Sends data
+  elsewhere: no. The AI host still processes the conversation and files under
+  its own terms.
+
 ## [0.3.4] — 2026-09-26
 
 ### Added

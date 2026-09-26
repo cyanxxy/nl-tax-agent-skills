@@ -54,7 +54,7 @@ must not access or operate Mijn Belastingdienst.
 
 ### Notes on personal data
 - BSN is not a field the taxpayer enters. The field mapper omits it entirely — it is not a data-entry field.
-- Address is pre-filled after login. The field mapper omits it from both `fields` and `missing_fields`; the validator treats it as coverage-exempt.
+- Address is pre-filled after login. The field mapper omits it from both `fields` and `missing_fields`; `FM-REFERENCE-COVERAGE` treats it as coverage-exempt.
 - The provisional form has minimal personal data fields compared to the annual return.
 
 ---

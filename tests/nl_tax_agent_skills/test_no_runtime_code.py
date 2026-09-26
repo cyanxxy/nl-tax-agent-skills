@@ -22,7 +22,6 @@ REPOSITORY_GRADERS = {
     "box2/calculate_box2_tax.py",
     "box3/compare_box3_annual_2025.py",
     "box3/summarize_box3_provisional_2026.py",
-    "evidence_indexer/index_evidence.py",
     "field_mapper/render_field_map.py",
     "field_mapper/validate_field_map.py",
     "partner_deductions/validate_allocation.py",
@@ -111,14 +110,17 @@ class NoRuntimeCodeContractTests(unittest.TestCase):
         self.assertNotRegex(readme, r"\b[\w/.-]+\.(png|jpe?g|gif|webp|svg)\b")
 
     def test_shared_templates_record_an_agent_check(self):
-        templates = (
-            "skills/nl-tax-evidence-indexer/templates/evidence-index.yaml",
-            "skills/nl-tax-field-mapper/templates/field-map-template.yaml",
-        )
+        templates = ("skills/nl-tax-field-mapper/templates/field-map-template.yaml",)
         for relative in templates:
             data = yaml.safe_load((PLUGIN_ROOT / relative).read_text(encoding="utf-8"))
             with self.subTest(relative=relative):
                 self.assertEqual(data["check_performed_by"], "checked_by_agent")
+
+    def test_retired_evidence_indexer_grader_is_gone(self):
+        # 0.4 (R10): the evidence indexer skill and its repository grader are
+        # retired; documents are read directly inside the owning workflow.
+        self.assertFalse((TOOLS_ROOT / "evidence_indexer").exists())
+        self.assertFalse((SKILLS_ROOT / "nl-tax-evidence-indexer").exists())
 
 
 if __name__ == "__main__":

@@ -27,19 +27,48 @@
 ## 🎯 What it does
 
 Share your jaaropgaaf, mortgage statement, bank overview, and similar papers, or
-just state amounts in the chat. The assistant:
+just state amounts in the chat. Everything happens in the conversation. The
+assistant:
 
-1. **Sorts your documents** and works out where each amount belongs, using
-   reviewed, source-cited Dutch tax rules for the supported year.
+1. **Reads your documents** directly and works out where each amount belongs,
+   using reviewed, source-cited Dutch tax rules for the supported year.
 2. **Asks only the missing questions** that matter for your situation.
-3. **Writes a workpack** listing every amount, its source, and any open
+3. **Builds a workpack** listing every amount, its source, and any open
    questions, so you can check the numbers first.
 4. **Maps each amount to its Mijn Belastingdienst field** so you can enter it
-   yourself, with an optional manual-entry checklist.
+   yourself, with an optional manual-entry checklist. Correct a figure later
+   and the map and checklist are marked stale until you regenerate them, so an
+   outdated amount never reaches the checklist.
 
 You can also just ask how a rule works, for example “What is the Box 3
 heffingsvrij vermogen for 2025?”. The answer comes from the reviewed notes,
 names the year and official source, and creates no files.
+
+### 💾 Your workpack file, only if you ask
+
+The plugin writes nothing by default. Tax preparation can take a few sessions,
+so the assistant offers to keep your workpack as a file when the workflow
+starts, when you pause, and after the workpack is generated, each time as the
+only question in its reply. Say yes, or “save my workpack” at any time, and it
+keeps **one Markdown file per workflow** in a `workspace/` folder inside your
+working folder:
+
+| Workflow | Saved file |
+|---|---|
+| Annual return 2025 | `workspace/nl-tax-annual-2025-workpack.md` |
+| Voorlopige aanslag 2026 | `workspace/nl-tax-provisional-2026-workpack.md` |
+
+The file holds your facts with their sources, the open questions, the field
+map, and the manual-entry checklist. It is yours: attach it (or keep it in the
+working folder) to continue later, and delete it whenever you like. The plugin
+never deletes files, never copies, moves, or renames your documents, and stops
+updating the workpack when you say “stop saving”. Consent covers the current
+conversation: in a new one, the assistant confirms a saved file before using
+it, and asks before replacing an older file rather than merging into it. In a
+cloud task whose folder may not outlast the session, you also get the workpack
+as a download to keep.
+A workpack from an older version (for example a 0.3 `return-pack.md`) is read
+as an ordinary source document, not migrated.
 
 ## 🚀 Quickstart
 
@@ -55,8 +84,9 @@ Help me request a 2026 voorlopige aanslag. Ask me for the estimates you still ne
 
 You can also ask to change, review, or stopzetten an existing 2026 voorlopige
 aanslag, or ask for both years in one sentence. The annual workpack is finished
-first, then the 2026 flow continues. Each keeps its own facts, sources, and
-output folder, and nothing final is written until you confirm.
+first, then the 2026 flow continues. Each keeps its own facts and sources, and
+its own workpack file if you save one. The workpack is generated only after you
+confirm the final review.
 
 <details>
 <summary><strong>Invoke a skill directly</strong></summary>
@@ -74,7 +104,7 @@ host; the natural-language request above works everywhere.
 ## 📦 Install
 
 No shell or Python is needed on any host: the plugin ships no scripts, and
-it writes only under `./workspace/`.
+it writes nothing unless you ask it to save your workpack.
 
 ### Claude Cowork
 
@@ -161,11 +191,17 @@ Rules never carry over between tax years.
 
 ## 🔒 Privacy
 
-Your documents are processed inside the host task (Cowork, Claude Code,
-ChatGPT Work, or Codex) under that host's data terms; the plugin itself sends
-them nowhere. Work folders are git-ignored so taxpayer files are never
-committed, but that is not an offline guarantee. See [PRIVACY.md](PRIVACY.md)
-for retention and cleanup, and [SECURITY.md](SECURITY.md) to report an issue.
+The plugin runs inside your AI host (Cowork, Claude Code, ChatGPT Work, or
+Codex), which processes the documents and conversation you share under its own
+data terms. The plugin itself sends your data nowhere and fetches nothing by
+default; when a workflow calls for a freshness check, the assistant may read
+public official pages such as belastingdienst.nl. It stores nothing unless you
+ask, and then only the one workpack file per workflow described above, in
+plaintext and until you delete it. It never asks for a BSN, IBAN, or DigiD
+details, and the workpack never records a full BSN, IBAN, policy, contract, or
+aanslag number. In this repository `workspace/` is git-ignored so taxpayer files are
+never committed. See [PRIVACY.md](PRIVACY.md) for details, and
+[SECURITY.md](SECURITY.md) to report an issue.
 
 ## 🤝 Contributing
 

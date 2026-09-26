@@ -121,5 +121,8 @@ the year notes above, never from a law note.
 ## Not tax rules
 
 `../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md` is the
-conversation and state contract for workpack preparation. It never answers a
-tax-rule question.
+conversation, provenance, and resume-record contract for workpack preparation.
+`../nl-tax-shared-resources/reference/evidence-types.md` and
+`../nl-tax-shared-resources/reference/extraction-boundaries.md` govern how a
+shared document is classified and recorded. None of them answers a tax-rule
+question.

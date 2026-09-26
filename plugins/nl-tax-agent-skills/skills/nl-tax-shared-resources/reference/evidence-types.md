@@ -1,10 +1,15 @@
 # Evidence Types — Dutch Tax Document Classification
 
-This reference defines the evidence categories used by the NL Tax Evidence Indexer. Each type includes a description, typical extractable fields, relevant workflow, and common file naming patterns.
+This reference defines the document types the owning annual or provisional
+workflow uses when it reads a document the user shares. Each type includes a
+description, typical extractable fields, relevant workflow, and common file
+naming patterns. Record each document as one row in the workpack's
+`## Documents and sources` table and take values only within
+`../nl-tax-shared-resources/reference/extraction-boundaries.md`.
 
 ---
 
-Use these canonical `evidence_type` tokens exactly as headings below. Dutch display labels such as "WOZ-beschikking" or "voorlopige aanslag" may appear in notes, but the index value must stay snake_case (`woz_beschikking`, `voorlopige_aanslag_beschikking`, `definitieve_aanslag`).
+Use these canonical type tokens exactly as the headings below in the row's type column. Dutch display labels such as "WOZ-beschikking" or "voorlopige aanslag" may appear in prose, but the type value must stay snake_case (`woz_beschikking`, `voorlopige_aanslag_beschikking`, `definitieve_aanslag`).
 
 ## Contents
 
@@ -161,9 +166,9 @@ documents: `verliesbeschikking`,
 ### aov_jaaropgaaf
 - **Description:** Annual statement for an arbeidsongeschiktheidsverzekering
   (AOV) held by the ondernemer, showing the premiums paid in the year.
-- **Typical fields:** verzekeraar, polisnummer, betaalde premie, verzekerd bedrag, tax year.
+- **Typical fields:** verzekeraar, betaalde premie, verzekerd bedrag, tax year (never the polisnummer).
 - **Boundary:** AOV premiums are **never** a business cost. They belong to the
-  uitgaven voor inkomensvoorzieningen in the privedeel, so do not index this
+  uitgaven voor inkomensvoorzieningen in the privedeel, so do not record this
   document against a cost rubriek of the winst-en-verliesrekening.
 - **Workflow:** annual
 - **Common naming patterns:** `aov*.pdf`, `arbeidsongeschiktheid*.pdf`, `jaaropgaaf*aov*.pdf`
@@ -174,7 +179,7 @@ documents: `verliesbeschikking`,
   reserveringsruimte.
 - **Typical fields:** aanbieder, polis- of rekeningnummer, betaalde premie of inleg, producttype, tax year.
 - **Boundary:** Same document family as `lijfrente_overzicht` under Deductions &
-  Gifts -- index the file once. Use `lijfrente_jaaroverzicht` for the
+  Gifts -- record the document once. Use `lijfrente_jaaroverzicht` for the
   ondernemer's annual statement feeding the jaarruimte and `lijfrente_overzicht`
   for a privedeel premium overview. The premiegrondslag comes off a specific
   line of the profit chain, not off this statement; take that line from
@@ -289,7 +294,7 @@ documents: `verliesbeschikking`,
 
 ### lijfrente_overzicht
 - **Description:** Annuity premium overview — premiums paid for lijfrente products that may be deductible in box 1.
-- **Typical fields:** verzekeraar/aanbieder, betaalde premie, type lijfrente, polisnummer, ingangsdatum, tax year.
+- **Typical fields:** verzekeraar/aanbieder, betaalde premie, type lijfrente, ingangsdatum, tax year (never the polisnummer).
 - **Workflow:** annual
 - **Common naming patterns:** `lijfrente*.pdf`, `annuity*.pdf`, `pensioenopbouw*.pdf`
 
@@ -350,8 +355,8 @@ documents: `verliesbeschikking`,
   of the zelfstandigenaftrek that the winst cap blocked, and carrying it forward.
 - **Typical fields:** belastingjaar, vastgesteld bedrag niet-gerealiseerde zelfstandigenaftrek, reeds verrekend, resterend saldo, dagtekening.
 - **Boundary:** The Belastingdienst does not apply this balance automatically --
-  the taxpayer enters it in a later aangifte. Index the beschikking and record
-  the running balance from it; never reconstruct the balance from an earlier
+  the taxpayer enters it in a later aangifte. Record the beschikking as a source
+  row and take the running balance from it; never reconstruct the balance from an earlier
   workpack. The set-off condition stays in
   `../nl-tax-shared-resources/knowledge/years/2025/entrepreneur/verlies-en-verrekening-2025.md`.
 - **Workflow:** annual
@@ -366,4 +371,4 @@ documents: `verliesbeschikking`,
 - **Typical fields:** none predefined — extract what is visible.
 - **Workflow:** both (unknown until classified)
 - **Common naming patterns:** any file not matching the patterns above.
-- **Note:** Always set `review_required: true` and `confidence: 0.0` for this type.
+- **Note:** Always set the row status to `needs review` for this type and ask the user what the document is.

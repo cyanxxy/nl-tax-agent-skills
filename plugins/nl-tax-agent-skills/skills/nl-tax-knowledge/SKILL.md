@@ -11,9 +11,9 @@ allowed-tools:
 # NL Tax Knowledge
 
 Answer Dutch individual income-tax rule questions from the reviewed,
-source-cited notes bundled with this plugin. This skill is a read-only lookup:
-it never creates or updates `workspace/` files, taxpayer profiles, session
-state, workpacks, field maps, or checklists.
+source-cited notes bundled with this plugin. This skill is a read-only lookup
+that writes nothing: it never creates or updates `workspace/` files, workpacks,
+field maps, or checklists.
 
 ## Always-on authenticated-portal boundary
 

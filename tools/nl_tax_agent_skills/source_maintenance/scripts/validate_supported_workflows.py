@@ -6,12 +6,15 @@ Usage:
       <path-to-supported-workflows.yaml> <path-to-source-register.yaml>
 
 Checks:
-    - Active workflows have source IDs, knowledge dirs, output paths, and
-      source-register coverage for the exact workflow/year or required shared
-      all-year sources.
-    - Blocked future workflows cannot produce workpacks.
+    - Active workflows have source IDs, knowledge dirs, and source-register
+      coverage for the exact workflow/year or required shared all-year
+      sources. Their output_paths list exactly the one consented workpack file
+      for that workflow and year (0.4 design, R3), for example
+      workspace/nl-tax-annual-2025-workpack.md.
+    - Blocked future workflows cannot produce workpacks and write nothing
+      (allowed_output: conversation_only).
     - Terminal routing entries (manual_review / unsupported) never prepare a
-      workpack and only write a shared notes file.
+      workpack and write nothing (allowed_output: conversation_only).
     - Source-register workflow/year pairs are declared as active before they
       can be treated as supported.
 """
@@ -35,10 +38,26 @@ WORKFLOW_SKILLS = {
 
 COMMON_WORKFLOW_HELPER_SKILLS = {
     "nl-tax-intake",
-    "nl-tax-evidence-indexer",
     "nl-tax-field-mapper",
     "nl-tax-submit-companion",
 }
+
+# 0.4 design (R1/R3): terminal and blocked workflows write nothing; their only
+# output is the conversation. Active workflows write exactly one consented
+# workpack file per workflow and tax year, at a fixed path.
+CONVERSATION_ONLY_OUTPUT = "conversation_only"
+WORKPACK_SLUGS = {
+    "annual_return": "annual",
+    "provisional_assessment": "provisional",
+}
+
+
+def expected_workpack_path(workflow, tax_year):
+    """Return the one workpack path an active workflow/year may write."""
+    slug = WORKPACK_SLUGS.get(workflow)
+    if slug is None:
+        return None
+    return f"workspace/nl-tax-{slug}-{int(tax_year)}-workpack.md"
 
 KNOWLEDGE_SKILL_HINTS = (
     ("box1", "nl-tax-box1-home"),
@@ -143,12 +162,12 @@ def validate_active_workflow(workflow, active_ids, active_pairs, source_by_id, p
         errors.append(f"{wid}: active workflow must have status: active")
     if not workflow.get("profile_candidates"):
         errors.append(f"{wid}: missing profile_candidates")
-    errors.extend(validate_active_paths(workflow, wid, tax_year, plugin_root))
+    errors.extend(validate_active_paths(workflow, wid, wf, tax_year, plugin_root))
     errors.extend(validate_required_sources(workflow, wid, wf, tax_year, source_by_id, plugin_root))
     return errors
 
 
-def validate_active_paths(workflow, wid, tax_year, plugin_root):
+def validate_active_paths(workflow, wid, wf, tax_year, plugin_root):
     errors = []
     knowledge_dirs = workflow.get("knowledge_dirs", [])
     if not knowledge_dirs:
@@ -168,8 +187,14 @@ def validate_active_paths(workflow, wid, tax_year, plugin_root):
         errors.append(f"{wid}: output_paths must be a list")
         output_paths = []
     for rel_path in output_paths:
-        if str(tax_year) not in rel_path:
+        if str(tax_year) not in str(rel_path):
             errors.append(f"{wid}: output path lacks tax year {tax_year}: {rel_path}")
+    expected = expected_workpack_path(wf, tax_year)
+    if expected is not None and output_paths and list(output_paths) != [expected]:
+        errors.append(
+            f"{wid}: output_paths must be exactly the one workpack file "
+            f"[{expected}], got: {output_paths}"
+        )
     return errors
 
 
@@ -273,6 +298,12 @@ def validate_blocked_workflow(workflow, blocked_ids, active_pairs):
         errors.append(f"{wid}: blocked workflow must not define output_paths")
     if workflow.get("required_source_ids"):
         errors.append(f"{wid}: blocked workflow must not define required_source_ids")
+    allowed_output = workflow.get("allowed_output")
+    if allowed_output != CONVERSATION_ONLY_OUTPUT:
+        errors.append(
+            f"{wid}: blocked workflow writes nothing; set allowed_output: "
+            f"{CONVERSATION_ONLY_OUTPUT} (got: {allowed_output!r})"
+        )
     if not workflow.get("reason"):
         warnings.append(f"{wid}: missing reason")
     if not workflow.get("unlock_condition"):
@@ -284,9 +315,9 @@ def validate_terminal_workflow(workflow, terminal_ids):
     """Validate a terminal routing entry (manual_review / unsupported).
 
     Terminal workflows are intake end-states: they never prepare a workpack and
-    may only write a shared notes file. This guards their shape so a typo in
-    may_prepare_workpack / allowed_output / status is caught instead of silently
-    ignored.
+    write nothing (allowed_output: conversation_only). This guards their shape
+    so a typo in may_prepare_workpack / allowed_output / status is caught
+    instead of silently ignored.
     """
     errors = []
     warnings = []
@@ -308,9 +339,10 @@ def validate_terminal_workflow(workflow, terminal_ids):
     allowed_output = workflow.get("allowed_output")
     if not allowed_output:
         errors.append(f"{wid}: terminal workflow must define allowed_output")
-    elif not str(allowed_output).startswith("workspace/shared/"):
+    elif allowed_output != CONVERSATION_ONLY_OUTPUT:
         errors.append(
-            f"{wid}: terminal allowed_output must be under workspace/shared/: {allowed_output}"
+            f"{wid}: terminal workflow writes nothing; allowed_output must be "
+            f"{CONVERSATION_ONLY_OUTPUT}: {allowed_output}"
         )
     if not workflow.get("profile_candidates"):
         errors.append(f"{wid}: missing profile_candidates")

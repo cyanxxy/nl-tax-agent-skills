@@ -1,0 +1,59 @@
+# Eval fixture: re-confirm a figure that is no longer visible (R9)
+#
+# Chat-only mode. Early in a long conversation the taxpayer gave an exact
+# mortgage-interest figure. The host later summarized the conversation, and
+# the summary kept only an approximation. At final review the exact figure is
+# no longer visible verbatim anywhere, and there is no saved workpack.
+
+fixture_id: eval_annual_reconfirm_unseen_figure
+fixture_version: "1.0"
+scenario: "An exact amount lost to conversation compaction is re-confirmed, never reconstructed"
+tax_year: 2025
+workflow: annual_2025
+
+conversation_state:
+  save_consent: declined
+  compaction_summary: >-
+    Earlier: taxpayer is employed, owns one home (WOZ about EUR 410k), paid
+    roughly EUR 12k mortgage interest in 2025, no partner. Income and Box 3
+    sections were completed.
+  exact_figures_visible_verbatim:
+    loon_loonheffing: true       # restated in the latest Confirmed so far recap
+    woz_waarde: false
+    hypotheekrente_2025: false
+  user_turn: "Great, let's wrap up and create the workpack."
+
+saving:
+  annual_2025:
+    consent: declined
+    declined_at: [workflow_start]
+
+expected_outputs:
+  files_created: []
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
+
+expected_conversation:
+  asks_to_reconfirm:
+    - woz_waarde
+    - hypotheekrente_2025
+  reconstructs_amount_from_summary: false
+  uses_approximation_as_value: false
+  generates_before_reconfirmation: false
+  # A5: the final-review reply asks only for the re-confirmed figures and then
+  # the generation question; the save offer comes after generation and mapping.
+  offers_save_after_generation: true
+  one_yes_no_question_per_reply: true
+  recap_shows_value_and_provenance: true
+
+expected_behavior:
+  - "Notice that the exact WOZ-waarde and mortgage interest are no longer visible verbatim"
+  - "Ask the taxpayer to re-confirm both exact amounts (or re-share the documents) before generation"
+  - "Never turn 'about EUR 410k' or 'roughly EUR 12k' into a workpack amount"
+  - "Offer to save after generation and mapping, in its own reply, since the taxpayer has not opted in; write nothing without consent"
+
+acceptance_criteria:
+  - "No workpack amount is reconstructed from memory or a summary"
+  - "Generation waits for the re-confirmed figures and the scoped confirmation"
+  - "No file is written"

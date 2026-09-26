@@ -1,7 +1,7 @@
 # Eval fixture: Annual Box 2 dividend case
 
 fixture_id: eval_annual_box2_dividend
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Annual 2025 standard Box 2 dividend"
 tax_year: 2025
 workflow: annual_2025
@@ -23,8 +23,19 @@ evidence_files:
       reguliere_voordelen_bruto: 12000.00
       ingehouden_dividendbelasting: 1800.00
 
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+
 expected_behavior:
-  - "Create annual workpack and field map under workspace/annual/2025/"
+  - "Keep the annual workpack, with its field map in Appendix B, in workspace/nl-tax-annual-2025-workpack.md after consent"
   - "Include box2.has_aanmerkelijk_belang"
   - "Include box2.reguliere_voordelen_bruto"
   - "Include box2.ingehouden_dividendbelasting"

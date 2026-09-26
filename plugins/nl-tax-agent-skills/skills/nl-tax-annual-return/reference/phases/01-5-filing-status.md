@@ -48,7 +48,7 @@ still-future deadline—extension may be requested up to that printed date using
 the official form; if it has passed, recommend prompt filing rather than an
 unavailable extension.
 
-Record under `workspace/annual/2025/notes/filing-status.yaml` with `source: user_chat`.
+Record the answers in the Filing status section with `U:` provenance.
 Do not accept the taxpayer's bare label "on time" as the classification basis.
 Record the applicable invitation/no-invitation route, deadline or granted
 extension date, and filing date/planned date needed to support that result.

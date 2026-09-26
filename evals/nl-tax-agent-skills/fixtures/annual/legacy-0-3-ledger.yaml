@@ -1,0 +1,86 @@
+# Eval fixture: a 0.3 ledger in the working folder is ignored (R8)
+
+fixture_id: eval_annual_legacy_ledger_ignored
+fixture_version: "1.0"
+scenario: "0.3 workspace ledgers are neither read nor written; the 0.3 return-pack.md is an ordinary source document"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: >-
+    I started my 2025 return with an older version of this plugin in March;
+    the old files are still in my working folder. Please continue, and keep
+    the new workpack as a file.
+  explicitly_requests_preparation: true
+
+# 0.3 files placed in the working folder before the conversation starts. They
+# must stay byte-identical: 0.4 never reads or writes profile.yaml,
+# session-progress.yaml, or evidence-index.yaml, and never rewrites the user's
+# documents.
+seed_files:
+  - path: workspace/taxpayer/profile.yaml
+    from: evals/nl-tax-agent-skills/fixtures/seeds/legacy-0-3/profile.yaml
+    role: legacy_0_3_ledger
+  - path: workspace/shared/session-progress.yaml
+    from: evals/nl-tax-agent-skills/fixtures/seeds/legacy-0-3/session-progress.yaml
+    role: legacy_0_3_ledger
+  - path: workspace/taxpayer/evidence-index.yaml
+    from: evals/nl-tax-agent-skills/fixtures/seeds/legacy-0-3/evidence-index.yaml
+    role: legacy_0_3_ledger
+  - path: workspace/annual/2025/return-pack.md
+    from: evals/nl-tax-agent-skills/fixtures/seeds/legacy-0-3/return-pack.md
+    role: legacy_0_3_source_document
+
+conversation:
+  - turn: 1
+    user: "asks to continue from the older files and to keep the new workpack as a file"
+  - turn: 2
+    assistant_expected: >-
+      Treats return-pack.md as a source document, names the figures it would
+      use (fiscaal loon EUR 45,000, loonheffing EUR 12,500, savings EUR 31,000)
+      and asks the taxpayer to confirm them; re-runs only the missing intake
+      screening instead of importing profile.yaml.
+    user: "Yes, those income figures are right. Savings were actually EUR 31,450."
+
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+  seeded_files_unchanged:
+    - workspace/taxpayer/profile.yaml
+    - workspace/shared/session-progress.yaml
+    - workspace/taxpayer/evidence-index.yaml
+    - workspace/annual/2025/return-pack.md
+  documents_rows_expected:
+    - document_contains: return-pack
+      type: other
+      status: extracted
+
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  readiness: draft
+
+expected_conversation:
+  reads_legacy_ledgers: false
+  writes_legacy_ledgers: false
+  migrates_legacy_state_automatically: false
+  confirms_material_figures_from_old_pack: true
+  uses_confirmed_value_not_old_value: true   # savings EUR 31,450, U: provenance
+
+expected_behavior:
+  - "Never read or write profile.yaml, session-progress.yaml, or evidence-index.yaml"
+  - "Cite the 0.3 return-pack.md as a Documents and sources row and confirm its material figures"
+  - "Write only workspace/nl-tax-annual-2025-workpack.md, after consent"
+
+acceptance_criteria:
+  - "Every seeded 0.3 file is byte-identical after the conversation"
+  - "No new file appears under workspace/taxpayer, workspace/shared, workspace/annual, or workspace/provisional"
+  - "The confirmed savings figure carries U: provenance, not the old pack's figure"

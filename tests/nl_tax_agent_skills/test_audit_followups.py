@@ -7,12 +7,10 @@ Covers:
     - Field-map identifier-placeholder convention (BSN/IBAN live in
       missing_fields without a value; the portal pre-fills them).
     - The two marketplace.json files agree on plugin name and path.
-    - Evidence indexer cataloging: hash-failure handling and stable ids.
 """
 
 import importlib.util
 import json
-import os
 import pathlib
 import tempfile
 import unittest
@@ -194,77 +192,6 @@ class MarketplaceConsistencyTests(unittest.TestCase):
             claude_marketplace.get("description", ""),
         )
 
-
-class EvidenceIndexerTests(unittest.TestCase):
-    def setUp(self):
-        self.mod = load_module(
-            "../../tools/nl_tax_agent_skills/evidence_indexer/index_evidence.py",
-            "index_evidence",
-        )
-
-    def test_hash_failure_yields_none_and_failed_status(self):
-        # Unit-level: compute_sha256 returns None (never an error string) on a
-        # missing/unreadable file.
-        result = self.mod.compute_sha256("/nonexistent/path/does-not-exist.txt")
-        self.assertIsNone(result)
-
-        # Integration-level: an unreadable real file is cataloged with a None
-        # hash and extraction_status "failed".
-        if getattr(os, "geteuid", lambda: 1)() == 0:
-            # Running as root bypasses chmod 000, so only assert the unit case.
-            self.skipTest("running as root: chmod 000 does not block reads")
-        with tempfile.TemporaryDirectory() as tmp:
-            scanned = pathlib.Path(tmp)
-            unreadable = scanned / "locked.txt"
-            unreadable.write_text("cannot read me", encoding="utf-8")
-            os.chmod(unreadable, 0o000)
-            try:
-                entries = self.mod.scan_directory(str(scanned))
-            finally:
-                os.chmod(unreadable, 0o600)
-
-            locked = [e for e in entries if e.get("file_name") == "locked.txt"]
-            self.assertEqual(len(locked), 1, entries)
-            entry = locked[0]
-            self.assertIsNone(entry.get("file_sha256"))
-            self.assertEqual(entry.get("extraction_status"), "failed")
-            self.assertTrue(entry.get("review_required"))
-
-    def test_relative_file_path_and_stable_id(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            scanned = pathlib.Path(tmp)
-            (scanned / "a.txt").write_text("alpha content", encoding="utf-8")
-            (scanned / "b.txt").write_text("beta content", encoding="utf-8")
-            entries = self.mod.scan_directory(str(scanned))
-            for e in entries:
-                # Paths are stored relative to the scanned directory.
-                self.assertFalse(os.path.isabs(e["file_path"]), e["file_path"])
-                # IDs are content-hash derived (ev_ + 10 hex chars).
-                self.assertTrue(e["evidence_id"].startswith("ev_"))
-
-            ids_before = {e["file_name"]: e["evidence_id"] for e in entries}
-            # Deleting one file must not renumber the OTHER file's id.
-            (scanned / "a.txt").unlink()
-            entries2 = self.mod.scan_directory(str(scanned))
-            ids_after = {e["file_name"]: e["evidence_id"] for e in entries2}
-            self.assertEqual(ids_before["b.txt"], ids_after["b.txt"])
-
-    def test_inventory_does_not_classify_evidence(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            folder = pathlib.Path(tmp)
-            (folder / "jaaropgaaf-2025.txt").write_text(
-                "Jaaropgaaf 2025; loon 50000", encoding="utf-8"
-            )
-
-            entry = self.mod.index_directory(str(folder))[0]
-
-            self.assertEqual(entry["evidence_type"], "")
-            self.assertIsNone(entry["tax_year"])
-            self.assertIsNone(entry["confidence"])
-            self.assertIsNone(entry["owner"])
-            self.assertEqual(entry["extraction_status"], "indexed_only")
-            rendered = self.mod.format_output([entry], str(folder))
-            self.assertIn("check_performed_by: checked_by_script", rendered)
 
 if __name__ == "__main__":
     unittest.main()

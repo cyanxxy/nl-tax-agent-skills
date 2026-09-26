@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Tax Skill Developers",
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Conversational Dutch tax prep",
-    "longDescription": "Prepare source-traceable Dutch tax workpacks in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The plugin guides intake, evidence indexing, source checks, field maps, and manual-entry checklists without logging in, filing, signing, submitting, or automating Mijn Belastingdienst.",
+    "longDescription": "Prepare source-traceable Dutch tax workpacks right in the conversation, in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The assistant reads the documents you share, asks only the missing questions, cites a reviewed source for each rule, maps each amount to its Mijn Belastingdienst field, and builds a manual-entry checklist when you ask. Nothing is saved unless you ask; then it keeps one workpack file per workflow that you can attach later to continue. It never logs in, files, signs, submits, or automates Mijn Belastingdienst.",
     "developerName": "Tax Skill Developers",
     "category": "Productivity",
     "capabilities": [
@@ -33,7 +33,7 @@
     "defaultPrompt": [
       "Prepare my 2025 Dutch income-tax workpack.",
       "Prepare a 2026 voorlopige aanslag workpack.",
-      "Index my Dutch tax documents for review."
+      "Read my jaaropgaven and help me prepare my 2025 return."
     ],
     "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
     "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",

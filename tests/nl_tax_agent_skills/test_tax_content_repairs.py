@@ -55,10 +55,20 @@ class TaxContentRepairTests(unittest.TestCase):
         self.assertEqual(source.get("tax_year"), year)
 
     def read_skill_text(self, relative):
+        # "file.md#Heading" narrows the text to one top-level workpack section
+        # (0.4 merged the delta/review-question templates into the workpack).
+        relative, _, heading = relative.partition("#")
         path = SKILLS / relative
         if not path.is_file():
             self.fail(f"{relative}: required consumer file is missing")
         text = path.read_text(encoding="utf-8")
+        if heading:
+            marker = f"\n## {heading}\n"
+            if marker not in text:
+                self.fail(f"{relative}: missing section {heading!r}")
+            start = text.index(marker) + len(marker)
+            end = text.find("\n## ", start)
+            text = text[start:] if end == -1 else text[start:end]
         if relative == "nl-tax-annual-return/reference/annual-flow.md":
             links = re.findall(r"\]\((phases/[^)]+\.md)\)", text)
             text += "\n".join(
@@ -158,7 +168,7 @@ class TaxContentRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source("bd_zorgkosten_overzicht_2025", 2025, relatives)
         self.assert_official_source("bd_fisin_zorgkosten_2025", 2025, relatives)
@@ -204,7 +214,7 @@ class TaxContentRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source(
             "bd_vervoerskosten_ziekte_2025", 2025, relatives
@@ -223,7 +233,7 @@ class TaxContentRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source("bd_fisin_lijfrente_2025", 2025, relatives)
         for relative in relatives:
@@ -248,7 +258,7 @@ class TaxContentRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source("bd_fisin_studiekosten_2025", 2025, relatives)
         for relative in relatives:
@@ -280,7 +290,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source(
             "bd_own_home_deduction_cap_2025", 2025, relatives
@@ -327,7 +337,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-box1-home/reference/own-home-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source(
             "bd_own_home_deduction_cap_2026", 2026, relatives
@@ -357,7 +367,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-winst/reference/winst-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source("bd_bijtelling_auto_2025", 2025, relatives)
         for relative in relatives:
@@ -385,7 +395,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-shared-resources/knowledge/years/2025/annual/box1-rates.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source("bd_stock_options_2025", 2025, relatives)
         for relative in relatives:
@@ -412,7 +422,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
                 "nl-tax-box1-home/reference/box1-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=("akw", "not taxable box 1 income"),
         )
@@ -422,7 +432,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         self.assert_official_source(
             "bd_arbeidsinkomen_definition_2025", 2025, relatives
@@ -448,7 +458,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/reference/annual-output-contract.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required_any=(
                 ("under 12", "younger than 12", "younger_than_12"),
@@ -463,13 +473,14 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         # The official page covers both supported years, so the register keeps
         # it deliberately unscoped rather than pretending it is a 2025-only
         # source. The consumer text below still pins this contract to annual
         # 2025.
         self.assert_official_reference(source_id, relatives)
+        template = "nl-tax-annual-return/templates/annual-workpack.md"
         for relative in relatives:
             self.assert_text_contract(
                 relative,
@@ -483,8 +494,22 @@ class TaxContentRepairTests(unittest.TestCase):
                         "alleenstaande",
                     ),
                 ),
-                forbidden=("single_parent_status",),
+                forbidden=() if relative == template else ("single_parent_status",),
             )
+        # 0.4: the workpack's Taxpayer profile summary replaces profile.yaml and
+        # records the screened household fact, but nothing outside that
+        # summary row may use single-parent status, and the credits screen
+        # keys the alleenstaande-ouderenkorting to single-person AOW entitlement.
+        text = self.read_skill_text(template)
+        profile = text.split("## taxpayer profile summary", 1)[1].split("\n## ", 1)[0]
+        outside = text.replace(profile, "")
+        self.assertIn("`household.single_parent_status`", profile)
+        self.assertNotIn("single_parent_status", outside)
+        credits = text.split("## credits screening", 1)[1].split("\n## ", 1)[0]
+        line = credits.split("**alleenstaande-ouderenkorting**", 1)[1].split("\n- **", 1)[0]
+        self.assertIn("aow benefit for a single person", " ".join(line.split()))
+        self.assertNotIn("single-parent", line)
+        self.assertNotIn("single_parent", line)
 
     def test_upo_is_not_payment_or_withholding_evidence(self):
         self.assert_claim(
@@ -494,7 +519,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
                 "nl-tax-box1-home/reference/box1-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=("upo", "accrual or projection context only", "payment-year pension statement"),
         )
@@ -507,7 +532,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=("eur 1.5 million", "transition"),
             forbidden=("periodieke giften (no threshold, no cap)", "fully deductible, no threshold or cap"),
@@ -521,7 +546,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/winst-en-kosten.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=(
                 "aov",
@@ -539,7 +564,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required_any=(
                 ("prior-year", "prior year", "prior years"),
@@ -563,7 +588,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
                 "nl-tax-partner-deductions/reference/deductions-2025.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=("allocation", "review"),
             forbidden=(
@@ -577,8 +602,8 @@ class TaxContentRepairTests(unittest.TestCase):
         relatives = (
             "nl-tax-annual-return/reference/annual-output-contract.md",
             "nl-tax-annual-return/reference/phases/06-partner.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
-            "nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
+            "nl-tax-provisional-assessment/templates/provisional-workpack.md",
             "nl-tax-partner-deductions/reference/deductions-2025.md",
             "nl-tax-partner-deductions/reference/provisional-deductions-2026.md",
             "nl-tax-shared-resources/runtime-contract.md",
@@ -647,8 +672,8 @@ class TaxContentRepairTests(unittest.TestCase):
         generated_output_contracts = (
             "nl-tax-annual-return/reference/annual-output-contract.md",
             "nl-tax-annual-return/reference/phases/06-partner.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
-            "nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
+            "nl-tax-provisional-assessment/templates/provisional-workpack.md",
         )
         generated = "\n".join(
             self.read_skill_text(path) for path in generated_output_contracts
@@ -687,7 +712,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
                 "nl-tax-intake/reference/filing-paths.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
                 "nl-tax-submit-companion/reference/annual-submit-steps.md",
                 "nl-tax-shared-resources/knowledge/years/2025/entrepreneur/entrepreneur-aangifte.md",
             ),
@@ -736,7 +761,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-shared-resources/knowledge/years/2025/annual/late-filing.md",
                 "nl-tax-annual-return/reference/annual-flow.md",
                 "nl-tax-annual-return/reference/annual-output-contract.md",
-                "nl-tax-annual-return/templates/annual-return-pack.md",
+                "nl-tax-annual-return/templates/annual-workpack.md",
             ),
             required=("herinnering", "aanmaning", "10 werkdagen"),
             required_any=(("potential exposure", "conditional exposure"),),
@@ -777,7 +802,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
                 "nl-tax-provisional-assessment/reference/delta-rules.md",
-                "nl-tax-provisional-assessment/templates/provisional-pack.md",
+                "nl-tax-provisional-assessment/templates/provisional-workpack.md",
             ),
             required=("unsolicited", "may be issued", "not guaranteed"),
             forbidden=("auto-issues", "automatically issues"),
@@ -794,8 +819,8 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-provisional-assessment/SKILL.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
-                "nl-tax-provisional-assessment/templates/provisional-pack.md",
-                "nl-tax-provisional-assessment/templates/delta-summary.md",
+                "nl-tax-provisional-assessment/templates/provisional-workpack.md",
+                "nl-tax-provisional-assessment/templates/provisional-workpack.md#Delta summary",
                 "nl-tax-submit-companion/SKILL.md",
                 "nl-tax-submit-companion/reference/provisional-submit-steps.md",
             ),
@@ -812,7 +837,7 @@ class TaxContentRepairTests(unittest.TestCase):
                 "nl-tax-provisional-assessment/reference/stopzetten-guidance.md",
                 "nl-tax-provisional-assessment/reference/provisional-flow.md",
                 "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
-                "nl-tax-provisional-assessment/templates/provisional-pack.md",
+                "nl-tax-provisional-assessment/templates/provisional-workpack.md",
             ),
             required=("moving abroad", "residency review", "not a categorical stopzetten reason"),
             forbidden=("moving abroad                         | stopzetten",),
@@ -825,7 +850,7 @@ class TaxContentRepairTests(unittest.TestCase):
             "nl-tax-box3/reference/box3-actual-2025.md",
             "nl-tax-annual-return/reference/annual-flow.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
             "nl-tax-field-mapper/reference/annual-field-map.md",
         )
         self.assert_official_source("bd_box3_2025_actual_return", 2025, relatives)

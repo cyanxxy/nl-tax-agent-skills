@@ -1,21 +1,23 @@
 # Eval fixture: Annual entrepreneur (eenmanszaak / ZZP)
 #
 # Scenario: Full-year Dutch resident, no fiscal partner, one eenmanszaak with
-#            winst uit onderneming, meets the urencriterium, no own home.
+#            winst uit onderneming, meets the urencriterium, no own home. The
+#            taxpayer agrees to keep the workpack as a file.
 #
 # Expected behavior:
 #   - Case is SUPPORTED and routes into annual_2025 (NOT out of scope)
-#   - business.has_onderneming is set true; finalized profit-and-loss and balance
-#     evidence is organized in Phase 2A via the nl-tax-winst helper
+#   - Finalized profit-and-loss and balance evidence are Documents and sources
+#     rows, organized in Phase 2A via the nl-tax-winst helper
 #   - The workpack walks the ordered chain: winst -> ondernemersaftrek ->
 #     MKB-winstvrijstelling -> belastbare winst. No asset was bought in 2025, so
 #     no investeringsaftrek screen is claimed and no schema blocker arises.
 #   - The Zvw bijdrage is raised as a separate aanslag
-#   - The field map mirrors the real aangifte rubrieken and reaches review_ready;
-#     it never instructs the taxpayer to type a deduction the aangifte computes
+#   - The Appendix B field map mirrors the real aangifte rubrieken and reaches
+#     review_ready; it never instructs the taxpayer to type a deduction the
+#     aangifte computes
 
 fixture_id: eval_annual_entrepreneur_zzp
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Annual entrepreneur — eenmanszaak / ZZP with winst uit onderneming"
 tax_year: 2025
 workflow: annual_2025
@@ -58,18 +60,16 @@ evidence_files:
     extracted_fields:
       totaal_uren: 1600
 
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
   files_created:
-    - workspace/taxpayer/profile.yaml
-    - workspace/taxpayer/evidence-index.yaml
-    - workspace/annual/2025/return-pack.md
-    - workspace/annual/2025/field-map.yaml
-    - workspace/shared/assumptions.md
-    - workspace/shared/missing-info.md
-    - workspace/shared/session-progress.yaml
-
+    - workspace/nl-tax-annual-2025-workpack.md
   files_not_created:
-    - workspace/provisional/**
+    - workspace/nl-tax-provisional-2026-workpack.md
 
   workpack_checks:
     - section: "Winst uit onderneming notes"
@@ -82,7 +82,7 @@ expected_outputs:
     - section: "Not submission advice"
       present: true
 
-  field_map_checks:
+  field_map_checks:   # Appendix B of the saved workpack
     - workflow: "annual_return"
     - tax_year: 2025
     - readiness: "review_ready"
@@ -94,10 +94,14 @@ expected_outputs:
     - no_login_automation: true
     - routes_out: false   # eenmanszaak / ZZP is supported, not out of scope
 
-expected_state:
-  session_progress_version: "1.4"
-  annual_2025_subsection: winst
-  annual_2025_winst_status: complete
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  readiness: review_ready
+  generation_confirmed: true
+  sections:
+    winst: complete
   field_map_readiness: review_ready
   field_map_blockers: []
   workpack_owner: nl-tax-annual-return
@@ -110,7 +114,7 @@ expected_state:
 acceptance_criteria:
   - "Case routes into annual_2025 (supported), not out of scope"
   - "The belastbare winst uit onderneming is derived through the ordered chain and feeds the box 1 total"
-  - "The field map mirrors the aangifte rubrieken and reaches review_ready with no blocker"
+  - "The Appendix B field map mirrors the aangifte rubrieken and reaches review_ready with no blocker"
   - "The field map never contains a deduction the aangifte computes itself"
   - "The Zvw bijdrage is surfaced as a separate aanslag"
   - "Stakingswinst, herinvesteringsreserve and terbeschikkingstelling stay manual review"

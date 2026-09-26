@@ -4,16 +4,15 @@ Compile standard aanmerkelijk-belang data for the annual 2025 return when applic
 
 When the taxpayer has an aanmerkelijk belang, read the rates from
 `../nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md` — never paraphrase the 24.5% /
-31% box 2 bracket from memory — and append `bd_box2_rates_2025_2026`,
-`bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to
-`session-progress.yaml` → `sources_loaded_by_workflow.annual_2025`, mirrored
-in the active `sources_loaded` list.
+31% box 2 bracket from memory — and add `bd_box2_rates_2025_2026`,
+`bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to this
+workflow's source list.
 
 ### 3A.1 Substantial-interest status
 
 - Confirm whether the taxpayer has an aanmerkelijk belang.
 - Standard threshold: generally 5%, assessed together with the fiscal partner where applicable.
-- Record `box2.has_aanmerkelijk_belang` as `true`/`false` in the profile (the template's boolean enum); route to manual review when the status is unclear.
+- Record `box2.has_aanmerkelijk_belang` as `true`/`false` in the Taxpayer profile summary; route to manual review when the status is unclear.
 
 ### 3A.2 Regular benefits
 

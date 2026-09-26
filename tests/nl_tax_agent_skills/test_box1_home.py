@@ -263,27 +263,38 @@ class Box1OwnHomeTests(unittest.TestCase):
 
 
 class Box1OwnHomeDocumentationTests(unittest.TestCase):
-    def test_skill_reads_evidence_index_without_summarizer(self):
+    def test_skill_reads_documents_and_sources_rows_without_summarizer(self):
         text = (ROOT / "skills/nl-tax-box1-home/SKILL.md").read_text(encoding="utf-8")
         retired_summarizer = "summarize_" + "box1_inputs.py"
         self.assertNotIn(retired_summarizer, text)
-        self.assertIn("evidence-index.yaml", text)
-        for phrase in ("reviewed", "successful", "correct tax year"):
-            self.assertIn(phrase, text.lower())
+        # 0.4: documents are rows in the workpack's Documents and sources
+        # section (ev_NNN); there is no evidence-index.yaml any more.
+        self.assertNotIn("evidence-index.yaml", text)
+        self.assertIn("`Documents and sources` rows (`ev_NNN`)", text)
+        compact = " ".join(text.lower().split())
+        for phrase in ("tax year equals the return year", "explicitly confirmed chat answer"):
+            self.assertIn(phrase, compact)
 
     def test_annual_evidence_cannot_close_a_gap_without_all_review_gates(self):
         text = (ROOT / "skills/nl-tax-box1-home/SKILL.md").read_text(encoding="utf-8")
-        behavior = text.split("## Behavior", 1)[1].split(
-            "## Own-home arithmetic parity", 1
-        )[0]
+        behavior = " ".join(
+            text.split("## Behavior", 1)[1]
+            .split("## Own-home arithmetic parity", 1)[0]
+            .split()
+        )
         for required_gate in (
-            "extraction_status: extracted",
-            "review_required: false",
-            "tax_year` equal to the return year",
+            "`extracted` (not `needs review`)",
+            "its tax year equals the return year",
+            "Record the `ev_NNN`",
         ):
             self.assertIn(required_gate, behavior)
-        for non_closing_status in ("indexed_only", "deferred", "failed", "wrong-year"):
-            self.assertIn(non_closing_status, behavior)
+        for non_closing in (
+            "a row that still needs review",
+            "a wrong-year document",
+            "a document not yet read never closes the gap",
+        ):
+            self.assertIn(non_closing, behavior.lower())
+        self.assertIn("never invent zeros", behavior.lower())
 
     def test_own_home_docs_share_one_agent_check_trail(self):
         paths = (

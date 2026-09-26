@@ -1,0 +1,139 @@
+# Eval fixture: stale map and checklist after a corrected figure (A10, A11, A12)
+#
+# The taxpayer declines saving, generates the workpack and field map in the
+# conversation, agrees to save later, corrects a figure, asks for the
+# manual-entry checklist while the map is stale, and resumes in a new session
+# from the saved file. The checklist must never show the old salary.
+
+fixture_id: eval_annual_stale_checklist_after_correction
+fixture_version: "1.0"
+scenario: "Decline save, generate, save later, correct a figure, request the checklist, resume: the stale map blocks the checklist until regeneration"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: >-
+    Help me prepare my Dutch 2025 income-tax return. Full-year resident,
+    single, employed, no business, no own home.
+  explicitly_requests_preparation: true
+
+conversation:
+  - turn: 1
+    assistant_offers_save_at: workflow_start
+    user: "No thanks, keep it in this chat."
+  - turn: 2
+    user: "My jaaropgaaf says fiscaal loon EUR 48,250 and loonheffing EUR 13,100."
+  - turn: 3
+    user: "EUR 15,000 in savings on 1 January 2025, nothing else. No deductions."
+  - turn: 4
+    assistant_final_review: true
+    user: "Yes, create the workpack and field map now."
+    expected: "generate the workpack and field map in the conversation; the Field map summary shows box1.loon 48,250 and box1.loonheffing 13,100; write no file"
+  - turn: 5
+    assistant_offers_save_at: generation
+    user: "Not now."
+  - turn: 6
+    user: "Actually, save my workpack now so I can continue tomorrow."
+    expected: >-
+      write workspace/nl-tax-annual-2025-workpack.md from the facts recorded in
+      the conversation; the field mapper rebuilds the map from those facts and
+      re-runs every FM-* check (the unsaved map is not state); the Field map
+      summary equals Appendix B; generation_confirmed: true
+  - turn: 7
+    user: "Correction: my fiscaal loon is EUR 51,400, I misread the jaaropgaaf."
+    expected: >-
+      record the corrected fact in the income section with a DRAFT banner;
+      confirm returns to not_started and generation_confirmed to false; the
+      Field map summary and Appendix B get the line 'STALE — predates the
+      change to fiscaal loon (<date>); regenerate before use.' in the
+      conversation and the saved file; present the updated summary and ask
+      only the generation question
+  - turn: 8
+    user: "Give me the manual-entry checklist."
+    expected: >-
+      stale map is a blocker: show only the Blockers section led by the stale
+      blocker, with no steps and no values to enter (neither 48,250 nor a
+      hand-patched 51,400); write nothing to the Manual-entry checklist section;
+      the reply's only question is the generation question
+  - turn: 9
+    user: "I'll finish this tomorrow."
+    expected: "no save offer (already saving); the saved file stays current and still carries the STALE lines"
+  - turn: 10
+    session: 2
+    user: "Let's continue my 2025 return."
+    expected: >-
+      find the file at the fixed path and confirm once ("I found your saved
+      2025 workpack, last updated <date>. Continue from it?"); after the yes,
+      re-ask no answered question and ask only the generation question, since
+      the map is stale and generation_confirmed is false
+  - turn: 11
+    user: "Yes, regenerate it."
+    expected: >-
+      regenerate the workpack and re-run the field mapper, which rebuilds the
+      map from the recorded facts: box1.loon 51,400 in the Field map summary and
+      Appendix B, no STALE line, generation_confirmed: true
+  - turn: 12
+    user: "Now the checklist please."
+    expected: "build the checklist from the regenerated map (box1.loon 51,400) and write it into the Manual-entry checklist section"
+
+saving:
+  annual_2025:
+    consent: given
+    at: user_request
+    declined_at: [workflow_start, generation]
+
+expected_state_after_turn:
+  6:
+    generation_confirmed: true
+    field_map_summary_equals_appendix_b: true
+  7:
+    generation_confirmed: false
+    confirm: not_started
+    stale_line_in: [field_map_summary, appendix_b]
+  8:
+    checklist_values_shown: []
+    manual_entry_checklist_section: not requested
+  11:
+    generation_confirmed: true
+    stale_line_in: []
+    field_map_value:
+      box1.loon: 51400
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  generation_confirmed: true
+  updated_after_created: true
+  sections:
+    box1: complete
+    confirm: complete
+
+expected_conversation:
+  one_yes_no_question_per_reply: true
+  map_rebuilt_from_recorded_facts_at_first_save: true
+  stale_marker_shown_after_correction: true
+  checklist_blocked_while_stale: true
+  checklist_ever_shows_old_value: false
+  resume_confirms_found_file_once: true
+  resume_reasks_answered_questions: false
+  regenerates_only_after_fresh_confirmation: true
+
+expected_behavior:
+  - "An unsaved field map is not state: the later save rebuilds the map from the recorded facts and re-runs every FM-* check"
+  - "A corrected figure after generation returns generation_confirmed to false and marks the Field map summary, Appendix B, and any checklist STALE"
+  - "A checklist request while the map is stale shows only the stale blocker and never copies a value from the stale map"
+  - "Resume from the saved file does not re-ask answered questions; the STALE line stays until regeneration"
+  - "Regeneration after fresh confirmation removes the STALE line and the map and checklist show the corrected 51,400"
+
+acceptance_criteria:
+  - "Exactly one file exists: workspace/nl-tax-annual-2025-workpack.md, a valid saved workpack"
+  - "At the end, Appendix A records generation_confirmed: true and the Field map summary shows the Appendix B value 51400 for box1.loon"
+  - "No Field map summary or Manual-entry checklist ever shows 48,250 as the value to enter after the correction"
+  - "A STALE line appears only while generation_confirmed is false"

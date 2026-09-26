@@ -16,12 +16,16 @@ directly through the checklist below; the repository's offline eval harness
 grades produced maps against the same file, so the runtime and the evals can
 never enforce different rules.
 
-Only `nl-tax-field-mapper` creates or updates the canonical `field-map.yaml`
-next to an annual or provisional workpack. Owning workflow skills pass their
-workpack and context to the mapper; they never seed or rewrite the map. The most
-recent mapper-validated file at the canonical workflow path is authoritative
-for manual entry. Do not create duplicate field-map files, and preserve valid
-sourced entries unless the current workpack/reference makes them obsolete.
+Only `nl-tax-field-mapper` creates or updates the field map. Owning workflow
+skills pass their reviewed workpack to the mapper; they never seed or rewrite
+the map. The map is composed and checked in the conversation, where only its
+`## Field map summary` table is shown, never the YAML. While save consent is
+active in this conversation, its canonical copy is the YAML block in
+`## Appendix B — Field map` of that workflow's workpack, with the human-readable
+`## Field map summary` table beside it. The most recently validated map is
+authoritative for manual entry. Never create a separate or duplicate field-map
+file, and preserve valid sourced entries unless the current workpack/reference
+makes them obsolete.
 
 ---
 
@@ -51,7 +55,7 @@ A single piece of evidence may provide data for multiple fields. Examples:
 - A **hypotheek_jaaroverzicht** provides: `eigenwoning.hypotheekrente` and `eigenwoning.eigenwoningschuld`
 - A **jaaroverzicht_bank** provides: `box3.banktegoeden` and (for werkelijk rendement) `box3.werkelijk_rendement_rente`
 
-When this happens, each field entry references the same `evidence_id` but captures a different extracted value.
+When this happens, each field entry references the same `evidence_id` (one `ev_NNN` row in `## Documents and sources`) but captures a different extracted value.
 
 ### Multiple evidence items to one form field
 
@@ -77,10 +81,10 @@ and explains material uncertainty in `notes`.
   supported estimate.
 - A score near 0 suits weak, speculative, or materially conflicting support.
 
-When a source already has a classification-confidence score, normally do not
-score the mapped field above it unless `notes` explain why that judgment is
-appropriate. Never use a confidence cutoff by itself to decide readiness or
-manual review.
+When the source row is still marked `needs review` in `## Documents and
+sources`, normally keep the mapped field's score below that of a reviewed
+source unless `notes` explain why that judgment is appropriate. Never use a
+confidence cutoff by itself to decide readiness or manual review.
 
 ---
 
@@ -90,11 +94,11 @@ Every field must trace back to a source. Valid source types:
 
 ### `evidence`
 
-The value comes from a document in the evidence index.
+The value comes from a document the taxpayer shared.
 
-- `evidence_id`: required -- references an entry in `workspace/taxpayer/evidence-index.yaml`
-- The evidence must exist and be classified
-- The field mapper does not reclassify evidence -- it uses the classification as-is
+- `evidence_id`: required -- references an `ev_NNN` row in the workpack's `## Documents and sources`
+- The row must exist and name its document type
+- The field mapper does not reclassify documents -- it uses the row's type as-is
 
 ### `user_chat`
 
@@ -113,14 +117,14 @@ provenance, not a missing-data state.
 The value is an estimate provided by the taxpayer or derived from available information.
 
 - `evidence_id`: null
-- `profile_path`: optional -- path in the taxpayer profile where the estimate was recorded
+- `profile_path`: optional -- the `Key` of the row in `## Taxpayer profile summary` where the estimate's context was recorded
 - All provisional field values default to this source type unless backed by a baseline
 
 ### `baseline`
 
 The value comes from an existing voorlopige aanslag or prior-year filing.
 
-- `evidence_id`: optional -- references the beschikking in the evidence index
+- `evidence_id`: optional -- references the beschikking's row in `## Documents and sources`
 - Used primarily in provisional change/review subflows
 - Represents the "before" value in a delta comparison
 
@@ -135,7 +139,8 @@ The value was computed from other field values using tax rules.
 ### `assumption`
 
 The value uses a user-confirmed default that is not fully determined by sourced
-facts. It requires `assumption_id` and remains a human-review item. Do not label
+facts. It requires `assumption_id` (an A-ID in the workpack's `## Assumptions`)
+and remains a human-review item. Do not label
 rule-derived values, such as an AOW-age screen from sourced DOB plus tax
 year and a reviewed rule, as assumptions; use `calculated`.
 
@@ -149,13 +154,14 @@ Fields that are needed for the return/assessment but have no available data are 
 |---|---|
 | `field_id` | The field identifier from the field reference |
 | `label` | Dutch label of the missing field |
-| `reason` | Why the data is not available (e.g., "no jaaropgaaf uploaded", "user did not provide estimate") |
+| `reason` | Why the data is not available (e.g., "no jaaropgaaf shared", "user did not provide estimate") |
 | `blocking` | Boolean -- true if the return cannot be filed without this data |
+| `open_question_id` | The Q-ID (`Q001` format) of the matching entry in the workpack's `## Open questions`; the mapper adds that row itself when it finds the gap |
 
 ### Blocking vs non-blocking
 
 - **Blocking:** the field is required and the return/assessment will be incomplete or rejected without it. Example: `box1.loon` when the taxpayer has employment income but no jaaropgaaf.
-- **Non-blocking:** the field is optional or the taxpayer's situation may not require it. Example: `aftrek.giften_anbi` when no gift receipts were uploaded but the taxpayer may not have made donations.
+- **Non-blocking:** the field is optional or the taxpayer's situation may not require it. Example: `aftrek.giften_anbi` when no gift receipts were shared but the taxpayer may not have made donations.
 
 Do not use `missing_fields` to satisfy reference coverage for portal-prefilled
 personal/identifier rows such as BSN, name, address, date of birth, or IBAN.
@@ -180,17 +186,18 @@ rows, so the mapper NEVER creates entries (in `fields` or `missing_fields`) for:
   workpack narrative (rule `zvw_entry_row` in `field-map-rules.yaml`).
 
 This is the human-only authenticated-portal product boundary in
-`../nl-tax-shared-resources/runtime-contract.md`, regardless of host permissions. The validator
-flags browser, Chrome, computer-use, login/session, form-filling, clicking,
-signing, sending, or submission actions if they appear in either `fields` or
+`../nl-tax-shared-resources/runtime-contract.md`, regardless of host permissions. The
+`FM-STRUCTURE` check (and the repository grader) flags browser, Chrome,
+computer-use, login/session, form-filling, clicking, signing, sending, or
+submission actions if they appear in either `fields` or
 `missing_fields`, because the mapper is preparation-only.
 
 ### Prefilled personal/identifier fields: omit, never value
 
 BSN, IBAN, name, address, and date of birth are not data-entry fields for this
 mapper. The portal pre-fills or confirms them, so the mapper does not create
-`fields` rows or `missing_fields` placeholders for them. The validator exempts
-required portal-prefilled reference rows from coverage so they do not count as
+`fields` rows or `missing_fields` placeholders for them. `FM-REFERENCE-COVERAGE`
+exempts required portal-prefilled reference rows so they do not count as
 unpopulated.
 
 ---
@@ -202,7 +209,7 @@ taxpayer verification is materially useful before entry. Relevant signals
 include:
 
 - meaningful uncertainty, estimation, extrapolation, or assumptions;
-- conflicting evidence or an evidence item already flagged for review;
+- conflicting evidence or a `Documents and sources` row marked `needs review`;
 - a significant change from a baseline whose source or explanation needs
   confirmation;
 - a taxpayer decision or portal-dependent review (e.g.,
@@ -249,14 +256,14 @@ in `notes`.
 
 This checklist is the check: the agent completes it for every map, reading
 the rule data from `field-map-rules.yaml`, and records
-`check_performed_by: checked_by_agent` in the artifact. The IDs are stable so
-session notes and evals can reference individual checks.
-The checklist validates the map mechanically; session state remains the sole
-readiness authority.
+`check_performed_by: checked_by_agent` in the map. The IDs are stable so the
+conversation and evals can reference individual checks.
+The checklist validates the map mechanically; the owning workflow's section
+rollup remains the sole readiness authority.
 
 - [ ] `FM-METADATA` — required metadata and the check trail are present and valid.
 - [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are the supported annual 2025 or provisional 2026 pair.
-- [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields and no Zvw entry rows exist.
+- [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields and no Zvw entry rows exist; an annual `business.has_onderneming` value is the YAML boolean `true` or `false`, never a string such as `"nee"` (the summary table may still display `nee`).
 - [ ] `FM-SOURCE` — every populated row has a valid source type and its required provenance fields.
 - [ ] `FM-CONFIDENCE-FINITE` — confidence is numeric within 0–1 and numeric values are finite.
 - [ ] `FM-REFERENCE-COVERAGE` — every required non-prefilled reference field appears in fields or missing fields.

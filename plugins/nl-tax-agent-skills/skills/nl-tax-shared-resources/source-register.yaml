@@ -119,7 +119,6 @@ sources:
     mandatory_for:
       - nl-tax-intake
       - nl-tax-annual-return
-      - nl-tax-evidence-indexer
 
   - id: bd_annual_return_4_steps_2025
     title: "Doe online aangifte inkomstenbelasting in 4 stappen"
@@ -135,7 +134,6 @@ sources:
     mandatory_for:
       - nl-tax-intake
       - nl-tax-annual-return
-      - nl-tax-evidence-indexer
 
   - id: bd_annual_data_checklist_2025
     title: "Deze gegevens hebt u nodig bij het invullen van uw belastingaangifte"
@@ -151,7 +149,6 @@ sources:
     mandatory_for:
       - nl-tax-intake
       - nl-tax-annual-return
-      - nl-tax-evidence-indexer
 
   - id: bd_jaaropgaaf_fields_2025
     title: "Wat staat er in een jaaropgaaf?"
@@ -167,7 +164,6 @@ sources:
     mandatory_for:
       - nl-tax-annual-return
       - nl-tax-box1-home
-      - nl-tax-evidence-indexer
       - nl-tax-field-mapper
 
   - id: bd_fisin_2025_index
@@ -184,7 +180,6 @@ sources:
     mandatory_for:
       - nl-tax-intake
       - nl-tax-annual-return
-      - nl-tax-evidence-indexer
 
   - id: bd_annual_deadline_2025
     title: "Wanneer moet mijn aangifte inkomstenbelasting binnen zijn?"
@@ -1560,7 +1555,6 @@ sources:
       - nl-tax-box1-home
       - nl-tax-box3
       - nl-tax-partner-deductions
-      - nl-tax-evidence-indexer
 
   # ===========================================================================
   #  Algorithm reference

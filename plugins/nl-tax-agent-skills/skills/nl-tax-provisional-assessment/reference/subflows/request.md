@@ -2,10 +2,9 @@
 
 ### Conversational review checkpoints
 
-1. Does the taxpayer profile exist? If not, route back to intake.
-2. Does the profile contain `provisional_2026_request`? If not, route to the correct subflow.
-3. **Have they already received any 2026 voorlopige aanslag?** A later unsolicited VA based on earlier data may be issued, but is not guaranteed. If a 2026 beschikking or monthly amount actually exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
-4. Does the taxpayer have a fiscal partner? If yes, collect partner data and determine box 3 allocation.
+1. Is the request subflow confirmed in the conversation, or in Appendix A of a resumed workpack? If intake screening facts are missing, establish only those first; if the goal is different, route to the correct subflow.
+2. **Have they already received any 2026 voorlopige aanslag?** A later unsolicited VA based on earlier data may be issued, but is not guaranteed. If a 2026 beschikking or monthly amount actually exists, this is really a **change** (or **review**), not a request -- route to the change/review subflow with that beschikking as the baseline. Only continue as a request when no 2026 voorlopige aanslag exists yet.
+3. Does the taxpayer have a fiscal partner? If yes, collect partner data and prepare traceable Box 3 and deduction allocation scenarios for the partners' own choice.
 
 ### Data collection steps
 
@@ -34,11 +33,11 @@
 
 ### Output generation
 
-1. Generate `workspace/provisional/2026/provisional-pack.md` using the template
-2. After the generation gate opens, invoke `nl-tax-field-mapper`; it alone writes and validates `workspace/provisional/2026/field-map.yaml` using `nl-tax-field-mapper/templates/field-map-template.yaml`, `nl-tax-field-mapper/reference/mapping-principles.md`, `nl-tax-field-mapper/reference/provisional-field-map.md`, and the agent checklist with `nl-tax-field-mapper/reference/field-map-rules.yaml`.
-3. Update `workspace/shared/assumptions.md` with all assumptions made
-4. Label all amounts as estimates
-5. If `person.aow_by_tax_year.2026.status` is `reaches_during_year`, record the transition
+1. At the generation gate, produce the workpack from `templates/provisional-workpack.md` with request context: `Existing baseline, if any` reads "No existing baseline — new request"; `Delta summary`, `Review questions`, `Stopzetten outcome`, and the change re-entry reminder read N/A.
+2. Then continue with `nl-tax-field-mapper`; it alone composes and checks the field map, shows its summary table in the conversation (never the YAML), and writes `Field map summary` and Appendix B only while save consent is active in this conversation.
+3. Record under `Assumptions` only assumptions the user explicitly accepted.
+4. Label all amounts as estimates.
+5. If the `Taxpayer profile summary` records 2026 AOW status `reaches_during_year`, record the transition
    month and use the live portal result for the affected rates/credits; do not
    select either whole-year table
 

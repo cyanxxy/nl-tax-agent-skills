@@ -54,7 +54,6 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
     def test_only_conversation_owners_allow_native_structured_questions(self):
         owners = (
             "nl-tax-intake",
-            "nl-tax-evidence-indexer",
             "nl-tax-annual-return",
             "nl-tax-provisional-assessment",
             "nl-tax-field-mapper",
@@ -89,15 +88,12 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         intake = frontmatter(SKILLS / "nl-tax-intake/SKILL.md")[
             "description"
         ].lower()
-        evidence = frontmatter(SKILLS / "nl-tax-evidence-indexer/SKILL.md")[
-            "description"
-        ].lower()
         self.assertIn("explicitly wants", intake)
         self.assertIn("informational", intake)
-        self.assertIn("explicitly wants", evidence)
-        self.assertTrue("index" in evidence or "organiz" in evidence)
         self.assertNotIn("mentions belastingaangifte", intake)
-        self.assertNotIn("mentions tax documents", evidence)
+        # 0.4 (R10): documents are read inside the owning workflow; there is no
+        # separate document-indexing entry point any more.
+        self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
 
     def test_informational_questions_use_notes_without_creating_state(self):
         intake = read_skill("nl-tax-intake").lower()
@@ -150,7 +146,7 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertIn("immediate checklist offer", metadata["description"].lower())
         self.assertIn("affirmative reply", body)
         self.assertIn("never require a slash command or magic phrase", body)
-        self.assertIn("do not run it merely because a field map exists", body)
+        self.assertIn("do not run merely because a field map exists", body)
         self.assertIn("not expected for `provisional_2026_review`", body)
         self.assertIn("or `provisional_2026_stopzetten`", body)
         self.assertIn("never report a missing field map as a blocker", body)
@@ -161,16 +157,33 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertNotIn("/nl-tax-", prompt)
         self.assertIn("any applicable field map", prompt)
 
-    def test_large_output_files_load_only_at_generation(self):
-        for skill_name, template in (
-            ("nl-tax-annual-return", "annual-return-pack.md"),
-            ("nl-tax-provisional-assessment", "provisional-pack.md"),
-        ):
-            text = " ".join(read_skill(skill_name).lower().split())
-            path = f"templates/{template}"
-            self.assertIn(path, text)
-            window = text[text.index(path) : text.index(path) + 300]
-            self.assertIn("only after", window)
+    def test_large_output_files_load_only_at_consent_or_generation(self):
+        annual = " ".join(read_skill("nl-tax-annual-return").lower().split())
+        self.assertIn(
+            "do not load `reference/annual-output-contract.md` during collection",
+            annual,
+        )
+        self.assertIn(
+            "phase 10 loads it, with the template, only after its generation gate opens",
+            annual,
+        )
+        self.assertIn("on consent, load `templates/annual-workpack.md`", annual)
+
+        provisional = " ".join(
+            read_skill("nl-tax-provisional-assessment").lower().split()
+        )
+        self.assertIn(
+            "load `templates/provisional-workpack.md` when the user consents to "
+            "saving or at the generation gate, whichever comes first",
+            provisional,
+        )
+        self.assertIn(
+            "load `reference/provisional-output-contract.md` at final review",
+            provisional,
+        )
+        for text in (annual, provisional):
+            for retired in ("annual-return-pack.md", "provisional-pack.md"):
+                self.assertNotIn(retired, text)
 
     def test_annual_phases_exist_and_are_linked_from_the_entry_surface(self):
         skill = read_skill("nl-tax-annual-return")
@@ -216,27 +229,33 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             SKILLS
             / "nl-tax-annual-return/reference/phases/10-assembly.md"
         ).read_text(encoding="utf-8")
-        provisional = "\n".join(
-            (
-                SKILLS
-                / f"nl-tax-provisional-assessment/reference/subflows/{name}"
-            ).read_text(encoding="utf-8")
-            for name in ("request.md", "change.md")
-        )
         shared_paths = (
             MAPPER_PATHS[0],
             MAPPER_PATHS[1],
             MAPPER_PATHS[4],
         )
-        for skill_name, text in (("annual", annual), ("provisional", provisional)):
-            for path in shared_paths:
-                with self.subTest(skill=skill_name, path=path):
-                    self.assertIn(path, text)
-        self.assertIn(MAPPER_PATHS[2], annual)
-        self.assertIn(MAPPER_PATHS[3], provisional)
+        for path in shared_paths + (MAPPER_PATHS[2],):
+            with self.subTest(skill="annual", path=path):
+                self.assertIn(path, annual)
         self.assertIn("reference/phases/10-assembly.md", annual_entry)
         self.assertIn("reference/subflows/request.md", provisional_entry)
         self.assertIn("reference/subflows/change.md", provisional_entry)
+
+        # Provisional request/change hand off to the mapper by name; the mapper
+        # entry surface names every bundled resource it loads, so nothing has
+        # to enumerate the package.
+        for name in ("request.md", "change.md"):
+            subflow = (
+                SKILLS / f"nl-tax-provisional-assessment/reference/subflows/{name}"
+            ).read_text(encoding="utf-8")
+            with self.subTest(subflow=name):
+                self.assertIn("continue with `nl-tax-field-mapper`", subflow)
+        mapper = read_skill("nl-tax-field-mapper")
+        for path in MAPPER_PATHS:
+            local = path.split("/", 1)[1]
+            with self.subTest(mapper_resource=local):
+                self.assertIn(local, mapper)
+                self.assertTrue((SKILLS / path).is_file())
 
 
 if __name__ == "__main__":

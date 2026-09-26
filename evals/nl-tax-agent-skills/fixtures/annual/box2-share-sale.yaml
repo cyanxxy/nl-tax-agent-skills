@@ -1,7 +1,7 @@
 # Eval fixture: Annual Box 2 share-sale case
 
 fixture_id: eval_annual_box2_share_sale
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Annual 2025 standard Box 2 share sale"
 tax_year: 2025
 workflow: annual_2025
@@ -24,8 +24,19 @@ evidence_files:
       verkrijgingsprijs: 40000.00
       vervreemdingskosten: 2500.00
 
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+
 expected_behavior:
-  - "Create annual Box 2 disposal-benefit notes"
+  - "Record the Box 2 disposal benefit in the workpack's Box 2 notes"
   - "Map box2.vervreemdingsprijs"
   - "Map box2.verkrijgingsprijs"
   - "Map box2.vervreemdingskosten"

@@ -109,7 +109,7 @@ When a user asks about stopping their voorlopige aanslag:
 3. If making payments: route to CHANGING the voorlopige aanslag; do not offer stopzetten
    - Explain that simply ceasing payment can create arrears under the current
      beschikking and does not correct the estimate
-   - Mutate session state before the next question: set `active_workflow: provisional_2026_change`, set `provisional_2026.subflow: change`, copy the payment baseline into the `baseline` subsection, mark `stopzetten_direction` complete with `routed_to_change_payment_case`, and reset `confirm` to `not_started`
+   - Record the redirect before the next question: switch the subflow to change (`provisional_2026_change`), carry the payment baseline into the `baseline` section, mark `stopzetten_direction` complete as routed to change (payment case), and reset `confirm` to `not_started`
 4. Warn that stopping a refund does not eliminate the tax obligation and does
    not by itself decide the taxpayer's annual filing obligation
 5. Direct the user to the Mijn Belastingdienst portal for the actual action only when the cutoff gate is before 2026-10-01

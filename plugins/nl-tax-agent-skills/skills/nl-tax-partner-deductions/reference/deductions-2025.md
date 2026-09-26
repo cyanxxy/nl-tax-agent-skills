@@ -125,7 +125,7 @@ This skill generates allocation scenarios with estimated tax impact. The final a
 4. Box 3 allocation interacts with deduction allocation (both change taxable income).
 5. The tariefsaanpassing complicates the straightforward "highest bracket" rule.
 
-The calling skill must present labeled allocation scenarios to the taxpayer for
+The owning workflow must present labeled allocation scenarios to the taxpayer for
 review, not rank, recommend, or select one automatically. Record an allocation
 only after the taxpayer explicitly chooses it; otherwise leave it unresolved.
 

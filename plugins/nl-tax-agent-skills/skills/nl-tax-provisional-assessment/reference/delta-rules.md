@@ -14,11 +14,11 @@
 
 ## Purpose
 
-This document defines the baseline and current-estimate comparison used inside
-provisional assessment workpacks. It helps the taxpayer see what changed and
-discuss a possible direction without predicting the monthly amount. It is for
-user understanding only -- the Belastingdienst recalculates from the complete
-submitted data.
+This document defines the baseline and current-estimate comparison used in the
+`Delta summary` section of the provisional workpack. It helps the taxpayer see
+what changed and discuss a possible direction without predicting the monthly
+amount. It is for user understanding only -- the Belastingdienst recalculates
+from the complete submitted data.
 
 ---
 
@@ -35,10 +35,10 @@ The baseline is the starting point — the existing voorlopige aanslag or prior-
 - EVA (Eerste Voorlopige Aanslag): a later **unsolicited** VA based on earlier data **may be issued**, but it is **not guaranteed**
 
 **Rules:**
-- If a beschikking is available in the evidence index, use it as the baseline
+- If the user shares a beschikking, record it as a `Documents and sources` row and use it as the baseline
 - If no beschikking is available, ask the user for the key figures from their current voorlopige aanslag
 - If no existing voorlopige aanslag exists (request subflow), baseline is "none" — delta is not applicable
-- Record the baseline source and date in the delta summary
+- Record the baseline source and date in the `Delta summary` section
 
 ### Forecast
 
@@ -81,7 +81,7 @@ what changed; any cash-flow direction remains a reviewed, non-binding note.
 
 ## Delta categories
 
-The delta summary must cover the following categories:
+The `Delta summary` section must cover the following categories:
 
 | Category                | Description                                    |
 |-------------------------|------------------------------------------------|
@@ -112,8 +112,8 @@ minus sign for an expected loss. Never fold it into generic other income.
 
 The bijdrage Zorgverzekeringswet is **not** a delta category. Where the taxpayer
 has winst uit onderneming or income from work performed outside employment, the
-delta summary reports the separate voorlopige aanslag Zvw **alongside** the
-table as a companion item and never merges it into an income-tax row or total.
+`Delta summary` section reports the separate voorlopige aanslag Zvw
+**alongside** the table as a companion item and never merges it into an income-tax row or total.
 
 - The income-tax voorlopige aanslag and the voorlopige aanslag Zvw are two
   separate aanslagen with two separate change routes. No reviewed source
@@ -138,7 +138,7 @@ for every Zvw figure; read them there and never restate one from memory.
 
 ## Visual format
 
-The delta summary must present the comparison in a table format:
+The `Delta summary` section must present the comparison in a table format:
 
 ```
 | Category               | Baseline      | Current Estimate | Delta         | Notes              |
@@ -190,8 +190,8 @@ The delta is for the taxpayer's understanding only. It is NOT submitted to the B
 
 - The Belastingdienst recalculates the entire assessment from the newly submitted data
 - The Belastingdienst does not receive or process a "delta" — it receives the full new dataset
-- The delta summary helps the taxpayer understand what changed and verify that the new workpack is correct
-- The delta summary is a preparation and review tool, not a submission document
+- The `Delta summary` section helps the taxpayer understand what changed and check that the new workpack is correct
+- The `Delta summary` section is a preparation and review tool, not a submission document
 
 ---
 
@@ -202,7 +202,7 @@ If the baseline is incomplete (e.g., user cannot provide all figures from the ex
 1. Record which baseline fields are available and which are missing
 2. Mark missing baseline fields as "unknown" in the delta table
 3. Calculate delta only for categories where both baseline and forecast are available
-4. Note in the assumptions section which baseline fields were unavailable
+4. Note in the `Delta summary` section which baseline fields were unavailable. This is a non-blocking note: it is not a user-accepted assumption, an open question, or a Missing information row, and it does not by itself keep the workpack a draft
 5. Do NOT guess or fabricate baseline values
 
 ---

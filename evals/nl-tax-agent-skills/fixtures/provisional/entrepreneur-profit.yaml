@@ -1,7 +1,7 @@
 # Eval fixture: Provisional 2026 entrepreneur expected-profit forecast
 
 fixture_id: eval_provisional_entrepreneur_profit
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Provisional 2026 request — sourced expected profit for an eenmanszaak"
 tax_year: 2026
 workflow: provisional_2026_request
@@ -28,7 +28,7 @@ estimated_data:
       quote: "My reviewed best estimate of full-year 2026 business profit is EUR 54,000."
       stated_at: "2026-07-11"
     support:
-      evidence_id: ev_profit_forecast_2026
+      document_row: ev_001
       description: "Current bookkeeping plus a full-year forecast reviewed by the taxpayer"
     manual_review_required: true
   rollover_check:
@@ -45,13 +45,16 @@ estimated_data:
     income_estimate: unknown
     status: open_question
 
+saving:
+  provisional_2026:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
   files_created:
-    - workspace/shared/session-progress.yaml
-    - workspace/provisional/2026/provisional-pack.md
-    - workspace/provisional/2026/field-map.yaml
+    - workspace/nl-tax-provisional-2026-workpack.md
   files_not_created:
-    - workspace/annual/**
+    - workspace/nl-tax-annual-2025-workpack.md
   workpack_checks:
     - section: "Winst uit onderneming forecast"
       contains: "EUR 54,000"
@@ -65,7 +68,7 @@ expected_outputs:
     - section: "Rollover check"
       contains: "opened pre-filled"
       contains_also: "zelfstandigenaftrek"
-  field_map_checks:
+  field_map_checks:   # Appendix B of the saved workpack
     - workflow: provisional_assessment
     - tax_year: 2026
     - contains_field: onderneming.geschatte_winst
@@ -75,10 +78,17 @@ expected_outputs:
     - no_zvw_calculation: true
     - no_final_tax_calculation: true
 
+expected_resume_record:
+  workflow: provisional_2026_request
+  tax_year: 2026
+  save_consent: given
+  sections:
+    winst_forecast: complete
+  open_question_topics:
+    - "voorlopige aanslag Zorgverzekeringswet 2026 received and its income estimate"
+
 expected_state:
-  session_progress_version: "1.4"
-  provisional_2026_subsection: winst_forecast
-  provisional_2026_winst_forecast_status: complete
+  provisional_2026_section: winst_forecast
   profit_semantics_confirmed: true
   zvw_companion_status: open_question
   rollover_check_status: complete
@@ -99,4 +109,4 @@ acceptance_criteria:
   - "The estimate is stated as the winst before ondernemersaftrek and mkb-winstvrijstelling, excluding btw"
   - "The separate voorlopige aanslag Zorgverzekeringswet is raised as a companion item, without calculating it; separate routes are stated and coupling is left unestablished"
   - "The pre-filled earlier-year estimate is checked against the current-year zelfstandigenaftrek"
-  - "Session progress remains schema 1.4 and the owning workflow persists helper results"
+  - "The owning workflow records helper results in the one workpack; helpers write nothing"

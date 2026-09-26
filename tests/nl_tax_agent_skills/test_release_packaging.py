@@ -13,9 +13,14 @@ PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 SKILLS = PLUGIN / "skills"
 REPOSITORY_URL = "https://github.com/cyanxxy/nl-tax-agent-skills"
 
+RELEASE_VERSION = "0.4.0"
+WORKPACK_FILES = (
+    "workspace/nl-tax-annual-2025-workpack.md",
+    "workspace/nl-tax-provisional-2026-workpack.md",
+)
+
 ARGUMENT_HINTS = {
     "nl-tax-annual-return": "[2025] [confirm]",
-    "nl-tax-evidence-indexer": "[path-to-upload-folder]",
     "nl-tax-field-mapper": "[annual|provisional] [year]",
     "nl-tax-intake": "[annual|request|change|review|stopzetten]",
     "nl-tax-knowledge": "[tax-rule question]",
@@ -27,7 +32,6 @@ ARGUMENT_HINTS = {
 
 PUBLIC_OPENAI_SKILLS = {
     "nl-tax-annual-return",
-    "nl-tax-evidence-indexer",
     "nl-tax-field-mapper",
     "nl-tax-intake",
     "nl-tax-knowledge",
@@ -100,15 +104,18 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_no_legacy_commands(self):
         self.assertFalse((PLUGIN / "commands").exists())
 
-    def test_exactly_12_runtime_skills_plus_hidden_shared_resources(self):
+    def test_exactly_11_runtime_skills_plus_hidden_shared_resources(self):
         paths = list(SKILLS.glob("*/SKILL.md"))
         names = [frontmatter(path)["name"] for path in paths]
         workflow_names = [
             frontmatter(path)["name"] for path in paths if path.parent.name != "nl-tax-shared-resources"
         ]
-        self.assertEqual(len(workflow_names), 12)
-        self.assertEqual(len(names), 13)
-        self.assertEqual(len(set(names)), 13)
+        self.assertEqual(len(workflow_names), 11)
+        self.assertEqual(len(names), 12)
+        self.assertEqual(len(set(names)), 12)
+        # 0.4 retired the evidence indexer; the owning workflows read documents.
+        self.assertNotIn("nl-tax-evidence-indexer", names)
+        self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
         shared = frontmatter(SKILLS / "nl-tax-shared-resources/SKILL.md")
         self.assertFalse(shared["user-invocable"])
         self.assertTrue(shared["disable-model-invocation"])
@@ -131,14 +138,14 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_manifest_versions_and_metadata(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
         codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        self.assertEqual(claude["version"], "0.3.4")
+        self.assertEqual(claude["version"], RELEASE_VERSION)
         # The directory portal warns without a privacy policy link.
         self.assertEqual(claude["privacyPolicyUrl"], REPOSITORY_URL + "/blob/main/PRIVACY.md")
         self.assertEqual(claude["privacyPolicyUrl"], codex["interface"]["privacyPolicyURL"])
         # skills/ is scanned by default; the directory portal found no skills
         # while the Claude manifest also declared "skills": "./skills".
         self.assertNotIn("skills", claude)
-        self.assertEqual(codex["version"], "0.3.4")
+        self.assertEqual(codex["version"], RELEASE_VERSION)
         self.assertEqual(claude["displayName"], "NL Tax Agent Skills")
         self.assertEqual(claude["homepage"], REPOSITORY_URL)
         self.assertEqual(claude["repository"], REPOSITORY_URL)
@@ -154,6 +161,47 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertLessEqual(len(codex["interface"]["displayName"]), 30)
         self.assertNotIn("Step-by-step", codex["interface"]["shortDescription"])
         self.assertEqual(len(codex["interface"]["defaultPrompt"]), 3)
+        # Catalog copy must not advertise the retired evidence indexer.
+        catalog_copy = " ".join(
+            [codex["interface"]["longDescription"], *codex["interface"]["defaultPrompt"]]
+        ).lower()
+        self.assertNotIn("index", catalog_copy)
+        self.assertIn("nothing is saved unless you ask", catalog_copy)
+
+    def test_workpack_templates_record_the_release_version(self):
+        # Appendix A of each saved workpack records the plugin version that
+        # wrote it; CONTRIBUTING says to bump it with the manifests.
+        for template in (
+            SKILLS / "nl-tax-annual-return/templates/annual-workpack.md",
+            SKILLS / "nl-tax-provisional-assessment/templates/provisional-workpack.md",
+        ):
+            with self.subTest(template=template.name):
+                self.assertIn(
+                    'plugin_version: "' + RELEASE_VERSION + '"',
+                    template.read_text(encoding="utf-8"),
+                )
+
+    def test_changelog_has_the_release_section_the_release_workflow_extracts(self):
+        changelog = (REPO / "CHANGELOG.md").read_text(encoding="utf-8")
+        # .github/workflows/release.yml extracts the notes from a line that
+        # starts with "## [X.Y.Z]" and stops at the next "## [" heading.
+        self.assertRegex(
+            changelog, r"(?m)^## \[" + RELEASE_VERSION.replace(".", r"\.") + r"\] — "
+        )
+        section = changelog.split("## [" + RELEASE_VERSION + "]", 1)[1].split("\n## [", 1)[0]
+        section_flat = " ".join(section.split())
+        for required in (
+            "Nothing is written by default.",
+            "workspace/nl-tax-annual-2025-workpack.md",
+            "workspace/nl-tax-provisional-2026-workpack.md",
+            "`nl-tax-evidence-indexer`. Reading documents is built into",
+            "embedded as Appendix B",
+            "ledgers are not migrated",
+            "attach an old `return-pack.md`",
+            "Sends data elsewhere: no.",
+        ):
+            with self.subTest(required=required):
+                self.assertIn(required, section_flat)
 
     def test_claude_package_has_one_specialist_reviewer_agent(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
@@ -176,15 +224,15 @@ class ReleasePackagingTests(unittest.TestCase):
             {"Read", "Grep", "Glob", "WebSearch", "WebFetch"},
         )
         self.assertNotIn("disallowedTools", metadata)
-        body = agent_paths[0].read_text(encoding="utf-8")
+        body = " ".join(agent_paths[0].read_text(encoding="utf-8").split())
         self.assertIn("official sources", body)
-        self.assertIn("outside the frontmatter\nallowlist", body)
+        self.assertIn("outside the frontmatter allowlist", body)
         self.assertIn("Do not use Bash, Write, Edit, Agent", body)
         self.assertIn("connectors, MCP tools", body)
         self.assertIn("return that request to the owner", body)
         self.assertNotIn("run the plugin's optional mechanical validators", body)
         self.assertIn("Do not decide final readiness", body)
-        self.assertIn("Do not write or mutate any file", body)
+        self.assertIn("Never write or change any file, including the workpack", body)
 
     def test_public_box3_copy_preserves_the_non_election_boundary(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
@@ -205,16 +253,20 @@ class ReleasePackagingTests(unittest.TestCase):
     def test_every_skill_loads_the_cross_runtime_contract(self):
         contract = SKILLS / "nl-tax-shared-resources/runtime-contract.md"
         self.assertTrue(contract.is_file())
-        contract_text = contract.read_text(encoding="utf-8")
+        contract_text = " ".join(contract.read_text(encoding="utf-8").split())
         for required in (
-            "ChatGPT Work on web or mobile",
-            "ChatGPT Work or Codex on desktop",
+            "never claim access to files that remain only on the user's computer",
+            "files in the working folder the user selected for the task",
             "The plugin ships no scripts and needs no shell or Python",
             "Never depend on a vendor-specific environment variable",
             "The owning conversational agent remains the only writer",
             "the user may ask for deadline reminders",
+            "No skill writes any file until the user has consented to saving",
+            "`workspace/nl-tax-annual-2025-workpack.md`",
+            "`workspace/nl-tax-provisional-2026-workpack.md`",
         ):
-            self.assertIn(required, contract_text)
+            with self.subTest(required=required):
+                self.assertIn(required, contract_text)
 
         for path in SKILLS.glob("*/SKILL.md"):
             with self.subTest(skill=path.parent.name):
@@ -315,26 +367,86 @@ class ReleasePackagingTests(unittest.TestCase):
 
     def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
         text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        tag = "nl-tax-agent-skills--v" + RELEASE_VERSION
         self.assertIn(
-            'test "$(git tag --list \'nl-tax-agent-skills--v0.3.4\')" = ""',
+            'test "$(git tag --list \'' + tag + '\')" = ""',
             text,
         )
         self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list 'nl-tax-agent-skills--v0.3.4'", text)
+        self.assertIn("git tag --list '" + tag + "'", text)
+        self.assertIn("currently `" + RELEASE_VERSION + "`", text)
+        self.assertIn("git tag -a v" + RELEASE_VERSION, text)
 
     def test_contributor_architecture_docs_match_artifact_ownership(self):
         readme = (REPO / "README.md").read_text(encoding="utf-8")
+        plugin_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
         contributing = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
+        contributing_flat = " ".join(contributing.split())
 
         self.assertNotIn("background helpers → workspace/shared/", readme)
         self.assertNotIn("background helper notes", contributing)
         self.assertNotIn("field-map.yaml                # nl-tax-field-mapper input", contributing)
-        self.assertIn("canonical nl-tax-field-mapper output", contributing)
+        # Appendix B of the one workpack holds the canonical field map, and
+        # the field mapper alone authors it.
+        self.assertIn("canonical nl-tax-field-mapper output", contributing_flat)
+        self.assertIn("field mapper alone authors the field map", contributing_flat)
+        self.assertIn("the only author of the field map", plugin_readme)
+        # Helpers, intake, and knowledge write nothing.
         self.assertIn(
             "background helpers return facts/questions without persisting files",
-            contributing,
+            contributing_flat,
         )
-        self.assertIn("field mapper alone writes canonical", contributing)
+        self.assertIn("intake and knowledge write nothing", contributing_flat)
+        self.assertIn("Background helpers the workflows consult; they write nothing", plugin_readme)
+        # Section ownership inside the one workpack file.
+        self.assertIn("`## Field map summary` and `## Appendix B — Field map`", contributing)
+        self.assertIn("`## Manual-entry checklist`", contributing)
+
+    def test_docs_describe_the_0_4_runtime_layout_only(self):
+        docs = {
+            "README.md": (REPO / "README.md").read_text(encoding="utf-8"),
+            "plugin README.md": (PLUGIN / "README.md").read_text(encoding="utf-8"),
+            "CONTRIBUTING.md": (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8"),
+            "PRIVACY.md": (REPO / "PRIVACY.md").read_text(encoding="utf-8"),
+            "SECURITY.md": (REPO / "SECURITY.md").read_text(encoding="utf-8"),
+        }
+        for name, text in docs.items():
+            with self.subTest(doc=name):
+                for path in WORKPACK_FILES:
+                    self.assertIn(path, text)
+                for stale in (
+                    "nl-tax-evidence-indexer",
+                    "evidence indexer",
+                    "workspace/shared/",
+                    "workspace/taxpayer/",
+                    "workspace/annual/",
+                    "workspace/provisional/",
+                    "manual-submission-checklist",
+                ):
+                    self.assertNotIn(stale, text)
+        # CONTRIBUTING may name the 0.3 ledgers only to say they are not migrated.
+        contributing_flat = " ".join(docs["CONTRIBUTING.md"].split())
+        self.assertIn("are not migrated and are never read or written", contributing_flat)
+
+    def test_user_docs_state_the_consented_single_workpack_data_handling(self):
+        plugin_readme = " ".join((PLUGIN / "README.md").read_text(encoding="utf-8").split())
+        readme = " ".join((REPO / "README.md").read_text(encoding="utf-8").split())
+        privacy = " ".join((REPO / "PRIVACY.md").read_text(encoding="utf-8").split())
+
+        self.assertIn("The plugin writes nothing unless you ask.", plugin_readme)
+        self.assertIn("**Writes:** nothing by default.", plugin_readme)
+        self.assertIn("pre-approve file edits for `./workspace/**` only", plugin_readme)
+        self.assertIn("**Fetches:** nothing by default", plugin_readme)
+        self.assertIn("The plugin writes nothing by default.", readme)
+        self.assertIn("Nothing, unless you ask.", privacy)
+        self.assertIn("A saved workpack stays until you delete it", privacy)
+        self.assertIn("**Sends data elsewhere:** no.", privacy)
+        for text in (plugin_readme, readme, privacy):
+            self.assertIn("attach", text)
+            # The plugin runs inside an AI host; never promise local-only use.
+            self.assertNotIn("never leaves your device", text.lower())
+            self.assertNotIn("data never leaves", text.lower())
+        self.assertGreaterEqual(len(plugin_readme.split()), 40)
 
 
 if __name__ == "__main__":

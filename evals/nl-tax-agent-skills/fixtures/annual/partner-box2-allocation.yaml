@@ -1,7 +1,7 @@
 # Eval fixture: Annual partner Box 2 allocation case
 
 fixture_id: eval_annual_partner_box2_allocation
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Annual 2025 fiscal partners allocate Box 2 income"
 tax_year: 2025
 workflow: annual_2025
@@ -25,6 +25,17 @@ evidence_files:
     tax_year: 2025
     extracted_fields:
       reguliere_voordelen_bruto: 20000.00
+
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
 
 expected_behavior:
   - "Include partner.verdeling_box2_inkomen"

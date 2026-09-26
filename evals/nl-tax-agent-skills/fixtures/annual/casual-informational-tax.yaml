@@ -1,8 +1,8 @@
 # Eval fixture: Casual informational annual-tax question
 
 fixture_id: eval_annual_casual_informational_tax
-fixture_version: "1.0"
-scenario: "Casual healthcare-cost question does not start intake"
+fixture_version: "2.0"
+scenario: "Casual healthcare-cost question does not start intake or write any file"
 tax_year: 2025
 workflow: intake
 
@@ -15,18 +15,18 @@ expected_outputs:
     - answers_question_directly: true
     - states_potentially_qualifying: true
     - mentions_income_dependent_threshold: true
+    - offers_to_save_a_workpack: false
+  files_created: []
   files_not_created:
-    - workspace/taxpayer/profile.yaml
-    - workspace/shared/session-progress.yaml
-    - workspace/annual/**
-    - workspace/provisional/**
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
 
 expected_behavior:
   - "Answer the informational question directly"
   - "Do not start intake or ask the annual/provisional screening questions"
-  - "Do not create taxpayer, session, annual, or provisional workflow files"
+  - "Write no file: an informational answer never starts a workpack or a save offer"
 
 acceptance_criteria:
   - "Unreimbursed prescribed medicine is described as potentially qualifying healthcare cost"
   - "The income-dependent threshold and manual-review calculation boundary are mentioned"
-  - "No intake interview or workpack is started"
+  - "No intake interview, workpack, or save offer is started"

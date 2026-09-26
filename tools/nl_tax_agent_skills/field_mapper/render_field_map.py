@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
-"""Render a field-map.yaml as a readable Markdown table for human review.
+"""Render a field map as a readable Markdown table for human review.
 
 Usage:
-    python3 render_field_map.py <path-to-field-map.yaml>
+    python3 render_field_map.py <field-map.yaml | workpack.md>
+
+Accepts a standalone field-map YAML file or a 0.4 workpack Markdown file, in
+which case the single fenced ``yaml`` block under ``## Appendix B — Field map``
+is rendered. A workpack whose Appendix B still holds ``not yet mapped`` has no
+field map: that is reported as an error (exit 1).
 
 Outputs Markdown to stdout grouped by section.
 """
 
+import importlib.util
 import math
 import os
 import re
 import sys
+from pathlib import Path
+
+_VALIDATOR_PATH = Path(__file__).resolve().with_name("validate_field_map.py")
 
 
 def _cell(value):
@@ -58,10 +67,27 @@ def _confidence(raw):
         return _cell(raw)
 
 
+def _workpack_extractor():
+    """Load the Appendix B extractor shared with the sibling validator."""
+    spec = importlib.util.spec_from_file_location(
+        "_nl_tax_validate_field_map_for_render", _VALIDATOR_PATH
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def load_yaml(path):
-    """Load YAML via PyYAML; require it rather than silently mis-parsing."""
+    """Load YAML via PyYAML; require it rather than silently mis-parsing.
+
+    A ``.md`` path is read as a workpack and its Appendix B block is loaded.
+    Raises ``ValueError`` (the validator's ``WorkpackFieldMapError``) when the
+    workpack holds no single field map.
+    """
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
+    if Path(path).suffix.lower() in {".md", ".markdown"}:
+        content, _ = _workpack_extractor().extract_workpack_field_map(content)
     try:
         import yaml
     except ImportError:
@@ -189,13 +215,17 @@ def render(data):
 
 
 def main():
+    usage = "Usage: python3 render_field_map.py <field-map.yaml | workpack.md>"
     if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
-        print("render_field_map.py — render a field-map.yaml as a Markdown table")
-        print("Usage: python3 render_field_map.py <path-to-field-map.yaml>")
+        print(
+            "render_field_map.py — render a field map (YAML file or the "
+            "Appendix B block of a workpack .md) as a Markdown table"
+        )
+        print(usage)
         sys.exit(0)
 
     if len(sys.argv) < 2:
-        print("Usage: python3 render_field_map.py <path-to-field-map.yaml>", file=sys.stderr)
+        print(usage, file=sys.stderr)
         sys.exit(1)
 
     path = sys.argv[1]
@@ -203,7 +233,11 @@ def main():
         print(f"Error: file not found: {path}", file=sys.stderr)
         sys.exit(1)
 
-    data = load_yaml(path)
+    try:
+        data = load_yaml(path)
+    except ValueError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        sys.exit(1)
     print(render(data))
 
 

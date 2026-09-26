@@ -68,7 +68,7 @@ in article 3.16 lid 6.
 
 ### Evidence checklist validation
 
-The regulation defines what evidence is required to support specific deduction claims. The evidence-indexer skill uses these requirements to validate whether a taxpayer's documentation is complete.
+The regulation defines what evidence is required to support specific deduction claims. The owning workflow uses these requirements to check whether a taxpayer's documentation is complete.
 
 ### Deduction eligibility checks
 

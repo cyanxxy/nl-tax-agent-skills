@@ -48,7 +48,7 @@
       "successChecklist": [
         "Answers the question directly from the relevant reviewed 2025 note.",
         "Explains the qualifying-cost and income-dependent-threshold boundary without inventing the user's result.",
-        "Does not start intake, create taxpayer state, or ask workflow-screening questions."
+        "Does not start intake, write any file, or ask workflow-screening questions."
       ]
     },
     {
@@ -60,7 +60,8 @@
       "successChecklist": [
         "Recognizes explicit annual-2025 preparation intent and moves the work forward.",
         "Uses supplied screening facts and asks only for genuinely missing information or relevant documents.",
-        "Keeps preparation, field mapping, and manual submission responsibilities distinct."
+        "Keeps preparation, field mapping, and manual submission responsibilities distinct.",
+        "Writes no file unless the user agrees to keep the workpack as one file in the working folder."
       ]
     },
     {

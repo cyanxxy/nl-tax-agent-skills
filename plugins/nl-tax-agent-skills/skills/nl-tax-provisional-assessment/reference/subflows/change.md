@@ -3,13 +3,17 @@
 Before the first user-facing change reply, state: "Prepare and verify the
 complete dataset; the change form requires all applicable categories, not only
 the changed item." Do this before baseline or intake follow-up questions, and
-repeat the reminder on every collection turn until final confirmation.
+repeat the reminder on every collection turn until final confirmation. The
+portal may offer to pre-fill figures from the most recent annual return, but it
+does not carry forward the current voorlopige-aanslag figures; whether the form
+opens blank or pre-filled, prepare and verify every applicable category and
+never claim that omitted values default to zero.
 
 ### Conversational review checkpoints
 
-1. Does the taxpayer profile exist and contain `provisional_2026_change`?
+1. Is the change subflow confirmed in the conversation, or in Appendix A of a resumed workpack?
 2. Is there a baseline available?
-   - From evidence index (beschikking indexed by the evidence-indexer skill)
+   - From a beschikking the user shares, recorded as a `Documents and sources` row
    - From user input (user provides current voorlopige aanslag details)
    - If no baseline at all: ask user to provide the current monthly amount and key figures from their beschikking
 3. Does the taxpayer have a fiscal partner? Has partner status changed?
@@ -44,10 +48,9 @@ repeat the reminder on every collection turn until final confirmation.
 
 ### Output generation
 
-1. Generate `workspace/provisional/2026/provisional-pack.md` with change context
-2. After the generation gate opens, invoke `nl-tax-field-mapper`; it alone writes and validates `workspace/provisional/2026/field-map.yaml` using `nl-tax-field-mapper/templates/field-map-template.yaml`, `nl-tax-field-mapper/reference/mapping-principles.md`, `nl-tax-field-mapper/reference/provisional-field-map.md`, and the agent checklist with `nl-tax-field-mapper/reference/field-map-rules.yaml`.
-3. Generate `workspace/provisional/2026/delta-summary.md` — baseline vs forecast comparison
-4. Update `workspace/shared/assumptions.md`
-5. Include the full-re-entry reminder in the workpack
+1. At the generation gate, produce the workpack from `templates/provisional-workpack.md` with change context, including the `Existing baseline, if any` section and the completed `Delta summary` section (baseline vs forecast, under `reference/delta-rules.md`)
+2. Include the `Change subflow — full re-entry reminder` section in the body, before `Field map summary`
+3. Then continue with `nl-tax-field-mapper`; it alone composes and checks the field map, shows its summary table in the conversation (never the YAML), and writes `Field map summary` and Appendix B only while save consent is active in this conversation
+4. Record under `Assumptions` only assumptions the user explicitly accepted; note unavailable baseline fields in the `Delta summary` section as a non-blocking note (under `reference/delta-rules.md`), not as an assumption or a Missing information row
 
 ---

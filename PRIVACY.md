@@ -6,34 +6,71 @@ Claude (Cowork, Claude Code, or the Claude apps), ChatGPT Work, or Codex. It has
 no backend, no server, and no account. The plugin authors receive none of your
 data.
 
+## In short
+
+- **Reads personal data:** yes, the documents and facts you share for your own
+  tax preparation.
+- **Stores personal data:** only if you ask. Then it keeps one workpack file per
+  workflow in your own working folder, until you delete it.
+- **Sends data elsewhere:** no.
+
 ## What the plugin reads
 
 When you ask it to prepare a tax workpack, the plugin instructs the host's AI
 model to read:
 
 - the documents you attach or select, such as a jaaropgaaf, mortgage statement,
-  or bank overview, which contain personal and financial data; and
-- the facts you state in the conversation.
+  or bank overview, which contain personal and financial data;
+- the facts you state in the conversation; and
+- a workpack you saved earlier, when you attach it or it is in your working
+  folder, so you can continue where you left off.
 
 It reads only what you provide for your own tax preparation. It never asks for
-DigiD details, passwords, verification codes, or portal sessions, and never
-opens Mijn Belastingdienst.
+a BSN, an IBAN, DigiD details, passwords, verification codes, or portal
+sessions, and never opens Mijn Belastingdienst.
 
 ## What the plugin stores
 
-The plugin instructs the model to write working files only under `workspace/` in
-your task's working folder: your taxpayer profile, an evidence index, workpacks,
-and field maps. These are plaintext Markdown and YAML files. They stay wherever
-your host keeps that folder: on your computer for a local task, or in the
-task's environment for a cloud task. The plugin does not encrypt them.
+Nothing, unless you ask. By default the whole preparation (your facts, the
+questions, the workpack, the field map, and the manual-entry checklist) stays in
+the conversation, and the plugin writes no file.
+
+If you agree to save, or ask it to ("save my workpack"), the plugin keeps
+**one file per workflow** in a `workspace/` folder inside your working folder:
+
+- `workspace/nl-tax-annual-2025-workpack.md` for the annual 2025 return, and
+- `workspace/nl-tax-provisional-2026-workpack.md` for the 2026 voorlopige
+  aanslag.
+
+Each is a plaintext Markdown file holding the facts you provided with their
+sources, open questions, the field map, and the manual-entry checklist. The
+plugin does not encrypt it. The workpack never records a full BSN, IBAN,
+policy, contract, or aanslag number, or any credential: a provider name and tax
+year identify each document. The plugin keeps that one file up to date while
+you work, writes no other file, and never copies, moves, renames, or changes
+your own documents. Say "stop saving" and it stops updating the file.
+
+Your consent covers the current conversation. In a new conversation, the
+assistant confirms a saved file before it uses or updates it, and it never
+overwrites an older workpack you did not resume without asking whether to
+replace it. Showing the workpack in the conversation creates no file; a
+download counts as saving and is offered only with your consent.
+
+The file stays wherever your host keeps the working folder: on your computer
+for a local task with a local folder. In a cloud task without a connected local
+folder, the file lives in the host's task storage and may not outlast the
+session, so the assistant also gives you the workpack as a download at pauses
+and when it is generated: the download is the copy you keep, to attach later.
+If your host offers no writable folder at all, the download is the only copy.
 
 ## What the plugin sends, and to whom
 
 The plugin sends your data to no one: not to the plugin authors, not to the
 Belastingdienst, and not to any other third party. It has no connectors, MCP
-servers, scripts, or network calls. An optional Claude reviewer agent may read
-public official pages, such as belastingdienst.nl, to check that tax sources are
-current; it sends no taxpayer data.
+servers, or scripts, and makes no network calls by default. When a workflow
+calls for a freshness check, the assistant or the optional Claude reviewer
+agent may read public official pages, such as belastingdienst.nl, to check that
+tax sources are current; this sends no taxpayer data.
 
 Your AI host does process everything you share with it, under its own terms.
 This plugin is **not** a local-only or offline guarantee. See your host's
@@ -42,16 +79,25 @@ privacy policy for how it handles prompts and files.
 ## Retention and deletion
 
 The plugin keeps no data of its own, so there is nothing for the authors to
-retain or delete. The files under `workspace/` stay until you delete them; the
-plugin never deletes them automatically. When you are done, delete the working
-folders you no longer need, for example:
+retain or delete. A saved workpack stays until you delete it; the plugin never
+deletes files. When you no longer need it, delete the file for that workflow:
+
+- `workspace/nl-tax-annual-2025-workpack.md`
+- `workspace/nl-tax-provisional-2026-workpack.md`
+
+For example, from your working folder:
 
 ```bash
-rm -rf workspace/ uploads/ evidence/
+rm workspace/nl-tax-annual-2025-workpack.md workspace/nl-tax-provisional-2026-workpack.md
 ```
 
 Check the contents before deleting, because this cannot be undone. Remember
-that cloud-sync folders, backups, and shared drives may hold copies.
+that cloud-sync folders, backups, shared drives, and any `uploads/` or
+`evidence/` folders where you kept your own documents may hold copies.
+
+The conversation itself, including the documents you attached to it, is kept
+by your AI host under its own retention settings. Delete it there if you no
+longer want it kept.
 
 ## Children
 

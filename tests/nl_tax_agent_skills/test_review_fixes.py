@@ -42,8 +42,8 @@ class Box3TrustedRowDocumentationTests(unittest.TestCase):
 
     def test_box3_templates_have_an_agent_check_trail(self):
         for relative_path in (
-            "skills/nl-tax-annual-return/templates/annual-return-pack.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "skills/nl-tax-annual-return/templates/annual-workpack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
         ):
             with self.subTest(path=relative_path):
                 text = (PLUGIN_ROOT / relative_path).read_text(encoding="utf-8")
@@ -335,10 +335,12 @@ class EvalVerifierGlobEscapeTests(unittest.TestCase):
         spec.loader.exec_module(mod)
         with tempfile.TemporaryDirectory() as tmp:
             workspace = pathlib.Path(tmp) / "run [2026]"
-            target = workspace / "workspace/annual/2025"
+            target = workspace / "workspace"
             target.mkdir(parents=True)
-            (target / "field-map.yaml").write_text("workflow: annual_return\n", encoding="utf-8")
-            matches = mod.glob_matches(workspace, "workspace/annual/*/field-map.yaml")
+            (target / "nl-tax-annual-2025-workpack.md").write_text(
+                "# Annual workpack\n", encoding="utf-8"
+            )
+            matches = mod.glob_matches(workspace, "workspace/nl-tax-*-workpack.md")
         self.assertEqual(len(matches), 1, matches)
 
 

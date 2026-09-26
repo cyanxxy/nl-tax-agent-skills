@@ -17,11 +17,12 @@
 # sections move between filing seasons. An unrecognised identifier is a
 # question for the taxpayer conversation, never a mechanical rejection.
 #
-# Readiness direction (load-bearing): `readiness` in the artifact is the
-# agent's declaration derived from session state. A check -- scripted or
-# manual -- may REJECT a declared review_ready via a disqualifier below, but
-# nothing here can prove completeness or promote a draft. Completeness is
-# established in the taxpayer conversation and recorded in session progress.
+# Readiness direction (load-bearing): `readiness` in the map is the agent's
+# declaration derived from the owning workflow's section rollup. A check --
+# scripted or manual -- may REJECT a declared review_ready via a disqualifier
+# below, but nothing here can prove completeness or promote a draft.
+# Completeness is established in the taxpayer conversation and, when the
+# taxpayer saves the workpack, recorded in its Appendix A resume record.
 
 rules_version: "1.0"
 
@@ -99,16 +100,17 @@ prohibitions:
 # keeps (or forces) the map draft with the named blocker. Their absence proves
 # nothing: completeness of the business section is established by auditing the
 # reference inventory in the taxpayer conversation, as annual-field-map.md
-# requires, and is recorded in session progress -- a saldo, two equity anchors
-# and an hours answer are never sufficient to grant review_ready.
+# requires, and is tracked in the owning workflow's section rollup -- a saldo,
+# two equity anchors and an hours answer are never sufficient to grant
+# review_ready.
 # --------------------------------------------------------------------------
 annual_business:
   section_prefix: onderneming.
   blocker: business-section schema review
   # Sourced control records that route the case. They belong to the annual
   # identifier inventory but describe no box in Mijn Belastingdienst, so they
-  # never reach the human manual-entry checklist. They carry
-  # entry_mode: internal_routing.
+  # never reach the Field map summary table or the human manual-entry
+  # checklist. They carry entry_mode: internal_routing.
   internal_routing_ids:
     - business.legal_form
     - onderneming.routing.complex_case

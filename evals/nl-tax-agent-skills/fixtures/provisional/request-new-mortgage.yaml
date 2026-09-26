@@ -4,13 +4,13 @@
 #            New mortgage deduction, estimated salary, savings + investments.
 #
 # Expected behavior:
-#   - Provisional request workpack created
+#   - The one provisional request workpack is kept as a file after consent
 #   - All amounts labeled as estimates
 #   - Box 3 provisional method used (fictitious only)
 #   - No werkelijk rendement request appears
 
 fixture_id: eval_provisional_request
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Provisional 2026 request — new mortgage, employed, savings"
 tax_year: 2026
 workflow: provisional_2026_request
@@ -42,15 +42,16 @@ estimated_data:
     overige_bezittingen_1_jan_2026: 60000.00
     schulden_1_jan_2026: 5000.00
 
+saving:
+  provisional_2026:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
   files_created:
-    - workspace/provisional/2026/provisional-pack.md
-    - workspace/provisional/2026/field-map.yaml
-    - workspace/provisional/2026/review-questions.md
-    - workspace/shared/assumptions.md
-
+    - workspace/nl-tax-provisional-2026-workpack.md
   files_not_created:
-    - workspace/annual/**
+    - workspace/nl-tax-annual-2025-workpack.md
 
   workpack_checks:
     - section: "Subflow"
@@ -60,7 +61,7 @@ expected_outputs:
       not_contains: "2025"
     - section: "Box 3 provisional estimate"
       contains: "fictitious"
-      not_contains: "werkelijk rendement"
+      not_contains: "werkelijk rendement"   # beyond the one required note
     - section: "Box 3 provisional estimate"
       contains: "provisional fictitious calculation"
     - section: "Income estimate"
@@ -68,7 +69,7 @@ expected_outputs:
     - section: "Not submission advice"
       present: true
 
-  field_map_checks:
+  field_map_checks:   # Appendix B of the saved workpack
     - workflow: "provisional_assessment"
     - tax_year: 2026
     - no_werkelijk_rendement_field: true
@@ -79,8 +80,15 @@ expected_outputs:
     - no_credential_fields: true
     - all_amounts_labeled_estimate: true
 
+expected_resume_record:
+  workflow: provisional_2026_request
+  tax_year: 2026
+  save_consent: given
+  sections:
+    box3_peildatum: chat_only
+
 acceptance_criteria:
-  - "Provisional request workpack created"
+  - "The provisional request workpack is kept as one file after consent"
   - "All amounts labeled as estimates"
   - "Box 3 provisional method used (fictitious only)"
   - "No werkelijk rendement request appears"

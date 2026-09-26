@@ -14,25 +14,25 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/
   bd_hypotheek_oversluiten:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: b5fbd765901ff8a681ef3091536579f6c36a279a7b153e470831171bef45b8fc
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 0a344fa852921d4780af863c22d6d28932ba127a6d3f6fbb22ef2307a3b8c95d
     source_id: bd_hypotheek_oversluiten
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrenteaftrek-bij-oversluiten-hypotheek
   bd_hypotheekrenteaftrek_conditions:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: b5fbd765901ff8a681ef3091536579f6c36a279a7b153e470831171bef45b8fc
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 0a344fa852921d4780af863c22d6d28932ba127a6d3f6fbb22ef2307a3b8c95d
     source_id: bd_hypotheekrenteaftrek_conditions
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken
   bd_own_home_deductible_costs:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: b5fbd765901ff8a681ef3091536579f6c36a279a7b153e470831171bef45b8fc
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 0a344fa852921d4780af863c22d6d28932ba127a6d3f6fbb22ef2307a3b8c95d
     source_id: bd_own_home_deductible_costs
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten
   bd_temporary_two_homes_interest:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: b5fbd765901ff8a681ef3091536579f6c36a279a7b153e470831171bef45b8fc
+    reviewed_note_hash_recorded_at: '2026-09-26T08:18:59.966373+00:00'
+    reviewed_note_hash_sha256: 0a344fa852921d4780af863c22d6d28932ba127a6d3f6fbb22ef2307a3b8c95d
     source_id: bd_temporary_two_homes_interest
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek

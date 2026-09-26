@@ -36,11 +36,11 @@ must not access or operate Mijn Belastingdienst.
 | `personal.naam` | Naam | Name | Persoonsgegevens | required | Pre-filled by portal |
 | `personal.adres` | Adres | Address | Persoonsgegevens | required | Pre-filled by portal |
 | `personal.geboortedatum` | Geboortedatum | Date of birth | Persoonsgegevens | required | Pre-filled by portal |
-| `personal.fiscaal_partner` | Fiscaal partner | Fiscal partner | Persoonsgegevens | conditional | Profile / intake |
+| `personal.fiscaal_partner` | Fiscaal partner | Fiscal partner | Persoonsgegevens | conditional | Taxpayer profile summary (intake) |
 
 ### Notes on personal data fields
 - BSN is pre-filled in the online return after login. The field mapper omits it entirely — it is not a data-entry field.
-- Name, address, and date of birth are pre-filled from the BRP (Basisregistratie Personen). The field mapper omits these rows from both `fields` and `missing_fields`; the validator treats them as coverage-exempt.
+- Name, address, and date of birth are pre-filled from the BRP (Basisregistratie Personen). The field mapper omits these rows from both `fields` and `missing_fields`; `FM-REFERENCE-COVERAGE` treats them as coverage-exempt.
 - Fiscal partner status must be confirmed by the taxpayer.
 
 ---
@@ -146,9 +146,10 @@ every value.
 
 The annual map also carries the following two sourced control records in
 `fields`. They are part of this authoritative identifier inventory only because
-readiness and resume logic need them. They do **not** describe boxes in Mijn
-Belastingdienst, must never appear in the human manual-entry checklist, and must
-carry `entry_mode: internal_routing` in addition to the ordinary source record:
+readiness and resume need them. They do **not** describe boxes in Mijn
+Belastingdienst, must never appear in the Field map summary table or the human
+manual-entry checklist, and must carry `entry_mode: internal_routing` in
+addition to the ordinary source record:
 
 | field_id | Meaning | Allowed value |
 |---|---|---|
@@ -304,8 +305,9 @@ These rows carry answers, not amounts.
 | Herinvesteringsreserve used on a purchased asset (manual review) | Winst-en-verliesrekening > Buitengewone lasten > Afboeking van de herinvesteringsreserve op gekochte activa | Balans > Passiva > Ondernemingsvermogen > herinvesteringsreserve |
 
 Map each onttrekking **once** as a single value and print it **twice** in the
-manual-entry checklist, once per screen path, so the taxpayer cannot enter one
-and skip the other. Do not create a second field id for the same fact.
+Field map summary table and the manual-entry checklist, once per screen path,
+so the taxpayer cannot enter one and skip the other. Do not create a second
+field id for the same fact.
 
 ### What the aangifte computes -- never a manual-entry row
 
@@ -335,7 +337,10 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
 - Every `onderneming.*` row is `conditional` or `optional`, never `required`: a
   taxpayer without an onderneming has none of them. `business.has_onderneming`
   stays the routing hook, and non-entrepreneurs use the canonical
-  not-applicable hook.
+  not-applicable hook: one `business.has_onderneming` row with the YAML
+  boolean `value: false` (never a string such as `"nee"`, `"no"`, or
+  `"false"`), sourced from the Taxpayer profile summary, and no `onderneming.*`
+  rows. An entrepreneur's hook row carries the boolean `true`.
 - Create manual-entry ids only for figures the taxpayer actually types. An id
   that is not in the schema above does not belong in the map; record the fact in
   the workpack instead.
@@ -387,7 +392,7 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
 
 | field_id | Label (NL) | Label (EN) | Section | Required | Evidence Type |
 |---|---|---|---|---|---|
-| `box2.has_aanmerkelijk_belang` | Aanmerkelijk belang aanwezig | Has substantial interest | Box 2 — Aanmerkelijk belang | conditional | Profile / shareholder register / user-provided |
+| `box2.has_aanmerkelijk_belang` | Aanmerkelijk belang aanwezig | Has substantial interest | Box 2 — Aanmerkelijk belang | conditional | Taxpayer profile summary / shareholder register / user-provided |
 | `box2.reguliere_voordelen_bruto` | Reguliere voordelen bruto | Gross regular benefits | Box 2 — Reguliere voordelen | conditional | Dividend statement / BV records |
 | `box2.kosten_reguliere_voordelen` | Kosten reguliere voordelen | Costs of regular benefits | Box 2 — Reguliere voordelen | optional | Expense evidence / user-provided |
 | `box2.vervreemdingsprijs` | Vervreemdingsprijs | Net transfer price | Box 2 — Vervreemding | conditional | Sale agreement / notarial deed |

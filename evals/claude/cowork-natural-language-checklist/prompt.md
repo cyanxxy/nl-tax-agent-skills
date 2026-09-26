@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 5
 timeout_seconds: 300
-expected_outcome: Recognize explicit checklist intent and create or continue the human-only manual-entry checklist from the reviewed artifacts.
+expected_outcome: Recognize explicit checklist intent and create the human-only manual-entry checklist from the reviewed workpack, in the conversation or in that workpack's own checklist section.
 ---
 We have finished reviewing my Dutch tax workpack and its field map. Please make
 the human-only manual-entry checklist for me now, with unresolved items first.

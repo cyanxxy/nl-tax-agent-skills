@@ -173,7 +173,7 @@ The following are required for the annual return but NOT for the provisional ass
 
 ## Output requirements
 
-When producing notes for the provisional 2026 workflow:
+When returning findings for the provisional 2026 workflow:
 
 1. Clearly label every amount as "ESTIMATED"
 2. Note the source of each estimate (current salary, current mortgage, etc.)
@@ -188,7 +188,7 @@ When producing notes for the provisional 2026 workflow:
 
 ## Notes
 
-- The provisional assessment can be requested, changed, reviewed, or stopped (stopgezet). This skill provides the box 1 calculation notes; the calling skill handles the workflow-specific logic.
+- The provisional assessment can be requested, changed, reviewed, or stopped (stopgezet). This helper provides the box 1 calculation findings; the owning provisional workflow handles the subflow-specific logic.
 - For change requests (wijzigen): the taxpayer may have updated income estimates. Use the latest estimates, not the original provisional amounts.
 - For review requests (controleren): compare the current provisional assessment against updated estimates.
 - Do not require the taxpayer to provide evidence documents for a provisional

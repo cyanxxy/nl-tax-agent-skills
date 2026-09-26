@@ -134,9 +134,9 @@ already available and can be taken over.
 
 1. Name Mijn Belastingdienst as the portal for the entrepreneur return; do not
    name Mijn Belastingdienst Zakelijk.
-2. Catalogue business evidence via `nl-tax-evidence-indexer`; request the
-   jaarstukken, invoices, bank jaaroverzicht, and urenadministratie as gaps when
-   missing, rather than assuming zeros.
+2. Record each business document as a row in the workpack's `Documents and
+   sources` table; request the jaarstukken, invoices, bank jaaroverzicht, and
+   urenadministratie as gaps when missing, rather than assuming zeros.
 3. Keep this prep-only: never present the workpack as a filed or final return.
 4. State the online-only rule when the channel first comes up, and do not offer
    the aangifte-app or a paper form as an alternative. Raise the Aangifte C paper

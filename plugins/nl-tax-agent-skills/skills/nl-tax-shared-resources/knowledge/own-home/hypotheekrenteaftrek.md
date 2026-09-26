@@ -9,7 +9,7 @@ review_status: reviewed
 
 ## Rule
 
-Mortgage interest and certain own-home costs are deductible only when they relate to the eigenwoningschuld for the taxpayer's own home. The official filing environment performs the binding calculation; the workpack prepares source-backed notes and missing-info flags.
+Mortgage interest and certain own-home costs are deductible only when they relate to the eigenwoningschuld for the taxpayer's own home. The official filing environment performs the binding calculation; the workpack prepares source-backed notes and flags missing information.
 
 ## Own-home calculation contract
 

@@ -3,12 +3,14 @@
 # Scenario: User pays monthly and wants to stop because the amount is wrong.
 #
 # Expected behavior:
-#   - Skill routes to change/review rather than stopzetten
-#   - Explains that stopping payments defers the bill
-#   - Recommends changing to correct amount instead
+#   - Skill routes to change rather than stopzetten
+#   - Explains that stopping payments does not correct the estimate
+#   - Recommends changing to the correct amount instead
+#   - The saved workpack records the redirect: subflow change, stopzetten
+#     direction complete, confirmation reset
 
 fixture_id: eval_provisional_stopzetten_payment_redirect
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Provisional 2026 stopzetten — user pays monthly, amount is wrong"
 tax_year: 2026
 workflow: provisional_2026_stopzetten
@@ -31,18 +33,39 @@ situation:
   monthly_amount: 350.00  # pays EUR 350/month
   reason_for_stopping: "Amount is too high, salary decreased"
 
+saving:
+  provisional_2026:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
+  files_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
   behavior_checks:
     - redirects_to_change: true  # payment user should change, not stop
     - does_not_produce_stopzetten_guidance: true
-    - explains_stopping_defers_bill: true
+    - explains_stopping_can_create_arrears: true
     - recommends_change_to_correct_amount: true
-
   workpack_checks:
-    - contains: "change"
-    - contains: "wijzigen"
+    - section: "Subflow"
+      contains: "change"
+    - section: "Stopzetten outcome"
+      contains: "change VA (payment case)"
+
+expected_resume_record:
+  workflow: provisional_2026_change     # the redirect rewrites the subflow
+  tax_year: 2026
+  save_consent: given
+  generation_confirmed: false
+  sections:
+    stopzetten_direction: complete
+    baseline: in_progress
+    confirm: not_started
 
 acceptance_criteria:
-  - "Skill routes to change/review rather than stopzetten"
-  - "Explains that stopping payments when you owe tax defers the bill"
+  - "Skill routes to change rather than stopzetten"
+  - "Explains that simply ceasing payments does not correct the estimate and can create arrears"
   - "Recommends changing to the correct amount instead"
+  - "The saved workpack's Subflow heading and Appendix A workflow both read change"

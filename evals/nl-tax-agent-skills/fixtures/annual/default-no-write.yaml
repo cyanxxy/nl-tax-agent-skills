@@ -1,0 +1,79 @@
+# Eval fixture: default no-write (R1)
+#
+# A complete annual conversation — intake, every section, final review,
+# generation, and mapping — without save consent. The workpack and its field
+# map live only in the conversation; the plugin writes no file at all.
+
+fixture_id: eval_annual_default_no_write
+fixture_version: "1.0"
+scenario: "Full annual 2025 conversation without save consent writes no file"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: >-
+    Help me prepare my Dutch 2025 income-tax return. I lived in Rotterdam all
+    year, I file as an individual, no partner, no business, no own home.
+  explicitly_requests_preparation: true
+
+conversation:
+  - turn: 1
+    assistant_offers_save_at: workflow_start
+    user: "No thanks, just keep it in this chat."
+  - turn: 2
+    user: "My jaaropgaaf says fiscaal loon EUR 41,300 and loonheffing EUR 10,950."
+  - turn: 3
+    user: "I had EUR 18,200 in my savings account on 1 January 2025 and nothing else."
+  - turn: 4
+    user: "No deductions, no donations, no alimony."
+  - turn: 5
+    assistant_final_review: true
+    # Final review asks only the generation question (review amendment A5).
+    user: "Yes, create the workpack and field map now."
+  - turn: 6
+    # After generation and mapping, the save offer is the reply's only question.
+    assistant_offers_save_at: generation
+    user: "No file please."
+
+saving:
+  annual_2025:
+    consent: declined
+    declined_at: [workflow_start, generation]
+
+expected_outputs:
+  files_created: []
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
+  # The harness copies the workpack the assistant presented in the chat to
+  # workspace/eval/chat-workpack.md so its structure can be graded in the
+  # grader's chat mode; the plugin itself writes nothing. The conversation
+  # shows only filled sections: no fill notes and no Appendix A/B YAML (A8).
+  chat_workpack:
+    harness_capture: workspace/eval/chat-workpack.md
+    presentation: chat
+    yaml_appendices_shown: false
+    template_fill_notes_shown: false
+    field_map_shown_as: summary_table
+
+expected_conversation:
+  save_offer_points_used: [workflow_start, generation]
+  save_offers_per_point: 1
+  one_yes_no_question_per_reply: true
+  final_review_asks_only_generation_question: true
+  pause_offer_not_used: true          # the user never signalled a pause
+  workpack_presented_in_conversation: true
+  field_map_summary_presented_in_conversation: true
+  says_where_the_workpack_is: "in this conversation"
+  confirmed_so_far_recap_after_each_section: true
+
+expected_behavior:
+  - "Offer to save at workflow start; respect the 'no' and keep working in the conversation"
+  - "At final review ask only the generation question; after generation and mapping, offer to save once more in its own reply (a 'no' earlier does not suppress a later point)"
+  - "Generate the workpack and field map in the conversation after the scoped confirmation, creating no downloadable file"
+  - "Write no file: no workpack, no field map, no checklist, no ledger"
+
+acceptance_criteria:
+  - "The working folder has no workspace/ output from the plugin"
+  - "The conversation workpack follows the annual template's section order, shows only filled sections, and prints no template fill notes and no Appendix A/B YAML; the field map appears as its summary table"
+  - "Each completed section ends with a compact Confirmed so far recap with provenance codes"

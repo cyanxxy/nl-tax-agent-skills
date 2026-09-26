@@ -17,6 +17,10 @@ def read_text(relative_path):
     return (ROOT / relative_path).read_text(encoding="utf-8")
 
 
+def flat(text):
+    return " ".join(text.split())
+
+
 def load_validator():
     path = ROOT / "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py"
     spec = importlib.util.spec_from_file_location("agent_driven_validator", path)
@@ -35,7 +39,7 @@ class AgentDrivenContractTests(unittest.TestCase):
             "skills/nl-tax-annual-return/reference/annual-output-contract.md",
             "skills/nl-tax-annual-return/reference/phases/04-box3.md",
             "skills/nl-tax-box3/reference/box3-annual-2025.md",
-            "skills/nl-tax-annual-return/templates/annual-return-pack.md",
+            "skills/nl-tax-annual-return/templates/annual-workpack.md",
         ]
         for path in paths:
             text = read_text(path)
@@ -49,7 +53,7 @@ class AgentDrivenContractTests(unittest.TestCase):
             "skills/nl-tax-annual-return/reference/annual-output-contract.md",
             "skills/nl-tax-annual-return/reference/phases/04-box3.md",
             "skills/nl-tax-box3/reference/box3-annual-2025.md",
-            "skills/nl-tax-annual-return/templates/annual-return-pack.md",
+            "skills/nl-tax-annual-return/templates/annual-workpack.md",
         ]
         for path in paths:
             text = " ".join(read_text(path).split())
@@ -70,41 +74,57 @@ class AgentDrivenContractTests(unittest.TestCase):
             self.assertIn("ouderenkorting", text)
         self.assertIn("Do not mark credits screening", phase)
 
-    def test_chat_values_update_evidence_ledger(self):
-        shared = read_text(
+    def test_chat_values_become_documents_and_sources_rows(self):
+        shared = flat(read_text(
             "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
-        )
-        annual = read_text(
+        ))
+        annual = flat(read_text(
             "skills/nl-tax-annual-return/reference/annual-flow.md"
+        ))
+        # 0.4: chat values are rows in the workpack's Documents and sources
+        # table and the User-stated values index, not an evidence ledger file.
+        self.assertIn(
+            "add a `Documents and sources` row of type `user_chat` when the value is used",
+            shared,
         )
-        for text in (shared, annual):
-            self.assertIn("sections.evidence.subsections.user_chat_values", text)
+        self.assertIn("list it in `## User-stated values index`", shared)
+        self.assertIn(
+            "A chat value gets a row too (named `chat YYYY-MM-DD`, type `user_chat`)",
+            annual,
+        )
         self.assertIn(
             "reference/annual-flow.md",
             read_text("skills/nl-tax-annual-return/SKILL.md"),
         )
-        self.assertIn("never simultaneously", shared)
+        for text in (shared, annual):
+            self.assertNotIn("sections.evidence.subsections.user_chat_values", text)
+        provisional = flat(read_text(
+            "skills/nl-tax-provisional-assessment/reference/provisional-flow.md"
+        ))
+        self.assertIn("so a question is never both open and answered", provisional)
 
     def test_provisional_owner_restores_chat_loop_and_exact_generation_gate(self):
         skill = read_text(
             "skills/nl-tax-provisional-assessment/SKILL.md"
         )
-        flow = read_text(
+        flow = flat(read_text(
             "skills/nl-tax-provisional-assessment/reference/provisional-flow.md"
-        )
+        ))
         for phrase in (
             "After every user reply",
-            "source: user_chat",
-            "stated_at",
-            "sections.evidence.subsections.user_chat_values.answered",
-            "workspace/shared/missing-info.md",
-            "same `session-progress.yaml` write",
+            'chat value (`U:"<short quote>" (<YYYY-MM-DD>)`, also listed in the `User-stated values index`)',
+            "a `Documents and sources` row, `F:ev_NNN`",
+            "add the unresolved fact to `Missing information`",
+            "write the fact to its section and the status to Appendix A in the same edit",
         ):
             self.assertIn(phrase, flow)
         for status in ("not_started", "in_progress", "complete", "chat_only", "deferred"):
             self.assertIn(f"`{status}`", skill)
-        self.assertIn("`box2` and `winst_forecast` are always gate members", skill)
-        self.assertIn("profile fact or user\nanswer", skill)
+        self.assertIn("`box2` and `winst_forecast` are gate members wherever they apply", flat(skill))
+        self.assertIn(
+            "only from a `Taxpayer profile summary` fact or a user answer, never from a blank field",
+            flat(skill),
+        )
 
     def test_box1_helper_returns_questions_to_owner_only(self):
         for relative in (
@@ -119,11 +139,16 @@ class AgentDrivenContractTests(unittest.TestCase):
     def test_aow_screen_uses_calculated_provenance(self):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
         aow = read_text("skills/nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md")
-        profile = read_text(
-            "skills/nl-tax-intake/templates/taxpayer-profile.yaml"
-        )
-        for text in (intake, aow, profile):
+        for text in (intake, aow):
             self.assertIn("calculated", text)
+        # 0.4: the workpack's Taxpayer profile summary replaces profile.yaml
+        # and marks the derived AOW status with calculated (`C:`) provenance.
+        for template in (
+            "skills/nl-tax-annual-return/templates/annual-workpack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+        ):
+            with self.subTest(template=template):
+                self.assertIn("C:aow_rule(person.date_of_birth)", read_text(template))
         self.assertNotIn("AOW-age status derived from DOB", intake)
 
     def test_preflight_does_not_preload_irrelevant_sources(self):
@@ -157,7 +182,7 @@ class AgentDrivenContractTests(unittest.TestCase):
             "skills/nl-tax-annual-return/reference/phases/05-5-credits.md"
         )
 
-        self.assertIn("never preload\nPhase N+2", skill)
+        self.assertIn("never preload Phase N+2", flat(skill))
         self.assertIn("Phase N+2 cannot be loaded", flow)
         self.assertIn("do not\nload Phase 5.5", deductions)
         self.assertIn("Never preload this phase", credits)
@@ -230,20 +255,34 @@ class AgentDrivenContractTests(unittest.TestCase):
 
         for text in (skill, flow, change):
             self.assertIn(canonical, text)
-        self.assertIn("If intake state is absent", skill)
-        self.assertIn("as soon as intake records the change candidate", skill)
-        self.assertIn("with valid intake state", flow)
+        self.assertIn("Before any change question, say:", skill)
+        self.assertIn(
+            "For a change, give the full re-entry notice before those questions too.",
+            skill,
+        )
+        self.assertIn(
+            "When intake still had to establish missing setup facts, the entry "
+            "skill already gave the canonical notice",
+            flow,
+        )
         self.assertIn("without replaying completed setup", flow)
         self.assertIn("before baseline or intake follow-up questions", change)
 
     def test_workflow_owns_chat_without_evidence_index_requirement(self):
-        indexer = read_text("skills/nl-tax-evidence-indexer/SKILL.md")
-        preflight = read_text(
+        # 0.4 (R10): the evidence indexer is retired; the owning workflow reads
+        # documents itself and pure chat collection needs no document at all.
+        self.assertFalse((ROOT / "skills/nl-tax-evidence-indexer").exists())
+        preflight = flat(read_text(
             "skills/nl-tax-annual-return/reference/phases/01-preflight.md"
+        ))
+        self.assertIn(
+            "record each one you use as a `Documents and sources` row when you read it",
+            preflight,
         )
-        self.assertIn("Do not invoke this indexer solely", indexer)
-        self.assertIn("pure chat collection does not require", indexer)
-        self.assertIn("absence of an evidence index", preflight)
+        self.assertIn(
+            "having no documents is not itself a gap and never forces a draft",
+            preflight,
+        )
 
     def test_rollup_precedes_mapping_and_regeneration_resets_confirmation(self):
         annual = read_text(
@@ -251,9 +290,12 @@ class AgentDrivenContractTests(unittest.TestCase):
         )
         annual_flat = " ".join(annual.split())
         before_mapper = annual.index("Before mapping")
-        invoke_mapper = annual.index("Then\ninvoke `nl-tax-field-mapper`")
+        invoke_mapper = annual.index("Then invoke `nl-tax-field-mapper`")
         self.assertLess(before_mapper, invoke_mapper)
-        self.assertIn("reset the `confirm` subsection", annual_flat)
+        self.assertIn(
+            "reset `confirm` to `not_started` and `generation_confirmed` to `false`",
+            annual_flat,
+        )
         self.assertIn("fresh contextual confirmation", annual_flat)
         self.assertIn("immediately preceding scoped question", annual_flat)
         self.assertIn("Never require an exact phrase", annual_flat)
@@ -287,7 +329,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertIn("do not create it solely because", mapper)
 
     def test_confirmed_workpack_authorizes_companion_map(self):
-        mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
+        mapper = flat(read_text("skills/nl-tax-field-mapper/SKILL.md"))
         self.assertIn("no second mapping request is needed", mapper)
 
     def test_mapper_loads_only_its_local_conversation_contract(self):
@@ -314,7 +356,7 @@ class AgentDrivenContractTests(unittest.TestCase):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
         mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
         self.assertIn("Invisible orchestration", runtime)
-        self.assertIn("Never mention internal skill names", intake)
+        self.assertIn("Never mention skill names, handoffs, resource loading", flat(intake))
         self.assertIn("never announce", mapper)
 
     def test_subagent_reviews_preserve_one_agent_owned_workflow(self):
@@ -334,11 +376,16 @@ class AgentDrivenContractTests(unittest.TestCase):
         self.assertIn("returns that request to the owner", runtime_flat)
         self.assertIn("do the review inline instead", runtime_flat)
         self.assertNotIn("run the plugin's optional mechanical checks", runtime_flat)
-        self.assertIn("sole writer", " ".join(annual.split()))
-        self.assertIn("sole writer", " ".join(provisional.split()))
         self.assertIn(
-            "one active owning workflow and one canonical-state writer",
-            elicitation,
+            "stay the single owner of facts, section status, and readiness",
+            flat(annual),
+        )
+        self.assertIn(
+            "stay the single writer and readiness authority for this workflow",
+            flat(provisional),
+        )
+        self.assertIn(
+            "The owning workflow is the single readiness authority", flat(elicitation)
         )
 
     def test_progress_files_record_state_without_owning_the_dialogue(self):
@@ -351,9 +398,9 @@ class AgentDrivenContractTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("conversation ledger, not a workflow executor", runtime)
-        self.assertIn("do not choose the next question", runtime_flat)
-        self.assertIn("conversation ledger, not a\nstate machine", elicitation)
+        self.assertIn("The resume record is a record, not a workflow executor", runtime_flat)
+        self.assertIn("they do not choose the next question", runtime_flat)
+        self.assertIn("They are a record, not a state machine", flat(elicitation))
         self.assertIn("the installed plugin ships no scripts", contributing)
         self.assertNotIn("small deterministic helpers", contributing)
 

@@ -1,29 +1,37 @@
 ## Phase 1 — Pre-flight checks
 
-Before generating any workpack content, verify all prerequisites are met.
+Before collecting any workpack content, verify all prerequisites are met. Take
+intake's screened facts from the conversation, or from the Taxpayer profile
+summary of an attached or found annual workpack. Nothing here writes a file;
+confirmed facts become rows of the Taxpayer profile summary.
 
-### 1.1 Profile exists
+### 1.1 Screening facts available
 
-- Read `workspace/taxpayer/profile.yaml`
-- Confirm the file exists and is parseable
-- If missing: stop and instruct the user to run the intake skill first
+- Confirm that intake's screening is in the conversation or in the resumed
+  workpack: residency, taxpayer type, living status, workflow choice, fiscal
+  partner, household, and the Box 2 and business screens
+- If screening has not happened: hand back to `nl-tax-intake` for only the
+  missing screening questions; never re-ask answered ones
 
 ### 1.2 Workflow confirmation
 
-- Confirm `workflow_candidate: annual_2025` in the profile
+- Confirm the chosen workflow is annual 2025
 - If the workflow is provisional, stopzetten, or unsupported: stop and explain the mismatch
-- If the workflow is not set: stop and instruct the user to complete intake
+- If no workflow was chosen: hand back to intake for that one question
+- If the user also asked for the 2026 voorlopige aanslag, note the queued
+  subflow for Appendix A `queued_workflow` and keep annual as the only active
+  workflow
 
 ### 1.3 Residency confirmed
 
 - Confirm full-year Dutch residency for 2025
-- Check for `residency: full_year_nl` or equivalent in the profile
+- Check the `residency.full_year_nl_resident` fact from screening
 - If part-year or non-resident: stop -- this is an unsupported case
 
 ### 1.4 Taxpayer type confirmed
 
 - Confirm the taxpayer is an individual filing an income-tax return.
-- **Winst uit onderneming (eenmanszaak / ZZP) is prepared end to end.** If the taxpayer is an IB-ondernemer with an eenmanszaak, set `business.has_onderneming: true`. Phase 2A runs the income-category pre-screen and then the ordered chain from the saldo fiscale winstberekening through investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the belastbare winst uit onderneming, which feeds the box 1 total. The annual field map reaches `review_ready` when the reviewed zakelijke schema covers every rubriek and question the case needs and no routing marker applies.
+- **Winst uit onderneming (eenmanszaak / ZZP) is prepared end to end.** If the taxpayer is an IB-ondernemer with an eenmanszaak, record `business.has_onderneming: true` in the Taxpayer profile summary. Phase 2A runs the income-category pre-screen and then the ordered chain from the saldo fiscale winstberekening through investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the belastbare winst uit onderneming, which feeds the box 1 total. The annual field map reaches `review_ready` when the reviewed zakelijke schema covers every rubriek and question the case needs and no routing marker applies.
 - Recognise and route every other IB business form rather than refusing it: vof, maatschap, man-vrouwfirma, cv, medegerechtigde, agrarische onderneming and zeescheepvaart are named in Phase 2A, and the surrounding return is still prepared. What stays terminal manual review is the **computation**: partnership profit-share allocation and KIA apportionment, medegerechtigde loss caps, DGA/BV winst, landbouwvrijstelling, zeevarenden, stakingswinst and doorschuiving, herinvesteringsreserve movements, oudedagsreserve wind-down, and terbeschikkingstelling. Those computations keep the blocked `annual_2025_entrepreneurs` candidate.
 - Resultaat uit overige werkzaamheden is not winst uit onderneming, and it is not a dead end: prepare it in Phase 2.4 under `row-en-dba-2025.md`, with no ondernemersaftrek, MKB-winstvrijstelling or investeringsaftrek.
 
@@ -39,23 +47,26 @@ Before generating any workpack content, verify all prerequisites are met.
 
 ### 1.7 Household composition
 
-- Read `profile.yaml` → `person.date_of_birth`,
-  `person.aow_by_tax_year.2025`, `partner.partner_date_of_birth`,
-  `partner.aow_by_tax_year.2025`, `household.children_at_home_count`, and
-  `household.children`. If an otherwise complete legacy profile has only
-  scalar AOW fields, normalize them into the 2025 entry from the sourced DOB
-  and reviewed AOW note; do not restart intake or use a legacy boolean as the
-  three-state result.
-- If any of these are missing or `source: unknown` and the workflow needs them for credits screening (Phase 5.5), ask the user to fill them in now, in one batch of up to 3 questions. Do not ask for BSNs.
-- Persist answers back to `profile.yaml` with `source: user_chat` and a stated_at date. Mark `sections.intake.subsections.household_composition.status: complete` in `session-progress.yaml`.
+- Use the screened `person.date_of_birth`, `person.aow_by_tax_year.2025`,
+  `partner.partner_date_of_birth`, `partner.aow_by_tax_year.2025`,
+  `household.children_at_home_count`, and `household.children` facts. Use the
+  three-state 2025 AOW status (`below_all_year`, `reaches_during_year`, or
+  `aow_all_year`) and transition month established at intake. If it is
+  missing, derive it from the sourced date of birth with
+  `../nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md`; never use a
+  yes/no AOW answer as the three-state result.
+- If any of these are missing or unknown and the workflow needs them for credits screening (Phase 5.5), ask the user now, in one batch of up to 3 questions. Do not ask for BSNs or names.
+- Record the answers as Taxpayer profile summary rows with `U:` provenance and
+  the date stated. Nothing is written back to intake.
 
-### 1.8 Evidence index exists
+### 1.8 Documents already shared
 
-- Read `workspace/taxpayer/evidence-index.yaml`
-- If missing: continue normally with chat collection. Say only that the user may
-  provide amounts in chat or attach documents; absence of an evidence index is
-  not itself a gap and never forces a draft.
-- If partially indexed: proceed but flag uncovered categories
+- Note the documents the user has already attached or shared, and record each
+  one you use as a `Documents and sources` row when you read it
+- If none: continue normally with chat collection. Say only that the user may
+  give amounts in chat or attach documents; having no documents is not itself
+  a gap and never forces a draft.
+- If only some categories are covered: proceed and flag the uncovered ones
 
 ### 1.9 Box 2 scope check
 
@@ -67,8 +78,8 @@ Before generating any workpack content, verify all prerequisites are met.
 
 Do **not** load any file in the list below during preflight. It is a routing
 inventory only: each later phase loads the applicable files immediately before
-using them and records only those actually consulted in
-`sources_loaded_by_workflow.annual_2025`, mirrored in active `sources_loaded`. Never
+using them and adds only those actually consulted to this workflow's source
+list (Appendix A `sources_loaded`). Never
 stale-check or warn about an inapplicable source. If an active phase cannot load
 a required file, stop that phase and tell the user; do not paraphrase rates from
 memory.

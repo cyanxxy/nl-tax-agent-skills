@@ -1,8 +1,8 @@
 # Eval fixture: Explicit annual-return preparation request
 
 fixture_id: eval_annual_explicit_preparation
-fixture_version: "1.0"
-scenario: "Explicit annual 2025 preparation request starts intake progression"
+fixture_version: "2.0"
+scenario: "Explicit annual 2025 preparation request starts the workflow in the conversation and offers once to keep a file"
 tax_year: 2025
 workflow: annual_2025
 
@@ -19,24 +19,41 @@ known_screening_facts:
     - jaaropgave_2025
     - bank_year_statement_2025
 
-expected_outputs:
-  files_created:
-    - workspace/taxpayer/profile.yaml
-    - workspace/shared/session-progress.yaml
-  files_not_created:
-    - workspace/provisional/**
-  response_checks:
-    - offers_local_workpack_preparation: true
-    - asks_for_ready_relevant_documents: true
-    - does_not_repeat_answered_screening_questions: true
+saving:
+  annual_2025:
+    consent: pending          # offered at workflow start, not yet answered
+    offered_at: workflow_start
 
-expected_state:
-  session_progress_version: "1.4"
+expected_outputs:
+  files_created: []
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
+  response_checks:
+    - moves_annual_preparation_forward: true
+    - offers_to_keep_one_workpack_file_once: true
+    # A5: the workflow-start save offer is its own reply, before the first
+    # collection question; a reply asks one yes/no question at most.
+    - save_offer_is_its_own_reply_before_first_collection_question: true
+    - asks_for_ready_relevant_documents_or_missing_screening_facts: true
+    - does_not_repeat_answered_screening_questions: true
+    - writes_nothing_before_consent: true
+
+expected_conversation:
   workflow: annual_2025
+  intake_writes_nothing: true
+  save_offer_points_used: [workflow_start]
+  save_offer_is_one_short_sentence: true
   workpack_owner: nl-tax-annual-return
   field_map_owner: nl-tax-field-mapper
 
+expected_behavior:
+  - "Start annual_2025 preparation in the conversation"
+  - "Offer once, in one short sentence and in its own reply before the first collection question, to keep the workpack as one file in the working folder"
+  - "Write no file until the taxpayer clearly agrees to saving"
+
 acceptance_criteria:
-  - "The explicit request starts annual_2025 intake/workspace progression"
-  - "Already supplied screening facts are preserved rather than asked again"
+  - "The explicit request starts annual_2025 preparation without a second activation phrase"
+  - "Already supplied screening facts are credited rather than asked again"
   - "The agent requests the ready relevant documents and does not file the return"
+  - "No file exists before the taxpayer consents to saving"

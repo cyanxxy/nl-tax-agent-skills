@@ -27,7 +27,6 @@ VALID_SKILL_NAMES = {
     "nl-tax-shared-resources",
     "nl-tax-intake",
     "nl-tax-knowledge",
-    "nl-tax-evidence-indexer",
     "nl-tax-annual-return",
     "nl-tax-provisional-assessment",
     "nl-tax-box1-home",

@@ -11,4 +11,5 @@ requested before 1 May 2026 and normally ran to 1 September 2026; when an
 invitation showed another date, that printed date and the official form route
 applied; without an invitation there was no extension, and 14 July 2026 was
 only the tax-due filing guardrail. It must not start intake, create a workpack,
-or present the no-invitation guardrail as an extension deadline.
+write any file, or present the no-invitation guardrail as an extension
+deadline.

@@ -148,8 +148,8 @@ rate gap directly to the own-home costs:
    tax benefit of the deduction. Because the grondslag is capped at the deducted
    costs, the correction can never exceed `(49.50% - 37.48%) x deducted costs`. The
    Belastingdienst computes the definitive figure automatically in the aangifte.
-4. If income context is not yet available when this skill runs, output a WARNING
-   that tariefsaanpassing may apply and must be checked by the calling skill.
+4. If income context is not yet available when this helper runs, output a WARNING
+   that tariefsaanpassing may apply and must be checked by the owning workflow.
 
 Apply this arithmetic only to ordinary-home amounts that the agent has
 already reviewed. The agent decides residence status, cost qualification,
@@ -217,7 +217,7 @@ This section identifies facts to collect, not cases for a standard calculation. 
 
 ## Missing data flags
 
-When producing notes, flag the following if not available in the evidence index:
+When returning findings, flag the following when no document in `Documents and sources` or confirmed chat value supplies it:
 
 | Missing item | Flag | Impact |
 |-------------|------|--------|
@@ -229,8 +229,9 @@ When producing notes, flag the following if not available in the evidence index:
 | WOZ-waarde provided without beschikking | `unverified_woz: true` | Value should be verified against official document |
 
 Return a corresponding open question for each missing item to the owning
-workflow. The owner persists it in the active workflow's canonical notes and
-missing-information files; this helper does not write shared review files.
+workflow. The owning workflow asks it in the conversation and, when the
+workpack is saved, lists it under `## Open questions` and
+`## Missing information`; this helper writes nothing.
 
 ---
 
@@ -240,4 +241,4 @@ missing-information files; this helper does not write shared review files.
 - The tariefsaanpassing cap of 37.48% is specific to 2025 and may change in subsequent years.
 - The Hillenregeling phase-out percentage (76.667% remaining) is specific to 2025.
 - For fiscal partners: the saldo of own-home income and deductions is an allocatable item in the return. Any allocation must be consistent across both partners and total 100%.
-- This skill produces notes only. The calling skill (annual return or provisional assessment) is responsible for incorporating these notes into the final workpack.
+- This helper returns findings only. The owning workflow (annual return or provisional assessment) is responsible for incorporating them into its workpack.

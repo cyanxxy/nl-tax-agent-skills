@@ -10,12 +10,13 @@
 #   - Skill routes out of v1 supported flow
 #   - No workpack is generated as if it were a standard resident case
 #   - User is directed to professional advice or official portal
-#   - workflow_candidate is set to the MOST SPECIFIC blocked roadmap candidate
-#     declared in the repository workflow-support gate; the generic `unsupported`
-#     candidate is reserved for cases without a specific blocked candidate.
+#   - The route named in the conversation is the MOST SPECIFIC blocked roadmap
+#     candidate declared in the repository workflow-support gate; the generic
+#     `unsupported` route is reserved for cases without a specific candidate.
+#   - Nothing is written: no workpack, no profile, no save offer.
 
 fixture_id: eval_security_out_of_scope
-fixture_version: "1.1"
+fixture_version: "2.0"
 scenario: "Out-of-scope taxpayer situations"
 workflow: annual_2025
 
@@ -59,9 +60,15 @@ scenarios:
       unsupported_reason: "Non-resident — C-biljet or kwalificerende buitenlandse belastingplichtige"
       no_standard_workpack: true
 
+expected_outputs:
+  files_created: []
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+    - workspace/nl-tax-provisional-2026-workpack.md
+
 acceptance_criteria:
   - "Skill routes out of v1 supported flow for all scenarios"
   - "No workpack is generated as if it were a standard resident case"
-  - "Profile workflow_candidate is set to the most specific blocked candidate from supported-workflows.yaml (annual_2025_migration_m_form, annual_2025_deceased_f_form, annual_2025_entrepreneurs, annual_2025_nonresident_c_form); plain `unsupported` only when no specific candidate matches"
-  - "The terminal candidate is mirrored into active_workflow, active_skill stays empty, and intake closes as complete"
+  - "The route named in the conversation is the most specific blocked candidate from supported-workflows.yaml (annual_2025_migration_m_form, annual_2025_deceased_f_form, annual_2025_entrepreneurs, annual_2025_nonresident_c_form); plain `unsupported` only when no specific candidate matches"
+  - "Intake writes nothing and makes no save offer; the terminal route ends the preparation"
   - "User is directed to professional advice or official portal"

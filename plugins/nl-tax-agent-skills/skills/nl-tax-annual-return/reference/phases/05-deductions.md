@@ -2,7 +2,7 @@
 
 Compile all deductible items from evidence and user-provided data.
 
-Entry gate: load this file only after the Box 3 subsections are terminal. While
+Entry gate: load this file only after both Box 3 sections are terminal. While
 any deductions question is open or deductions remains `in_progress`, do not
 load Phase 5.5 or the credits knowledge note. After asking a deductions
 question, stop workflow-resource loading for this turn.
@@ -79,7 +79,7 @@ question, stop workflow-resource loading for this turn.
   pre-1 July 2015 prestatiebeurs exception, requiring a final DUO notice that
   the grant was not converted into a gift after the diploma period expired
 - Restant persoonsgebonden aftrek from prior years; eligible whole-year fiscal partners may allocate this prior-year personal-deduction remainder, subject to traceable scenarios and taxpayer review
-- Any other qualifying deductions from the profile or evidence
+- Any other qualifying deductions from the conversation or documents
 
 ### 5.6 Deduction summary
 

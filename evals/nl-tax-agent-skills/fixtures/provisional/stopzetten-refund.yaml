@@ -3,12 +3,13 @@
 # Scenario: User receives a monthly refund and wants to stop it.
 #
 # Expected behavior:
-#   - Stopzetten guidance is produced
+#   - Stopzetten guidance is produced in the Stopzetten outcome section
 #   - Skill explains stopzetten is a manual official flow
 #   - No calculation of final tax consequences
+#   - Stopzetten never produces a field map
 
 fixture_id: eval_provisional_stopzetten_refund
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Provisional 2026 stopzetten — user receives monthly refund"
 tax_year: 2026
 workflow: provisional_2026_stopzetten
@@ -29,14 +30,25 @@ situation:
   receives_monthly_refund: true
   monthly_amount: 200.00  # receives EUR 200/month
   reason_for_stopping: "Deductions no longer apply"
+  current_date: "2026-09-20"   # before the 2026-10-01 cutoff
+
+saving:
+  provisional_2026:
+    consent: given
+    at: workflow_start
 
 expected_outputs:
+  files_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+  files_not_created:
+    - workspace/nl-tax-annual-2025-workpack.md
   workpack_checks:
     - section: "Subflow"
       contains: "stopzetten"
     - contains: "manual"
     - contains: "official"
     - contains: "Mijn Belastingdienst"
+  field_map: never   # Appendix B stays "not yet mapped"
 
   behavior_checks:
     - stopzetten_guidance_produced: true
@@ -44,7 +56,15 @@ expected_outputs:
     - explains_manual_flow: true
     - no_final_tax_calculation: true
 
+expected_resume_record:
+  workflow: provisional_2026_stopzetten
+  tax_year: 2026
+  save_consent: given
+  sections:
+    stopzetten_direction: complete
+
 acceptance_criteria:
   - "Stopzetten guidance is produced"
   - "Skill explains stopzetten is a manual official flow"
   - "Does not redirect to change (refund scenario is appropriate for stopzetten)"
+  - "No field map is produced for stopzetten"

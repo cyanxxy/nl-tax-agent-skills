@@ -1,15 +1,15 @@
 # Manual Submission Steps -- Annual Return 2025
 
-> **HUMAN-ONLY PORTAL STEPS.** The taxpayer or an authorized human performs
-> every step below on their own device. The assistant must not open or operate
-> Mijn Belastingdienst, enter values, sign, send, or submit.
+> **HUMAN-ONLY PORTAL STEPS.** You (the taxpayer) or an authorized human
+> perform every step below on your own device. The assistant must not open or
+> operate Mijn Belastingdienst, enter values, sign, send, or submit.
 
 ## Pre-submission checklist
 
-- [ ] All evidence verified and complete
+- [ ] Every document in Documents and sources checked and complete
 - [ ] Workpack reviewed and assumptions confirmed
-- [ ] Field map reviewed -- all high-confidence fields verified
-- [ ] Missing information resolved or accepted as gaps
+- [ ] Field map summary reviewed -- every value checked against its source
+- [ ] Open questions and missing information resolved or accepted as gaps
 - [ ] Taxpayer-selected partner allocation recorded (if fiscal partner)
 - [ ] Box 3 data-supply choice recorded: if actual-return data was supplied,
   confirm that the portal compares both calculations and uses the favorable
@@ -17,24 +17,24 @@
 
 ## Submission steps
 
-1. **Taxpayer:** Go to Mijn Belastingdienst (mijn.belastingdienst.nl).
-2. **Taxpayer:** Log in to Mijn Belastingdienst.
-3. **Taxpayer:** Select "Aangifte inkomstenbelasting 2025".
-4. **Taxpayer:** Review pre-filled data (VIA) and compare it with the evidence.
-5. **Taxpayer:** Correct or add data using the field map as a guide.
-6. **Taxpayer:** Pay special attention to:
+1. **You (the taxpayer):** Go to Mijn Belastingdienst (mijn.belastingdienst.nl).
+2. **You (the taxpayer):** Log in to Mijn Belastingdienst.
+3. **You (the taxpayer):** Select "Aangifte inkomstenbelasting 2025".
+4. **You (the taxpayer):** Review pre-filled data (VIA) and compare it with your documents.
+5. **You (the taxpayer):** Correct or add data using the Field map summary as a guide.
+6. **You (the taxpayer):** Pay special attention to:
    - Box 3 values on peildatum (1 January 2025)
    - Eigen woning details (WOZ-waarde, hypotheek, rente)
    - Deductions with supporting evidence (aftrekposten)
    - Winst uit onderneming (if you have an eenmanszaak / ZZP): the zakelijk deel (balans and winst-en-verliesrekening), the urencriterium answer, and the ondernemersaftrek / MKB-winstvrijstelling / kleinschaligheidsinvesteringsaftrek figures. The income-tax return, including the winst section, is filed via Mijn Belastingdienst — not Mijn Belastingdienst Zakelijk.
-7. **Taxpayer:** Review the complete return.
-8. **Taxpayer:** If filing together with a fiscal partner, both partners review and sign. If
+7. **You (the taxpayer):** Review the complete return.
+8. **You (the taxpayer):** If filing together with a fiscal partner, both partners review and sign. If
    filing separately: each taxpayer signs their own return, and both returns
    must use mutually consistent allocations that do not exceed 100% in total
    wherever allocation is legally available. Treat part-year/separation
    eligibility as manual review.
-9. **Taxpayer:** Submit the return.
-10. **Taxpayer:** Save the confirmation/receipt.
+9. **You (the taxpayer):** Submit the return.
+10. **You (the taxpayer):** Save the confirmation/receipt.
 
 ## Deadline
 

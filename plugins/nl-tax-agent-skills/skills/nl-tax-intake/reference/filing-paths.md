@@ -8,16 +8,17 @@ choose the clearest conversational order.
 ## Annual Return 2025
 
 - **Direction:** Backward-looking — what happened in 2025
-- **Filing review:** Ask whether an invitation letter (aangiftebrief) exists. If it does, record
-  `invited` and use its deadline. With no invitation, ask the taxpayer to
-  complete the 2025 return personally in Mijn Belastingdienst without
-  submitting. The assistant must not open or operate the authenticated portal.
-  Record one of:
-  `no_letter_but_mandatory` (EUR 58 or more to pay, or the separate
-  income-dependent-scheme/assets test), `refund_claim_only` (EUR 19 or more
-  back, with no mandatory test), or `filing_obligation_unresolved`. The first
-  no-letter route carries the **14 July 2026** guardrail. These are review labels
-  based on the official result, not an automated eligibility decision.
+- **Filing review:** The annual workflow asks whether an invitation letter
+  (aangiftebrief) exists. If it does, the label is `invited` and its deadline
+  applies. With no invitation, the taxpayer completes the 2025 return
+  personally in Mijn Belastingdienst without submitting; the assistant never
+  opens or operates the authenticated portal. The official result gives one of
+  these labels: `no_letter_but_mandatory` (EUR 58 or more to pay, or the
+  separate income-dependent-scheme/assets test), `refund_claim_only` (EUR 19 or
+  more back, with no mandatory test), or `filing_obligation_unresolved`. The
+  first no-letter route carries the **14 July 2026** guardrail. These are
+  review labels based on the official result, not an automated eligibility
+  decision.
 - **Asset/scheme question:** Filing can still be mandatory when the taxpayer has
   a right to an income-dependent scheme and relevant assets exceed EUR 37,395,
   or EUR 74,790 with a fiscal partner. Do not infer scheme entitlement or the
@@ -27,8 +28,8 @@ choose the clearest conversational order.
   deduction evidence). For an IB-ondernemer, also the business evidence: the
   finalized winst-en-verliesrekening, the balans with both the opening and the
   closing column, the urenadministratie, and the investeringsfacturen for
-  bedrijfsmiddelen bought in the year. Values may be supplied in chat when the
-  user chooses not to upload a document.
+  bedrijfsmiddelen bought in the year. The user may give values in chat
+  instead of sharing a document.
 - **Trigger phrases:** "aangifte doen", "belastingaangifte 2025", "file my taxes", "income tax return"
 
 ## Voorlopige Aanslag 2026 — Request
@@ -70,9 +71,8 @@ Ask: "Do you want to look back at what happened in 2025, or plan ahead for 2026?
 
 - If looking back at 2025 → Annual return 2025
 - If planning ahead for 2026 → Voorlopige aanslag 2026 (then determine subflow: request, change, review, or stopzetten)
-- If both → Record the chosen 2026 subflow, start with the annual return
-  2025, and queue provisional 2026. After the completed annual workpack and
-  field map validate, continue into the queued subflow without asking for a new
-  activation phrase. Annual actuals may inform a later estimate only after the
-  taxpayer reviews or states that provisional estimate; do not copy them
-  automatically.
+- If both → Settle the 2026 subflow, start with the annual return 2025, and
+  queue provisional 2026. After the annual workpack is generated and mapped,
+  continue into the queued subflow without asking for a new activation phrase.
+  Annual actuals may inform a later estimate only after the taxpayer reviews or
+  states that provisional estimate; never copy them automatically.

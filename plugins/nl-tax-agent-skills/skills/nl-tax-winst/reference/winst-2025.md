@@ -389,7 +389,7 @@ Further routing rules that go with the table:
 - For a niet-gerealiseerde zelfstandigenaftrek or a verliesbeschikking, ask for
   the aanslagbiljet that carries the beschikking.
 - Collect only what the chain needs. Do not record a BSN, an aanslagnummer, a
-  policy number, or a bank account number from any document.
+  policy or contract number, or a bank account number from any document.
 
 ## Question-packet ids
 

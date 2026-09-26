@@ -1,24 +1,37 @@
 # Annual Income-Tax Return Workpack -- 2025
 
-> **STATUS: {DRAFT — N deferred section(s) | COMPLETE DRAFT FOR REVIEW} — not for filing.** Replace `N` with the number of sections still deferred or carrying `?` rows; use "COMPLETE DRAFT FOR REVIEW" only when no section is deferred. This workpack is never submission advice; filing always happens manually via Mijn Belastingdienst.
+> **STATUS: {DRAFT — N deferred section(s) | COMPLETE DRAFT FOR REVIEW} — not for filing.** Replace `N` with the number of applicable sections still deferred, incomplete, or carrying `?` rows; use "COMPLETE DRAFT FOR REVIEW" only when every applicable section is `complete` or `chat_only` and no blocking open question remains. This workpack is never submission advice; filing always happens manually via Mijn Belastingdienst.
 
 > **Provenance convention.** Every numeric line in this workpack records its source in a `Src` column or inline `Src:` note.
 > Source codes:
-> - `F:<evidence_id>` -- value from a file in the evidence index
-> - `U:"<short quote>" (<YYYY-MM-DD>)` -- value stated by the user in chat
-> - `A:<assumption_id>` -- confirmed assumption, also listed under Assumptions
+> - `F:<evidence_id>` -- value taken from a document row (`ev_NNN`) in Documents and sources
+> - `U:"<short quote>" (<YYYY-MM-DD>)` -- value stated by the user in chat, also listed in the User-stated values index
+> - `A:<assumption_id>` -- assumption the taxpayer explicitly accepted, also listed under Assumptions
 > - `?` -- required but still missing, also listed under Missing information
 > - `C:<formula>` -- computed from other sourced rows
 >
-> A row marked `?` is never silently treated as zero. It blocks finalization until resolved or explicitly accepted as missing.
+> A row marked `?` is never silently treated as zero. It blocks finalization until resolved or explicitly accepted as missing. A `profile.<key>` reference in a `Src` cell points to that row of the Taxpayer profile summary, which carries its own provenance.
+
+[Fill note: a tax section the conversation has not reached yet holds the single
+line `Not yet reviewed.` This differs from a "Not applicable" line, which
+records a sourced answer. Remove every bracketed fill note from the filled
+workpack. Shown in the conversation, the workpack holds only filled sections:
+no fill notes, no bracketed instructions, and no Appendix A or Appendix B
+YAML.]
+
+## How to use this file
+
+- This is your own working file for your 2025 Dutch income-tax return, built only from what you shared in the conversation.
+- To continue later, keep it in your working folder or attach it to a new conversation.
+- Filing is always manual: you (the taxpayer) or an authorized human enter, sign, and submit the return in Mijn Belastingdienst.
 
 ## Contents
 
 - Scope
 - Unsupported-case checks
-- Sources used
 - Taxpayer profile summary
-- Evidence summary
+- Documents and sources
+- Sources used
 - Filing status and late-filing exposure
 - Income notes
 - Winst uit onderneming notes
@@ -28,19 +41,23 @@
 - Deductions notes
 - Credits screening
 - Fiscal partner notes
-- Field map summary
+- Open questions
 - Missing information
 - Assumptions
 - User-stated values index
+- Field map summary
+- Manual-entry checklist
 - Human review checklist
 - Not submission advice
+- Appendix A — Resume record
+- Appendix B — Field map
 
 ## Scope
 
 Tax year: 2025
 Workflow: Annual income-tax return (aangifte inkomstenbelasting)
-Taxpayer: [from profile]
-Fiscal partner: [yes/no, from profile]
+Taxpayer: [the taxpayer, or a label the taxpayer chose; no name, BSN, or IBAN needed]
+Fiscal partner: [yes/no] -- Src: profile.partner.has_fiscal_partner
 Created: [timestamp]
 
 ## Unsupported-case checks
@@ -66,54 +83,65 @@ figure, route only that figure to manual review, and keep the business field map
 
 - [ ] Terminal business-computation trigger present: [no / yes -- blocked figure named below]
 
+## Taxpayer profile summary
+
+[The screened facts from the start of the conversation, one row per fact with
+its provenance. The `Key` column is stable so the field map's
+`source.profile_path` can point to a row. No name, BSN, or IBAN is needed; do
+not record them.]
+
+| Key | Value | Src |
+|-----|-------|-----|
+| `residency.full_year_nl_resident` | [yes/no] | [F/U/A/?] |
+| `taxpayer.type` | [individual / individual with a recognised IB business form] | [F/U/A/?] |
+| `taxpayer.primary_income_type` | [employment / pension / benefit / business / combination] | [F/U/A/?] |
+| `person.date_of_birth` | [date] | [F/U/A/?] |
+| `person.aow_by_tax_year.2025.status` | [below_all_year / reaches_during_year / aow_all_year] | [C:aow_rule(person.date_of_birth) / F/U/?] |
+| `person.aow_by_tax_year.2025.transition_month` | [1..12 / n/a] | [C/F/U/?] |
+| `person.aow_by_tax_year.2025.single_person_pension_entitlement` | [yes / no / unresolved / n/a] | [F/U/?] |
+| `partner.has_fiscal_partner` | [yes/no] | [F/U/A/?] |
+| `partner.partner_date_of_birth` | [date / n/a] | [F/U/A/?] |
+| `partner.aow_by_tax_year.2025.status` | [below_all_year / reaches_during_year / aow_all_year / n/a] | [C/F/U/?] |
+| `partner.aow_by_tax_year.2025.transition_month` | [1..12 / n/a] | [C/F/U/?] |
+| `household.children_at_home_count` | [count on 31 Dec 2025] | [U/A/?] |
+| `household.children` | [dates of birth for the IACK age test on 1 Jan 2025 / n/a] | [U/A/?] |
+| `household.single_parent_status` | [yes/no] | [U/A/?] |
+| `box2.has_aanmerkelijk_belang` | [yes/no] | [F/U/A/?] |
+| `routing.complex_box2_screening` | [standard / manual_review / not applicable] | [U/?] |
+| `business.has_onderneming` | [yes/no] | [F/U/A/?] |
+| `business.legal_form` | [eenmanszaak / vof / maatschap / cv / bv / other / n/a] | [F/U/A/?] |
+| `routing.complex_business_screening` | [standard / manual_review / not applicable] | [U/?] |
+| `special_circumstances` | [any manual-review flags from screening / none] | [U/?] |
+
+## Documents and sources
+
+[Every document or chat value used, one row each. Assign the next unused
+`ev_NNN` and never renumber. Name each document as the taxpayer named it and use
+a canonical type from the shared evidence-types reference. A chat value is
+named `chat YYYY-MM-DD`, has type `user_chat`, and carries its short quote
+under "Values taken". Record no file hashes, no full BSN, IBAN, policy,
+contract, or aanslag number, and no content beyond the short quote needed for
+provenance.]
+
+| ID | Document | Type | Tax year | Owner | Location | Values taken | Status |
+|----|----------|------|----------|-------|----------|--------------|--------|
+| ev_001 | [name as given by the taxpayer] | [evidence type] | [2025] | [taxpayer / partner / joint] | [page / section] | [field: EUR amount; ...] | [extracted / needs review] |
+
+[If nothing has been used yet: "None yet."]
+
 ## Sources used
 
-[Emit exactly the IDs from `workspace/shared/session-progress.yaml` ->
-`sources_loaded_by_workflow.annual_2025`, one per line. Do not pad with sources
+[Emit exactly the reviewed `source_id`s consulted for this annual workflow, one
+per line, identical to `sources_loaded` in Appendix A. Do not pad with sources
 that were not consulted, omit consulted annual sources, or include provisional
 source IDs.]
 
 - [source_id]
 - [source_id]
 
-## Taxpayer profile summary
-
-[Summary from workspace/taxpayer/profile.yaml. Include source provenance for each value:]
-
-- Name: [taxpayer name] -- Src: [F/U/A/?]
-- Date of birth: [date] -- Src: [F/U/A/?]
-- AOW status in 2025: [below_all_year / reaches_during_year / aow_all_year] -- Src: [profile.person.aow_by_tax_year.2025.status]
-- AOW transition month in 2025: [1..12 / n/a] -- Src: [profile.person.aow_by_tax_year.2025.transition_month]
-- Residency: full-year Dutch resident 2025 -- Src: [F/U/A/?]
-- Primary income type: [employment / pension / benefit / combination] -- Src: [F/U/A/?]
-- Fiscal partner: [yes/no] -- Src: [F/U/A/?]
-- Partner name: [if applicable] -- Src: [F/U/A/?]
-- Partner date of birth: [date or n/a] -- Src: [F/U/A/?]
-- Partner AOW status in 2025: [below_all_year / reaches_during_year / aow_all_year / n/a] -- Src: [profile.partner.aow_by_tax_year.2025.status]
-- Partner AOW transition month in 2025: [1..12 / n/a] -- Src: [profile.partner.aow_by_tax_year.2025.transition_month]
-- Children at home on 31 Dec 2025: [count] -- Src: [U/A/?]
-- Children DOBs (for IACK age test on 1 Jan 2025): [list or n/a] -- Src: [U/A/?]
-- Single-parent status: [yes/no] -- Src: [U/A/?]
-- Address: [municipality, for WOZ reference] -- Src: [F/U/A/?]
-- Special circumstances: [any flags from intake]
-
-## Evidence summary
-
-[Summary from workspace/taxpayer/evidence-index.yaml. Include file-based and user-chat items:]
-
-- Total evidence items indexed: [count] (files: [count], user-chat values: [count])
-- Files by category:
-  - Income (jaaropgaven, pension statements): [count]
-  - Own home (WOZ-beschikking, mortgage statement): [count]
-  - Box 3 (bank statements, portfolio statements): [count]
-  - Deductions (medical receipts, donation receipts): [count]
-  - Other: [count]
-- Items flagged for review: [count]
-- Items with low classification confidence: [count]
-
 ## Filing status and late-filing exposure
 
-[From workspace/annual/2025/notes/filing-status.yaml. First emit one route
+[From the filing-status answers given in the conversation. First emit one route
 label: `invited`, `no_letter_but_mandatory`, `refund_claim_only`, or
 `filing_obligation_unresolved`. These labels report reviewed facts; they do not
 automatically decide a filing obligation. Then render only the applicable
@@ -618,8 +646,8 @@ threshold only to the qualifying total.
 
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
-[Actual-return subsection status: `complete` when all required inputs are
-available with indexed evidence; `chat_only` when the complete input set was
+[Actual-return (`box3_actual`) section status: `complete` when all required inputs are
+available with document evidence; `chat_only` when the complete input set was
 supplied in chat; also `complete` with `not supplied by choice` when the taxpayer
 explicitly declines this additional data collection. A declined comparison is not a
 gap. Use `deferred/manual review` only for required facts still missing after
@@ -767,8 +795,8 @@ Allocation order: box 1 first, then box 3, then box 2.
 
 [For each item below, emit `Candidate`, `Not applicable`, or `Unresolved`, list
 the facts supporting that status, and flag candidates/unresolved conditions for
-review in Mijn Belastingdienst. Profile data starts the screen; it does not
-decide the result. Do not calculate amounts.]
+review in Mijn Belastingdienst. The Taxpayer profile summary starts the screen;
+it does not decide the result. Do not calculate amounts.]
 
 - **IACK (inkomensafhankelijke combinatiekorting)** -- [status; child DOB and
   whether younger than 12 on 1 January 2025;
@@ -835,58 +863,96 @@ than 100% across both. Part-year/separation eligibility remains manual review.
 - [ ] Record the taxpayers' explicit choice, or leave the allocation unresolved
 - [ ] I confirmed both partners will use the same taxpayer-selected box 3 allocation ratio
 
-## Field map summary
+## Open questions
 
-The field map for this workpack is available at:
-`workspace/annual/2025/field-map.yaml`
+[Every question still awaiting the taxpayer's answer, including deferred ones.
+Q-IDs are stable: never renumber, and reuse the same Q-ID when a deferred
+question is asked again. Remove a row once its answer is recorded in the tax
+section. Appendix A lists the same Q-IDs under each section's `open`. Order the
+rows by impact: filing possible at all, then tax amount, then accuracy. The
+field mapper adds its own rows for mapping gaps, continuing the Q001 numbering,
+so every field-map `open_question_id` resolves here.]
 
-This field map maps each line item in this workpack to the corresponding field
-in the Belastingdienst online return. The taxpayer uses it as a guide while
-personally entering data in Mijn Belastingdienst.
+| Q-ID | Section | Question | Blocking | Status |
+|------|---------|----------|----------|--------|
+| [Q001] | [section key, e.g. `box3_actual`] | [question] | [yes/no] | [open / deferred] |
 
-Note: This field map is specific to the annual return 2025. It is separate from any provisional assessment field maps.
+[If none: "None -- no open questions."]
 
 ## Missing information
 
-[From workspace/shared/missing-info.md, filtered for annual_2025. Every row in the workpack with `Src: ?` must appear here.]
+[Every row marked `Src: ?` must appear here. Each item says what is needed and
+where the taxpayer can obtain it, and links the open Q-ID when one exists. The
+field mapper adds its own rows for missing mapped values, continuing the M001
+numbering.]
 
 ### Critical (blocks accurate filing)
 
-| ID | Description | Workpack row | How to resolve |
-|----|-------------|--------------|----------------|
-| [MI-001] | [description] | [section/row] | [resolution guidance] |
+| M-ID | Description | Workpack row | Q-ID | How to resolve |
+|------|-------------|--------------|------|----------------|
+| [M001] | [description] | [section/row] | [Q-ID / none] | [resolution guidance] |
 
 ### Important (affects accuracy)
 
-| ID | Description | Workpack row | How to resolve |
-|----|-------------|--------------|----------------|
-| [MI-002] | [description] | [section/row] | [resolution guidance] |
+| M-ID | Description | Workpack row | Q-ID | How to resolve |
+|------|-------------|--------------|------|----------------|
+| [M002] | [description] | [section/row] | [Q-ID / none] | [resolution guidance] |
 
 ### Nice-to-have (minor impact)
 
-| ID | Description | Workpack row | How to resolve |
-|----|-------------|--------------|----------------|
-| [MI-003] | [description] | [section/row] | [resolution guidance] |
+| M-ID | Description | Workpack row | Q-ID | How to resolve |
+|------|-------------|--------------|------|----------------|
+| [M003] | [description] | [section/row] | [Q-ID / none] | [resolution guidance] |
 
 Total missing items: [count]
 
 ## Assumptions
 
-[From workspace/shared/assumptions.md, filtered for annual_2025. Every row with `Src: A:<id>` must appear here.]
+[Only assumptions the taxpayer explicitly accepted. Every row with
+`Src: A:<id>` must appear here.]
 
-| Assumption ID | Description | Confirmed by user | Impact if incorrect | Resolution |
-|---------------|-------------|-------------------|---------------------|------------|
-| [A001] | [what was assumed] | [yes/no] | [what changes if wrong] | [how to confirm] |
+| A-ID | Description | Accepted by taxpayer | Impact if incorrect | Resolution |
+|------|-------------|----------------------|---------------------|------------|
+| [A001] | [what was assumed] | [U:"<short quote>" (<YYYY-MM-DD>)] | [what changes if wrong] | [how to confirm] |
 
 Total assumptions: [count]
+
+[If none: "None -- no assumptions were used."]
 
 ## User-stated values index
 
 [Cross-index every `U:` row so the user can spot-check what was recorded from chat.]
 
-| Workpack row | Value | Quote | Stated at |
-|--------------|-------|-------|-----------|
-| [section/row] | [value] | "[verbatim quote]" | [YYYY-MM-DD] |
+| Workpack row | Value | Quote | Stated at | Document row |
+|--------------|-------|-------|-----------|--------------|
+| [section/row] | [value] | "[verbatim quote]" | [YYYY-MM-DD] | [ev_NNN] |
+
+## Field map summary
+
+[Written only by the field mapper, from the canonical map in Appendix B. Until
+mapping runs, this section holds the single line `not yet mapped`; the mapper
+replaces it with its summary table. The field map maps each line item in this
+workpack to the corresponding field in the Belastingdienst online return.
+The taxpayer uses it as a guide while personally entering data in Mijn
+Belastingdienst. It is specific to the annual return 2025 and separate from any
+provisional field map. Once mapping has run, every manual-entry field in
+Appendix B appears here with the same value, and every missing field appears
+as a `MISSING - enter manually` row with its Q-ID. If a sourced fact changes
+after generation, the annual workflow adds the line `STALE — predates the
+change to <fact> (<YYYY-MM-DD>); regenerate before use.` at the top of this
+section; only regeneration, which re-runs the field mapper, removes it.]
+
+not yet mapped
+
+## Manual-entry checklist
+
+[Written only by the submit companion, and only when the taxpayer asks for it.
+Until then this section holds the single line `not requested`. If a sourced
+fact changes after generation, the annual workflow adds the same stale line at
+the top of a requested checklist; its values are then never used until the
+map is regenerated and the checklist rebuilt.]
+
+not requested
 
 ## Human review checklist
 
@@ -916,9 +982,12 @@ submit.
 - [ ] Zorgkosten threshold manual review completed if exact reviewed 2025 threshold sources are not registered
 - [ ] Lijfrente limit manual review completed if exact reviewed 2025 jaarruimte/reserveringsruimte sources are not registered
 - [ ] Deductions have supporting evidence retained for at least 5 years
+- [ ] I used the Field map summary only as a guide while personally entering each value in Mijn Belastingdienst
 - [ ] All `U:` user-chat values reviewed for accuracy
 - [ ] All `A:` assumptions reviewed and confirmed or corrected
 - [ ] All `?` missing information resolved or consciously accepted
+- [ ] Every blocking open question answered; any question left open keeps this workpack a draft
+- [ ] Every Documents and sources row marked `needs review` checked against the original document
 - [ ] WOZ-waarde matches the gemeente beschikking
 - [ ] Mortgage interest matches the jaaroverzicht hypotheek
 - [ ] Loonheffing withheld matches jaaropgaven total
@@ -932,3 +1001,56 @@ submit.
 This workpack is a preparation aid. You, the taxpayer or an authorized human,
 must review the figures and perform all portal entry, signing, and submission
 yourself. The assistant must not access or operate Mijn Belastingdienst.
+
+## Appendix A — Resume record
+
+[One fenced `yaml` block. Facts never live here; they live in the sections
+above with provenance. Section keys and statuses mirror the conversation:
+`not_started | in_progress | complete | chat_only | deferred`, with `open`
+listing that section's open Q-IDs. `readiness` follows the STATUS banner.
+`save_consent` defaults to `not_given` and becomes `given` in the written file
+(saved in the working folder or delivered as a download); it is a record of the
+taxpayer's decision in the conversation, never an authorization to write. `generation_confirmed` becomes `true`
+after the final-review confirmation and returns to `false` when a sourced fact
+changes afterwards; the Field map summary, Appendix B, and any checklist then
+carry the stale line until regeneration. `queued_workflow` holds the queued 2026 subflow value when
+the taxpayer asked for both workflows, otherwise `null`. `sources_loaded`
+equals the Sources used list.]
+
+```yaml
+workpack_format: nl-tax-workpack
+workpack_version: "2.0"
+plugin_version: "0.4.0"
+workflow: annual_2025
+tax_year: 2025
+created_at: ""
+updated_at: ""
+save_consent: not_given
+readiness: draft
+generation_confirmed: false
+queued_workflow: null
+sections:
+  filing_status: {status: not_started, open: []}
+  box1: {status: not_started, open: []}
+  winst: {status: not_started, open: []}
+  eigen_woning: {status: not_started, open: []}
+  box2: {status: not_started, open: []}
+  box3_peildatum: {status: not_started, open: []}
+  box3_actual: {status: not_started, open: []}
+  deductions: {status: not_started, open: []}
+  credits_screening: {status: not_started, open: []}
+  partner_allocation: {status: not_started, open: []}
+  confirm: {status: not_started, open: []}
+sources_loaded: []
+```
+
+## Appendix B — Field map
+
+[Written only by the field mapper: one fenced `yaml` block holding the canonical
+annual field map (`workflow: annual_return`, schema v1.1 from the field-mapper
+template). Until mapping runs, this section holds the single literal line
+below. After a changed fact, the annual workflow adds the stale line above the
+`yaml` block; the mapper removes it only by regenerating the map from the
+recorded facts.]
+
+not yet mapped

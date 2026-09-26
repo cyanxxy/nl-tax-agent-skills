@@ -1,8 +1,17 @@
 #!/usr/bin/env python3
-"""Validate a field-map.yaml for correctness and policy compliance.
+"""Validate a field map for correctness and policy compliance.
 
 Usage:
-    python3 validate_field_map.py <path-to-field-map.yaml>
+    python3 validate_field_map.py [--strict|--require-ready] <field-map.yaml | workpack.md>
+
+Input:
+    Either a standalone field-map YAML file, or a 0.4 workpack Markdown file
+    (``workspace/nl-tax-annual-2025-workpack.md`` or
+    ``workspace/nl-tax-provisional-2026-workpack.md``). For a ``.md`` workpack
+    the canonical field map is the single fenced ``yaml`` block under the
+    heading ``## Appendix B — Field map``. When that section still holds the
+    literal line ``not yet mapped`` the workpack has no field map yet; that is
+    reported as an error ("no field map in workpack", exit 1).
 
 Checks:
     - All required metadata fields present
@@ -205,7 +214,8 @@ ZVW_LABEL_KEYWORDS = set(_ZVW_RULE.get("label_keywords") or ())
 # Annual 2025 business disqualifiers. Demote-only: each condition keeps the
 # map draft with the named blocker; their absence proves nothing, because
 # completeness of a business section is established in the taxpayer
-# conversation and recorded in session progress, never by this script.
+# conversation and recorded by the owning workflow (the section status in the
+# conversation and, when saved, workpack Appendix A), never by this script.
 ANNUAL_BUSINESS_BLOCKER = str(
     _ANNUAL_BUSINESS_RULES.get("blocker") or "business-section schema review"
 )
@@ -267,9 +277,131 @@ CHECK_IDS = (
 )
 
 
-def load_yaml(path):
-    with open(path, "r", encoding="utf-8") as f:
-        content = f.read()
+# --------------------------------------------------------------------------
+# 0.4 workpack input: the canonical field map is the one fenced yaml block in
+# "## Appendix B — Field map" of the workflow's single workpack file. Until the
+# mapper runs, that section holds the literal line "not yet mapped".
+# --------------------------------------------------------------------------
+WORKPACK_SUFFIXES = {".md", ".markdown"}
+WORKPACK_FIELD_MAP_HEADING = re.compile(
+    r"^##\s+Appendix\s+B\s*[\u2014\u2013-]+\s*Field\s+map\s*$",
+    re.IGNORECASE,
+)
+WORKPACK_NOT_YET_MAPPED = "not yet mapped"
+NO_FIELD_MAP_IN_WORKPACK = "no field map in workpack"
+_FENCE_OPEN = re.compile(r"^(`{3,}|~{3,})\s*([^`\s]*)")
+_SECTION_HEADING = re.compile(r"^#{1,2}\s")
+
+
+class WorkpackFieldMapError(ValueError):
+    """The workpack does not hold exactly one extractable Appendix B field map."""
+
+
+def is_workpack_path(path):
+    """True when ``path`` names a Markdown workpack rather than a YAML map."""
+    return Path(path).suffix.lower() in WORKPACK_SUFFIXES
+
+
+def _is_fence_close(stripped, marker):
+    return (
+        stripped.startswith(marker)
+        and set(stripped) == {marker[0]}
+    )
+
+
+def extract_workpack_field_map(markdown_text):
+    """Return ``(yaml_text, warnings)`` for the Appendix B field map.
+
+    Raises ``WorkpackFieldMapError`` when the section is absent or duplicated,
+    holds ``not yet mapped`` (no field map in workpack), holds no fenced yaml
+    block, holds more than one, or leaves a fence unclosed. Headings inside
+    fenced blocks never delimit sections.
+    """
+    lines = str(markdown_text).splitlines()
+    fence = None
+    starts = []
+    end = None
+    for index, line in enumerate(lines):
+        stripped = line.strip()
+        if fence is not None:
+            if _is_fence_close(stripped, fence):
+                fence = None
+            continue
+        opener = _FENCE_OPEN.match(stripped)
+        if opener:
+            fence = opener.group(1)
+            continue
+        if not _SECTION_HEADING.match(stripped):
+            continue
+        if WORKPACK_FIELD_MAP_HEADING.match(stripped):
+            starts.append(index + 1)
+        elif len(starts) == 1 and end is None:
+            end = index
+    if not starts:
+        raise WorkpackFieldMapError(
+            f"{NO_FIELD_MAP_IN_WORKPACK}: missing the "
+            "'## Appendix B — Field map' section"
+        )
+    if len(starts) > 1:
+        raise WorkpackFieldMapError(
+            "workpack has more than one '## Appendix B — Field map' section"
+        )
+    section = lines[starts[0]:end]
+
+    blocks = []
+    placeholder = False
+    fence = None
+    info = ""
+    body = []
+    for line in section:
+        stripped = line.strip()
+        if fence is not None:
+            if _is_fence_close(stripped, fence):
+                blocks.append((info, "\n".join(body)))
+                fence = None
+                body = []
+            else:
+                body.append(line)
+            continue
+        opener = _FENCE_OPEN.match(stripped)
+        if opener:
+            fence = opener.group(1)
+            info = opener.group(2).lower()
+            body = []
+            continue
+        if stripped.strip("`").strip().lower() == WORKPACK_NOT_YET_MAPPED:
+            placeholder = True
+    if fence is not None:
+        raise WorkpackFieldMapError(
+            "Appendix B — Field map has an unclosed fenced block"
+        )
+
+    yaml_blocks = [text for lang, text in blocks if lang in {"yaml", "yml"}]
+    if not yaml_blocks:
+        if placeholder:
+            raise WorkpackFieldMapError(
+                f"{NO_FIELD_MAP_IN_WORKPACK}: Appendix B — Field map holds "
+                f"'{WORKPACK_NOT_YET_MAPPED}'"
+            )
+        raise WorkpackFieldMapError(
+            f"{NO_FIELD_MAP_IN_WORKPACK}: Appendix B — Field map holds no "
+            "fenced yaml block"
+        )
+    if len(yaml_blocks) > 1:
+        raise WorkpackFieldMapError(
+            "Appendix B — Field map must hold exactly one fenced yaml block "
+            f"(found {len(yaml_blocks)})"
+        )
+    warnings = []
+    if placeholder:
+        warnings.append(
+            f"Appendix B — Field map still holds the '{WORKPACK_NOT_YET_MAPPED}' "
+            "line next to the field map; the mapper replaces it"
+        )
+    return yaml_blocks[0], warnings
+
+
+def _parse_yaml_text(content, path):
     try:
         import yaml
     except ImportError:
@@ -282,6 +414,26 @@ def load_yaml(path):
         return yaml.safe_load(content)
     except yaml.YAMLError as exc:
         raise SystemExit(f"Error: invalid YAML in {path}: {exc}")
+
+
+def load_field_map(path):
+    """Load a field map from a YAML file or a workpack's Appendix B.
+
+    Returns ``(data, warnings)``. Raises ``WorkpackFieldMapError`` for a
+    workpack without exactly one Appendix B yaml block.
+    """
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+    warnings = []
+    if is_workpack_path(path):
+        content, warnings = extract_workpack_field_map(content)
+    return _parse_yaml_text(content, path), warnings
+
+
+def load_yaml(path):
+    """Load the field map at ``path`` (YAML file or ``.md`` workpack)."""
+    data, _ = load_field_map(path)
+    return data
 
 
 def _is_provisional(workflow):
@@ -904,8 +1056,9 @@ def portal_prefilled_reference_fields(reference_path):
 def assess_readiness(fields, missing, workflow, parsed_tax_year, notes=None):
     """Assess whether map structure could support review-ready status.
 
-    This mechanical candidate never overrides the agent declaration derived from
-    session-progress.yaml. Returns
+    This mechanical candidate never overrides the agent declaration, which the
+    owning workflow derives from its section rollup (tracked in the
+    conversation and, when saved, in workpack Appendix A). Returns
     {ready, populated_count, required_unpopulated, blockers}:
       - populated_count: fields with a non-empty value AND usable provenance
         (source.type known/not unknown; baseline/calculated carry their ref).
@@ -968,9 +1121,9 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year, notes=None):
 
             # Demote-only disqualifiers from field-map-rules.yaml. This script
             # cannot prove a business section complete — completeness is
-            # established in the taxpayer conversation and recorded in session
-            # progress — so it checks only for conditions that positively
-            # disqualify review_ready.
+            # established in the taxpayer conversation and recorded by the
+            # owning workflow — so it checks only for conditions that
+            # positively disqualify review_ready.
 
             # The form must be positively established as an eenmanszaak. An
             # ABSENT legal form is a disqualifier too: an unanswered form
@@ -1135,9 +1288,16 @@ def _readiness_for(data):
 
 
 def main():
+    usage = (
+        "Usage: python3 validate_field_map.py [--strict|--require-ready] "
+        "<field-map.yaml | workpack.md>"
+    )
     if "-h" in sys.argv[1:] or "--help" in sys.argv[1:]:
-        print("validate_field_map.py — validate a field-map.yaml for correctness and policy")
-        print("Usage: python3 validate_field_map.py [--strict|--require-ready] <path-to-field-map.yaml>")
+        print(
+            "validate_field_map.py — validate a field map (YAML file or the "
+            "Appendix B block of a workpack .md) for correctness and policy"
+        )
+        print(usage)
         sys.exit(0)
 
     args = [a for a in sys.argv[1:] if not a.startswith("-")]
@@ -1155,8 +1315,7 @@ def main():
     require_ready = bool(flags & known_flags)
 
     if not args:
-        print("Usage: python3 validate_field_map.py [--strict|--require-ready] "
-              "<path-to-field-map.yaml>", file=sys.stderr)
+        print(usage, file=sys.stderr)
         sys.exit(1)
 
     path = args[0]
@@ -1164,8 +1323,18 @@ def main():
         print(f"Error: file not found: {path}", file=sys.stderr)
         sys.exit(1)
 
-    data = load_yaml(path)
+    try:
+        data, load_warnings = load_field_map(path)
+    except WorkpackFieldMapError as exc:
+        print("VALIDATION FAILED")
+        print()
+        print("Errors:")
+        print(f"  - {exc}")
+        print()
+        print("READINESS: NOT_ASSESSED (no field map to validate)")
+        sys.exit(1)
     errors, warnings = validate(data)
+    warnings = list(load_warnings) + list(warnings)
     readiness = _readiness_for(data)
 
     if errors:

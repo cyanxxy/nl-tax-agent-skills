@@ -1,0 +1,14 @@
+# 0.3 evidence index (seed for the legacy-ledger eval case).
+# 0.4 never reads or writes this file; it must stay byte-identical.
+evidence_index_version: "1.1"
+items:
+  - evidence_id: ev_001
+    source: file
+    file_path: uploads/jaaropgaaf-2025.pdf
+    evidence_type: jaaropgaaf
+    tax_year: 2025
+    extraction_status: extracted
+    review_required: false
+    extracted_fields:
+      loon_loonheffing: 45000.00
+      ingehouden_loonheffing: 12500.00

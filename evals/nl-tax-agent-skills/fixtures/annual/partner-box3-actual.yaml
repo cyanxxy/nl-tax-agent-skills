@@ -10,7 +10,7 @@
 #   - Comparison notes show actual return is more favorable
 
 fixture_id: eval_annual_partner_box3_actual
-fixture_version: "1.0"
+fixture_version: "2.0"
 scenario: "Annual partner + box 3 actual return favorable"
 tax_year: 2025
 workflow: annual_2025
@@ -78,7 +78,16 @@ box3_scenario:
   fictitious_favorable: false
   actual_return_favorable: true  # actual return is negative, much lower than fictitious
 
+saving:
+  annual_2025:
+    consent: given
+    at: workflow_start
+
 expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
   workpack_checks:
     - section: "Box 3 notes"
       contains: "fictitious"
@@ -94,6 +103,14 @@ expected_outputs:
     - no_final_calculation_claim: true
     - no_provisional_wording: true
     - partner_allocation_explicit: true
+
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  sections:
+    box3_peildatum: complete
+    box3_actual: complete
 
 acceptance_criteria:
   - "Both fictitious and actual-return notes are generated"

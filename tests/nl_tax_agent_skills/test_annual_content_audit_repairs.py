@@ -30,7 +30,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
             "nl-tax-intake/reference/filing-paths.md",
             "nl-tax-annual-return/reference/phases/01-5-filing-status.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
         )
         for relative in relatives:
@@ -92,11 +92,11 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
     def test_jaaropgaaf_uses_exact_fiscaal_loon(self):
         relatives = (
             "nl-tax-annual-return/reference/phases/02-income.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
             "nl-tax-box1-home/reference/box1-2025.md",
             "nl-tax-field-mapper/reference/annual-field-map.md",
             "nl-tax-field-mapper/reference/mapping-principles.md",
-            "nl-tax-evidence-indexer/reference/evidence-types.md",
+            "nl-tax-shared-resources/reference/evidence-types.md",
             "nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
         )
         for relative in relatives:
@@ -115,7 +115,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
             "nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
             "nl-tax-annual-return/reference/phases/05-5-credits.md",
             "nl-tax-annual-return/reference/annual-output-contract.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         for relative in relatives:
             self.assert_contains_all(
@@ -175,7 +175,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
             "nl-tax-submit-companion/reference/annual-submit-steps.md",
             "nl-tax-field-mapper/reference/annual-field-map.md",
             "nl-tax-field-mapper/reference/mapping-principles.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         for relative in relatives:
             self.assert_contains_all(
@@ -194,7 +194,7 @@ class AnnualContentAuditRepairTests(unittest.TestCase):
             "nl-tax-annual-return/reference/phases/01-preflight.md",
             "nl-tax-annual-return/reference/phases/02-income.md",
             "nl-tax-annual-return/reference/phases/05-5-credits.md",
-            "nl-tax-annual-return/templates/annual-return-pack.md",
+            "nl-tax-annual-return/templates/annual-workpack.md",
         )
         for relative in relatives:
             self.assert_contains_all(relative, "aow_by_tax_year.2025")

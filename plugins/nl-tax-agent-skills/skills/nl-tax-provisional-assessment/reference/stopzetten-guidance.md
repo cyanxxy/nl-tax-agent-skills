@@ -9,7 +9,6 @@
 - Monthly PAYMENT (betaling) — amount is correct
 - Edge case: user wants to stop because they will file early
 - Manual checklist for stopzetten (for inclusion in workpack)
-- Stopzetten checklist
 - Safety notes
 
 ## Purpose
@@ -144,15 +143,15 @@ When a user who pays monthly wants to stop because the amount is wrong:
 2. Explain that simply ceasing payment can create arrears under the current
    beschikking and does not correct the estimate
 3. Recommend changing the voorlopige aanslag instead
-4. If the user agrees, transition to the change subflow and mutate progress before asking the next question:
-   - set `active_workflow: provisional_2026_change`
-   - set `provisional_2026.subflow: change`
-   - copy the payment baseline into the `baseline` subsection
-   - mark `stopzetten_direction` complete with `routed_to_change_payment_case`
-   - reset `confirm` to `not_started`
+4. If the user agrees, transition to the change subflow and record the redirect before asking the next question:
+   - the subflow becomes change in the conversation (and, when the workpack is saved, in the `Subflow` heading and Appendix A `workflow: provisional_2026_change`)
+   - record the payment baseline with provenance in `Existing baseline, if any` and mark `baseline` `in_progress`
+   - mark `stopzetten_direction` `complete` with the route `change VA (payment case)` in `Stopzetten outcome`
+   - set `confirm` to `not_started` and `generation_confirmed` to `false`
+   - give the full re-entry notice before the first change question
 5. If the user still asks to stop a monthly payment case, state that stopzetten is not available for payment cases and continue with the change flow
 
-This state mutation prevents the next turn from re-entering the stopzetten prompt loop.
+Recording the redirect prevents the next turn from re-entering the stopzetten prompt loop.
 
 ---
 
@@ -178,10 +177,10 @@ Some taxpayers want to stop their voorlopige aanslag because they plan to file t
 
 ## Manual checklist for stopzetten (for inclusion in workpack)
 
-When stopzetten is the appropriate action, include this checklist:
+When stopzetten is the appropriate action, include this checklist in the workpack's `Stopzetten outcome` section:
 
 ```
-## Stopzetten checklist
+### Refund-stop checklist
 
 **HUMAN-ONLY PORTAL STEPS:** You, the taxpayer or an authorized human, perform
 all portal steps below on your own device. The assistant must not operate the

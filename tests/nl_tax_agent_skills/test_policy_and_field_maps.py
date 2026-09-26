@@ -751,7 +751,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-box1-home/SKILL.md",
             "skills/nl-tax-box2/SKILL.md",
             "skills/nl-tax-box3/SKILL.md",
-            "skills/nl-tax-evidence-indexer/SKILL.md",
             "skills/nl-tax-field-mapper/SKILL.md",
             "skills/nl-tax-partner-deductions/SKILL.md",
             "skills/nl-tax-winst/SKILL.md",
@@ -780,7 +779,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
     def test_every_user_facing_skill_repeats_the_full_portal_tool_boundary(self):
         public_paths = (
             "skills/nl-tax-annual-return/SKILL.md",
-            "skills/nl-tax-evidence-indexer/SKILL.md",
             "skills/nl-tax-field-mapper/SKILL.md",
             "skills/nl-tax-intake/SKILL.md",
             "skills/nl-tax-provisional-assessment/SKILL.md",
@@ -794,7 +792,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "connector",
             "another tool",
             "credentials",
-            "sessions",
+            "session",
         )
 
         for public_path in public_paths:
@@ -824,23 +822,23 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/SKILL.md",
         ):
             with self.subTest(owner=owner):
-                owner_text = read_text(owner)
+                owner_text = " ".join(read_text(owner).split())
                 self.assertIn("Claude in Chrome", owner_text)
-                self.assertIn("computer\nuse", owner_text)
+                self.assertIn("computer use", owner_text)
                 self.assertIn("a connector", owner_text)
-                self.assertIn("credentials or sessions", owner_text)
-                self.assertIn("taxpayer or an authorized human", owner_text)
+                self.assertIn("DigiD details, passwords, codes, or sessions", owner_text)
+                self.assertRegex(owner_text, r"taxpayer\)? or an authorized human")
 
         procedure_paths = (
             "skills/nl-tax-submit-companion/reference/annual-submit-steps.md",
             "skills/nl-tax-submit-companion/reference/provisional-submit-steps.md",
             "skills/nl-tax-submit-companion/reference/stopzetten-submit-steps.md",
-            "skills/nl-tax-submit-companion/templates/manual-submission-checklist.md",
+            "skills/nl-tax-submit-companion/templates/manual-entry-checklist.md",
             "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md",
         )
         bare_action = re.compile(
             r"(?im)^(?:\d+\.\s+|-\s+\[\s\]\s+)"
-            r"(?:go to|log in|open|navigate|select|enter|fill|click|sign|send|submit|confirm)\b"
+            r"(?:go to|log in|open(?! questions)|navigate|select|enter|fill|click|sign|send|submit|confirm)\b"
         )
         for relative_path in procedure_paths:
             with self.subTest(path=relative_path):
@@ -849,7 +847,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 self.assertIsNone(bare_action.search(content), content)
 
         annual_template = read_text(
-            "skills/nl-tax-annual-return/templates/annual-return-pack.md"
+            "skills/nl-tax-annual-return/templates/annual-workpack.md"
         )
         for human_action in (
             "**Taxpayer:** File the prepared return",
@@ -862,46 +860,62 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             self.assertIn(human_action, annual_template)
         self.assertNotIn("Use it as a guide when entering", annual_template)
 
-    def test_evidence_indexer_uses_canonical_beschikking_tokens(self):
-        skill = read_text("skills/nl-tax-evidence-indexer/SKILL.md")
+    def test_shared_evidence_types_use_canonical_beschikking_tokens(self):
+        # 0.4 (R10): the retired indexer's type list lives in the shared
+        # resources and names the type column of Documents and sources rows.
         evidence_types = read_text(
-            "skills/nl-tax-evidence-indexer/reference/evidence-types.md"
+            "skills/nl-tax-shared-resources/reference/evidence-types.md"
+        )
+        elicitation = read_text(
+            "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
 
-        self.assertIn("`woz_beschikking`", skill)
-        self.assertIn("`voorlopige_aanslag_beschikking`", skill)
-        self.assertIn("`hypotheek_jaaroverzicht`", skill)
-        self.assertIn("Use these canonical `evidence_type` tokens", evidence_types)
-        self.assertNotIn("`WOZ-beschikking`", skill)
-        self.assertNotIn("`beschikking-VA`", skill)
+        for token in ("woz_beschikking", "voorlopige_aanslag_beschikking", "hypotheek_jaaroverzicht"):
+            with self.subTest(token=token):
+                self.assertIn(f"### {token}\n", evidence_types)
+        self.assertIn("Use these canonical type tokens exactly", evidence_types)
+        self.assertIn("in the row's type column", evidence_types)
+        self.assertIn("../nl-tax-shared-resources/reference/evidence-types.md", elicitation)
+        self.assertFalse((ROOT / "skills/nl-tax-evidence-indexer").exists())
 
     def test_submission_checklist_stays_focused_without_paper_fallback(self):
         checklist = read_text(
-            "skills/nl-tax-submit-companion/templates/manual-submission-checklist.md"
+            "skills/nl-tax-submit-companion/templates/manual-entry-checklist.md"
         )
 
         self.assertIn("Mijn Belastingdienst", checklist)
         self.assertNotIn("generic credential warning", checklist)
         self.assertNotIn("0800-0543", checklist)
 
-    def test_provisional_generation_gate_tracks_box2_in_session_progress(self):
+    def test_provisional_generation_gate_tracks_box2_in_resume_record(self):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
-        resume = read_text(
+        resume = " ".join(read_text(
             "skills/nl-tax-provisional-assessment/reference/resume-contract.md"
-        )
+        ).split())
         elicitation = read_text(
             "skills/nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md"
         )
-        combined = f"{skill}\n{resume}\n{elicitation}"
+        template = read_text(
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
+        )
+        appendix = template.split("## Appendix A — Resume record", 1)[1]
+        record = yaml.safe_load(appendix.split("```yaml\n", 1)[1].split("\n```", 1)[0])
 
         self.assertIn("reference/resume-contract.md", skill)
-        self.assertIn("provisional_2026.subsections.box2", resume)
-        self.assertIn("pre-1.4", resume)
-        self.assertIn("generation gate", combined)
-        self.assertIn("Every applicable subsection", elicitation)
-        self.assertIn("winst_forecast", combined)
-        self.assertIn("`complete`, `chat_only`, or `deferred`", elicitation)
-        self.assertIn("open_questions", elicitation)
+        self.assertIn("box2", record["sections"])
+        self.assertIn("winst_forecast", record["sections"])
+        self.assertIn(
+            "Continue from the first applicable section that is not `complete` or `chat_only`",
+            resume,
+        )
+        self.assertNotIn("pre-1.4", resume)
+        self.assertIn("## Workpack generation gate", elicitation)
+        self.assertIn(
+            "`box2` and `winst_forecast` are gate members wherever they apply",
+            " ".join(skill.split()),
+        )
+        self.assertIn("`complete`, `chat_only`, or `deferred`", " ".join(elicitation.split()))
+        self.assertIn("## Open questions", elicitation)
 
     def test_provisional_review_questions_template_is_concrete_and_wired(self):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
@@ -909,19 +923,26 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md"
         )
         template = read_text(
-            "skills/nl-tax-provisional-assessment/templates/review-questions.md"
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
         )
 
-        self.assertIn("templates/review-questions.md", skill)
-        self.assertIn("review-questions.md", contract)
+        # 0.4: the review-questions template is merged into the workpack's
+        # `## Review questions` section, which is the review subflow's output.
+        self.assertIn(
+            "**Review:** the `Review questions` section is the output; no field map.",
+            " ".join(skill.split()),
+        )
+        self.assertIn("Review questions", contract)
+        self.assertNotIn("templates/review-questions.md", skill + contract)
+        self.assertIn("provisional_2026_review", template)
+        review = template.split("\n## Review questions\n", 1)[1].split("\n## ", 1)[0]
         for required in (
-            "provisional_2026_review",
             "Baseline field",
             "Current 2026 estimate",
             "Change status",
             "Recommended action",
         ):
-            self.assertIn(required, template)
+            self.assertIn(required, review)
 
     def test_stopzetten_contract_has_structured_body_date_gate_and_redirect_state(self):
         skill = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
@@ -929,7 +950,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md"
         )
         template = read_text(
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md"
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
         )
         guidance = read_text(
             "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md"
@@ -942,9 +963,13 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("## Stopzetten outcome", template)
         self.assertIn("current date", combined)
         self.assertIn("do not generate a stopzetten checklist", combined)
-        self.assertIn("provisional_2026.subflow: change", combined)
-        self.assertIn("active_workflow: provisional_2026_change", combined)
-        self.assertIn("copy the payment baseline", combined)
+        combined_flat = " ".join(combined.split())
+        self.assertIn("Appendix A `workflow: provisional_2026_change`", combined_flat)
+        self.assertIn(
+            "the payment baseline goes into `Existing baseline, if any` with provenance",
+            combined_flat,
+        )
+        self.assertIn("carry the payment baseline forward there", combined_flat)
 
     def test_change_reentry_language_is_canonical_across_provisional_notes(self):
         canonical = (
@@ -961,11 +986,11 @@ class PolicyAndFieldMapTests(unittest.TestCase):
     def test_submit_companion_lists_provisional_review_workflow(self):
         skill = read_text("skills/nl-tax-submit-companion/SKILL.md")
         checklist = read_text(
-            "skills/nl-tax-submit-companion/templates/manual-submission-checklist.md"
+            "skills/nl-tax-submit-companion/templates/manual-entry-checklist.md"
         )
 
         self.assertIn("provisional_2026_review", checklist)
-        self.assertIn("review-questions.md", skill)
+        self.assertIn("the workpack's `## Review questions` section", " ".join(skill.split()))
         self.assertIn("provisional_2026_stopzetten", skill)
         self.assertIn("Do not list a missing field map as a blocker", checklist)
         self.assertIn("do not invent field-map rows", checklist.lower())
@@ -1021,7 +1046,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         )
 
         provisional_template = read_text(
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md"
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
         )
         provisional_field_map = read_text(
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md"
@@ -1038,10 +1063,10 @@ class PolicyAndFieldMapTests(unittest.TestCase):
     def test_zorgkosten_and_lijfrente_templates_require_manual_review_without_sources(self):
         annual_flow = read_text("skills/nl-tax-annual-return/reference/annual-flow.md").lower()
         annual_template = read_text(
-            "skills/nl-tax-annual-return/templates/annual-return-pack.md"
+            "skills/nl-tax-annual-return/templates/annual-workpack.md"
         ).lower()
         provisional_template = read_text(
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md"
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
         ).lower()
 
         self.assertIn("zorgkosten threshold manual review", annual_template)
@@ -1066,12 +1091,15 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "skills/nl-tax-annual-return/reference/annual-output-contract.md",
             "## Required sections",
         )
+        # 0.4 R4: the workpack section order, after the title/STATUS banner.
         required_sections = [
+            "How to use this file",
+            "Contents",
             "Scope",
             "Unsupported-case checks",
-            "Sources used",
             "Taxpayer profile summary",
-            "Evidence summary",
+            "Documents and sources",
+            "Sources used",
             "Filing status and late-filing exposure",
             "Income notes",
             "Winst uit onderneming notes",
@@ -1081,18 +1109,27 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "Deductions notes",
             "Credits screening",
             "Fiscal partner notes",
-            "Field map summary",
+            "Open questions",
             "Missing information",
             "Assumptions",
             "User-stated values index",
+            "Field map summary",
+            "Manual-entry checklist",
             "Human review checklist",
             "Not submission advice",
+            "Appendix A — Resume record",
+            "Appendix B — Field map",
         ]
 
-        self.assertEqual(len(required_sections), 20)
-        for section in required_sections:
-            with self.subTest(section=section):
-                self.assertIn(section, skill_sections)
+        self.assertEqual(len(required_sections), 26)
+        numbered = re.findall(r"(?m)^\d+\. \*\*(.+?)\*\*", skill_sections)
+        self.assertEqual(numbered[0], "Title and STATUS banner")
+        self.assertEqual(numbered[1:], required_sections)
+        self.assertNotIn("Evidence summary", skill_sections)
+
+        template = read_text("skills/nl-tax-annual-return/templates/annual-workpack.md")
+        headings = re.findall(r"(?m)^## (.+?)\s*$", template)
+        self.assertEqual(headings, required_sections)
         self.assertIn(
             "reference/annual-output-contract.md",
             read_text(
@@ -1101,16 +1138,19 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         )
 
     def test_box2_helper_contract_returns_notes_and_open_questions(self):
-        annual_skill = read_text(
+        annual_skill = " ".join(read_text(
             "skills/nl-tax-annual-return/reference/annual-flow.md"
-        )
+        ).split())
         box2_skill = read_text("skills/nl-tax-box2/SKILL.md")
-        combined = f"{annual_skill}\n{box2_skill}"
 
         self.assertIn("return a structured question packet", box2_skill)
-        self.assertIn("persists those results", annual_skill)
-        self.assertIn("resume-only inputs", combined)
-        self.assertIn("never update or create", annual_skill)
+        self.assertIn("The owning workflow records those results", annual_skill)
+        self.assertIn(
+            "A 0.3 `return-pack.md`, notes file, or other older document the user "
+            "shares is an ordinary source document",
+            annual_skill,
+        )
+        self.assertIn("0.3 `workspace/` ledgers are not read", annual_skill)
 
     def test_annual_helper_delegation_allows_read_only_inline_fallback(self):
         annual_skill = read_text(
@@ -1132,34 +1172,41 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         )
         self.assertIn("returns structured facts and open questions", annual_skill)
         self.assertIn("writes nothing", annual_skill)
-        self.assertIn("called through a Skill/Task tool or inlined by an owning workflow", combined)
+        self.assertIn(
+            "called through a Skill/Task tool or inlined by an owning workflow",
+            " ".join(combined.split()),
+        )
         for helper_path in helper_paths:
             with self.subTest(helper_path=helper_path):
                 self.assertIn(
                     "called through a Skill/Task tool or inlined by an owning workflow",
-                    read_text(helper_path),
+                    " ".join(read_text(helper_path).split()),
                 )
 
     def test_field_mapper_is_the_only_canonical_field_map_writer(self):
-        annual = read_text("skills/nl-tax-annual-return/SKILL.md")
-        provisional = read_text("skills/nl-tax-provisional-assessment/SKILL.md")
-        mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
+        annual = " ".join(read_text("skills/nl-tax-annual-return/SKILL.md").split())
+        provisional = " ".join(
+            read_text("skills/nl-tax-provisional-assessment/SKILL.md").split()
+        )
+        mapper = " ".join(read_text("skills/nl-tax-field-mapper/SKILL.md").split())
         principles = read_text(
             "skills/nl-tax-field-mapper/reference/mapping-principles.md"
         )
 
-        self.assertIn("sole writer of both canonical field-map artifacts", mapper)
+        self.assertIn("This skill is the only author of the field map", mapper)
         self.assertIn("Only `nl-tax-field-mapper` creates or updates", principles)
         self.assertNotIn("Workflow skills may create an initial", principles)
-        self.assertIn("`workspace/annual/2025/field-map.yaml`", mapper)
-        self.assertIn("`workspace/provisional/2026/field-map.yaml`", mapper)
+        # 0.4 R7: the canonical map is Appendix B of the one workpack.
+        self.assertIn("`workspace/nl-tax-annual-2025-workpack.md`", mapper)
+        self.assertIn("`workspace/nl-tax-provisional-2026-workpack.md`", mapper)
+        self.assertIn("Never create a separate field-map file", mapper)
+        self.assertIn("`## Appendix B — Field map`", mapper)
+        self.assertIn("invoke `nl-tax-field-mapper`", annual)
+        self.assertIn("continue with `nl-tax-field-mapper`", provisional)
         for workflow in (annual, provisional):
             with self.subTest(workflow=workflow[:40]):
-                self.assertIn("invoke `nl-tax-field-mapper`", workflow)
-                self.assertNotIn("Write `workspace/annual/2025/field-map.yaml`", workflow)
-                self.assertNotIn(
-                    "Write `workspace/provisional/2026/field-map.yaml`", workflow
-                )
+                self.assertIn("The mapper alone composes", workflow)
+                self.assertNotIn("field-map.yaml", workflow)
 
     def test_workflows_use_exact_field_mapper_sibling_paths(self):
         common_paths = (
@@ -1167,20 +1214,21 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             "nl-tax-field-mapper/reference/mapping-principles.md",
             "nl-tax-field-mapper/reference/field-map-rules.yaml",
         )
-        workflow_paths = {
-            "skills/nl-tax-annual-return/reference/phases/10-assembly.md": (
-                "nl-tax-field-mapper/reference/annual-field-map.md"
-            ),
-            "skills/nl-tax-provisional-assessment/reference/subflows/request.md": (
-                "nl-tax-field-mapper/reference/provisional-field-map.md"
-            ),
-        }
+        annual = read_text("skills/nl-tax-annual-return/reference/phases/10-assembly.md")
+        for path in (*common_paths, "nl-tax-field-mapper/reference/annual-field-map.md"):
+            with self.subTest(workflow="annual", path=path):
+                self.assertIn(path, annual)
 
-        for workflow_path, workflow_reference in workflow_paths.items():
-            workflow = read_text(workflow_path)
-            for path in (*common_paths, workflow_reference):
-                with self.subTest(workflow_path=workflow_path, path=path):
-                    self.assertIn(path, workflow)
+        # Provisional request/change hand off by name; the mapper's own entry
+        # surface names every bundled resource (paths relative to its folder).
+        for subflow in ("request.md", "change.md"):
+            text = read_text(f"skills/nl-tax-provisional-assessment/reference/subflows/{subflow}")
+            with self.subTest(subflow=subflow):
+                self.assertIn("continue with `nl-tax-field-mapper`", text)
+        mapper = read_text("skills/nl-tax-field-mapper/SKILL.md")
+        for path in (*common_paths, "nl-tax-field-mapper/reference/provisional-field-map.md"):
+            with self.subTest(workflow="mapper", path=path):
+                self.assertIn(path.split("/", 1)[1], mapper)
 
     def test_helpers_return_results_without_persisting_artifacts(self):
         helper_paths = (
@@ -1195,27 +1243,43 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             helper = read_text(helper_path)
             helper_lower = helper.lower()
             with self.subTest(helper_path=helper_path):
-                self.assertIn("return structured facts and open questions", helper_lower)
-                self.assertIn("do not\npersist any final artifact", helper_lower)
-                self.assertNotIn("  - Write\n", helper)
-                self.assertNotIn("  - Edit\n", helper)
-
-    def test_owning_workflows_persist_helper_results_and_legacy_notes_are_read_only(self):
-        for workflow_path in (
-            "skills/nl-tax-annual-return/reference/annual-flow.md",
-            "skills/nl-tax-provisional-assessment/reference/provisional-flow.md",
-        ):
-            workflow = read_text(workflow_path)
-            with self.subTest(workflow_path=workflow_path):
-                self.assertTrue(
-                    "persists those results" in workflow
-                    or "persists the returned facts and open questions" in workflow
+                flat = " ".join(helper_lower.split())
+                self.assertIn("return structured facts and open questions", flat)
+                self.assertIn("**writes nothing.**", flat)
+                self.assertIn(
+                    "do not persist anything: no file, workpack section, field map, or checklist",
+                    flat,
                 )
-                self.assertIn("resume-only inputs", workflow)
-                self.assertIn("never update or create", workflow)
+                self.assertNotIn("  - Write", helper)
+                self.assertNotIn("  - Edit", helper)
+
+    def test_owning_workflows_record_helper_results_and_legacy_files_are_sources(self):
+        for workflow_path, records in (
+            (
+                "skills/nl-tax-annual-return/reference/annual-flow.md",
+                "The owning workflow records those results",
+            ),
+            (
+                "skills/nl-tax-provisional-assessment/reference/provisional-flow.md",
+                "This workflow records those results in its sections",
+            ),
+        ):
+            workflow = " ".join(read_text(workflow_path).split())
+            with self.subTest(workflow_path=workflow_path):
+                self.assertIn(records, workflow)
+                self.assertIn("the helper writes nothing", workflow.lower())
+        annual = " ".join(read_text("skills/nl-tax-annual-return/reference/annual-flow.md").split())
+        resume = " ".join(read_text(
+            "skills/nl-tax-provisional-assessment/reference/resume-contract.md"
+        ).split())
+        self.assertIn("0.3 `workspace/` ledgers are not read", annual)
+        self.assertIn(
+            "never read or write `profile.yaml`, `session-progress.yaml`, or `evidence-index.yaml`",
+            resume,
+        )
 
     def test_annual_template_uses_knowledge_placeholders_for_rates(self):
-        template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
+        template = read_text("skills/nl-tax-annual-return/templates/annual-workpack.md")
 
         forbidden_fixed_rate_text = [
             "5% -- Src: bd_belastingrente_overview",
@@ -1237,7 +1301,7 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         self.assertIn("[box 3 rate from `fictitious.md`]", template)
 
     def test_annual_template_clarifies_box2_disposal_costs_once(self):
-        template = read_text("skills/nl-tax-annual-return/templates/annual-return-pack.md")
+        template = read_text("skills/nl-tax-annual-return/templates/annual-workpack.md")
 
         self.assertIn("Do not subtract disposal costs from `box2.vervreemdingsprijs`", template)
         self.assertIn("Use `box2.vervreemdingskosten` only to derive net transfer price from gross proceeds", template)
@@ -1342,15 +1406,30 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         skill_paths = sorted((ROOT / "skills").glob("*/SKILL.md"))
         names = [skill_frontmatter(path.parent.name)["name"] for path in skill_paths]
 
-        self.assertEqual(len(names), 13)
-        self.assertEqual(len(set(names)), 13)
-        self.assertIn("nl-tax-shared-resources", names)
-        self.assertIn("nl-tax-knowledge", names)
+        # 0.4: eleven skills plus the hidden nl-tax-shared-resources package.
+        self.assertEqual(len(names), 12)
+        self.assertEqual(len(set(names)), 12)
+        self.assertEqual(
+            set(names),
+            {
+                "nl-tax-annual-return",
+                "nl-tax-box1-home",
+                "nl-tax-box2",
+                "nl-tax-box3",
+                "nl-tax-field-mapper",
+                "nl-tax-intake",
+                "nl-tax-knowledge",
+                "nl-tax-partner-deductions",
+                "nl-tax-provisional-assessment",
+                "nl-tax-shared-resources",
+                "nl-tax-submit-companion",
+                "nl-tax-winst",
+            },
+        )
 
     def test_public_skills_retain_exact_argument_hints(self):
         expected = {
             "nl-tax-annual-return": "[2025] [confirm]",
-            "nl-tax-evidence-indexer": "[path-to-upload-folder]",
             "nl-tax-field-mapper": "[annual|provisional] [year]",
             "nl-tax-intake": "[annual|request|change|review|stopzetten]",
             "nl-tax-provisional-assessment": (
@@ -1368,13 +1447,13 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         checks = [
             (
                 "skills/nl-tax-intake/SKILL.md",
-                "## Workspace location",
-                ["On the first turn, also tell the user", "state its absolute path"],
+                "## User-facing boundary",
+                ["absolute path", "workspace_root", "Which skill"],
             ),
             (
                 "skills/nl-tax-intake/SKILL.md",
-                "## After intake is complete",
-                ["Which skill"],
+                "## Hand off",
+                ["Which skill", "profile.yaml", "session-progress.yaml"],
             ),
             (
                 "skills/nl-tax-intake/SKILL.md",
@@ -1398,6 +1477,12 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             for term in forbidden_terms:
                 with self.subTest(path=relative_path, heading=heading, term=term):
                     self.assertNotIn(term, section)
+        # The saved file is the one visible action: report it only at the
+        # natural points, never every routine update.
+        annual_report = " ".join(
+            section_text("skills/nl-tax-annual-return/SKILL.md", "## End-of-turn report").split()
+        )
+        self.assertIn("do not announce routine updates", annual_report)
 
     # ------------------------------------------------------------------
     # CR-04 readiness: a map with zero populated fields is never "ready",

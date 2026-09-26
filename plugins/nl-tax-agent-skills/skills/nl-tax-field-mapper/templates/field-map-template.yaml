@@ -1,14 +1,21 @@
+# Field map schema v1.1. The mapper composes and checks this map in the
+# conversation but never prints the YAML in chat; the conversation shows the
+# "## Field map summary" table rendered from it. While save consent is active in
+# this conversation, the canonical copy is one fenced yaml block in
+# "## Appendix B — Field map" of the workflow's workpack (never a separate file).
 field_map_version: "1.1"
 workflow: ""          # "annual_return" or "provisional_assessment" — the FIELD-MAP enum.
-                      # Do NOT copy the intake/session labels (annual_2025,
+                      # Do NOT copy the workpack's resume-record labels (annual_2025,
                       # provisional_2026_request, ...) into this key; those live in
-                      # profile.yaml/session-progress.yaml and fail validation here.
+                      # Appendix A of the workpack and fail validation here.
 tax_year: ""          # REQUIRED: set explicitly to 2025 for annual_return or 2026 for provisional_assessment
 created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
 updated_at: ""
-readiness: "draft"    # Canonical agent declaration derived from session-progress.yaml:
-                      # "review_ready" only for a complete active workflow with no
-                      # blocker; otherwise "draft". A validator never promotes it.
+readiness: "draft"    # Canonical agent declaration derived from the owning workflow's
+                      # section rollup (Appendix A when saved): "review_ready" only when
+                      # every applicable section is complete or chat_only, no blocking
+                      # open question remains, and no manual-review blocker applies;
+                      # otherwise "draft". A check never promotes it.
 check_performed_by: "checked_by_agent"  # Always checked_by_agent, recorded after completing every
                                         # CHECK_ID in mapping-principles.md against field-map-rules.yaml
 
@@ -20,13 +27,13 @@ fields: []
 #   value: null                     # The value to enter on the form (null when source.type = "unknown")
 #   source:
 #     type: ""                      # One of: evidence | user_chat | estimate | baseline | calculated | assumption | unknown
-#     evidence_id: null             # When source.type = evidence
+#     evidence_id: null             # When source.type = evidence: an ev_NNN row in "## Documents and sources"
 #     quote: ""                     # When source.type = user_chat (verbatim user text)
 #     stated_at: ""                 # When source.type = user_chat (YYYY-MM-DD)
-#     assumption_id: null           # When source.type = assumption
+#     assumption_id: null           # When source.type = assumption: an A-ID in "## Assumptions"
 #     baseline_ref: ""              # When source.type = baseline
 #     calculated_from: []           # When source.type = calculated (list of field_ids)
-#     profile_path: ""              # Path in taxpayer profile (if applicable)
+#     profile_path: ""              # Row Key in "## Taxpayer profile summary" (if applicable)
 #   confidence: null                # 0.0 to 1.0 per mapping principles
 #   manual_review_required: true    # Boolean - true if human must verify before entry
 #   notes: []                       # List of notes, warnings, or context strings
@@ -37,7 +44,7 @@ missing_fields: []
 #   label: ""                       # Dutch label of the missing field
 #   reason: ""                      # Why data is not available
 #   blocking: true                  # true if the return/assessment cannot proceed without it
-#   open_question_id: ""            # Cross-reference to workspace/shared/field-map-open-questions.yaml
+#   open_question_id: ""            # The Q-ID (Q001 format) of the matching entry in "## Open questions"; the mapper adds that row itself
 
 user_chat_values_index: []
 # Cross-index of all source.type = user_chat entries for spot-checking.

@@ -9,7 +9,19 @@ PLUGIN = Path(__file__).resolve().parents[2] / "plugins" / "nl-tax-agent-skills"
 
 
 def read(relative_path):
-    return (PLUGIN / relative_path).read_text(encoding="utf-8")
+    """Read a plugin file; ``path#Heading`` narrows it to one ``##`` section.
+
+    0.4 merged the delta-summary and review-questions templates into the one
+    provisional workpack, so their contracts now apply to those sections.
+    """
+    relative_path, _, heading = relative_path.partition("#")
+    text = (PLUGIN / relative_path).read_text(encoding="utf-8")
+    if heading:
+        marker = f"\n## {heading}\n"
+        start = text.index(marker) + len(marker)
+        end = text.find("\n## ", start)
+        text = text[start:] if end == -1 else text[start:end]
+    return text
 
 
 class ProvisionalContentAuditRepairTests(unittest.TestCase):
@@ -26,7 +38,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/stopzetten-guidance.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/stopzetten.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
         )
         self.assert_all_contain(core_paths, "1 january 2026", "iack")
         self.assert_all_contain(
@@ -53,14 +65,18 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
                 self.assertNotIn("annual return is still required", text)
 
     def test_aow_has_three_states_and_transition_month(self):
-        profile = read("skills/nl-tax-intake/templates/taxpayer-profile.yaml")
+        # 0.4: the workpack's Taxpayer profile summary replaces profile.yaml.
+        profile = read(
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
+            "#Taxpayer profile summary"
+        )
         aow = read("skills/nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md")
         rates = read(
             "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md"
         )
         skill = read("skills/nl-tax-provisional-assessment/SKILL.md")
         pack = read(
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md"
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"
         )
         for text in (profile, aow, rates, skill, pack):
             with self.subTest(text=text[:60]):
@@ -75,11 +91,14 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
             "skills/nl-tax-provisional-assessment/reference/resume-contract.md"
         ).lower()
         self.assertIn("reference/resume-contract.md", skill)
+        compact = " ".join(resume.split())
+        self.assertIn("conversational resume guide", compact)
+        self.assertIn("not a script or tax-decision engine", compact)
         self.assertIn(
-            "conversational profile normalization",
-            " ".join(resume.split()),
+            "use the 2026 aow status and transition month recorded there as they stand",
+            compact,
         )
-        self.assertIn("not a script or tax-decision engine", " ".join(resume.split()))
+        self.assertIn("person.aow_by_tax_year.2026.transition_month", profile)
 
     def test_2026_aow_transition_month_rates_are_bundled(self):
         rates = read(
@@ -117,7 +136,9 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
         )
         self.assertIn("annual income-tax return", aow)
         self.assertIn("Verzoek of wijziging voorlopige aanslag", aow)
-        self.assertIn("aow_by_tax_year.<tax_year>.status", aow)
+        self.assertIn("AOW status per tax year for the taxpayer and, separately, for a fiscal partner", aow)
+        self.assertIn("never reuse one year's status or transition month for the other", aow)
+        self.assertIn("records it in the workpack's `Taxpayer profile summary`", aow)
 
     def test_shared_2026_own_home_note_names_the_woz_valuation_date(self):
         own_home = " ".join(
@@ -136,8 +157,8 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
 
     def test_business_profit_and_own_home_components_reach_rollup_and_delta(self):
         paths = (
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
-            "skills/nl-tax-provisional-assessment/templates/delta-summary.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md#Delta summary",
             "skills/nl-tax-provisional-assessment/reference/delta-rules.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/change.md",
@@ -158,7 +179,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
         paths = (
             "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/request.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
         )
         self.assert_all_contain(paths, "peildatum 1 january 2025")
@@ -186,10 +207,9 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
         paths = (
             "skills/nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md",
             "skills/nl-tax-provisional-assessment/reference/subflows/review.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
-            "skills/nl-tax-provisional-assessment/templates/review-questions.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md#Review questions",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
-            "skills/nl-tax-intake/templates/taxpayer-profile.yaml",
         )
         self.assert_all_contain(
             paths,
@@ -203,7 +223,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
             "skills/nl-tax-box3/reference/box3-provisional-2026.md",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
         )
         self.assert_all_contain(
             paths,
@@ -220,7 +240,7 @@ class ProvisionalContentAuditRepairTests(unittest.TestCase):
             "skills/nl-tax-box3/reference/box3-provisional-2026.md",
             "skills/nl-tax-provisional-assessment/SKILL.md",
             "skills/nl-tax-provisional-assessment/reference/provisional-output-contract.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-pack.md",
+            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
             "skills/nl-tax-field-mapper/reference/provisional-field-map.md",
         )
         self.assert_all_contain(

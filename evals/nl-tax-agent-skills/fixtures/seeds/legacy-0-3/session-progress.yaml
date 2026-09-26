@@ -1,0 +1,17 @@
+# 0.3 session ledger (seed for the legacy-ledger eval case).
+# 0.4 never reads or writes this file; it must stay byte-identical.
+session_progress_version: "1.4"
+active_workflow: annual_2025
+active_skill: nl-tax-annual-return
+sections:
+  annual_2025:
+    status: in_progress
+    current_subsection: box3_peildatum
+    subsections:
+      filing_status: complete
+      box1: complete
+      box3_peildatum: in_progress
+sources_loaded_by_workflow:
+  annual_2025: [bd_box1_rates_2025]
+  provisional_2026: []
+sources_loaded: [bd_box1_rates_2025]

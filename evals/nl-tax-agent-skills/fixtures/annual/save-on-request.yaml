@@ -1,0 +1,71 @@
+# Eval fixture: save on request mid-conversation, then kept current (R2)
+
+fixture_id: eval_annual_save_on_request
+fixture_version: "1.0"
+scenario: "The taxpayer declines the first save offer, later says 'save my workpack', and the one file stays current"
+tax_year: 2025
+workflow: annual_2025
+
+user_request:
+  text: "Help me prepare my Dutch 2025 aangifte. Full-year resident, single, employed, no business."
+  explicitly_requests_preparation: true
+
+conversation:
+  - turn: 1
+    assistant_offers_save_at: workflow_start
+    user: "Not now."
+  - turn: 2
+    user: "I got the aangiftebrief. My jaaropgaaf shows fiscaal loon EUR 39,800 and loonheffing EUR 9,700."
+  - turn: 3
+    user: "Actually, save my workpack so I can pick this up tomorrow."
+    expected: "write workspace/nl-tax-annual-2025-workpack.md immediately with everything so far and save_consent: given; say where the file is"
+  - turn: 4
+    user: "On 1 January 2025 I had EUR 22,400 in savings and EUR 6,100 in an ETF account."
+    expected: "update the same file in place: Box 3 rows, section status, updated_at"
+  - turn: 5
+    user: "That's all for Box 3."
+    expected: "update the same file in place; no routine save announcement"
+
+saving:
+  annual_2025:
+    consent: given
+    at: user_request
+    declined_first_at: workflow_start
+
+expected_outputs:
+  files_created:
+    - workspace/nl-tax-annual-2025-workpack.md
+  files_not_created:
+    - workspace/nl-tax-provisional-2026-workpack.md
+
+expected_resume_record:
+  workflow: annual_2025
+  tax_year: 2025
+  save_consent: given
+  readiness: draft
+  generation_confirmed: false
+  updated_after_created: true
+  sections:
+    filing_status: complete
+    box1: complete
+    box3_peildatum: chat_only
+    confirm: not_started
+
+expected_conversation:
+  file_written_at_turn: 3
+  file_updated_in_place_at_turns: [4, 5]
+  announces_first_save_location: true
+  announces_routine_updates: false
+  creates_copies_or_variants: false
+  unreached_sections_read: "Not yet reviewed."
+
+expected_behavior:
+  - "A 'not now' at the first offer does not block a later explicit request"
+  - "'Save my workpack' is consent without a magic phrase; the file is written in that turn"
+  - "Every later turn that adds a sourced fact updates the same file in place"
+  - "Field map summary and Appendix B stay 'not yet mapped' until generation and mapping"
+
+acceptance_criteria:
+  - "Exactly one file exists: workspace/nl-tax-annual-2025-workpack.md"
+  - "Appendix A records save_consent: given and an updated_at later than created_at"
+  - "Box 3 figures from turn 4 appear in the saved file with U: provenance"

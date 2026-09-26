@@ -8,8 +8,8 @@ disable-model-invocation: true
 # NL Tax shared resources
 
 This internal skill packages the shared runtime contract, reviewed tax
-knowledge, source register, and templates required by the user-facing Dutch tax
-skills.
+knowledge, source register, and document-reading references required by the
+user-facing Dutch tax skills.
 
 Do not invoke it as a standalone workflow and do not answer a taxpayer directly
 from this file. An owning skill must select the relevant shared resource, apply
@@ -18,3 +18,8 @@ its own workflow and safety boundaries, and keep progressive disclosure intact.
 Start every tax-rule lookup at
 [`knowledge-index.md`](knowledge-index.md): it maps each topic, year, and
 workflow to the one reviewed note that answers it.
+
+When an owning workflow reads a document the user shares, it classifies it with
+[`reference/evidence-types.md`](reference/evidence-types.md) and takes values
+only within
+[`reference/extraction-boundaries.md`](reference/extraction-boundaries.md).

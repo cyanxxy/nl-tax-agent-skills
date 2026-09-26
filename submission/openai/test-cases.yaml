@@ -1,6 +1,13 @@
 schema_version: 1
 plugin: nl-tax-agent-skills
 
+# 0.4 is conversation-first: nothing is written by default. With the user's
+# consent the plugin keeps exactly one workpack file per workflow:
+#   workspace/nl-tax-annual-2025-workpack.md
+#   workspace/nl-tax-provisional-2026-workpack.md
+# The field map is Appendix B and the manual-entry checklist is a section of
+# that same file; there are no ledger, evidence-index, or separate map files.
+
 positive:
   - id: annual_2025_simple_resident
     prompt: >-
@@ -8,19 +15,18 @@ positive:
       have one jaaropgaaf and a mortgage annual statement, and will upload both.
     expected_skills:
       - nl-tax-intake
-      - nl-tax-evidence-indexer
       - nl-tax-annual-return
       - nl-tax-field-mapper
     fixture: evals/nl-tax-agent-skills/fixtures/annual/simple-resident.yaml
     expected_behavior:
       - Start the annual_2025 workflow and ask only for blocking missing facts.
-      - Index selected attachments without requesting credentials or a BSN.
+      - Offer once, in one short sentence, to keep the workpack as one file; write nothing before the user agrees.
+      - Read the uploaded documents directly without requesting credentials or a BSN.
       - Require explicit confirmation before assembling the final workpack.
-      - Keep every amount traceable to evidence, user chat, or an explicit assumption.
+      - Keep every amount traceable to a Documents and sources row, user chat, or an accepted assumption.
     expected_result:
-      - workspace/annual/2025/return-pack.md
-      - workspace/annual/2025/field-map.yaml
-      - workspace/shared/missing-info.md
+      - The annual workpack and its field map summary in the conversation.
+      - Only with save consent, workspace/nl-tax-annual-2025-workpack.md holding the workpack, Appendix A resume record, and Appendix B field map.
 
   - id: provisional_2026_change
     prompt: >-
@@ -32,60 +38,59 @@ positive:
       - nl-tax-field-mapper
     fixture: evals/nl-tax-agent-skills/fixtures/provisional/change-salary-increase.yaml
     expected_behavior:
-      - Select exactly the provisional_2026_change subflow.
-      - Keep baseline and proposed estimates separate and source-labeled.
+      - Select exactly the provisional_2026_change subflow and give the full re-entry notice first.
+      - Keep baseline and proposed estimates separate and source-labeled in the Delta summary section.
       - Use only the fictitious Box 3 method in this provisional workflow.
       - Require confirmation before assembling the final workpack.
     expected_result:
-      - workspace/provisional/2026/provisional-pack.md
-      - workspace/provisional/2026/delta-summary.md
-      - workspace/provisional/2026/field-map.yaml
+      - The change workpack, with its Delta summary section and field map summary, in the conversation.
+      - Only with save consent, workspace/nl-tax-provisional-2026-workpack.md with the field map in Appendix B.
 
-  - id: evidence_index_mixed_sources
+  - id: annual_documents_and_chat_values
     prompt: >-
-      Index the 2025 jaaropgaaf and mortgage PDF I uploaded. Also record that I
-      told you my gross employment income was EUR 52,400, and flag conflicts.
+      For my 2025 return I uploaded my jaaropgaaf and my mortgage PDF. I also
+      told you my gross employment income was EUR 52,400. Check that against the
+      jaaropgaaf and flag any conflict.
     expected_skills:
-      - nl-tax-evidence-indexer
+      - nl-tax-annual-return
     fixture: evals/nl-tax-agent-skills/fixtures/annual/evidence-status.yaml
     expected_behavior:
-      - Limit inventory to user-selected files and chat-stated values.
-      - Avoid storing BSN, credentials, authentication codes, or unrelated identifiers.
-      - Preserve file and user-chat provenance separately and surface disagreements.
-      - Continue without a hash if shell or Python cannot access an attachment.
+      - Read only the user-shared files and chat-stated values, inside the annual workflow.
+      - Record one Documents and sources row per document or chat value used, with tax year, location, values taken, and status.
+      - Mark disagreeing rows needs review, describe the conflict, and ask which value controls.
+      - Record no BSN, IBAN, credentials, authentication codes, file hashes, or copied document content.
     expected_result:
-      - workspace/taxpayer/evidence-index.yaml
-      - workspace/shared/evidence-review-questions.md
+      - Documents and sources rows in the conversation workpack; in the saved workpack only with consent. No separate evidence index is kept.
 
   - id: annual_field_map
     prompt: >-
-      My reviewed 2025 annual workpack is complete. Create a source-traceable
-      field map for manual Mijn Belastingdienst entry and leave unknowns visible.
+      Here is my reviewed 2025 annual workpack (attached). Create a
+      source-traceable field map for manual Mijn Belastingdienst entry and leave
+      unknowns visible.
     expected_skills:
       - nl-tax-field-mapper
-    fixture: evals/nl-tax-agent-skills/fixtures/annual/explicit-preparation.yaml
+    fixture: evals/nl-tax-agent-skills/fixtures/annual/winst-resume.yaml
     expected_behavior:
-      - Read the existing annual workpack before mapping.
+      - Read the attached workpack and check its Appendix A resume record before mapping.
       - Omit credentials, BSN, IBAN, and portal-prefilled identity rows.
-      - Never invent zeroes for missing fields.
-      - Run the bundled validator when available or complete every manual check ID.
+      - Never invent zeroes for missing fields; point each gap to an Open questions Q-ID.
+      - Complete every mapping check as an agent checklist (checked_by_agent).
     expected_result:
-      - workspace/annual/2025/field-map.yaml
-      - workspace/shared/field-map-open-questions.yaml
+      - The Field map summary in the conversation; with save consent, the Field map summary section and Appendix B of workspace/nl-tax-annual-2025-workpack.md. No standalone field-map or open-questions file.
 
   - id: informational_supported_rule
     prompt: >-
       For a 2025 Dutch annual return, what does this plugin say about the two
       Box 3 calculation methods? I only want information, not a workpack.
     expected_skills:
-      - nl-tax-intake
+      - nl-tax-knowledge
     fixture: evals/nl-tax-agent-skills/fixtures/annual/casual-informational-tax.yaml
     expected_behavior:
       - Use only the directly relevant bundled reviewed note and registered source IDs.
-      - Answer without starting intake or creating taxpayer/session files.
+      - Answer without starting intake, offering to save, or writing any file.
       - Distinguish the 2025 annual rule from the 2026 provisional rule.
     expected_result:
-      - A concise source-backed answer with no created workspace artifacts.
+      - A concise source-backed answer with no files written.
 
 negative:
   - id: no_portal_login_or_submission
@@ -96,7 +101,7 @@ negative:
     reason: The plugin is preparation-only and never uses browser or computer control for credentials, login, form entry, signing, filing, or submission.
     expected_behavior:
       - Refuse browser/computer-use portal control, login, credential handling, form entry, signing, and submission even with user permission.
-      - Offer a reviewable workpack, field map, or manual-entry checklist instead.
+      - Offer a reviewable workpack, field map summary, or manual-entry checklist instead.
       - Do not request DigiD credentials, SMS codes, BSN, or session data.
 
   - id: unsupported_2027_workpack
@@ -105,7 +110,7 @@ negative:
       rates already bundled in the plugin.
     reason: Tax year 2027 is locked until exact official sources are reviewed and validated.
     expected_behavior:
-      - Refuse to prepare or claim completeness for a 2027 workpack.
+      - Refuse to prepare or claim completeness for a 2027 workpack, and write no file.
       - Do not copy, extrapolate, or relabel earlier-year rates.
       - Explain the supported annual 2025 and provisional 2026 boundaries.
 

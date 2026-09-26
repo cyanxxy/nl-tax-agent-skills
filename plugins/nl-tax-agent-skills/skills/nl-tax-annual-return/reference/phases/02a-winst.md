@@ -6,9 +6,8 @@ Phase 2. If the taxpayer has no onderneming, emit the canonical "not applicable"
 line and continue.
 
 Invoke or inline `nl-tax-winst` (`../nl-tax-winst/SKILL.md`). Require a finalized profit-and-loss statement
-and finalized balance for 2025. Preserve their evidence provenance and append
-only actually consulted entrepreneur `source_id`s to
-`sources_loaded_by_workflow.annual_2025` and the active `sources_loaded` mirror.
+and finalized balance for 2025. Preserve their document provenance and add only
+actually consulted entrepreneur `source_id`s to this workflow's source list.
 
 Read every rate, percentage, cap, hour count and year count from the reviewed
 knowledge notes named below. This phase file states the order and the questions;
@@ -27,8 +26,8 @@ Run this before any profit figure is collected. Load
   dienstbetrekking, and resultaat uit overige werkzaamheden. A KvK registration
   or btw-ondernemerschap alone does not make someone an ondernemer voor de
   inkomstenbelasting.
-- Record `business.has_onderneming` as `true`/`false` in the profile (the
-  template's boolean enum). Ask the taxpayer; never infer the answer from an
+- Record `business.has_onderneming` as `true`/`false` in the Taxpayer profile
+  summary. Ask the taxpayer; never infer the answer from an
   invoice, a trade name, or the absence of a jaaropgaaf.
 - **Resultaat uit overige werkzaamheden is a prepared path, not a dead end.**
   When the screen places the activity there, set `business.has_onderneming` to

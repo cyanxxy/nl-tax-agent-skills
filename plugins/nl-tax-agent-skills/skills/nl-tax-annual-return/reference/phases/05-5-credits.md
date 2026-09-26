@@ -4,8 +4,8 @@ Entry gate: load this file only after deductions is `complete`, `chat_only`, or
 explicitly `deferred` with its open item recorded. Never preload this phase
 while a deductions question is awaiting the user's reply.
 
-Use household composition from `profile.yaml` as the start of a conversation,
-not as a credit decision. For each credit below, record `candidate`, `not
+Use household composition from the Taxpayer profile summary as the start of a
+conversation, not as a credit decision. For each credit below, record `candidate`, `not
 applicable`, or `unresolved`, with the answered conditions and provenance. The
 live return calculates the result.
 
@@ -50,7 +50,7 @@ duration/income facts for manual portal review. Do not calculate the amount.
 
 Candidate only when the taxpayer has reached AOW age **by 31 December 2025**.
 
-- Check `profile.yaml` → `person.aow_by_tax_year.2025.status`. Both
+- Check the Taxpayer profile summary's `person.aow_by_tax_year.2025.status`. Both
   `reaches_during_year` and `aow_all_year` satisfy the by-31-December screen;
   `below_all_year` does not. Keep that year's transition month for portal
   review and do not infer this from a legacy scalar alone.
@@ -72,8 +72,9 @@ or Wajong work support **and does not receive the ouderenkorting**. A reported
 young-disabled status is not enough unless it establishes that Wajong
 entitlement or work support. Ask this dedicated question explicitly: "Do you
 receive or have entitlement to Wajong or Wajong work support (sometimes
-described as young-disabled status)?" Store it as
-`annual.credits.young_disabled_status` with a yes/no value and chat provenance.
+described as young-disabled status)?" Record the answer in the Credits
+screening section under `annual.credits.young_disabled_status`, with a yes/no
+value and `U:` provenance.
 A broad answer such as "no other benefits or credits" does not answer this
 question. Combine the answer with the ouderenkorting screen before setting the
 trigger. Do not mark credits screening `complete` or `chat_only` until the
@@ -97,6 +98,8 @@ will be paid.
 
 ### 5.5.6 Output
 
-Write the screening results to `workspace/annual/2025/notes/credits.yaml`. The template's Credits screening section emits these results verbatim.
+Record the screening results in the Credits screening section of the workpack;
+the template emits them verbatim. Keep any unresolved condition as an open
+question.
 
 ---
