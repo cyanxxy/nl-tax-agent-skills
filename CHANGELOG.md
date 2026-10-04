@@ -5,7 +5,101 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] — 2026-10-05
+
+Adds draft-only VAT, cross-border and international preparation alongside the
+reviewed annual 2025 and provisional 2026 workflows. Skills guide the agent's
+reasoning and use of evidence; the plugin ships no runtime tax engine. The new
+workflows still await human source and schema review. Filing remains human-only.
+
+### Added
+
+- Draft-only ZZP VAT return and correction/suppletie skills for 2025 and 2026
+  (`nl-tax-vat-return`, `nl-tax-vat-correction`): one workpack per confirmed
+  period, invoice and rubric reconciliation, KOR screening, confirmed reverse
+  charge, source-linked rubric maps, and stale-output checks.
+- Draft-only owners for the opgaaf ICP (`nl-tax-icp`), OSS Union, OSS
+  non-Union and IOSS returns (`nl-tax-oss`), M (migration) and C
+  (nonresident) income-tax returns (`nl-tax-international-return`), and
+  resident annual 2026 evidence collection (`nl-tax-annual-return-2026`), plus
+  the read-only `nl-tax-vat-adjustments` helper for evidenced car/private use,
+  pro-rata, revision/property, 2026 investment services, BUA and margin
+  calculations.
+- Staged official source entries for the VAT, cross-border VAT, international
+  and annual 2026 families (the initial 22 VAT entries and the extended
+  families), all `needs_review`. No draft workflow claims filing readiness or
+  shows a checklist with amounts until a human tax reviewer approves its
+  sources and exact schema.
+- Claude eval cases for the draft workflows, and one draft-only negative
+  reviewer case in `submission/openai/test-cases.yaml` (five positive and four
+  negative cases).
+- Release-packaging tests for the Codex starter-prompt limit (at most three,
+  each at most 128 characters), listing and release-note consistency, the
+  Claude directory limits (no non-image file of 256 KiB or more, at most 512
+  files), and per-skill icon and brand metadata.
+
+### Changed
+
+- The Codex manifest keeps the three original income-tax starter prompts; the
+  listing and publication release notes describe the new workflows as
+  draft-only previews that are not filing-ready.
+- The Claude manifest adds `documentationUrl`, `supportUrl` and
+  `termsOfServiceUrl` for the directory listing.
+- Publisher and author are now Mansour Damanpak; the OpenAI listing gains a
+  support URL and Netherlands availability.
+- README, plugin README, PRIVACY.md and TERMS.md cover the VAT, ICP, OSS,
+  international and annual 2026 draft workpacks: their saved-file paths, the
+  customer and supplier data in invoices, deletion of every workpack path,
+  Mijn Belastingdienst Zakelijk as the filing portal for VAT, ICP and OSS, and
+  the draft-only disclaimer.
+- Every public skill's Codex `agents/openai.yaml` uses a natural-language
+  starter prompt without a skill name, plus the plugin icon and brand colour.
+- The Claude eval cases moved from `evals/claude/` to
+  `plugins/nl-tax-agent-skills/evals/`, so `claude plugin eval
+  plugins/nl-tax-agent-skills` discovers them without extra flags; the case
+  files grant only read-only tools.
+
+### Fixed
+
+- Annual 2025 deduction-rate-cap income basis is Box 1 income before
+  deductions, not aggregate verzamelinkomen; the rate and threshold amount are
+  unchanged.
+- 20 overdue source attestations refreshed following the publisher's review
+  and approval on 1 October 2026; the comparison record, including the five
+  re-stamped metadata hashes of the shared deductions note, is kept under
+  `submission/openai/reviews/`.
+- Review-pass corrections to the draft workflows: stricter draft gates in the
+  mapper, submit companion and workpack grader; VAT corrections and suppletie
+  (one workpack per original period; a whole-year suppletie is mentioned but
+  not prepared, and the `Y` period token means only an assigned annual filing
+  period); KOR conditions and withdrawal; ICP and OSS rules; M/C and annual
+  2026 content; hardened repository graders; and the eval relocation.
+- Small VAT corrections carried into a later return follow that return's
+  payment deadline; the instruction to await an assessment applies to the
+  applicable suppletie route, not to a next-return correction.
+- C-return refund-interest guidance includes the unchanged-return,
+  processing-time and assessment-date conditions; filing after 1 May alone
+  does not establish entitlement.
+- Chat-only workpack source validation uses the requested workflow year,
+  preventing a 2025 workpack from accepting a 2026-only source.
+- Native Claude evaluations require every scored grader to pass, so file
+  checks cannot offset a failed tax-rule rubric. Added payment-route and
+  refund-interest scenarios.
+- Clear VAT, ICP and OSS questions no longer invite an unrelated annual or
+  provisional income-tax clarification.
+- Adviser-authorization guidance refers to the applicable official route
+  instead of assuming that all advisers use a single intermediary portal.
+  The correction and source review were approved by the publisher on
+  5 October 2026.
+- CI and release checks use Europe/Amsterdam for source-review dates, so a
+  review just after local midnight is not rejected as a future UTC date.
+
+### Validation scope
+
+One native Claude informational smoke passed at score 1.00 with no file
+writes. The full repeated native evaluation suite and fresh Cowork/ChatGPT
+Work UI smoke tests were not run for this release. A GitHub release does not
+complete OpenAI Plugin Directory review or publication.
 
 ## [0.4.0] — 2026-09-26
 

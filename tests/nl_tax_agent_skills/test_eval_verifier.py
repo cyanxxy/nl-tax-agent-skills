@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import tempfile
@@ -22,6 +23,21 @@ VERIFIER_PATH = REPO_ROOT / "evals/nl-tax-agent-skills/verify_offline_workspace.
 DATASET_PATH = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
 ANNUAL = "workspace/nl-tax-annual-2025-workpack.md"
 PROVISIONAL = "workspace/nl-tax-provisional-2026-workpack.md"
+# Native Claude plugin-eval cases live inside the plugin so that
+# `claude plugin eval plugins/nl-tax-agent-skills` discovers and loads them.
+CLAUDE_EVAL_ROOT = REPO_ROOT / "plugins/nl-tax-agent-skills/evals"
+PLUGIN_SKILLS_ROOT = REPO_ROOT / "plugins/nl-tax-agent-skills/skills"
+# One year/period-qualified workpack path per extended owner identity. `Y` is
+# only an annual assigned filing period, never a batch of shorter periods.
+EXTENDED_WORKPACK_PATH = re.compile(
+    r"^workspace/nl-tax-("
+    r"(vat|vat-correction|icp)-(2025|2026)-(Q[1-4]|M(0[1-9]|1[0-2])|Y)"
+    r"|oss-(union|non_union)-(2025|2026)-Q[1-4]"
+    r"|oss-ioss-(2025|2026)-M(0[1-9]|1[0-2])"
+    r"|international-(2025|2026)-(migration|nonresident)"
+    r"|annual-2026"
+    r")-workpack\.md$"
+)
 LEGACY_TREES = (
     "workspace/taxpayer/**",
     "workspace/shared/**",
@@ -88,8 +104,12 @@ class OfflineDatasetTests(unittest.TestCase):
         )
         self.assertEqual(
             set(self.dataset["global"]["workpack_paths"].values()),
-            set(grader.WORKPACK_PATHS.values()),
+            {grader.WORKPACK_PATHS[kind] for kind in ("annual", "provisional")},
         )
+        # VAT has multiple assigned periods per year; its path patterns are
+        # covered by the period-aware VAT suite, not these fixed IB scenarios.
+        self.assertEqual(grader.WORKPACK_PATHS["vat"], "workspace/nl-tax-vat-{year}-{period}-workpack.md")
+        self.assertEqual(grader.WORKPACK_PATHS["vat_correction"], "workspace/nl-tax-vat-correction-{year}-{period}-workpack.md")
         self.assertTrue(set(LEGACY_TREES) <= set(self.dataset["global"]["legacy_forbidden_paths"]))
         self.assertEqual(self.dataset["global"]["harness_output_globs"], ["workspace/eval/**"])
         self.assertEqual(
@@ -245,7 +265,8 @@ class OfflineDatasetTests(unittest.TestCase):
                 with self.subTest(case=case["id"], path=relative):
                     self.assertTrue(
                         relative in {ANNUAL, PROVISIONAL}
-                        or relative.startswith("workspace/eval/"),
+                        or relative.startswith("workspace/eval/")
+                        or EXTENDED_WORKPACK_PATH.match(relative) is not None,
                         relative,
                     )
                     for banned in (
@@ -473,7 +494,7 @@ class OfflineVerifierBehaviorTests(unittest.TestCase):
             errors = self.verify(tmp, case)
         self.assertTrue(any("field-map validation failed" in error for error in errors), errors)
         self.assertTrue(
-            any("Unsupported workflow/tax_year combination" in error for error in errors),
+            any("annual_2026: unsupported field_id" in error for error in errors),
             errors,
         )
         self.assertTrue(any("Appendix B tax_year must be 2025" in error for error in errors), errors)
@@ -622,7 +643,7 @@ class AgenticSurfaceTests(unittest.TestCase):
             "cowork-explicit-annual-preparation",
             "cowork-annual-entrepreneur-boundary",
             "cowork-provisional-change",
-            "cowork-unsupported-boundary",
+            "cowork-migration-draft-boundary",
             "cowork-natural-language-checklist",
             "cowork-refuse-portal-control",
             "cowork-corrected-tax-rules",
@@ -630,8 +651,17 @@ class AgenticSurfaceTests(unittest.TestCase):
             "cowork-dual-workflow-handoff",
             "cowork-save-and-resume",
             "cowork-stale-checklist-after-correction",
+            "cowork-vat-return-draft",
+            "cowork-icp-period-and-vat-id-review",
+            "cowork-oss-country-corrections-no-offset",
+            "cowork-vat-adjustments-first-use-2026",
+            "cowork-international-m-c-year-isolation",
+            "cowork-annual-2026-actual-precollection",
+            "cowork-vat-correction-periods",
+            "cowork-vat-small-correction-payment",
+            "cowork-c-return-refund-interest",
         }
-        eval_root = REPO_ROOT / "evals/claude"
+        eval_root = CLAUDE_EVAL_ROOT
         actual_case_names = {
             path.parent.name
             for path in eval_root.glob("cowork-*/prompt.md")
@@ -648,8 +678,126 @@ class AgenticSurfaceTests(unittest.TestCase):
                 self.assertIn('schema_version: "1.1"', prompt.read_text(encoding="utf-8"))
                 self.assertIn("type: llm", criteria.read_text(encoding="utf-8"))
 
+    def test_cowork_cases_grant_only_read_only_tools(self):
+        # Files inside the plugin never grant Write, Edit or Bash; the save
+        # case gets Edit and Write only from `--allow-tools` on the command line.
+        prompts = sorted(CLAUDE_EVAL_ROOT.glob("cowork-*/prompt.md"))
+        self.assertGreaterEqual(len(prompts), 19)
+        for prompt in prompts:
+            with self.subTest(case=prompt.parent.name):
+                text = prompt.read_text(encoding="utf-8")
+                frontmatter = yaml.safe_load(text.split("---", 2)[1])
+                self.assertEqual(
+                    frontmatter.get("allowed_tools"), ["Read", "Glob", "Grep", "Skill"]
+                )
+                self.assertEqual(frontmatter.get("name"), prompt.parent.name)
+        for path in CLAUDE_EVAL_ROOT.rglob("*.md"):
+            text = path.read_text(encoding="utf-8")
+            with self.subTest(file=str(path.relative_to(CLAUDE_EVAL_ROOT))):
+                frontmatter = yaml.safe_load(text.split("---", 2)[1]) or {}
+                tools = frontmatter.get("allowed_tools") or []
+                self.assertFalse({"Write", "Edit", "Bash"} & set(tools))
+
+    def test_extended_cowork_cases_have_skill_step_graders(self):
+        owners = {
+            "cowork-vat-return-draft": "nl-tax-vat-return",
+            "cowork-vat-adjustments-first-use-2026": "nl-tax-vat-return",
+            "cowork-vat-correction-periods": "nl-tax-vat-correction",
+            "cowork-vat-small-correction-payment": "nl-tax-vat-correction",
+            "cowork-c-return-refund-interest": "nl-tax-international-return",
+            "cowork-icp-period-and-vat-id-review": "nl-tax-icp",
+            "cowork-oss-country-corrections-no-offset": "nl-tax-oss",
+            "cowork-international-m-c-year-isolation": "nl-tax-international-return",
+            "cowork-migration-draft-boundary": "nl-tax-international-return",
+            "cowork-annual-2026-actual-precollection": "nl-tax-annual-return-2026",
+        }
+        for case, owner in owners.items():
+            with self.subTest(case=case):
+                grader = CLAUDE_EVAL_ROOT / case / "graders/skill-fired.md"
+                frontmatter = yaml.safe_load(
+                    grader.read_text(encoding="utf-8").split("---", 2)[1]
+                )
+                self.assertEqual(frontmatter["type"], "tool_used")
+                self.assertEqual(frontmatter["tool"], "Skill")
+                self.assertIn(owner, frontmatter["input_match"])
+                self.assertTrue(
+                    (PLUGIN_SKILLS_ROOT / owner / "SKILL.md").is_file(), owner
+                )
+                # skill-fired.md also passes when only the intake router fires;
+                # owner-read.md shows the owning skill's own files were read.
+                owner_read = yaml.safe_load(
+                    (CLAUDE_EVAL_ROOT / case / "graders/owner-read.md")
+                    .read_text(encoding="utf-8")
+                    .split("---", 2)[1]
+                )
+                self.assertEqual(owner_read["type"], "tool_used")
+                self.assertEqual(owner_read["tool"], "Read")
+                self.assertIn(owner + "/", owner_read["input_match"])
+                self.assertEqual(owner_read["arm"], "with-only")
+        helper = yaml.safe_load(
+            (
+                CLAUDE_EVAL_ROOT
+                / "cowork-vat-adjustments-first-use-2026/graders/helper-fired.md"
+            ).read_text(encoding="utf-8").split("---", 2)[1]
+        )
+        self.assertEqual(helper["type"], "tool_used")
+        self.assertIn("nl-tax-vat-adjustments", helper["input_match"])
+
+    def test_no_save_cowork_cases_carry_no_write_graders(self):
+        # The suite-wide `--allow-tools Edit Write` grant reaches every case,
+        # and the llm criteria see only the final message, so each case
+        # without save consent in the conversation must fail on any Write or
+        # Edit call. Only these cases may write.
+        may_write = {
+            "cowork-vat-correction-periods",
+            "cowork-stale-checklist-after-correction",
+        }
+        cases = sorted(
+            path.parent.name for path in CLAUDE_EVAL_ROOT.glob("cowork-*/prompt.md")
+        )
+        no_save = [case for case in cases if case not in may_write]
+        self.assertGreaterEqual(len(no_save), 17)
+        for case in no_save:
+            for name, tool in (("no-write.md", "Write"), ("no-edit.md", "Edit")):
+                with self.subTest(case=case, grader=name):
+                    grader = CLAUDE_EVAL_ROOT / case / "graders" / name
+                    self.assertTrue(grader.is_file(), grader)
+                    frontmatter = yaml.safe_load(
+                        grader.read_text(encoding="utf-8").split("---", 2)[1]
+                    )
+                    self.assertEqual(frontmatter["type"], "tool_used")
+                    self.assertEqual(frontmatter["tool"], tool)
+                    self.assertEqual(frontmatter["min"], 0)
+                    self.assertEqual(frontmatter["max"], 0)
+                    self.assertNotIn("input_match", frontmatter)
+                    self.assertNotEqual(frontmatter.get("arm"), "with-only")
+
+    def test_vat_correction_case_checks_saved_period_files(self):
+        graders = CLAUDE_EVAL_ROOT / "cowork-vat-correction-periods/graders"
+        expected = {
+            "q1-file.md": ("workspace/nl-tax-vat-correction-2026-Q1-workpack.md", True),
+            "q2-file.md": ("workspace/nl-tax-vat-correction-2026-Q2-workpack.md", True),
+            "no-q3-file.md": ("workspace/*Q3*", False),
+            "no-combined-file.md": ("workspace/*Q1*Q2*", False),
+        }
+        for name, (path, exists) in expected.items():
+            with self.subTest(grader=name):
+                frontmatter = yaml.safe_load(
+                    (graders / name).read_text(encoding="utf-8").split("---", 2)[1]
+                )
+                self.assertEqual(frontmatter["type"], "file_exists")
+                self.assertEqual(frontmatter["path"], path)
+                self.assertEqual(frontmatter.get("exists", True), exists)
+        criteria = " ".join((graders / "criteria.md").read_text(encoding="utf-8").split())
+        self.assertIn("official option for a human or adviser", criteria)
+        self.assertIn("does not prepare a combined or batched suppletie", criteria)
+        self.assertNotIn("replace-or-keep", criteria)
+        readme = (REPO_ROOT / "evals/nl-tax-agent-skills/README.md").read_text(encoding="utf-8")
+        self.assertIn("--allow-tools Edit Write", readme)
+        self.assertNotIn("evals/claude", readme)
+
     def test_cowork_criteria_assume_no_written_state(self):
-        eval_root = REPO_ROOT / "evals/claude"
+        eval_root = CLAUDE_EVAL_ROOT
         for criteria in eval_root.glob("cowork-*/graders/criteria.md"):
             text = criteria.read_text(encoding="utf-8")
             with self.subTest(case=criteria.parent.parent.name):
@@ -786,7 +934,7 @@ class AgenticSurfaceTests(unittest.TestCase):
                 self.assertNotEqual(result.returncode, 0, result.stdout)
 
     def test_new_cowork_graders_cover_handoff_generation_and_save_gates(self):
-        eval_root = REPO_ROOT / "evals/claude"
+        eval_root = CLAUDE_EVAL_ROOT
         dual_prompt = (
             eval_root / "cowork-dual-workflow-handoff/prompt.md"
         ).read_text(encoding="utf-8")

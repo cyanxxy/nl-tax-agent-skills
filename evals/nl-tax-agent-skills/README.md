@@ -7,11 +7,19 @@ only hard structural contracts. Passing one does not imply passing the other.
 Both follow the 0.4 conversation-first design
 (`docs/maintainers/0.4-conversation-first-design.md`): nothing is written by
 default, and only with the taxpayer's consent does the plugin keep exactly one
-workpack file per workflow — `workspace/nl-tax-annual-2025-workpack.md` or
-`workspace/nl-tax-provisional-2026-workpack.md` — holding the readable
-workpack, the Appendix A resume record, and the Appendix B field map. There are
-no profile, session, evidence-index, notes, or separate field-map, delta,
-review-question, or checklist files.
+workpack file per workflow identity, holding the readable workpack, the
+Appendix A resume record, and the Appendix B field map. The income-tax
+workflows use the fixed paths `workspace/nl-tax-annual-2025-workpack.md` and
+`workspace/nl-tax-provisional-2026-workpack.md`. The draft-only extended
+owners use one year/period-qualified path each, for example
+`workspace/nl-tax-vat-2026-Q3-workpack.md`,
+`workspace/nl-tax-vat-correction-2026-Q1-workpack.md` (one file per original
+period), `workspace/nl-tax-icp-2026-Q3-workpack.md`,
+`workspace/nl-tax-oss-union-2026-Q3-workpack.md`,
+`workspace/nl-tax-international-2025-migration-workpack.md` and
+`workspace/nl-tax-annual-2026-workpack.md`. There are no profile, session,
+evidence-index, notes, or separate field-map, delta, review-question, or
+checklist files.
 
 ## Agentic evaluation — primary behavior signal
 
@@ -21,7 +29,7 @@ review-question, or checklist files.
 2. explicit annual-return preparation;
 3. a provisional-assessment salary change;
 4. annual entrepreneur/Winst preparation with an overreaching request; and
-5. an unsupported part-year-resident case.
+5. a part-year-resident case routed into a separate migration draft.
 
 The prompts contain no fixture names, case IDs, marker files, expected file
 lists, or prescribed question sequences. Each run starts from the minimal
@@ -36,7 +44,10 @@ claims, unsupported overreach, and delegating interpretation to a validator.
 
 The only automated live-run verifier is
 `agentic-workspace/.eval/verify-hard-contracts.sh`. It checks the 0.4 file
-boundaries: nothing under `workspace/` except the two fixed workpack files, no
+boundaries: nothing under `workspace/` except the two fixed income-tax
+workpack files and the identity-scoped VAT, VAT-correction, ICP, OSS,
+international and annual 2026 workpack paths, each only with a recorded
+`save_consent: given` and a matching `workflow:` line; no
 second `workspace/` tree or workpack copy, a recorded `save_consent: given`
 (the record of consent given in the conversation, never itself an
 authorization) and the file's own workflow in any workpack that exists, no cross-workflow file
@@ -64,25 +75,97 @@ the existing five profiles.
 
 ## Native Claude prose evaluation
 
-`../claude/cowork-*/` contains twelve first-party Claude cases using natural
-prompts and LLM graders, including `cowork-save-and-resume` (continue from a
-saved workpack's resume record without re-asking answered questions),
-`cowork-stale-checklist-after-correction` (a corrected figure makes the field
-map stale, so a checklist request shows only the stale blocker and asks once
-to regenerate, never the old value), and no-write assertions on opening
-turns. When native evaluation is available:
+The first-party Claude cases live inside the plugin package, at
+`plugins/nl-tax-agent-skills/evals/cowork-*/`, because `claude plugin eval`
+discovers cases only in the `evals/` directory of the plugin under test and
+loads that plugin for them. A case kept outside the plugin runs against
+baseline Claude Code with no plugin loaded. Each case has a natural prompt
+(`prompt.md`) and an LLM grader (`graders/criteria.md`), including
+`cowork-save-and-resume` (continue from a saved workpack's resume record
+without re-asking answered questions), `cowork-stale-checklist-after-correction`
+(a corrected figure makes the field map stale, so a checklist request shows
+only the stale blocker and asks once to regenerate, never the old value), and
+no-write assertions on opening turns.
+
+Every `prompt.md` lists only the read-only tools
+`allowed_tools: [Read, Glob, Grep, Skill]`, so the agent can load the plugin's
+skills and read its knowledge notes. Files inside the plugin never grant
+`Write`, `Edit` or `Bash`. The one case that must save files,
+`cowork-vat-correction-periods`, gets its write tools from the operator grant
+`--allow-tools Edit Write` on the command line. That grant applies to every
+case in the run, so each no-save case carries `no-write.md` and `no-edit.md`,
+`tool_used` graders with `min: 0` and `max: 0` on `Write` and on `Edit`, that
+fail if the agent writes or edits a file before the user consents to saving.
+Only `cowork-vat-correction-periods` (save consent in the prompt) and
+`cowork-stale-checklist-after-correction` (the user says saving is already
+active in this conversation) omit them. Without the grant, the correction
+case's `file_exists` graders fail and the CLI warns that they cannot pass.
+
+When native evaluation is available, run a quick check from the repository root:
 
 ```bash
 claude plugin eval plugins/nl-tax-agent-skills \
+  --trust-plugin \
   --case 'cowork-*' \
+  --allow-tools Edit Write \
   --runs 1 \
-  --threshold 0.8 \
+  --threshold 1.0 \
+  --no-publish \
   --output-dir evals/results/latest
 ```
+
+All scored graders are required: a failed tax-rule or safety rubric must not
+be offset by passing file-existence checks. Keep the threshold at `1.0`.
+The single run above is a quick check; before release, use `--runs 3` with
+the same threshold to check consistency across repeated agent responses.
+
+To confirm discovery without spending anything, add `--max-cost-usd 0
+--ablation none`: the output names `Plugin under test: "nl-tax-agent-skills"`
+and stops before the first paid run. Never commit run results; keep them out
+of `plugins/nl-tax-agent-skills/evals/results/` so they are not packaged.
+
+Graders follow the plugin-eval guidance of one grader on the result and one
+on the steps. `criteria.md` is the `llm` result grader on the final message.
+The extended cases also have a `skill-fired.md` `tool_used: Skill` step
+grader that passes when the owning skill (or the `nl-tax-intake` router that
+hands off to it) was loaded; in a two-arm run it is a plugin-fired indicator
+rather than part of the score. Because that indicator also passes when only
+the router fires, each extended case adds an `owner-read.md` `tool_used: Read`
+indicator (`arm: with-only`) whose `input_match` names the owning skill's
+directory, for example `nl-tax-vat-return/`. It passes when the run read the
+owner's SKILL.md through the intake handoff or the owner's own reference flow
+after a direct Skill invocation. Owner routing stays invisible in the reply,
+so the `criteria.md` rubrics judge only its visible effect, such as a separate
+migration-year (M) draft, never internal workflow identifiers.
+`cowork-vat-adjustments-first-use-2026` adds a
+`helper-fired.md` indicator that the read-only `nl-tax-vat-adjustments`
+helper was read. `cowork-vat-correction-periods` adds `file_exists` graders:
+one saved correction workpack each for Q1 and Q2, and no Q3 or combined file.
+The LLM criteria judge only what a correct first reply can show; they do not
+require mapper internals, Appendix YAML or discussion of facts the prompt does
+not contain.
 
 This still does not prove the Cowork desktop UI, marketplace update flow,
 local/remote file selection, or available tools in a fresh task. Record a
 separate human smoke after installation.
+
+The VAT cases (`cowork-vat-return-draft`, `cowork-vat-correction-periods`)
+cover a draft period return and per-period corrections without a checklist.
+The correction case prepares Q1 and Q2 as separate workpacks; a complete-year
+suppletie may only be mentioned as an official option for a human or adviser
+and is never prepared or batched. The extended cases cover ICP goods frequency
+and actual customer-ID gaps (`cowork-icp-period-and-vat-id-review`), OSS
+corrections and separate country refunds
+(`cowork-oss-country-corrections-no-offset`), 2026 investment-service first
+use (`cowork-vat-adjustments-first-use-2026`), M/C form and year isolation
+(`cowork-international-m-c-year-isolation`), a part-year resident routed to a
+migration draft (`cowork-migration-draft-boundary`), and actual annual-2026
+precollection (`cowork-annual-2026-actual-precollection`). Their offline
+fixtures require chat-only output and preserve file boundaries; tax-content
+behavior is assessed from the natural prompt and the LLM or human grader.
+These are draft-only previews: shipping the cases does not record a native
+host evaluation run, and passing them does not make any extended workflow
+filing-ready.
 
 ## Offline structural contracts — secondary regression signal
 
@@ -116,8 +199,10 @@ checks that:
   `## Field map summary`, with the summary table once mapping has run;
 - once a workpack is mapped, `## Field map summary` is the checked surface
   (review amendment A12): every manual-entry field in Appendix B appears with
-  the same value after amount normalization, every missing field appears as a
-  `MISSING - enter manually` row with its Q-ID, no row names a field Appendix
+  the same value after amount normalization, every missing manual-entry field
+  appears as a `MISSING - enter manually` row with its Q-ID (an
+  `internal_routing` gap, as in every annual 2026 and international map, is
+  listed beneath the table by its Q-ID instead), no row names a field Appendix
   B lacks, and a requested, non-stale checklist shows the same values. A
   `STALE — predates the change to <fact> (<YYYY-MM-DD>); regenerate before
   use.` line is valid only while Appendix A `generation_confirmed` is `false`,

@@ -1,7 +1,7 @@
 ---
 name: nl-tax-intake
-description: Use when the user explicitly wants to start or resume Dutch annual 2025/provisional 2026 tax preparation. Do not use after intake is complete; informational rule questions go to nl-tax-knowledge.
-argument-hint: "[annual|request|change|review|stopzetten]"
+description: Use when the user explicitly wants Dutch tax preparation. For informational questions use nl-tax-knowledge. Do not use after intake is complete.
+argument-hint: "[annual|international|request|change|review|stopzetten|vat|vat-correction|icp|oss]"
 allowed-tools:
   - Read
   - Glob
@@ -33,7 +33,7 @@ set the order.
 - **Annual and provisional stay separate.** Annual 2025 works from actuals,
   provisional 2026 from estimates; never carry an amount from one into the
   other automatically. Provisional 2026 Box 3 is fictitious-only. If the user
-  raises werkelijk rendement for 2026, say: "Werkelijk rendement may become
+  raises werkelijk rendement within a provisional 2026 flow, say: "Werkelijk rendement may become
   relevant when filing the annual 2026 return in 2027."
 - **Invisible routing.** Never mention skill names, handoffs, resource loading,
   or path resolution to the user.
@@ -58,21 +58,47 @@ workpack:
    - stopzetten:
      `../nl-tax-provisional-assessment/reference/source-projections/stopzetten-flow-human.md`
    For another topic, use `../nl-tax-shared-resources/knowledge-index.md` to
-   pick the directly relevant reviewed note under
+   pick the directly relevant note under
    `../nl-tax-shared-resources/knowledge/` and load only that note. Read the
    selected resource's `source_ids`, then search
    `../nl-tax-shared-resources/source-register.yaml` for only those entries;
    do not read the complete register. Never open the raw reviewed
    `request-flow.md`, `change-flow.md`, or `stopzetten-flow.md` in this fast
    path; their registered `snapshot_path` values are maintainer provenance.
-3. Answer from the reviewed note and matched entries, not model memory. Keep
+3. Answer from the selected note and matched entries, not model memory. Keep
    annual and provisional rules distinct and state any manual-review or
-   unsupported boundary the note sets.
+   unsupported boundary the note sets. When the note's review status is
+   `needs_review` (the VAT, ICP, OSS, international and annual 2026 notes),
+   say that it is a draft source summary awaiting human review.
 4. Answer directly. A short offer to prepare later is fine, but
    do not ask screening questions unless the user then explicitly asks for
    preparation.
 
 The rest of this skill applies only after explicit preparation intent.
+
+## Select the preparation family before resident screening
+
+For the annual 2026 return, an annual M or C return for migration or
+nonresidence in 2025/2026, ICP, OSS/IOSS, or an attached extended workpack,
+read `reference/extended-routing.md` first and
+continue with its exact owner. It uses the shared declarative workflow-scope
+contract for identity and path checks. These owners collect draft evidence
+while source/form review remains open. The resident 2025/provisional helper
+contracts and their terminal migration/nonresident labels do not apply to
+these separate owners.
+
+## VAT routing before income-tax screening
+
+For ordinary `btw`, `omzetbelasting`, `VAT return`, `suppletie`, or an attached VAT
+workpack, read `reference/vat-routing.md` and use its VAT screening and resume
+contract. Then continue with `../nl-tax-vat-return/SKILL.md` or
+`../nl-tax-vat-correction/SKILL.md`. Do not run the income-tax household,
+AOW, fiscal-partner, or Box 1–3 interview for VAT. VAT establishment and
+VAT-ondernemerschap are separate from IB residence and IB-ondernemerschap.
+If "ZZP tax return" is ambiguous, clarify income tax versus VAT before routing.
+VAT draft preparation is available while tax-content review is outstanding;
+the VAT owner enforces the source-review blocker before filing guidance.
+Explicit ICP/OSS intent uses its own owner, not the ordinary VAT scope screen.
 
 ## User-facing boundary
 
@@ -100,10 +126,22 @@ relative to this skill directory.
 ## Resume a saved workpack
 
 The user may continue earlier work by attaching a saved workpack, or it may sit
-in the selected working folder at one of two fixed paths:
-`workspace/nl-tax-annual-2025-workpack.md` or
-`workspace/nl-tax-provisional-2026-workpack.md`. Check only those paths; never
-search the folder.
+in the selected working folder. Check only the path that matches the requested
+workflow; never search the folder.
+
+- Annual 2025: `workspace/nl-tax-annual-2025-workpack.md`.
+- Voorlopige aanslag 2026: `workspace/nl-tax-provisional-2026-workpack.md`.
+- Annual 2026: `workspace/nl-tax-annual-2026-workpack.md`.
+- If the request names 2026 without saying whether it is the annual 2026
+  return or the voorlopige aanslag 2026, first ask that one question, then
+  check only the matching 2026 path.
+- If the request names neither a year nor a workflow, check only the annual
+  2025 and provisional 2026 paths, and ask which one to continue when both
+  exist.
+- Every other extended identity (VAT, VAT correction, ICP, OSS, international)
+  uses its exact contract path from `reference/extended-routing.md` or
+  `reference/vat-routing.md`, checked only after the necessary dimensions are
+  confirmed.
 
 - Confirm once before using a found file: "I found your saved 2025 workpack,
   last updated <date>. Continue from it?"
@@ -139,7 +177,8 @@ explicitly accepts it.
 
 ## Screening essentials
 
-Cover residency, taxpayer type, living status, and workflow first, batched as
+For resident annual 2025/provisional 2026 only, cover residency, taxpayer type,
+living status, and workflow first, batched as
 `intake-flow.md` describes; then fiscal partner, Box 2, business form,
 household composition, and the workflow-specific anchor.
 
@@ -160,7 +199,7 @@ not predict a later annual lump sum as a certainty.
 
 ### Household composition
 
-Collect the taxpayer's date of birth, the partner's when there is a fiscal
+For resident annual 2025/provisional 2026, collect the taxpayer's date of birth, the partner's when there is a fiscal
 partner, and the child and single-parent facts in `intake-flow.md`. For every
 requested tax year, derive the AOW status of the taxpayer and partner as
 `below_all_year`, `reaches_during_year` (with that year's `transition_month`),
@@ -174,18 +213,31 @@ or ask the user to confirm undisputed date arithmetic.
 
 Route to exactly one owner at a time:
 
-- `annual_2025`: the annual workflow.
+- `annual_2025`: the resident annual 2025 workflow.
+- `annual_2026`: the separate annual 2026 actual-evidence draft owner.
+- `international_<year>_<migration|nonresident>`: the international owner
+  for 2025 preparation or 2026 draft precollection.
+- `icp_<year>_<period>` and `oss_<scheme>_<year>_<period>`: separate
+  cross-border VAT owners with confirmed dimensions.
+- `vat_<year>_<period>` and `vat_correction_<year>_<period>`: the domestic
+  VAT return and VAT correction owners under `reference/vat-routing.md`.
 - `provisional_2026_request`, `provisional_2026_change`,
   `provisional_2026_review`, or `provisional_2026_stopzetten`: the provisional
   workflow.
 - `manual_review`, `unsupported`, or a specific blocked label from
-  `unsupported-cases.md` (`annual_2025_nonresident_c_form`,
-  `annual_2025_migration_m_form`, `annual_2025_deceased_f_form`,
-  `annual_2025_foreign_treaty_heavy`): terminal. Explain the outcome in chat,
+  `unsupported-cases.md` (`annual_2025_deceased_f_form`,
+  `annual_2025_foreign_treaty_heavy` for resident treaty-heavy cases): terminal.
+  Explain the outcome in chat,
   suggest a belastingadviseur or the taxpayer's own filing in Mijn
   Belastingdienst, and prepare no workpack or partial calculation.
 
-When the user asks for both workflows, settle the 2026 subflow (and the
+Migration/nonresident cases instead use the international route above for
+annual M or C preparation only; their disputed classification remains a
+blocker inside that draft owner. A voorlopige aanslag 2026 request for a
+migrant or nonresident follows the terminal provisional boundary in section 1
+of `reference/unsupported-cases.md`.
+
+When the user asks for both resident annual 2025 and provisional 2026, settle the 2026 subflow (and the
 stopzetten direction) during screening, start annual 2025, and carry the
 provisional subflow as the queued workflow. That original request authorizes
 continuing into provisional collection once the annual workpack is generated

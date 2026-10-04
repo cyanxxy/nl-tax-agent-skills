@@ -39,8 +39,16 @@ structure from ``docs/maintainers/0.4-conversation-first-design.md``:
   whose ``generation_confirmed`` is ``false`` must carry that line in the summary,
   in Appendix B, and in a requested checklist, because mapping only follows a
   confirmed generation;
-- no BSN-like 9-digit number, IBAN, or file hash; no cross-workflow workpack
-  path; no werkelijk-rendement collection in a provisional workpack.
+- no BSN-like 9-digit number, IBAN, or file hash; no other workpack path,
+  including another period, scheme or return form of the same kind (templated
+  paths are matched with token-aware regexes); no werkelijk-rendement
+  collection in a provisional workpack;
+- VAT, VAT correction, ICP, OSS, international and annual 2026 workpacks:
+  the H1 title names exactly the Appendix A year and identity tokens (whole
+  tokens, so ``union`` never matches ``non_union``); ICP and OSS source
+  ledgers never borrow the other scheme's cross-border sources; and while the
+  source/schema review blockers from validate_vat.py or validate_extended.py
+  remain, ``## Manual-entry checklist`` must read ``not requested``.
 
 With ``presentation="chat"`` (CLI ``--chat``) it grades a harness capture of the
 workpack as shown in the conversation instead of a saved file (review amendment
@@ -78,6 +86,7 @@ import argparse
 import datetime as dt
 import decimal
 import functools
+import importlib.util
 import re
 import sys
 from pathlib import Path
@@ -91,10 +100,24 @@ except ImportError as exc:  # pragma: no cover - maintainer environment has PyYA
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_PLUGIN_ROOT = REPO_ROOT / "plugins" / "nl-tax-agent-skills"
+_VAT_SPEC = importlib.util.spec_from_file_location(
+    "_nl_tax_vat_for_workpack", REPO_ROOT / "tools/nl_tax_agent_skills/vat/validate_vat.py"
+)
+_VAT = importlib.util.module_from_spec(_VAT_SPEC)
+_VAT_SPEC.loader.exec_module(_VAT)
+
+_EXT_SPEC = importlib.util.spec_from_file_location(
+    "_nl_tax_extended_for_workpack", REPO_ROOT / "tools/nl_tax_agent_skills/extended/validate_extended.py"
+)
+_EXT = importlib.util.module_from_spec(_EXT_SPEC)
+_EXT_SPEC.loader.exec_module(_EXT)
+EXTENDED_SCOPES = _EXT.SCOPES
 
 TEMPLATE_PATHS = {
     "annual": "skills/nl-tax-annual-return/templates/annual-workpack.md",
     "provisional": "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+    "vat": "skills/nl-tax-vat-return/templates/vat-workpack.md",
+    "vat_correction": "skills/nl-tax-vat-correction/templates/vat-correction-workpack.md",
 }
 PROVISIONAL_FLOW_PATH = "skills/nl-tax-provisional-assessment/reference/provisional-flow.md"
 SOURCE_REGISTER_PATH = "skills/nl-tax-shared-resources/source-register.yaml"
@@ -103,9 +126,48 @@ SOURCE_REGISTER_PATH = "skills/nl-tax-shared-resources/source-register.yaml"
 WORKPACK_PATHS = {
     "annual": "workspace/nl-tax-annual-2025-workpack.md",
     "provisional": "workspace/nl-tax-provisional-2026-workpack.md",
+    "vat": "workspace/nl-tax-vat-{year}-{period}-workpack.md",
+    "vat_correction": "workspace/nl-tax-vat-correction-{year}-{period}-workpack.md",
 }
+TEMPLATE_PATHS.update({kind: scope["template"] for kind, scope in EXTENDED_SCOPES.items()})
+WORKPACK_PATHS.update({kind: scope["path"] for kind, scope in EXTENDED_SCOPES.items()})
 WORKPACK_FILENAMES = {kind: Path(path).name for kind, path in WORKPACK_PATHS.items()}
 WORKPACK_STEMS = {kind: Path(path).stem for kind, path in WORKPACK_PATHS.items()}
+
+# Identity tokens in the period-, scheme- and form-templated workpack paths.
+# The period pattern is the canonical VAT/ICP/OSS assigned-period vocabulary;
+# the scheme and form vocabularies are the extension scopes' own. A templated
+# stem becomes a regex so that a real file name such as
+# ``nl-tax-vat-2026-Q3-workpack`` is recognized.
+PATH_TOKEN_PATTERNS = {
+    "{year}": r"20[0-9]{2}",
+    "{period}": r"(?:Q[1-4]|M(?:0[1-9]|1[0-2])|Y)",
+    "{scheme}": r"(?:union|non_union|ioss)",
+    "{return_form}": r"(?:migration|nonresident)",
+}
+
+
+def templated_path_regex(template: str, *, anchored: bool = False) -> re.Pattern[str]:
+    """Return a regex for a workpack path or stem that may carry identity tokens.
+
+    Unanchored, the regex finds the name inside text: the leading ``(?<![\\w-])``
+    boundary stops ``union`` from matching inside ``non_union``, and the
+    ``{year}`` token stops the VAT return stem from matching inside the VAT
+    correction stem. The trailing ``[\\w-]*`` swallows any ``-v2``/``_copy``
+    suffix, so a variant never equals the own stem and is always reported.
+    """
+    pattern = re.escape(template)
+    for token, replacement in PATH_TOKEN_PATTERNS.items():
+        pattern = pattern.replace(re.escape(token), replacement)
+    if anchored:
+        return re.compile("^" + pattern + "$")
+    return re.compile(r"(?<![\w-])" + pattern + r"[\w-]*")
+
+
+WORKPACK_STEM_RES = {kind: templated_path_regex(stem) for kind, stem in WORKPACK_STEMS.items()}
+WORKPACK_PATH_RES = {
+    kind: templated_path_regex(path, anchored=True) for kind, path in WORKPACK_PATHS.items()
+}
 
 WORKPACK_FORMAT = "nl-tax-workpack"
 RESUME_RECORD_KEYS = (
@@ -131,8 +193,14 @@ SAVE_CONSENT_VALUES = ("given", "not_given")
 ANNUAL_WORKFLOW = "annual_2025"
 PROVISIONAL_SUBFLOWS = ("request", "change", "review", "stopzetten")
 PROVISIONAL_WORKFLOWS = tuple(f"provisional_2026_{name}" for name in PROVISIONAL_SUBFLOWS)
-TAX_YEARS = {"annual": 2025, "provisional": 2026}
-FIELD_MAP_WORKFLOWS = {"annual": "annual_return", "provisional": "provisional_assessment"}
+TAX_YEARS = {"annual": 2025, "provisional": 2026, "vat": 2026, "vat_correction": 2026}
+FIELD_MAP_WORKFLOWS = {"annual": "annual_return", "provisional": "provisional_assessment", "vat": "vat_return", "vat_correction": "vat_correction"}
+VAT_SECTION_KEYS = {
+    "vat": frozenset({"vat_scope", "vat_transactions", "vat_input_tax", "vat_reconciliation", "confirm"}),
+    "vat_correction": frozenset({"vat_scope", "vat_original", "vat_reconciliation", "vat_correction_route", "confirm"}),
+}
+TAX_YEARS.update({kind: scope["tax_years"][-1] for kind, scope in EXTENDED_SCOPES.items()})
+FIELD_MAP_WORKFLOWS.update({kind: scope["map_workflow"] for kind, scope in EXTENDED_SCOPES.items()})
 NO_FIELD_MAP_SUBFLOWS = {"review", "stopzetten"}
 # A stopzetten payment case redirected to change keeps its completed
 # `stopzetten_direction` section (provisional subflows/stopzetten.md, step 4).
@@ -451,6 +519,11 @@ def expected_section_keys(plugin_root: str, workflow: str) -> tuple[frozenset[st
     """Return ``(required, optional)`` Appendix A section keys for ``workflow``."""
     if workflow == ANNUAL_WORKFLOW:
         return annual_section_keys(plugin_root), frozenset()
+    kind = kind_for_workflow(workflow)
+    if kind in VAT_SECTION_KEYS:
+        return VAT_SECTION_KEYS[kind], frozenset()
+    if kind in EXTENDED_SCOPES:
+        return frozenset(EXTENDED_SCOPES[kind]["sections"]), frozenset()
     subflow = workflow.rsplit("_", 1)[-1]
     required = provisional_section_keys(plugin_root)[subflow]
     return required, frozenset(OPTIONAL_SECTION_KEYS.get(workflow, set()))
@@ -479,15 +552,80 @@ def kind_for_workflow(workflow: Any) -> str | None:
         return "annual"
     if workflow in PROVISIONAL_WORKFLOWS:
         return "provisional"
+    extended = _EXT.parse_resume_identity(workflow)
+    if extended:
+        return extended["kind"]
+    identity = _VAT.parse_resume_identity(workflow)
+    if identity:
+        return "vat_correction" if identity[0] == "vat_correction" else "vat"
     return None
+
+
+def workpack_path_for_workflow(workflow: Any) -> str | None:
+    """Return the one ``workspace/...`` path that ``workflow``'s identity may write.
+
+    Annual 2025 and provisional 2026 have one fixed path each; VAT, VAT
+    correction, ICP, OSS and international paths carry the exact year, period,
+    scheme or return form from the Appendix A workflow identity.
+    """
+    kind = kind_for_workflow(workflow)
+    if kind is None:
+        return None
+    if kind in VAT_SECTION_KEYS:
+        identity = _VAT.parse_resume_identity(workflow)
+        return _VAT.workpack_path(*identity) if identity else None
+    if kind in EXTENDED_SCOPES:
+        identity = _EXT.parse_resume_identity(workflow)
+        if not identity:
+            return None
+        keys = {key: identity[key] for key in EXTENDED_SCOPES[kind]["identity_keys"]}
+        return EXTENDED_SCOPES[kind]["path"].format(year=identity["tax_year"], **keys)
+    return WORKPACK_PATHS[kind]
 
 
 def kind_for_path(path: str | Path) -> str | None:
     name = Path(path).name
+    if re.fullmatch(r"nl-tax-vat-(2025|2026)-(Q[1-4]|M(?:0[1-9]|1[0-2])|Y)-workpack\.md", name):
+        return "vat"
+    if re.fullmatch(r"nl-tax-vat-correction-(2025|2026)-(Q[1-4]|M(?:0[1-9]|1[0-2])|Y)-workpack\.md", name):
+        return "vat_correction"
+    for kind, scope in EXTENDED_SCOPES.items():
+        pattern = re.escape(Path(scope["path"]).name)
+        for key in ("year", "period", "scheme", "return_form"):
+            pattern = pattern.replace(re.escape("{" + key + "}"), r"[A-Za-z0-9_]+")
+        if re.fullmatch(pattern, name):
+            return kind
     for kind, filename in WORKPACK_FILENAMES.items():
         if name == filename:
             return kind
     return None
+
+
+def title_tokens(title: str | None) -> set[str]:
+    """Whole word tokens of the H1 title; ``non_union`` is one token, never ``union``."""
+    return set(re.findall(r"[A-Za-z0-9_]+", title or ""))
+
+
+def title_years(title: str | None) -> set[str]:
+    return {token for token in title_tokens(title) if re.fullmatch(r"20[0-9]{2}", token)}
+
+
+def title_periods(title: str | None) -> set[str]:
+    return {
+        token for token in title_tokens(title)
+        if re.fullmatch(PATH_TOKEN_PATTERNS["{period}"], token)
+    }
+
+
+def kind_for_title(title: str | None) -> str | None:
+    if not title:
+        return None
+    for kind, scope in EXTENDED_SCOPES.items():
+        if scope["title"].lower() in title.lower() and any(str(year) in title for year in scope["tax_years"]):
+            return kind
+    if re.search(r"\b(?:vat|btw|omzetbelasting)\b", title, re.IGNORECASE):
+        return "vat_correction" if re.search(r"correction|correctie|suppletie", title, re.IGNORECASE) else "vat"
+    return "annual" if "2025" in title else "provisional" if "2026" in title else None
 
 
 APPENDIX_HEADINGS = {"A": "Appendix A — Resume record", "B": "Appendix B — Field map"}
@@ -844,6 +982,10 @@ def expected_summary_values(data: dict[str, Any]) -> tuple[dict[str, tuple[str, 
             expected[field_id] = ("missing", previous[1] if previous else None)
         else:
             expected[field_id] = ("value", entry.get("value"))
+    # An internal_routing gap (every annual 2026 and international row) is never
+    # a portal row: it is neither required nor allowed as a summary row.
+    for fid in routing:
+        expected.pop(fid, None)
     return expected, routing
 
 
@@ -1013,9 +1155,19 @@ def _check_structure(
             previous = (index, section)
 
     year = str(TAX_YEARS[kind])
+    years_in_title = title_years(parsed.title)
     if parsed.title is None:
         report.errors.append("missing the H1 title line")
-    elif year not in parsed.title:
+    elif kind in VAT_SECTION_KEYS and (
+        len(years_in_title) != 1 or not years_in_title <= {str(y) for y in _VAT.VAT_YEARS}
+    ):
+        report.errors.append(f"VAT title '{parsed.title}' must name exactly one tax year, 2025 or 2026")
+    elif kind in EXTENDED_SCOPES and (
+        len(years_in_title) != 1
+        or not years_in_title <= {str(y) for y in EXTENDED_SCOPES[kind]["tax_years"]}
+    ):
+        report.errors.append(f"{kind} title must name exactly one supported tax year")
+    elif kind not in VAT_SECTION_KEYS and kind not in EXTENDED_SCOPES and year not in parsed.title:
         report.errors.append(f"title '{parsed.title}' does not name tax year {year}")
 
 
@@ -1057,7 +1209,9 @@ def _check_resume_record(
     missing = [key for key in RESUME_RECORD_KEYS if key not in record]
     if missing:
         errors.append(f"Appendix A is missing key(s): {', '.join(missing)}")
-    unknown = sorted(str(key) for key in record if key not in RESUME_RECORD_KEYS)
+    identity_keys = set(EXTENDED_SCOPES.get(kind, {}).get("identity_keys", []))
+    allowed_record_keys = set(RESUME_RECORD_KEYS) | ({"period"} if kind in VAT_SECTION_KEYS else identity_keys)
+    unknown = sorted(str(key) for key in record if key not in allowed_record_keys)
     if unknown:
         errors.append(
             f"Appendix A has unknown key(s) {', '.join(unknown)}; facts never live in the resume record"
@@ -1078,7 +1232,25 @@ def _check_resume_record(
         errors.append(f"plugin_version must be a quoted semantic version (got {plugin_version!r})")
 
     workflow = record.get("workflow")
-    expected_year = TAX_YEARS[kind]
+    identity = _VAT.parse_resume_identity(workflow)
+    extended = _EXT.parse_resume_identity(workflow)
+    expected_year = extended["tax_year"] if extended else identity[1] if identity else TAX_YEARS[kind]
+    if kind in EXTENDED_SCOPES:
+        if not extended:
+            errors.append(f"Invalid {kind} Appendix A workflow identity")
+        else:
+            for key in identity_keys:
+                if record.get(key) != extended.get(key):
+                    errors.append(f"Appendix A {key} must match its workflow")
+        if record.get("readiness") == "review_ready":
+            errors.append(f"{kind} workpack review_ready is blocked by source and exact annual/scheme/form schema review")
+    if kind in VAT_SECTION_KEYS:
+        if not identity or record.get("period") != identity[2]:
+            errors.append("VAT Appendix A period must match the workflow's supported year and period")
+        if record.get("readiness") == "review_ready":
+            blockers = _VAT.review_blockers(plugin_root, FIELD_MAP_WORKFLOWS[kind])
+            if blockers:
+                errors.append("VAT review_ready is blocked: " + "; ".join(blockers))
     if kind_for_workflow(workflow) != kind:
         errors.append(
             f"workflow {workflow!r} does not belong in the {kind} workpack "
@@ -1246,15 +1418,66 @@ def _check_sources(
     if register is None:
         report.warnings.append("source register not found; registered-source checks skipped")
         return
-    other = FIELD_MAP_WORKFLOWS["provisional" if kind == "annual" else "annual"]
+    if isinstance(record, dict):
+        expected_year = record.get("tax_year")
+    elif kind in VAT_SECTION_KEYS or kind in EXTENDED_SCOPES:
+        # Chat has no resume record. Its H1 supplies the active year; the
+        # structure check rejects missing, ambiguous or unsupported years.
+        # TAX_YEARS stores only the latest supported year for these kinds.
+        years = title_years(parsed.title)
+        expected_year = next(iter(years)) if len(years) == 1 else None
+    else:
+        expected_year = TAX_YEARS[kind]
     for source_id in sorted(set(ids)):
         entry = register.get(source_id)
         if entry is None:
             report.errors.append(f"'## Sources used' names unregistered source_id {source_id}")
-        elif entry.get("workflow") == other:
-            report.errors.append(
-                f"{kind} workpack lists {source_id}, a {other} source; source ledgers never mix workflows"
-            )
+            continue
+        problem = source_scope_error(source_id, entry, kind, expected_year)
+        if problem:
+            report.errors.append(problem)
+
+
+def source_scope_error(source_id: str, entry: dict[str, Any], kind: str, tax_year: Any) -> str | None:
+    """Return why a registered source does not belong in a ``kind`` ledger, or None.
+
+    One rule for the workpack grader and the offline eval verifier: the
+    register ``workflow`` must be unset, ``all``, ``security`` or the kind's
+    field-map workflow; a ``workflow_family`` keeps VAT, international, annual
+    2026 and cross-border sources in their own workflows (ICP and OSS never
+    borrow each other's sources); and a year-specific source matches the
+    workpack's tax year.
+    """
+    expected_workflow = FIELD_MAP_WORKFLOWS[kind]
+    family = entry.get("workflow_family")
+    if entry.get("workflow") not in {None, "all", "security", expected_workflow}:
+        return (
+            f"{kind} workpack lists {source_id}, a {entry.get('workflow')} source; "
+            "source ledgers never mix workflows"
+        )
+    if family == "vat" and kind not in set(VAT_SECTION_KEYS) | {"icp", "oss"}:
+        return f"{kind} workpack lists VAT workflow-family source {source_id}; source ledgers never mix workflows"
+    if family == "international" and kind != "international":
+        return f"{kind} workpack mixes international source {source_id}"
+    if family == "annual_2026" and kind != "annual_2026":
+        return f"{kind} workpack mixes annual 2026 source {source_id}"
+    if (
+        family == "vat_cross_border"
+        and kind in {"icp", "oss"}
+        and EXTENDED_SCOPES[kind]["owner"] not in (entry.get("mandatory_for") or [])
+    ):
+        # ICP and OSS keep separate ledgers: a cross-border source counts only
+        # for the scheme owner that the register names.
+        return (
+            f"{kind} workpack lists {source_id}, a cross-border source owned by another scheme; "
+            "source ledgers never mix workflows"
+        )
+    if family == "vat_cross_border" and kind not in {"icp", "oss", "vat", "vat_correction"}:
+        return f"{kind} workpack mixes cross-border VAT source {source_id}"
+    if entry.get("tax_year") not in {None, "all"}:
+        if _tax_year_value(entry.get("tax_year")) != _tax_year_value(tax_year):
+            return f"{kind} workpack lists {source_id}, a source from another tax year"
+    return None
 
 
 def _check_documents(text: str, parsed: ParsedMarkdown, report: WorkpackReport) -> set[str]:
@@ -1316,12 +1539,33 @@ def _check_privacy_and_scope(text: str, kind: str, workflow: Any, report: Workpa
     for iban in sorted(seen_ibans):
         report.errors.append(f"IBAN-like value {iban!r}; never record an IBAN")
 
-    other = "provisional" if kind == "annual" else "annual"
-    if WORKPACK_STEMS[other] in text:
-        report.errors.append(
-            f"{kind} workpack mentions the {other} workpack path {WORKPACK_PATHS[other]}; "
-            "each workflow owns only its own file"
-        )
+    # R3: a workpack names no other workpack file, including another period,
+    # scheme or return form of its own kind. Its own file name is allowed.
+    own_path = workpack_path_for_workflow(workflow) if workflow is not None else None
+    if own_path is None and kind in WORKPACK_PATHS and "{" not in WORKPACK_PATHS[kind]:
+        own_path = WORKPACK_PATHS[kind]
+    own_stem = Path(own_path).stem if own_path else None
+    reported: set[str] = set()
+    for other, regex in WORKPACK_STEM_RES.items():
+        if other == kind and own_stem is None:
+            # A conversation rendering of a templated kind has no Appendix A
+            # identity, so its own file name cannot be told from another one.
+            continue
+        for match in regex.finditer(text):
+            name = match.group(0)
+            if name == own_stem or name in reported:
+                continue
+            reported.add(name)
+            if other == kind:
+                report.errors.append(
+                    f"{kind} workpack mentions another {kind} workpack path workspace/{name}.md; "
+                    "each workflow identity owns only its own file"
+                )
+            else:
+                report.errors.append(
+                    f"{kind} workpack mentions the {other} workpack path workspace/{name}.md "
+                    f"({WORKPACK_PATHS[other]}); each workflow owns only its own file"
+                )
 
     if kind == "provisional":
         scrubbed = text
@@ -1376,6 +1620,7 @@ def _check_field_map(
     evidence_rows: set[str],
     questions: dict[str, dict[str, str]],
     report: WorkpackReport,
+    plugin_root: str = str(DEFAULT_PLUGIN_ROOT),
 ) -> None:
     state, data, errors = extract_field_map(text)
     report.field_map_state = state
@@ -1427,10 +1672,26 @@ def _check_field_map(
             f"Appendix B workflow must be {expected_workflow} in the {kind} workpack "
             f"(got {data.get('workflow')!r})"
         )
-    if _tax_year_value(data.get("tax_year")) != TAX_YEARS[kind]:
+    expected_year = record.get("tax_year") if isinstance(record, dict) and kind in set(VAT_SECTION_KEYS) | set(EXTENDED_SCOPES) else TAX_YEARS[kind]
+    if _tax_year_value(data.get("tax_year")) != _tax_year_value(expected_year):
         report.errors.append(
-            f"Appendix B tax_year must be {TAX_YEARS[kind]} (got {data.get('tax_year')!r})"
+            f"Appendix B tax_year must be {expected_year} (got {data.get('tax_year')!r})"
         )
+    if kind in VAT_SECTION_KEYS:
+        if not isinstance(record, dict) or data.get("period") != record.get("period"):
+            report.errors.append("Appendix B VAT period must match Appendix A period")
+        report.errors.extend(_VAT.validate_map(data))
+        if data.get("readiness") == "review_ready":
+            blockers = _VAT.review_blockers(plugin_root, expected_workflow)
+            if blockers:
+                report.errors.append("VAT field map review_ready is blocked: " + "; ".join(blockers))
+    if kind in EXTENDED_SCOPES:
+        for key in EXTENDED_SCOPES[kind]["identity_keys"]:
+            if not isinstance(record, dict) or data.get(key) != record.get(key):
+                report.errors.append(f"Appendix B {key} must match Appendix A")
+        report.errors.extend(_EXT.validate_map(data))
+        if data.get("readiness") == "review_ready":
+            report.errors.extend(_EXT.review_readiness_blockers(data, plugin_root))
     record_readiness = record.get("readiness") if isinstance(record, dict) else None
     map_readiness = data.get("readiness")
     appendix_b = find_section(parsed, "Appendix B — Field map")
@@ -1480,6 +1741,64 @@ def _check_field_map(
                 f"Appendix B missing_fields[{index}] open_question_id {question!r} "
                 "has no row in '## Open questions'"
             )
+
+
+def draft_review_blockers(kind: str, tax_year: Any, plugin_root: str) -> list[str]:
+    """Return the source/schema review blockers that keep ``kind`` draft-only.
+
+    VAT and VAT correction use the source-review gate in validate_vat.py; ICP,
+    OSS, international and annual 2026 use the extension draft ceiling in
+    validate_extended.py. Both read the register and policy files, so the gate
+    lifts by itself once a human review is recorded there. Annual 2025 and
+    provisional 2026 return no blocker here.
+    """
+    if kind in VAT_SECTION_KEYS:
+        return list(_VAT.review_blockers(plugin_root, FIELD_MAP_WORKFLOWS[kind]))
+    if kind in EXTENDED_SCOPES:
+        year = _tax_year_value(tax_year)
+        if year not in EXTENDED_SCOPES[kind]["tax_years"]:
+            year = EXTENDED_SCOPES[kind]["tax_years"][-1]
+        return list(
+            _EXT.review_readiness_blockers(
+                {"workflow": FIELD_MAP_WORKFLOWS[kind], "tax_year": year}, plugin_root
+            )
+        )
+    return []
+
+
+def _check_draft_checklist(
+    parsed: ParsedMarkdown, kind: str, tax_year: Any, plugin_root: str, report: WorkpackReport
+) -> None:
+    """While source or schema review is pending, no manual-entry checklist exists.
+
+    The submit companion shows only Blockers in chat for these workflows, with
+    no entry amounts or filing steps, and writes no checklist even with
+    consent; the section keeps the literal ``not requested``. Any requested
+    checklist content is an error, stale or not, with or without values.
+    """
+    checklist = find_section(parsed, "Manual-entry checklist")
+    if checklist is None:
+        return
+    # Local to this gate: a ``not requested`` line does not excuse checklist
+    # rows kept beside it, and a STALE line alone is not checklist content.
+    # ``checklist_requested`` stays unchanged because stale-output checks rely on it.
+    content = [
+        line
+        for line in text_outside_fences(checklist.body).split("\n")
+        if line.strip()
+        and not FILL_NOTE_LINE.match(line)
+        and not STALE_START.match(_marker_text(line))
+        and line.strip().strip("`*_> ").strip().rstrip(".").lower() != NOT_REQUESTED
+    ]
+    if not content:
+        return
+    blockers = draft_review_blockers(kind, tax_year, plugin_root)
+    if blockers:
+        report.errors.append(
+            f"{kind} workpack carries a manual-entry checklist while source/schema review "
+            "blockers remain; show only Blockers in chat and keep the section 'not requested' "
+            f"({blockers[0]})"
+        )
 
 
 def _check_summary_against_map(summary: Section, data: dict[str, Any], report: WorkpackReport) -> None:
@@ -1707,7 +2026,7 @@ def validate_workpack_text(
     record_kind = kind_for_workflow(record.get("workflow")) if isinstance(record, dict) else None
     kind = expected_kind or record_kind
     if kind is None and parsed.title:
-        kind = "annual" if "2025" in parsed.title else "provisional" if "2026" in parsed.title else None
+        kind = kind_for_title(parsed.title)
     if kind not in TAX_YEARS:
         report.errors.append("cannot tell whether this is the annual or the provisional workpack")
         return report
@@ -1725,12 +2044,35 @@ def validate_workpack_text(
     if isinstance(record, dict):
         _check_resume_record(record, kind, root, expect_saved, questions, report)
         _check_subflow_heading(parsed, record.get("workflow"), report)
+        if kind in VAT_SECTION_KEYS:
+            identity = _VAT.parse_resume_identity(record.get("workflow"))
+            # Whole-token match: the title names exactly the Appendix A year
+            # and that period, never a second year.
+            if identity and parsed.title and (
+                title_years(parsed.title) != {str(identity[1])}
+                or title_periods(parsed.title) != {identity[2]}
+            ):
+                report.errors.append("VAT title must name the exact year and period in Appendix A")
+    if kind in EXTENDED_SCOPES and isinstance(record, dict):
+        identity = _EXT.parse_resume_identity(record.get("workflow"))
+        if identity and parsed.title:
+            tokens = title_tokens(parsed.title)
+            if title_years(parsed.title) != {str(identity["tax_year"])}:
+                report.errors.append("Extended workpack title must match Appendix A tax year")
+            for key in EXTENDED_SCOPES[kind]["identity_keys"]:
+                if str(identity[key]) not in tokens or (
+                    key == "period" and title_periods(parsed.title) != {identity[key]}
+                ):
+                    report.errors.append(f"Extended workpack title must match Appendix A {key}")
     _check_sources(parsed, record, kind, root, report)
     evidence_rows = _check_documents(text, parsed, report)
     _check_privacy_and_scope(
         text, kind, record.get("workflow") if isinstance(record, dict) else None, report
     )
-    _check_field_map(text, parsed, record, kind, evidence_rows, questions, report)
+    _check_field_map(text, parsed, record, kind, evidence_rows, questions, report, root)
+    _check_draft_checklist(
+        parsed, kind, record.get("tax_year") if isinstance(record, dict) else None, root, report
+    )
     return report
 
 
@@ -1746,7 +2088,7 @@ def _validate_chat_rendering(
         report.errors.append("a conversation rendering is never a saved workpack; drop expect_saved")
     kind = expected_kind
     if kind is None and parsed.title:
-        kind = "annual" if "2025" in parsed.title else "provisional" if "2026" in parsed.title else None
+        kind = kind_for_title(parsed.title)
     if kind not in TAX_YEARS:
         report.errors.append("cannot tell whether this is the annual or the provisional workpack")
         return report
@@ -1765,6 +2107,8 @@ def _validate_chat_rendering(
     _check_documents(text, parsed, report)
     _check_privacy_and_scope(text, kind, None, report)
     _check_chat_field_map(parsed, kind, report)
+    years = title_years(parsed.title)
+    _check_draft_checklist(parsed, kind, next(iter(years)) if len(years) == 1 else None, root, report)
     return report
 
 
@@ -1784,13 +2128,26 @@ def validate_workpack_file(
         report = WorkpackReport()
         report.errors.append(f"cannot read {path}: {exc}")
         return report
-    return validate_workpack_text(
+    report = validate_workpack_text(
         text,
         expected_kind=kind,
         expect_saved=expect_saved,
         plugin_root=plugin_root,
         presentation=presentation,
     )
+    if path.name.startswith("nl-tax-vat-") and isinstance(report.resume_record, dict):
+        identity = _VAT.parse_resume_identity(report.resume_record.get("workflow"))
+        if identity:
+            expected = _VAT.workpack_path(*identity)
+            if path.name != Path(expected).name:
+                report.errors.append(f"VAT saved filename must match its workflow, year, and period: {expected}")
+    if report.kind in EXTENDED_SCOPES and isinstance(report.resume_record, dict):
+        identity = _EXT.parse_resume_identity(report.resume_record.get("workflow"))
+        if identity:
+            expected = EXTENDED_SCOPES[report.kind]["path"].format(year=identity["tax_year"], **{key: identity[key] for key in EXTENDED_SCOPES[report.kind]["identity_keys"]})
+            if path.name != Path(expected).name:
+                report.errors.append(f"Saved filename must match its exact workflow identity: {expected}")
+    return report
 
 
 def main(argv: list[str] | None = None) -> int:

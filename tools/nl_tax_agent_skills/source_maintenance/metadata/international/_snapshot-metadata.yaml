@@ -1,0 +1,90 @@
+metadata_version: '1.1'
+sources:
+  bd_intl_social_insurance:
+    source_id: bd_intl_social_insurance
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/buitenland/content/uw-volksverzekeringen-als-u-emigreert
+    review_status: needs_review
+    reviewed_note_hash_sha256: 33ad865940401b64287e2592f2495dd4e5ab76f6f9c5df135109011e3bb8cca7
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.585021+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_country_and_treaty:
+    source_id: bd_intl_country_and_treaty
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/wanneer_aangifte_doen/in_welk_land_moet_u_aangifte_doen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 33ad865940401b64287e2592f2495dd4e5ab76f6f9c5df135109011e3bb8cca7
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.589543+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_fisin_2026:
+    source_id: bd_intl_fisin_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/u_woont_buiten_nederland
+    review_status: needs_review
+    reviewed_note_hash_sha256: 01184a3e283519251f5b34ecd49009f8cdac4caa50588c687be3737bb7a48cca
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_c_notes_2025:
+    source_id: bd_intl_c_notes_2025
+    source_url: https://download.belastingdienst.nl/belastingdienst/docs/toelichting_c_biljet_ib3161t51fd.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: 2eb876ee0b8fd511333b4a1b6a85bc18b3c3565cdcc9dc5c6acd7bd465febdde
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_fisin_2025:
+    source_id: bd_intl_fisin_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/u_woont_buiten_nederland
+    review_status: needs_review
+    reviewed_note_hash_sha256: 2eb876ee0b8fd511333b4a1b6a85bc18b3c3565cdcc9dc5c6acd7bd465febdde
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_income_statement:
+    source_id: bd_intl_income_statement
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/buitenland/content/inkomensverklaring-aangifte-inkomstenbelasting-buitenlandse-belastingplichtigen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 2eb876ee0b8fd511333b4a1b6a85bc18b3c3565cdcc9dc5c6acd7bd465febdde
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_m_return:
+    source_id: bd_intl_m_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/buitenland/content/deels-niet-in-nederland-wonen-m-aangifte-doen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 738b58f77e0b078886ab6fbf9918353d9a50521fbdcc128678f5e3bf2071040e
+    reviewed_note_hash_recorded_at: '2026-10-04T20:59:21.154645+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_c_return:
+    source_id: bd_intl_c_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/buitenland/content/buitenlands-belastingplichtig-hoe-doe-ik-aangifte-inkomstenbelasting
+    review_status: needs_review
+    reviewed_note_hash_sha256: 738b58f77e0b078886ab6fbf9918353d9a50521fbdcc128678f5e3bf2071040e
+    reviewed_note_hash_recorded_at: '2026-10-04T20:59:21.154645+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_m_notes_2025:
+    source_id: bd_intl_m_notes_2025
+    source_url: https://download.belastingdienst.nl/belastingdienst/docs/toelichting_m_biljet_ib3271t51fd.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: 738b58f77e0b078886ab6fbf9918353d9a50521fbdcc128678f5e3bf2071040e
+    reviewed_note_hash_recorded_at: '2026-10-04T20:59:21.154645+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_partial_foreign_liability:
+    source_id: bd_intl_partial_foreign_liability
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/vermogen/wat_is_uw_vermogen/partiele_buitenlandse_belastingplicht_30_bewijsregel
+    review_status: needs_review
+    reviewed_note_hash_sha256: 738b58f77e0b078886ab6fbf9918353d9a50521fbdcc128678f5e3bf2071040e
+    reviewed_note_hash_recorded_at: '2026-10-04T20:59:21.154645+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_intl_refund_interest:
+    source_id: bd_intl_refund_interest
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_ontvangen_bij_inkomstenbelasting
+    review_status: needs_review
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+    reviewed_note_hash_sha256: 738b58f77e0b078886ab6fbf9918353d9a50521fbdcc128678f5e3bf2071040e
+    reviewed_note_hash_recorded_at: '2026-10-04T20:59:21.154645+00:00'

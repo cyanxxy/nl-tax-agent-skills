@@ -422,7 +422,7 @@ complete dataset again; the review itself produces no field map.
 
 ## Stopzetten validation rules
 
-Moving abroad requires residency review and is **not a categorical stopzetten reason**. A workpack must route migration facts to the unsupported residency/migration path rather than producing a stopzetten outcome solely from the move.
+Moving abroad requires residency review and is **not a categorical stopzetten reason**. A workpack must apply the provisional 2026 migration boundary in section 1 of `../nl-tax-intake/reference/unsupported-cases.md` (terminal for the provisional workflow) rather than producing a stopzetten outcome solely from the move. That boundary does not send the voorlopige aanslag to the international M/C owner: an annual M or C precollection draft cannot change or stop a voorlopige aanslag.
 
 For review/change context, an **unsolicited** VA from earlier data **may be issued**, but it is **not guaranteed**; do not present a later VA as automatic.
 
@@ -513,7 +513,7 @@ Do not expand it into generic credential boilerplate.
 
 `Appendix A — Resume record` is one fenced `yaml` block with
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.4.0"`, `workflow: provisional_2026_<subflow>`,
+`plugin_version: "0.5.0"`, `workflow: provisional_2026_<subflow>`,
 `tax_year: 2026`, `created_at`, `updated_at`, `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow: null`, `sections`, and
 `sources_loaded`. `save_consent` defaults to `not_given` in the template and is

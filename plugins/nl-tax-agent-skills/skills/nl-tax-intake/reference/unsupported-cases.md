@@ -1,7 +1,18 @@
 # Unsupported Cases
 
-The situations below are outside this plugin's preparation scope. When intake
-detects one of them, except under section 4:
+This file describes income-tax boundaries. For VAT, first use
+`reference/vat-routing.md` and the VAT owner's special-case scope. An IB
+entrepreneur determination or a personal migration screen does not by itself
+settle whether a Netherlands-established business owes VAT.
+
+Check the applicable owner before declaring a case outside preparation scope.
+Migration/nonresident 2025/2026 now uses
+`../nl-tax-international-return/SKILL.md`; annual 2026 uses
+`../nl-tax-annual-return-2026/SKILL.md`. Both support draft evidence collection
+with specific review blockers. Sections 1, 2, 4 and 5 are preparation routes
+for the annual M or C return (sections 1 and 2) or the annual business section
+(section 4), not terminal outcomes. The provisional 2026 boundary at the end of
+section 1 stays terminal. Only genuinely terminal cases follow these steps:
 
 1. Tell the user clearly, in chat, which part of their situation is not
    covered.
@@ -17,16 +28,37 @@ detects one of them, except under section 4:
 ## 1. Part-Year Dutch Resident (Buitenlandse Belastingplicht)
 
 - **Description:** The taxpayer was a Dutch resident for only part of the tax year (e.g., emigrated or immigrated during 2025)
-- **Route label:** `annual_2025_migration_m_form`
-- **Why unsupported:** Requires pro-rata calculations, split-year treatment, and potentially two country returns
-- **Advice:** The taxpayer files through Mijn Belastingdienst personally or consults a tax adviser experienced in migration cases
+- **Route:** `international_<year>_migration`, year 2025 or 2026, through
+  `../nl-tax-international-return/SKILL.md`.
+- **Preparation:** Collect residence intervals and sourced income/assets,
+  qualification, social-insurance and treaty questions. Calculate only
+  established bounded lines. Unknown allocation/treaty treatment stays a
+  specific blocker while unaffected preparation continues.
+- **Review:** 2026 is precollection pending final annual M-form review; 2025
+  also keeps new source/form review visible. Never reuse the resident map.
+- **Provisional 2026 boundary:** A request, change, review or stopzetten of
+  the voorlopige aanslag 2026 for a taxpayer who emigrates or immigrates in
+  2026, or who lives abroad, is the unsupported residency/migration path for
+  the provisional workflow (`../nl-tax-provisional-assessment/SKILL.md`). It is
+  terminal there: prepare no provisional workpack and no stopzetten checklist,
+  and follow the terminal steps at the top of this file. Tell the taxpayer to
+  adjust or stop the voorlopige aanslag personally or with a tax adviser; the
+  Belastingdienst emigration checklist asks a taxpayer who receives or pays
+  monthly amounts to adjust it. Offer the
+  `international_2026_<migration|nonresident>` precollection only as a
+  separate annual-evidence workflow that the user explicitly asks for; it does
+  not change or stop the voorlopige aanslag.
 
 ## 2. Non-Resident Taxpayer (C-biljet / Kwalificerende Buitenlandse Belastingplichtige)
 
 - **Description:** The taxpayer lives outside the Netherlands but has Dutch-source income (e.g., Dutch employment, Dutch property, Dutch pension)
-- **Route label:** `annual_2025_nonresident_c_form`
-- **Why unsupported:** Requires C-biljet filing, qualification rules for deductions, and potential treaty application
-- **Advice:** The taxpayer uses the Belastingdienst route for non-residents personally or consults an international tax adviser
+- **Route:** `international_<year>_nonresident`, year 2025 or 2026, through
+  `../nl-tax-international-return/SKILL.md`.
+- **Preparation:** Collect Dutch-source and world-income evidence separately,
+  qualifying foreign-taxpayer evidence, residence/insurance and treaty review.
+  No automatic qualifying status, resident deductions or withholding credit.
+- **Review:** 2026 is precollection; pending source/form review blocks entry
+  guidance. The human supplies any required identifiers personally.
 
 ## 3. Deceased Taxpayer (F-biljet)
 
@@ -37,8 +69,7 @@ detects one of them, except under section 4:
 
 ## 4. Complex Business Forms (Winst uit onderneming)
 
-This section is the one place in this file where recognising the case does **not**
-end the preparation. Only the named computations below are terminal; everything
+Recognising a complex business form does **not** end the preparation. Only the named computations below are terminal; everything
 else about the business is prepared, so do not apply the numbered stop rules at
 the top of this file to a business case before checking the lists here.
 
@@ -65,29 +96,42 @@ the top of this file to a business case before checking the lists here.
 ## 5. M-Aangifte (Migration Return)
 
 - **Description:** A special return filed in the year of immigration to or emigration from the Netherlands
-- **Route label:** `annual_2025_migration_m_form`
-- **Why unsupported:** Combines elements of resident and non-resident filing, requires complex allocation rules
-- **Advice:** Consult a tax adviser experienced in international/migration tax matters
+- **Route:** `international_<year>_migration` through the international owner
+  in section 1. M-form preparation is supported for 2025 and draft
+  precollection for 2026. Split-year/treaty/insurance uncertainty blocks only
+  the affected position; it is not a reason to suppress the workpack.
 
 ## 6. Complex Box 2 Substantial-Interest Cases
 
 - **Supported standard preparation:** A full-year resident individual in an active `annual_2025` or `provisional_2026` workflow may include standard Box 2 preparation for an aanmerkelijk belang, including regular benefits such as dividends, disposal benefits such as share-sale profit, dividend withholding tax credit, loss carry-forward fields, and fiscal-partner Box 2 allocation.
 - **Route label:** `manual_review`
-- **Manual review / unsupported boundary:** Route the case to manual review or unsupported when Box 2 involves valuation disputes, immigration or emigration, death, restructurings, treaty or nonresident issues, informal capital, non-arm's-length transfers, or corporate-tax-heavy DGA questions.
+- **Manual review / unsupported boundary:** Within the legacy resident
+  2025/provisional 2026 owner, complex valuation, death, restructurings,
+  informal capital, non-arm's-length transfers and corporate-tax-heavy DGA
+  questions retain their existing manual-review boundary. Immigration,
+  emigration or nonresident annual preparation uses the international owner,
+  which records affected Box 2/treaty questions as named blockers. The old
+  resident Box 2 helper contract does not govern that owner.
 - **Advice:** For complex Box 2 cases, consult a tax adviser, especially one experienced with DGA (directeur-grootaandeelhouder) and corporate-tax interaction.
 
 ## 7. Multiple Nationalities with Tax Treaty Complications
 
 - **Description:** The taxpayer holds multiple nationalities and the applicable tax treaty creates complications regarding residence determination, tie-breaker rules, or income allocation
-- **Route label:** `annual_2025_foreign_treaty_heavy`
-- **Why unsupported:** Requires treaty interpretation, tie-breaker analysis, and potential competent authority procedures
+- **Route label:** `annual_2025_foreign_treaty_heavy` only for a resident
+  2025 case outside the international migration/nonresident owner.
+- **Boundary:** Treaty residence/tie-breaker disputes within a migration or
+  nonresident return remain explicit blockers inside its draft workpack;
+  nationality alone does not establish residence or a terminal outcome.
 - **Advice:** Consult an international tax adviser
 
 ## 8. Foreign Pension with Treaty Override
 
 - **Description:** The taxpayer receives a foreign pension where a tax treaty allocates taxation rights differently from standard Dutch rules, potentially requiring exemption or credit methods
-- **Route label:** `annual_2025_foreign_treaty_heavy`
-- **Why unsupported:** Requires treaty-by-treaty analysis, voorkoming dubbele belasting calculations, and potentially foreign tax credit computations
+- **Route label:** `annual_2025_foreign_treaty_heavy` only for a resident
+  2025 case outside the international migration/nonresident owner.
+- **Boundary:** The international owner collects pension and foreign-tax
+  evidence and names unresolved treaty exemption/credit as a blocker; it
+  does not silently use resident or foreign-tax-credit assumptions.
 - **Advice:** Consult a tax adviser experienced in cross-border pension taxation
 
 ---

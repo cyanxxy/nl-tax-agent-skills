@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch VAT Correction"
+  short_description: "Draft VAT correction for one filed period"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare a draft correction for an already filed 2025 or 2026 Dutch ZZP VAT period."
+
+policy:
+  allow_implicit_invocation: true

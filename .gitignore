@@ -31,6 +31,8 @@ __pycache__/
 *.py[cod]
 plugins/*/version.json
 evals/*/runs/
+evals/results/
+plugins/nl-tax-agent-skills/evals/results/
 evals/*/benchmark-usage.jsonl
 *.bsn
 *.iban

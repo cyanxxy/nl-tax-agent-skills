@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch International Tax Workpack"
+  short_description: "Draft M/C migration and nonresident evidence"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare a draft Dutch migration (M) or nonresident (C) income-tax workpack from my facts and documents."
+
+policy:
+  allow_implicit_invocation: true

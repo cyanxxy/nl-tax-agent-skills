@@ -1020,7 +1020,7 @@ equals the Sources used list.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.4.0"
+plugin_version: "0.5.0"
 workflow: annual_2025
 tax_year: 2025
 created_at: ""

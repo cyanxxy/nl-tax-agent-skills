@@ -25,6 +25,8 @@ TEMPLATES = {
     "annual": PLUGIN_ROOT / "skills/nl-tax-annual-return/templates/annual-workpack.md",
     "provisional": PLUGIN_ROOT
     / "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
+    "vat": PLUGIN_ROOT / "skills/nl-tax-vat-return/templates/vat-workpack.md",
+    "vat_correction": PLUGIN_ROOT / "skills/nl-tax-vat-correction/templates/vat-correction-workpack.md",
 }
 ANNUAL_PATH = "workspace/nl-tax-annual-2025-workpack.md"
 PROVISIONAL_PATH = "workspace/nl-tax-provisional-2026-workpack.md"
@@ -216,9 +218,12 @@ def build_workpack(
     changed fact (review amendment A10): ``generation_confirmed`` false and the
     STALE line at the top of the summary, Appendix B, and a requested checklist.
     """
-    workflow = workflow or ("annual_2025" if kind == "annual" else "provisional_2026_request")
+    workflow = workflow or {"annual": "annual_2025", "provisional": "provisional_2026_request", "vat": "vat_2026_Q3", "vat_correction": "vat_correction_2026_Q3"}[kind]
     subflow = workflow.rsplit("_", 1)[-1] if kind == "provisional" else None
     text = TEMPLATES[kind].read_text(encoding="utf-8")
+    identity = load_grader()._VAT.parse_resume_identity(workflow)
+    if identity:
+        text = text.replace("{year}", str(identity[1])).replace("{period}", identity[2])
 
     if statuses is None:
         fill = "complete" if readiness == "review_ready" else "not_started"
@@ -232,7 +237,8 @@ def build_workpack(
         key: {"status": status, "open": list(open_questions.get(key, []))}
         for key, status in statuses.items()
     }
-    sources = tuple(sources if sources is not None else (ANNUAL_SOURCES if kind == "annual" else PROVISIONAL_SOURCES))
+    default_sources = ANNUAL_SOURCES if kind == "annual" else PROVISIONAL_SOURCES if kind == "provisional" else ()
+    sources = tuple(sources if sources is not None else default_sources)
     documents = documents if documents is not None else (
         ANNUAL_DOCUMENTS if kind == "annual" else PROVISIONAL_DOCUMENTS
     )
@@ -303,6 +309,9 @@ def build_workpack(
         "sections": sections,
         "sources_loaded": list(sources),
     }
+    if identity:
+        record["tax_year"] = identity[1]
+        record["period"] = identity[2]
     if record_overrides:
         for key, value in record_overrides.items():
             if value is _DELETE:

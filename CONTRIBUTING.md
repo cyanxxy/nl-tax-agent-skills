@@ -26,8 +26,12 @@ where this guide and the spec disagree, the spec wins.
 ## Repository layout
 
 The plugin is the product package — `plugins/nl-tax-agent-skills/`. Repository-level
-tests, evaluations, submission tooling, marketplace manifests, and project docs stay
-outside that distributable directory.
+tests, offline evaluations, submission tooling, marketplace manifests, and project docs
+stay outside that distributable directory. The Claude eval cases are the one
+exception: they live in the plugin's own `evals/` directory so that
+`claude plugin eval plugins/nl-tax-agent-skills` discovers them without extra
+flags. They are Markdown only, grant only read-only tools, and are excluded
+from the OpenAI bundle.
 
 ```text
 .claude-plugin/
@@ -39,7 +43,8 @@ plugins/nl-tax-agent-skills/
   .claude-plugin/plugin.json
   .codex-plugin/plugin.json
   README.md
-  assets/                           # icon.png (the single packaged image)
+  assets/                           # icon.png (the plugin icon; public skills copy it to skills/<name>/assets/)
+  evals/                            # Claude eval cases (cowork-*/prompt.md + graders); not in the OpenAI bundle
   agents/
     nl-tax-specialist-reviewer.md   # Claude Cowork specialist reviewer
   skills/
@@ -53,6 +58,13 @@ plugins/nl-tax-agent-skills/
     nl-tax-knowledge/               # read-only rule lookup; writes nothing
     nl-tax-annual-return/           # annual 2025 workflow; owns the annual workpack
     nl-tax-provisional-assessment/  # provisional 2026 subflows; owns the provisional workpack
+    nl-tax-annual-return-2026/      # draft-only annual 2026 evidence collection; owns its workpack
+    nl-tax-vat-return/              # draft-only VAT return; one workpack per period
+    nl-tax-vat-correction/          # draft-only VAT correction/suppletie; one workpack per filed period
+    nl-tax-icp/                     # draft-only opgaaf ICP; one workpack per period
+    nl-tax-oss/                     # draft-only OSS/IOSS; one workpack per scheme and period
+    nl-tax-international-return/    # draft-only M/C return; one workpack per year and form
+    nl-tax-vat-adjustments/         # background helper for the VAT owners; writes nothing
     nl-tax-box1-home/               # background helper; writes nothing
     nl-tax-box2/                    # background helper; writes nothing
     nl-tax-box3/                    # background helper; writes nothing
@@ -87,7 +99,7 @@ greys out Cowork and the Claude apps. Codex still reads `.codex-plugin/plugin.js
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -241,7 +253,18 @@ task's working folder (git-ignored in this repository):
 workspace/
   nl-tax-annual-2025-workpack.md        # annual 2025, only after save consent
   nl-tax-provisional-2026-workpack.md   # provisional 2026 (any subflow), only after save consent
+  nl-tax-annual-2026-workpack.md        # draft annual 2026
+  nl-tax-vat-<year>-<period>-workpack.md            # draft VAT return, one per period
+  nl-tax-vat-correction-<year>-<period>-workpack.md # draft VAT correction, one per filed period
+  nl-tax-icp-<year>-<period>-workpack.md            # draft ICP, one per period
+  nl-tax-oss-<scheme>-<year>-<period>-workpack.md   # draft OSS/IOSS, one per scheme and period
+  nl-tax-international-<year>-<form>-workpack.md    # draft M or C return, one per year and form
 ```
+
+For the draft workflows, the workflow identity includes the period, scheme, or
+form, so "one file per workflow" means one file per identity; a second period
+never overwrites the first. `skills/nl-tax-shared-resources/reference/workflow-scopes.yaml`
+declares each identity, path, and template.
 
 There is no profile file, session ledger, evidence index, notes directory,
 missing-info or assumptions file, and no separate field-map, delta,
@@ -435,7 +458,7 @@ python3 evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
 
 For an OpenAI Plugin Directory release, also review
 `submission/openai/README.md`, run its fresh-task smoke-test matrix, and submit
-the exact five positive and three negative reviewer cases in
+the exact five positive and four negative reviewer cases in
 `submission/openai/test-cases.yaml`. Repository validation cannot replace
 publisher verification, Apps Management permission, genuine product
 screenshots, or a Work web/desktop smoke test.
@@ -476,11 +499,11 @@ python3 tools/nl_tax_agent_skills/field_mapper/render_field_map.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.4.0`):
+Both plugin manifests pin a fixed version (currently `0.5.0`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.4.0"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.4.0"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.0"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.0"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
@@ -496,7 +519,25 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
 ### Release checklist
 
 - The release artifact contains only the plugin package, its README and
-  license, and the Claude/Codex plugin manifests.
+  license, its Claude eval cases (`evals/`), and the Claude/Codex plugin
+  manifests. The OpenAI bundle excludes `evals/`.
+- Keep the plugin folder within the Claude directory review limits: every file
+  that is not an image or font stays under 256 KiB, and the folder holds at most
+  512 files. `test_plugin_folder_stays_within_directory_review_limits` enforces
+  this; `source-register.yaml` is the file closest to the size limit, and an
+  early-warning check fails once it reaches 250 KiB, so trim or split it before
+  adding many sources.
+- Run the Claude eval cases with the plugin loaded (save cases need write
+  tools, which the case files themselves never grant):
+  `claude plugin eval plugins/nl-tax-agent-skills --case 'cowork-*' --runs 3 --threshold 1.0 --allow-tools Edit Write --output-dir evals/results/latest`.
+  Every scored grader must pass, so passing file checks cannot hide a failed
+  tax-rule or safety rubric. Three runs check consistency before release;
+  `--runs 1` is only a quick check and keeps the same threshold.
+  The grant applies to every case in the run, so every case without save
+  consent in the conversation carries `graders/no-write.md` and
+  `graders/no-edit.md` (`tool_used` with `min: 0` and `max: 0` on `Write` and
+  `Edit`); give any new no-save case both graders.
+  `test_no_save_cowork_cases_carry_no_write_graders` enforces this.
 - Exclude `.git/`, `.claude/`, `.codex/`, `.plugin-eval/`, `__MACOSX/`,
   `__pycache__/`, local workspaces, uploads, evidence files, compiled Python,
   and local `.agents/` state other than `.agents/plugins/marketplace.json`.
@@ -529,9 +570,9 @@ Guard against a retroactive or duplicate tag before letting Claude create the
 plugin release tag:
 
 ```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.4.0')" = ""
+test "$(git tag --list 'nl-tax-agent-skills--v0.5.0')" = ""
 claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.4.0'
+git tag --list 'nl-tax-agent-skills--v0.5.0'
 ```
 
 ### Publish the GitHub release
@@ -545,8 +586,8 @@ section. It runs the unit suite, attaches
 section as the notes, and takes the title from the tag message:
 
 ```bash
-git tag -a v0.4.0 -m "v0.4.0 — <short release title>"
-git push origin v0.4.0
+git tag -a v0.5.0 -m "v0.5.0 — <short release title>"
+git push origin v0.5.0
 ```
 
 A version bump is not a release until this tag is pushed.

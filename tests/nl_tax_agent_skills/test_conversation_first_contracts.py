@@ -26,6 +26,7 @@ Covers:
 """
 
 import importlib.util
+import json
 import pathlib
 import re
 import subprocess
@@ -55,6 +56,13 @@ WRITERS = {
     "nl-tax-provisional-assessment",
     "nl-tax-field-mapper",
     "nl-tax-submit-companion",
+    "nl-tax-vat-return",
+    "nl-tax-vat-correction",
+    "nl-tax-annual-return-2026",
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-international-return",
+
 }
 NON_WRITERS = {
     "nl-tax-intake",
@@ -64,6 +72,7 @@ NON_WRITERS = {
     "nl-tax-box3",
     "nl-tax-partner-deductions",
     "nl-tax-winst",
+    "nl-tax-vat-adjustments",
 }
 
 RESUME_RECORD_KEYS = [
@@ -212,7 +221,7 @@ class SkillWriteBoundaryTests(unittest.TestCase):
     def test_skill_set_is_eleven_skills_plus_shared_resources(self):
         names = {path.parent.name for path in SKILLS.glob("*/SKILL.md")}
         self.assertEqual(names, WRITERS | NON_WRITERS | {"nl-tax-shared-resources"})
-        self.assertEqual(len(WRITERS | NON_WRITERS), 11)
+        self.assertEqual(len(WRITERS | NON_WRITERS), 18)
 
     def test_only_workpack_writers_carry_the_workspace_edit_rule(self):
         for skill in sorted(WRITERS | NON_WRITERS | {"nl-tax-shared-resources"}):
@@ -383,6 +392,9 @@ class WorkpackTemplateTests(unittest.TestCase):
                 self.assertEqual(listed, found)
 
     def test_resume_records_have_exact_r5_keys(self):
+        release_version = json.loads(
+            (PLUGIN / ".codex-plugin/plugin.json").read_text(encoding="utf-8")
+        )["version"]
         for text, workflow, year, keys in (
             (self.annual, "annual_2025", 2025, ANNUAL_SECTION_KEYS),
             (self.provisional, "provisional_2026_request", 2026, PROVISIONAL_SECTION_KEYS),
@@ -392,7 +404,7 @@ class WorkpackTemplateTests(unittest.TestCase):
                 self.assertEqual(list(record), RESUME_RECORD_KEYS)
                 self.assertEqual(record["workpack_format"], "nl-tax-workpack")
                 self.assertEqual(record["workpack_version"], "2.0")
-                self.assertEqual(record["plugin_version"], "0.4.0")
+                self.assertEqual(record["plugin_version"], release_version)
                 self.assertEqual(record["workflow"], workflow)
                 self.assertEqual(record["tax_year"], year)
                 self.assertIn(record["save_consent"], {"given", "not_given"})
@@ -918,7 +930,9 @@ class ReviewAmendmentTests(unittest.TestCase):
     # A9 ---------------------------------------------------------------------
 
     def test_ids_chat_rows_and_identifier_rules_are_consistent(self):
-        stray_ids = re.compile(r"(?<![\w-])(?:Q|M|A)\d{1,2}(?![\d\w])|(?<![\w])ev_\d{1,2}(?!\d)")
+        # Q1..Q4 and M01..M12 are canonical VAT periods, not workpack question
+        # or missing-information IDs. Other short IDs remain forbidden.
+        stray_ids = re.compile(r"(?<![\w-])(?:Q(?![1-4](?![\d\w]))|M(?!0[1-9](?![\d\w])|1[0-2](?![\d\w]))|A)\d{1,2}(?![\d\w])|(?<![\w])ev_\d{1,2}(?!\d)")
         for path in runtime_files():
             if "/knowledge/" in path.as_posix():
                 continue  # reviewed source notes are not workpack instructions

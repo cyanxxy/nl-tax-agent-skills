@@ -23,6 +23,12 @@ PUBLIC_SKILLS = {
     "nl-tax-knowledge",
     "nl-tax-provisional-assessment",
     "nl-tax-submit-companion",
+    "nl-tax-vat-return",
+    "nl-tax-vat-correction",
+    "nl-tax-annual-return-2026",
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-international-return",
 }
 LEGACY_OUTPUTS = (
     "workspace/taxpayer",
@@ -171,9 +177,20 @@ class OpenAIReviewerCasesTests(unittest.TestCase):
     def test_case_counts_and_ids(self):
         positive, negative = self.cases["positive"], self.cases["negative"]
         self.assertEqual(len(positive), 5)
-        self.assertEqual(len(negative), 3)
-        self.assertEqual(len({case["id"] for case in positive + negative}), 8)
+        self.assertEqual(len(negative), 4)
+        self.assertEqual(len({case["id"] for case in positive + negative}), 9)
         self.assertNotIn("evidence_index_mixed_sources", {case["id"] for case in positive})
+
+    def test_draft_only_gate_has_a_negative_case(self):
+        case = next(
+            case
+            for case in self.cases["negative"]
+            if case["id"] == "draft_vat_icp_no_checklist_or_readiness"
+        )
+        behavior = " ".join(case["expected_behavior"]).lower()
+        for required in ("checklist", "filing-ready", "human review", "draft"):
+            with self.subTest(required=required):
+                self.assertIn(required, behavior)
 
     def test_expected_skills_are_shipped_public_skills(self):
         for case in self.cases["positive"]:

@@ -226,7 +226,12 @@ in `notes`.
 
 ## Workflow-specific rules
 
-### Annual return fields
+### Annual return 2025 fields (`annual_return`, `tax_year: 2025`)
+
+An `annual_return` map with `tax_year: 2026` follows only
+`reference/annual-2026-field-map.md` (conceptual `annual2026.*`
+internal_routing rows; Box 3 opening assets at 1 January 2026); none of the
+bullets below apply to it.
 
 - Use evidence-based values wherever possible
 - Include werkelijk rendement fields if data is available
@@ -238,7 +243,7 @@ in `notes`.
   for a figure the aangifte computes itself -- those belong in the workpack
   narrative as expectations the taxpayer checks on screen.
 
-### Provisional assessment fields
+### Provisional assessment 2026 fields
 
 - All values are estimates by definition
 - NEVER include werkelijk rendement fields
@@ -262,10 +267,21 @@ The checklist validates the map mechanically; the owning workflow's section
 rollup remains the sole readiness authority.
 
 - [ ] `FM-METADATA` — required metadata and the check trail are present and valid.
-- [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are the supported annual 2025 or provisional 2026 pair.
+- [ ] `FM-WORKFLOW-YEAR` — workflow and tax year are one supported pair: `annual_return` with 2025 (resident 2025 schema) or with 2026 (annual 2026 draft, `annual2026.*` internal_routing rows only); `provisional_assessment` with 2026; `vat_return`, `vat_correction` or `icp_declaration` with 2025 or 2026 and the owner's exact confirmed `period`; `oss_return` with 2025 or 2026, a `scheme`, and a scheme-correct `period` (`Q1`–`Q4` for `union` and `non_union`, `M01`–`M12` for `ioss`); or `international_return` with 2025 or 2026 and a `return_form`. Every identity key equals Appendix A and the workpack filename.
 - [ ] `FM-STRUCTURE` — root, fields, and missing fields have the correct shape; field IDs are unique; no portal-automation fields and no Zvw entry rows exist; an annual `business.has_onderneming` value is the YAML boolean `true` or `false`, never a string such as `"nee"` (the summary table may still display `nee`).
 - [ ] `FM-SOURCE` — every populated row has a valid source type and its required provenance fields.
 - [ ] `FM-CONFIDENCE-FINITE` — confidence is numeric within 0–1 and numeric values are finite.
 - [ ] `FM-REFERENCE-COVERAGE` — every required non-prefilled reference field appears in fields or missing fields.
 - [ ] `FM-MISSING-STRUCTURE` — every unknown row also appears in `missing_fields`; required rows are represented; structural blockers are reported without changing the agent-declared readiness.
 - [ ] `FM-PROVISIONAL-METHOD` — a provisional map contains no werkelijk-rendement field and uses only the allowed expected-profit treatment.
+- [ ] For VAT only, perform `FM-VAT-PERIOD`, `FM-VAT-RUBRICS`,
+  `FM-VAT-RECONCILIATION`, `FM-VAT-DEDUCTION`, and `FM-VAT-REVIEW` from
+  `reference/vat-field-map.md`. A draft source summary cannot authorize
+  `review_ready` or a manual-entry checklist.
+- [ ] For ICP, OSS/IOSS, international and annual 2026 maps, apply the rules in
+  the matching extended reference (`reference/cross-border-field-map.md`,
+  `reference/international-field-map.md` or
+  `reference/annual-2026-field-map.md`). Readiness stays `draft` under the
+  `maximum_readiness` policy in
+  `../nl-tax-shared-resources/reference/workflow-scopes.yaml`, and no
+  manual-entry checklist is offered.

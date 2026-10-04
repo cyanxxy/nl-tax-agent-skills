@@ -7,9 +7,14 @@ Only these domains may be fetched by the source refresh pipeline. All other doma
 ```
 belastingdienst.nl          -- primary tax authority
 www.belastingdienst.nl      -- main website
+download.belastingdienst.nl -- official forms and explanatory PDFs
+stichtingenvereniging.belastingdienst.nl -- official rubric structure (sector conditions remain scoped)
 over-ons.belastingdienst.nl -- algoritmeregister
 odb.belastingdienst.nl      -- developer portal
 wetten.overheid.nl          -- legislation database
+zoek.officielebekendmakingen.nl -- official Dutch legal publications
+vat-one-stop-shop.ec.europa.eu -- European Commission OSS/IOSS guidance
+eur-lex.europa.eu           -- EU legislation (VAT Directive 2006/112/EC)
 regels.overheid.nl          -- rule methodology
 platform.claude.com         -- Anthropic Agent Skills docs
 code.claude.com             -- Claude Code docs
@@ -46,3 +51,8 @@ www.rvo.nl                  -- RVO (EIA, MIA and Vamil lists and maxima)
 | `www.rijksoverheid.nl`        | Government          | AOW-leeftijd schedule             |
 | `rvo.nl`                      | Government (RVO)    | Redirects to www subdomain        |
 | `www.rvo.nl`                  | Government (RVO)    | Energielijst / Milieulijst, EIA, MIA and Vamil maxima |
+| `download.belastingdienst.nl` | Tax authority      | Official forms and explanatory PDFs (toelichtingen) |
+| `stichtingenvereniging.belastingdienst.nl` | Tax authority | Stichting/vereniging loket; VAT rubric structure only |
+| `zoek.officielebekendmakingen.nl` | Government      | Staatscourant decrees and ministerial regulations |
+| `vat-one-stop-shop.ec.europa.eu` | European Commission | OSS/IOSS guidance and explanatory notes |
+| `eur-lex.europa.eu`           | European Union      | EU legislation; VAT Directive 2006/112/EC currency-conversion articles for OSS. Automated fetches get an HTTP 202 bot challenge, so a human confirms the text in a browser |

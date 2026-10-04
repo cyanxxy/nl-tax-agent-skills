@@ -49,6 +49,7 @@ class InvocationPolicyTests(unittest.TestCase):
                 "nl-tax-box3",
                 "nl-tax-partner-deductions",
                 "nl-tax-winst",
+                "nl-tax-vat-adjustments",
             },
         )
         for name in (
@@ -97,6 +98,56 @@ class InvocationPolicyTests(unittest.TestCase):
             )
             errors, _ = self.mod.collect_errors(str(skills))
             self.assertEqual(errors, [])
+
+    def test_internal_helper_default_prompt_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            skills = pathlib.Path(tmp)
+            helper = skills / "nl-tax-newhelper"
+            (helper / "agents").mkdir(parents=True)
+            (helper / "SKILL.md").write_text(
+                "---\nname: nl-tax-newhelper\n"
+                "description: helper\nuser-invocable: false\n---\nbody\n",
+                encoding="utf-8",
+            )
+            # A starter prompt invites standalone explicit invocation -> fails.
+            (helper / "agents" / "openai.yaml").write_text(
+                "interface:\n"
+                "  display_name: \"Helper\"\n"
+                "  default_prompt: \"Use $nl-tax-newhelper now.\"\n"
+                "policy:\n  allow_implicit_invocation: false\n",
+                encoding="utf-8",
+            )
+            errors, checked = self.mod.collect_errors(str(skills))
+            self.assertIn("nl-tax-newhelper", checked)
+            self.assertEqual(len(errors), 1)
+            self.assertIn("default_prompt", errors[0][1])
+            # Internal display metadata without a default prompt -> passes.
+            (helper / "agents" / "openai.yaml").write_text(
+                "interface:\n"
+                "  display_name: \"Helper\"\n"
+                "  short_description: \"Internal helper.\"\n"
+                "policy:\n  allow_implicit_invocation: false\n",
+                encoding="utf-8",
+            )
+            errors, _ = self.mod.collect_errors(str(skills))
+            self.assertEqual(errors, [])
+
+    def test_real_internal_helpers_have_no_default_prompt(self):
+        import yaml
+
+        _, checked = self.mod.collect_errors(str(SKILLS_DIR))
+        for name in checked:
+            with self.subTest(skill=name):
+                data = yaml.safe_load(
+                    (SKILLS_DIR / name / "agents" / "openai.yaml").read_text(
+                        encoding="utf-8"
+                    )
+                )
+                interface = data.get("interface") or {}
+                self.assertNotIn("default_prompt", interface)
+                self.assertIn(
+                    "internal", interface.get("short_description", "").lower()
+                )
 
     def test_user_invocable_skill_not_required_to_have_openai_yaml(self):
         with tempfile.TemporaryDirectory() as tmp:

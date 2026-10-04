@@ -11,6 +11,9 @@ Checks:
     - All URLs use https, carry no embedded credentials, and are on the allowlist
     - No entry has last_checked in the future
     - mandatory_for references valid skill names (error if unknown)
+    - draft_only entries record agent research only (last_checked_kind:
+      agent_source_research, last_human_reviewed: null); promoted entries
+      cannot rest on agent research and need an ISO last_human_reviewed date
 """
 
 import os
@@ -36,11 +39,20 @@ VALID_SKILL_NAMES = {
     "nl-tax-partner-deductions",
     "nl-tax-field-mapper",
     "nl-tax-submit-companion",
+    "nl-tax-vat-return",
+    "nl-tax-vat-correction",
+    "nl-tax-vat-adjustments",
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-international-return",
+    "nl-tax-annual-return-2026",
 }
 
 ALLOWED_DOMAINS = {
     "belastingdienst.nl",
     "www.belastingdienst.nl",
+    "download.belastingdienst.nl",
+    "stichtingenvereniging.belastingdienst.nl",
     "over-ons.belastingdienst.nl",
     "odb.belastingdienst.nl",
     "wetten.overheid.nl",
@@ -55,6 +67,9 @@ ALLOWED_DOMAINS = {
     "www.rijksoverheid.nl",
     "rvo.nl",
     "www.rvo.nl",
+    "zoek.officielebekendmakingen.nl",
+    "vat-one-stop-shop.ec.europa.eu",
+    "eur-lex.europa.eu",
 }
 
 
@@ -123,6 +138,52 @@ def find_content_root(register_path):
     return candidates[-1]
 
 
+# Workflow families added as draft_only extensions. Legacy income-tax entries
+# carry no workflow_family and keep their own review-date history.
+PROMOTION_REVIEW_FAMILIES = {"vat", "vat_cross_border", "international", "annual_2026"}
+
+
+def provenance_errors(sid, source):
+    """Keep agent research apart from human review attestation.
+
+    A draft_only entry records agent public-source research only: it must say
+    so (last_checked_kind: agent_source_research) and must carry
+    last_human_reviewed: null, so no edit can fabricate a review. A promoted
+    (non-draft) entry may keep these fields, but it cannot rest on agent
+    research alone, and a recorded human review must be a real ISO date.
+    """
+    errors = []
+    kind = source.get("last_checked_kind")
+    if source.get("content_stage") == "draft_only":
+        if kind != "agent_source_research":
+            errors.append(
+                f"{sid}: draft-only source must set last_checked_kind: agent_source_research"
+            )
+        if "last_human_reviewed" not in source or source.get("last_human_reviewed") is not None:
+            errors.append(
+                f"{sid}: draft-only source must carry last_human_reviewed: null "
+                "(a real review is recorded only on promotion)"
+            )
+        return errors
+    if kind == "agent_source_research":
+        errors.append(f"{sid}: a non-draft source cannot rest on agent research only")
+    family = source.get("workflow_family")
+    if family in PROMOTION_REVIEW_FAMILIES and "last_human_reviewed" not in source:
+        # Extension families start draft_only; promoting one (dropping
+        # content_stage: draft_only) must record the actual human review date.
+        errors.append(f"{sid}: promoted {family} source needs an ISO last_human_reviewed date")
+    if "last_human_reviewed" in source:
+        reviewed = source.get("last_human_reviewed")
+        try:
+            reviewed_date = date.fromisoformat(str(reviewed))
+        except ValueError:
+            errors.append(f"{sid}: promoted source needs an ISO last_human_reviewed date")
+        else:
+            if reviewed_date > date.today():
+                errors.append(f"{sid}: last_human_reviewed is in the future: {reviewed}")
+    return errors
+
+
 def validate(register_path):
     errors = []
     warnings = []
@@ -148,6 +209,11 @@ def validate(register_path):
             errors.append(f"entry[{i}]: source entry must be a mapping, got: {source!r}")
             continue
         sid = source.get("id", f"entry[{i}]")
+        if source.get("content_stage") not in {None, "draft_only"}:
+            errors.append(f"{sid}: invalid content_stage (only explicit draft_only staging is supported)")
+        if source.get("content_stage") == "draft_only" and source.get("workflow_family") not in {"vat", "vat_cross_border", "international", "annual_2026"}:
+            errors.append(f"{sid}: draft-only source must declare a recognized isolated workflow_family")
+        errors.extend(provenance_errors(sid, source))
 
         # Required fields
         for field in REQUIRED_FIELDS:

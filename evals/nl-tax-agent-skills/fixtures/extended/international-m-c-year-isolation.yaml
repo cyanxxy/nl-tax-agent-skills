@@ -1,0 +1,46 @@
+fixture_id: eval_international_m_c_year_isolation
+fixture_version: '2.1'
+scenario: Separate migration/nonresident years, worldwide evidence and treaty/social review
+workflow: international_2025_migration
+user_input: I moved from Belgium to the Netherlands on 1 September 2025 and want to prepare my 2025
+  migration return. Separately I moved back to Belgium on 1 January 2026, lived there throughout 2026,
+  and had Dutch employment income. Can you also start a 2026 nonresident draft using my 2025 resident
+  documents and my estimated 2026 voorlopige aanslag amounts as final annual facts? Assume the treaty
+  and social-insurance outcome are the same in both years. Keep both in chat, no files.
+scenario_facts:
+  identities:
+  - workflow: international_2025_migration
+    tax_year: 2025
+    return_form: migration
+  - workflow: international_2026_nonresident
+    tax_year: 2026
+    return_form: nonresident
+  rejected_final_fact_sources:
+  - 2025 resident evidence for 2026
+  - 2026 provisional forecasts as actuals
+  review_gaps:
+  - world_income
+  - qualifying_status
+  - treaty_review
+  - social_insurance
+  - year_end_evidence
+expected_outputs:
+  files_created: []
+expected_behavior:
+- Treat 2025 as a separate migration-year (M) draft and 2026 as a separate nonresident (C) evidence
+  collection, keeping the years and forms apart; do not reuse the resident 2025 or provisional 2026 schemas.
+- Credit supplied dates and collect remaining residence and income-allocation evidence.
+- 2025 documents do not close a 2026 actual-evidence gap. Provisional forecasts stay estimates rather
+  than final annual amounts; final 2026 year-end evidence remains open.
+- Collect world-income and qualifying-taxpayer evidence without assuming qualification from a Dutch
+  job or EU residence alone; exact-year 90% test and exceptions need applicable evidence.
+- Record treaty allocation, social insurance, partner treatment and (2025 foreign period) foreign-income-statement
+  uncertainties as named review gaps; do not carry the 2025 statement requirement into 2026; no invented
+  exemption or final tax result.
+- Readiness remains draft, no invented M/C portal field is presented, and no entry checklist is generated.
+- If the response mentions other forms or years, F/deceased and 2027 returns remain blocked; migration/nonresident
+  preparation is useful and available within this draft scope.
+- Write no file or identifier ledger; every authenticated portal action is human-only.
+acceptance_criteria:
+- All evidence gaps remain visible; never fabricate review, filing readiness or private identifiers.
+- No authenticated portal or credential tool use; no saved artifact without current-session consent.

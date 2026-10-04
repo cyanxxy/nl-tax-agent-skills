@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+env:
+  # Match the calendar used for source-review dates and local validation.
+  TZ: Europe/Amsterdam
+
 jobs:
   publish:
     name: Publish GitHub release

@@ -5,6 +5,7 @@
 conversation plus Appendix A (resume record) of the one consented workpack.
 """
 
+import json
 import pathlib
 import re
 import unittest
@@ -119,12 +120,13 @@ class IntakeContractTests(unittest.TestCase):
 
     def test_resume_record_schema_and_chat_only_gate_match_templates(self):
         contract = read_text(ELICITATION)
+        release_version = json.loads(read_text(".codex-plugin/plugin.json"))["version"]
         for template in (ANNUAL_TEMPLATE, PROVISIONAL_TEMPLATE):
             record = resume_record(template)
             with self.subTest(template=template):
                 self.assertEqual(record["workpack_format"], "nl-tax-workpack")
                 self.assertEqual(record["workpack_version"], "2.0")
-                self.assertEqual(record["plugin_version"], "0.4.0")
+                self.assertEqual(record["plugin_version"], release_version)
                 self.assertIn(record["readiness"], {"draft", "review_ready"})
                 self.assertIs(record["generation_confirmed"], False)
                 for entry in record["sections"].values():
@@ -167,13 +169,14 @@ class IntakeContractTests(unittest.TestCase):
         }
         expected = {
             "annual_2025_entrepreneurs",
-            "annual_2025_nonresident_c_form",
-            "annual_2025_migration_m_form",
             "annual_2025_deceased_f_form",
             "annual_2025_foreign_treaty_heavy",
         }
 
         self.assertTrue(expected.issubset(blocked_candidates), blocked_candidates)
+        drafts = {wf["id"]: wf for wf in supported["draft_only_workflows"]}
+        self.assertEqual(drafts["international_2025"]["maximum_readiness"], "draft")
+        self.assertIn("nl-tax-international-return", intake_contract)
         for candidate in expected:
             with self.subTest(candidate=candidate):
                 self.assertIn(candidate, intake_contract)

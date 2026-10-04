@@ -1,0 +1,19 @@
+# Codex per-skill configuration.
+#
+# Codex indexes only name/description/path up front and loads the full SKILL.md
+# when it selects a skill; it does NOT honor the Claude frontmatter keys
+# (disable-model-invocation, user-invocable, allowed-tools), so this openai.yaml
+# policy governs implicit invocation.
+#
+# nl-tax-vat-adjustments is an INTERNAL helper, invoked only as a sub-step by
+# nl-tax-vat-return or nl-tax-vat-correction — not a standalone user workflow.
+# Disabling implicit invocation keeps Codex from routing a user prompt straight
+# to it and bypassing the owning VAT workflow. It has no default_prompt, so no
+# starter prompt invites standalone use. Explicit `$nl-tax-vat-adjustments`
+# invocation still works.
+interface:
+  display_name: "Dutch VAT Adjustments Helper"
+  short_description: "Internal VAT adjustment helper for the owning VAT workflow."
+
+policy:
+  allow_implicit_invocation: false

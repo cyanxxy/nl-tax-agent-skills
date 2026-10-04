@@ -26,6 +26,37 @@
 
 rules_version: "1.0"
 
+# VAT identifier/reconciliation policy is shared by the agent and repo grader.
+# This records form shape and checks, not tax rates or eligibility decisions.
+vat:
+  workflows: [vat_return, vat_correction]
+  tax_years: [2025, 2026]
+  period_pattern: '^(?:Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$'
+  liability_rubrics: [1a, 1b, 1c, 1d, 2a, 4a, 4b]
+  turnover_rubrics: [1a, 1b, 1c, 1d, 1e, 2a, 3a, 3b, 3c, 4a, 4b]
+  liability_total_id: vat.5a.vat
+  input_total_id: vat.5b.vat
+  balance_id: vat.total.balance
+  previous_balance_id: vat.correction.previous_balance
+  correction_delta_id: vat.correction.delta
+  internal_ids: [vat.5a.vat, vat.total.balance, vat.correction.delta]
+  # The suppletie's prior-total field ("Totaalbedrag eerdere btw-aangifte over
+  # dit tijdvak") is a real form entry, so it is not internal; it belongs only
+  # to vat_correction maps.
+  suppletie_entry_ids: [vat.correction.previous_balance]
+  # Every vat_correction map declares its route in exactly one notes line,
+  # "vat_correction_route: <route>". Only the suppletie route maps the
+  # suppletie_entry_ids; the small next-return route puts the correction in
+  # the next return's normal rubrics and maps no previous_balance row.
+  correction_route_note_prefix: 'vat_correction_route:'
+  correction_routes: [suppletie, next_return, letter, human_review]
+  suppletie_route: suppletie
+  source_review_blocker: VAT source-content review
+  require_whole_euro_values: true
+  require_source_review_for_review_ready: true
+  coverage_states: [applicable_mapped, not_applicable_sourced, unresolved]
+  coverage_note_prefix: 'vat_rubric_coverage:'
+
 # --------------------------------------------------------------------------
 # Identifiers that carry special meaning
 # --------------------------------------------------------------------------

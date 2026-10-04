@@ -74,8 +74,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
   bd_deduction_rate_cap_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_deduction_rate_cap_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
   bd_fisin_2025_index:
@@ -86,20 +86,20 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
   bd_fisin_lijfrente_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_fisin_lijfrente_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/uitgaven_voor_inkomensvoorzieningen
   bd_fisin_studiekosten_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_fisin_studiekosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_studiekosten
   bd_fisin_zorgkosten_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_fisin_zorgkosten_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_specifieke_zorgkosten
   bd_general_tax_credit_2025:
@@ -110,8 +110,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2025
   bd_giften_aftrek_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_giften_aftrek_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/aftrekposten/persoonsgebonden-aftrek/giften_aan_goede_doelen/hoeveel_aftrek_krijg_u/
   bd_heffingskortingen_aow_2025_2026:
@@ -164,8 +164,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
   bd_partneralimentatie_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_partneralimentatie_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/alimentatie/alimentatie_betalen_voor_uw_ex_partner/alimentatie_betalen_voor_uw_ex_partner
   bd_stock_options_2025:
@@ -182,8 +182,8 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/heffingskortingen-laten-uitbetalen
   bd_vervoerskosten_ziekte_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_vervoerskosten_ziekte_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/vervoerskosten-ziekte-invaliditeit-aftrekken
   bd_verzuimboete:
@@ -200,7 +200,7 @@ sources:
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/eigen_woning_en_restschuld_vroegere
   bd_zorgkosten_overzicht_2025:
     review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-07-16T08:42:33.473452+00:00'
-    reviewed_note_hash_sha256: 260bc1f99668a2a9d32e0217c0d0fcb2749ad9641325e4024ff090235cd87fcd
+    reviewed_note_hash_recorded_at: '2026-10-01T10:46:08.596590+00:00'
+    reviewed_note_hash_sha256: ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc
     source_id: bd_zorgkosten_overzicht_2025
     source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/overzicht-zorgkosten-2025

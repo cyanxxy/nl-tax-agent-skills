@@ -1,0 +1,210 @@
+metadata_version: '1.1'
+sources:
+  bd_vat_corrections:
+    source_id: bd_vat_corrections
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/aangifte_corrigeren/aangifte_corrigeren
+    review_status: needs_review
+    reviewed_note_hash_sha256: 02a8a3cc6c80c878eff5e85406fdbfdaf9eae045a1c742b1dd03d130e08d2e5e
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_suppletie_explanation:
+    source_id: bd_vat_suppletie_explanation
+    source_url: https://download.belastingdienst.nl/belastingdienst/docs/toelichting_suppletie_btw_ob1431t21pl.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: 02a8a3cc6c80c878eff5e85406fdbfdaf9eae045a1c742b1dd03d130e08d2e5e
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_invoice_basis:
+    source_id: bd_vat_invoice_basis
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/bereken_het_bedrag/hoe_berekent_u_het_btw_bedrag/factuurstelsel
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_cash_basis:
+    source_id: bd_vat_cash_basis
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/bereken_het_bedrag/hoe_berekent_u_het_btw_bedrag/kasstelsel/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_cash_basis_eligibility:
+    source_id: bd_vat_cash_basis_eligibility
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/bereken_het_bedrag/hoe_berekent_u_het_btw_bedrag/kasstelsel/voor_wie_geldt_het_kasstelsel
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_input_conditions:
+    source_id: bd_vat_input_conditions
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/welke_btw_is_aftrekbaar/welke_btw_mag_u_aftrekken
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_invoice_requirements:
+    source_id: bd_vat_invoice_requirements
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/facturen_maken/factuureisen/factuureisen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_non_deductible:
+    source_id: bd_vat_non_deductible
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/welke_btw_is_aftrekbaar/welke_btw_mag_u_niet_aftrekken
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_eu_supply_timing:
+    source_id: bd_vat_eu_supply_timing
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_afnemen_uit_andere_eu_landen/aangifte_doen/factuurdatum_of_leverdatum/aangifte_doen_factuurdatum_of_leverdatum
+    review_status: needs_review
+    reviewed_note_hash_sha256: 0ae14ea6292f0bb8963a3f3ba7e20076a4b52807d0ad7615dd3af3fad329b147
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_kor:
+    source_id: bd_vat_kor
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/kleineondernemersregeling
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_kor_effects:
+    source_id: bd_vat_kor_effects
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/wat-betekent-meedoen-met-de-kleineondernemersregeling/wat-betekent-meedoen-met-de-kleineondernemersregeling
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_icp:
+    source_id: bd_vat_icp
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/opgaaf_icp
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_private_use:
+    source_id: bd_vat_private_use
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/privegebruik/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_logies_2026:
+    source_id: bd_vat_logies_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-logies
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_return_walkthrough:
+    source_id: bd_vat_return_walkthrough
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/ik-moet-btw-aangifte-doen-hoe-vul-ik-die-in
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_rubric_structure:
+    source_id: bd_vat_rubric_structure
+    source_url: https://stichtingenvereniging.belastingdienst.nl/aangifte/aangifte-omzetbelasting/invullen-rubrieken/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_return_obligation:
+    source_id: bd_vat_return_obligation
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/moet-ik-altijd-btw-aangifte-doen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_return_deadlines:
+    source_id: bd_vat_return_deadlines
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/uiterste-aangifte-en-betaaldatums
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_rounding:
+    source_id: bd_vat_rounding
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/facturen_maken/btw-bedrag_afronden
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_domestic_reverse_charge:
+    source_id: bd_vat_domestic_reverse_charge
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/welke_btw_is_aftrekbaar/verlegde_btw_aftrekken
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_eu_acquisitions:
+    source_id: bd_vat_eu_acquisitions
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_afnemen_uit_andere_eu_landen/aangifte_doen/aangifte-doen-van-goederen-en-diensten-uit-andere-eu-landen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_non_eu_services:
+    source_id: bd_vat_non_eu_services
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/zakendoen_buiten_de_eu/aangifte_doen_als_u_zakendoet_buiten_de_eu/aangifte_doen_als_u_diensten_afneemt_van_leveranciers_uit_niet_eu_landen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_kor_conditions:
+    source_id: bd_vat_kor_conditions
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/kor-voorwaarden
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_kor_withdrawal:
+    source_id: bd_vat_kor_withdrawal
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/afmelden-kor
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_zakelijk_login_machtigen:
+    source_id: bd_zakelijk_login_machtigen
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/home/content/hulp-inloggen-belastingdienst-zakelijk
+    review_status: needs_review
+    reviewed_note_hash_sha256: 850027331a8d0f5f0645a3e82a6c8995a3d908de10df209bd7a6d530ebde5316
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  law_wet_ob_1968:
+    source_id: law_wet_ob_1968
+    source_url: https://wetten.overheid.nl/BWBR0002629/2026-01-01
+    review_status: needs_review
+    reviewed_note_hash_sha256: 72b766752e8b8c682e313d0bc70ad83cdb9edc761707b82103b2e03b433bd0c7
+    reviewed_note_hash_recorded_at: '2026-10-02T20:46:29.142001+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.

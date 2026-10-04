@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch ICP Declaration"
+  short_description: "Draft opgaaf ICP with VAT rubric 3b reconciliation"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare a draft opgaaf ICP for one confirmed 2025 or 2026 period."
+
+policy:
+  allow_implicit_invocation: true

@@ -1407,8 +1407,8 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         names = [skill_frontmatter(path.parent.name)["name"] for path in skill_paths]
 
         # 0.4: eleven skills plus the hidden nl-tax-shared-resources package.
-        self.assertEqual(len(names), 12)
-        self.assertEqual(len(set(names)), 12)
+        self.assertEqual(len(names), 19)
+        self.assertEqual(len(set(names)), 19)
         self.assertEqual(
             set(names),
             {
@@ -1424,18 +1424,25 @@ class PolicyAndFieldMapTests(unittest.TestCase):
                 "nl-tax-shared-resources",
                 "nl-tax-submit-companion",
                 "nl-tax-winst",
+                "nl-tax-vat-return",
+                "nl-tax-vat-correction",
+                "nl-tax-vat-adjustments",
+    "nl-tax-annual-return-2026",
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-international-return",
             },
         )
 
     def test_public_skills_retain_exact_argument_hints(self):
         expected = {
             "nl-tax-annual-return": "[2025] [confirm]",
-            "nl-tax-field-mapper": "[annual|provisional] [year]",
-            "nl-tax-intake": "[annual|request|change|review|stopzetten]",
+            "nl-tax-field-mapper": "[annual|provisional|vat|vat-correction|icp|oss|international] [year] [period|form]",
+            "nl-tax-intake": "[annual|international|request|change|review|stopzetten|vat|vat-correction|icp|oss]",
             "nl-tax-provisional-assessment": (
                 "[2026] [request|change|review|stopzetten|confirm]"
             ),
-            "nl-tax-submit-companion": "[annual|provisional] [2025|2026]",
+            "nl-tax-submit-companion": "[annual|provisional|international|vat|vat-correction|icp|oss] [2025|2026] [identity]",
         }
 
         actual = {
@@ -1922,6 +1929,121 @@ class PolicyAndFieldMapTests(unittest.TestCase):
         errors, _ = self.validator.validate(data)
         self.assertTrue(
             any("requires entry in missing_fields" in e for e in errors)
+        )
+
+
+def _field_map_grader():
+    return load_module(
+        "../../tools/nl_tax_agent_skills/field_mapper/validate_field_map.py",
+        "field_map_grader_identity_tests",
+    )
+
+
+def _samples():
+    spec = importlib.util.spec_from_file_location(
+        "workpack_samples_for_field_map_identity",
+        pathlib.Path(__file__).resolve().parent / "workpack_samples.py",
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _vat_map(workflow="vat_return", notes=()):
+    values = {
+        "vat.1a.turnover": 10000, "vat.1a.vat": 2100, "vat.1b.vat": 0, "vat.1c.vat": 0,
+        "vat.1d.vat": 0, "vat.2a.vat": 0, "vat.4a.vat": 0, "vat.4b.turnover": 1000,
+        "vat.4b.vat": 210, "vat.5a.vat": 2310, "vat.5b.vat": 735, "vat.total.balance": 1575,
+    }
+    internal = {"vat.5a.vat", "vat.total.balance"}
+    return {
+        "field_map_version": "1.1", "workflow": workflow, "tax_year": 2026, "period": "Q3",
+        "created_at": "2026-10-02T08:00:00Z", "updated_at": "2026-10-02T08:00:00Z",
+        "readiness": "draft", "check_performed_by": "checked_by_agent", "missing_fields": [],
+        "user_chat_values_index": [], "notes": list(notes),
+        "fields": [
+            {"field_id": fid, "label": fid, "value": amount,
+             "entry_mode": "internal_routing" if fid in internal else "manual_entry",
+             "source": {"type": "evidence", "evidence_id": "ev_001"},
+             "confidence": 0.9, "manual_review_required": True, "notes": []}
+            for fid, amount in values.items()
+        ],
+    }
+
+
+class FieldMapIdentityAndYearTests(unittest.TestCase):
+    """PYT-09, PYT-10 and PYT-12 regressions in the repository field-map grader."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.grader = _field_map_grader()
+        cls.samples = _samples()
+
+    def test_annual_2025_map_mislabelled_2026_names_the_year_slip(self):
+        data = dict(self.samples.ANNUAL_FIELD_MAP, tax_year=2026)
+        errors, _ = self.grader.validate(data)
+        self.assertTrue(
+            any(
+                "annual_return tax_year 2026 map uses annual 2025 field ids box1.loon, box1.loonheffing"
+                in error and "check tax_year" in error
+                for error in errors
+            ),
+            errors,
+        )
+        # The per-field errors stay, so nothing is hidden.
+        self.assertTrue(any("annual_2026: unsupported field_id box1.loon" in e for e in errors), errors)
+        # A real annual 2026 map with annual2026. ids never gets the year-slip error.
+        real = dict(self.samples.ANNUAL_FIELD_MAP, tax_year=2026, fields=[{
+            "field_id": "annual2026.box1.wage", "label": "wage", "value": 100,
+            "entry_mode": "internal_routing", "source": {"type": "evidence", "evidence_id": "ev_001"},
+            "confidence": 0.9, "manual_review_required": True, "notes": [],
+        }])
+        errors, _ = self.grader.validate(real)
+        self.assertFalse(any("year slip" in e or "uses annual 2025 field ids" in e for e in errors), errors)
+
+    def test_identity_keys_belong_only_to_their_workflows(self):
+        annual = dict(self.samples.ANNUAL_FIELD_MAP, period="Q3", scheme="union", return_form="migration")
+        errors, warnings = self.grader.validate(annual)
+        for key in ("period", "scheme", "return_form"):
+            with self.subTest(key=key):
+                self.assertIn(f"annual_return map must not carry identity key {key}", errors)
+        self.assertFalse(any("Unknown top-level key" in warning for warning in warnings), warnings)
+
+        provisional = dict(self.samples.PROVISIONAL_FIELD_MAP, period="Q1")
+        self.assertIn(
+            "provisional_assessment map must not carry identity key period",
+            self.grader.validate(provisional)[0],
+        )
+
+        vat = dict(_vat_map(), scheme="ioss", return_form="nonresident")
+        errors, _ = self.grader.validate(vat)
+        self.assertIn("vat_return map must not carry identity key scheme", errors)
+        self.assertIn("vat_return map must not carry identity key return_form", errors)
+        errors, warnings = self.grader.validate(_vat_map())
+        self.assertFalse(any("identity key" in error for error in errors), errors)
+        self.assertFalse(any("Unknown top-level key" in warning for warning in warnings), warnings)
+
+    def test_vat_coverage_notes_are_cross_checked_against_mapped_rows(self):
+        data = _vat_map(notes=[
+            "vat_rubric_coverage:1e=applicable_mapped; F:ev_001",
+            "vat_rubric_coverage:1a=not_applicable_sourced; F:ev_001",
+        ])
+        readiness = self.grader.assess_readiness(
+            data["fields"], data["missing_fields"], "vat_return", 2026, notes=data["notes"]
+        )
+        blockers = " | ".join(readiness["blockers"])
+        self.assertIn("applicable_mapped has no mapped field: 1e", blockers)
+        self.assertIn("not_applicable_sourced also has a mapped field: 1a", blockers)
+        self.assertFalse(readiness["ready"])
+
+    def test_vat_coverage_needs_leading_provenance(self):
+        data = _vat_map(notes=["vat_rubric_coverage:1e=not_applicable_sourced; TODO: U: ask user"])
+        readiness = self.grader.assess_readiness(
+            data["fields"], data["missing_fields"], "vat_return", 2026, notes=data["notes"]
+        )
+        self.assertTrue(
+            any("inapplicable rubric has no provenance: 1e" in blocker for blocker in readiness["blockers"]),
+            readiness["blockers"],
         )
 
 

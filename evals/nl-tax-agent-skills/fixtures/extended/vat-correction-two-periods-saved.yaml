@@ -1,0 +1,117 @@
+fixture_id: eval_vat_correction_two_periods_saved
+fixture_version: '1.0'
+scenario: Two filed quarterly btw-aangiften corrected separately, each saved in its own consented workpack
+workflow: vat_correction_2026_Q1
+tax_year: 2026
+user_input: 'I filed my Q1 2026 and Q2 2026 btw-aangiften on time; I am a quarterly filer with a
+  Netherlands eenmanszaak, not in the KOR. On 21 September 2026 my bookkeeper found two errors. In Q1
+  2026 I left out a domestic sales invoice of EUR 3,000 excluding VAT at 21%. In Q2 2026 I deducted
+  EUR 1,450 input VAT on a laptop that I bought for private use. Please help me correct both and keep
+  a saved workpack for each so I can continue tomorrow. Can you put both into one correction, since
+  the total is what matters?'
+conversation:
+- turn: 1
+  assistant_offers_save_at: workflow_start
+  user: Yes, save a workpack for each period.
+  expected: one yes/no save question in its own reply; after the yes, each original period gets its
+    own file at its exact period path, never one combined file
+- turn: 2
+  user: The Q1 return showed EUR 24,000 in 1a with EUR 5,040 VAT and EUR 1,200 in 5b. The Q2 return
+    showed EUR 26,000 in 1a with EUR 5,460 VAT and EUR 2,650 in 5b.
+  expected: record the original filed figures with U provenance in the matching period's workpack and
+    update that file in place
+- turn: 3
+  user: I will confirm the corrected figures with my bookkeeper tomorrow; let us pause here.
+  expected: pause without final generation; Field map summary and Appendix B stay not yet mapped and
+    the Manual-entry checklist reads not requested in both files
+scenario_facts:
+  discovery_date: '2026-09-21'
+  q1_2026:
+    original_1a_turnover: 24000
+    original_1a_vat: 5040
+    original_5b: 1200
+    original_balance: 3840
+    corrected_1a_turnover: 27000
+    corrected_1a_vat: 5670
+    corrected_balance: 4470
+    vat_delta: 630
+    route_per_corrections_note: small correction in the next (eerstvolgende) VAT return after
+      discovery, which is the Q3 2026 return
+  q2_2026:
+    original_1a_turnover: 26000
+    original_1a_vat: 5460
+    original_5b: 2650
+    original_balance: 2810
+    corrected_5b: 1200
+    corrected_balance: 4260
+    vat_delta: 1450
+    route_per_corrections_note: suppletie with corrected full totals, sent as soon as possible and in
+      any case within eight weeks of discovery
+    original_deadline_passed_on_correction_date: true
+  combined_delta_that_must_not_be_used: 2080
+saving:
+  vat_correction_2026_Q1:
+    consent: given
+    at: workflow_start
+  vat_correction_2026_Q2:
+    consent: given
+    at: workflow_start
+expected_outputs:
+  files_created:
+  - workspace/nl-tax-vat-correction-2026-Q1-workpack.md
+  - workspace/nl-tax-vat-correction-2026-Q2-workpack.md
+  files_not_created:
+  - workspace/nl-tax-vat-correction-2026-Y-workpack.md
+  - workspace/nl-tax-vat-2026-Q3-workpack.md
+  - workspace/nl-tax-annual-2025-workpack.md
+  - workspace/nl-tax-provisional-2026-workpack.md
+expected_resume_records:
+- workflow: vat_correction_2026_Q1
+  tax_year: 2026
+  period: Q1
+  save_consent: given
+  readiness: draft
+  generation_confirmed: false
+  queued_workflow: null
+  sections:
+    vat_scope: complete
+    vat_original: in_progress
+    confirm: not_started
+- workflow: vat_correction_2026_Q2
+  tax_year: 2026
+  period: Q2
+  save_consent: given
+  readiness: draft
+  generation_confirmed: false
+  queued_workflow: null
+  sections:
+    vat_scope: complete
+    vat_original: in_progress
+    confirm: not_started
+expected_behavior:
+- The nl-tax-vat-correction owner prepares one workpack per original filed period. It never batches
+  Q1 and Q2 into one correction, never records them under the Y token (Y means only an annual
+  assigned filing period), and does not prepare a whole-year suppletie; it may mention that official
+  option as a human-review route.
+- After the taxpayer's yes, it writes workspace/nl-tax-vat-correction-2026-Q1-workpack.md and
+  workspace/nl-tax-vat-correction-2026-Q2-workpack.md with save_consent given, each with its own
+  Appendix A workflow (vat_correction_2026_Q1 or vat_correction_2026_Q2), tax_year 2026 and matching
+  period; neither file names the other, and later facts update the matching file in place.
+- The small-correction threshold from knowledge/vat/corrections.md is screened separately for each
+  original period. The Q1 VAT delta of EUR 630 is at or below the threshold, so its route is the next
+  (eerstvolgende) VAT return after discovery; the Q2 delta of EUR 1,450 is above it, so its route is a
+  suppletie with corrected full rubric totals, sent within eight weeks of the 21 September 2026
+  discovery. The combined EUR 2,080 is never used to choose a route.
+- The Q1 small-correction components are recorded for the Q3 2026 return without creating or changing
+  a Q3 2026 VAT return workpack.
+- The Q2 original deadline had passed on the correction date, so the human awaits the
+  naheffingsaanslag and pays with its own details; no payment reference is invented.
+- Original filed totals, corrected full totals and the signed VAT delta stay separate with
+  provenance; nothing missing is treated as zero.
+- Both workpacks stay draft because the VAT knowledge notes are needs_review; no manual-entry
+  checklist is written. The human performs every authenticated action in Mijn Belastingdienst
+  Zakelijk personally.
+acceptance_criteria:
+- Exactly two files exist under workspace/, one per original period, at the exact period paths.
+- Appendix A in each file records save_consent given, readiness draft and its own period identity.
+- Each period's threshold screen uses only that period's VAT delta.

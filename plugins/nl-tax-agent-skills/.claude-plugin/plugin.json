@@ -1,17 +1,20 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "nl-tax-agent-skills",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "displayName": "NL Tax Agent Skills",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills",
   "repository": "https://github.com/cyanxxy/nl-tax-agent-skills",
   "author": {
-    "name": "Tax Skill Developers",
+    "name": "Mansour Damanpak",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
   "license": "Apache-2.0",
   "privacyPolicyUrl": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
+  "supportUrl": "https://github.com/cyanxxy/nl-tax-agent-skills/issues",
+  "documentationUrl": "https://github.com/cyanxxy/nl-tax-agent-skills#readme",
   "keywords": [
     "tax",
     "dutch-tax",
@@ -19,6 +22,16 @@
     "workpacks",
     "voorlopige-aanslag",
     "zzp",
-    "winst-uit-onderneming"
+    "winst-uit-onderneming",
+    "btw",
+    "vat-return",
+    "suppletie",
+    "icp",
+    "oss",
+    "ioss",
+    "vat-adjustments",
+    "migration",
+    "nonresident",
+    "annual-2026"
   ]
 }

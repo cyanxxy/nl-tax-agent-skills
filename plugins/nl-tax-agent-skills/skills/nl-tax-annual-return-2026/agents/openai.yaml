@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch Annual Tax Workpack 2026"
+  short_description: "Collect draft 2026 annual income-tax evidence."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Start collecting evidence for my draft 2026 Dutch annual income-tax workpack."
+
+policy:
+  allow_implicit_invocation: true

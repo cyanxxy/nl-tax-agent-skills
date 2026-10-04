@@ -39,6 +39,7 @@ Exit codes:
 """
 
 import math
+import importlib.util
 import os
 import re
 import sys
@@ -67,7 +68,27 @@ REFERENCE_DIR = (
 SUPPORTED_WORKFLOW_YEARS = {
     ("annual_return", 2025): REFERENCE_DIR / "annual-field-map.md",
     ("provisional_assessment", 2026): REFERENCE_DIR / "provisional-field-map.md",
+    ("vat_return", 2025): REFERENCE_DIR / "vat-field-map.md",
+    ("vat_return", 2026): REFERENCE_DIR / "vat-field-map.md",
+    ("vat_correction", 2025): REFERENCE_DIR / "vat-field-map.md",
+    ("vat_correction", 2026): REFERENCE_DIR / "vat-field-map.md",
 }
+_VAT_SPEC = importlib.util.spec_from_file_location(
+    "_nl_tax_vat_for_field_map", _REPO_ROOT / "tools/nl_tax_agent_skills/vat/validate_vat.py"
+)
+_VAT = importlib.util.module_from_spec(_VAT_SPEC)
+_VAT_SPEC.loader.exec_module(_VAT)
+_EXT_SPEC = importlib.util.spec_from_file_location(
+    "_nl_tax_extended_for_field_map", _REPO_ROOT / "tools/nl_tax_agent_skills/extended/validate_extended.py"
+)
+_EXT = importlib.util.module_from_spec(_EXT_SPEC)
+_EXT_SPEC.loader.exec_module(_EXT)
+for _kind, _scope in _EXT.SCOPES.items():
+    for _year in _scope["tax_years"]:
+        SUPPORTED_WORKFLOW_YEARS[(_scope["map_workflow"], _year)] = REFERENCE_DIR / {
+            "annual_2026": "annual-2026-field-map.md", "international": "international-field-map.md",
+            "icp": "cross-border-field-map.md", "oss": "cross-border-field-map.md",
+        }[_kind]
 VALID_WORKFLOWS = {workflow for workflow, _ in SUPPORTED_WORKFLOW_YEARS}
 # BSN/IBAN are portal-prefilled identifiers the taxpayer confirms in the portal,
 # so a field map intentionally omits them; they must not count against readiness
@@ -258,6 +279,18 @@ KNOWN_TOP_LEVEL_KEYS = {
     "fields", "missing_fields", "user_chat_values_index", "notes", "readiness",
     "check_performed_by",
 }
+# Identity keys belong only to the map workflows whose workpack identity carries
+# them (Appendix A ``period``/``scheme``/``return_form``). Annual 2025, annual
+# 2026 and provisional maps carry none; a stray key is an error, never a silent
+# cross-workflow identity.
+IDENTITY_KEYS_BY_WORKFLOW = {
+    "vat_return": {"period"},
+    "vat_correction": {"period"},
+    "icp_declaration": {"period"},
+    "oss_return": {"period", "scheme"},
+    "international_return": {"return_form"},
+}
+IDENTITY_KEYS = ("period", "scheme", "return_form")
 # Optional top-level readiness self-declaration (ME-30).
 VALID_READINESS_VALUES = {"draft", "review_ready"}
 VALID_CHECK_TRAILS = {"checked_by_script", "checked_by_agent"}
@@ -1099,7 +1132,13 @@ def assess_readiness(fields, missing, workflow, parsed_tax_year, notes=None):
             and rid not in prefilled
         )
 
-    blockers = []
+    blockers = _EXT.review_readiness_blockers({"workflow": workflow, "tax_year": parsed_tax_year}, _REPO_ROOT / "plugins/nl-tax-agent-skills")
+    blockers.extend(_VAT.review_blockers(_REPO_ROOT / "plugins/nl-tax-agent-skills", workflow))
+    if workflow in _VAT.VAT_WORKFLOWS:
+        # Cross-check the coverage declarations against the map's own rows:
+        # an applicable_mapped rubric needs a vat.<rubric>.* row or gap row,
+        # and a not_applicable_sourced rubric must not also be mapped.
+        blockers.extend(_VAT.coverage_blockers(notes, fields, missing))
     if workflow == "annual_return" and parsed_tax_year == 2025:
         has_annual_business = any(
             isinstance(field, dict)
@@ -1181,8 +1220,12 @@ def validate(data):
     if not isinstance(data, dict):
         return (["Field map root must be a mapping"], [])
 
+    allowed_identity = IDENTITY_KEYS_BY_WORKFLOW.get(data.get("workflow"), set())
     for key in data:
-        if key not in KNOWN_TOP_LEVEL_KEYS:
+        if key in IDENTITY_KEYS:
+            if key not in allowed_identity:
+                errors.append(f"{data.get('workflow')} map must not carry identity key {key}")
+        elif key not in KNOWN_TOP_LEVEL_KEYS:
             warnings.append(f"Unknown top-level key: {key}")
 
     workflow, parsed_tax_year = validate_metadata(data, errors)
@@ -1239,6 +1282,24 @@ def validate(data):
     validate_user_chat_index(data, clean_fields, errors, warnings)
     validate_missing_fields(clean_missing, workflow, errors, warnings)
     validate_top_level_notes(data, workflow, errors)
+    if workflow == "annual_return" and parsed_tax_year == 2026:
+        # annual_return serves annual 2025 and annual 2026, and the map's own
+        # tax_year selects the scope. Name the likely year slip before the
+        # per-field errors so the repair fixes the year, never the field ids.
+        prefix = _EXT.SCOPES["annual_2026"]["field_prefix"]
+        legacy = sorted(
+            field["field_id"]
+            for field in clean_fields
+            if isinstance(field.get("field_id"), str) and not field["field_id"].startswith(prefix)
+        )
+        if legacy:
+            errors.append(
+                "annual_return tax_year 2026 map uses annual 2025 field ids "
+                + ", ".join(legacy[:5])
+                + "; check tax_year — annual 2025 and annual 2026 maps never mix"
+            )
+    errors.extend(_VAT.validate_map(data))
+    errors.extend(_EXT.validate_map(data))
 
     readiness = assess_readiness(
         clean_fields, clean_missing, workflow, parsed_tax_year,

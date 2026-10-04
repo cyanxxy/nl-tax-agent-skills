@@ -1,0 +1,228 @@
+{
+  "date": "2026-10-01",
+  "reviewer": "Codex (AI-assisted comparison; not human attestation)",
+  "status": "human_approved",
+  "scope": "Comparison of assertions tied to the 20 overdue source entries. This is not a complete re-audit of all 237 sources.",
+  "human_review": {
+    "reviewer": "Mansour Damanpak",
+    "date": "2026-10-01",
+    "decision": "approved",
+    "evidence": "User explicitly replied: I reviewed and approve, in response to the source-findings and deductions.md correction review request."
+  },
+  "entries": [
+    {
+      "source_id": "bd_annual_return_4_steps_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Four manual filing stages and prefill verification remain supported. Portal actions remain human-only.",
+      "human_attestation_pending": false,
+      "note_sha256": "4f1f75ae3aa20a66366d85dfa756bea45fcc1d81cb372fbf2288a3a1cc34d993",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_annual_data_checklist_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2025 evidence categories and the WOZ valuation date of 1 January 2024 match the relevant checklist content.",
+      "human_attestation_pending": false,
+      "note_sha256": "bc96642eadc967065e0538c1c354466c7422b1dbc251b9c2707fe59484ea65e5",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fisin_2025_index",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "The page remains the official tax-year-2025 doctrine index. No year substitution was found.",
+      "human_attestation_pending": false,
+      "note_sha256": "4f1f75ae3aa20a66366d85dfa756bea45fcc1d81cb372fbf2288a3a1cc34d993",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_annual_deadline_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "The applicable filing deadline is the date in the invitation letter; 1 May is common, not universal.",
+      "human_attestation_pending": false,
+      "note_sha256": "4f1f75ae3aa20a66366d85dfa756bea45fcc1d81cb372fbf2288a3a1cc34d993",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_annual_extension_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "The ordinary extension window has closed. Other invitation dates use the form route before the stated deadline.",
+      "human_attestation_pending": false,
+      "note_sha256": "4f1f75ae3aa20a66366d85dfa756bea45fcc1d81cb372fbf2288a3a1cc34d993",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_tax_credit_payout_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/heffingskortingen-laten-uitbetalen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2025 maximum general-credit payout of EUR 3,068 for a qualifying lower-earning partner born before 1963 matches.",
+      "human_attestation_pending": false,
+      "note_sha256": "8e144991b1bdd6ab5b0ca9ce819b99250bfefc238cc66d2c465236008ed0959a",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_heffingskortingen_how_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/hoe_werken_heffingskortingen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Credits reduce combined income tax and national-insurance premiums, matching the local note.",
+      "human_attestation_pending": false,
+      "note_sha256": "8e144991b1bdd6ab5b0ca9ce819b99250bfefc238cc66d2c465236008ed0959a",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_arbeidsinkomen_definition_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/inkomen_uit_werk",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/credits.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "The local note retains the employment-condition distinction for sickness benefits and the voluntary-insurance exception.",
+      "human_attestation_pending": false,
+      "note_sha256": "8e144991b1bdd6ab5b0ca9ce819b99250bfefc238cc66d2c465236008ed0959a",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_deduction_rate_cap_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "CORRECTED: the EUR 76,817 threshold tests Box 1 income before deductions, not aggregate verzamelinkomen. Human approval received for the prepared correction.",
+      "human_attestation_pending": false,
+      "note_sha256": "ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_eigenwoningforfait_multiple_homes",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/own-home/eigenwoningforfait.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Moving-year main-home periods and zero-forfait exceptions match the relevant application notes.",
+      "human_attestation_pending": false,
+      "note_sha256": "944a8e93fbbb4c2a8e8bb03de4a96ed8400c026efca40176d94bfb78ce6cf1c7",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_giften_aftrek_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/aftrekposten/persoonsgebonden-aftrek/giften_aan_goede_doelen/hoeveel_aftrek_krijg_u/",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Periodic gifts: EUR 1.5 million limit; ordinary gifts: 1% threshold/minimum EUR 60 and 10% cap; cultural uplift matches. Confirmed directly in the live browser on 2026-10-01.",
+      "human_attestation_pending": false,
+      "note_sha256": "ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_zorgkosten_overzicht_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/overzicht-zorgkosten-2025",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Expense exclusions and conditional classification match the relevant inventory; this page alone does not verify the detailed threshold table supported by separate sources.",
+      "human_attestation_pending": false,
+      "note_sha256": "ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fiscal_partnership",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "The relevant partner-status, whole-year election, and allocation categories match. Complex cases remain manual review.",
+      "human_attestation_pending": false,
+      "note_sha256": "1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fiscal_partner_death_return",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Choice between partnership until death and whole-year treatment, affecting both returns, matches.",
+      "human_attestation_pending": false,
+      "note_sha256": "1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fiscal_partner_separation",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Marriage/registered-partnership termination needs both a formal request and different registered addresses; cohabitation ends on different addresses.",
+      "human_attestation_pending": false,
+      "note_sha256": "1f17b74d08ee86f6cc21577b41862a5c0ca1d9444d529c2be47b6c4fd7f7cc06",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_box2_income_ab_guidance",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/box2/box2-income-guidance.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "Separate dividend and disposal benefits, withholding credit, and net disposal price match.",
+      "human_attestation_pending": false,
+      "note_sha256": "01d3f0aa91bd32a067d4dd5e899fb7c7d6cbef258ef7ca5acee4046aeca5a349",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fisin_aanmerkelijk_belang_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aanmerkelijk_belang",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/box2/fisin-aanmerkelijk-belang.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2025 substantial-interest threshold, full-year allocation, and EUR 500,000 own-company borrowing review flag match.",
+      "human_attestation_pending": false,
+      "note_sha256": "c0476418f71a187e7cb56654275dea71033948450c135ddad9a6ab0ffc80649e",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fisin_aanmerkelijk_belang_2026",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2026/provisional/fisin-aanmerkelijk-belang.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2026 Box 2 rates (24.5% to EUR 68,843; then 31%), withholding, and borrowing threshold adjustments match.",
+      "human_attestation_pending": false,
+      "note_sha256": "da0dc951a0d73e247a106c37a642f63cbe0e7008af7ac952035e66ec73ed7ae8",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_box3_2025_calc",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2025 percentages (1.37%, 5.88%, 2.70%), 36% tax, and six-stage calculation match the relevant note.",
+      "human_attestation_pending": false,
+      "note_sha256": "215ba1751da00d58e53fd39e45ae43bf168e471340ddba7b1d19c484f9868831",
+      "human_last_checked": "2026-10-01"
+    },
+    {
+      "source_id": "bd_fisin_box3_assets_debts_2025",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/bezittingen_en_schulden_box_3_",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md",
+      "previous_human_last_checked": "2026-07-02",
+      "comparison": "2025 allowances, debt thresholds, cash exemption, and debt-category exclusions match the relevant note.",
+      "human_attestation_pending": false,
+      "note_sha256": "215ba1751da00d58e53fd39e45ae43bf168e471340ddba7b1d19c484f9868831",
+      "human_last_checked": "2026-10-01"
+    }
+  ],
+  "metadata_hash_restamps": [
+    {
+      "source_ids": [
+        "bd_fisin_lijfrente_2025",
+        "bd_fisin_studiekosten_2025",
+        "bd_fisin_zorgkosten_2025",
+        "bd_partneralimentatie_2025",
+        "bd_vervoerskosten_ziekte_2025"
+      ],
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md",
+      "note_sha256": "ec0632b40bcb12bbaa9746ae40584d33b34e8510ec9638be241939cfb36200cc",
+      "reason": "Shared-note hash update after the approved deduction-rate-cap threshold correction; these sources' own comparisons were not re-performed and their register last_checked is intentionally unchanged."
+    }
+  ]
+}

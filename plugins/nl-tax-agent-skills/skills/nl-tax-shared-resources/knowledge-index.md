@@ -1,6 +1,6 @@
 # Knowledge index
 
-Topic map for the reviewed Dutch income-tax notes bundled with this plugin. Use
+Topic map for the Dutch income-tax and VAT notes bundled with this plugin. Use
 it to pick the one or two notes that answer a rule question, then open only
 those notes. Every note carries its own `source_ids`, `workflow`, `tax_year`,
 and `review_status` header; the note, not this index, is canonical for every
@@ -13,8 +13,14 @@ amount, percentage, threshold, and date.
   `../nl-tax-shared-resources/...` path works from any skill in this plugin.
 - Match the question's **year and workflow first**. Annual 2025 notes answer the
   2025 return (aangifte inkomstenbelasting 2025). Provisional 2026 notes answer
-  the voorlopige aanslag 2026. Never answer a 2026 question from a 2025 note or
-  the reverse; say which year a figure belongs to.
+  the voorlopige aanslag 2026. The annual 2026 note (`years/2026/annual/`)
+  answers the 2026 annual return (aangifte inkomstenbelasting 2026, based on
+  actual figures). Never answer a 2026 question from a 2025 note or the
+  reverse, and never answer an annual 2026 question from a provisional 2026
+  note or the reverse. Clarify annual versus provisional only for an ambiguous
+  2026 income-tax question whose answer depends on that distinction; clear VAT,
+  ICP and OSS questions need no income-tax screening. Say which year a figure
+  belongs to.
 - Then match the **topic** using the key terms column. The terms are the Dutch
   and English words a taxpayer is likely to use.
 - If no row fits, a narrow text search for the Dutch term inside
@@ -22,8 +28,15 @@ amount, percentage, threshold, and date.
   the plugin.
 - To cite a source, read the selected note's `source_ids` and look up only those
   entries in `../nl-tax-shared-resources/source-register.yaml`.
-- Years other than 2025 (annual) and 2026 (provisional) are not covered. Say so
-  instead of answering from model memory.
+- Covered: the reviewed notes for the annual return 2025 and the voorlopige
+  aanslag 2026, and the draft notes (review status `needs_review`) for VAT
+  returns and corrections, VAT adjustments, ICP, OSS/IOSS, the international
+  M and C returns (2025, with 2026 precollection) and the resident annual
+  return 2026. Tax years, taxes and scopes not listed in a section below are
+  not covered. Say so instead of answering from model memory.
+- A draft note supports a rule answer or draft preparation only. Disclose its
+  `needs_review` status, link the official source, and never present it as a
+  reviewed filing position or as ready for filing.
 - Sections headed "Developer instruction" or "Common failure" inside a note are
   guidance for the agent. Apply them; do not quote them to the taxpayer as tax
   rules.
@@ -95,7 +108,21 @@ For request, change, and stopzetten procedures, open the human-subject runtime
 projection listed above, not the raw `request-flow.md`, `change-flow.md`, or
 `stopzetten-flow.md` notes. The raw notes are maintainer provenance.
 
-## Topics that span both years
+## VAT returns and corrections 2025/2026 (draft preparation)
+
+These source summaries were researched on 2 October 2026 and await human
+tax-content review. They support draft preparation only, with no
+`review_ready` label or checklist containing entry amounts. State that review
+status when answering a VAT rule question and link the official source.
+
+| Topic | Key terms | Note |
+|---|---|---|
+| VAT return and rubrics | btw-aangifte, btw, VAT, omzetbelasting, period, deadline, reverse charge, rounding, machtigen, eHerkenning, ketenmachtiging | `../nl-tax-shared-resources/knowledge/vat/return-and-rubrics.md` |
+| Invoice evidence and input VAT | invoice, factuurstelsel, kasstelsel, input VAT, deduction, foreign VAT, call-off, voorraad op afroep | `../nl-tax-shared-resources/knowledge/vat/invoices-and-deduction.md` |
+| KOR and special cases | KOR, kleineondernemersregeling, afmelden, withdrawal, jaaromzet in Nederland, preceding calendar year, exemption, ICP, OSS, private use, logies | `../nl-tax-shared-resources/knowledge/vat/kor-and-special-cases.md` |
+| Corrections and suppletie | correction, suppletie, Totaalbedrag eerdere btw-aangifte, betalingskenmerk, naheffingsaanslag, teruggaafbeschikking, bezwaar, Central Liaison Office, jaarglobalisatie, discovery, corrected totals, eight weeks, whole-year | `../nl-tax-shared-resources/knowledge/vat/corrections.md` |
+
+## Topics that span income-tax years
 
 | Topic | Key terms | Note |
 |---|---|---|
@@ -126,3 +153,50 @@ conversation, provenance, and resume-record contract for workpack preparation.
 `../nl-tax-shared-resources/reference/extraction-boundaries.md` govern how a
 shared document is classified and recorded. None of them answers a tax-rule
 question.
+
+## Extended draft preparation
+
+The notes below cover VAT adjustments, the opgaaf ICP, OSS and IOSS, the
+international M and C returns, and the resident annual income-tax return 2026.
+They summarize public research dated 2 October 2026 and await human
+tax-content review (`needs_review`). Disclose that status in every answer, and
+keep the exact tax year, OSS scheme, and M or C form of the question. The
+source register records the year of each authority, including the
+investment-services and IOSS customs changes that apply only from 2026.
+
+### VAT adjustments 2025/2026 (draft)
+
+| Topic | Key terms | Note |
+|---|---|---|
+| BUA gifts and staff facilities | BUA, relatiegeschenk, personeelsvoorziening, gifts, staff | `../nl-tax-shared-resources/knowledge/vat-adjustments/bua.md` |
+| VAT private use of a business car | private use, business car, woon-werkverkeer, commuting, working days, forfait | `../nl-tax-shared-resources/knowledge/vat-adjustments/car-private-use.md` |
+| Margin goods, individual and global methods, reconciliation | margeregeling, margin, individual, global, jaarsaldo, negative annual balance, vaststelling, KOR | `../nl-tax-shared-resources/knowledge/vat-adjustments/margin.md` |
+| Direct attribution and taxable/exempt pro-rata | pro-rata, direct attribution, exempt, vrijgestelde, VvE, herziening | `../nl-tax-shared-resources/knowledge/vat-adjustments/mixed-deduction.md` |
+| VAT business/private use beyond cars | private use, withdrawal, gratis, computer, gift, staff, property | `../nl-tax-shared-resources/knowledge/vat-adjustments/private-use.md` |
+| Property VAT classification and bounded adjustment support | onroerend, verhuur, levering, property, rental, option | `../nl-tax-shared-resources/knowledge/vat-adjustments/property.md` |
+| VAT revision of capital goods and investment services | herziening, investeringsgoed, investeringsdienst, revision, capital goods, doorlevering, Uitvoeringsbeschikking omzetbelasting 1968, KOR, VvE, onroerende | `../nl-tax-shared-resources/knowledge/vat-adjustments/revision.md` |
+
+### ICP and OSS 2025/2026 (draft)
+
+| Topic | Key terms | Note |
+|---|---|---|
+| Opgaaf ICP: period, transactions and reconciliation | opgaaf ICP, ICP, intracommunautaire prestaties, voorraad op afroep, call-off, nieuw vervoermiddel, rubric 3b, btw-id, triangular | `../nl-tax-shared-resources/knowledge/vat-cross-border/icp.md` |
+| OSS Union, non-Union and IOSS preparation | OSS, IOSS, eenloketsysteem, Unieregeling, niet-Unieregeling, Invoerregeling, btw-melding, ECB, Northern Ireland, distance sales, three years | `../nl-tax-shared-resources/knowledge/vat-cross-border/oss.md` |
+
+### International M and C returns (draft)
+
+| Topic | Key terms | Note |
+|---|---|---|
+| 2025 migration and nonresident return scope | migration, nonresident, M form, m-biljet, c-biljet, emigratie, immigratie, buitenlands belastingplichtige, 30%-regeling, partiële buitenlandse belastingplicht, te conserveren inkomen, conserverende aanslag, revisierente, belastingrente, middenkoers, heffingsvrij vermogen | `../nl-tax-shared-resources/knowledge/international/scope-and-forms-2025.md` |
+| Qualifying nonresident preparation for 2025 | kwalificerend buitenlands belastingplichtige, 90%-eis, inkomensverklaring, qualifying nonresident, C form, arbeidskorting, aftrekposten | `../nl-tax-shared-resources/knowledge/international/qualification-2025.md` |
+| 2026 international precollection | precollection, m-biljet, c-biljet, emigratie, immigratie, 30%-regeling, partiële buitenlandse belastingplicht, provisional, residence | `../nl-tax-shared-resources/knowledge/international/precollection-2026.md` |
+| International insurance and treaty review | treaty, tie-breaker, social insurance, SVB, AOW, residence, emigration | `../nl-tax-shared-resources/knowledge/international/insurance-and-treaty-review.md` |
+
+### Annual return 2026 (aangifte inkomstenbelasting 2026, draft)
+
+This note answers the 2026 annual return, which uses actual 2026 figures. For
+the voorlopige aanslag 2026, use the provisional 2026 notes above.
+
+| Topic | Key terms | Note |
+|---|---|---|
+| Annual income-tax 2026 preparation | annual income-tax 2026 preparation, aangifte inkomstenbelasting 2026, jaaropgaaf, zelfstandigenaftrek, startersaftrek, urencriterium, MKB-winstvrijstelling, MKB exemption, tariefsaanpassing, medegerechtigde, AOW, Box 3, werkelijk rendement, tegenbewijs, actual return, bijtelling eigen gebruik, own use, second home, WOZ, forfait, partial foreign tax liability, 30%-regeling, expat ruling, private movements | `../nl-tax-shared-resources/knowledge/years/2026/annual/preparation.md` |

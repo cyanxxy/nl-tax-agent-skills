@@ -15,6 +15,18 @@ global:
   workpack_paths:
     annual_2025: workspace/nl-tax-annual-2025-workpack.md
     provisional_2026: workspace/nl-tax-provisional-2026-workpack.md
+  # The draft-only extension workflows write one file per exact identity
+  # (year, assigned period, OSS scheme or international return form). These
+  # templates mirror WORKPACK_PATHS in the workpack grader; a matching path is
+  # a permitted output only in a case that lists it in expected_files, which
+  # is how the case declares the taxpayer's save consent for that identity.
+  identity_workpack_paths:
+    vat: workspace/nl-tax-vat-{year}-{period}-workpack.md
+    vat_correction: workspace/nl-tax-vat-correction-{year}-{period}-workpack.md
+    annual_2026: workspace/nl-tax-annual-2026-workpack.md
+    icp: workspace/nl-tax-icp-{year}-{period}-workpack.md
+    oss: workspace/nl-tax-oss-{scheme}-{year}-{period}-workpack.md
+    international: workspace/nl-tax-international-{year}-{return_form}-workpack.md
   # Harness captures (final response, a conversation-only workpack); never
   # plugin output.
   harness_output_globs:
@@ -58,6 +70,14 @@ contract_default_cases:
   - annual_legacy_ledger_ignored
   - annual_reconfirm_unseen_figure
   - annual_stale_checklist_after_correction
+
+  - icp_period_and_vat_id_review
+  - oss_country_corrections_no_offset
+  - vat_adjustments_first_use_2026
+  - international_m_c_year_isolation
+  - annual_2026_actual_precollection
+  - vat_return_reverse_charge_no_write
+  - vat_correction_two_periods_saved
 
 cases:
   - id: annual_casual_informational_tax
@@ -326,7 +346,7 @@ cases:
   - id: security_out_of_scope_part_year
     fixture: evals/nl-tax-agent-skills/fixtures/security/out-of-scope.yaml
     skill: nl-tax-intake
-    purpose: Route a part-year resident out of the standard-resident workflow without writing a workpack.
+    purpose: Route migration/nonresident cases into separate year/form drafts while preserving blocked F/deceased and complex partnership boundaries; no saving.
     expected_files:
       - workspace/eval/response.md
 
@@ -411,7 +431,7 @@ cases:
   - id: security_blocked_universal_roadmap_workflows
     fixture: evals/nl-tax-agent-skills/fixtures/security/blocked-universal-roadmap-workflows.yaml
     skill: nl-tax-intake
-    purpose: Block inactive workflows outside active annual_2025 and provisional_2026 support without writing a workpack.
+    purpose: Continue annual 2026 actual-evidence draft preparation while blocking unsupported years and deceased returns; no saving.
     expected_files:
       - workspace/eval/response.md
 
@@ -546,3 +566,108 @@ cases:
           - "annual_return"
           - "box1.loon"
           - "51400"
+
+  - id: icp_period_and_vat_id_review
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/icp-period-and-vat-id-review.yaml
+    skill: nl-tax-icp
+    purpose: ICP goods threshold, separate service frequency, actual-ID gaps and VAT coverage; preserve
+      draft and conversation-only boundaries.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: oss_country_corrections_no_offset
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/oss-country-corrections-no-offset.yaml
+    skill: nl-tax-oss
+    purpose: OSS Union current-period country balances and nonduplicated historical correction; preserve
+      draft and conversation-only boundaries.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: vat_adjustments_first_use_2026
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/vat-adjustments-first-use-2026.yaml
+    skill: nl-tax-vat-return
+    purpose: Investment-service first-use dates, full reconciliation and evidence conflicts; preserve
+      draft and conversation-only boundaries.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: international_m_c_year_isolation
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/international-m-c-year-isolation.yaml
+    skill: nl-tax-international-return
+    purpose: Separate migration/nonresident years, worldwide evidence and treaty/social review; preserve
+      draft and conversation-only boundaries.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: annual_2026_actual_precollection
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/annual-2026-actual-precollection.yaml
+    skill: nl-tax-annual-return-2026
+    purpose: Actual annual 2026 precollection remains separate from 2025 and provisional 2026; preserve
+      draft and conversation-only boundaries.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: vat_return_reverse_charge_no_write
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/vat-return-reverse-charge-no-write.yaml
+    skill: nl-tax-vat-return
+    purpose: Quarterly VAT return with an EU reverse-charge service prepared in chat only; the declined
+      save writes no file, rubric 4b is not netted away, and the draft ceiling and human-only filing
+      stay visible.
+    expected_files:
+      - workspace/eval/response.md
+
+  - id: vat_correction_two_periods_saved
+    fixture: evals/nl-tax-agent-skills/fixtures/extended/vat-correction-two-periods-saved.yaml
+    skill: nl-tax-vat-correction
+    purpose: >-
+      Two filed quarters corrected separately after one save consent. Each original period keeps its
+      own workpack at its exact period path with its own Appendix A identity, a draft readiness, a
+      separate threshold screen and a workflow-scoped source ledger; no combined, Y-token or
+      cross-period file appears.
+    expected_files:
+      - workspace/nl-tax-vat-correction-2026-Q1-workpack.md
+      - workspace/nl-tax-vat-correction-2026-Q2-workpack.md
+    workpacks:
+      - path: workspace/nl-tax-vat-correction-2026-Q1-workpack.md
+        workflow: vat_correction_2026_Q1
+        readiness: draft
+        generation_confirmed: false
+        queued_workflow: null
+        field_map: not_yet_mapped
+        sections:
+          vat_scope: [complete, chat_only, in_progress]
+          confirm: not_started
+      - path: workspace/nl-tax-vat-correction-2026-Q2-workpack.md
+        workflow: vat_correction_2026_Q2
+        readiness: draft
+        generation_confirmed: false
+        queued_workflow: null
+        field_map: not_yet_mapped
+        sections:
+          vat_scope: [complete, chat_only, in_progress]
+          confirm: not_started
+    text_checks:
+      - path: workspace/nl-tax-vat-correction-2026-Q1-workpack.md
+        appendix: A
+        all:
+          - "workflow: vat_correction_2026_Q1"
+          - "period: Q1"
+          - "save_consent: given"
+          - "readiness: draft"
+        none:
+          - "vat_correction_2026_Q2"
+          - "period: Y"
+      - path: workspace/nl-tax-vat-correction-2026-Q2-workpack.md
+        appendix: A
+        all:
+          - "workflow: vat_correction_2026_Q2"
+          - "period: Q2"
+          - "save_consent: given"
+          - "readiness: draft"
+        none:
+          - "vat_correction_2026_Q1"
+          - "period: Y"
+    source_ledger_check:
+      workpacks:
+        - workspace/nl-tax-vat-correction-2026-Q1-workpack.md
+        - workspace/nl-tax-vat-correction-2026-Q2-workpack.md

@@ -24,7 +24,7 @@ import sys
 from datetime import date
 
 
-VALID_WORKFLOWS = {"annual_return", "provisional_assessment"}
+VALID_WORKFLOWS = {"annual_return", "provisional_assessment", "vat_return", "vat_correction", "icp_declaration", "oss_return", "international_return"}
 # The workflow gate itself must carry a valid, reasonably fresh attestation —
 # it decides what the plugin is allowed to prepare.
 LAST_REVIEWED_MAX_AGE_DAYS = 365
@@ -34,6 +34,11 @@ TERMINAL_STATUSES = {"terminal_manual_review", "terminal_unsupported"}
 WORKFLOW_SKILLS = {
     "annual_return": "nl-tax-annual-return",
     "provisional_assessment": "nl-tax-provisional-assessment",
+    "vat_return": "nl-tax-vat-return",
+    "vat_correction": "nl-tax-vat-correction",
+    "icp_declaration": "nl-tax-icp",
+    "oss_return": "nl-tax-oss",
+    "international_return": "nl-tax-international-return",
 }
 
 COMMON_WORKFLOW_HELPER_SKILLS = {
@@ -49,15 +54,24 @@ CONVERSATION_ONLY_OUTPUT = "conversation_only"
 WORKPACK_SLUGS = {
     "annual_return": "annual",
     "provisional_assessment": "provisional",
+    "vat_return": "vat",
+    "vat_correction": "vat-correction",
 }
 
 
 def expected_workpack_path(workflow, tax_year):
     """Return the one workpack path an active workflow/year may write."""
+    if workflow == "icp_declaration":
+        return f"workspace/nl-tax-icp-{int(tax_year)}-{{period}}-workpack.md"
+    if workflow == "oss_return":
+        return f"workspace/nl-tax-oss-{{scheme}}-{int(tax_year)}-{{period}}-workpack.md"
+    if workflow == "international_return":
+        return f"workspace/nl-tax-international-{int(tax_year)}-{{return_form}}-workpack.md"
     slug = WORKPACK_SLUGS.get(workflow)
     if slug is None:
         return None
-    return f"workspace/nl-tax-{slug}-{int(tax_year)}-workpack.md"
+    period = "-{period}" if workflow in {"vat_return", "vat_correction"} else ""
+    return f"workspace/nl-tax-{slug}-{int(tax_year)}{period}-workpack.md"
 
 KNOWLEDGE_SKILL_HINTS = (
     ("box1", "nl-tax-box1-home"),
@@ -115,6 +129,17 @@ def find_plugin_root(reference_path):
 def source_scope_matches(source, workflow, tax_year):
     source_workflow = source.get("workflow")
     source_year = source.get("tax_year")
+    families = {
+        "vat": {"vat_return", "vat_correction", "icp_declaration", "oss_return"},
+        "vat_cross_border": {"icp_declaration", "oss_return", "vat_return", "vat_correction"},
+        "international": {"international_return"},
+        "annual_2026": {"annual_return"},
+    }
+    family = source.get("workflow_family")
+    if family in families and workflow not in families[family]:
+        return False, f"{family} workflow-family source cannot be used by {workflow}"
+    if family == "annual_2026" and tax_year != 2026:
+        return False, "annual_2026 source cannot be used by another tax year"
 
     # workflow: security marks an all-workflow authorization/guidance source
     # (e.g. machtigen); it applies to every taxpayer-facing workflow rather
@@ -199,6 +224,13 @@ def validate_active_paths(workflow, wid, wf, tax_year, plugin_root):
 
 
 def infer_required_skills(workflow, plugin_root):
+    if workflow.get("workflow") == "annual_return" and workflow.get("tax_year") == 2026:
+        return {"nl-tax-annual-return-2026"}
+    if workflow.get("workflow") in {"vat_return", "vat_correction", "icp_declaration", "oss_return", "international_return"}:
+        # VAT owners explicitly declare their source set. Shared mapper and
+        # companion skills also serve IB; their all-year IB legal notes do not
+        # become VAT dependencies, or correction-only notes return dependencies.
+        return {WORKFLOW_SKILLS[workflow["workflow"]]}
     skills = set(COMMON_WORKFLOW_HELPER_SKILLS)
     workflow_skill = WORKFLOW_SKILLS.get(workflow.get("workflow"))
     if workflow_skill:
@@ -242,6 +274,8 @@ def validate_required_sources(workflow, wid, wf, tax_year, source_by_id, plugin_
         if source is None:
             errors.append(f"{wid}: unknown required source_id: {sid}")
             continue
+        if source.get("content_stage") == "draft_only" and workflow.get("status") == "active":
+            errors.append(f"{wid}: active workflow cannot use draft-only source_id: {sid}")
         matches, reason = source_scope_matches(source, wf, tax_year)
         if not matches:
             errors.append(f"{wid}: source_id {sid} {reason}")
@@ -265,6 +299,41 @@ def validate_required_sources(workflow, wid, wf, tax_year, source_by_id, plugin_
                 f"{wid}: missing mandatory source_id: {sid} "
                 f"(required by {', '.join(matching_skills)})"
             )
+    return errors
+
+
+def validate_draft_only_workflow(workflow, draft_ids, source_by_id, plugin_root):
+    """A source-backed staging route may prepare drafts without claiming review."""
+    wid = workflow.get("id")
+    wf = workflow.get("workflow")
+    year = workflow.get("tax_year")
+    errors = []
+    if not wid or wid in draft_ids:
+        errors.append(f"Invalid or duplicate draft-only workflow id: {wid}")
+    draft_ids.add(wid)
+    allowed = {"vat_return", "vat_correction", "icp_declaration", "oss_return", "international_return"}
+    if wf not in allowed and not (wf == "annual_return" and year == 2026):
+        errors.append(f"{wid}: unsupported draft-only workflow/year")
+    if year not in {2025, 2026} or isinstance(year, bool):
+        errors.append(f"{wid}: draft-only tax_year must be 2025 or 2026")
+        return errors
+    if workflow.get("status") != "draft_only":
+        errors.append(f"{wid}: draft-only workflow must have status: draft_only")
+    if workflow.get("maximum_readiness") != "draft":
+        errors.append(f"{wid}: draft-only workflow must set maximum_readiness: draft")
+    if workflow.get("may_prepare_workpack") is not True:
+        errors.append(f"{wid}: draft-only workflow must set may_prepare_workpack: true")
+    if not workflow.get("profile_candidates"):
+        errors.append(f"{wid}: missing profile_candidates")
+    errors.extend(validate_active_paths(workflow, wid, wf, year, plugin_root))
+    errors.extend(validate_required_sources(workflow, wid, wf, year, source_by_id, plugin_root))
+    for sid in workflow.get("required_source_ids", []):
+        source = source_by_id.get(sid)
+        if not source:
+            continue
+        snapshot = source.get("snapshot_path")
+        if not snapshot or not os.path.isfile(os.path.join(plugin_root, snapshot)):
+            errors.append(f"{wid}: draft source snapshot missing: {sid}")
     return errors
 
 
@@ -351,7 +420,7 @@ def validate_terminal_workflow(workflow, terminal_ids):
     return errors, warnings
 
 
-def validate_source_pairs(sources, active_pairs):
+def validate_source_pairs(sources, active_pairs, draft_pairs=None):
     errors = []
     for source in sources:
         wf = source.get("workflow")
@@ -362,6 +431,10 @@ def validate_source_pairs(sources, active_pairs):
             pair = (wf, int(tax_year))
         except (TypeError, ValueError):
             errors.append(f"{source.get('id')}: invalid tax_year: {tax_year}")
+            continue
+        if source.get("content_stage") == "draft_only":
+            if pair not in (draft_pairs or set()):
+                errors.append(f"{source.get('id')}: draft source pair {pair} is not declared draft-only")
             continue
         if pair not in active_pairs:
             errors.append(
@@ -441,6 +514,27 @@ def validate(config_path, register_path):
             )
         )
 
+    draft_ids = set()
+    draft_pairs = set()
+    for index, workflow in enumerate(config.get("draft_only_workflows", []) or []):
+        if not isinstance(workflow, dict):
+            errors.append(f"draft_only_workflows[{index}] must be a mapping")
+            continue
+        errors.extend(validate_draft_only_workflow(workflow, draft_ids, source_by_id, plugin_root))
+        pair = (workflow.get("workflow"), workflow.get("tax_year"))
+        if pair in active_pairs or pair in draft_pairs:
+            errors.append(f"{workflow.get('id')}: workflow/year pair is duplicated or both active and draft-only")
+        draft_pairs.add(pair)
+    for source in sources:
+        if source.get("content_stage") != "draft_only":
+            continue
+        owners = set(normalize_skill_list(source.get("mandatory_for")))
+        supported_draft_owners = {
+            ("nl-tax-annual-return-2026" if wf == "annual_return" and year == 2026 else WORKFLOW_SKILLS.get(wf)) for wf, year in draft_pairs
+        }
+        if not owners.intersection(supported_draft_owners):
+            errors.append(f"{source.get('id')}: draft-only source has no declared draft workflow owner")
+
     for index, workflow in enumerate(config.get("blocked_workflows", []) or []):
         if not isinstance(workflow, dict):
             errors.append(f"blocked_workflows[{index}] must be a mapping, got: {workflow!r}")
@@ -465,7 +559,7 @@ def validate(config_path, register_path):
         errors.extend(terminal_errors)
         warnings.extend(terminal_warnings)
 
-    errors.extend(validate_source_pairs(sources, active_pairs))
+    errors.extend(validate_source_pairs(sources, active_pairs, draft_pairs))
     return errors, warnings
 
 

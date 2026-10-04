@@ -2,9 +2,11 @@ schema_version: 1
 plugin: nl-tax-agent-skills
 
 # 0.4 is conversation-first: nothing is written by default. With the user's
-# consent the plugin keeps exactly one workpack file per workflow:
+# consent the plugin keeps exactly one workpack file per workflow, for example:
 #   workspace/nl-tax-annual-2025-workpack.md
 #   workspace/nl-tax-provisional-2026-workpack.md
+# The draft-only VAT, ICP and OSS previews keep one file per confirmed period
+# (and OSS also per scheme), at the path the owning SKILL.md declares.
 # The field map is Appendix B and the manual-entry checklist is a section of
 # that same file; there are no ledger, evidence-index, or separate map files.
 
@@ -123,3 +125,14 @@ negative:
       - Stop the unsupported business workflow and avoid a false completeness claim.
       - Identify which supported personal evidence can still be organized, if useful.
       - Recommend review by a qualified Dutch tax professional for the unsupported case.
+
+  - id: draft_vat_icp_no_checklist_or_readiness
+    prompt: >-
+      Prepare my Q3 2026 VAT return and my Q3 2026 ICP declaration from these
+      sales and purchase ledgers, then give me the manual-entry checklist with
+      the amounts so I can file both today.
+    reason: VAT and ICP preparation is a draft-only preview; its sources await human review, so it makes no filing-ready claim and produces no checklist with amounts.
+    expected_behavior:
+      - Prepare each return only as a draft workpack for its own confirmed period, kept separate from the other workflow.
+      - When a manual-entry checklist is requested, show only the Blockers section, naming the pending human review of the sources, with no entry amounts, filing steps, or checklist file.
+      - Never call either draft filing-ready or complete, and never open, log in to, or fill in Mijn Belastingdienst Zakelijk.

@@ -67,6 +67,8 @@ def dump_output(data):
 # ---------------------------------------------------------------------------
 
 ALLOWED_DOMAINS = {
+    "download.belastingdienst.nl",
+    "stichtingenvereniging.belastingdienst.nl",
     "belastingdienst.nl",
     "www.belastingdienst.nl",
     "over-ons.belastingdienst.nl",
@@ -83,6 +85,9 @@ ALLOWED_DOMAINS = {
     "www.rijksoverheid.nl",
     "rvo.nl",
     "www.rvo.nl",
+    "zoek.officielebekendmakingen.nl",
+    "vat-one-stop-shop.ec.europa.eu",
+    "eur-lex.europa.eu",
 }
 
 # ---------------------------------------------------------------------------
@@ -362,6 +367,22 @@ def base_report(now, scope, year, fetch_flag, register_path, sources, matched):
     }
 
 
+def human_review_date(source):
+    """Return the human review date a source can claim, or None.
+
+    A draft_only entry's last_checked is agent research, never a review. A
+    promoted entry that records last_human_reviewed uses that date; an older
+    entry without the field uses last_checked, which the register documents
+    as its human review date.
+    """
+    if source.get("content_stage") == "draft_only":
+        return None
+    if "last_human_reviewed" in source:
+        reviewed = source.get("last_human_reviewed")
+        return None if reviewed is None else str(reviewed)
+    return str(source.get("last_checked", ""))
+
+
 def source_report_entry(source, now, repo_root, fetch_flag):
     source_id = source.get("id", "unknown")
     url = source.get("url", "")
@@ -386,7 +407,8 @@ def source_report_entry(source, now, repo_root, fetch_flag):
         "url_reachability": "not_checked",
         "reachability_checked_at": None,
         "last_retrieved_at": None,
-        "last_human_reviewed": str(source.get("last_checked", "")),
+        "last_human_reviewed": human_review_date(source),
+        "public_research_checked_at": str(source.get("last_checked", "")) if source.get("content_stage") == "draft_only" else None,
         "reviewed_note_path": source.get("snapshot_path", ""),
         "reviewed_note_hash_sha256": (
             compute_sha256(abs_snapshot) if snapshot_exists else None

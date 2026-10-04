@@ -26,7 +26,28 @@ confirmed facts become rows of the Taxpayer profile summary.
 
 - Confirm full-year Dutch residency for 2025
 - Check the `residency.full_year_nl_resident` fact from screening
-- If part-year or non-resident: stop -- this is an unsupported case
+- If part-year or non-resident: stop the resident annual 2025 workflow and
+  explain that the migration return (M-biljet) or the nonresident return
+  (C-biljet) is prepared separately. Continue in the same conversation with
+  `../nl-tax-international-return/SKILL.md` as `international_2025_migration`
+  (part-year residence) or `international_2025_nonresident` (no Dutch
+  residence in 2025). That owner prepares a draft only, and its source and
+  form review blockers apply. Do not reuse the resident 2025 field map,
+  helpers or workpack file for it. This path resolves relative to this skill
+  directory, as the runtime contract requires.
+- If the taxpayer lived in the Netherlands all year, already used the expat
+  ruling (30%-regeling) on their wages before 2024 and the ruling still ran in
+  2025, record a named human-review question on the
+  transitional partial foreign tax liability (partiële buitenlandse
+  belastingplicht) choice before Box 2 and Box 3 collection. Never apply that
+  choice by default and never treat it as a reason to leave the resident
+  workflow. While that question is open, keep foreign Box 2 and Box 3 items
+  as evidence linked to the question rather than as Dutch-reportable amounts,
+  and do not treat Box 2 or Box 3 as review-ready. The rule text and its
+  draft source are in the international scope note
+  (`../nl-tax-shared-resources/knowledge/international/scope-and-forms-2025.md`);
+  for this reviewed resident workflow they stay a human-review item, not a
+  reviewed source to cite in Sources used.
 
 ### 1.4 Taxpayer type confirmed
 
@@ -43,7 +64,10 @@ confirmed facts become rows of the Taxpayer profile summary.
 ### 1.6 No M-biljet required
 
 - Confirm no immigration or emigration during 2025
-- If M-biljet is required: stop -- unsupported case
+- If an M-biljet is required (immigration or emigration during 2025): route as
+  in 1.3 to `../nl-tax-international-return/SKILL.md` as
+  `international_2025_migration`. It is a separate preparation route, not a
+  terminal unsupported case.
 
 ### 1.7 Household composition
 

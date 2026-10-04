@@ -9,9 +9,11 @@ data.
 ## In short
 
 - **Reads personal data:** yes, the documents and facts you share for your own
-  tax preparation.
+  tax preparation, which for VAT, ICP, and OSS can include personal data of
+  your customers and suppliers.
 - **Stores personal data:** only if you ask. Then it keeps one workpack file per
-  workflow in your own working folder, until you delete it.
+  workflow (and, for VAT, ICP, and OSS, one per period or scheme) in your own
+  working folder, until you delete it.
 - **Sends data elsewhere:** no.
 
 ## What the plugin reads
@@ -21,6 +23,11 @@ model to read:
 
 - the documents you attach or select, such as a jaaropgaaf, mortgage statement,
   or bank overview, which contain personal and financial data;
+- for the draft VAT, ICP, and OSS workflows: sales and purchase invoices and
+  ledgers, which can include your customers' and suppliers' names, addresses,
+  and VAT numbers; for the draft M (migration) and C (nonresident) returns:
+  residence, insurance, and foreign-income records. The workpack keeps only
+  aliases, countries, dates, and amounts from these documents;
 - the facts you state in the conversation; and
 - a workpack you saved earlier, when you attach it or it is in your working
   folder, so you can continue where you left off.
@@ -36,18 +43,39 @@ questions, the workpack, the field map, and the manual-entry checklist) stays in
 the conversation, and the plugin writes no file.
 
 If you agree to save, or ask it to ("save my workpack"), the plugin keeps
-**one file per workflow** in a `workspace/` folder inside your working folder:
+**one file per workflow, period or scheme** in a `workspace/` folder inside
+your working folder:
 
-- `workspace/nl-tax-annual-2025-workpack.md` for the annual 2025 return, and
+- `workspace/nl-tax-annual-2025-workpack.md` for the annual 2025 return;
 - `workspace/nl-tax-provisional-2026-workpack.md` for the 2026 voorlopige
-  aanslag.
+  aanslag;
+- `workspace/nl-tax-annual-2026-workpack.md` for the draft annual return 2026;
+- `workspace/nl-tax-vat-<year>-<period>-workpack.md` for a draft 2025/2026 VAT
+  return, and `workspace/nl-tax-vat-correction-<year>-<period>-workpack.md`
+  for a draft VAT correction;
+- `workspace/nl-tax-icp-<year>-<period>-workpack.md` for a draft ICP
+  declaration;
+- `workspace/nl-tax-oss-<scheme>-<year>-<period>-workpack.md` for a draft OSS
+  or IOSS return; and
+- `workspace/nl-tax-international-<year>-<form>-workpack.md` for a draft M
+  (migration) or C (nonresident) return.
+
+Each confirmed monthly, quarterly, or annual period, each OSS scheme, and each
+M or C form stays in its own file. The VAT adjustment helper writes no file.
+The VAT, ICP, and OSS workpacks use local evidence IDs and customer aliases
+instead of retaining VAT identification numbers, invoice numbers, or
+customers' and suppliers' personal data. The dates, countries, amounts, and
+eligibility evidence that the tax rules need are kept as sourced facts. You
+check and enter real customer VAT identification numbers, and any registration
+or payment details, yourself in Mijn Belastingdienst Zakelijk. If they appear
+in documents you share, the assistant does not copy them into the workpack.
 
 Each is a plaintext Markdown file holding the facts you provided with their
 sources, open questions, the field map, and the manual-entry checklist. The
 plugin does not encrypt it. The workpack never records a full BSN, IBAN,
 policy, contract, or aanslag number, or any credential: a provider name and tax
-year identify each document. The plugin keeps that one file up to date while
-you work, writes no other file, and never copies, moves, renames, or changes
+year identify each document. The plugin keeps each workpack file up to date
+while you work, writes no other file, and never copies, moves, renames, or changes
 your own documents. Say "stop saving" and it stops updating the file.
 
 Your consent covers the current conversation. In a new conversation, the
@@ -80,15 +108,24 @@ privacy policy for how it handles prompts and files.
 
 The plugin keeps no data of its own, so there is nothing for the authors to
 retain or delete. A saved workpack stays until you delete it; the plugin never
-deletes files. When you no longer need it, delete the file for that workflow:
+deletes files. When you no longer need it, delete the file for that workflow,
+period, scheme, or form:
 
 - `workspace/nl-tax-annual-2025-workpack.md`
 - `workspace/nl-tax-provisional-2026-workpack.md`
+- `workspace/nl-tax-annual-2026-workpack.md`
+- `workspace/nl-tax-vat-<year>-<period>-workpack.md`
+- `workspace/nl-tax-vat-correction-<year>-<period>-workpack.md`
+- `workspace/nl-tax-icp-<year>-<period>-workpack.md`
+- `workspace/nl-tax-oss-<scheme>-<year>-<period>-workpack.md`
+- `workspace/nl-tax-international-<year>-<form>-workpack.md`
 
-For example, from your working folder:
+For example, from your working folder, list what is there first and then
+delete all saved workpacks:
 
 ```bash
-rm workspace/nl-tax-annual-2025-workpack.md workspace/nl-tax-provisional-2026-workpack.md
+ls workspace/nl-tax-*-workpack.md
+rm workspace/nl-tax-*-workpack.md
 ```
 
 Check the contents before deleting, because this cannot be undone. Remember
@@ -101,8 +138,8 @@ longer want it kept.
 
 ## Children
 
-The plugin is intended for adults preparing their own Dutch income tax. It is
-not intended for people under 18.
+The plugin is intended for adults preparing their own Dutch income tax or
+sole-trader VAT. It is not intended for people under 18.
 
 ## Contact
 

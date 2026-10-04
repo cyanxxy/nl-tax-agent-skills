@@ -1,7 +1,7 @@
 ---
 name: nl-tax-submit-companion
-description: Use when a user explicitly asks in natural language for a human-only manual-entry checklist from an existing annual or provisional workpack, or clearly accepts the mapper's immediate checklist offer.
-argument-hint: "[annual|provisional] [2025|2026]"
+description: Use when a user explicitly asks in natural language for a human-only checklist from an IB, VAT, ICP or OSS workpack, or accepts the mapper's immediate checklist offer; source/schema blockers apply.
+argument-hint: "[annual|provisional|international|vat|vat-correction|icp|oss] [2025|2026] [identity]"
 allowed-tools:
   - Read
   - Glob
@@ -28,7 +28,11 @@ representative performs every official action manually in Mijn Belastingdienst.
   Only while save consent is active in this conversation, write it into the
   `## Manual-entry checklist` section of that workflow's one workpack:
   `workspace/nl-tax-annual-2025-workpack.md` or
-  `workspace/nl-tax-provisional-2026-workpack.md`. Consent is checked in the
+  `workspace/nl-tax-provisional-2026-workpack.md`, the exact VAT period file,
+  or an extended identity's only path from
+  `../nl-tax-shared-resources/reference/workflow-scopes.yaml`, chosen by the
+  workpack's Appendix A `workflow` identity (an annual 2026 checklist never
+  goes into the 2025 file). Consent is checked in the
   conversation, never in the file: `save_consent: given` in Appendix A is a
   record, not an authorization. Edit only that section and never create a
   separate checklist file or a copy.
@@ -50,6 +54,35 @@ exists, and never require a slash command or magic phrase.
 Read `../nl-tax-shared-resources/runtime-contract.md`. Resolve bundled files
 relative to this skill directory with the host's skill-resource or file tools.
 
+For annual 2026, international migration/nonresident 2025/2026, ICP or OSS/IOSS,
+read `reference/extended-submit-steps.md` before any generic partial-input
+instruction. Confirm the shared scope contract's exact identity/path and its
+current draft policy. Source/schema review or draft-policy blockers mean only
+**Blockers**, with no amounts, filing steps, checklist or file write, even
+with consent. Conceptual/internal rows cannot become entries, and a legacy
+resident 2025/provisional map or submit-step sequence cannot replace these
+workflows' unreviewed inventory. Never manufacture a final 2026 form.
+
+For VAT, ICP, OSS/IOSS, international and annual 2026 workpacks, while a
+required source-content review or an exact form or schema review is pending,
+or while the `workflow-scopes.yaml` draft readiness ceiling applies, show only
+**Blockers**, with no entry amounts or filing steps, and write no checklist,
+even with save consent. For resident annual 2025 and provisional 2026, a
+map-level manual-review blocker such as `business-section schema review` is
+listed under **Blockers**, and the Partial inputs rule below still applies, so
+the checklist keeps its known steps. Human source review is never inferred
+from research or arithmetic.
+
+For a VAT workpack, read `reference/vat-submit-steps.md` and apply its stronger
+source-review gate before the generic partial-input rule below. The required
+map is `vat_return`/`vat_correction`, with the same year and confirmed period
+as the workpack. The only saved checklist section is in
+`workspace/nl-tax-vat-<year>-<period>-workpack.md` or
+`workspace/nl-tax-vat-correction-<year>-<period>-workpack.md`, subject to the
+same session consent and found-file confirmation. The taxpayer's destination
+is Mijn Belastingdienst Zakelijk. No VAT checklist is generated from an IB
+workpack or from another period.
+
 - **The reviewed workpack.** Use the workpack in this conversation, or a saved
   workpack the user attaches. Never read a file found at the fixed path unless
   the user has confirmed it in this conversation through the owning workflow's
@@ -70,7 +103,9 @@ relative to this skill directory with the host's skill-resource or file tools.
   and `## Assumptions`.
 - **The steps**: `reference/annual-submit-steps.md`,
   `reference/provisional-submit-steps.md`, or
-  `reference/stopzetten-submit-steps.md`.
+  `reference/stopzetten-submit-steps.md`; for VAT, the gate and steps in
+  `reference/vat-submit-steps.md`; for ICP, OSS/IOSS, international and annual
+  2026, the gate in `reference/extended-submit-steps.md`.
 - **The section spec**: `templates/manual-entry-checklist.md`.
 
 ## Stale map: blocker first
@@ -126,6 +161,8 @@ paragraphs.
 
 ## Partial inputs
 
+This rule applies to resident annual 2025 and provisional 2026 workpacks, and
+to a VAT or extended workpack only after its review gate above has cleared.
 If the workpack or an applicable field map is incomplete, do not refuse.
 Produce the checklist with the known steps and put every actual gap under
 **Blockers** so the user resolves it before filing. A field map remains

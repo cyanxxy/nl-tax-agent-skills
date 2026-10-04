@@ -50,33 +50,93 @@ def frontmatter(path):
     return yaml.safe_load(block)
 
 
+def all_skill_frontmatter():
+    return {
+        path.parent.name: frontmatter(path) for path in SKILLS.glob("*/SKILL.md")
+    }
+
+
+def public_skills():
+    """Every user-invocable skill (no `user-invocable: false`)."""
+    return {
+        name
+        for name, metadata in all_skill_frontmatter().items()
+        if metadata.get("user-invocable", True) is not False
+    }
+
+
+def conversation_owner_skills():
+    """Workspace writers that hold the conversation, plus intake.
+
+    The submit companion writes only its checklist section from an existing
+    workpack and asks no structured questions, so it is not a conversation
+    owner here.
+    """
+    owners = {
+        name
+        for name, metadata in all_skill_frontmatter().items()
+        if "Edit(./workspace/**)" in (metadata.get("allowed-tools") or [])
+    }
+    return (owners | {"nl-tax-intake"}) - {"nl-tax-submit-companion"}
+
+
+def background_helper_skills():
+    """Every non-user-invocable skill except the hidden resource bundle."""
+    return {
+        name
+        for name, metadata in all_skill_frontmatter().items()
+        if metadata.get("user-invocable") is False
+    } - {"nl-tax-shared-resources"}
+
+
 class SkillDiscoveryAndLoadingTests(unittest.TestCase):
     def test_only_conversation_owners_allow_native_structured_questions(self):
-        owners = (
-            "nl-tax-intake",
-            "nl-tax-annual-return",
-            "nl-tax-provisional-assessment",
-            "nl-tax-field-mapper",
+        owners = conversation_owner_skills()
+        helpers = background_helper_skills()
+        # Derived sets must keep covering the original and the extended skills.
+        self.assertTrue(
+            {
+                "nl-tax-intake",
+                "nl-tax-annual-return",
+                "nl-tax-provisional-assessment",
+                "nl-tax-field-mapper",
+                "nl-tax-vat-return",
+                "nl-tax-vat-correction",
+                "nl-tax-icp",
+                "nl-tax-oss",
+                "nl-tax-international-return",
+                "nl-tax-annual-return-2026",
+            }
+            <= owners
         )
-        helpers = (
-            "nl-tax-partner-deductions",
-            "nl-tax-box1-home",
-            "nl-tax-box2",
-            "nl-tax-box3",
-            "nl-tax-winst",
+        self.assertTrue(
+            {
+                "nl-tax-partner-deductions",
+                "nl-tax-box1-home",
+                "nl-tax-box2",
+                "nl-tax-box3",
+                "nl-tax-winst",
+                "nl-tax-vat-adjustments",
+            }
+            <= helpers
         )
-        for skill_name in owners:
+        self.assertFalse(owners & helpers)
+        for skill_name in sorted(owners):
             with self.subTest(skill=skill_name):
                 tools = frontmatter(SKILLS / skill_name / "SKILL.md")[
                     "allowed-tools"
                 ]
                 self.assertIn("AskUserQuestion", tools)
-        for skill_name in helpers:
+        for skill_name in sorted(helpers):
             with self.subTest(skill=skill_name):
-                tools = frontmatter(SKILLS / skill_name / "SKILL.md")[
-                    "allowed-tools"
-                ]
+                tools = frontmatter(SKILLS / skill_name / "SKILL.md").get(
+                    "allowed-tools", []
+                )
                 self.assertNotIn("AskUserQuestion", tools)
+                # Helpers write nothing, so they never pre-approve any edit.
+                self.assertFalse(
+                    [tool for tool in tools if str(tool).startswith(("Edit", "Write"))]
+                )
 
     def test_all_skill_descriptions_fit_claude_metadata_limit(self):
         for path in SKILLS.glob("*/SKILL.md"):
@@ -115,12 +175,25 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         )
 
     def test_other_public_descriptions_use_explicit_user_intent(self):
-        for skill_name in (
-            "nl-tax-annual-return",
-            "nl-tax-provisional-assessment",
-            "nl-tax-field-mapper",
-            "nl-tax-submit-companion",
-        ):
+        # Intake and knowledge have their own trigger tests above and in
+        # test_knowledge_base_access.py.
+        public = public_skills() - {"nl-tax-intake", "nl-tax-knowledge"}
+        self.assertTrue(
+            {
+                "nl-tax-annual-return",
+                "nl-tax-provisional-assessment",
+                "nl-tax-field-mapper",
+                "nl-tax-submit-companion",
+                "nl-tax-vat-return",
+                "nl-tax-vat-correction",
+                "nl-tax-icp",
+                "nl-tax-oss",
+                "nl-tax-international-return",
+                "nl-tax-annual-return-2026",
+            }
+            <= public
+        )
+        for skill_name in sorted(public):
             with self.subTest(skill=skill_name):
                 description = frontmatter(SKILLS / skill_name / "SKILL.md")[
                     "description"

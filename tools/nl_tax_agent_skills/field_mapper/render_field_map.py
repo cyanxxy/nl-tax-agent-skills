@@ -117,6 +117,9 @@ def infer_section(field_id):
         "eigenwoning": "Eigen Woning",
         "aftrek": "Deductions",
         "partner": "Partner",
+        "vat": "Btw / omzetbelasting",
+        "icp": "ICP draft rows",
+        "oss": "OSS draft rows",
         # Descriptive aliases (kept for non-canonical or legacy ids).
         "income": "Income",
         "wages": "Income",
@@ -157,6 +160,11 @@ def render(data):
     lines.append(f"")
     lines.append(f"**Workflow:** {workflow}")
     lines.append(f"**Tax year:** {tax_year}")
+    if data.get("period"):
+        lines.append(f"**Period:** {_cell(data['period'])}")
+    for key in ("scheme", "return_form"):
+        if data.get(key):
+            lines.append(f"**{key}:** {_cell(data[key])}")
     lines.append(f"**Created:** {created}")
     lines.append(f"**Checks:** {_cell(check_performed_by)}")
     lines.append("")
@@ -164,7 +172,7 @@ def render(data):
     fields = data.get("fields", [])
     if not isinstance(fields, list):
         fields = []
-    fields = [f for f in fields if isinstance(f, dict)]
+    fields = [f for f in fields if isinstance(f, dict) and f.get("entry_mode") != "internal_routing"]
     if not fields:
         lines.append("_No fields mapped._")
     else:
@@ -183,6 +191,9 @@ def render(data):
             lines.append("|-------|-------|--------|------------|--------|-------|")
             for f in section_fields:
                 label = _cell(f.get("label", f.get("field_id")))
+                dimensions = f.get("dimensions")
+                if isinstance(dimensions, dict) and dimensions:
+                    label += " (" + _cell(", ".join(f"{key}={value}" for key, value in sorted(dimensions.items()))) + ")"
                 raw_value = f.get("value")
                 value = "_missing_" if raw_value is None else _cell(raw_value)
                 source = f.get("source", {})

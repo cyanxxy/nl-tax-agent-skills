@@ -1,6 +1,6 @@
 interface:
   display_name: "NL Tax Shared Resources"
-  short_description: "Internal reviewed resources used by the Dutch tax workflow skills."
+  short_description: "Internal rule notes and sources for the Dutch tax skills"
 
 policy:
   allow_implicit_invocation: false

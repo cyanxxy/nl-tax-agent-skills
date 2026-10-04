@@ -1,0 +1,74 @@
+metadata_version: '1.1'
+sources:
+  bd_annual2026_fisin:
+    source_id: bd_annual2026_fisin
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_calculation:
+    source_id: bd_annual2026_calculation
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/belastingberekening
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_business:
+    source_id: bd_annual2026_business
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/winst_uit_onderneming
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_deductions:
+    source_id: bd_annual2026_deductions
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/ondernemersaftrek_en_investeringsaftrek
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_actual_return:
+    source_id: bd_annual2026_actual_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/wat-is-mijn-werkelijk-rendement
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_forfait_status:
+    source_id: bd_annual2026_forfait_status
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/met-welke-percentages-is-het-fictief-rendement-berekend
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_mkb:
+    source_id: bd_annual2026_mkb
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_box1_rates:
+    source_id: bd_annual2026_box1_rates
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_annual2026_partial_foreign_liability:
+    source_id: bd_annual2026_partial_foreign_liability
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/vermogen/wat_is_uw_vermogen/partiele_buitenlandse_belastingplicht_30_bewijsregel
+    review_status: needs_review
+    reviewed_note_hash_sha256: af99958d7a9d51d1f911cab1d23788a17a47857b57804be3ac2560159adb3dcd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.

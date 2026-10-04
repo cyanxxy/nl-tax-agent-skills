@@ -7,15 +7,15 @@
 <p>
   <strong>Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack for manual Mijn Belastingdienst entry.</strong>
   <br />
-  <sub>An Agent Skills plugin for Claude Cowork, Claude Code, ChatGPT Work, and Codex — annual 2025 &amp; voorlopige aanslag 2026.</sub>
+  <sub>An Agent Skills plugin for Claude Cowork, Claude Code, ChatGPT Work, and Codex — annual 2025 &amp; voorlopige aanslag 2026, plus draft-only VAT, ICP, OSS, M/C and annual 2026 previews.</sub>
 </p>
 
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" /></a>
 <a href="#claude-cowork"><img alt="Cowork" src="https://img.shields.io/badge/Cowork-primary-6E56CF" /></a>
-<a href="#chatgpt-work"><img alt="ChatGPT Work" src="https://img.shields.io/badge/ChatGPT%20Work-ready-10A37F" /></a>
+<a href="#chatgpt-work"><img alt="ChatGPT Work" src="https://img.shields.io/badge/ChatGPT%20Work-compatible-10A37F" /></a>
 <a href="#claude-code"><img alt="Claude Code" src="https://img.shields.io/badge/Claude%20Code-supported-D97757" /></a>
 <a href="#codex-cli"><img alt="Codex" src="https://img.shields.io/badge/Codex-compatible-111111" /></a>
-<a href="#-supported-workflows"><img alt="Years" src="https://img.shields.io/badge/Years-2025%20annual%20%C2%B7%202026%20provisional-2EA44F" /></a>
+<a href="#-supported-workflows"><img alt="Years" src="https://img.shields.io/badge/Years-2025%20annual%20%C2%B7%202026%20provisional%20%C2%B7%20drafts-2EA44F" /></a>
 
 </div>
 
@@ -31,18 +31,37 @@ just state amounts in the chat. Everything happens in the conversation. The
 assistant:
 
 1. **Reads your documents** directly and works out where each amount belongs,
-   using reviewed, source-cited Dutch tax rules for the supported year.
+   using source-cited Dutch tax notes for the workflow and year, with their
+   review status made clear.
 2. **Asks only the missing questions** that matter for your situation.
 3. **Builds a workpack** listing every amount, its source, and any open
    questions, so you can check the numbers first.
-4. **Maps each amount to its Mijn Belastingdienst field** so you can enter it
-   yourself, with an optional manual-entry checklist. Correct a figure later
-   and the map and checklist are marked stale until you regenerate them, so an
-   outdated amount never reaches the checklist.
+4. **Maps supported amounts to their Mijn Belastingdienst fields** for your
+   review and manual entry, with an optional checklist. Draft-only workflows
+   provide a draft map and a checklist of blockers without amounts. After a
+   correction, the assistant marks the affected map and checklist stale until
+   you regenerate them.
 
 You can also just ask how a rule works, for example “What is the Box 3
-heffingsvrij vermogen for 2025?”. The answer comes from the reviewed notes,
-names the year and official source, and creates no files.
+heffingsvrij vermogen for 2025?”. The answer comes from the bundled
+source-cited notes, names the year and official source, says when a note still
+awaits human review, and creates no files.
+
+### How the skills work
+
+Skills are instructions and reference material for the host's AI agent. The
+agent selects the relevant skills, reads their supporting notes when needed,
+reasons over the evidence, and decides which missing facts to ask for. A clear
+VAT, ICP or OSS question goes directly to that topic. The agent asks whether
+you mean an annual return or provisional assessment only when a 2026
+income-tax request is ambiguous and the distinction changes the answer.
+
+The plugin bundles Markdown/YAML guidance and sources, with no runtime
+scripts, hooks or MCP server. Its workflows are agent-driven, not a
+deterministic tax engine. Repository validators help maintainers check files,
+source metadata and output contracts; behavioral evaluations check agent
+responses. Neither replaces human tax-content review or your review of a
+workpack.
 
 ### 💾 Your workpack file, only if you ask
 
@@ -50,13 +69,26 @@ The plugin writes nothing by default. Tax preparation can take a few sessions,
 so the assistant offers to keep your workpack as a file when the workflow
 starts, when you pause, and after the workpack is generated, each time as the
 only question in its reply. Say yes, or “save my workpack” at any time, and it
-keeps **one Markdown file per workflow** in a `workspace/` folder inside your
-working folder:
+keeps **one Markdown file per workflow** (and, for VAT, ICP and OSS, one per
+period or scheme) in a `workspace/` folder inside your working folder:
 
 | Workflow | Saved file |
 |---|---|
 | Annual return 2025 | `workspace/nl-tax-annual-2025-workpack.md` |
 | Voorlopige aanslag 2026 | `workspace/nl-tax-provisional-2026-workpack.md` |
+| Draft VAT return, 2025/2026 period | `workspace/nl-tax-vat-<year>-<period>-workpack.md` |
+| Draft VAT correction of one filed 2025/2026 period | `workspace/nl-tax-vat-correction-<year>-<period>-workpack.md` |
+| Draft ICP declaration, 2025/2026 period | `workspace/nl-tax-icp-<year>-<period>-workpack.md` |
+| Draft OSS or IOSS return, 2025/2026 | `workspace/nl-tax-oss-<scheme>-<year>-<period>-workpack.md` |
+| Draft M (migration) or C (nonresident) return | `workspace/nl-tax-international-<year>-<form>-workpack.md` |
+| Draft annual return 2026 | `workspace/nl-tax-annual-2026-workpack.md` |
+
+The period is the filing period the Belastingdienst assigned to you: a quarter
+(`Q1`–`Q4`), a month (`M01`–`M12`), or, for VAT and ICP only, `Y` for an
+assigned annual filing period. OSS Union and non-Union returns are quarterly
+and IOSS returns are monthly; the scheme is `union`, `non_union` or `ioss`.
+The form is `migration` or `nonresident`. Each confirmed period has its own
+workpack; one quarter never replaces another quarter's file.
 
 The file holds your facts with their sources, the open questions, the field
 map, and the manual-entry checklist. It is yours: attach it (or keep it in the
@@ -170,10 +202,33 @@ write permission.
 | ✅ Voorlopige aanslag: change | **2026** | Updated estimates and a change summary |
 | ✅ Voorlopige aanslag: review | **2026** | Review summary and open questions |
 | ✅ Voorlopige aanslag: stopzetten | **2026** | Guided checklist |
-| ✅ Rule questions | **2025 / 2026** | Sourced answer; no files created |
-| 🚫 VOF / maatschap / CV, DGA / BV, agrarisch, zeevarenden, staking | 2025 | Routed to manual review |
-| 🚫 Annual return | 2026 | Filed in 2027; only the provisional flows are active |
+| ✅ / 📝 Rule questions | **2025 / 2026** | Sourced answer with the note's review status; extended topics remain draft-only; no files created |
+| 📝 ZZP VAT return, and correction or suppletie of one filed period | **2025 / 2026** | Period-specific draft reconciliation, rubric map, KOR and special-case screening; no checklist with amounts |
+| 📝 ICP declaration (opgaaf ICP) | **2025 / 2026** | Draft per period with customer aliases and a reconciliation with VAT rubric 3b; no checklist with amounts |
+| 📝 OSS Union, OSS non-Union and IOSS returns | **2025 / 2026** | Draft per scheme and period, with each country's amounts and corrections kept separate; no checklist with amounts |
+| 📝 M-biljet (emigration or immigration year) or C-biljet (nonresident) | **2025**; 2026 evidence only | Draft with residence periods, Dutch and foreign income, and qualifying-status proof; no checklist with amounts |
+| 📝 Annual income-tax preparation (aangifte inkomstenbelasting 2026) | **2026** | Separate draft collection of actual evidence; final year-end evidence and the annual form are still pending |
+| 🚫 VOF / maatschap / CV, DGA / BV, agrarisch, zeevarenden, staking, deceased person | 2025 | Routed to manual review |
 | 🚫 Any workflow | 2027 | Blocked until 2027 sources are registered and validated |
+
+✅ means reviewed and supported. 📝 means a **draft-only preview**: its official
+sources still await human tax-content review, so the assistant never calls the
+draft complete or ready to file, and a requested manual-entry checklist lists
+only the blockers, without amounts. VAT, ICP and OSS returns are filed by you
+or someone you have authorized (for example in Mijn Belastingdienst Zakelijk);
+the assistant never files.
+
+```text
+Help me prepare a draft ZZP btw-aangifte for Q3 2026. I use the factuurstelsel and have my sales and purchase ledgers.
+```
+
+```text
+Help me reconcile a correction to my filed Q2 2026 VAT return.
+```
+
+```text
+Prepare my 2025 M-biljet. I emigrated in August 2025.
+```
 
 > [!WARNING]
 > **Box 3.** Annual 2025 collects inputs for the **fictitious (forfaitair)**
@@ -189,6 +244,36 @@ exception, and jaarruimte/reserveringsruimte. For lijfrente limits, the agent
 uses the result of the official Belastingdienst Hulpmiddel Lijfrentepremie.
 Rules never carry over between tax years.
 
+VAT preparation covers an ordinary Netherlands-established eenmanszaak or ZZP
+business. Evidenced calculations for private use of a business car, mixed
+taxable and exempt use, revision of investment goods and property, BUA, and the
+margin scheme go through the read-only `nl-tax-vat-adjustments` helper.
+Unresolved KOR transitions, import goods, undecided classifications or
+elections, disputed valuations, and missing inputs remain review blockers. ICP
+and OSS have their own workflows and files, so no amount is silently merged
+into the domestic VAT return. You check and enter your customers' real VAT
+identification numbers yourself; the workpack keeps only an alias.
+
+The annual 2026 workflow collects actual evidence while the year is still open
+and never reuses the 2025 or provisional forms; for an estimate of 2026, use
+the voorlopige aanslag. M and C returns record residence periods, insurance
+periods and qualifying-status proof; country-specific treaty questions stay
+with a human tax professional.
+
+| Draft-only skill | What it prepares |
+|---|---|
+| `nl-tax-vat-return` | A draft btw-aangifte for one confirmed period |
+| `nl-tax-vat-correction` | A draft correction or suppletie for one already filed period |
+| `nl-tax-icp` | A draft opgaaf ICP for one confirmed period |
+| `nl-tax-oss` | A draft OSS Union, OSS non-Union or IOSS return for one scheme and period |
+| `nl-tax-international-return` | A draft M-biljet or C-biljet for 2025, or evidence collection for 2026 |
+| `nl-tax-annual-return-2026` | Draft evidence collection for the resident annual return 2026 |
+| `nl-tax-vat-adjustments` | Read-only helper for the VAT workflows; it writes no file |
+
+The remaining product gaps and the activation reviews are recorded in
+[the VAT capability review](docs/maintainers/vat-support-2026-10-02.md) and
+[the extended workflow review](docs/maintainers/extended-workflows-2026-10-02.md).
+
 ## 🔒 Privacy
 
 The plugin runs inside your AI host (Cowork, Claude Code, ChatGPT Work, or
@@ -196,9 +281,9 @@ Codex), which processes the documents and conversation you share under its own
 data terms. The plugin itself sends your data nowhere and fetches nothing by
 default; when a workflow calls for a freshness check, the assistant may read
 public official pages such as belastingdienst.nl. It stores nothing unless you
-ask, and then only the one workpack file per workflow described above, in
-plaintext and until you delete it. It never asks for a BSN, IBAN, or DigiD
-details, and the workpack never records a full BSN, IBAN, policy, contract, or
+ask, and then only the workpack files described above (one per workflow, and
+per period or scheme for VAT, ICP and OSS), in plaintext and until you delete
+them. It never asks for a BSN, IBAN, or DigiD details, and the workpack never records a full BSN, IBAN, policy, contract, or
 aanslag number. In this repository `workspace/` is git-ignored so taxpayer files are
 never committed. See [PRIVACY.md](PRIVACY.md) for details, and
 [SECURITY.md](SECURITY.md) to report an issue.

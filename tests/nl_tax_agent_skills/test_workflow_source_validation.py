@@ -269,8 +269,6 @@ sources:
 
         expected_ids = {
             "annual_2025_entrepreneurs_roadmap",
-            "annual_2025_nonresidents_c_form_roadmap",
-            "annual_2025_migration_m_form_roadmap",
             "annual_2025_deceased_f_form_roadmap",
             "annual_2025_foreign_treaty_heavy_roadmap",
             "annual_2027",
@@ -413,6 +411,45 @@ sources:
                 self.assertTrue(
                     any("exactly the one workpack file" in e for e in errors), errors
                 )
+
+    def test_workflow_gate_keeps_rationale_comments_and_pending_review(self):
+        path = REPO_ROOT / "tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml"
+        text = path.read_text(encoding="utf-8")
+        # The gate is hand-edited; a YAML dump would silently delete these.
+        for phrase in (
+            "# The one consented workpack file (0.4 design R3).",
+            "# The voorlopige aanslag asks an ondernemer for ONE figure",
+            "# The next two 2025 directories host all-year snapshots",
+            "# The one consented workpack file for every provisional subflow",
+        ):
+            self.assertIn(phrase, text)
+        module = load_module(
+            "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py",
+            "validate_supported_workflows_pending_review",
+        )
+        config = module.load_yaml_or_json(str(path))
+        # The 2 October 2026 draft scope is an agent change awaiting a human;
+        # it must not move the human attestation date.
+        self.assertEqual(str(config["last_reviewed"]), "2026-08-15")
+        pending = config["pending_review"]
+        self.assertEqual(pending["changed_by"], "agent")
+        self.assertIsNone(pending["human_review"])
+        self.assertIn("never count as supported", config["policy"]["rule"])
+        drafts = {w["id"]: w for w in config["draft_only_workflows"]}
+        expectations = {
+            "bd_vat_kor_conditions": ("vat_return_2025", "vat_correction_2026"),
+            "law_uitvoeringsbeschikking_ob_1968": ("vat_return_2026", "vat_correction_2025"),
+            "bd_zakelijk_login_machtigen": ("vat_return_2025", "icp_2025", "oss_2026"),
+            "eu_vat_directive_oss_currency": ("oss_2025", "oss_2026"),
+            "bd_machtigen_authorization": ("international_2025", "international_2026", "annual_2026"),
+            "bd_intl_partial_foreign_liability": ("international_2025", "international_2026"),
+            "bd_annual2026_box1_rates": ("annual_2026",),
+            "bd_annual2026_partial_foreign_liability": ("annual_2026",),
+        }
+        for source_id, workflow_ids in expectations.items():
+            for wid in workflow_ids:
+                with self.subTest(source_id=source_id, workflow=wid):
+                    self.assertIn(source_id, drafts[wid]["required_source_ids"])
 
 
 if __name__ == "__main__":

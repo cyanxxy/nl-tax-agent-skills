@@ -1,5 +1,16 @@
 # Intake Flow Contract
 
+For annual 2026, annual M or C (migration or nonresident 2025/2026), ICP or
+OSS/IOSS intent, use
+`reference/extended-routing.md` before this resident 2025/provisional 2026
+contract. Its exact owner/resume dimensions apply; do not use the household
+anchors or terminal M/C labels below for an extended owner.
+
+For explicit ordinary VAT return/correction intent, use `reference/vat-routing.md`
+instead of the income-tax screening below. Its year-and-period resume check
+also applies to an attached VAT workpack. Never give VAT-only users this
+household or AOW interview.
+
 Load this reference on every explicit preparation turn until the handoff. It is
 a resume, screening, routing, and handoff contract, not a prescribed interview
 order. Credit facts already supplied, skip resolved questions, and choose the
@@ -20,15 +31,22 @@ shared, and the open material gaps. Intake writes no file at any point.
 
 ## Resume check
 
-Run this before screening on the first preparation turn.
+Run this before screening on the first resident 2025/provisional 2026
+preparation turn. Extended workpacks use `reference/extended-routing.md`.
 
 1. **Attached workpack.** If the user attached what looks like a saved
    workpack, read its `## Appendix A — Resume record`.
 2. **Fixed paths.** Otherwise check the selected working folder for
    `workspace/nl-tax-annual-2025-workpack.md` and
    `workspace/nl-tax-provisional-2026-workpack.md`: the one matching the
-   user's request, or both when the request names no year. Never search the
-   folder or open other files there.
+   user's request, or both when the request names neither a year nor a
+   workflow. If the request names 2026 without saying whether it is the
+   annual 2026 return or the voorlopige aanslag 2026, first ask that one
+   question. For the voorlopige aanslag, check the provisional 2026 path. For
+   the annual 2026 return, check only
+   `workspace/nl-tax-annual-2026-workpack.md` and continue with
+   `reference/extended-routing.md`. Never search the folder or open other
+   files there.
 3. **Confirm once.** For a file found at a fixed path, ask: "I found your saved
    2025 workpack, last updated <date from `updated_at`>. Continue from it?"
    Read nothing else from the file until the user confirms. Confirming a found
@@ -36,11 +54,16 @@ Run this before screening on the first preparation turn.
    the user's own request to continue from it is the confirmation; otherwise
    ask the same one question. Never ask twice. Continuing from an attachment is
    not save consent: the owning workflow asks once whether to keep saving it.
-4. **Check Appendix A.** Resume only when `workpack_format` is
+4. **Extended or VAT identity.** If Appendix A `workflow` is an extended
+   identity (`annual_2026`, `international_*`, `icp_*`, `oss_*`) or a VAT
+   identity (`vat_*`, `vat_correction_*`), stop this check and continue with
+   `reference/extended-routing.md` or `reference/vat-routing.md`; the workpack
+   is resumable there under that file's own identity check.
+5. **Check Appendix A.** Resume only when `workpack_format` is
    `nl-tax-workpack`, `workpack_version` is "2.x", `workflow` is `annual_2025`
    or `provisional_2026_request|change|review|stopzetten`, and `tax_year`
    matches it (2025 annual, 2026 provisional).
-5. **Route.** On a pass, hand off straight to the matching workflow without a
+6. **Route.** On a pass, hand off straight to the matching workflow without a
    recap of intake questions. Facts in `Taxpayer profile summary` are answered;
    do not re-run screening or re-ask them. The workflow continues from its
    first section that is not `complete` or `chat_only`.
@@ -56,8 +79,13 @@ Edge cases:
   untouched.
 - **Both files present.** When the request does not say which, ask which to
   continue.
+- **Annual 2026 versus provisional 2026.** A request that names only "2026"
+  (for example "continue my 2026 return") is ambiguous. Ask whether it is the
+  annual 2026 return or the voorlopige aanslag 2026 before checking either
+  file, and never offer or resume the other 2026 file instead.
 - **Check fails.** For a file with no Appendix A, another format, a version
-  other than 2.x, or a workflow/year mismatch, do not resume from it. Say in
+  other than 2.x, or a workflow/year that matches no identity supported by
+  this file or by the extended or VAT routing files, do not resume from it. Say in
   one line that this file is not a saved workpack this version can continue,
   run intake normally, and let the owning workflow use the file as an ordinary
   source document.
@@ -233,7 +261,11 @@ owning workflow re-asks it when it becomes relevant.
 | `annual_2025` | Annual workflow |
 | `provisional_2026_request`, `provisional_2026_change`, `provisional_2026_review`, `provisional_2026_stopzetten` | Provisional workflow |
 | `manual_review` | Terminal: complex Box 2 or another whole-case manual-review trigger |
-| `annual_2025_nonresident_c_form`, `annual_2025_migration_m_form`, `annual_2025_deceased_f_form`, `annual_2025_foreign_treaty_heavy` | Terminal: specific blocked case |
+| `international_<year>_migration`, `international_<year>_nonresident` | International preparation owner; 2026 is draft precollection |
+| `annual_2026` | Separate annual 2026 actual-evidence draft owner |
+| `icp_<year>_<period>`, `oss_<scheme>_<year>_<period>` | Separate ICP/OSS owners under extended-routing.md |
+| `vat_<year>_<period>`, `vat_correction_<year>_<period>` | VAT return and VAT correction owners under vat-routing.md |
+| `annual_2025_deceased_f_form`, `annual_2025_foreign_treaty_heavy` | Terminal: deceased or resident treaty-heavy case |
 | `unsupported` | Terminal: out of scope, when no specific label fits |
 
 `annual_2025_entrepreneurs` is never a route on its own. It is the roadmap
@@ -309,17 +341,21 @@ the provisional one. Never copy an annual amount into provisional facts.
 When a possible unsupported case appears, load `unsupported-cases.md`. A
 standard `eenmanszaak`/ZZP is supported and never routed there as terminal,
 and neither is a resultaat uit overige werkzaamheden. Section 4 of that file is
-the only section where recognising the case does not end preparation: apply
-its computation boundary instead of the steps below.
+a computation-boundary section that keeps unaffected preparation active.
+Migration/nonresident cases use the international owner for annual M or C
+preparation only, and annual 2026 uses its separate owner; do not apply
+terminal steps to those routes. A voorlopige aanslag 2026 request for a
+migrant or nonresident follows the terminal provisional boundary in section 1
+of `unsupported-cases.md`.
 
 For every other unsupported or terminal case:
 
 1. Explain clearly in chat which complexity puts the case outside this
-   plugin's scope, naming the form in plain words (for example C-biljet,
-   M-biljet, or F-biljet), and stop collecting unrelated facts.
-2. Choose the most specific label: `annual_2025_nonresident_c_form`,
-   `annual_2025_migration_m_form`, `annual_2025_deceased_f_form`,
-   `annual_2025_foreign_treaty_heavy`, `manual_review` (including complex Box
+   plugin's scope, naming the affected form in plain words (for example
+   F-biljet), and stop collecting unrelated facts.
+2. Choose the most specific label: `annual_2025_deceased_f_form`,
+   `annual_2025_foreign_treaty_heavy` for a resident treaty-heavy case,
+   `manual_review` (including complex Box
    2), or `unsupported` only when none fits.
 3. Give a short chat list the user can take to an adviser: the facts already
    screened and the specific trigger.

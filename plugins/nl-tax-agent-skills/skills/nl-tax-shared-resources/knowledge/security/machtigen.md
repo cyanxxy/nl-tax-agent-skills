@@ -4,7 +4,7 @@ source_ids: bd_machtigen_authorization
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-04-30"
+last_reviewed: "2026-10-05"
 review_status: reviewed
 
 ## Rule
@@ -26,7 +26,7 @@ When someone other than the taxpayer is preparing or submitting a tax return or 
 
 ### Belastingconsulent / Adviseur
 - Tax advisers typically use their own professional authorization
-- This is handled through the Belastingdienst's intermediary portal
+- Use the applicable official authorization route; the adviser handles it through their professional workflow.
 - Outside v1 scope for automation — route to their professional workflow
 
 ## What skills may do

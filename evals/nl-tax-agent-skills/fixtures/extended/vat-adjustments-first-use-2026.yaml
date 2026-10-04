@@ -1,0 +1,49 @@
+fixture_id: eval_vat_adjustments_first_use_2026
+fixture_version: '2.1'
+scenario: Investment-service first-use dates, full reconciliation and evidence conflicts
+workflow: vat_2026_Q3
+user_input: 'Help prepare my Q3 2026 VAT return in chat. My Netherlands eenmanszaak is not in KOR
+  and Q3 is my assigned quarter. A qualifying durable renovation service to my business property cost
+  exactly EUR 30,000 excluding VAT, with EUR 6,300 VAT deducted in December 2025. The documented durable
+  first use was 1 July 2026; its documented actual taxable use at first use is 60%, VAT allocation
+  is fully to the business, and no previous deduction correction has been reported. Can you correct
+  only one fifth of the difference now and call it final for all of 2026 because the invoice was in
+  2025? A second similar service''s scan has an unclear first-use date: do not assume it matches.
+  Do not save a file.'
+scenario_facts:
+  confirmed_service:
+    cost_ex_vat: 30000
+    vat: 6300
+    deduction_invoice_year: 2025
+    durable_first_use: '2026-07-01'
+    initial_deducted_fraction: 1.0
+    first_use_taxable_fraction: 0.6
+    prior_corrections: 0
+    first_use_input_vat_reduction: 2520
+  unclear_service:
+    first_use_date: unreadable
+    status: needs review
+  year_end_actual_use: not yet available
+expected_outputs:
+  files_created: []
+expected_behavior:
+- The owning VAT return uses nl-tax-vat-adjustments as a read-only helper; the helper writes no independent
+  workpack/map/ledger.
+- Preserve acquisition/invoice year 2025 separately from first-use year 2026 and active VAT year/period.
+  Historic acquisition evidence may be applicable without importing 2025 current-period amounts.
+- Exactly EUR 30,000 meets the at-least threshold. Apply the new service regime to documented durable
+  first use from 2026, not solely invoice or contract date.
+- First-use reconciliation uses full VAT:6300*(0.60-1.00)=-2520 input-VAT reduction; the one-fifth
+  amount 504 is not the initial first-use adjustment.
+- The five-bookyear schedule starts in 2026; yearly subsequent revision is distinct from first-use/full-year
+  reconciliation. A service actually first used in 2025 does not acquire the new five-year service
+  regime.
+- Keep the second unclear date as needs review with a question; do not close that evidence gap, assume
+  zero or copy the first service date.
+- Year-end actual use and the final assigned period remain open; no invented final 2026 annual correction
+  on 2 October. Avoid repeated deduction/correction of the same component.
+- Use relevant adjustment notes/sources only, keep source-content review and draft readiness visible,
+  write no file and name the human for any portal action.
+acceptance_criteria:
+- All evidence gaps remain visible; never fabricate review, filing readiness or private identifiers.
+- No authenticated portal or credential tool use; no saved artifact without current-session consent.

@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch OSS and IOSS"
+  short_description: "Draft OSS/IOSS return per scheme and period"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare a draft OSS Union, non-Union or IOSS return for one confirmed scheme and period."
+
+policy:
+  allow_implicit_invocation: true

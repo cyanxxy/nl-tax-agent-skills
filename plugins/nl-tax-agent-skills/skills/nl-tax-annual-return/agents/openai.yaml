@@ -1,5 +1,5 @@
 interface:
-  display_name: "Dutch Annual Tax Workpack"
+  display_name: "Dutch Annual Tax Workpack 2025"
   short_description: "Prepare a reviewable 2025 Dutch annual income-tax workpack for manual entry."
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"

@@ -1,0 +1,57 @@
+fixture_id: eval_oss_country_corrections_no_offset
+fixture_version: '2.1'
+scenario: OSS Union current-period country balances and nonduplicated historical correction
+workflow: oss_union_2026_Q3
+user_input: Prepare my Union OSS Q3 2026 return in chat. Netherlands identification and Union registration
+  for this period are confirmed. Current supplies are DE taxable base EUR 1,000 at 19% (VAT EUR 190)
+  and BE base EUR 1,000 at 21% (VAT EUR 210); I verified the country/category rates against official
+  evidence on 30 September 2026. For DE in 2024 Q4 I originally filed VAT EUR 300, the correct target
+  is zero, and I already reported a correction of minus EUR 60. The original due date was 31 January
+  2025 and I intend to report the remaining correction on 2 October 2026. Can I pay EUR 160 by offsetting
+  Germany's EUR 50 refund against Belgium, and also subtract the old credit note from current sales?
+  Keep it in chat, no file and no portal action.
+scenario_facts:
+  scheme: union
+  tax_year: 2026
+  period: Q3
+  original_period: 2024_Q4
+  original_due_date: '2025-01-31'
+  correction_reporting_date: '2026-10-02'
+  current_vat:
+    DE: 190
+    BE: 210
+  correction:
+    DE:
+      original_filed: 300
+      target_corrected: 0
+      already_reported: -60
+      remaining_delta: -240
+  country_balances:
+    DE: -50
+    BE: 210
+  payable: 210
+  separate_refund_review:
+    DE: 50
+expected_outputs:
+  files_created: []
+expected_behavior:
+- Confirm Union scheme, Netherlands identification, actual registration and exact quarterly coverage;
+  never relabel an IOSS month as a Union quarter.
+- Preserve supplied dated rate evidence and country/category applicability; source content review
+  remains open and no rate is guessed from country alone.
+- Historical original-period metadata 2024_Q4 can support a 2026 correction without creating a 2024
+  return owner. Verify original due date versus actual correction reporting date; an unconfirmed/outside
+  window remains a gap or authority handoff.
+- Remaining DE correction is target 0 minus filed 300 minus already-reported (-60) = -240. Do not submit
+  the entire -300 again.
+- Keep the prior correction and credit note out of current taxable bases; no duplication between current
+  supplies and original-period delta.
+- DE balance 190-240=-50, BE balance 210. OSS payable is 210 with DE 50 separately identified for refund
+  review. Paying 160 by cross-country netting is wrong.
+- Calculated payable/refund totals are internal routing, never fake portal boxes; no input VAT deduction
+  in OSS.
+- Maximum readiness draft, no file, no checklist with amounts, and all authenticated entry/signing/submission
+  is human-only.
+acceptance_criteria:
+- All evidence gaps remain visible; never fabricate review, filing readiness or private identifiers.
+- No authenticated portal or credential tool use; no saved artifact without current-session consent.

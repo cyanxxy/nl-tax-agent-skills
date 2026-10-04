@@ -1,7 +1,7 @@
 ---
 name: nl-tax-field-mapper
 description: Use when the user explicitly wants a supported workpack mapped to source-traceable Mijn Belastingdienst fields.
-argument-hint: "[annual|provisional] [year]"
+argument-hint: "[annual|provisional|vat|vat-correction|icp|oss|international] [year] [period|form]"
 allowed-tools:
   - Read
   - Glob
@@ -12,10 +12,29 @@ allowed-tools:
 
 # NL Tax Field Mapper
 
-Turn a reviewed annual 2025 or provisional 2026 workpack into a
-source-traceable field map for manual entry in Mijn Belastingdienst. This skill
-is the only author of the field map. Continue the same tax conversation and
+Turn a reviewed workpack from a supported owner (annual 2025, provisional 2026,
+VAT return or VAT correction, ICP, OSS/IOSS, international M-biljet or
+C-biljet, or annual 2026) into a source-traceable field map for manual entry in
+Mijn Belastingdienst. This skill is the only author of the field map. Continue the same tax conversation and
 never announce that a mapper is taking over.
+
+VAT return/correction workpacks for 2025/2026 are also mapped here, using
+`reference/vat-field-map.md`. Their destination is the human's Mijn
+Belastingdienst Zakelijk. A VAT map remains draft while VAT source-content
+review is outstanding; it is preparation material, with no filing checklist.
+
+
+ICP, OSS, migration/nonresident and annual 2026 workpacks are mapped as draft
+preparation using `reference/cross-border-field-map.md`,
+`reference/international-field-map.md` or `reference/annual-2026-field-map.md`.
+Use the exact identity, path and owner in
+`../nl-tax-shared-resources/reference/workflow-scopes.yaml`. Their pending
+source-content review and their pending form, scheme or annual schema review
+block `review_ready` and an entry checklist. Annual 2026 and M/C rows are
+conceptual `internal_routing` records; do not reuse the resident 2025 screen
+fields. Keep the ICP customer dimension and the OSS country and rate
+dimensions. These saved files use the same consent and section ownership
+boundaries below, and each one has its own identity-keyed path.
 
 ## Boundaries that always apply
 
@@ -28,39 +47,59 @@ never announce that a mapper is taking over.
   taxpayer) or an authorized human perform them.
 - **Nothing is written by default.** The map lives in the conversation. Only
   while save consent is active in this conversation, write the
-  `## Field map summary` section and `## Appendix B — Field map` into that
-  workflow's one workpack: `workspace/nl-tax-annual-2025-workpack.md` or
-  `workspace/nl-tax-provisional-2026-workpack.md`. Consent is checked in the
+  `## Field map summary` section and `## Appendix B — Field map` into the
+  active workflow's one workpack. Choose the file by the owner's Appendix A
+  `workflow` identity, never by the map's `workflow` enum:
+  `annual_2025` uses `workspace/nl-tax-annual-2025-workpack.md`;
+  `provisional_2026_*` uses `workspace/nl-tax-provisional-2026-workpack.md`;
+  `annual_2026` uses `workspace/nl-tax-annual-2026-workpack.md`; VAT, ICP,
+  OSS/IOSS and international identities use the single path that
+  `../nl-tax-shared-resources/reference/workflow-scopes.yaml` or the VAT
+  save-path bullet below gives for the confirmed year, period, scheme or form.
+  A map with `workflow: annual_return` and `tax_year: 2026` never goes into the
+  2025 file. Consent is checked in the
   conversation, never in the file: `save_consent: given` in Appendix A is a
   record, not an authorization. Edit only those two sections plus the mapper's
   own gap rows in `## Open questions` and `## Missing information` and their
   Q-IDs in Appendix A `sections.<key>.open`. Never create a separate field-map
   file, a copy, or a second `workspace/` tree.
-- **Annual and provisional stay separate.** Pair `annual_return` with `2025`
-  and `provisional_assessment` with `2026`; never merge the two maps or use one
-  as a source for the other. Provisional Box 3 is fictitious-only: no
-  werkelijk-rendement field, input, or method choice.
+- **VAT save paths.** For VAT, the only path is
+  `workspace/nl-tax-vat-<year>-<period>-workpack.md` or
+  `workspace/nl-tax-vat-correction-<year>-<period>-workpack.md`, matching the
+  owner's confirmed year and period. The same section ownership, session
+  consent, found-file confirmation, and stale-output rules apply.
+- **Each map pairs with exactly one workflow identity.** The reviewed resident
+  schemas pair `annual_return` with `2025` and `provisional_assessment` with
+  `2026`. The draft extended identities come from `workflow-scopes.yaml`:
+  `annual_return` with `2026` for the `annual_2026` identity (conceptual
+  `annual2026.*` internal_routing rows only, never the 2025 screen fields),
+  `international_return` with its year and `return_form`, `icp_declaration`
+  with its year and `period`, and `oss_return` with its `scheme`, year and
+  `period`. Never merge two maps or use one map as a source for another.
+  Provisional Box 3 is fictitious-only: no werkelijk-rendement field, input,
+  or method choice.
 - **No identifiers or credentials.** Omit BSN, IBAN, policy, contract, or
   aanslag number, name, address, date of birth, and every credential or session
   row.
 
 ## When to use
 
-- The owning annual 2025 or provisional request/change workflow calls this
+- The owning annual 2025, annual 2026, VAT, ICP, OSS, international or
+  provisional request/change workflow calls this
   skill right after the taxpayer confirms the workpack at final review. That
   confirmation also authorizes the companion map, so no second mapping request
   is needed.
 - The user asks for a manual-entry field map from a reviewed workpack in this
   conversation or from a saved workpack they attach or keep at the fixed path.
   Never read a file found at the fixed path unless the user has confirmed it in
-  this conversation through the owning workflow's confirm-once step ("I found
-  your saved 2025 workpack, last updated <date>. Continue from it?"); when that
-  has not happened, ask that one question first.
+  this conversation through the owning workflow's confirm-once step (for
+  example "I found your saved 2025 workpack, last updated <date>. Continue from
+  it?", worded with that workflow's own year, period, scheme or form); when
+  that has not happened, ask that one question first.
 
 Provisional review and stopzetten produce no field map; a review that routes to
 a change is mapped as a change. If no reviewed workpack exists, say it must be
-prepared first and offer to continue the matching annual or provisional
-workflow.
+prepared first and offer to continue the matching owning workflow.
 
 ## Read first
 
@@ -79,14 +118,33 @@ showing, and saving. It delegates field policy to:
   for the 2026 provisional fields;
 - [`templates/field-map-template.yaml`](templates/field-map-template.yaml) for
   the v1.1 schema.
+- [`reference/vat-field-map.md`](reference/vat-field-map.md) for VAT return
+  or correction fields, exact period, reconciliation, and review blockers;
+- [`reference/cross-border-field-map.md`](reference/cross-border-field-map.md)
+  for ICP (`icp_declaration`) and OSS/IOSS (`oss_return`) maps;
+- [`reference/international-field-map.md`](reference/international-field-map.md)
+  for migration and nonresident (M-biljet and C-biljet) maps
+  (`international_return`);
+- [`reference/annual-2026-field-map.md`](reference/annual-2026-field-map.md)
+  for the annual 2026 draft map (`annual_return` with `tax_year: 2026`);
+- [`../nl-tax-shared-resources/reference/workflow-scopes.yaml`](../nl-tax-shared-resources/reference/workflow-scopes.yaml)
+  for each extended identity's owner, identity keys, only save path and draft
+  readiness ceiling.
 
 Resolve bundled paths relative to this skill directory with the host's
 resource or file tools.
 
 ## Mapping contract
 
-- Set `tax_year` explicitly: `2025` with `annual_return`, or `2026` with
+- Set `tax_year` explicitly for the reviewed resident schemas: `2025` with `annual_return`, or `2026` with
   `provisional_assessment`. Never leave it blank, `null`, or a placeholder.
+  Use `2026` with `annual_return` only for the `annual_2026` identity.
+  For `vat_return` or `vat_correction`, set year 2025/2026 and `period` to the
+  same confirmed `Q1`–`Q4`, `M01`–`M12`, or `Y` as Appendix A. VAT maps
+  contain no income-tax fields and never take profit as turnover. For
+  `icp_declaration`, `oss_return` and `international_return`, set year
+  2025/2026 and also set `period`, both `scheme` and `period`, or
+  `return_form`, exactly as Appendix A records them.
 - Map only facts the workpack establishes. Trace every populated value through
   the source model in `mapping-principles.md`: `source.evidence_id` names an
   `ev_NNN` row in `## Documents and sources`, `source.profile_path` names a
@@ -109,7 +167,7 @@ resource or file tools.
   `chat_only`, no blocking open question remains, and no workflow-specific
   manual-review blocker applies; otherwise use `draft`. Checks may reject a
   false `review_ready` but never promote a draft.
-- For an annual business map, carry `business.legal_form` and
+- For a resident annual 2025 business map, carry `business.legal_form` and
   `onderneming.routing.complex_case` as sourced `internal_routing` records, not
   portal rows. Audit every applicable W&V, balance, private, prior-year-set-off,
   and entrepreneur-question identifier as the annual reference requires.
@@ -146,8 +204,10 @@ Show the `Field map summary` table in the conversation, rendered from that
 YAML as `mapper-flow.md` describes. The YAML is composed and checked but never
 printed in chat. The summary is the checked surface: every `manual_entry`
 field appears in it with the same value as the YAML, and every
-`missing_fields` entry appears as a `MISSING - enter manually` row with its
-Q-ID. While save consent is active in this conversation, write the same table
+`missing_fields` entry for a `manual_entry` field appears as a
+`MISSING - enter manually` row with its Q-ID. An `internal_routing` gap (all
+annual 2026 and international rows) is never a table row; list it beneath the
+table as `Open question Qnnn — draft fact, not a portal field`. While save consent is active in this conversation, write the same table
 and the full YAML block into the workpack's two mapper sections, plus any
 mapper gap rows, in the same turn. Without save consent, write nothing; if the
 taxpayer agrees to save later, rebuild the map from the recorded facts and
@@ -167,7 +227,12 @@ After the map is composed or updated:
   in the current request. Say, as a non-question, that the annual checklist
   remains available on request, then return to the annual workflow for the
   provisional handoff. A later bare "yes" is never acceptance of that notice.
-- Otherwise, offer to create the human-only manual-entry checklist, asking one
+- Otherwise, unless this is a VAT, ICP, OSS/IOSS, international or annual 2026
+  map whose source-content, form, scheme or annual schema review is still
+  pending (then name that blocker and make no offer), offer to create the
+  human-only manual-entry checklist. A resident annual 2025 or provisional 2026
+  map-level blocker such as `business-section schema review` does not suppress
+  the offer, because the checklist lists it under Blockers. Ask one
   yes/no question per reply. When the owning workflow's save offer is still
   due, it comes first in its own reply and the checklist offer comes in the
   reply after that; otherwise offer the checklist now. Do not create it merely

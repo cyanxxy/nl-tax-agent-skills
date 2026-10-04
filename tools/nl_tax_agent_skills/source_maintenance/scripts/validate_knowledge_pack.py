@@ -85,7 +85,7 @@ POLICY_KEYWORD_DAYS = [
 # year. Handled by date logic in check_freshness(), not by a day threshold.
 SEASON_POLICY_KEYWORDS = ("provisional assessment season", "january")
 
-VALID_KNOWLEDGE_WORKFLOWS = {"all", "annual_return", "provisional_assessment"}
+VALID_KNOWLEDGE_WORKFLOWS = {"all", "annual_return", "provisional_assessment", "vat_return", "vat_correction"}
 
 
 REVIEW_BLOCKING_PATTERNS = [
@@ -453,7 +453,15 @@ def collect_snapshot_metadata_errors(sources, project_root, metadata_root=None):
         if stored_url != source_url:
             errors.append((sid, "source_url mismatch", rel_meta_path))
 
-        if source_meta.get("review_status") != "reviewed":
+        draft_only = source.get("content_stage") == "draft_only" and source.get("workflow_family") in {"vat", "vat_cross_border", "international", "annual_2026"}
+        if draft_only:
+            # This is an explicit staging declaration, never an attestation.
+            # A draft note cannot become available to an active workflow.
+            if source_meta.get("review_status") != "needs_review":
+                errors.append((sid, "draft-only snapshot metadata must be needs_review", rel_meta_path))
+            if extract_metadata_value(abs_snapshot, "review_status") != "needs_review":
+                errors.append((sid, "draft-only note must be needs_review", rel_snapshot))
+        elif source_meta.get("review_status") != "reviewed":
             errors.append((sid, "snapshot metadata not reviewed", rel_meta_path))
 
         if not source_meta.get("reviewed_note_hash_recorded_at"):
@@ -563,6 +571,12 @@ def print_report(
     workflow_metadata_errors,
     source_reference_errors,
 ):
+    draft_sources = [source.get("id", "unknown") for source in sources if source.get("content_stage") == "draft_only"]
+    print_section(
+        "DRAFT-ONLY SOURCES (human review pending; no review_ready outputs):",
+        draft_sources,
+        lambda source_id: source_id,
+    )
     stale_mandatory = [row for row in stale_sources if len(row) > 2 and row[2]]
     stale_warning = [row for row in stale_sources if not (len(row) > 2 and row[2])]
 

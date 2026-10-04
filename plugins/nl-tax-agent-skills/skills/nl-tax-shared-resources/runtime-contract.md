@@ -42,7 +42,7 @@ variables are optional implementation details, not workflow requirements.
   surfaces, not tax-workflow resources.
 - Select the owning workflow and current phase/subflow from the conversation or
   from the attached workpack's resume record (Appendix A) before opening topic
-  resources. When intake is complete and an annual or provisional workflow is
+  resources. When intake is complete and an owning workflow is
   active, do not load intake resources again.
 - If a required named resource cannot be opened, report that exact missing
   path. Do not probe guessed filenames or broader directories to find a
@@ -88,8 +88,10 @@ checklist file.
 
 ### Save consent
 
-- The owning workflow (`nl-tax-annual-return` or
-  `nl-tax-provisional-assessment`) offers to save, in one short sentence, only
+- The owning workflow (`nl-tax-annual-return`, `nl-tax-annual-return-2026`,
+  `nl-tax-international-return`, `nl-tax-provisional-assessment`,
+  `nl-tax-vat-return`, `nl-tax-vat-correction`, `nl-tax-icp`, or
+  `nl-tax-oss`) offers to save, in one short sentence, only
   at these points:
   1. when the workflow starts after intake ("This can take a few sessions. Want
      me to keep your workpack as one file in your working folder so you can pick
@@ -198,18 +200,41 @@ them.
   clear it.
 - Once mapping has run, `Field map summary` is the checked surface, in the
   saved file and in the conversation: every `manual_entry` field in Appendix B
-  appears in it with the same value, and every `missing_fields` entry appears
-  as a `MISSING - enter manually` row with its Q-ID.
+  appears in it with the same value, and every `missing_fields` entry for a
+  `manual_entry` field appears as a `MISSING - enter manually` row with its
+  Q-ID; an `internal_routing` gap is listed beneath the table by its Q-ID
+  instead.
 
 ### One file per workflow
 
-Annual 2025 and provisional 2026 stay separate. Each has exactly one file,
-never a combined one:
+Resident annual 2025, resident annual 2026, provisional 2026, international
+returns, domestic VAT, ICP and each OSS scheme stay separate. Each confirmed
+workflow identity has exactly one file, never a combined one. Use
+`../nl-tax-shared-resources/reference/workflow-scopes.yaml` for extended owner,
+identity, path and section contracts; it records scope rather than choosing
+questions or tax treatment:
 
 | Workflow | The only file the plugin may write |
 |---|---|
 | annual 2025 | `workspace/nl-tax-annual-2025-workpack.md` |
+| resident annual 2026 | `workspace/nl-tax-annual-2026-workpack.md` |
+| migration/nonresident 2025/2026 | `workspace/nl-tax-international-<year>-<form>-workpack.md` |
+| ICP, confirmed year and coverage | `workspace/nl-tax-icp-<year>-<period>-workpack.md` |
+| OSS/IOSS, confirmed scheme and period | `workspace/nl-tax-oss-<scheme>-<year>-<period>-workpack.md` |
 | provisional 2026 (any subflow) | `workspace/nl-tax-provisional-2026-workpack.md` |
+| VAT return, confirmed year and period | `workspace/nl-tax-vat-<year>-<period>-workpack.md` |
+| VAT correction, confirmed year and period | `workspace/nl-tax-vat-correction-<year>-<period>-workpack.md` |
+
+VAT years are 2025/2026 and period tokens are `Q1`–`Q4`, `M01`–`M12`, or `Y`.
+One VAT file belongs to exactly one originally assigned period (`Q1`..`Q4`,
+`M01`..`M12`, or `Y` for an annual assigned period only). The official
+whole-year suppletie by a monthly or quarterly filer may be mentioned but is a
+human-review route that these skills never prepare or record under `Y`; each
+corrected period has its own workpack. Never overwrite another period's file.
+International form is `migration | nonresident`. ICP covers confirmed
+2025/2026 periods; Union/non-Union OSS uses quarters, IOSS months, and scheme
+is `union | non_union | ioss`. Extended identity keys must agree in profile,
+Appendix A, map and filename before resuming or writing.
 
 - Paths are relative to the task's working folder: the folder the user selected
   or the host's task workspace. A working folder that may not outlast the
@@ -220,7 +245,10 @@ never a combined one:
   replace-or-keep question above, and never merged into.
 - Only these skills may write, only while save consent is active in this
   conversation, and only to the active workflow's file:
-  `nl-tax-annual-return` and `nl-tax-provisional-assessment` (every section
+  `nl-tax-annual-return`, `nl-tax-annual-return-2026`,
+  `nl-tax-international-return`, `nl-tax-provisional-assessment`,
+  `nl-tax-vat-return`, `nl-tax-vat-correction`, `nl-tax-icp`, and `nl-tax-oss`
+  (every section
   except the mapper's and companion's), `nl-tax-field-mapper`
   (`## Field map summary`, `## Appendix B — Field map`, and its own gap rows in
   `## Open questions` and `## Missing information`, continuing the Q001/M001
@@ -232,7 +260,8 @@ never a combined one:
   `Edit(./workspace/**)` and never list `Write` or `Bash`.
 - `nl-tax-intake`, `nl-tax-knowledge`, and the background helpers
   (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`,
-  `nl-tax-partner-deductions`, `nl-tax-winst`) write nothing.
+  `nl-tax-partner-deductions`, `nl-tax-winst`, `nl-tax-vat-adjustments`)
+  write nothing.
 
 ### Resume from a saved workpack
 
@@ -248,7 +277,8 @@ never a combined one:
   conversation. Saving later in this conversation needs consent plus the
   replace-or-keep question; never merge into or silently overwrite that file.
 - Check Appendix A: `workpack_format: nl-tax-workpack`, a `workpack_version`
-  of "2.x", `workflow`, and `tax_year`. Route to the matching workflow, do not
+  of "2.x", `workflow`, and `tax_year`, plus period/scheme/return_form where
+  required by its workflow-scope contract. Route to the matching workflow, do not
   re-ask intake questions answered in `## Taxpayer profile summary` or any
   other answered question, and continue from the first section that is not
   `complete` or `chat_only`.
@@ -302,6 +332,72 @@ every other government filing service.
 
 Host permissions and host safeguards are defense in depth, not authorization to
 cross this product boundary.
+
+## Extended annual and international preparation
+
+Resident annual 2026 uses actual evidence under `nl-tax-annual-return-2026`,
+separate from provisional forecasts and annual 2025. Before year-end, retain
+year-to-date actuals and forecasts as distinct rows; do not mark final annual
+statements or year-end balances complete. A final annual schema, portal opening
+date or deadline is never inferred from provisional sources. New annual 2026
+source-content and exact annual-schema reviews keep the owner/map draft.
+
+Migration/nonresident 2025/2026 uses `nl-tax-international-return`, with exact
+residence/insurance intervals, source income, world-income/qualification
+evidence and treaty questions. The 2026 route is precollection pending its
+final annual form. New source/form review blocks manual-entry output. Old
+resident 2025 box-helper computations and provisional 2026 field maps do not
+govern either extended owner; use their named notes and separate inventories.
+Bounded calculations require accepted classification and complete sourced
+inputs; unresolved treaty, qualification, valuation or insurance facts remain
+named blockers while unaffected preparation continues.
+
+For any extended manual-entry request with source/schema review, draft-policy
+ceiling or stale/unconfirmed output still open, the companion shows only
+**Blockers**, without amounts, steps, checklist generation or file writes.
+Draft owners can continue collecting sourced facts with session save consent;
+the checklist gate does not suppress ordinary draft preparation.
+
+## VAT preparation and review boundary
+
+VAT preparation uses Mijn Belastingdienst Zakelijk as the human's filing
+destination. It has the same human-only portal and credential boundary as
+income tax; no browser or connector operates it.
+
+- Match year, confirmed assigned period, and VAT accounting system before
+  using a transaction. VAT returns use transaction evidence, never an
+  income-tax profit figure. VAT registration, KOR participation, and
+  IB-ondernemerschap are separate questions.
+- The VAT owners load applicable named notes in `knowledge/vat/`,
+  `knowledge/vat-adjustments/`, or `knowledge/vat-cross-border/`. Those notes state
+  the exact years covered. New VAT notes carry `review_status: needs_review`
+  until a human tax-content reviewer compares them with the cited authority.
+  Draft collection, reconciliation, and mapping are available, but the
+  `VAT source-content review` blocker prevents `review_ready` and any
+  manual-entry checklist. If a source or schema blocker remains when an entry
+  checklist is requested, show only **Blockers**, with no amounts, steps or
+  checklist write, even with save consent. Do not interpret agent arithmetic checks
+  or source browsing as a human review attestation.
+- The domestic VAT owner may invoke the read-only `nl-tax-vat-adjustments`
+  helper for complete bounded car/private-use, pro-rata, capital-goods/services
+  revision, property, BUA and margin lines. Unsettled classification/elections
+  are named affected-line blockers; they do not make every adjustment
+  unsupported. Private use, exempt use and prior deductions are reconciled
+  without double counting.
+- ICP and registered OSS/IOSS use their separate owners and files, never the
+  domestic VAT correction route by substitution. Preserve human customer-ID
+  verification and separate manual identity entry without storing actual IDs.
+- VAT scope, KOR, exemption, accounting system, special-case disposition,
+  and correction route belong in workpack facts. They are not invented portal
+  fields. Derived net balances and correction differences are displayed as
+  calculations; the mapper never invents a numbered total box.
+- Keep income tax, VAT returns, and VAT corrections separate, including their
+  source ledgers and save consent. A correction workpack preserves original
+  declared figures, corrected full totals, and a separate difference. Never
+  substitute the difference for the corrected totals on a suppletie form.
+- Changed transaction, period, accounting-system, KOR, or deduction facts
+  invalidate generation, mapping, and any checklist under the stale-output
+  rules above. A later period does not clear an earlier period's stale state.
 
 ## Box 3 actual-return comparison boundary
 
@@ -466,7 +562,11 @@ workflow or a requirement for completing the workpack.
   year, section, bounded review question, the facts under review with their
   provenance, and the reviewed source IDs or rule-note paths. If the workpack is
   saved, the brief may add its path; the reviewer reads nothing else from the
-  taxpayer's files.
+  taxpayer's files. For an extended (VAT, ICP, OSS, international or annual
+  2026) workflow, the brief also carries the resolved path of
+  `../nl-tax-shared-resources/reference/workflow-scopes.yaml` and of each rule
+  note in use, because a reviewer agent has no skill directory to resolve
+  relative paths against.
 - Give a reviewer only read/research capabilities for the named material and
   public official sources. Never grant Bash, Write, Edit, computer use,
   connectors, MCP tools, or another write-capable tool. It may inspect
@@ -510,3 +610,10 @@ The `allowed-tools` key in `SKILL.md` supports hosts that recognize that
 frontmatter. Other hosts may ignore it. The safety, write-boundary, confirmation,
 and no-submission rules in the skill body always apply regardless of tool names
 or host enforcement.
+
+A multi-year note may list authorities for both 2025 and 2026. Select only the
+source IDs and rule passages applicable to the active year and topic in the
+workpack source ledger. Reading a 2026 amendment for orientation does not make
+it a 2025 authority. Historical acquisition/correction facts retain their
+original dates and evidence separately; they do not change the active return
+year or authorize an older-year return calculation.

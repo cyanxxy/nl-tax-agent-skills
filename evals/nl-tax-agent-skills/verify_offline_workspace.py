@@ -3,10 +3,20 @@
 
 0.4 is conversation-first (docs/maintainers/0.4-conversation-first-design.md):
 nothing is written by default, and only with the taxpayer's consent does the
-plugin keep exactly one workpack file per workflow:
+plugin keep exactly one workpack file per workflow identity. Income tax has two
+fixed paths (``global.workpack_paths``):
 
 - ``workspace/nl-tax-annual-2025-workpack.md``
 - ``workspace/nl-tax-provisional-2026-workpack.md``
+
+The draft-only extension workflows (VAT return, VAT correction, ICP, OSS,
+international, annual 2026) write one file per exact identity, for example
+``workspace/nl-tax-vat-2026-Q3-workpack.md``. Their path templates come from
+the workpack grader's ``WORKPACK_PATHS`` (mirrored in
+``global.identity_workpack_paths``) and are matched with the grader's
+token-aware regexes. Such a path is a permitted output only in a case that
+lists it in ``expected_files``, which is how a case declares the taxpayer's save
+consent for that identity.
 
 For a selected case this verifier checks that the test workspace holds exactly
 the expected workpacks (plus harness captures under ``workspace/eval/``), that
@@ -50,6 +60,9 @@ DEFAULT_WORKPACK_PATHS = {
     "annual_2025": "workspace/nl-tax-annual-2025-workpack.md",
     "provisional_2026": "workspace/nl-tax-provisional-2026-workpack.md",
 }
+# Grader kinds whose path is one of the two fixed income-tax paths above; every
+# other grader kind writes an identity-scoped path that a case must consent to.
+FIXED_PATH_KINDS = {"annual": "annual_2025", "provisional": "provisional_2026"}
 DEFAULT_HARNESS_GLOBS = ["workspace/eval/**"]
 DEFAULT_LEGACY_PATHS = [
     "workspace/taxpayer/**",
@@ -71,13 +84,6 @@ APPENDIX_RULE_KEYS = (
     "field_map",
     "updated_after_created",
 )
-ANNUAL_WORKFLOWS = {"annual_2025"}
-PROVISIONAL_WORKFLOWS = {
-    "provisional_2026_request",
-    "provisional_2026_change",
-    "provisional_2026_review",
-    "provisional_2026_stopzetten",
-}
 NO_FIELD_MAP_WORKFLOWS = {"provisional_2026_review", "provisional_2026_stopzetten"}
 SKIPPED_DIRS = {"__pycache__", ".git", ".plugin-eval"}
 
@@ -243,6 +249,57 @@ def workpack_paths(dataset: dict[str, Any]) -> dict[str, str]:
     return dict(_global(dataset).get("workpack_paths") or DEFAULT_WORKPACK_PATHS)
 
 
+def identity_workpack_templates() -> dict[str, str]:
+    """Grader path templates for the identity-scoped (non-fixed) workpack kinds."""
+    grader = load_workpack_grader()
+    return {
+        kind: path for kind, path in grader.WORKPACK_PATHS.items() if kind not in FIXED_PATH_KINDS
+    }
+
+
+def _grader_or_none():
+    try:
+        return load_workpack_grader()
+    except (FileNotFoundError, ImportError, OSError):
+        return None
+
+
+def identity_workpack_kind(relative: str) -> str | None:
+    """Return the grader kind when ``relative`` is an identity-scoped workpack path.
+
+    Without a loadable grader no identity-scoped path is recognized, so such a
+    file is reported as unexpected (fail closed).
+    """
+    grader = _grader_or_none()
+    if grader is None:
+        return None
+    for kind, regex in grader.WORKPACK_PATH_RES.items():
+        if kind not in FIXED_PATH_KINDS and regex.match(relative):
+            return kind
+    return None
+
+
+def is_workpack_filename(name: str) -> bool:
+    """True for a canonical workpack file name of any kind (fixed or templated)."""
+    grader = _grader_or_none()
+    if grader is None:
+        return name in {Path(path).name for path in DEFAULT_WORKPACK_PATHS.values()}
+    return any(
+        grader.WORKPACK_PATH_RES[kind].match("workspace/" + name) for kind in grader.WORKPACK_PATH_RES
+    )
+
+
+def consented_workpack_paths(dataset: dict[str, Any], case: dict[str, Any]) -> set[str]:
+    """Workpack paths this case permits: an expected fixed or identity-scoped path."""
+    fixed = set(workpack_paths(dataset).values())
+    expected = set(case.get("expected_files") or [])
+    return {
+        relative
+        for relative in expected
+        if relative in fixed or identity_workpack_kind(relative) is not None
+    }
+
+
 def harness_globs(dataset: dict[str, Any]) -> list[str]:
     return list(_global(dataset).get("harness_output_globs", DEFAULT_HARNESS_GLOBS) or [])
 
@@ -309,8 +366,8 @@ def check_layout(
     errors: list[str],
 ) -> None:
     root_relative = _global(dataset).get("generated_output_root", "workspace")
-    allowed_workpacks = set(workpack_paths(dataset).values())
-    expected = set(case.get("expected_files") or [])
+    fixed_workpacks = set(workpack_paths(dataset).values())
+    consented = consented_workpack_paths(dataset, case)
     harness = harness_globs(dataset)
     legacy = legacy_paths(dataset)
 
@@ -322,22 +379,22 @@ def check_layout(
                 f"{case_id}: legacy 0.3 path written: {relative} "
                 "(0.4 writes only the consented workpack file)"
             )
-        elif relative in allowed_workpacks:
-            if relative not in expected:
+        elif relative in fixed_workpacks or identity_workpack_kind(relative) is not None:
+            if relative not in consented:
                 errors.append(
                     f"{case_id}: workpack written without this case's save consent: {relative}"
                 )
         elif any(matches_pattern(relative, pattern) for pattern in harness):
             continue
         else:
+            permitted = ", ".join(sorted(consented)) or "none in this case"
             errors.append(
                 f"{case_id}: unexpected file under {root_relative}/: {relative} "
-                f"(the plugin may write only {', '.join(sorted(allowed_workpacks))})"
+                f"(the plugin may write only the case's consented workpack path(s): {permitted})"
             )
 
     # R3: no copy, versioned or dated variant, or second workspace/ tree
     # anywhere in the task folder.
-    allowed_names = {Path(path).name for path in allowed_workpacks}
     for current_root, dirs, names in os.walk(workspace):
         dirs[:] = [d for d in dirs if d not in SKIPPED_DIRS]
         current = Path(current_root)
@@ -347,14 +404,15 @@ def check_layout(
                 errors.append(f"{case_id}: second workspace tree: {relative}/")
         for name in names:
             relative = (current / name).relative_to(workspace).as_posix()
-            if relative in seed_paths or relative in allowed_workpacks:
+            if relative in seed_paths or relative in fixed_workpacks or relative in consented:
                 continue
             if name.startswith("nl-tax-") and "workpack" in name:
-                if name in allowed_names and not relative.startswith(root_relative + "/"):
-                    # A file with the fixed name outside workspace/ is only
-                    # acceptable as a seeded attachment (handled above).
+                canonical = is_workpack_filename(name)
+                if canonical and not relative.startswith(root_relative + "/"):
+                    # A file with a canonical workpack name outside workspace/
+                    # is only acceptable as a seeded attachment (handled above).
                     errors.append(f"{case_id}: workpack copy outside {root_relative}/: {relative}")
-                elif name not in allowed_names:
+                elif not canonical:
                     errors.append(f"{case_id}: workpack copy or variant: {relative}")
 
     for pattern in case.get("forbidden_files", []) or []:
@@ -410,11 +468,12 @@ def check_generated_output_regex(
 
 
 def _kind_for_workflow(workflow: Any) -> str | None:
-    if workflow in ANNUAL_WORKFLOWS:
-        return "annual"
-    if workflow in PROVISIONAL_WORKFLOWS:
-        return "provisional"
-    return None
+    """The grader's kind for an Appendix A workflow identity (None when unknown)."""
+    try:
+        grader = load_workpack_grader()
+    except (FileNotFoundError, ImportError, OSError):
+        return None
+    return grader.kind_for_workflow(workflow)
 
 
 def check_field_map(
@@ -668,16 +727,21 @@ def check_source_ledger(
         kind = grader.kind_for_workflow(record.get("workflow"))
         if register is None or kind is None or not isinstance(loaded, list):
             continue
-        other = "provisional_assessment" if kind == "annual" else "annual_return"
-        crossed = sorted(
-            str(source_id)
-            for source_id in loaded
-            if (register.get(str(source_id)) or {}).get("workflow") == other
-        )
+        # The grader's own compatibility rule (register workflow against
+        # FIELD_MAP_WORKFLOWS[kind], workflow_family, ICP/OSS ownership, tax
+        # year), so the verifier and the grader never drift apart.
+        crossed = []
+        for source_id in loaded:
+            entry = register.get(str(source_id))
+            if entry is None:
+                continue
+            problem = grader.source_scope_error(str(source_id), entry, kind, record.get("tax_year"))
+            if problem:
+                crossed.append(problem)
         if crossed:
             errors.append(
-                f"{case_id}: {relative} sources_loaded holds {other} source(s) {crossed}; "
-                "a workflow ledger is never a cross-workflow union"
+                f"{case_id}: {relative} sources_loaded holds source(s) of another workflow or year "
+                f"({'; '.join(crossed)}); a workflow ledger is never a cross-workflow union"
             )
 
 
@@ -759,6 +823,17 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
             f"global.workpack_paths must be the two fixed 0.4 workpack paths {DEFAULT_WORKPACK_PATHS}"
         )
     allowed_workpacks = set(workpacks_by_family.values())
+    try:
+        grader = load_workpack_grader()
+        templates = identity_workpack_templates()
+    except (FileNotFoundError, ImportError, OSError) as exc:
+        return errors + [f"workpack grader unavailable for dataset checks: {exc}"]
+    declared = global_config.get("identity_workpack_paths")
+    if declared != templates:
+        errors.append(
+            "global.identity_workpack_paths must mirror the workpack grader's WORKPACK_PATHS "
+            f"for the identity-scoped workflows {templates} (got {declared!r})"
+        )
     harness = harness_globs(dataset)
     legacy = legacy_paths(dataset)
     if not set(DEFAULT_LEGACY_PATHS) <= set(legacy):
@@ -775,8 +850,10 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
         for pattern in expected:
             if any(matches_pattern(pattern, legacy_pattern) for legacy_pattern in legacy):
                 errors.append(f"{case_id}: expected file is a legacy 0.3 path: {pattern}")
-            elif pattern not in allowed_workpacks and not any(
-                matches_pattern(pattern, glob_pattern) for glob_pattern in harness
+            elif (
+                pattern not in allowed_workpacks
+                and identity_workpack_kind(pattern) is None
+                and not any(matches_pattern(pattern, glob_pattern) for glob_pattern in harness)
             ):
                 errors.append(
                     f"{case_id}: expected file is neither a workpack nor a harness capture: {pattern}"
@@ -801,10 +878,10 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
             presentation = rule.get("presentation", "file")
             if presentation not in PRESENTATIONS:
                 errors.append(f"{case_id}: workpack rule presentation must be one of {sorted(PRESENTATIONS)}")
-            if relative in allowed_workpacks:
-                family = "annual_2025" if kind == "annual" else "provisional_2026"
-                if kind is not None and workpacks_by_family.get(family) != relative:
-                    errors.append(f"{case_id}: {workflow} belongs in {workpacks_by_family.get(family)}, not {relative}")
+            if relative in allowed_workpacks or identity_workpack_kind(relative) is not None:
+                own_path = grader.workpack_path_for_workflow(workflow) if kind is not None else None
+                if kind is not None and own_path != relative:
+                    errors.append(f"{case_id}: {workflow} belongs in {own_path}, not {relative}")
                 if consent != "given":
                     errors.append(f"{case_id}: a saved workpack file implies save_consent: given")
                 if presentation == "chat":
@@ -827,7 +904,9 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
             if workflow in NO_FIELD_MAP_WORKFLOWS and field_map == "expected":
                 errors.append(f"{case_id}: {workflow} never produces a field map")
         for relative in expected:
-            if relative in allowed_workpacks and relative not in rule_paths:
+            if (
+                relative in allowed_workpacks or identity_workpack_kind(relative) is not None
+            ) and relative not in rule_paths:
                 errors.append(f"{case_id}: expected workpack {relative} has no workpacks rule")
 
         chat_paths = {
@@ -857,7 +936,7 @@ def validate_dataset_paths(dataset_path: Path, dataset: dict[str, Any]) -> list[
         for seed in seed_files(case):
             if not (REPO_ROOT / seed["from"]).is_file():
                 errors.append(f"{case_id}: seed source does not exist: {seed['from']}")
-            if seed["path"] in allowed_workpacks:
+            if seed["path"] in allowed_workpacks or identity_workpack_kind(seed["path"]) is not None:
                 errors.append(
                     f"{case_id}: a seed must not occupy a fixed workpack path; put an attached "
                     "workpack outside workspace/"

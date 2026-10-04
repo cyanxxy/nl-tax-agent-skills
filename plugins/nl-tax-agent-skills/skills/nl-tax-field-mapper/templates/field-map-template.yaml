@@ -4,11 +4,16 @@
 # this conversation, the canonical copy is one fenced yaml block in
 # "## Appendix B — Field map" of the workflow's workpack (never a separate file).
 field_map_version: "1.1"
-workflow: ""          # "annual_return" or "provisional_assessment" — the FIELD-MAP enum.
+workflow: ""          # annual_return | provisional_assessment | vat_return | vat_correction | icp_declaration | oss_return | international_return
                       # Do NOT copy the workpack's resume-record labels (annual_2025,
                       # provisional_2026_request, ...) into this key; those live in
                       # Appendix A of the workpack and fail validation here.
-tax_year: ""          # REQUIRED: set explicitly to 2025 for annual_return or 2026 for provisional_assessment
+tax_year: ""          # REQUIRED: set explicitly to one pair from FM-WORKFLOW-YEAR: annual_return 2025 (resident
+                      # 2025 schema) or 2026 (annual 2026 draft, annual2026.* rows only);
+                      # provisional_assessment 2026; VAT, ICP, OSS or international 2025 or 2026.
+# VAT/ICP/OSS add period: Q1..Q4 | M01..M12 | Y for VAT and ICP; Q1..Q4 for OSS union and
+# non_union, M01..M12 for OSS ioss. OSS also adds scheme: union | non_union | ioss.
+# International adds return_form: migration | nonresident. Every key equals Appendix A.
 created_at: ""        # ISO 8601 timestamp, e.g. "2026-04-30T14:00:00Z"
 updated_at: ""
 readiness: "draft"    # Canonical agent declaration derived from the owning workflow's
@@ -59,3 +64,9 @@ notes: []
 # include one business-schema coverage entry per referenced W&V, balance,
 # private, prior-year-set-off, and question identifier:
 # "business_schema_coverage: <field_id> = applicable_mapped|not_applicable_sourced|unresolved; source=<...>"
+
+# Extended scopes also use scheme: union|non_union|ioss (OSS), or
+# return_form: migration|nonresident (international), matching Appendix A.
+# ICP/OSS rows preserve dimensions per cross-border-field-map.md; no genuine IDs.
+# All annual 2026/international rows are conceptual entry_mode: internal_routing.
+# Extensions stay draft while source and exact schema review are pending.

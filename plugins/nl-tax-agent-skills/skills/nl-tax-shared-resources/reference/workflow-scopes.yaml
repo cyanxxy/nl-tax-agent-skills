@@ -1,0 +1,97 @@
+# Declarative identity and path contract for the extended preparation owners.
+# The `template` values are plugin-root-relative for the repository graders.
+# At runtime each owner reads its own `templates/` file named in its SKILL.md.
+version: 1
+policy:
+  maximum_readiness: draft
+  human_source_review_required: true
+  manual_entry_schema_review_required: true
+scopes:
+  annual_2026:
+    owner: nl-tax-annual-return-2026
+    map_workflow: annual_return
+    tax_years:
+    - 2026
+    resume_pattern: ^annual_(?P<tax_year>2026)$
+    identity_keys: []
+    path: workspace/nl-tax-annual-2026-workpack.md
+    title: Dutch Annual Income Tax Workpack
+    template: skills/nl-tax-annual-return-2026/templates/annual-2026-workpack.md
+    sections:
+    - annual_scope
+    - household
+    - income
+    - business
+    - home
+    - box2
+    - box3
+    - deductions_credits
+    - reconciliation
+    - confirm
+    field_prefix: annual2026.
+    internal_only: true
+    review_blocker: Annual 2026 source and annual schema review
+  icp:
+    owner: nl-tax-icp
+    map_workflow: icp_declaration
+    tax_years:
+    - 2025
+    - 2026
+    resume_pattern: ^icp_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$
+    identity_keys:
+    - period
+    path: workspace/nl-tax-icp-{year}-{period}-workpack.md
+    title: Dutch ICP
+    template: skills/nl-tax-icp/templates/icp-workpack.md
+    sections:
+    - icp_scope
+    - icp_transactions
+    - icp_corrections
+    - icp_reconciliation
+    - confirm
+    review_blocker: ICP source-content and schema review
+  oss:
+    owner: nl-tax-oss
+    map_workflow: oss_return
+    tax_years:
+    - 2025
+    - 2026
+    resume_pattern: ^(?=oss_(?:(?:union|non_union)_\d{4}_Q[1-4]|ioss_\d{4}_M(?:0[1-9]|1[0-2]))$)oss_(?P<scheme>union|non_union|ioss)_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2]))$
+    identity_keys:
+    - period
+    - scheme
+    path: workspace/nl-tax-oss-{scheme}-{year}-{period}-workpack.md
+    title: Dutch OSS
+    template: skills/nl-tax-oss/templates/oss-workpack.md
+    sections:
+    - oss_scope
+    - oss_transactions
+    - oss_corrections
+    - oss_reconciliation
+    - confirm
+    review_blocker: OSS source-content and scheme schema review
+  international:
+    owner: nl-tax-international-return
+    map_workflow: international_return
+    tax_years:
+    - 2025
+    - 2026
+    resume_pattern: ^international_(?P<tax_year>2025|2026)_(?P<return_form>migration|nonresident)$
+    identity_keys:
+    - return_form
+    path: workspace/nl-tax-international-{year}-{return_form}-workpack.md
+    title: Dutch International
+    template: skills/nl-tax-international-return/templates/international-workpack.md
+    sections:
+    - international_scope
+    - residence_periods
+    - income_assets
+    - qualifying_status
+    - social_insurance
+    - treaty_review
+    - deductions_credits
+    - reconciliation
+    - confirm
+    field_prefix: international.
+    internal_only: true
+    review_blocker: International source-content and form schema review

@@ -32,6 +32,38 @@ choose the clearest conversational order.
   instead of sharing a document.
 - **Trigger phrases:** "aangifte doen", "belastingaangifte 2025", "file my taxes", "income tax return"
 
+## Annual Return 2026
+
+- **Direction:** Actual 2026 income, assets and deductions; year-to-date
+  evidence stays distinct from forecasts until final annual evidence exists.
+- **Owner:** `../nl-tax-annual-return-2026/SKILL.md`. A separate actual-return
+  draft, not the provisional 2026 estimate workflow.
+- **Boundary:** Source/form review and outstanding year-end evidence keep
+  preparation draft; no opening date, deadline or final annual portal
+  inventory is assumed. Resident 2025 helper/rate contracts do not apply.
+
+## Migration / Nonresident Annual 2025 or 2026
+
+- **Direction:** Establish residence intervals and the migration or full-year
+  nonresident form, then prepare evidence with international classification
+  questions. Use `reference/extended-routing.md` and its international owner.
+- **Boundary:** 2025 M/C preparation is available; 2026 is precollection until
+  its final annual form is reviewed. Neither route is automatically terminal.
+  A voorlopige aanslag 2026 for a migrant or nonresident is not this route: it
+  follows the terminal provisional boundary in section 1 of
+  `reference/unsupported-cases.md`.
+
+## ICP / OSS / IOSS
+
+- **Direction:** Separate cross-border declarations. The ICP rubric 3 total
+  (ICP rubric 3a goods and services plus ICP rubric 3b simplified
+  triangulation) must reconcile to btw-aangifte rubric 3b for the same
+  coverage.
+  OSS uses an already established Union/non-Union/IOSS registration, scheme
+  and period, with verified consumption-country rates.
+- **Owner:** `reference/extended-routing.md` names the separate ICP/OSS owners.
+  A domestic VAT return never substitutes for either declaration.
+
 ## Voorlopige Aanslag 2026 — Request
 
 - **Direction:** Forward-looking — what do you expect in 2026
@@ -62,12 +94,22 @@ choose the clearest conversational order.
 
 ## Key Distinction
 
-- **Annual = backward-looking:** What actually happened in 2025 (actuals, evidence-based)
+- **VAT = transaction and period based:** a `btw-aangifte`/`omzetbelasting`
+  for an assigned monthly, quarterly, or annual period. Use
+  `reference/vat-routing.md` for return or correction intent. A "ZZP return"
+  may mean income tax or VAT; resolve that ambiguity before the annual flow.
+
+- **Annual = actuals:** What happened in the requested 2025 or 2026 year.
+  Annual 2026 collected before year-end remains an actual-evidence draft.
 - **Provisional = forward-looking:** What do you expect in 2026 (estimates, projection-based)
 
 ## When the User is Unsure
 
-Ask: "Do you want to look back at what happened in 2025, or plan ahead for 2026?"
+For ambiguous 2026 income-tax intent, ask whether the user wants actual
+annual-return evidence preparation or a provisional estimate. When the user is
+choosing between the resident annual return 2025 and the voorlopige aanslag
+2026, ask: "Do you want to look back at what happened in 2025, or plan
+ahead for 2026?" Do not turn explicit annual 2026 intent into provisional.
 
 - If looking back at 2025 → Annual return 2025
 - If planning ahead for 2026 → Voorlopige aanslag 2026 (then determine subflow: request, change, review, or stopzetten)

@@ -52,7 +52,7 @@ class ValidatorSmokeTests(unittest.TestCase):
         )
 
         cases = [
-            ("annual_return", 2026),
+            ("annual_return", 2027),
             ("provisional_assessment", 2025),
             ("annual", 2025),
         ]

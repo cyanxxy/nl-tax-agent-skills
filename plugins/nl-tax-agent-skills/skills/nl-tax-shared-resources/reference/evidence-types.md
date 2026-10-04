@@ -1,7 +1,7 @@
 # Evidence Types — Dutch Tax Document Classification
 
-This reference defines the document types the owning annual or provisional
-workflow uses when it reads a document the user shares. Each type includes a
+This reference defines the document types an owning income-tax, international,
+VAT, ICP or OSS workflow uses when it reads a document the user shares. Each type includes a
 description, typical extractable fields, relevant workflow, and common file
 naming patterns. Record each document as one row in the workpack's
 `## Documents and sources` table and take values only within
@@ -22,6 +22,9 @@ Use these canonical type tokens exactly as the headings below in the row's type 
 - Deductions & Gifts
 - Debts & Liabilities
 - Tax Authority Documents
+- VAT evidence
+- Cross-border and international evidence
+- Annual 2026 collection evidence
 - Catch-all
 
 ## Income & Employment
@@ -363,6 +366,133 @@ documents: `verliesbeschikking`,
 - **Common naming patterns:** `niet*gerealiseerde*zelfstandigenaftrek*.pdf`, `ngz*.pdf`, `beschikking*zelfstandigenaftrek*.pdf`
 
 ---
+
+## VAT evidence
+
+Use these tokens for VAT return/correction preparation; collect no supplier or
+customer personal identifiers, VAT registration numbers, or payment references.
+
+### vat_sales_ledger
+- **Typical fields:** year, assigned period, invoice/credit-note dates,
+  delivery dates where relevant, tax-exclusive turnover, charged VAT,
+  established rate/treatment, reconciliation totals, currency.
+- **Boundary:** a bank receipt is not an invoice under the invoicing system;
+  sales totals must reconcile without duplicate credit notes or overlaps.
+
+### vat_purchase_ledger
+- **Typical fields:** invoice dates, tax-exclusive costs, Dutch input VAT,
+  evidence of taxable business use, deduction restrictions, foreign-service
+  reverse-charge amounts and their confirmed treatment.
+- **Boundary:** foreign VAT is not Dutch input VAT; paying an expense or
+  deducting it for income tax does not establish VAT deductibility.
+
+### vat_invoice
+- **Typical fields:** invoice/credit-note type, date, supply date, net amount,
+  VAT amount and rate, currency, treatment, business-use evidence.
+- **Boundary:** use a local evidence ID instead of storing invoice numbers
+  or counterparty identifying data; check minimum invoice requirements in the
+  VAT note and record only whether requirements are met.
+
+### vat_filed_return
+- **Typical fields:** exact filed year/period, all declared rubric totals,
+  prior net amount, filing date; source for a correction's original column.
+- **Boundary:** read the copy the user shares. Never retrieve it from an
+  authenticated portal or record account identifiers.
+
+### vat_filing_notice
+- **Typical fields:** assigned year/period, due date, filing frequency, KOR
+  effective dates if the notice establishes them.
+- **Boundary:** record no tax/account or payment-reference numbers.
+
+### vat_adjustment_statement
+- **Typical fields:** adviser-confirmed adjustment, relevant period,
+  rubric, amount, explanation and deduction treatment.
+- **Boundary:** record accepted treatment, period and calculation provenance.
+  The VAT owner may obtain bounded supported arithmetic from
+  `../nl-tax-vat-adjustments/SKILL.md`; unresolved classification/elections
+  remain named blockers. An adviser statement is not required for every
+  complete car, property, mixed-use or capital-goods calculation.
+
+## Cross-border and international evidence
+
+These tokens identify evidence, not tax entitlement. Use anonymous group,
+customer and asset labels. Never retain full VAT/IOSS IDs, names/addresses,
+invoice/contract references, foreign account/tax IDs or credentials. Record
+whether the human checked needed identity fields without copying them.
+
+### icp_transaction_ledger
+- **Typical fields:** year, exact coverage, customer alias/country, goods or
+  service classification, tax date, exclusive amount, correction sign, and the
+  comparison of the ICP rubric 3 total with btw-aangifte rubric 3b for the
+  same coverage.
+- **Boundary:** goods/services frequencies may differ. An alias never replaces
+  the actual customer VAT ID the human supplies personally.
+
+### icp_customer_verification
+- **Typical fields:** customer alias, country, verification date, human
+  confirmation of VAT-ID validity and customer status, evidence ID.
+- **Boundary:** no actual VAT/verification request IDs; missing verification
+  is a blocker, not an assumed valid customer.
+
+### cross_border_filed_declaration
+- **Typical fields:** actual filed workflow/scheme, year/period, customer alias
+  or consumption-country groups, declared values, earlier reported
+  corrections and relevant dates.
+- **Boundary:** a draft is not a filed baseline. ICP/OSS corrections preserve
+  their distinct original-period conventions.
+
+### oss_registration_notice
+- **Typical fields:** scheme, identification state, registration/effective
+  dates, intermediary appointment confirmation, scope and period assignment.
+- **Boundary:** no actual registration/payment IDs; never infer registration
+  from sales or select a scheme.
+
+### oss_transaction_grid
+- **Typical fields:** scheme/year/period, group alias, consumption and
+  dispatch/establishment countries, supply type, date/base basis, currency,
+  exclusive base, verified rate/VAT, exclusions and original-period correction.
+- **Boundary:** input VAT never reduces OSS payable. Do not net another
+  country's refund against payable or count a credit note twice.
+
+### official_rate_or_fx_evidence
+- **Typical fields:** official URL/date, destination/category/rate, period
+  currency quotation direction and published exchange rate.
+- **Boundary:** no recalled rate or domestic whole-euro rounding for OSS;
+  a country's standard rate does not classify every transaction.
+
+### international_residence_timeline
+- **Typical fields:** year, countries, exact residence dates, migration or
+  nonresident form, domicile disputes and provenance.
+- **Boundary:** BRP/nationality/address alone do not decide treaty residence;
+  retain countries/intervals without full addresses or identities.
+
+### foreign_income_or_tax_statement
+- **Typical fields:** year, country/source category, income as labelled,
+  foreign tax, Dutch withholding, currency and relevant dates.
+- **Boundary:** world income, Dutch-source income and accepted treaty
+  allocation stay separate; foreign tax is not automatically a Dutch credit.
+
+### qualifying_foreign_taxpayer_evidence
+- **Typical fields:** year/country, income-statement availability, certified
+  status, world-income components and sourced qualification facts.
+- **Boundary:** a ratio does not establish every qualification condition;
+  missing certification/status stays open.
+
+### social_insurance_period_evidence
+- **Typical fields:** countries, exact covered intervals, dated insurance and EU applicable-legislation certificate
+  confirmation and contribution/withholding categories.
+- **Boundary:** residence does not decide insurance coverage; no certificate
+  numbers or assumed year-fraction entitlement.
+
+## Annual 2026 collection evidence
+
+### annual_actuals_collection
+- **Typical fields:** actual period covered, year-to-date income/costs,
+  dated balances, known withholding, source and final-statement availability.
+- **Boundary:** dated actuals stay distinct from forecasts/incomplete annual
+  totals. Reuse common annual evidence types where appropriate, validating
+  year/category under the annual 2026 owner; do not import resident 2025
+  helper/rate contracts.
 
 ## Catch-all
 

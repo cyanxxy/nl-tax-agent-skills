@@ -330,7 +330,7 @@ payment/refund amount and timing.
 redirect. For request/review and any other change, replace this section's body
 with "N/A — not applicable for this subflow"; do not omit the heading.]
 
-If the taxpayer is **moving abroad**, record: "Residency review required; moving abroad is **not a categorical stopzetten reason**." Route to the unsupported residency/migration path and do not emit a refund-stop checklist solely because of the move.
+If the taxpayer is **moving abroad**, record: "Residency review required; moving abroad is **not a categorical stopzetten reason**." The provisional 2026 migration boundary applies and is terminal for this provisional workflow: do not emit a refund-stop checklist solely because of the move, and tell the taxpayer to adjust or stop the voorlopige aanslag personally or with an adviser. An annual M or C precollection draft is a separate workflow and does not change or stop the voorlopige aanslag.
 
 ### Current-date cutoff gate
 
@@ -775,7 +775,7 @@ appendices.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.4.0"
+plugin_version: "0.5.0"
 workflow: provisional_2026_request   # provisional_2026_request | provisional_2026_change | provisional_2026_review | provisional_2026_stopzetten
 tax_year: 2026
 created_at: ""                       # ISO 8601

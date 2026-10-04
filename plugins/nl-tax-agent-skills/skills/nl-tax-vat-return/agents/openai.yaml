@@ -1,0 +1,10 @@
+interface:
+  display_name: "Dutch ZZP VAT Return"
+  short_description: "Draft Dutch ZZP VAT workpack for one confirmed period"
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
+  brand_color: "#1F6FEB"
+  default_prompt: "Prepare a draft Dutch ZZP VAT workpack for one confirmed 2025 or 2026 filing period."
+
+policy:
+  allow_implicit_invocation: true

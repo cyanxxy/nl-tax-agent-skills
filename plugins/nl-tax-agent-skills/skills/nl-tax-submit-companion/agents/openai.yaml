@@ -12,6 +12,8 @@
 interface:
   display_name: "Dutch Tax Manual-entry Checklist"
   short_description: "Human-only portal checklist from a reviewed tax workpack."
+  icon_small: "./assets/icon.png"
+  icon_large: "./assets/icon.png"
   brand_color: "#1F6FEB"
   default_prompt: "Create my human-only manual-entry checklist from my reviewed Dutch tax workpack and any applicable field map."
 

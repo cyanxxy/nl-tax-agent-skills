@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-10-02T10:54:32.547296+00:00",
+  "scope": "Unreleased ZZP VAT preparation extension",
+  "skills": [
+    "nl-tax-vat-return",
+    "nl-tax-vat-correction"
+  ],
+  "years": [
+    2025,
+    2026
+  ],
+  "readiness_ceiling": "draft",
+  "source_content_review": "needs_review",
+  "source_count": 22,
+  "human_review_attested": false,
+  "verification": {
+    "unit_suite_repo_cwd": {
+      "tests": 621,
+      "result": "passed"
+    },
+    "unit_suite_plugin_cwd": {
+      "tests": 621,
+      "result": "passed"
+    },
+    "vat_targeted_after_final_provenance_change": {
+      "tests": 21,
+      "result": "passed"
+    },
+    "source_provenance_after_final_change": {
+      "tests": 7,
+      "result": "passed"
+    },
+    "audit_fixes_after_final_change": {
+      "tests": 13,
+      "result": "passed"
+    },
+    "source_register": "passed",
+    "supported_workflows": "passed",
+    "invocation_policy": "passed",
+    "offline_dataset": "passed",
+    "compile_check": "passed",
+    "diff_whitespace": "passed",
+    "live_host_smoke_test": "not_run"
+  },
+  "release_blockers": [
+    {
+      "source_id": "bd_machtigen_authorization",
+      "reason": "Existing human source review is 93 days old against its 92-day freshness policy; knowledge gate fails."
+    },
+    {
+      "source_scope": "vat",
+      "reason": "New VAT notes require human content comparison before review_ready or entry checklists."
+    }
+  ],
+  "publication": "not_published"
+}

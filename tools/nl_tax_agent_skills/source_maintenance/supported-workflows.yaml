@@ -1,5 +1,22 @@
 version: 1
+# last_reviewed is the most recent HUMAN attestation of this gate. The
+# 2 October 2026 draft-scope change below was made by an agent and is recorded
+# under pending_review; it does not move this date.
 last_reviewed: "2026-08-15"
+
+# Unattested change to this gate. A human reviewer who accepts the change sets
+# human_review to the review date and moves last_reviewed at the same time.
+pending_review:
+  changed_on: "2026-10-02"
+  changed_by: agent
+  human_review: null
+  scope: >-
+    Added draft_only_workflows (vat_return, vat_correction, icp_declaration,
+    oss_return and international_return for 2025 and 2026; annual_return
+    2026). Removed the blocked entries annual_2026,
+    annual_2025_nonresidents_c_form_roadmap and
+    annual_2025_migration_m_form_roadmap, because the draft routes now cover
+    those cases at draft readiness only.
 
 policy:
   source_backed_only: true
@@ -7,7 +24,10 @@ policy:
     A workflow is supported only when the exact workflow and tax year, plus any
     required shared all-year sources, have reviewed source-register entries,
     local knowledge snapshots, and passing validators. Never reuse rates,
-    thresholds, field maps, or box 3 rules from another tax year.
+    thresholds, field maps, or box 3 rules from another tax year. Entries under
+    draft_only_workflows are staged, unreviewed preparation routes capped at
+    draft readiness; they never satisfy this rule and never count as
+    supported.
 
 active_workflows:
   - id: annual_2025
@@ -402,38 +422,6 @@ blocked_workflows:
       per-partner field maps and the samenwerkingsverband screens; update
       knowledge snapshots and tests, then pass validation.
 
-  - id: annual_2025_nonresidents_c_form_roadmap
-    workflow: annual_return
-    tax_year: 2025
-    status: blocked_pending_official_sources
-    may_prepare_workpack: false
-    profile_candidates:
-      - annual_2025_nonresident_c_form
-    case_scope: nonresident_c_form
-    allowed_output: conversation_only
-    reason: >-
-      Nonresident C-form cases are outside the reviewed resident annual-return
-      source set and must not reuse resident-only assumptions.
-    unlock_condition: >-
-      Add official C-form/nonresident sources, local snapshots, field maps, and
-      validation tests before enabling workpack preparation.
-
-  - id: annual_2025_migration_m_form_roadmap
-    workflow: annual_return
-    tax_year: 2025
-    status: blocked_pending_official_sources
-    may_prepare_workpack: false
-    profile_candidates:
-      - annual_2025_migration_m_form
-    case_scope: migration_m_form
-    allowed_output: conversation_only
-    reason: >-
-      Migration M-form cases require separate official guidance and field maps
-      and are not covered by the active resident annual-return workflow.
-    unlock_condition: >-
-      Add reviewed M-form sources, knowledge snapshots, field maps, and
-      validation tests before enabling workpack preparation.
-
   - id: annual_2025_deceased_f_form_roadmap
     workflow: annual_return
     tax_year: 2025
@@ -466,23 +454,6 @@ blocked_workflows:
       Add reviewed foreign-income and treaty sources, local snapshots, field
       maps, and validation tests before enabling workpack preparation.
 
-  - id: annual_2026
-    workflow: annual_return
-    tax_year: 2026
-    status: blocked_pending_official_sources
-    may_prepare_workpack: false
-    allowed_output: conversation_only
-    reason: >-
-      The annual return 2026 is filed in 2027; no reviewed annual-return 2026
-      source-register entries or local knowledge snapshots exist yet. Do not
-      prepare a 2026 annual-return workpack and do not substitute 2025 annual
-      or 2026 provisional values. Only the 2026 voorlopige aanslag flows are
-      active for tax year 2026.
-    unlock_condition: >-
-      Add official Belastingdienst/wetten.overheid.nl 2026 annual sources when
-      the 2026 filing season opens, update the source register and knowledge
-      snapshots, then pass validation.
-
   - id: annual_2027
     workflow: annual_return
     tax_year: 2027
@@ -510,3 +481,474 @@ blocked_workflows:
     unlock_condition: >-
       Add official Belastingdienst 2027 provisional sources, update the source
       register and knowledge snapshots, then pass validation.
+
+# Staged preparation routes (added 2 October 2026, pending human review). Every
+# required source here is content_stage: draft_only (agent research only,
+# last_human_reviewed: null) or an all-year shared source such as the
+# authorization note. maximum_readiness: draft keeps every map at draft, and
+# while that ceiling applies the submit companion shows only Blockers and
+# writes no manual-entry checklist for these routes.
+# Hand-edit this file; a YAML dump would delete these comments.
+draft_only_workflows:
+  - id: vat_return_2025
+    workflow: vat_return
+    tax_year: 2025
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - vat_2025_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat
+      - skills/nl-tax-shared-resources/knowledge/vat-adjustments
+    output_paths:
+      - workspace/nl-tax-vat-2025-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_corrections
+      - bd_vat_suppletie_explanation
+      - bd_vat_invoice_basis
+      - bd_vat_cash_basis
+      - bd_vat_cash_basis_eligibility
+      - bd_vat_input_conditions
+      - bd_vat_invoice_requirements
+      - bd_vat_non_deductible
+      - bd_vat_eu_supply_timing
+      - bd_vat_kor
+      - bd_vat_kor_effects
+      - bd_vat_icp
+      - bd_vat_private_use
+      - bd_vat_logies_2026
+      - bd_vat_return_walkthrough
+      - bd_vat_rubric_structure
+      - bd_vat_return_obligation
+      - bd_vat_return_deadlines
+      - bd_vat_rounding
+      - bd_vat_domestic_reverse_charge
+      - bd_vat_eu_acquisitions
+      - bd_vat_non_eu_services
+      - bd_vat_bua_scope
+      - bd_vat_bua_threshold
+      - bd_vat_bua_exceptions
+      - bd_vat_bua_contribution_policy
+      - bd_vat_year_end_adjustments
+      - bd_vat_car_private_use
+      - bd_vat_car_commuting
+      - bd_vat_car_policy
+      - bd_vat_car_ib_2025
+      - bd_vat_margin_goods
+      - bd_vat_margin_calculation
+      - bd_vat_margin_return
+      - bd_vat_margin_method
+      - bd_vat_margin_losses
+      - bd_vat_margin_year_balance
+      - bd_vat_margin_next_year
+      - bd_vat_mixed_taxable_exempt
+      - bd_vat_deduction_ratio
+      - bd_vat_ordinary_revision
+      - bd_vat_mixed_investment_allocation
+      - bd_vat_movable_private_use
+      - bd_vat_computer_private_use
+      - bd_vat_free_services
+      - bd_vat_property_delivery
+      - bd_vat_property_delivery_option
+      - bd_vat_property_rent_option
+      - bd_vat_property_private_use
+      - bd_vat_capital_revision
+      - bd_vat_investment_services
+      - bd_vat_investment_services_regulation
+      - bd_vat_kor_revision
+      - bd_vat_property_revision
+      - bd_vat_deduction_policy
+      - bd_vat_deduction_policy_amendment_2025
+      - bd_vat_kor_conditions
+      - bd_vat_kor_withdrawal
+      - bd_zakelijk_login_machtigen
+      - law_uitvoeringsbeschikking_ob_1968
+      - law_wet_ob_1968
+
+  - id: vat_correction_2025
+    workflow: vat_correction
+    tax_year: 2025
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - vat_correction_2025_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat
+      - skills/nl-tax-shared-resources/knowledge/vat-adjustments
+    output_paths:
+      - workspace/nl-tax-vat-correction-2025-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_corrections
+      - bd_vat_suppletie_explanation
+      - bd_vat_invoice_basis
+      - bd_vat_cash_basis
+      - bd_vat_cash_basis_eligibility
+      - bd_vat_input_conditions
+      - bd_vat_invoice_requirements
+      - bd_vat_non_deductible
+      - bd_vat_eu_supply_timing
+      - bd_vat_kor
+      - bd_vat_kor_effects
+      - bd_vat_icp
+      - bd_vat_private_use
+      - bd_vat_logies_2026
+      - bd_vat_return_walkthrough
+      - bd_vat_rubric_structure
+      - bd_vat_return_obligation
+      - bd_vat_return_deadlines
+      - bd_vat_rounding
+      - bd_vat_domestic_reverse_charge
+      - bd_vat_eu_acquisitions
+      - bd_vat_non_eu_services
+      - bd_vat_bua_scope
+      - bd_vat_bua_threshold
+      - bd_vat_bua_exceptions
+      - bd_vat_bua_contribution_policy
+      - bd_vat_year_end_adjustments
+      - bd_vat_car_private_use
+      - bd_vat_car_commuting
+      - bd_vat_car_policy
+      - bd_vat_car_ib_2025
+      - bd_vat_margin_goods
+      - bd_vat_margin_calculation
+      - bd_vat_margin_return
+      - bd_vat_margin_method
+      - bd_vat_margin_losses
+      - bd_vat_margin_year_balance
+      - bd_vat_margin_next_year
+      - bd_vat_mixed_taxable_exempt
+      - bd_vat_deduction_ratio
+      - bd_vat_ordinary_revision
+      - bd_vat_mixed_investment_allocation
+      - bd_vat_movable_private_use
+      - bd_vat_computer_private_use
+      - bd_vat_free_services
+      - bd_vat_property_delivery
+      - bd_vat_property_delivery_option
+      - bd_vat_property_rent_option
+      - bd_vat_property_private_use
+      - bd_vat_capital_revision
+      - bd_vat_investment_services
+      - bd_vat_investment_services_regulation
+      - bd_vat_kor_revision
+      - bd_vat_property_revision
+      - bd_vat_deduction_policy
+      - bd_vat_deduction_policy_amendment_2025
+      - bd_vat_kor_conditions
+      - bd_vat_kor_withdrawal
+      - bd_zakelijk_login_machtigen
+      - law_uitvoeringsbeschikking_ob_1968
+      - law_wet_ob_1968
+
+  - id: vat_return_2026
+    workflow: vat_return
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - vat_2026_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat
+      - skills/nl-tax-shared-resources/knowledge/vat-adjustments
+    output_paths:
+      - workspace/nl-tax-vat-2026-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_corrections
+      - bd_vat_suppletie_explanation
+      - bd_vat_invoice_basis
+      - bd_vat_cash_basis
+      - bd_vat_cash_basis_eligibility
+      - bd_vat_input_conditions
+      - bd_vat_invoice_requirements
+      - bd_vat_non_deductible
+      - bd_vat_eu_supply_timing
+      - bd_vat_kor
+      - bd_vat_kor_effects
+      - bd_vat_icp
+      - bd_vat_private_use
+      - bd_vat_logies_2026
+      - bd_vat_return_walkthrough
+      - bd_vat_rubric_structure
+      - bd_vat_return_obligation
+      - bd_vat_return_deadlines
+      - bd_vat_rounding
+      - bd_vat_domestic_reverse_charge
+      - bd_vat_eu_acquisitions
+      - bd_vat_non_eu_services
+      - bd_vat_bua_scope
+      - bd_vat_bua_threshold
+      - bd_vat_bua_exceptions
+      - bd_vat_bua_contribution_policy
+      - bd_vat_year_end_adjustments
+      - bd_vat_car_private_use
+      - bd_vat_car_commuting
+      - bd_vat_car_policy
+      - bd_vat_car_ib_2026
+      - bd_vat_margin_goods
+      - bd_vat_margin_calculation
+      - bd_vat_margin_return
+      - bd_vat_margin_method
+      - bd_vat_margin_losses
+      - bd_vat_margin_year_balance
+      - bd_vat_margin_next_year
+      - bd_vat_mixed_taxable_exempt
+      - bd_vat_deduction_ratio
+      - bd_vat_ordinary_revision
+      - bd_vat_mixed_investment_allocation
+      - bd_vat_movable_private_use
+      - bd_vat_computer_private_use
+      - bd_vat_free_services
+      - bd_vat_property_delivery
+      - bd_vat_property_delivery_option
+      - bd_vat_property_rent_option
+      - bd_vat_property_private_use
+      - bd_vat_capital_revision
+      - bd_vat_investment_services
+      - bd_vat_investment_services_regulation
+      - bd_vat_kor_revision
+      - bd_vat_property_revision
+      - bd_vat_deduction_policy
+      - bd_vat_deduction_policy_amendment_2025
+      - bd_vat_deduction_policy_amendment_2026
+      - bd_vat_kor_conditions
+      - bd_vat_kor_withdrawal
+      - bd_zakelijk_login_machtigen
+      - law_uitvoeringsbeschikking_ob_1968
+      - law_wet_ob_1968
+
+  - id: vat_correction_2026
+    workflow: vat_correction
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - vat_correction_2026_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat
+      - skills/nl-tax-shared-resources/knowledge/vat-adjustments
+    output_paths:
+      - workspace/nl-tax-vat-correction-2026-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_corrections
+      - bd_vat_suppletie_explanation
+      - bd_vat_invoice_basis
+      - bd_vat_cash_basis
+      - bd_vat_cash_basis_eligibility
+      - bd_vat_input_conditions
+      - bd_vat_invoice_requirements
+      - bd_vat_non_deductible
+      - bd_vat_eu_supply_timing
+      - bd_vat_kor
+      - bd_vat_kor_effects
+      - bd_vat_icp
+      - bd_vat_private_use
+      - bd_vat_logies_2026
+      - bd_vat_return_walkthrough
+      - bd_vat_rubric_structure
+      - bd_vat_return_obligation
+      - bd_vat_return_deadlines
+      - bd_vat_rounding
+      - bd_vat_domestic_reverse_charge
+      - bd_vat_eu_acquisitions
+      - bd_vat_non_eu_services
+      - bd_vat_bua_scope
+      - bd_vat_bua_threshold
+      - bd_vat_bua_exceptions
+      - bd_vat_bua_contribution_policy
+      - bd_vat_year_end_adjustments
+      - bd_vat_car_private_use
+      - bd_vat_car_commuting
+      - bd_vat_car_policy
+      - bd_vat_car_ib_2026
+      - bd_vat_margin_goods
+      - bd_vat_margin_calculation
+      - bd_vat_margin_return
+      - bd_vat_margin_method
+      - bd_vat_margin_losses
+      - bd_vat_margin_year_balance
+      - bd_vat_margin_next_year
+      - bd_vat_mixed_taxable_exempt
+      - bd_vat_deduction_ratio
+      - bd_vat_ordinary_revision
+      - bd_vat_mixed_investment_allocation
+      - bd_vat_movable_private_use
+      - bd_vat_computer_private_use
+      - bd_vat_free_services
+      - bd_vat_property_delivery
+      - bd_vat_property_delivery_option
+      - bd_vat_property_rent_option
+      - bd_vat_property_private_use
+      - bd_vat_capital_revision
+      - bd_vat_investment_services
+      - bd_vat_investment_services_regulation
+      - bd_vat_kor_revision
+      - bd_vat_property_revision
+      - bd_vat_deduction_policy
+      - bd_vat_deduction_policy_amendment_2025
+      - bd_vat_deduction_policy_amendment_2026
+      - bd_vat_kor_conditions
+      - bd_vat_kor_withdrawal
+      - bd_zakelijk_login_machtigen
+      - law_uitvoeringsbeschikking_ob_1968
+      - law_wet_ob_1968
+
+  - id: icp_2025
+    workflow: icp_declaration
+    tax_year: 2025
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - icp_2025_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat-cross-border
+    output_paths:
+      - workspace/nl-tax-icp-2025-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_icp
+      - bd_icp_periods
+      - bd_icp_explanation_2025
+      - bd_icp_vat_id_checks
+      - bd_zakelijk_login_machtigen
+
+  - id: oss_2025
+    workflow: oss_return
+    tax_year: 2025
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - oss_<scheme>_2025_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat-cross-border
+    output_paths:
+      - workspace/nl-tax-oss-{scheme}-2025-{period}-workpack.md
+    required_source_ids:
+      - bd_oss_reporting
+      - bd_oss_non_union
+      - bd_oss_non_union_reporting
+      - bd_oss_distance_threshold
+      - bd_ioss_scope
+      - eu_oss_scope
+      - eu_oss_registration
+      - eu_oss_declare_pay
+      - eu_ioss_explanatory_notes
+      - bd_zakelijk_login_machtigen
+      - eu_vat_directive_oss_currency
+
+  - id: international_2025
+    workflow: international_return
+    tax_year: 2025
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - international_2025_<form>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/international
+    output_paths:
+      - workspace/nl-tax-international-2025-{return_form}-workpack.md
+    required_source_ids:
+      - bd_intl_social_insurance
+      - bd_intl_country_and_treaty
+      - bd_intl_c_notes_2025
+      - bd_intl_fisin_2025
+      - bd_intl_income_statement
+      - bd_intl_m_return
+      - bd_intl_c_return
+      - bd_intl_m_notes_2025
+      - bd_machtigen_authorization
+      - bd_intl_partial_foreign_liability
+      - bd_intl_refund_interest
+
+  - id: icp_2026
+    workflow: icp_declaration
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - icp_2026_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat-cross-border
+    output_paths:
+      - workspace/nl-tax-icp-2026-{period}-workpack.md
+    required_source_ids:
+      - bd_vat_icp
+      - bd_icp_periods
+      - bd_icp_explanation_2026
+      - bd_icp_vat_id_checks
+      - bd_zakelijk_login_machtigen
+
+  - id: oss_2026
+    workflow: oss_return
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - oss_<scheme>_2026_<period>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/vat-cross-border
+    output_paths:
+      - workspace/nl-tax-oss-{scheme}-2026-{period}-workpack.md
+    required_source_ids:
+      - bd_oss_reporting
+      - bd_oss_non_union
+      - bd_oss_non_union_reporting
+      - bd_oss_distance_threshold
+      - bd_ioss_scope
+      - eu_oss_scope
+      - eu_oss_registration
+      - eu_oss_declare_pay
+      - eu_ioss_explanatory_notes
+      - eu_ioss_customs_addendum_2026
+      - bd_zakelijk_login_machtigen
+      - eu_vat_directive_oss_currency
+
+  - id: international_2026
+    workflow: international_return
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - international_2026_<form>
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/international
+    output_paths:
+      - workspace/nl-tax-international-2026-{return_form}-workpack.md
+    required_source_ids:
+      - bd_intl_social_insurance
+      - bd_intl_country_and_treaty
+      - bd_intl_fisin_2026
+      - bd_machtigen_authorization
+      - bd_intl_partial_foreign_liability
+
+  - id: annual_2026
+    workflow: annual_return
+    tax_year: 2026
+    status: draft_only
+    maximum_readiness: draft
+    may_prepare_workpack: true
+    profile_candidates:
+      - annual_2026
+    knowledge_dirs:
+      - skills/nl-tax-shared-resources/knowledge/years/2026/annual
+    output_paths:
+      - workspace/nl-tax-annual-2026-workpack.md
+    required_source_ids:
+      - bd_annual2026_fisin
+      - bd_annual2026_calculation
+      - bd_annual2026_business
+      - bd_annual2026_deductions
+      - bd_annual2026_actual_return
+      - bd_annual2026_forfait_status
+      - bd_annual2026_mkb
+      - bd_annual2026_box1_rates
+      - bd_annual2026_partial_foreign_liability
+      - bd_machtigen_authorization

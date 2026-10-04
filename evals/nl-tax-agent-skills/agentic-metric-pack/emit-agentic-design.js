@@ -63,7 +63,7 @@ const checks = [
     scenarios.length === 5 ? "pass" : "warn",
     "The live benchmark should stay focused on five representative conversations.",
     [`scenario_count=${scenarios.length}`],
-    ["Use one informational, annual, provisional-change, entrepreneur, and unsupported scenario."],
+    ["Use one informational, annual, provisional-change, entrepreneur, and special-return boundary scenario."],
   ),
   check(
     "agentic-natural-prompts",

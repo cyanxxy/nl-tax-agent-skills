@@ -1,0 +1,77 @@
+{
+  "checked_at": "2026-10-02T12:01:53.783444+00:00",
+  "scope": "Unreleased ICP/OSS, VAT adjustments, international and annual 2026 preparation",
+  "skills": [
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-vat-adjustments",
+    "nl-tax-international-return",
+    "nl-tax-annual-return-2026"
+  ],
+  "readiness_ceiling": "draft",
+  "source_content_review": "needs_review",
+  "human_review_attested": false,
+  "new_source_entries": 66,
+  "total_registered_sources": 325,
+  "total_staged_sources": 88,
+  "verification": {
+    "unit_suite_repo_cwd_final": {
+      "tests": 666,
+      "result": "passed"
+    },
+    "unit_suite_plugin_cwd_before_final_dependency_guard": {
+      "tests": 665,
+      "result": "passed"
+    },
+    "extension_suite_plugin_cwd_after_final_dependency_guard": {
+      "tests": 28,
+      "result": "passed"
+    },
+    "source_register": "passed",
+    "supported_workflows": "passed",
+    "invocation_policy": "passed",
+    "offline_dataset": "passed",
+    "compile_check": "passed",
+    "diff_whitespace": "passed",
+    "live_host_smoke_test": "not_run",
+    "bundle_archives": {
+      "cowork": {
+        "skills": 19,
+        "files": 210,
+        "sha256": "5553885762c14b3cf96075b532afb1dce794284a3b98fde3025cd8ea7f41a312"
+      },
+      "openai": {
+        "skills": 19,
+        "files": 208,
+        "sha256": "ec5055e44fa5a7eb044bb75e8df7c2a133d884b05254af6ee336014582414ff5"
+      }
+    }
+  },
+  "independent_agent_review": {
+    "result": "findings_corrected",
+    "human_review": false,
+    "findings": [
+      "Pro-rata turnover percentage rounds upward to a whole percent before applying shared VAT.",
+      "Used business-goods exclusion exception and actual-use effective dates preserved.",
+      "Financial-lease and VvE basis boundaries retained.",
+      "Historical correction metadata kept separate from active return year.",
+      "Resident annual 2026 and M/C routes do not reuse 2025/provisional schemas.",
+      "Current source conflicts about AOW table and KOR exactly EUR 500 remain review blockers."
+    ]
+  },
+  "release_blockers": [
+    {
+      "source_id": "bd_machtigen_authorization",
+      "reason": "Existing genuine human review is 93 days old against its 92-day policy; knowledge gate fails."
+    },
+    {
+      "source_scope": "extensions",
+      "reason": "New sources require real human comparison; exact annual/M/C/scheme schemas and scope activation remain pending."
+    },
+    {
+      "source_scope": "annual_2026",
+      "reason": "Year-end actual evidence and final annual form/percentages cannot be presumed."
+    }
+  ],
+  "publication": "not_published"
+}

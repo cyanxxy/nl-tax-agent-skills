@@ -4,6 +4,10 @@ on:
   push:
   pull_request:
 
+env:
+  # Source-review dates follow the Dutch tax-content owner's calendar.
+  TZ: Europe/Amsterdam
+
 jobs:
   validate:
     name: Validate package (Python ${{ matrix.python-version }})

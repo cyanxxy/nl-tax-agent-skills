@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-01",
+  "publisher": "Mansour Damanpak",
+  "package": "dist/openai/nl-tax-agent-skills.zip",
+  "package_sha256": "ce9b17da22e13e777f94ada927e6e18d63042963f1d1f30a042726797112555a",
+  "source_review": "source-review-2026-10-01.json",
+  "source_review_status": "human_approved",
+  "knowledge_pack": "passed: 237 sources; zero stale, missing or metadata errors",
+  "source_register": "passed",
+  "workflow_validator": "passed",
+  "invocation_policy": "passed",
+  "offline_dataset": "passed",
+  "unit_tests_log": "/tmp/nl-tax-tests-final.log",
+  "live_smoke_tests": "pending: not inferred from repository checks",
+  "portal_status": "blocked_before_upload: individual developer identity verification required",
+  "uploaded": false,
+  "submitted": false,
+  "published": false,
+  "unit_tests": {
+    "passed": 601,
+    "failed": 0
+  },
+  "superseded": true,
+  "superseded_note": "dist/openai/nl-tax-agent-skills.zip was rebuilt on 2026-10-02 (sha256 ec5055e44fa5a7eb044bb75e8df7c2a133d884b05254af6ee336014582414ff5) with the draft-only previews; it is not this approved candidate. Rebuild from the release tag and re-verify the hash before any upload."
+}

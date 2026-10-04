@@ -989,7 +989,8 @@ class CommandLineTests(unittest.TestCase):
             with self.subTest(kind=kind):
                 result = self.run_cli("--kind", kind, str(template))
                 self.assertEqual(result.returncode, 1)
-                self.assertIn("Sources used", result.stdout)
+                expected_blocker = "VAT Appendix A period" if kind in {"vat", "vat_correction"} else "Sources used"
+                self.assertIn(expected_blocker, result.stdout)
 
 
 class ChatRenderingTests(WorkpackGraderTestCase):
@@ -1061,5 +1062,316 @@ class ChatRenderingTests(WorkpackGraderTestCase):
             self.assertEqual(run("--chat", "--expect-saved", str(path)).returncode, 2)
 
 
+VAT_DOCUMENTS = (
+    ("ev_001", "VAT control ledger 2026", "vat_summary", "2026", "taxpayer", "summary",
+     "reviewed ledger totals", "extracted"),
+)
+CHECKLIST_ROW = (("1", "Input VAT", 735, "ev_001", "vat.5b.vat"),)
+
+
+def vat_sample(kind="vat", workflow=None, **kwargs):
+    """A VAT or VAT correction workpack from the real template."""
+    kwargs.setdefault("sources", ())
+    kwargs.setdefault("documents", VAT_DOCUMENTS)
+    return samples.build_workpack(kind, workflow=workflow, **kwargs)
+
+
+def extended_sample(grader, kind, workflow, sources=(), **kwargs):
+    """An ICP, OSS, international or annual 2026 workpack from the real template."""
+    identity = grader._EXT.parse_resume_identity(workflow)
+    samples.TEMPLATES[kind] = samples.PLUGIN_ROOT / grader.EXTENDED_SCOPES[kind]["template"]
+    overrides = {key: value for key, value in identity.items() if key != "kind"}
+    text = samples.build_workpack(
+        kind, workflow=workflow, sources=sources, record_overrides=overrides,
+        documents=(("ev_001", "chat 2026-10-02", "user_chat", str(identity["tax_year"]), "taxpayer",
+                    "chat", "confirmed example administration figures", "extracted"),),
+        **kwargs,
+    )
+    for key, value in identity.items():
+        text = text.replace("{" + key + "}", str(value))
+    return text.replace("{year}", str(identity["tax_year"])).replace(
+        "{form}", identity.get("return_form", "")
+    )
+
+
+def with_checklist(text, rows=CHECKLIST_ROW):
+    body = "### 4. Steps\n\n" + samples.table(
+        ["Step", "Portal label", "Value to enter", "Source", "field_id"], rows
+    )
+    return samples.replace_section(text, "Manual-entry checklist", body)
+
+
+def with_note(text, note):
+    return text.replace("## Assumptions\n", f"## Assumptions\n\n{note}\n", 1)
+
+
+class DraftOnlyChecklistGateTests(WorkpackGraderTestCase):
+    """PYT-01: no manual-entry checklist while source or schema review is pending."""
+
+    GATE = "carries a manual-entry checklist while source/schema review"
+
+    def test_vat_and_vat_correction_checklists_are_rejected(self):
+        self.assertValid(vat_sample())
+        self.assertError(with_checklist(vat_sample()), self.GATE)
+        self.assertError(with_checklist(vat_sample("vat_correction")), self.GATE)
+
+    def test_stale_or_valueless_checklist_content_is_rejected_too(self):
+        stale = with_checklist(vat_sample()).replace(
+            "### 4. Steps", samples.stale_marker("input VAT", "2026-10-02") + "\n\n### 4. Steps", 1
+        )
+        self.assertError(stale, self.GATE)
+        steps_only = samples.replace_section(
+            vat_sample(), "Manual-entry checklist", "1. Open the VAT return screen."
+        )
+        self.assertError(steps_only, self.GATE)
+
+    def test_not_requested_line_does_not_excuse_checklist_rows_beside_it(self):
+        table = samples.table(
+            ["Step", "Portal label", "Value to enter", "Source", "field_id"], CHECKLIST_ROW
+        )
+        mixed = samples.replace_section(
+            vat_sample(), "Manual-entry checklist", "not requested\n\n### 4. Steps\n\n" + table
+        )
+        self.assertError(mixed, self.GATE)
+        stale_placeholder = samples.replace_section(
+            vat_sample(),
+            "Manual-entry checklist",
+            samples.stale_marker("input VAT", "2026-10-02") + "\n\nnot requested",
+        )
+        report = self.grade(stale_placeholder)
+        self.assertFalse(any(self.GATE in error for error in report.errors), report.errors)
+
+    def test_extended_workflow_checklists_are_rejected(self):
+        for kind, workflow in (
+            ("icp", "icp_2026_Q3"),
+            ("oss", "oss_union_2026_Q3"),
+            ("international", "international_2025_migration"),
+            ("annual_2026", "annual_2026"),
+        ):
+            with self.subTest(workflow=workflow):
+                text = extended_sample(self.grader, kind, workflow)
+                self.assertValid(text)
+                rows = (("1", "DE services", 100, "ev_001", "icp.row.customer_01.services_amount"),)
+                self.assertError(with_checklist(text, rows), self.GATE)
+
+    def test_conversation_rendering_of_a_draft_only_checklist_is_rejected(self):
+        text = samples.strip_fill_notes(with_checklist(vat_sample()))
+        for heading in ("Appendix A — Resume record", "Appendix B — Field map"):
+            text = samples.remove_section(text, heading)
+        report = self.grader.validate_workpack_text(text, expected_kind="vat", presentation="chat")
+        self.assertTrue(any(self.GATE in error for error in report.errors), report.errors)
+
+    def test_gate_lifts_only_through_the_policy_functions(self):
+        self.assertTrue(self.grader.draft_review_blockers("vat", 2026, str(samples.PLUGIN_ROOT)))
+        self.assertTrue(self.grader.draft_review_blockers("icp", 2026, str(samples.PLUGIN_ROOT)))
+        self.assertEqual(self.grader.draft_review_blockers("annual", 2025, str(samples.PLUGIN_ROOT)), [])
+        # Income-tax checklists are unaffected by the draft-only gate.
+        report = self.grade(
+            samples.build_workpack(
+                "annual", field_map=samples.ANNUAL_FIELD_MAP,
+                checklist_rows=(("1", "Loon", "EUR 48,250", "ev_001", "box1.loon"),),
+            ),
+            "annual",
+        )
+        self.assertFalse(any(self.GATE in error for error in report.errors), report.errors)
+
+
+class IdentityScopedPathMentionTests(WorkpackGraderTestCase):
+    """PYT-03: templated workpack paths are recognized in text."""
+
+    def test_annual_workpack_never_names_a_period_workpack(self):
+        for note, fragment in (
+            ("See workspace/nl-tax-vat-2026-Q3-workpack.md", "mentions the vat workpack path"),
+            ("See workspace/nl-tax-icp-2026-Q3-workpack.md", "mentions the icp workpack path"),
+            ("See workspace/nl-tax-oss-non_union-2026-Q3-workpack.md", "mentions the oss workpack path"),
+            ("See workspace/nl-tax-international-2025-migration-workpack.md",
+             "mentions the international workpack path"),
+            ("See workspace/nl-tax-annual-2026-workpack.md", "mentions the annual_2026 workpack path"),
+            ("See workspace/nl-tax-vat-correction-2026-Q1-workpack.md",
+             "mentions the vat_correction workpack path"),
+        ):
+            with self.subTest(note=note):
+                self.assertError(with_note(samples.build_workpack("annual"), note), fragment, "annual")
+
+    def test_same_kind_other_period_is_rejected_but_own_name_is_allowed(self):
+        own = with_note(vat_sample(), "Saved as workspace/nl-tax-vat-2026-Q3-workpack.md")
+        self.assertValid(own)
+        other = with_note(vat_sample(), "Copied from workspace/nl-tax-vat-2026-Q2-workpack.md")
+        self.assertError(other, "mentions another vat workpack path")
+        correction = with_note(
+            vat_sample("vat_correction", "vat_correction_2026_Q1"),
+            "Q2 is in workspace/nl-tax-vat-correction-2026-Q2-workpack.md",
+        )
+        self.assertError(correction, "mentions another vat_correction workpack path")
+
+    def test_copy_or_variant_of_another_workpack_is_rejected(self):
+        annual = with_note(
+            samples.build_workpack("annual"),
+            "Old draft kept at workspace/nl-tax-provisional-2026-workpack-v2.md",
+        )
+        self.assertError(annual, "mentions the provisional workpack path", "annual")
+        annual_copy = with_note(
+            samples.build_workpack("annual"),
+            "Old draft kept at workspace/nl-tax-provisional-2026-workpack_copy.md",
+        )
+        self.assertError(annual_copy, "mentions the provisional workpack path", "annual")
+        own_variant = with_note(vat_sample(), "Old draft kept at workspace/nl-tax-vat-2026-Q3-workpack-v2.md")
+        self.assertError(own_variant, "mentions another vat workpack path")
+
+    def test_vat_return_stem_never_matches_inside_the_correction_stem(self):
+        text = with_note(
+            vat_sample("vat_correction", "vat_correction_2026_Q3"),
+            "Saved as workspace/nl-tax-vat-correction-2026-Q3-workpack.md",
+        )
+        report = self.assertValid(text)
+        self.assertEqual(report.kind, "vat_correction")
+
+    def test_oss_union_and_non_union_are_different_files(self):
+        text = with_note(
+            extended_sample(self.grader, "oss", "oss_union_2026_Q3"),
+            "Non-Union is in workspace/nl-tax-oss-non_union-2026-Q3-workpack.md",
+        )
+        self.assertError(text, "mentions another oss workpack path")
+
+
+class TitleIdentityTokenTests(WorkpackGraderTestCase):
+    """PYT-04: whole-token title identity, exactly one year and period."""
+
+    def test_vat_title_with_an_extra_year_or_period_is_rejected(self):
+        text = vat_sample()
+        self.assertValid(text)
+        title = "# Dutch VAT Return Workpack — 2026 Q3"
+        self.assertIn(title, text)
+        for wrong in (
+            "# Dutch VAT Return Workpack — 2025 Q3 (Q1 2026 copy)",
+            "# Dutch VAT Return Workpack — 2026 Q3 and Q4",
+            "# Dutch VAT Return Workpack — 2025 Q3",
+        ):
+            with self.subTest(title=wrong):
+                self.assertError(text.replace(title, wrong, 1), "VAT title")
+
+    def test_oss_title_scheme_is_a_whole_token(self):
+        union = extended_sample(self.grader, "oss", "oss_union_2026_Q3")
+        self.assertValid(union)
+        title = "# Dutch OSS Workpack — union 2026 Q3"
+        self.assertIn(title, union)
+        self.assertError(
+            union.replace(title, "# Dutch OSS Workpack — non_union 2026 Q3", 1),
+            "Extended workpack title must match Appendix A scheme",
+        )
+        non_union = extended_sample(self.grader, "oss", "oss_non_union_2026_Q3")
+        self.assertValid(non_union)
+        self.assertError(
+            non_union.replace("— non_union 2026 Q3", "— union 2026 Q3", 1),
+            "Extended workpack title must match Appendix A scheme",
+        )
+
+    def test_extended_title_with_two_years_is_rejected(self):
+        text = extended_sample(self.grader, "icp", "icp_2026_Q3")
+        self.assertError(
+            text.replace("# Dutch ICP Workpack — 2026 Q3", "# Dutch ICP Workpack — 2026 Q3 (from 2025)", 1),
+            "tax year",
+        )
+
+
+class CrossBorderLedgerTests(WorkpackGraderTestCase):
+    """XB-01: ICP and OSS source ledgers never borrow the other scheme's sources."""
+
+    def test_icp_and_oss_ledgers_stay_separate(self):
+        self.assertError(
+            extended_sample(self.grader, "icp", "icp_2026_Q3", sources=("bd_oss_reporting",)),
+            "cross-border source owned by another scheme",
+        )
+        self.assertError(
+            extended_sample(self.grader, "icp", "icp_2026_Q3", sources=("eu_ioss_customs_addendum_2026",)),
+            "cross-border source owned by another scheme",
+        )
+        self.assertError(
+            extended_sample(self.grader, "oss", "oss_union_2025_Q3", sources=("bd_icp_explanation_2025",)),
+            "cross-border source owned by another scheme",
+        )
+
+    def test_own_scheme_sources_still_pass(self):
+        self.assertValid(
+            extended_sample(self.grader, "oss", "oss_ioss_2026_M09", sources=("eu_ioss_customs_addendum_2026",))
+        )
+        self.assertValid(
+            extended_sample(self.grader, "icp", "icp_2026_Q3", sources=("bd_icp_periods", "bd_icp_explanation_2026"))
+        )
+
+    def test_shared_rule_is_public_for_the_offline_verifier(self):
+        register = self.grader.source_register(str(samples.PLUGIN_ROOT.resolve()))
+        self.assertIsNone(
+            self.grader.source_scope_error("bd_icp_periods", register["bd_icp_periods"], "icp", 2026)
+        )
+        self.assertIn(
+            "another scheme",
+            self.grader.source_scope_error("bd_icp_periods", register["bd_icp_periods"], "oss", 2026),
+        )
+
+
+class WorkpackPathForWorkflowTests(WorkpackGraderTestCase):
+    def test_each_identity_resolves_to_its_one_path(self):
+        expected = {
+            "annual_2025": "workspace/nl-tax-annual-2025-workpack.md",
+            "provisional_2026_change": "workspace/nl-tax-provisional-2026-workpack.md",
+            "vat_2026_Q3": "workspace/nl-tax-vat-2026-Q3-workpack.md",
+            "vat_correction_2025_M04": "workspace/nl-tax-vat-correction-2025-M04-workpack.md",
+            "icp_2025_Y": "workspace/nl-tax-icp-2025-Y-workpack.md",
+            "oss_non_union_2026_Q3": "workspace/nl-tax-oss-non_union-2026-Q3-workpack.md",
+            "international_2026_nonresident": "workspace/nl-tax-international-2026-nonresident-workpack.md",
+            "annual_2026": "workspace/nl-tax-annual-2026-workpack.md",
+        }
+        for workflow, path in expected.items():
+            with self.subTest(workflow=workflow):
+                self.assertEqual(self.grader.workpack_path_for_workflow(workflow), path)
+                kind = self.grader.kind_for_workflow(workflow)
+                self.assertTrue(self.grader.WORKPACK_PATH_RES[kind].match(path))
+        for bad in ("vat_2024_Q3", "oss_ioss_2026_Q3", "unknown"):
+            with self.subTest(workflow=bad):
+                self.assertIsNone(self.grader.workpack_path_for_workflow(bad))
+
+
 if __name__ == "__main__":
     unittest.main()
+
+
+class InternalRoutingGapSummaryTests(WorkpackGraderTestCase):
+    """XC-03: an internal_routing gap is never a summary row, shown or required."""
+
+    ROW = "| Box 3 | Bank balance | annual2026.box3.bank_31dec | MISSING - enter manually | Q001 | Blocking |\n"
+
+    def annual_2026_gap(self):
+        field_map = {
+            "field_map_version": "1.1", "workflow": "annual_return", "tax_year": 2026,
+            "readiness": "draft", "check_performed_by": "checked_by_agent",
+            "created_at": "2026-10-02T12:00:00Z", "updated_at": "2026-10-02T12:00:00Z",
+            "fields": [{
+                "field_id": "annual2026.box3.bank_31dec", "label": "Bank balance", "value": None,
+                "entry_mode": "internal_routing", "source": {"type": "unknown"},
+                "confidence": 0.0, "manual_review_required": True, "notes": [],
+            }],
+            "missing_fields": [{
+                "field_id": "annual2026.box3.bank_31dec", "label": "Bank balance",
+                "open_question_id": "Q001", "reason": "not provided",
+            }],
+            "user_chat_values_index": [], "notes": [],
+        }
+        return extended_sample(
+            self.grader, "annual_2026", "annual_2026", field_map=field_map,
+            questions=(("Q001", "box3", "What was the bank balance?", "yes"),),
+            open_questions={"box3": ["Q001"]},
+        )
+
+    def test_internal_routing_gap_is_listed_beneath_the_table_not_as_a_row(self):
+        shown = self.annual_2026_gap()
+        self.assertIn(self.ROW, shown)
+        self.assertError(shown, "internal_routing record that is never a portal row")
+        omitted = shown.replace(
+            self.ROW, "", 1
+        ).replace(
+            "|---|---|---|---|---|---|\n",
+            "|---|---|---|---|---|---|\n\nOpen question Q001 — draft fact, not a portal field\n",
+            1,
+        )
+        self.assertValid(omitted)

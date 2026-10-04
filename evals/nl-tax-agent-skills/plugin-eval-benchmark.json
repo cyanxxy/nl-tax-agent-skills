@@ -89,15 +89,16 @@
       ]
     },
     {
-      "id": "unsupported-part-year-resident",
+      "id": "part-year-resident-migration-draft",
       "rubricProfile": "unsupported_boundary",
-      "title": "Unsupported part-year resident boundary",
-      "purpose": "Recognize a migration/residency case outside the standard workflow and still give a useful next step.",
-      "userInput": "I moved from Belgium to the Netherlands on 1 September 2025 and want help preparing my Dutch 2025 return. Can you prepare the normal resident workpack for me?",
+      "title": "Part-year resident migration draft boundary",
+      "purpose": "Route migration facts to their own draft owner and preserve residence/treaty review gaps.",
+      "userInput": "I moved from Belgium to the Netherlands on 1 September 2025 and want help preparing my Dutch 2025 return. Can you prepare the normal resident workpack for me? Keep this in chat; I do not want a saved file.",
       "successChecklist": [
-        "Recognizes that a part-year resident or migration return is outside the standard annual-2025 workflow.",
-        "Does not create or pretend to complete a standard resident workpack.",
-        "Explains a useful official or professional next step without guessing the correct special return."
+        "Recognizes the migration case and continues a separate migration-year (M) draft rather than the standard annual-2025 resident workflow.",
+        "Continues useful preparation in chat and asks for the next missing residence, income-allocation or treaty fact.",
+        "Keeps conceptual fields internal and readiness draft; does not guess a treaty decision or provide an entry checklist.",
+        "Writes no file, requests no identifiers or credentials, and names the human for every portal action."
       ]
     }
   ]

@@ -17,6 +17,11 @@ non-implicitly-invocable (`disable-model-invocation: true` or
 `policy.allow_implicit_invocation: false`. Without this check, a developer can add
 a new helper, forget the openai.yaml, pass every other validator and the test
 suite, and silently make the helper implicitly invocable on Codex.
+
+It also rejects an `interface.default_prompt` on those skills. Explicit
+`$skill` invocation still works when implicit invocation is off, and a default
+prompt is shown as a ready-made starter in the Codex / ChatGPT skill picker, so
+it would invite a user to run an internal helper without its owning workflow.
 """
 
 import os
@@ -96,6 +101,11 @@ def openai_policy_ok(openai_yaml_path):
         return False, "agents/openai.yaml has no policy block"
     if _as_bool(policy.get("allow_implicit_invocation")) is not False:
         return False, "policy.allow_implicit_invocation must be false"
+    interface = data.get("interface")
+    if interface is not None and not isinstance(interface, dict):
+        return False, "agents/openai.yaml interface is not a mapping"
+    if (interface or {}).get("default_prompt"):
+        return False, "internal helpers must not define interface.default_prompt"
     return True, ""
 
 

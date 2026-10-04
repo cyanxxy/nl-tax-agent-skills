@@ -13,7 +13,7 @@ PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 SKILLS = PLUGIN / "skills"
 REPOSITORY_URL = "https://github.com/cyanxxy/nl-tax-agent-skills"
 
-RELEASE_VERSION = "0.4.0"
+RELEASE_VERSION = "0.5.0"
 WORKPACK_FILES = (
     "workspace/nl-tax-annual-2025-workpack.md",
     "workspace/nl-tax-provisional-2026-workpack.md",
@@ -21,13 +21,13 @@ WORKPACK_FILES = (
 
 ARGUMENT_HINTS = {
     "nl-tax-annual-return": "[2025] [confirm]",
-    "nl-tax-field-mapper": "[annual|provisional] [year]",
-    "nl-tax-intake": "[annual|request|change|review|stopzetten]",
+    "nl-tax-field-mapper": "[annual|provisional|vat|vat-correction|icp|oss|international] [year] [period|form]",
+    "nl-tax-intake": "[annual|international|request|change|review|stopzetten|vat|vat-correction|icp|oss]",
     "nl-tax-knowledge": "[tax-rule question]",
     "nl-tax-provisional-assessment": (
         "[2026] [request|change|review|stopzetten|confirm]"
     ),
-    "nl-tax-submit-companion": "[annual|provisional] [2025|2026]",
+    "nl-tax-submit-companion": "[annual|provisional|international|vat|vat-correction|icp|oss] [2025|2026] [identity]",
 }
 
 PUBLIC_OPENAI_SKILLS = {
@@ -37,6 +37,12 @@ PUBLIC_OPENAI_SKILLS = {
     "nl-tax-knowledge",
     "nl-tax-provisional-assessment",
     "nl-tax-submit-companion",
+    "nl-tax-vat-return",
+    "nl-tax-vat-correction",
+    "nl-tax-annual-return-2026",
+    "nl-tax-icp",
+    "nl-tax-oss",
+    "nl-tax-international-return",
 }
 
 
@@ -81,7 +87,7 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertTrue((maintainer_notes / "compat/odb-service-developers.md").is_file())
         self.assertTrue((maintainer_notes / "methodology/regelspraak.md").is_file())
         metadata = REPO / "tools/nl_tax_agent_skills/source_maintenance/metadata"
-        self.assertEqual(len(list(metadata.glob("**/_snapshot-metadata.yaml"))), 10)
+        self.assertEqual(len(list(metadata.glob("**/_snapshot-metadata.yaml"))), 15)
 
         runtime_registry = "\n".join(
             (
@@ -110,9 +116,9 @@ class ReleasePackagingTests(unittest.TestCase):
         workflow_names = [
             frontmatter(path)["name"] for path in paths if path.parent.name != "nl-tax-shared-resources"
         ]
-        self.assertEqual(len(workflow_names), 11)
-        self.assertEqual(len(names), 12)
-        self.assertEqual(len(set(names)), 12)
+        self.assertEqual(len(workflow_names), 18)
+        self.assertEqual(len(names), 19)
+        self.assertEqual(len(set(names)), 19)
         # 0.4 retired the evidence indexer; the owning workflows read documents.
         self.assertNotIn("nl-tax-evidence-indexer", names)
         self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
@@ -160,7 +166,18 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertLessEqual(len(codex["interface"]["shortDescription"]), 30)
         self.assertLessEqual(len(codex["interface"]["displayName"]), 30)
         self.assertNotIn("Step-by-step", codex["interface"]["shortDescription"])
-        self.assertEqual(len(codex["interface"]["defaultPrompt"]), 3)
+        prompts = codex["interface"]["defaultPrompt"]
+        # Codex keeps at most MAX_DEFAULT_PROMPT_COUNT = 3 starter prompts of
+        # at most 128 characters, and the OpenAI listing rejects more, longer,
+        # duplicated, or @-mentioning prompts.
+        self.assertGreater(len(prompts), 0)
+        self.assertLessEqual(len(prompts), 3)
+        self.assertEqual(len(set(prompts)), len(prompts))
+        for prompt in prompts:
+            with self.subTest(prompt=prompt):
+                self.assertLessEqual(len(prompt), 128)
+                self.assertNotIn("@", prompt)
+        self.assertLessEqual(len(codex["interface"]["longDescription"]), 4000)
         # Catalog copy must not advertise the retired evidence indexer.
         catalog_copy = " ".join(
             [codex["interface"]["longDescription"], *codex["interface"]["defaultPrompt"]]
@@ -168,14 +185,69 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertNotIn("index", catalog_copy)
         self.assertIn("nothing is saved unless you ask", catalog_copy)
 
+    def test_listing_release_notes_match_the_package(self):
+        codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
+        notes = (REPO / "submission/openai/release-notes.md").read_text(encoding="utf-8")
+        # The public note's heading names the manifest version it describes.
+        self.assertIn(f"release {codex['version']}", notes.splitlines()[0])
+        # Maintainer instructions stay out of the public release note.
+        self.assertNotIn("docs/maintainers", notes)
+        self.assertNotIn("this bundle must not", notes)
+        publication_notes = codex["extensions"]["com.openai"]["publication"]["release_notes"]
+        long_description = codex["interface"]["longDescription"]
+        # When the listing mentions the draft workflows, both the listing and
+        # the publication notes must call them draft-only previews.
+        if "draft" in long_description.lower():
+            self.assertIn("draft-only", long_description)
+            self.assertIn("not filing-ready", long_description)
+            self.assertIn("draft-only", publication_notes)
+            self.assertIn("draft-only", notes)
+        self.assertNotIn("Unreleased extension", notes)
+
+    def test_plugin_folder_stays_within_directory_review_limits(self):
+        # The Claude directory holds a version for manual review when a
+        # non-image, non-font file reaches 256 KiB or the plugin folder has
+        # more than 512 files. Eval cases (evals/) and skill icons count.
+        exempt_suffixes = {
+            ".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".ico",
+            ".woff", ".woff2", ".ttf", ".otf",
+        }
+        files = [
+            path
+            for path in PLUGIN.rglob("*")
+            if path.is_file()
+            and "__pycache__" not in path.parts
+            and path.name != ".DS_Store"
+        ]
+        self.assertLessEqual(len(files), 512)
+        for path in files:
+            if path.suffix.lower() in exempt_suffixes:
+                continue
+            with self.subTest(path=str(path.relative_to(PLUGIN))):
+                self.assertLess(path.stat().st_size, 256 * 1024)
+        # Early warning: the source register is the file closest to the hold.
+        # Trim repeated prose or split staged families out of it before it
+        # reaches 250 KiB, so a few new sources cannot hold a release.
+        register = SKILLS / "nl-tax-shared-resources/source-register.yaml"
+        self.assertLess(
+            register.stat().st_size,
+            250 * 1024,
+            "source-register.yaml is near the 256 KiB directory hold; trim or split it",
+        )
+
     def test_workpack_templates_record_the_release_version(self):
         # Appendix A of each saved workpack records the plugin version that
-        # wrote it; CONTRIBUTING says to bump it with the manifests.
-        for template in (
-            SKILLS / "nl-tax-annual-return/templates/annual-workpack.md",
-            SKILLS / "nl-tax-provisional-assessment/templates/provisional-workpack.md",
-        ):
-            with self.subTest(template=template.name):
+        # wrote it; CONTRIBUTING says to bump it with the manifests, in every
+        # workpack template and output contract that carries it.
+        templates = sorted(SKILLS.glob("*/templates/*-workpack.md"))
+        self.assertEqual(len(templates), 8)
+        versioned = templates + [
+            SKILLS / "nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md",
+            SKILLS / "nl-tax-annual-return/reference/annual-output-contract.md",
+            SKILLS / "nl-tax-provisional-assessment/reference/provisional-output-contract.md",
+        ]
+        for template in versioned:
+            with self.subTest(template=str(template.relative_to(SKILLS))):
                 self.assertIn(
                     'plugin_version: "' + RELEASE_VERSION + '"',
                     template.read_text(encoding="utf-8"),
@@ -189,19 +261,10 @@ class ReleasePackagingTests(unittest.TestCase):
             changelog, r"(?m)^## \[" + RELEASE_VERSION.replace(".", r"\.") + r"\] — "
         )
         section = changelog.split("## [" + RELEASE_VERSION + "]", 1)[1].split("\n## [", 1)[0]
-        section_flat = " ".join(section.split())
-        for required in (
-            "Nothing is written by default.",
-            "workspace/nl-tax-annual-2025-workpack.md",
-            "workspace/nl-tax-provisional-2026-workpack.md",
-            "`nl-tax-evidence-indexer`. Reading documents is built into",
-            "embedded as Appendix B",
-            "ledgers are not migrated",
-            "attach an old `return-pack.md`",
-            "Sends data elsewhere: no.",
-        ):
-            with self.subTest(required=required):
-                self.assertIn(required, section_flat)
+        # The workflow skips the release heading itself. A release must have
+        # its own notes, without requiring text about changes from an older one.
+        notes = section.partition("\n")[2]
+        self.assertTrue(notes.strip(), "current release section has no release notes")
 
     def test_claude_package_has_one_specialist_reviewer_agent(self):
         claude = load_json(PLUGIN / ".claude-plugin/plugin.json")
@@ -278,6 +341,27 @@ class ReleasePackagingTests(unittest.TestCase):
                 self.assertNotIn("requires Claude Code", text)
                 self.assertNotIn("host file tools", text)
 
+    def test_draft_only_owners_say_draft_in_the_picker_blurb(self):
+        # The Codex/ChatGPT skill picker shows short_description; a draft-only
+        # preview must not look filing-ready there.
+        for skill_name in (
+            "nl-tax-annual-return-2026",
+            "nl-tax-vat-return",
+            "nl-tax-vat-correction",
+            "nl-tax-icp",
+            "nl-tax-oss",
+            "nl-tax-international-return",
+        ):
+            with self.subTest(skill=skill_name):
+                metadata = yaml.safe_load(
+                    (SKILLS / skill_name / "agents/openai.yaml").read_text(encoding="utf-8")
+                )
+                self.assertIn("draft", metadata["interface"]["short_description"].lower())
+        shared = yaml.safe_load(
+            (SKILLS / "nl-tax-shared-resources/agents/openai.yaml").read_text(encoding="utf-8")
+        )
+        self.assertNotIn("reviewed", shared["interface"]["short_description"].lower())
+
     def test_public_skills_have_openai_interface_metadata(self):
         for skill_name in PUBLIC_OPENAI_SKILLS:
             with self.subTest(skill=skill_name):
@@ -288,16 +372,21 @@ class ReleasePackagingTests(unittest.TestCase):
                 self.assertTrue(interface["display_name"])
                 self.assertTrue(interface["short_description"])
                 self.assertTrue(interface["default_prompt"])
+                # Deliberate departure from OpenAI's skill-creator advice to
+                # write `$skill-name` in default_prompt: `$` is a Codex-only
+                # mention, ChatGPT Work uses `@`, and the plugin routes from
+                # natural language, so no public prompt names a skill.
                 self.assertNotIn("$nl-tax-", interface["default_prompt"])
                 self.assertNotIn("/nl-tax-", interface["default_prompt"])
+                self.assertNotIn("@nl-tax-", interface["default_prompt"])
                 self.assertTrue(metadata["policy"]["allow_implicit_invocation"])
-                icon_values = [
-                    interface.get(icon_key)
-                    for icon_key in ("icon_small", "icon_large")
-                ]
-                self.assertEqual(bool(icon_values[0]), bool(icon_values[1]))
-                for icon_value in filter(None, icon_values):
-                    icon_path = (path.parent.parent / icon_value).resolve()
+                # Every public skill shows the plugin icon and brand colour in
+                # the Codex and ChatGPT skill pickers.
+                for key in ("icon_small", "icon_large", "brand_color"):
+                    self.assertTrue(interface.get(key), key)
+                self.assertEqual(interface["brand_color"], "#1F6FEB")
+                for icon_key in ("icon_small", "icon_large"):
+                    icon_path = (path.parent.parent / interface[icon_key]).resolve()
                     self.assertTrue(icon_path.is_file(), icon_path)
 
     def test_openai_submission_pack_has_exact_reviewer_case_counts(self):
@@ -306,11 +395,15 @@ class ReleasePackagingTests(unittest.TestCase):
             (submission / "test-cases.yaml").read_text(encoding="utf-8")
         )
         self.assertEqual(len(cases["positive"]), 5)
-        self.assertEqual(len(cases["negative"]), 3)
+        self.assertEqual(len(cases["negative"]), 4)
         self.assertEqual(
             len({case["id"] for case in cases["positive"] + cases["negative"]}),
-            8,
+            9,
         )
+        readme = " ".join((submission / "README.md").read_text(encoding="utf-8").split())
+        self.assertIn("five positive and four negative cases", readme)
+        contributing = " ".join((REPO / "CONTRIBUTING.md").read_text(encoding="utf-8").split())
+        self.assertIn("five positive and four negative reviewer cases", contributing)
         self.assertTrue((submission / "README.md").is_file())
         self.assertTrue((submission / "release-notes.md").is_file())
 

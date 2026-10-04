@@ -1,9 +1,9 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "author": {
-    "name": "Tax Skill Developers",
+    "name": "Mansour Damanpak",
     "url": "https://github.com/cyanxxy/nl-tax-agent-skills"
   },
   "homepage": "https://github.com/cyanxxy/nl-tax-agent-skills#readme",
@@ -16,14 +16,24 @@
     "workpacks",
     "voorlopige-aanslag",
     "zzp",
-    "winst-uit-onderneming"
+    "winst-uit-onderneming",
+    "btw",
+    "vat-return",
+    "suppletie",
+    "icp",
+    "oss",
+    "ioss",
+    "vat-adjustments",
+    "migration",
+    "nonresident",
+    "annual-2026"
   ],
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "shortDescription": "Conversational Dutch tax prep",
-    "longDescription": "Prepare source-traceable Dutch tax workpacks right in the conversation, in Claude Cowork, ChatGPT Work, Codex, or another Agent Skills host. The assistant reads the documents you share, asks only the missing questions, cites a reviewed source for each rule, maps each amount to its Mijn Belastingdienst field, and builds a manual-entry checklist when you ask. Nothing is saved unless you ask; then it keeps one workpack file per workflow that you can attach later to continue. It never logs in, files, signs, submits, or automates Mijn Belastingdienst.",
-    "developerName": "Tax Skill Developers",
+    "longDescription": "Prepare Dutch individual income-tax information for manual entry in Mijn Belastingdienst, using ChatGPT Work, Codex, or Claude Cowork. Supports annual returns for 2025, provisional assessments for 2026, and questions about the bundled rules for those years. Organize the documents and figures you share, identify missing information, cite official sources, and prepare a workpack, field map, and optional manual-entry checklist. Also includes draft-only previews that are not filing-ready and await human source review: ZZP VAT returns and corrections, ICP declarations, OSS and IOSS returns, VAT adjustments, M (migration) and C (nonresident) income-tax returns, and resident annual 2026 evidence collection. A manual-entry checklist with amounts is available only for reviewed workflows. Nothing is saved unless you ask; then one workpack file per workflow (and per period or scheme for VAT, ICP and OSS) lets you resume later. Complex or unsupported situations are flagged for professional review. This is an informational preparation aid, not tax advice. It never logs in, files, signs, submits, or automates Mijn Belastingdienst.",
+    "developerName": "Mansour Damanpak",
     "category": "Productivity",
     "capabilities": [
       "Agent Skills",
@@ -36,10 +46,21 @@
       "Read my jaaropgaven and help me prepare my 2025 return."
     ],
     "websiteURL": "https://github.com/cyanxxy/nl-tax-agent-skills",
+    "supportURL": "https://github.com/cyanxxy/nl-tax-agent-skills/issues",
     "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
     "brandColor": "#1F6FEB",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png"
+  },
+  "extensions": {
+    "com.openai": {
+      "publication": {
+        "countries": [
+          "NL"
+        ],
+        "release_notes": "Initial OpenAI directory release. Conversational Dutch income-tax preparation for annual 2025 and provisional 2026, with source references, manual-entry field maps, and one optional saved workpack per workflow. Also includes draft-only VAT, ICP, OSS/IOSS, migration/nonresident and annual 2026 previews that are not filing-ready, produce no manual-entry checklist with amounts, and await human source review. No authentication, connected services, or tax-portal automation."
+      }
+    }
   }
 }

@@ -1,0 +1,298 @@
+metadata_version: '1.1'
+sources:
+  bd_vat_bua_scope:
+    source_id: bd_vat_bua_scope
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/personeelsvoorzieningen_en_relatiegeschenken/
+    review_status: needs_review
+    reviewed_note_hash_sha256: fb9c8a8d77a6b059e172a001f606682368acc07220bb4920f4ba0c5d8943ca00
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:35.903567+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_bua_threshold:
+    source_id: bd_vat_bua_threshold
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/personeelsvoorzieningen_en_relatiegeschenken/drempelbedrag_personeelsvoorzieningen_giften_en_relatiegeschenken
+    review_status: needs_review
+    reviewed_note_hash_sha256: fb9c8a8d77a6b059e172a001f606682368acc07220bb4920f4ba0c5d8943ca00
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:35.921927+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_bua_exceptions:
+    source_id: bd_vat_bua_exceptions
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/personeelsvoorzieningen_en_relatiegeschenken/toegestane_aftrek_personeelsvoorzieningen
+    review_status: needs_review
+    reviewed_note_hash_sha256: fb9c8a8d77a6b059e172a001f606682368acc07220bb4920f4ba0c5d8943ca00
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:35.940627+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_bua_contribution_policy:
+    source_id: bd_vat_bua_contribution_policy
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2023-28124.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: fb9c8a8d77a6b059e172a001f606682368acc07220bb4920f4ba0c5d8943ca00
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:35.958372+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_year_end_adjustments:
+    source_id: bd_vat_year_end_adjustments
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aangifte_doen_en_betalen/btw-aangifte-waar-moet-u-aan-denken/laatste-btw-aangifte-van-het-jaar
+    review_status: needs_review
+    reviewed_note_hash_sha256: fb9c8a8d77a6b059e172a001f606682368acc07220bb4920f4ba0c5d8943ca00
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:35.975915+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_car_private_use:
+    source_id: bd_vat_car_private_use
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/btw_en_de_auto/privegebruik_auto_van_de_zaak/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5f9f203308fb6a996c6df1d8c92c28406e440cc43a4e3b443b12a3a7f3699382
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_car_commuting:
+    source_id: bd_vat_car_commuting
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/btw_en_de_auto/privegebruik_auto_van_de_zaak/woon_werkverkeer
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5f9f203308fb6a996c6df1d8c92c28406e440cc43a4e3b443b12a3a7f3699382
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_car_policy:
+    source_id: bd_vat_car_policy
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2020-35053.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5f9f203308fb6a996c6df1d8c92c28406e440cc43a4e3b443b12a3a7f3699382
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_car_ib_2025:
+    source_id: bd_vat_car_ib_2025
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5f9f203308fb6a996c6df1d8c92c28406e440cc43a4e3b443b12a3a7f3699382
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_car_ib_2026:
+    source_id: bd_vat_car_ib_2026
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/winst_uit_onderneming
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5f9f203308fb6a996c6df1d8c92c28406e440cc43a4e3b443b12a3a7f3699382
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_goods:
+    source_id: bd_vat_margin_goods
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/wat_zijn_margegoederen/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_calculation:
+    source_id: bd_vat_margin_calculation
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/margegoederen/btw_berekenen_bij_margegoederen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_return:
+    source_id: bd_vat_margin_return
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/margeregeling_aangifte_doen/aangifte_doen_bij_handel_in_margegoederen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_method:
+    source_id: bd_vat_margin_method
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/administratie_bijhouden_bij_handel_in_margegoederen/administratie_bijhouden_bij_handel_in_margegoederen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_losses:
+    source_id: bd_vat_margin_losses
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/margeregeling_aangifte_doen/negatieve_winstmarge_verrekenen/negatieve_winstmarge_verrekenen
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_year_balance:
+    source_id: bd_vat_margin_year_balance
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/margeregeling_aangifte_doen/negatieve_winstmarge_verrekenen/vaststellen_van_het_jaarsaldo
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_margin_next_year:
+    source_id: bd_vat_margin_next_year
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/bijzondere_regelingen/margeregeling/margeregeling_aangifte_doen/negatieve_winstmarge_verrekenen/negatief_jaarsaldo_verrekenen_met_een_positief_jaarsaldo_in_het_volgende_jaar
+    review_status: needs_review
+    reviewed_note_hash_sha256: 3b97cdacebfc123fc4a0148f8c55333e4df92d2910ef5084c2352e6744713577
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_mixed_taxable_exempt:
+    source_id: bd_vat_mixed_taxable_exempt
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/belaste_en_vrijgestelde_omzet/
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_deduction_ratio:
+    source_id: bd_vat_deduction_ratio
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/belaste_en_vrijgestelde_omzet/inschatting_van_het_gebruik2/inschatting_van_het_gebruik
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_ordinary_revision:
+    source_id: bd_vat_ordinary_revision
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/belaste_en_vrijgestelde_omzet/inschatting_van_het_gebruik2/herziening_aftrek_niet_investeringsgoederen_en_diensten
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_mixed_investment_allocation:
+    source_id: bd_vat_mixed_investment_allocation
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/privegebruik/gemengd_gebruik/investeringsgoederen/investeringsgoederen
+    review_status: needs_review
+    reviewed_note_hash_sha256: a3e161bde3e5700d80196f0b4399b1f94ffcc9c0a28cb078a5337389d97490b1
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_movable_private_use:
+    source_id: bd_vat_movable_private_use
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/privegebruik/gemengd_gebruik/investeringsgoederen/roerende_investeringsgoederen/
+    review_status: needs_review
+    reviewed_note_hash_sha256: a3e161bde3e5700d80196f0b4399b1f94ffcc9c0a28cb078a5337389d97490b1
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_computer_private_use:
+    source_id: bd_vat_computer_private_use
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/privegebruik/gemengd_gebruik/investeringsgoederen/roerende_investeringsgoederen/voorbeeld_computer_geheel_bedrijfsvermogen
+    review_status: needs_review
+    reviewed_note_hash_sha256: a3e161bde3e5700d80196f0b4399b1f94ffcc9c0a28cb078a5337389d97490b1
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_free_services:
+    source_id: bd_vat_free_services
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_berekenen_aan_uw_klanten/waarover_btw_berekenen/diensten/btw_betalen_over_gratis_diensten
+    review_status: needs_review
+    reviewed_note_hash_sha256: a3e161bde3e5700d80196f0b4399b1f94ffcc9c0a28cb078a5337389d97490b1
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_property_delivery:
+    source_id: bd_vat_property_delivery
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/onroerende_zaken/levering_onroerende_zaak/levering_van_een_onroerende_zaak
+    review_status: needs_review
+    reviewed_note_hash_sha256: 85c52fe0b5cea7c37ab80c0dc09a7494fe20255958da7bd22668625347a5d4a6
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.332049+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_property_delivery_option:
+    source_id: bd_vat_property_delivery_option
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/onroerende_zaken/levering_onroerende_zaak/belaste_levering/voorwaarde_voor_belaste_levering
+    review_status: needs_review
+    reviewed_note_hash_sha256: 85c52fe0b5cea7c37ab80c0dc09a7494fe20255958da7bd22668625347a5d4a6
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.350328+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_property_rent_option:
+    source_id: bd_vat_property_rent_option
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/onroerende_zaken/verhuur_onroerende_zaak/belaste_verhuur/voorwaarden_belaste_verhuur/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 85c52fe0b5cea7c37ab80c0dc09a7494fe20255958da7bd22668625347a5d4a6
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.368599+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_property_private_use:
+    source_id: bd_vat_property_private_use
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/privegebruik/gemengd_gebruik/investeringsgoederen/onroerende-zaken
+    review_status: needs_review
+    reviewed_note_hash_sha256: 85c52fe0b5cea7c37ab80c0dc09a7494fe20255958da7bd22668625347a5d4a6
+    reviewed_note_hash_recorded_at: '2026-10-02T11:58:36.387291+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_capital_revision:
+    source_id: bd_vat_capital_revision
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/btw_aftrekken/belaste_en_vrijgestelde_omzet/inschatting_van_het_gebruik2/herziening_aftrek_bij_investeringsgoederen2/herziening_aftrek_bij_investeringsgoederen
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_investment_services:
+    source_id: bd_vat_investment_services
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-aftrek-investeringsdiensten
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_investment_services_regulation:
+    source_id: bd_vat_investment_services_regulation
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2024-41523.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_kor_revision:
+    source_id: bd_vat_kor_revision
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/hoe_werkt_de_btw/kleineondernemersregeling/wat-betekent-meedoen-met-de-kleineondernemersregeling/moet-ik-mijn-btw-aftrek-herzien-vanwege-de-kleineondernemersregeling
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_property_revision:
+    source_id: bd_vat_property_revision
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/onroerende_zaken/herziening_btw/
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_deduction_policy:
+    source_id: bd_vat_deduction_policy
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2020-63000.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_deduction_policy_amendment_2025:
+    source_id: bd_vat_deduction_policy_amendment_2025
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2024-38540.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_vat_deduction_policy_amendment_2026:
+    source_id: bd_vat_deduction_policy_amendment_2026
+    source_url: https://zoek.officielebekendmakingen.nl/stcrt-2026-29217.html
+    review_status: needs_review
+    reviewed_note_hash_sha256: a79b8c711f9a5a836bc3b418161d533f39570bd6e462a8ad5acad38f30a783f7
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  law_uitvoeringsbeschikking_ob_1968:
+    source_id: law_uitvoeringsbeschikking_ob_1968
+    source_url: https://wetten.overheid.nl/BWBR0002634/
+    review_status: needs_review
+    reviewed_note_hash_sha256: cf18ba1dea28e4764458614f3351130925f35926c10e64e3891aa01cf34261dd
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.

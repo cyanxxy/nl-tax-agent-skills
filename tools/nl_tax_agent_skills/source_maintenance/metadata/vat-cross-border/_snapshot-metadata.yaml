@@ -1,0 +1,122 @@
+metadata_version: '1.1'
+sources:
+  bd_icp_periods:
+    source_id: bd_icp_periods
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/zakendoen_met_het_buitenland/goederen_en_diensten_naar_andere_eu_landen/opgaaf_icp/tijdvak_opgaaf_icp/
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5b711e5f5b10126662c5cc3cd3824ce631c301860180389ca83d938813ebcad0
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_icp_explanation_2025:
+    source_id: bd_icp_explanation_2025
+    source_url: https://download.belastingdienst.nl/belastingdienst/docs/toelichting-digitale-opgaaf-intracomm-pres-ob1291t53fd.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5b711e5f5b10126662c5cc3cd3824ce631c301860180389ca83d938813ebcad0
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_icp_explanation_2026:
+    source_id: bd_icp_explanation_2026
+    source_url: https://download.belastingdienst.nl/belastingdienst/docs/toelichting-digitale-opgaaf-intracomm-pres-ob1291t62fd.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5b711e5f5b10126662c5cc3cd3824ce631c301860180389ca83d938813ebcad0
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_icp_vat_id_checks:
+    source_id: bd_icp_vat_id_checks
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-id-controleren
+    review_status: needs_review
+    reviewed_note_hash_sha256: 5b711e5f5b10126662c5cc3cd3824ce631c301860180389ca83d938813ebcad0
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_oss_reporting:
+    source_id: bd_oss_reporting
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-melden-eenloketsysteem
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_oss_non_union:
+    source_id: bd_oss_non_union
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/internationaal/btw_voor_buitenlandse_ondernemers/e_commerce_en_diensten/ik_lever_diensten_-_de_niet-unieregeling/
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_oss_non_union_reporting:
+    source_id: bd_oss_non_union_reporting
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/internationaal/btw_voor_buitenlandse_ondernemers/e_commerce_en_diensten/ik_lever_diensten_-_de_niet-unieregeling/niet-unieregeling_btw_melden_en_betalen/
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_oss_distance_threshold:
+    source_id: bd_oss_distance_threshold
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-diensten-particulieren
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  bd_ioss_scope:
+    source_id: bd_ioss_scope
+    source_url: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-goederen-importeren-leveren
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_oss_scope:
+    source_id: eu_oss_scope
+    source_url: https://vat-one-stop-shop.ec.europa.eu/one-stop-shop_en
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_oss_registration:
+    source_id: eu_oss_registration
+    source_url: https://vat-one-stop-shop.ec.europa.eu/one-stop-shop/register-oss_en
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_oss_declare_pay:
+    source_id: eu_oss_declare_pay
+    source_url: https://vat-one-stop-shop.ec.europa.eu/one-stop-shop/declare-and-pay-oss_en
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_ioss_explanatory_notes:
+    source_id: eu_ioss_explanatory_notes
+    source_url: https://vat-one-stop-shop.ec.europa.eu/document/download/3372e2f2-d5ec-46ea-a2ac-97bc4f5ec634_en?filename=vatecommerceexplanatory_notes_28102020_en.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_ioss_customs_addendum_2026:
+    source_id: eu_ioss_customs_addendum_2026
+    source_url: https://vat-one-stop-shop.ec.europa.eu/document/download/3086db0e-7b4a-4202-9f38-d32bd774f5a8_en?filename=20260821_VAT+guidelines-3+EUR+Customs+duty_revised.pdf
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.
+  eu_vat_directive_oss_currency:
+    source_id: eu_vat_directive_oss_currency
+    source_url: https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=CELEX:32006L0112
+    review_status: needs_review
+    reviewed_note_hash_sha256: a4d95b9f452acadd1c534e604d6f43879c9b41efb34b5d14cad444f3314c2a78
+    reviewed_note_hash_recorded_at: '2026-10-02T15:45:43.926979+00:00'
+    review_requirement: Human comparison of note with official authority; agent research
+      is not a review attestation.

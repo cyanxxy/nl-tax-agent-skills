@@ -4,7 +4,7 @@ source_ids: bd_fisin_2025_index, bd_partneralimentatie_2025, bd_giften_aftrek_20
 workflow: annual_return
 tax_year: 2025
 status: active
-last_reviewed: "2026-07-16"
+last_reviewed: "2026-10-01"
 review_status: reviewed
 
 ## Rule
@@ -207,7 +207,7 @@ Fiscal partners can allocate the following deductions between them in the most t
 
 ### High-income deduction-rate cap
 
-For 2025, taxpayers with income in the highest box 1 bracket (verzamelinkomen above EUR 76,817, the start of schijf 3) do not necessarily receive a 49.50% benefit for deductions. The maximum rate for listed aftrekposten in the highest bracket is 37.48% (a tariefsaanpassing of 12.02% = 49.50% - 37.48%). This cap applies beyond own-home costs and includes, among others, persoonsgebonden aftrek, gifts, specific healthcare costs, paid partneralimentatie, own-home costs, and entrepreneur deductions where applicable.
+For 2025, the deduction-rate adjustment applies when income from work and home (box 1) before the relevant deductions exceeds EUR 76,817. Do not use verzamelinkomen across boxes 1, 2, and 3 to test this threshold. The maximum rate for listed aftrekposten in the highest bracket is 37.48% (a tariefsaanpassing of 12.02% = 49.50% - 37.48%). This cap applies beyond own-home costs and includes, among others, persoonsgebonden aftrek, gifts, specific healthcare costs, paid partneralimentatie, own-home costs, and entrepreneur deductions where applicable.
 
 ### Allocation strategy
 

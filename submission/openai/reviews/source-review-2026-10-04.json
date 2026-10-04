@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-04",
+  "reviewer": "Codex (AI-assisted comparison; not human attestation)",
+  "status": "human_approved",
+  "scope": "Current official guidance compared with the local authorization note for the single stale mandatory source bd_machtigen_authorization. This is not a historical remote-page diff or a re-audit of the other sources.",
+  "human_review": {
+    "reviewer": "Mansour Damanpak",
+    "date": "2026-10-05",
+    "decision": "approved",
+    "evidence": "User explicitly replied: do it approved, after the source-review approval request presenting the prepared adviser authorization wording correction and cited official guidance."
+  },
+  "entries": [
+    {
+      "source_id": "bd_machtigen_authorization",
+      "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen",
+      "note": "plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/knowledge/security/machtigen.md",
+      "note_sha256": "ad49efe58fcb913ef10c7f9803ae0f0211e71f84d184573a16275778ba700208",
+      "previous_human_last_checked": "2026-07-01",
+      "human_last_checked": "2026-10-05",
+      "agent_research_date": "2026-10-04",
+      "human_attestation_pending": false,
+      "freshness": {
+        "policy": "check quarterly; representative authorization procedures may change with platform updates",
+        "age_days": 0,
+        "blocking_threshold_days": 92,
+        "gate_result": "fresh",
+        "assessed_on": "2026-10-05"
+      },
+      "comparison": "The main official page continues to support arranging scoped authorization through official channels for someone handling tax matters, activating it before representative portal access, and not sharing the taxpayer's DigiD. Its linked guidance confirms separate procedures for administrators and curators. The local prohibition on credential collection and agent automation is repository policy, not a purported quotation of government guidance. The overbroad intermediary-portal wording has been replaced with a reference to the applicable official authorization route; the user approved this prepared correction and source review on 2026-10-05.",
+      "review_points": [
+        {
+          "local_claim": "This is handled through the Belastingdienst's intermediary portal",
+          "finding": "The generic portal description is overbroad. The linked official adviser guidance distinguishes the mandate to file from additional registration for service messages and prefilled data. It describes requesting the latter through adviser software and viewing or withdrawing active registrations through the Logius Machtigingenregister Digipoort.",
+          "proposed_replacement": "Use the applicable official authorization route; the adviser handles it through their professional workflow.",
+          "applied": true,
+          "reason_for_minimal_change": "The local skill routes advisers to their professional workflow. It need not describe a universal portal or expand into detailed adviser software procedures.",
+          "current_wording": "Use the applicable official authorization route; the adviser handles it through their professional workflow."
+        }
+      ],
+      "official_pages_consulted": [
+        {
+          "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen",
+          "support": "Scoped authorization, request and activation steps, representative access in Mijn Belastingdienst, alternatives and links for special situations."
+        },
+        {
+          "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digitale-vertegenwoordiging-bewindvoerders/",
+          "support": "Separate digital representation procedures for bewindvoerders and curators, using their own DigiD or professional eHerkenning."
+        },
+        {
+          "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/serviceberichten_voor_uw_intermediair/",
+          "support": "Additional consent and active registration for adviser service messages and prefilled data; adviser software requests and activation; Logius registry access."
+        },
+        {
+          "url": "https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/machtiging-registreren-voor-uw-intermediair",
+          "support": "Distinction between an existing mandate to file and additional registered authorization for assessment messages or prefilled data; viewing and revoking via Logius."
+        }
+      ],
+      "previous_note_sha256": "b453e3c03bdf6c8e5ccab2d73dbd4dbbecad2368ea7ee2b3668e9eaae810451a",
+      "pending_review_note_sha256": "ccfedd14b52766a2be1740858d29b36ba965cab775b52c215760db015ff16316",
+      "freshness_before_approval": {
+        "policy": "check quarterly; representative authorization procedures may change with platform updates",
+        "age_days": 95,
+        "blocking_threshold_days": 92,
+        "gate_result": "stale",
+        "assessed_on": "2026-10-04"
+      }
+    }
+  ],
+  "integrity": {
+    "source_register_dates_modified": true,
+    "knowledge_note_modified": true,
+    "review_status_modified": true,
+    "freshness_gate_relaxed": false,
+    "human_approval_recorded": true,
+    "review_status_change": "After the explicit human approval on 2026-10-05, the note header and source metadata were restored to reviewed. Only bd_machtigen_authorization received the new last_checked date.",
+    "metadata_refresh": "Ran build_snapshots.py against a temporary register containing only bd_machtigen_authorization. One changed hash, no other source entries processed. After human approval, the final note review fields and the hash of that exact reviewed note were recorded for this source only.",
+    "new_agent_research_after_2026_10_04": false
+  },
+  "required_next_step": "Source review and source gates are complete. Continue the remaining release checks.",
+  "requirement_references": [
+    "CONTRIBUTING.md:382-385 (substantive edits and human restoration of reviewed status)",
+    "CONTRIBUTING.md:401-404 (mandatory-source freshness gate)",
+    "CONTRIBUTING.md:411-416 (last_checked and reviewed are human attestations)",
+    "tools/nl_tax_agent_skills/source_maintenance/reference/refresh-policy.md:38-43 (human review date and limits of hashes)"
+  ],
+  "limitations": [
+    "No archived remote page body was available, so this comparison cannot claim that the official web pages have never changed since July 1.",
+    "The AI-assisted source comparison took place on 2026-10-04. The subsequent explicit human approval was recorded on 2026-10-05; no new source research is claimed for that date."
+  ],
+  "validation": {
+    "date": "2026-10-05",
+    "source_register": {
+      "result": "passed",
+      "errors": 0,
+      "warnings": 0
+    },
+    "knowledge_pack": {
+      "result": "passed",
+      "sources": 335,
+      "missing": 0,
+      "stale": 0,
+      "metadata_errors": 0,
+      "unreferenced_files": 0,
+      "review_marker_errors": 0,
+      "workflow_metadata_errors": 0,
+      "unknown_source_id_errors": 0
+    }
+  }
+}

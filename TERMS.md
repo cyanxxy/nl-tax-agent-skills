@@ -5,11 +5,22 @@ By using the `nl-tax-agent-skills` plugin, you agree to the following.
 ## Not tax, legal, or financial advice
 
 This plugin is an informational and organizational aid for preparing Dutch
-individual income-tax information. It is **not** tax advice, legal advice, or
-financial advice, and it is not a substitute for a qualified tax adviser,
+individual income-tax and sole-trader VAT information. It is **not** tax
+advice, legal advice, or financial advice, and it is not a substitute for a qualified tax adviser,
 accountant, or the Belastingdienst. Tax rules change and may be applied
 differently to your specific situation. For binding guidance, consult a
 qualified professional or the official Belastingdienst channels.
+
+Some workflows are **draft-only previews**: the VAT return and correction, the
+ICP declaration, the OSS and IOSS returns, the VAT adjustment calculations, the
+M (migration) and C (nonresident) income-tax returns, and the annual income-tax
+return 2026. Their official sources have not yet been reviewed by a human tax
+reviewer, and the exact official forms for some of them are not final. The
+plugin therefore never presents these drafts as complete or ready to file and
+gives no manual-entry checklist with amounts for them. The annual 2026 draft
+stays incomplete until the year has ended and its year-end documents exist.
+Tax treaties, elections, valuations, and specialist calculations that the
+plugin does not support need a qualified tax professional.
 
 ## You are responsible for verifying the figures
 
@@ -22,8 +33,9 @@ guidance. Do not rely on the plugin's output as the sole basis for a filing.
 ## Submission is always manual
 
 The plugin never logs in, signs, submits, files, or automates Mijn
-Belastingdienst. Every official submission is performed
-manually by you through the official portal. You alone choose what to submit and
+Belastingdienst or Mijn Belastingdienst Zakelijk. Every official submission is
+performed manually by you through the official portal: Mijn Belastingdienst
+for income tax, or Mijn Belastingdienst Zakelijk for VAT, ICP, and OSS. You alone choose what to submit and
 when.
 
 ## No warranty

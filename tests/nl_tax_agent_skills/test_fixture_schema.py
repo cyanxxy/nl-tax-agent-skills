@@ -6,9 +6,21 @@ harness, so they share one minimal schema: identifying metadata, a workflow
 label drawn from the intake routing vocabulary, and explicit expectations
 (``expected_behavior`` and/or ``acceptance_criteria``). 0.4 adds the file
 rules: a fixture creates files only through the save consent it declares, and
-only the two fixed workpack paths; resume expectations use Appendix A resume
-record terms, never 0.3 ledger terms.
+only at an owner's one workpack path: the two fixed income-tax paths
+(``workspace/nl-tax-annual-2025-workpack.md`` and
+``workspace/nl-tax-provisional-2026-workpack.md``) or a year/period-qualified
+extended path such as ``workspace/nl-tax-vat-2026-Q3-workpack.md``,
+``workspace/nl-tax-vat-correction-2026-Q1-workpack.md``,
+``workspace/nl-tax-icp-2026-Q3-workpack.md``,
+``workspace/nl-tax-oss-union-2026-Q3-workpack.md``,
+``workspace/nl-tax-international-2025-migration-workpack.md`` or
+``workspace/nl-tax-annual-2026-workpack.md``. Extended workflow labels are
+checked against identity patterns rather than a list of single periods.
+Resume expectations use Appendix A resume record terms, never 0.3 ledger
+terms.
 """
+
+import re
 
 import importlib.util
 import pathlib
@@ -29,9 +41,9 @@ DATASET_PATH = REPO_ROOT / "evals/nl-tax-agent-skills/offline-dataset.yaml"
 PLUGIN_ROOT = REPO_ROOT / "plugins/nl-tax-agent-skills"
 GRADER_PATH = REPO_ROOT / "tools/nl_tax_agent_skills/workpack/validate_workpack.py"
 
-# Workflow labels: the intake routing vocabulary (annual_2025 plus the four
-# provisional subflows), and the two non-taxpayer harness labels used by the
-# security fixtures (intake boundary tests and source maintenance tests).
+# Workflow labels: the income-tax intake routing vocabulary (annual_2025 plus
+# the four provisional subflows), and the two non-taxpayer harness labels used
+# by the security fixtures (intake boundary tests and source maintenance tests).
 ALLOWED_WORKFLOWS = {
     "annual_2025",
     "provisional_2026_request",
@@ -41,6 +53,30 @@ ALLOWED_WORKFLOWS = {
     "intake",
     "maintenance",
 }
+
+# Extended owners carry a year/period identity in their workflow label, so a
+# label is accepted when it matches the owner's identity pattern. ``Y`` is only
+# an annual assigned filing period, never a batch of shorter periods.
+PERIOD = r"(Q[1-4]|M(0[1-9]|1[0-2])|Y)"
+WORKFLOW_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in (
+        rf"^vat_(2025|2026)_{PERIOD}$",
+        rf"^vat_correction_(2025|2026)_{PERIOD}$",
+        rf"^icp_(2025|2026)_{PERIOD}$",
+        r"^oss_(union|non_union)_(2025|2026)_Q[1-4]$",
+        r"^oss_ioss_(2025|2026)_M(0[1-9]|1[0-2])$",
+        r"^international_(2025|2026)_(migration|nonresident)$",
+        r"^annual_2026$",
+    )
+)
+
+
+def workflow_label_is_known(label):
+    return label in ALLOWED_WORKFLOWS or any(
+        isinstance(label, str) and pattern.match(label) for pattern in WORKFLOW_PATTERNS
+    )
+
 
 REQUIRED_KEYS = ("fixture_id", "fixture_version", "scenario", "workflow")
 
@@ -58,6 +94,31 @@ LEGACY_TERMS = (
     "evidence_index_version",
     "taxpayer_profile_version",
 )
+
+
+def workpack_path_for(key):
+    """Return the one workpack path for a saving key, or None when unknown.
+
+    A key is an income-tax family (annual_2025, provisional_2026) or an
+    extended workflow identity such as vat_correction_2026_Q1.
+    """
+    if key in WORKPACK_BY_FAMILY:
+        return WORKPACK_BY_FAMILY[key]
+    if not isinstance(key, str) or not any(p.match(key) for p in WORKFLOW_PATTERNS):
+        return None
+    if key == "annual_2026":
+        return "workspace/nl-tax-annual-2026-workpack.md"
+    for prefix in ("vat_correction", "vat", "icp", "oss", "international"):
+        if key.startswith(prefix + "_"):
+            rest = key[len(prefix) + 1 :]
+            if prefix == "oss":
+                scheme, year, period = rest.rsplit("_", 2)
+                tokens = [scheme, year, period]
+            else:
+                tokens = rest.split("_")
+            stem = prefix.replace("_", "-")
+            return f"workspace/nl-tax-{stem}-{'-'.join(tokens)}-workpack.md"
+    return None
 
 
 def iter_fixture_paths():
@@ -97,11 +158,40 @@ class FixtureSchemaTests(unittest.TestCase):
         for path in iter_fixture_paths():
             with self.subTest(fixture=path.name):
                 data = yaml.safe_load(path.read_text(encoding="utf-8"))
-                self.assertIn(
-                    data.get("workflow"),
-                    ALLOWED_WORKFLOWS,
+                self.assertTrue(
+                    workflow_label_is_known(data.get("workflow")),
                     f"{path} uses unknown workflow label {data.get('workflow')!r}",
                 )
+
+    def test_workflow_patterns_accept_identities_and_reject_reshaped_periods(self):
+        for label in (
+            "vat_2026_Q3",
+            "vat_2025_M12",
+            "vat_2026_Y",
+            "vat_correction_2026_Q1",
+            "icp_2026_Q3",
+            "oss_union_2026_Q3",
+            "oss_non_union_2025_Q4",
+            "oss_ioss_2026_M07",
+            "international_2025_migration",
+            "international_2026_nonresident",
+            "annual_2026",
+        ):
+            with self.subTest(label=label):
+                self.assertTrue(workflow_label_is_known(label))
+        for label in (
+            "vat_2027_Q1",
+            "vat_2026_Q5",
+            "vat_2026_M13",
+            "vat_correction_2026_Q1_Q2",
+            "oss_union_2026_M07",
+            "oss_ioss_2026_Q3",
+            "international_2025_f",
+            "annual_2027",
+            "provisional_2027_request",
+        ):
+            with self.subTest(label=label):
+                self.assertFalse(workflow_label_is_known(label))
 
     def test_expectations_present(self):
         for path in iter_fixture_paths():
@@ -179,27 +269,51 @@ class SaveConsentAndFileRuleTests(unittest.TestCase):
             outputs = data.get("expected_outputs") or {}
             created = outputs.get("files_created") or []
             saving = data.get("saving") or {}
+            paths_by_key = {key: workpack_path_for(key) for key in saving}
             with self.subTest(fixture=path.name):
                 for relative in created:
-                    self.assertIn(relative, WORKPACK_BY_FAMILY.values())
-                    family = next(
-                        key for key, value in WORKPACK_BY_FAMILY.items() if value == relative
+                    self.assertIn(
+                        relative,
+                        paths_by_key.values(),
+                        f"{path.name} creates {relative}, which is no declared owner's one workpack path",
                     )
+                    key = next(key for key, value in paths_by_key.items() if value == relative)
                     self.assertEqual(
-                        (saving.get(family) or {}).get("consent"),
+                        (saving.get(key) or {}).get("consent"),
                         "given",
                         f"{path.name} creates {relative} without declared save consent",
                     )
-                for family, state in saving.items():
-                    self.assertIn(family, WORKPACK_BY_FAMILY)
+                for key, state in saving.items():
+                    self.assertIsNotNone(
+                        paths_by_key[key], f"{path.name} declares saving for unknown workflow {key!r}"
+                    )
                     self.assertIn(state.get("consent"), CONSENT_VALUES)
                     if state.get("consent") == "given":
                         self.assertIn(state.get("at"), CONSENT_POINTS)
-                        self.assertIn(WORKPACK_BY_FAMILY[family], created)
+                        self.assertIn(paths_by_key[key], created)
                     else:
-                        self.assertNotIn(WORKPACK_BY_FAMILY[family], created)
+                        self.assertNotIn(paths_by_key[key], created)
                 for relative in outputs.get("files_not_created") or []:
                     self.assertNotIn(relative, created)
+
+    def test_workpack_paths_follow_owner_identities(self):
+        expected = {
+            "annual_2025": "workspace/nl-tax-annual-2025-workpack.md",
+            "provisional_2026": "workspace/nl-tax-provisional-2026-workpack.md",
+            "vat_2026_Q3": "workspace/nl-tax-vat-2026-Q3-workpack.md",
+            "vat_correction_2026_Q1": "workspace/nl-tax-vat-correction-2026-Q1-workpack.md",
+            "icp_2026_Q3": "workspace/nl-tax-icp-2026-Q3-workpack.md",
+            "oss_union_2026_Q3": "workspace/nl-tax-oss-union-2026-Q3-workpack.md",
+            "oss_ioss_2026_M07": "workspace/nl-tax-oss-ioss-2026-M07-workpack.md",
+            "international_2025_migration": "workspace/nl-tax-international-2025-migration-workpack.md",
+            "annual_2026": "workspace/nl-tax-annual-2026-workpack.md",
+        }
+        for key, relative in expected.items():
+            with self.subTest(key=key):
+                self.assertEqual(workpack_path_for(key), relative)
+        for key in ("vat_correction_2026_Q1_Q2", "vat_2027_Q1", "intake"):
+            with self.subTest(key=key):
+                self.assertIsNone(workpack_path_for(key))
 
     def test_fixtures_use_resume_record_terms_not_0_3_ledgers(self):
         for path in iter_fixture_paths():
