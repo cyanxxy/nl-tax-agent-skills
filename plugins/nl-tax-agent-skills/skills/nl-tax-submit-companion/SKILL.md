@@ -51,6 +51,9 @@ exists, and never require a slash command or magic phrase.
 
 ## Read first
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md`. Resolve bundled files
 relative to this skill directory with the host's skill-resource or file tools.
 

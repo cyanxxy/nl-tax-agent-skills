@@ -109,6 +109,9 @@ single offer when it starts. Add no generic warnings to ordinary replies.
 
 ## Load for explicit preparation
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md` first. Then read:
 
 1. `../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md`

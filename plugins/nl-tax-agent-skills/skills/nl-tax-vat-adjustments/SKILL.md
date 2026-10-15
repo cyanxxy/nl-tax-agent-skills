@@ -2,6 +2,7 @@
 name: nl-tax-vat-adjustments
 description: "Use when an owning Dutch VAT return or correction workflow needs sourced 2025/2026 adjustment findings: private use, pro-rata, revision, property, BUA or margin arithmetic."
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

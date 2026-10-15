@@ -19,6 +19,23 @@ example in Mijn Belastingdienst Zakelijk); the plugin never does.
 > only. It never logs in, signs, or submits anything, and its output is not an
 > official calculation. You review everything and enter it yourself.
 
+## For ZZP'ers and freelancers
+
+**Self-employed? Your business income is covered too.**
+
+- **Annual 2025 (reviewed):** belastbare winst uit onderneming for an
+  eenmanszaak / ZZP, through the **urencriterium**, **investeringsaftrek**,
+  **zelfstandigenaftrek and startersaftrek** and **MKB-winstvrijstelling**,
+  plus a reminder of the separate **Zvw-bijdrage**.
+- **Freelancer, not an ondernemer:** **resultaat uit overige werkzaamheden**
+  is prepared after a bron-van-inkomen check.
+- **Voorlopige aanslag 2026 (reviewed):** your sourced **expected 2026
+  profit**.
+- **Draft-only:** **btw-aangifte** with **KOR screening**, correction or
+  suppletie, **opgaaf ICP**, and **OSS / IOSS**.
+- **Professional review** for VOF or maatschap profit shares, stakingswinst,
+  BV / DGA income and reserves such as the herinvesteringsreserve.
+
 ## How to use it
 
 Attach or select your documents (jaaropgaaf, mortgage statement, bank
@@ -192,5 +209,7 @@ income-tax draft".
 - [Privacy](https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md):
   what the plugin reads, stores, and sends (it sends nothing), and how to delete
   a saved workpack.
+- Install in Claude Code (2.1.275 or later):
+  `/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills`
 - Install steps and contributor docs: <https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;
 see the bundled [LICENSE](LICENSE).

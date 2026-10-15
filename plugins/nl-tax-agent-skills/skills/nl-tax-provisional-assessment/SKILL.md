@@ -59,6 +59,9 @@ workflow.
 
 ## Start
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
 resources relative to this skill directory and `workspace/...` against the
 task's working folder (the folder the user selected or the host's task

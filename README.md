@@ -7,7 +7,7 @@
 <p>
   <strong>Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack for manual Mijn Belastingdienst entry.</strong>
   <br />
-  <sub>An Agent Skills plugin for Claude Cowork, ChatGPT Work, Claude Code, and Codex CLI: annual 2025 &amp; voorlopige aanslag 2026, plus draft-only VAT, ICP, OSS, M/C and annual 2026 previews.</sub>
+  <sub>An Agent Skills plugin for Claude Cowork, ChatGPT Work, Claude Code, and Codex CLI: annual 2025 &amp; voorlopige aanslag 2026 for employees, <b>ZZP'ers and freelancers</b>, plus draft-only VAT, ICP, OSS, M/C and annual 2026 previews.</sub>
 </p>
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg?style=flat-square)](LICENSE)
@@ -75,6 +75,30 @@ source metadata and output contracts; behavioral evaluations check agent
 responses. Neither replaces human tax-content review or your review of a
 workpack.
 
+## 💼 For ZZP'ers and freelancers
+
+**Self-employed in the Netherlands? Your business income is covered too.**
+
+- **Annual return 2025, eenmanszaak / ZZP (reviewed).** From your finalized
+  profit-and-loss statement and balance sheet, the assistant works through the
+  **ondernemer tests and urencriterium**, the **investeringsaftrek (KIA)**, the
+  **zelfstandigenaftrek and startersaftrek**, and the
+  **MKB-winstvrijstelling** to your **belastbare winst uit onderneming**, and
+  reminds you of the separate **Zvw-bijdrage** assessment.
+- **Freelancer but not an ondernemer?** Income as **resultaat uit overige
+  werkzaamheden** is prepared too, after a bron-van-inkomen check. Wet DBA is
+  explained, never judged for you.
+- **Voorlopige aanslag 2026 (reviewed).** Records your sourced
+  **expected 2026 profit**, so a request or change reflects your business
+  income.
+- **btw, ICP and OSS (draft-only).** A draft **btw-aangifte** per period with
+  **KOR screening**, a **correction or suppletie** of a filed period, the
+  **opgaaf ICP**, and **OSS / IOSS** returns. These are not filing-ready until
+  their sources pass human review.
+- **Flagged for professional review**, with your facts collected so far: VOF or
+  maatschap profit shares, stakingswinst, BV / DGA income, and reserves such as
+  the herinvesteringsreserve.
+
 ## 🚀 Quickstart
 
 After [installing](#-install), attach your documents and ask in plain language:
@@ -134,6 +158,12 @@ conversation or project; on desktop you can also select a local folder.
 ```text
 /plugin marketplace add cyanxxy/nl-tax-agent-skills
 /plugin install nl-tax-agent-skills@nl-tax-agent-skills-marketplace
+```
+
+On Claude Code 2.1.275 or later, one line does both:
+
+```text
+/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills
 ```
 
 Or load a checkout for one session:

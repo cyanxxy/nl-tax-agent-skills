@@ -2,6 +2,7 @@
 name: nl-tax-box3
 description: Use when an owning Dutch tax workflow needs Box 3 facts and questions; annual 2025 compares fictitious and actual return, while provisional 2026 uses the fictitious method only.
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

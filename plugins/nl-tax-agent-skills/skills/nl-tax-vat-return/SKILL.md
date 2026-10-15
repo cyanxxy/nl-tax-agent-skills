@@ -56,6 +56,9 @@ VAT preparation is separate from the annual income-tax return and its profit.
 
 ## Start, resources, and resume
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md`, then
 `reference/vat-return-flow.md`. Resolve bundled paths relative to this skill
 directory using the host's resource/file tools; `workspace/...` is relative

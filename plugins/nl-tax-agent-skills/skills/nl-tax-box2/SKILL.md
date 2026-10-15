@@ -2,6 +2,7 @@
 name: nl-tax-box2
 description: Use when an owning Dutch tax workflow needs standard Box 2 facts and questions; use reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for provisional workpacks.
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

@@ -73,6 +73,9 @@ review. Support exactly 2025/2026 Netherlands-established eenmanszaak or ZZP per
 
 ## Start, resources, and resume
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md`, then
 `reference/vat-correction-flow.md`. Resolve bundled paths relative to this
 skill directory with the host's resource/file tools; `workspace/...` is

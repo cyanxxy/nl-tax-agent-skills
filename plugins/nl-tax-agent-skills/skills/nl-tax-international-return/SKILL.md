@@ -59,6 +59,9 @@ annual M/C return.
 
 ## Start, resources and resume
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md`, then
 `../nl-tax-shared-resources/reference/workflow-scopes.yaml` and
 `reference/international-return-flow.md`. Resolve bundled paths relative to

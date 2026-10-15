@@ -5,7 +5,7 @@ the belastbare winst uit onderneming, which feeds the box 1 income total in
 Phase 2. If the taxpayer has no onderneming, emit the canonical "not applicable"
 line and continue.
 
-Invoke or inline `nl-tax-winst` (`../nl-tax-winst/SKILL.md`). Require a finalized profit-and-loss statement
+Read and apply `nl-tax-winst` (`../nl-tax-winst/SKILL.md`). Require a finalized profit-and-loss statement
 and finalized balance for 2025. Preserve their document provenance and add only
 actually consulted entrepreneur `source_id`s to this workflow's source list.
 

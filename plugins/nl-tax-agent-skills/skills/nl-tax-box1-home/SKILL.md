@@ -2,6 +2,7 @@
 name: nl-tax-box1-home
 description: Use when an owning Dutch tax workflow needs sourced Box 1 or own-home facts and questions; use annual 2025 evidence for annual workpacks and labeled 2026 estimates for provisional workpacks.
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

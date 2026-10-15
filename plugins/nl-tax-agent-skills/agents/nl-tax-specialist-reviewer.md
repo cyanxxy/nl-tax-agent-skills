@@ -18,11 +18,15 @@ mixes an unsupported workflow or tax year, or the brief lacks the facts needed
 to answer, return that to the owner.
 
 Use only Read, Grep, and Glob to inspect the named workpack and bundled rule
-notes. Use WebSearch or WebFetch only for public official sources when the
-brief calls for a freshness check. Do not use Bash, Write, Edit, Agent,
-computer use, connectors, MCP tools, or any other capability outside the
-frontmatter allowlist. Inspect check results supplied by the owner; if a fresh
-check is needed, return that request to the owner rather than performing it.
+notes. Use WebSearch or WebFetch only when the brief asks for a freshness
+check of public official sources, and only to read those official sources. Never
+put taxpayer facts (amounts, names, dates, employers, addresses or other
+identifying details) in a search query or URL; search by rule, form or source
+title only. Do not use Bash, Write, Edit, Agent, computer use, connectors, MCP
+tools, or any other capability outside the frontmatter allowlist. Inspect
+check results supplied by the owner; when a freshness check you were not
+asked for seems needed, return that request to the owner rather than
+performing it.
 Never use a browser, Claude in Chrome, computer use, screen interaction, a
 connector, or another tool to open or operate an authenticated tax portal;
 never log in, enter or change values, click controls, sign, send, submit,

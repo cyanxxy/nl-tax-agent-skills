@@ -103,6 +103,9 @@ prepared first and offer to continue the matching owning workflow.
 
 ## Read first
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read [`../nl-tax-shared-resources/runtime-contract.md`](../nl-tax-shared-resources/runtime-contract.md),
 then all of [`reference/mapper-flow.md`](reference/mapper-flow.md), the
 operating procedure for inputs, the field record, gaps, readiness, checks,

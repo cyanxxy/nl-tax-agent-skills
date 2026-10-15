@@ -53,6 +53,9 @@ non-Union and IOSS registrations, figures and files separate. Use
 
 ## Start, resources and resume
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md` then
 `reference/oss-flow.md`. Resolve bundled paths relative to this skill directory
 with host resource/file tools; `workspace/...` is relative to the selected

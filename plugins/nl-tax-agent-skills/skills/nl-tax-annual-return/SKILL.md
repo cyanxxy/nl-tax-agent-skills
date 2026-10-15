@@ -45,6 +45,9 @@ follow-up, and stay the single owner of facts, section status, and readiness.
 
 ## Start and resume
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
 resources relative to this skill directory; `workspace/...` is relative to the
 task's working folder. Never depend on vendor-specific environment variables.

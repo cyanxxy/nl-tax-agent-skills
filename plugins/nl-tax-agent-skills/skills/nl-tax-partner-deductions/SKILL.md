@@ -2,6 +2,7 @@
 name: nl-tax-partner-deductions
 description: Use when an owning Dutch tax workflow needs fiscal-partner, deduction, or allocation facts and review scenarios for annual 2025 or provisional 2026 preparation.
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

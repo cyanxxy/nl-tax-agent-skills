@@ -2,6 +2,7 @@
 name: nl-tax-winst
 description: "Use when an owning Dutch tax workflow needs the annual 2025 belastbare winst uit onderneming determined from the reviewed profit chain, or one sourced 2026 provisional expected-profit forecast."
 user-invocable: false
+disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

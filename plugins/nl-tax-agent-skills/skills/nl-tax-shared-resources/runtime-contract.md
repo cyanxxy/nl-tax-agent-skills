@@ -29,6 +29,9 @@ variables are optional implementation details, not workflow requirements.
   directly; do not inventory the plugin, enumerate sibling skills, or search
   inactive phase/subflow files for possible questions. A helper `SKILL.md`
   path named by the owning workflow's flow file is part of that allowlist.
+- Background helpers are not listed as model-invocable skills
+  (`disable-model-invocation: true`). Read the helper `SKILL.md` at the path
+  the flow file names and apply it inline; do not call it as a skill.
 - For a tax-rule lookup, `../nl-tax-shared-resources/knowledge-index.md` is the
   topic map for every reviewed note. Use it to choose the note, then open only
   that note. When the index does not settle the choice, a narrow text search for
@@ -257,7 +260,11 @@ Appendix A, map and filename before resuming or writing.
   edits only its own sections. The one exception is the stale line: the
   owning workflow adds it to the mapper's and companion's sections after a
   changed fact, without touching their content. Their `allowed-tools` keep
-  `Edit(./workspace/**)` and never list `Write` or `Bash`.
+  `Edit(./workspace/**)` and never list `Write` or `Bash`. In Claude Code that
+  pre-approval lasts only for the turn that invokes the skill, so a save in a
+  later turn shows the host's normal permission prompt. That prompt is
+  expected and is the user's to approve; saving never depends on the
+  pre-approval.
 - `nl-tax-intake`, `nl-tax-knowledge`, and the background helpers
   (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`,
   `nl-tax-partner-deductions`, `nl-tax-winst`, `nl-tax-vat-adjustments`)
@@ -378,7 +385,7 @@ income tax; no browser or connector operates it.
   checklist is requested, show only **Blockers**, with no amounts, steps or
   checklist write, even with save consent. Do not interpret agent arithmetic checks
   or source browsing as a human review attestation.
-- The domestic VAT owner may invoke the read-only `nl-tax-vat-adjustments`
+- The domestic VAT owner may read and apply the read-only `nl-tax-vat-adjustments`
   helper for complete bounded car/private-use, pro-rata, capital-goods/services
   revision, property, BUA and margin lines. Unsettled classification/elections
   are named affected-line blockers; they do not make every adjustment
@@ -585,7 +592,8 @@ workflow or a requirement for completing the workpack.
   main conversation.
 
 Claude Cowork may use the packaged, allowlisted
-`nl-tax-specialist-reviewer` agent. ChatGPT Work or Codex may use a constrained
+`nl-tax-specialist-reviewer` agent (in Claude hosts it is namespaced as
+`nl-tax-agent-skills:nl-tax-specialist-reviewer`). ChatGPT Work or Codex may use a constrained
 built-in specialist subagent under this same contract; custom Codex agents live
 in user/project configuration rather than inside a plugin. Hosts without a
 constrained subagent simply continue inline.

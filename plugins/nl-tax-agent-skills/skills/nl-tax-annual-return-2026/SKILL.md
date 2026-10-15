@@ -11,6 +11,9 @@ allowed-tools:
 
 # Annual income tax 2026
 
+After any context compaction or summary, read the files named below again,
+plus any helper `SKILL.md` in use, before your next reply.
+
 Prepare a resident annual 2026 return with sourced actual facts and open items.
 Read `../nl-tax-shared-resources/runtime-contract.md`, then
 `reference/annual-2026-flow.md`. This owner has a separate year and file from
