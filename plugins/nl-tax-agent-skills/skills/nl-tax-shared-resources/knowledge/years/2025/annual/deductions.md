@@ -1,6 +1,6 @@
 # Rule note: Common deductions for annual return 2025
 
-source_ids: bd_fisin_2025_index, bd_partneralimentatie_2025, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_fisin_zorgkosten_2025, bd_vervoerskosten_ziekte_2025, bd_fisin_lijfrente_2025, bd_fisin_studiekosten_2025, bd_deduction_rate_cap_2025
+source_ids: bd_fisin_2025_index, bd_partneralimentatie_2025, bd_fisin_partneralimentatie_2025, bd_giften_aftrek_2025, bd_zorgkosten_overzicht_2025, bd_fisin_zorgkosten_2025, bd_vervoerskosten_ziekte_2025, bd_fisin_lijfrente_2025, bd_fisin_studiekosten_2025, bd_deduction_rate_cap_2025
 workflow: annual_return
 tax_year: 2025
 status: active

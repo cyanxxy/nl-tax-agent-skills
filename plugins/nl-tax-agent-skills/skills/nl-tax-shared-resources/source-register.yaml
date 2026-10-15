@@ -107,7 +107,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md
-    last_checked: "2026-07-13"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season (March) and after any BD portal update
     owner: tax-content
     mandatory_for: [nl-tax-intake, nl-tax-annual-return]
@@ -146,7 +146,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/evidence-checklist.md
-    last_checked: "2026-07-16"
+    last_checked: "2026-10-15"
     freshness_policy: check at the start of filing season and after Belastingdienst jaaropgaaf guidance changes
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-box1-home, nl-tax-field-mapper]
@@ -185,7 +185,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md
-    last_checked: "2026-07-16"
+    last_checked: "2026-10-15"
     freshness_policy: check throughout filing season; no-letter thresholds and deadlines are year-specific
     owner: tax-content
     mandatory_for: [nl-tax-intake, nl-tax-annual-return, nl-tax-submit-companion]
@@ -211,7 +211,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/filing-flow.md
-    last_checked: "2026-07-11"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season (March) and after any BD portal update
     owner: tax-content
     mandatory_for: [nl-tax-intake, nl-tax-annual-return, nl-tax-submit-companion]
@@ -424,7 +424,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md
-    last_checked: "2026-07-16"
+    last_checked: "2026-10-15"
     freshness_policy: check at the start of filing season; the applicable WOZ valuation date is tax-year-specific
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-box1-home, nl-tax-partner-deductions]
@@ -542,8 +542,21 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
-    last_checked: "2026-07-16"
+    last_checked: "2026-10-15"
     freshness_policy: check at the start of filing season and after guidance changes
+    owner: tax-content
+    mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions]
+
+  - id: bd_fisin_partneralimentatie_2025
+    title: Fiscale informatie 2025 -- 19 Aftrek betaalde partneralimentatie en andere onderhoudsverplichtingen
+    domain: belastingdienst.nl
+    url: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_betaalde_partneralimentatie
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
+    last_checked: "2026-10-15"
+    freshness_policy: check at the start of filing season; child alimony stays non-deductible and received partner alimony taxable unless the chapter changes
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions]
 
@@ -568,7 +581,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
-    last_checked: "2026-07-11"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season; thresholds and increase percentages change by tax year
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions]
@@ -581,7 +594,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
-    last_checked: "2026-07-11"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season; kilometre rate and mobility forfait may change
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions]
@@ -594,7 +607,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
-    last_checked: "2026-07-11"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season; eligible years and maximum reserveringsruimte change annually
     owner: tax-content
     mandatory_for: [nl-tax-annual-return]
@@ -607,7 +620,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/annual/deductions.md
-    last_checked: "2026-07-11"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season while the prestatiebeurs transition exception remains possible
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions]
@@ -646,7 +659,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md
-    last_checked: "2026-07-16"
+    last_checked: "2026-10-15"
     freshness_policy: check at the start of filing season and after joint-filing portal changes
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-partner-deductions, nl-tax-field-mapper, nl-tax-submit-companion]
@@ -759,8 +772,21 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/box3/actual-return.md
-    last_checked: "2026-07-13"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season; may change if box 3 legislation is amended
+    owner: tax-content
+    mandatory_for: [nl-tax-annual-return, nl-tax-box3]
+
+  - id: bd_box3_2025_actual_return_examples
+    title: Rekenvoorbeelden berekening werkelijk rendement
+    domain: belastingdienst.nl
+    url: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/rekenvoorbeelden-berekening-werkelijk-rendement
+    source_type: official_guidance
+    workflow: annual_return
+    tax_year: 2025
+    snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/box3/actual-return.md
+    last_checked: "2026-10-15"
+    freshness_policy: check at start of filing season; the worked examples state they cover 2025 (kale huur excluding servicekosten plus the WOZ value change)
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-box3]
 
@@ -785,7 +811,7 @@ sources:
     workflow: annual_return
     tax_year: 2025
     snapshot_path: skills/nl-tax-shared-resources/knowledge/years/2025/box3/actual-return.md
-    last_checked: "2026-07-13"
+    last_checked: "2026-10-15"
     freshness_policy: check at start of filing season; may change if box 3 legislation is amended
     owner: tax-content
     mandatory_for: [nl-tax-annual-return, nl-tax-box3]

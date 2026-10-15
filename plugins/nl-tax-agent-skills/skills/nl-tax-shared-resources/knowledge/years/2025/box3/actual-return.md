@@ -1,6 +1,6 @@
 # Rule note: Box 3 actual return (werkelijk rendement) for 2025
 
-source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025
+source_ids: bd_box3_2025_actual_return, bd_fisin_box3_actual_return_2025, bd_box3_2025_actual_return_examples
 workflow: annual_return
 tax_year: 2025
 status: active
