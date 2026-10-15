@@ -775,7 +775,7 @@ appendices.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.0"
+plugin_version: "0.5.1"
 workflow: provisional_2026_request   # provisional_2026_request | provisional_2026_change | provisional_2026_review | provisional_2026_stopzetten
 tax_year: 2026
 created_at: ""                       # ISO 8601

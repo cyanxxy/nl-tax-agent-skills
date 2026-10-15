@@ -2,7 +2,7 @@
 
 Use the shared single-file and provenance rules and the filled workpack
 template. Appendix A uses format `nl-tax-workpack`, version `2.0`, plugin
-`0.5.0`, workflow `annual_2026`, tax_year `2026` and exactly the flow section
+`0.5.1`, workflow `annual_2026`, tax_year `2026` and exactly the flow section
 keys. Actual evidence coverage is recorded in profile rows, not inferred from
 the workflow name.
 

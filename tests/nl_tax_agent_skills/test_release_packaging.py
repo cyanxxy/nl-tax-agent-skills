@@ -13,7 +13,7 @@ PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 SKILLS = PLUGIN / "skills"
 REPOSITORY_URL = "https://github.com/cyanxxy/nl-tax-agent-skills"
 
-RELEASE_VERSION = "0.5.0"
+RELEASE_VERSION = "0.5.1"
 
 ARGUMENT_HINTS = {
     "nl-tax-annual-return": "[2025] [confirm]",

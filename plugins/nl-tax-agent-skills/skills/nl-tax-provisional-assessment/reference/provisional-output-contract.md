@@ -513,7 +513,7 @@ Do not expand it into generic credential boilerplate.
 
 `Appendix A — Resume record` is one fenced `yaml` block with
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.0"`, `workflow: provisional_2026_<subflow>`,
+`plugin_version: "0.5.1"`, `workflow: provisional_2026_<subflow>`,
 `tax_year: 2026`, `created_at`, `updated_at`, `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow: null`, `sections`, and
 `sources_loaded`. `save_consent` defaults to `not_given` in the template and is

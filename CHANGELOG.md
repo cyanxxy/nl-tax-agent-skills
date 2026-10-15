@@ -5,6 +5,44 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] — 2026-10-15
+
+Brings the skills in line with current Claude Code plugin behaviour, re-verifies
+stale official sources, and makes ZZP and freelancer support visible. No tax
+rule, rate, or workflow scope changes.
+
+### Added
+
+- A **For ZZP'ers and freelancers** section in both READMEs: annual 2025 winst
+  uit onderneming, resultaat uit overige werkzaamheden, the provisional 2026
+  expected-profit forecast, the draft btw/ICP/OSS workflows, and what goes to
+  professional review.
+- The one-line Claude Code install command
+  (`/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills`,
+  Claude Code 2.1.275 or later).
+- Two official citations for facts the notes already stated:
+  `bd_fisin_partneralimentatie_2025` (child alimony is not deductible; received
+  partner alimony is taxed) and `bd_box3_2025_actual_return_examples` (kale huur
+  in the 2025 actual return).
+
+### Changed
+
+- Background helpers now set `disable-model-invocation: true`. Their
+  descriptions no longer take up the skill-listing budget, and a prompt can no
+  longer go straight to a helper past its owning workflow. Owners read the
+  helper `SKILL.md` by path.
+- Workflow skills re-read the runtime contract, their flow file, and any helper
+  in use after a context compaction.
+- The runtime contract states that an `allowed-tools` grant lasts only for the
+  invoking turn, so a consented save later shows the normal permission prompt.
+- The specialist reviewer never puts taxpayer facts in a search query or URL,
+  and its freshness-check instructions no longer contradict each other.
+- 13 mandatory 2025 sources re-verified against the live Belastingdienst pages
+  on 2026-10-15; the knowledge-pack freshness gate passes again.
+- The repository unit suite is deterministic only (745 to 565 tests): wording
+  checks are removed, and behaviour is tested with `claude plugin eval`.
+- CI uses `actions/checkout@v5` and `actions/setup-python@v6`.
+
 ## [0.5.0] — 2026-10-05
 
 Adds draft-only VAT, cross-border and international preparation alongside the
