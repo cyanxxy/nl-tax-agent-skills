@@ -242,5 +242,32 @@ class Box1OwnHomeRateParityTests(unittest.TestCase):
         self.assertNotIn("mortgage_start_year", result)
 
 
+
+class AowTransitionRateTableTests(unittest.TestCase):
+    """The 2026 AOW-transition month rates use the FISIN belastingberekening
+    series; two official pages differ by 0.01pp on six rows, so pin the table."""
+
+    def test_2026_aow_transition_month_rates_are_bundled(self):
+        rates = (
+            KNOWLEDGE / "years/2026/provisional/rates-and-credits.md"
+        ).read_text(encoding="utf-8")
+        for month, percentage in (
+            ("January", "17.85%"),
+            ("February", "19.34%"),
+            ("March", "20.83%"),
+            ("April", "22.32%"),
+            ("May", "23.81%"),
+            ("June", "25.30%"),
+            ("July", "26.80%"),
+            ("August", "28.29%"),
+            ("September", "29.78%"),
+            ("October", "31.27%"),
+            ("November", "32.76%"),
+            ("December", "34.25%"),
+        ):
+            with self.subTest(month=month):
+                self.assertIn(f"| {month} | {percentage} |", rates)
+        self.assertIn("bd_fisin_2026_belastingberekening", rates)
+
 if __name__ == "__main__":
     unittest.main()

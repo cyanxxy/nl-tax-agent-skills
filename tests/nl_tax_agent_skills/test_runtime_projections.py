@@ -4,7 +4,6 @@
 import hashlib
 import importlib.util
 import pathlib
-import re
 import sys
 import unittest
 
@@ -50,19 +49,6 @@ class RuntimeProjectionTests(unittest.TestCase):
                 )
                 self.assertNotIn("review_status:", projected_text)
 
-    def test_projections_have_no_bare_portal_action_imperatives(self):
-        bare_action = re.compile(
-            r"^\s*(?:\d+\. |- )?"
-            r"(?:Prepare|Log in|Enter|Review|Verify|Sign and send|Open|Choose|"
-            r"Navigate|Select|Confirm)\b",
-            re.MULTILINE,
-        )
-        for config in self.builder.PROJECTIONS:
-            projection = self.builder.OUTPUT / config.output_name
-            with self.subTest(projection=config.output_name):
-                body = projection.read_text(encoding="utf-8").split("## Rule\n", 1)[1]
-                self.assertIsNone(bare_action.search(body))
-
     def test_projection_builder_targets_only_the_runtime_projection_directory(self):
         expected = {
             "request-flow-human.md",
@@ -78,49 +64,6 @@ class RuntimeProjectionTests(unittest.TestCase):
             PLUGIN
             / "skills/nl-tax-provisional-assessment/reference/source-projections",
         )
-
-    def test_runtime_routes_portal_flows_only_through_exact_projection_paths(self):
-        skill = (
-            PLUGIN / "skills/nl-tax-provisional-assessment/SKILL.md"
-        ).read_text(encoding="utf-8")
-        intake = (PLUGIN / "skills/nl-tax-intake/SKILL.md").read_text(
-            encoding="utf-8"
-        )
-        runtime = (
-            PLUGIN / "skills/nl-tax-shared-resources/runtime-contract.md"
-        ).read_text(encoding="utf-8")
-
-        for name in (
-            "request-flow-human.md",
-            "change-flow-human.md",
-            "stopzetten-flow-human.md",
-        ):
-            self.assertIn(f"reference/source-projections/{name}", skill)
-            self.assertIn(f"reference/source-projections/{name}", intake)
-
-        normalized_skill = " ".join(skill.split())
-        normalized_runtime = " ".join(runtime.split())
-        self.assertIn(
-            "Do not open the raw reviewed `request-flow.md`, `change-flow.md`, or "
-            "`stopzetten-flow.md` during a taxpayer workflow",
-            normalized_skill,
-        )
-        self.assertNotIn(
-            "applicable 2026 provisional notes under",
-            skill,
-        )
-        normalized_intake = " ".join(intake.split())
-        self.assertIn(
-            "Never open the raw reviewed `request-flow.md`, `change-flow.md`, or "
-            "`stopzetten-flow.md` in this fast path",
-            normalized_intake,
-        )
-        self.assertIn(
-            "load that projection instead of the raw reviewed snapshot",
-            normalized_runtime,
-        )
-        self.assertIn("not a separate review attestation", normalized_runtime)
-        self.assertIn("mechanically reversible insertion", normalized_runtime)
 
 
 if __name__ == "__main__":

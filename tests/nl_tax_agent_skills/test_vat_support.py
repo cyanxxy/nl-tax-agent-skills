@@ -15,7 +15,6 @@ import yaml
 
 
 REPO = Path(__file__).resolve().parents[2]
-PLUGIN = REPO / "plugins/nl-tax-agent-skills"
 
 
 def load(relative, name):
@@ -230,34 +229,6 @@ class VatCoverageAuditTests(unittest.TestCase):
         fields.append({"field_id": "vat.1b.turnover"})
         blockers = VAT.coverage_blockers(notes, fields, missing_fields=[{"field_id": "vat.5b.vat"}])
         self.assertTrue(any("not_applicable_sourced also has a mapped field: 1b" in blocker for blocker in blockers))
-
-
-class VatCorrectionContentTests(unittest.TestCase):
-    """Decision D1 and the suppletie explanation stay consistent across owners."""
-
-    KNOWLEDGE = PLUGIN / "skills/nl-tax-shared-resources/knowledge/vat"
-
-    def test_corrections_note_keeps_sourced_branches(self):
-        text = (self.KNOWLEDGE / "corrections.md").read_text(encoding="utf-8")
-        for phrase in ("Totaalbedrag eerdere btw-aangifte over dit tijdvak",
-                       "betalingskenmerk",
-                       "never prepared under the `Y` period token",
-                       "Central Liaison Office",
-                       "within six weeks",
-                       "may not be offset in the next return"):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, text)
-
-    def test_whole_year_suppletie_is_never_prepared_under_y(self):
-        for relative in ("nl-tax-vat-correction/SKILL.md",
-                         "nl-tax-vat-correction/reference/vat-correction-flow.md",
-                         "nl-tax-field-mapper/reference/vat-field-map.md"):
-            with self.subTest(file=relative):
-                text = " ".join((PLUGIN / "skills" / relative).read_text(encoding="utf-8").split())
-                self.assertIn("whole-year suppletie", text)
-                self.assertIn("`Y`", text)
-                self.assertNotIn("Year-scope corrections need a complete", text)
-                self.assertNotIn("until the sources and exact form are established", text)
 
 
 class VatDraftSourceGateTests(unittest.TestCase):

@@ -14,10 +14,6 @@ SKILLS = PLUGIN / "skills"
 REPOSITORY_URL = "https://github.com/cyanxxy/nl-tax-agent-skills"
 
 RELEASE_VERSION = "0.5.0"
-WORKPACK_FILES = (
-    "workspace/nl-tax-annual-2025-workpack.md",
-    "workspace/nl-tax-provisional-2026-workpack.md",
-)
 
 ARGUMENT_HINTS = {
     "nl-tax-annual-return": "[2025] [confirm]",
@@ -157,52 +153,19 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertEqual(claude["repository"], REPOSITORY_URL)
         self.assertEqual(codex["homepage"], REPOSITORY_URL + "#readme")
         self.assertEqual(codex["repository"], REPOSITORY_URL)
-        self.assertIn("Conversational, source-traceable", claude["description"])
-        self.assertEqual(claude["description"], codex["description"])
-        self.assertIn("Claude Cowork", codex["interface"]["longDescription"])
-        self.assertIn("ChatGPT Work", codex["interface"]["longDescription"])
-        self.assertIn("Conversational", codex["interface"]["shortDescription"])
-        # OpenAI final directory submission caps these at 30 characters.
-        self.assertLessEqual(len(codex["interface"]["shortDescription"]), 30)
-        self.assertLessEqual(len(codex["interface"]["displayName"]), 30)
-        self.assertNotIn("Step-by-step", codex["interface"]["shortDescription"])
         prompts = codex["interface"]["defaultPrompt"]
-        # Codex keeps at most MAX_DEFAULT_PROMPT_COUNT = 3 starter prompts of
-        # at most 128 characters, and the OpenAI listing rejects more, longer,
-        # duplicated, or @-mentioning prompts.
+        # Codex keeps at most MAX_DEFAULT_PROMPT_COUNT = 3 starter prompts, and
+        # the OpenAI listing rejects more or duplicated prompts.
         self.assertGreater(len(prompts), 0)
         self.assertLessEqual(len(prompts), 3)
         self.assertEqual(len(set(prompts)), len(prompts))
+        # OpenAI directory field limits (platform rules, not wording).
+        self.assertLessEqual(len(codex["interface"]["shortDescription"]), 30)
+        self.assertLessEqual(len(codex["interface"]["displayName"]), 30)
+        self.assertLessEqual(len(codex["interface"]["longDescription"]), 4000)
         for prompt in prompts:
             with self.subTest(prompt=prompt):
                 self.assertLessEqual(len(prompt), 128)
-                self.assertNotIn("@", prompt)
-        self.assertLessEqual(len(codex["interface"]["longDescription"]), 4000)
-        # Catalog copy must not advertise the retired evidence indexer.
-        catalog_copy = " ".join(
-            [codex["interface"]["longDescription"], *codex["interface"]["defaultPrompt"]]
-        ).lower()
-        self.assertNotIn("index", catalog_copy)
-        self.assertIn("nothing is saved unless you ask", catalog_copy)
-
-    def test_listing_release_notes_match_the_package(self):
-        codex = load_json(PLUGIN / ".codex-plugin/plugin.json")
-        notes = (REPO / "submission/openai/release-notes.md").read_text(encoding="utf-8")
-        # The public note's heading names the manifest version it describes.
-        self.assertIn(f"release {codex['version']}", notes.splitlines()[0])
-        # Maintainer instructions stay out of the public release note.
-        self.assertNotIn("docs/maintainers", notes)
-        self.assertNotIn("this bundle must not", notes)
-        publication_notes = codex["extensions"]["com.openai"]["publication"]["release_notes"]
-        long_description = codex["interface"]["longDescription"]
-        # When the listing mentions the draft workflows, both the listing and
-        # the publication notes must call them draft-only previews.
-        if "draft" in long_description.lower():
-            self.assertIn("draft-only", long_description)
-            self.assertIn("not filing-ready", long_description)
-            self.assertIn("draft-only", publication_notes)
-            self.assertIn("draft-only", notes)
-        self.assertNotIn("Unreleased extension", notes)
 
     def test_plugin_folder_stays_within_directory_review_limits(self):
         # The Claude directory holds a version for manual review when a
@@ -287,80 +250,15 @@ class ReleasePackagingTests(unittest.TestCase):
             {"Read", "Grep", "Glob", "WebSearch", "WebFetch"},
         )
         self.assertNotIn("disallowedTools", metadata)
-        body = " ".join(agent_paths[0].read_text(encoding="utf-8").split())
-        self.assertIn("official sources", body)
-        self.assertIn("outside the frontmatter allowlist", body)
-        self.assertIn("Do not use Bash, Write, Edit, Agent", body)
-        self.assertIn("connectors, MCP tools", body)
-        self.assertIn("return that request to the owner", body)
-        self.assertNotIn("run the plugin's optional mechanical validators", body)
-        self.assertIn("Do not decide final readiness", body)
-        self.assertIn("Never write or change any file, including the workpack", body)
-
-    def test_public_box3_copy_preserves_the_non_election_boundary(self):
-        readme = (REPO / "README.md").read_text(encoding="utf-8")
-        examples = (
-            SKILLS / "nl-tax-shared-resources/knowledge/years/2025/box3/examples.md"
-        ).read_text(encoding="utf-8")
-
-        self.assertIn("informational comparison", readme)
-        self.assertIn("not a tax-method election", readme)
-        self.assertIn("uses the more favorable amount", readme)
-        self.assertNotIn("comparison for the user to choose from", readme)
-        self.assertIn("recommendation note", examples)
-        runtime = (SKILLS / "nl-tax-shared-resources/runtime-contract.md").read_text(encoding="utf-8")
-        self.assertIn("legacy “recommendation note” shorthand", runtime)
-        self.assertIn("does not create a taxpayer method election", runtime)
-        self.assertIn("Preserve\nthe reviewed source note byte-for-byte", runtime)
 
     def test_every_skill_loads_the_cross_runtime_contract(self):
         contract = SKILLS / "nl-tax-shared-resources/runtime-contract.md"
         self.assertTrue(contract.is_file())
-        contract_text = " ".join(contract.read_text(encoding="utf-8").split())
-        for required in (
-            "never claim access to files that remain only on the user's computer",
-            "files in the working folder the user selected for the task",
-            "The plugin ships no scripts and needs no shell or Python",
-            "Never depend on a vendor-specific environment variable",
-            "The owning conversational agent remains the only writer",
-            "the user may ask for deadline reminders",
-            "No skill writes any file until the user has consented to saving",
-            "`workspace/nl-tax-annual-2025-workpack.md`",
-            "`workspace/nl-tax-provisional-2026-workpack.md`",
-        ):
-            with self.subTest(required=required):
-                self.assertIn(required, contract_text)
 
         for path in SKILLS.glob("*/SKILL.md"):
             with self.subTest(skill=path.parent.name):
                 text = path.read_text(encoding="utf-8")
-                if path.parent.name != "nl-tax-shared-resources":
-                    self.assertIn("../nl-tax-shared-resources/runtime-contract.md", text)
                 self.assertNotIn("${CLAUDE_", text)
-                self.assertNotIn("in Cowork's isolated VM", text)
-                self.assertNotIn("requires Claude Code", text)
-                self.assertNotIn("host file tools", text)
-
-    def test_draft_only_owners_say_draft_in_the_picker_blurb(self):
-        # The Codex/ChatGPT skill picker shows short_description; a draft-only
-        # preview must not look filing-ready there.
-        for skill_name in (
-            "nl-tax-annual-return-2026",
-            "nl-tax-vat-return",
-            "nl-tax-vat-correction",
-            "nl-tax-icp",
-            "nl-tax-oss",
-            "nl-tax-international-return",
-        ):
-            with self.subTest(skill=skill_name):
-                metadata = yaml.safe_load(
-                    (SKILLS / skill_name / "agents/openai.yaml").read_text(encoding="utf-8")
-                )
-                self.assertIn("draft", metadata["interface"]["short_description"].lower())
-        shared = yaml.safe_load(
-            (SKILLS / "nl-tax-shared-resources/agents/openai.yaml").read_text(encoding="utf-8")
-        )
-        self.assertNotIn("reviewed", shared["interface"]["short_description"].lower())
 
     def test_public_skills_have_openai_interface_metadata(self):
         for skill_name in PUBLIC_OPENAI_SKILLS:
@@ -372,13 +270,6 @@ class ReleasePackagingTests(unittest.TestCase):
                 self.assertTrue(interface["display_name"])
                 self.assertTrue(interface["short_description"])
                 self.assertTrue(interface["default_prompt"])
-                # Deliberate departure from OpenAI's skill-creator advice to
-                # write `$skill-name` in default_prompt: `$` is a Codex-only
-                # mention, ChatGPT Work uses `@`, and the plugin routes from
-                # natural language, so no public prompt names a skill.
-                self.assertNotIn("$nl-tax-", interface["default_prompt"])
-                self.assertNotIn("/nl-tax-", interface["default_prompt"])
-                self.assertNotIn("@nl-tax-", interface["default_prompt"])
                 self.assertTrue(metadata["policy"]["allow_implicit_invocation"])
                 # Every public skill shows the plugin icon and brand colour in
                 # the Codex and ChatGPT skill pickers.
@@ -400,10 +291,6 @@ class ReleasePackagingTests(unittest.TestCase):
             len({case["id"] for case in cases["positive"] + cases["negative"]}),
             9,
         )
-        readme = " ".join((submission / "README.md").read_text(encoding="utf-8").split())
-        self.assertIn("five positive and four negative cases", readme)
-        contributing = " ".join((REPO / "CONTRIBUTING.md").read_text(encoding="utf-8").split())
-        self.assertIn("five positive and four negative reviewer cases", contributing)
         self.assertTrue((submission / "README.md").is_file())
         self.assertTrue((submission / "release-notes.md").is_file())
 
@@ -416,130 +303,6 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertEqual(codex["interface"]["composerIcon"], "./assets/icon.png")
         self.assertEqual(codex["interface"]["logo"], "./assets/icon.png")
 
-    def test_user_docs_say_no_python_is_needed(self):
-        user_doc_paths = (
-            REPO / "README.md",
-            PLUGIN / "README.md",
-        )
-        for path in user_doc_paths:
-            with self.subTest(path=path.relative_to(REPO)):
-                text = path.read_text(encoding="utf-8")
-                self.assertRegex(text.lower(), r"no shell or python\s+is\s+needed")
-                self.assertNotIn("Python 3." + "8", text)
-
-    def test_public_readme_has_actionable_codex_install_steps(self):
-        text = (REPO / "README.md").read_text(encoding="utf-8")
-        self.assertIn(
-            "codex plugin marketplace add cyanxxy/nl-tax-agent-skills --ref main",
-            text,
-        )
-        self.assertIn(
-            "codex plugin add nl-tax-agent-skills@nl-tax-agent-skills-local",
-            text,
-        )
-        self.assertIn("codex plugin list", text)
-
-    def test_maintainer_docs_require_python_3_10(self):
-        maintainer_doc_paths = (
-            REPO / "CONTRIBUTING.md",
-            REPO / "evals/nl-tax-agent-skills/README.md",
-        )
-        for path in maintainer_doc_paths:
-            with self.subTest(path=path.relative_to(REPO)):
-                text = path.read_text(encoding="utf-8")
-                self.assertIn("Python 3.10+", text)
-                self.assertRegex(
-                    text.lower(), r"taxpayer workflows\s+need\s+no\s+python"
-                )
-                self.assertNotIn("Python 3." + "8", text)
-
-    def test_contributor_docs_have_no_current_0_1_2_example(self):
-        text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        self.assertNotIn("currently `0.1." + "2`", text)
-        self.assertNotIn('"version": "0.1.2"', text)
-
-    def test_release_docs_include_future_tag_guard_without_claiming_tag(self):
-        text = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        tag = "nl-tax-agent-skills--v" + RELEASE_VERSION
-        self.assertIn(
-            'test "$(git tag --list \'' + tag + '\')" = ""',
-            text,
-        )
-        self.assertIn("claude plugin tag plugins/nl-tax-agent-skills", text)
-        self.assertIn("git tag --list '" + tag + "'", text)
-        self.assertIn("currently `" + RELEASE_VERSION + "`", text)
-        self.assertIn("git tag -a v" + RELEASE_VERSION, text)
-
-    def test_contributor_architecture_docs_match_artifact_ownership(self):
-        readme = (REPO / "README.md").read_text(encoding="utf-8")
-        plugin_readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
-        contributing = (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8")
-        contributing_flat = " ".join(contributing.split())
-
-        self.assertNotIn("background helpers → workspace/shared/", readme)
-        self.assertNotIn("background helper notes", contributing)
-        self.assertNotIn("field-map.yaml                # nl-tax-field-mapper input", contributing)
-        # Appendix B of the one workpack holds the canonical field map, and
-        # the field mapper alone authors it.
-        self.assertIn("canonical nl-tax-field-mapper output", contributing_flat)
-        self.assertIn("field mapper alone authors the field map", contributing_flat)
-        self.assertIn("the only author of the field map", plugin_readme)
-        # Helpers, intake, and knowledge write nothing.
-        self.assertIn(
-            "background helpers return facts/questions without persisting files",
-            contributing_flat,
-        )
-        self.assertIn("intake and knowledge write nothing", contributing_flat)
-        self.assertIn("Background helpers the workflows consult; they write nothing", plugin_readme)
-        # Section ownership inside the one workpack file.
-        self.assertIn("`## Field map summary` and `## Appendix B — Field map`", contributing)
-        self.assertIn("`## Manual-entry checklist`", contributing)
-
-    def test_docs_describe_the_0_4_runtime_layout_only(self):
-        docs = {
-            "README.md": (REPO / "README.md").read_text(encoding="utf-8"),
-            "plugin README.md": (PLUGIN / "README.md").read_text(encoding="utf-8"),
-            "CONTRIBUTING.md": (REPO / "CONTRIBUTING.md").read_text(encoding="utf-8"),
-            "PRIVACY.md": (REPO / "PRIVACY.md").read_text(encoding="utf-8"),
-            "SECURITY.md": (REPO / "SECURITY.md").read_text(encoding="utf-8"),
-        }
-        for name, text in docs.items():
-            with self.subTest(doc=name):
-                for path in WORKPACK_FILES:
-                    self.assertIn(path, text)
-                for stale in (
-                    "nl-tax-evidence-indexer",
-                    "evidence indexer",
-                    "workspace/shared/",
-                    "workspace/taxpayer/",
-                    "workspace/annual/",
-                    "workspace/provisional/",
-                    "manual-submission-checklist",
-                ):
-                    self.assertNotIn(stale, text)
-        # CONTRIBUTING may name the 0.3 ledgers only to say they are not migrated.
-        contributing_flat = " ".join(docs["CONTRIBUTING.md"].split())
-        self.assertIn("are not migrated and are never read or written", contributing_flat)
-
-    def test_user_docs_state_the_consented_single_workpack_data_handling(self):
-        plugin_readme = " ".join((PLUGIN / "README.md").read_text(encoding="utf-8").split())
-        readme = " ".join((REPO / "README.md").read_text(encoding="utf-8").split())
-        privacy = " ".join((REPO / "PRIVACY.md").read_text(encoding="utf-8").split())
-
-        self.assertIn("The plugin writes nothing unless you ask.", plugin_readme)
-        self.assertIn("**Writes:** nothing by default.", plugin_readme)
-        self.assertIn("pre-approve file edits for `./workspace/**` only", plugin_readme)
-        self.assertIn("**Fetches:** nothing by default", plugin_readme)
-        self.assertIn("The plugin writes nothing by default.", readme)
-        self.assertIn("Nothing, unless you ask.", privacy)
-        self.assertIn("A saved workpack stays until you delete it", privacy)
-        self.assertIn("**Sends data elsewhere:** no.", privacy)
-        for text in (plugin_readme, readme, privacy):
-            self.assertIn("attach", text)
-            # The plugin runs inside an AI host; never promise local-only use.
-            self.assertNotIn("never leaves your device", text.lower())
-            self.assertNotIn("data never leaves", text.lower())
-        self.assertGreaterEqual(len(plugin_readme.split()), 40)
 
 
 if __name__ == "__main__":

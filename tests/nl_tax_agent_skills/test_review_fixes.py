@@ -21,38 +21,6 @@ def load_module(relative_path, name):
     return module
 
 
-class Box3TrustedRowDocumentationTests(unittest.TestCase):
-    def test_generic_loan_stays_unknown_and_manual_review(self):
-        paths = [
-            "skills/nl-tax-box3/SKILL.md",
-            "skills/nl-tax-box3/reference/box3-annual-2025.md",
-            "skills/nl-tax-box3/reference/box3-provisional-2026.md",
-        ]
-        required = [
-            'description: "Loan to friend"',
-            'category: "unknown"',
-            'status: "manual_review"',
-            "value: 10000",
-        ]
-        for relative_path in paths:
-            with self.subTest(path=relative_path):
-                text = (PLUGIN_ROOT / relative_path).read_text(encoding="utf-8")
-                for phrase in required:
-                    self.assertIn(phrase, text)
-
-    def test_box3_templates_have_an_agent_check_trail(self):
-        for relative_path in (
-            "skills/nl-tax-annual-return/templates/annual-workpack.md",
-            "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md",
-        ):
-            with self.subTest(path=relative_path):
-                text = (PLUGIN_ROOT / relative_path).read_text(encoding="utf-8")
-                self.assertIn("accepted rows", text.lower())
-                self.assertIn("rejected/manual-review rows", text.lower())
-                self.assertIn("checked_by_agent", text)
-                self.assertNotIn("checked_by_script", text)
-
-
 class InvocationPolicyFrontmatterTests(unittest.TestCase):
     """validate_invocation_policy must fail closed on odd frontmatter."""
 

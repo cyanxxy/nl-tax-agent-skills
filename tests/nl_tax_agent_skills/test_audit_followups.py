@@ -145,9 +145,6 @@ class InvocationPolicyTests(unittest.TestCase):
                 )
                 interface = data.get("interface") or {}
                 self.assertNotIn("default_prompt", interface)
-                self.assertIn(
-                    "internal", interface.get("short_description", "").lower()
-                )
 
     def test_user_invocable_skill_not_required_to_have_openai_yaml(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -224,9 +221,6 @@ class MarketplaceConsistencyTests(unittest.TestCase):
     )
     def test_marketplaces_agree_on_name_path_and_description(self):
         claude_marketplace_path = REPO_ROOT / ".claude-plugin" / "marketplace.json"
-        claude_marketplace = json.loads(
-            claude_marketplace_path.read_text(encoding="utf-8")
-        )
         claude = self._plugin_entry(claude_marketplace_path)
         agents = self._plugin_entry(REPO_ROOT / ".agents" / "plugins" / "marketplace.json")
         canonical = json.loads(
@@ -238,10 +232,6 @@ class MarketplaceConsistencyTests(unittest.TestCase):
         self.assertEqual(self._source_path(claude), "./plugins/nl-tax-agent-skills")
         self.assertEqual(claude.get("description"), canonical)
         self.assertEqual(agents.get("description"), canonical)
-        self.assertIn(
-            "Conversational, source-traceable",
-            claude_marketplace.get("description", ""),
-        )
 
 
 if __name__ == "__main__":

@@ -72,37 +72,6 @@ class NoRuntimeCodeContractTests(unittest.TestCase):
                     if tool.startswith("Edit"):
                         self.assertEqual(tool, "Edit(./workspace/**)")
 
-    def test_runtime_docs_run_no_code(self):
-        shipped = "\n".join(
-            path.read_text(encoding="utf-8")
-            for path in PLUGIN_ROOT.rglob("*")
-            if path.is_file() and path.suffix in {".md", ".yaml", ".yml"}
-        )
-        for phrase in ("python3 ", "scripts/", "checked_by_script"):
-            with self.subTest(phrase=phrase):
-                self.assertNotIn(phrase, shipped)
-        contract = (
-            SKILLS_ROOT / "nl-tax-shared-resources" / "runtime-contract.md"
-        ).read_text(encoding="utf-8")
-        self.assertIn("The plugin ships no scripts and needs no shell or Python", contract)
-
-    def test_retired_heuristics_have_no_runtime_references(self):
-        retired = {
-            "summarize_" + "box1_inputs.py",
-            "summarize_" + "box2_inputs.py",
-            "validate_" + "box2_inputs.py",
-            "classify_" + "box3_assets.py",
-            "fetch_" + "sources.py",
-        }
-        shipped = "\n".join(
-            path.read_text(encoding="utf-8")
-            for path in SKILLS_ROOT.rglob("*")
-            if path.is_file() and path.suffix in {".md", ".yaml", ".yml"}
-        )
-        for name in retired:
-            with self.subTest(name=name):
-                self.assertNotIn(name, shipped)
-
     def test_readme_names_no_bundled_image_paths(self):
         # The directory scan holds a plugin whose README names bundled images
         # outside Markdown image syntax (UNREAD_ASSET_REFERENCED).

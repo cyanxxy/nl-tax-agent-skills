@@ -167,20 +167,6 @@ sources:
             [],
         )
 
-    def test_source_register_documents_snapshot_path_base_conventions(self):
-        register = (ROOT / "skills/nl-tax-shared-resources/source-register.yaml").read_text(
-            encoding="utf-8"
-        )
-        refresh_skill = (
-            REPO_ROOT
-            / "tools/nl_tax_agent_skills/source_maintenance/README.md"
-        ).read_text(encoding="utf-8")
-        combined = f"{register}\n{refresh_skill}"
-
-        self.assertIn("repo root", combined)
-        self.assertIn("skill-relative", combined)
-        self.assertIn("nl-tax-shared-resources/", combined)
-
     def test_box3_examples_have_direct_register_coverage(self):
         module = load_module(
             "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py",
@@ -237,19 +223,6 @@ sources:
         self.assertEqual(entry["staleness_threshold_days"], 180)
         self.assertEqual(entry["expires_on"], "2025-06-30")
         self.assertGreater(entry["age_days"], entry["staleness_threshold_days"])
-
-    @unittest.skipUnless(
-        (REPO_ROOT / "CHANGELOG.md").is_file(),
-        "dev-repo CHANGELOG.md not present — standalone package run",
-    )
-    def test_changelog_notes_source_refresh_report_schema_change(self):
-        changelog = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-
-        self.assertIn("source-refresh report schema", changelog.lower())
-        self.assertIn("dry_run", changelog)
-        self.assertIn("mode", changelog)
-        self.assertIn("refresh_plan_requested", changelog)
-        self.assertIn("operation", changelog)
 
     def test_blocked_roadmap_workflows_remain_blocked_without_source_ids(self):
         module = load_module(
@@ -412,17 +385,8 @@ sources:
                     any("exactly the one workpack file" in e for e in errors), errors
                 )
 
-    def test_workflow_gate_keeps_rationale_comments_and_pending_review(self):
+    def test_workflow_gate_keeps_pending_review(self):
         path = REPO_ROOT / "tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml"
-        text = path.read_text(encoding="utf-8")
-        # The gate is hand-edited; a YAML dump would silently delete these.
-        for phrase in (
-            "# The one consented workpack file (0.4 design R3).",
-            "# The voorlopige aanslag asks an ondernemer for ONE figure",
-            "# The next two 2025 directories host all-year snapshots",
-            "# The one consented workpack file for every provisional subflow",
-        ):
-            self.assertIn(phrase, text)
         module = load_module(
             "../../tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py",
             "validate_supported_workflows_pending_review",
@@ -434,7 +398,6 @@ sources:
         pending = config["pending_review"]
         self.assertEqual(pending["changed_by"], "agent")
         self.assertIsNone(pending["human_review"])
-        self.assertIn("never count as supported", config["policy"]["rule"])
         drafts = {w["id"]: w for w in config["draft_only_workflows"]}
         expectations = {
             "bd_vat_kor_conditions": ("vat_return_2025", "vat_correction_2026"),

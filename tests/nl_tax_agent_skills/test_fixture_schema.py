@@ -621,13 +621,6 @@ class ScenarioContractTests(unittest.TestCase):
         self.assertFalse(record["generation_confirmed"])
 
     def test_evidence_types_reference_documents_canonical_extraction_statuses(self):
-        reference = (
-            PLUGIN_ROOT
-            / "skills/nl-tax-shared-resources/reference/extraction-boundaries.md"
-        ).read_text(encoding="utf-8")
-        for status in ("extracted", "needs review"):
-            with self.subTest(status=status):
-                self.assertIn(status, reference)
         self.assertFalse(
             (PLUGIN_ROOT / "skills/nl-tax-evidence-indexer").exists(),
             "the evidence indexer is retired in 0.4",

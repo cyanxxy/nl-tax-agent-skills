@@ -30,19 +30,6 @@ PUBLIC_SKILLS = {
     "nl-tax-oss",
     "nl-tax-international-return",
 }
-LEGACY_OUTPUTS = (
-    "workspace/taxpayer",
-    "workspace/shared",
-    "workspace/annual",
-    "workspace/provisional",
-    "evidence-index",
-    "field-map.yaml",
-    "field-map-open-questions",
-    "missing-info.md",
-    "delta-summary.md",
-    "return-pack.md",
-    "provisional-pack.md",
-)
 
 
 def load_builder():
@@ -61,7 +48,6 @@ class OpenAISubmissionBundleTests(unittest.TestCase):
                     SOURCE_PLUGIN / "skills" / skill_name / "SKILL.md"
                 ).read_text(encoding="utf-8")
                 self.assertNotIn("disable-model-invocation: true", skill)
-                self.assertIn("natural language", skill.lower())
                 policy = (
                     SOURCE_PLUGIN / "skills" / skill_name / "agents/openai.yaml"
                 ).read_text(encoding="utf-8")
@@ -98,14 +84,10 @@ class OpenAISubmissionBundleTests(unittest.TestCase):
 
             for skill_name in ("nl-tax-submit-companion",):
                 with self.subTest(skill=skill_name):
-                    copied = (built / "skills" / skill_name / "SKILL.md").read_text(
-                        encoding="utf-8"
-                    )
                     source = (
                         SOURCE_PLUGIN / "skills" / skill_name / "SKILL.md"
                     ).read_text(encoding="utf-8")
                     self.assertNotIn("disable-model-invocation: true", source)
-                    self.assertIn("natural language", copied.lower())
                     copied_policy = (
                         built / "skills" / skill_name / "agents/openai.yaml"
                     ).read_text(encoding="utf-8")
@@ -181,17 +163,6 @@ class OpenAIReviewerCasesTests(unittest.TestCase):
         self.assertEqual(len({case["id"] for case in positive + negative}), 9)
         self.assertNotIn("evidence_index_mixed_sources", {case["id"] for case in positive})
 
-    def test_draft_only_gate_has_a_negative_case(self):
-        case = next(
-            case
-            for case in self.cases["negative"]
-            if case["id"] == "draft_vat_icp_no_checklist_or_readiness"
-        )
-        behavior = " ".join(case["expected_behavior"]).lower()
-        for required in ("checklist", "filing-ready", "human review", "draft"):
-            with self.subTest(required=required):
-                self.assertIn(required, behavior)
-
     def test_expected_skills_are_shipped_public_skills(self):
         for case in self.cases["positive"]:
             with self.subTest(case=case["id"]):
@@ -202,25 +173,10 @@ class OpenAIReviewerCasesTests(unittest.TestCase):
                 self.assertTrue((REPO / case["fixture"]).is_file(), case["fixture"])
 
     def test_expected_results_follow_the_0_4_file_rules(self):
-        rendered = yaml.safe_dump(self.cases)
-        self.assertNotIn(RETIRED_SKILL, rendered)
-        for legacy in LEGACY_OUTPUTS:
-            with self.subTest(legacy=legacy):
-                self.assertNotIn(legacy, rendered)
-        for case in self.cases["positive"]:
-            text = " ".join(case["expected_result"]) + " " + " ".join(case["expected_behavior"])
-            with self.subTest(case=case["id"]):
-                for path in (
-                    "workspace/nl-tax-annual-2025-workpack.md",
-                    "workspace/nl-tax-provisional-2026-workpack.md",
-                ):
-                    if path in text:
-                        self.assertIn("consent", text.lower())
         informational = next(
             case for case in self.cases["positive"] if case["id"] == "informational_supported_rule"
         )
         self.assertEqual(informational["expected_skills"], ["nl-tax-knowledge"])
-        self.assertIn("no files written", " ".join(informational["expected_result"]))
 
 
 if __name__ == "__main__":

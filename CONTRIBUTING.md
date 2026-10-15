@@ -470,8 +470,15 @@ screenshots, or a Work web/desktop smoke test.
 | `validate_knowledge_pack.py` | Each knowledge note cites only registered `source_id`s; snapshots match referenced paths and hashes; stale mandatory sources fail |
 | `validate_supported_workflows.py` | Active workflow/year pairs have all their `required_source_ids` registered and reviewed |
 | `validate_invocation_policy.py` | Every non-user-invocable skill ships an `agents/openai.yaml` with `policy.allow_implicit_invocation: false` |
-| `tests/nl_tax_agent_skills/` (unittest) | Repository-only unit coverage of validator/helper logic plus regression and golden tests; it is excluded from the installed plugin |
+| `tests/nl_tax_agent_skills/` (unittest) | Repository-only deterministic checks: validator/grader logic, manifest and frontmatter structure, path and `source_id` cross-references, rate parity, and packaging boundaries; it is excluded from the installed plugin |
 | `verify_offline_workspace.py` | Structural contract library is internally consistent; it is not the live conversational grader |
+
+The unit suite never asserts wording. Do not add a test that a phrase appears
+(or does not appear) in a `SKILL.md`, reference note, template prose, agent
+body, README, or description. Model behaviour (skill triggering, routing,
+safety boundaries, rule-following) is tested with `claude plugin eval` against
+the cases in `plugins/nl-tax-agent-skills/evals/`; run those before a release
+and after any description or workflow change.
 
 ### Developer utilities
 

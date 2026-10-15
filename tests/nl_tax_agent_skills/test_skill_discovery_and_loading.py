@@ -138,45 +138,12 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
                     [tool for tool in tools if str(tool).startswith(("Edit", "Write"))]
                 )
 
-    def test_all_skill_descriptions_fit_claude_metadata_limit(self):
-        for path in SKILLS.glob("*/SKILL.md"):
-            description = frontmatter(path)["description"]
-            with self.subTest(skill=path.parent.name):
-                self.assertLessEqual(len(description), 200)
-
     def test_public_triggers_require_preparation_intent(self):
-        intake = frontmatter(SKILLS / "nl-tax-intake/SKILL.md")[
-            "description"
-        ].lower()
-        self.assertIn("explicitly wants", intake)
-        self.assertIn("informational", intake)
-        self.assertNotIn("mentions belastingaangifte", intake)
         # 0.4 (R10): documents are read inside the owning workflow; there is no
         # separate document-indexing entry point any more.
         self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
 
-    def test_informational_questions_use_notes_without_creating_state(self):
-        intake = read_skill("nl-tax-intake").lower()
-        informational = intake.split(
-            "## informational fast path", 1
-        )[1].split("## user-facing boundary", 1)[0]
-        for required in (
-            "do not create or update",
-            "source-register.yaml",
-            "nl-tax-shared-resources/knowledge/",
-            "not model memory",
-            "do not read the complete register",
-            "do not ask screening questions",
-        ):
-            self.assertIn(required, informational)
-        self.assertLess(
-            informational.index("nl-tax-shared-resources/knowledge/"),
-            informational.index("source-register.yaml"),
-        )
-
     def test_other_public_descriptions_use_explicit_user_intent(self):
-        # Intake and knowledge have their own trigger tests above and in
-        # test_knowledge_base_access.py.
         public = public_skills() - {"nl-tax-intake", "nl-tax-knowledge"}
         self.assertTrue(
             {
@@ -193,19 +160,10 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             }
             <= public
         )
-        for skill_name in sorted(public):
-            with self.subTest(skill=skill_name):
-                description = frontmatter(SKILLS / skill_name / "SKILL.md")[
-                    "description"
-                ].lower()
-                self.assertIn("explicitly", description)
 
     def test_submit_companion_uses_natural_language_activation(self):
         skill_path = SKILLS / "nl-tax-submit-companion/SKILL.md"
         metadata = frontmatter(skill_path)
-        body = " ".join(
-            skill_path.read_text(encoding="utf-8").lower().split()
-        )
         openai = yaml.safe_load(
             (SKILLS / "nl-tax-submit-companion/agents/openai.yaml").read_text(
                 encoding="utf-8"
@@ -213,50 +171,7 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         )
 
         self.assertNotEqual(metadata.get("disable-model-invocation"), True)
-        self.assertLessEqual(len(metadata["description"]), 200)
-        self.assertIn("natural language", metadata["description"].lower())
-        self.assertIn("checklist", metadata["description"].lower())
-        self.assertIn("immediate checklist offer", metadata["description"].lower())
-        self.assertIn("affirmative reply", body)
-        self.assertIn("never require a slash command or magic phrase", body)
-        self.assertIn("do not run merely because a field map exists", body)
-        self.assertIn("not expected for `provisional_2026_review`", body)
-        self.assertIn("or `provisional_2026_stopzetten`", body)
-        self.assertIn("never report a missing field map as a blocker", body)
-        self.assertIn("field-map rows only for annual", body)
         self.assertTrue(openai["policy"]["allow_implicit_invocation"])
-        prompt = openai["interface"]["default_prompt"].lower()
-        self.assertNotIn("$nl-tax-", prompt)
-        self.assertNotIn("/nl-tax-", prompt)
-        self.assertIn("any applicable field map", prompt)
-
-    def test_large_output_files_load_only_at_consent_or_generation(self):
-        annual = " ".join(read_skill("nl-tax-annual-return").lower().split())
-        self.assertIn(
-            "do not load `reference/annual-output-contract.md` during collection",
-            annual,
-        )
-        self.assertIn(
-            "phase 10 loads it, with the template, only after its generation gate opens",
-            annual,
-        )
-        self.assertIn("on consent, load `templates/annual-workpack.md`", annual)
-
-        provisional = " ".join(
-            read_skill("nl-tax-provisional-assessment").lower().split()
-        )
-        self.assertIn(
-            "load `templates/provisional-workpack.md` when the user consents to "
-            "saving or at the generation gate, whichever comes first",
-            provisional,
-        )
-        self.assertIn(
-            "load `reference/provisional-output-contract.md` at final review",
-            provisional,
-        )
-        for text in (annual, provisional):
-            for retired in ("annual-return-pack.md", "provisional-pack.md"):
-                self.assertNotIn(retired, text)
 
     def test_annual_phases_exist_and_are_linked_from_the_entry_surface(self):
         skill = read_skill("nl-tax-annual-return")
@@ -267,15 +182,12 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertEqual(
             {path.name for path in phases_dir.glob("*.md")}, set(ANNUAL_PHASES)
         )
-        positions = []
         for filename in ANNUAL_PHASES:
             with self.subTest(phase=filename):
                 reference = f"reference/phases/{filename}"
                 self.assertIn(reference, skill)
                 index_reference = f"phases/{filename}"
                 self.assertIn(index_reference, index)
-                positions.append(index.index(index_reference))
-        self.assertEqual(positions, sorted(positions))
 
     def test_provisional_subflows_exist_and_are_directly_selectable(self):
         skill = read_skill("nl-tax-provisional-assessment")
@@ -293,7 +205,6 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
                 reference = f"reference/subflows/{filename}"
                 self.assertIn(reference, skill)
                 self.assertIn(f"subflows/{filename}", index)
-        self.assertIn("exactly one", (skill + index).lower())
 
     def test_workflow_skills_use_explicit_sibling_mapper_paths(self):
         annual_entry = read_skill("nl-tax-annual-return")
@@ -314,15 +225,8 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
         self.assertIn("reference/subflows/request.md", provisional_entry)
         self.assertIn("reference/subflows/change.md", provisional_entry)
 
-        # Provisional request/change hand off to the mapper by name; the mapper
-        # entry surface names every bundled resource it loads, so nothing has
-        # to enumerate the package.
-        for name in ("request.md", "change.md"):
-            subflow = (
-                SKILLS / f"nl-tax-provisional-assessment/reference/subflows/{name}"
-            ).read_text(encoding="utf-8")
-            with self.subTest(subflow=name):
-                self.assertIn("continue with `nl-tax-field-mapper`", subflow)
+        # The mapper entry surface names every bundled resource it loads, so
+        # nothing has to enumerate the package.
         mapper = read_skill("nl-tax-field-mapper")
         for path in MAPPER_PATHS:
             local = path.split("/", 1)[1]

@@ -126,20 +126,6 @@ class OfflineDatasetTests(unittest.TestCase):
         self.assertEqual(len(scenarios), 5)
         self.assertTrue(all("datasetCaseId" not in scenario for scenario in scenarios))
 
-        rendered_prompts = "\n".join(
-            scenario["userInput"].lower() for scenario in scenarios
-        )
-        for forbidden in (
-            "fixture",
-            "current-case",
-            "dataset case",
-            "exact case",
-            "expected file",
-            "run offline",
-        ):
-            with self.subTest(forbidden=forbidden):
-                self.assertNotIn(forbidden, rendered_prompts)
-
         self.assertEqual(
             {scenario["rubricProfile"] for scenario in scenarios},
             {
@@ -788,34 +774,10 @@ class AgenticSurfaceTests(unittest.TestCase):
                 self.assertEqual(frontmatter["type"], "file_exists")
                 self.assertEqual(frontmatter["path"], path)
                 self.assertEqual(frontmatter.get("exists", True), exists)
-        criteria = " ".join((graders / "criteria.md").read_text(encoding="utf-8").split())
-        self.assertIn("official option for a human or adviser", criteria)
-        self.assertIn("does not prepare a combined or batched suppletie", criteria)
-        self.assertNotIn("replace-or-keep", criteria)
-        readme = (REPO_ROOT / "evals/nl-tax-agent-skills/README.md").read_text(encoding="utf-8")
-        self.assertIn("--allow-tools Edit Write", readme)
-        self.assertNotIn("evals/claude", readme)
-
-    def test_cowork_criteria_assume_no_written_state(self):
-        eval_root = CLAUDE_EVAL_ROOT
-        for criteria in eval_root.glob("cowork-*/graders/criteria.md"):
-            text = criteria.read_text(encoding="utf-8")
-            with self.subTest(case=criteria.parent.parent.name):
-                for stale in (
-                    "local workpack",
-                    "field-map.yaml",
-                    "session-progress",
-                    "profile.yaml",
-                    "evidence index",
-                    "canonical artifact",
-                    "annual field map have validated",
-                ):
-                    self.assertNotIn(stale, text)
 
     def test_benchmark_contains_tax_specific_copy_only(self):
         benchmark_path = REPO_ROOT / "evals/nl-tax-agent-skills/plugin-eval-benchmark.json"
         benchmark = json.loads(benchmark_path.read_text(encoding="utf-8"))
-        rendered = json.dumps(benchmark)
 
         self.assertEqual(len(benchmark["scenarios"]), 5)
         self.assertEqual(
@@ -830,7 +792,6 @@ class AgenticSurfaceTests(unittest.TestCase):
         self.assertTrue(
             (workspace_seed / ".eval/verify-hard-contracts.sh").is_file()
         )
-        self.assertIn("Dutch tax", rendered)
 
     def test_agentic_rubric_is_weighted_and_allows_valid_variation(self):
         rubric_path = REPO_ROOT / "evals/nl-tax-agent-skills/agentic-rubric.json"
@@ -842,9 +803,6 @@ class AgenticSurfaceTests(unittest.TestCase):
         )
         self.assertEqual(rubric["passThresholdPercent"], 80)
         self.assertGreaterEqual(len(rubric["hardFails"]), 4)
-        instructions = " ".join(rubric["reviewInstructions"]).lower()
-        self.assertIn("different wording", instructions)
-        self.assertIn("do not require a case marker", instructions)
 
     def test_agentic_metric_pack_is_schema_compatible(self):
         root = REPO_ROOT / "evals/nl-tax-agent-skills"
@@ -932,56 +890,6 @@ class AgenticSurfaceTests(unittest.TestCase):
                     write(tmp, relative, text)
                 result = run(tmp)
                 self.assertNotEqual(result.returncode, 0, result.stdout)
-
-    def test_new_cowork_graders_cover_handoff_generation_and_save_gates(self):
-        eval_root = CLAUDE_EVAL_ROOT
-        dual_prompt = (
-            eval_root / "cowork-dual-workflow-handoff/prompt.md"
-        ).read_text(encoding="utf-8")
-        dual_criteria = (
-            eval_root / "cowork-dual-workflow-handoff/graders/criteria.md"
-        ).read_text(encoding="utf-8")
-        dual_criteria_flat = " ".join(dual_criteria.split())
-        entrepreneur_criteria = " ".join(
-            (
-                eval_root / "cowork-provisional-entrepreneur-profit/graders/criteria.md"
-            ).read_text(encoding="utf-8").split()
-        )
-        save_resume = " ".join(
-            (eval_root / "cowork-save-and-resume/graders/criteria.md")
-            .read_text(encoding="utf-8")
-            .split()
-        )
-        save_prompt = (eval_root / "cowork-save-and-resume/prompt.md").read_text(encoding="utf-8")
-
-        self.assertIn("prepare both", dual_prompt.lower())
-        for required in (
-            "sole owning workflow",
-            "queued intent",
-            "without a new activation phrase",
-            "must not authorize provisional generation",
-            "own immediate, contextual confirmation",
-            "writes no file",
-            "own save consent",
-        ):
-            with self.subTest(required=required):
-                self.assertIn(required, dual_criteria_flat)
-        self.assertIn("not final-generation consent", entrepreneur_criteria)
-        self.assertIn("must not claim", entrepreneur_criteria)
-        self.assertIn("immediate, scoped natural-language confirmation", entrepreneur_criteria)
-        self.assertIn("writes no file", entrepreneur_criteria)
-
-        self.assertIn("workpack_format: nl-tax-workpack", save_prompt)
-        for required in (
-            "Appendix A",
-            "must not re-ask",
-            "first section",
-            "workspace/nl-tax-annual-2025-workpack.md",
-            "never a copy",
-            "re-confirm",
-        ):
-            with self.subTest(required=required):
-                self.assertIn(required, save_resume)
 
 
 if __name__ == "__main__":

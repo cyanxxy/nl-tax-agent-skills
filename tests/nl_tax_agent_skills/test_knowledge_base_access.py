@@ -13,13 +13,6 @@ SKILLS = REPO / "plugins" / "nl-tax-agent-skills" / "skills"
 SHARED = SKILLS / "nl-tax-shared-resources"
 KNOWLEDGE = SHARED / "knowledge"
 INDEX = SHARED / "knowledge-index.md"
-HELPERS = (
-    "nl-tax-box1-home",
-    "nl-tax-box2",
-    "nl-tax-box3",
-    "nl-tax-winst",
-    "nl-tax-partner-deductions",
-)
 INDEX_ROW = re.compile(r"^\| (.+?) \| (.+?) \| `(\.\./[^`]+)` \|$")
 
 
@@ -86,15 +79,6 @@ class KnowledgeBaseAccessTests(unittest.TestCase):
                     any(p.endswith(f"/provisional/{flow}-flow.md") for p in paths)
                 )
 
-    def test_index_key_terms_occur_in_the_linked_note(self):
-        for _, terms, relative in index_rows():
-            text = (SKILLS / "nl-tax-knowledge" / relative).read_text(
-                encoding="utf-8"
-            ).lower()
-            for term in (t.strip() for t in terms.split(",")):
-                with self.subTest(path=relative, term=term):
-                    self.assertIn(term.lower(), text)
-
     def test_skill_documents_use_skill_relative_shared_paths(self):
         bare = re.compile(r"(?<![./A-Za-z0-9_-])(?:_shared|nl-tax-shared-resources)/")
         for path in skill_documents():
@@ -103,30 +87,9 @@ class KnowledgeBaseAccessTests(unittest.TestCase):
             with self.subTest(path=str(path.relative_to(SKILLS))):
                 self.assertIsNone(bare.search(path.read_text(encoding="utf-8")))
 
-    def test_owning_workflows_name_helper_skill_paths(self):
-        flows = (
-            SKILLS / "nl-tax-annual-return/reference/annual-flow.md",
-            SKILLS / "nl-tax-provisional-assessment/reference/provisional-flow.md",
-        )
-        for flow in flows:
-            text = flow.read_text(encoding="utf-8")
-            for helper in HELPERS:
-                with self.subTest(flow=flow.name, helper=helper):
-                    self.assertIn(f"`../{helper}/SKILL.md`", text)
-
-    def test_runtime_contract_allows_index_lookup_and_scoped_search(self):
-        contract = " ".join(
-            (SHARED / "runtime-contract.md").read_text(encoding="utf-8").split()
-        )
-        self.assertIn("../nl-tax-shared-resources/knowledge-index.md", contract)
-        self.assertIn("inside `../nl-tax-shared-resources/knowledge/` is allowed", contract)
-        self.assertIn("helper `SKILL.md` path named by the owning workflow", contract)
-        self.assertIn("installed incompletely", contract)
-
     def test_knowledge_skill_is_a_discoverable_read_only_lookup(self):
         path = SKILLS / "nl-tax-knowledge" / "SKILL.md"
         metadata = frontmatter(path)
-        body = " ".join(path.read_text(encoding="utf-8").split())
         openai = yaml.safe_load(
             (SKILLS / "nl-tax-knowledge/agents/openai.yaml").read_text(
                 encoding="utf-8"
@@ -136,22 +99,6 @@ class KnowledgeBaseAccessTests(unittest.TestCase):
         self.assertNotIn("user-invocable", metadata)
         self.assertNotIn("disable-model-invocation", metadata)
         self.assertTrue(openai["policy"]["allow_implicit_invocation"])
-        for keyword in ("2025", "2026", "voorlopige aanslag", "eigen woning"):
-            self.assertIn(keyword, metadata["description"])
-        self.assertIn("../nl-tax-shared-resources/knowledge-index.md", body)
-        self.assertIn("not model memory", body)
-        self.assertIn("Do not read the complete register", body)
-        self.assertIn(
-            "Werkelijk rendement may become relevant when filing the annual 2026 "
-            "return in 2027.",
-            body,
-        )
-        self.assertIn("never creates or updates `workspace/` files", body)
-
-    def test_intake_routes_rule_questions_to_the_index(self):
-        intake = (SKILLS / "nl-tax-intake/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("nl-tax-knowledge", frontmatter(SKILLS / "nl-tax-intake/SKILL.md")["description"])
-        self.assertIn("../nl-tax-shared-resources/knowledge-index.md", intake)
 
     def test_knowledge_note_headers_use_uniform_keys(self):
         for note in KNOWLEDGE.glob("**/*.md"):
