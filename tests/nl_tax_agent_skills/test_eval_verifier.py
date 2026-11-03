@@ -726,8 +726,30 @@ class AgenticSurfaceTests(unittest.TestCase):
                 / "cowork-vat-adjustments-first-use-2026/graders/helper-fired.md"
             ).read_text(encoding="utf-8").split("---", 2)[1]
         )
-        self.assertEqual(helper["type"], "tool_used")
-        self.assertIn("nl-tax-vat-adjustments", helper["input_match"])
+        # Owners invoke the helper as a skill when the host lists it and read
+        # its SKILL.md inline otherwise, so the grader must accept both routes
+        # and ignore the helper path quoted inside another file's text.
+        self.assertEqual(helper["type"], "regex")
+        self.assertEqual(helper["target"], "trace")
+        self.assertEqual(helper["arm"], "with-only")
+        pattern = re.compile(helper["pattern"])
+        passing = (
+            '{"name":"Skill","input":{"skill":"nl-tax-agent-skills:nl-tax-vat-adjustments"}}',
+            r'{\"name\":\"Skill\",\"input\":{\"skill\":\"nl-tax-vat-adjustments\"}}',
+            '{"name":"Read","input":{"file_path":"/plugins/x/skills/nl-tax-vat-adjustments/SKILL.md"}}',
+            r'{\"name\":\"Read\",\"input\":{\"file_path\":\"/s/nl-tax-vat-adjustments/reference/x.md\"}}',
+        )
+        failing = (
+            '{"name":"Read","input":{"file_path":"/skills/nl-tax-vat-return/SKILL.md"}}',
+            r'{\"type\":\"tool_result\",\"content\":\"read `../nl-tax-vat-adjustments/SKILL.md`\"}',
+            '{"name":"Skill","input":{"skill":"nl-tax-vat-return"}}',
+        )
+        for line in passing:
+            with self.subTest(passing=line):
+                self.assertRegex(line, pattern)
+        for line in failing:
+            with self.subTest(failing=line):
+                self.assertNotRegex(line, pattern)
 
     def test_no_save_cowork_cases_carry_no_write_graders(self):
         # The suite-wide `--allow-tools Edit Write` grant reaches every case,
