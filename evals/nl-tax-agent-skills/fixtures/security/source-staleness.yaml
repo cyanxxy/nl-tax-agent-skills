@@ -19,8 +19,7 @@ setup:
   stale_source:
     id: bd_box3_2025_calc
     last_checked: "2025-06-15"  # over 10 months old
-    # Production prose policy from source-register.yaml ("filing season" maps
-    # to a 90-day threshold in validate_knowledge_pack.py).
+    # Production prose policy from source-register.yaml.
     freshness_policy: "check at start of filing season; may change if box 3 legislation is amended"
     current_date: "2026-04-30"  # well into filing season
 

@@ -7,7 +7,7 @@ last_reviewed: "2026-09-26"
 review_status: reviewed
 # Internal methodology contract (no external source_id — this file is authored
 # in-repo, like the other methods/ playbooks, and is exempt from the
-# source-citation rule; see validate_knowledge_pack.py INTERNAL_KNOWLEDGE_PREFIXES).
+# source-citation rule).
 
 All taxpayer-facing NL tax skills are **conversational**. The user does not
 pre-stage a folder of evidence and then run a skill once. They talk with the

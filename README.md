@@ -378,12 +378,12 @@ See [PRIVACY.md](PRIVACY.md) and [TERMS.md](TERMS.md) for details, and
 
 ## 🤝 Contributing
 
-Skill internals, the full validation gate, and the release process are in
-[CONTRIBUTING.md](CONTRIBUTING.md). CI runs the gate on every push and pull
-request; locally, start with the unit suite:
+Skill internals, validation, and the release process are in
+[CONTRIBUTING.md](CONTRIBUTING.md). CI runs Anthropic's plugin validator on
+every push and pull request; run it locally with:
 
 ```bash
-python3 -m unittest discover -s tests/nl_tax_agent_skills -p 'test_*.py'
+claude plugin validate --strict plugins/nl-tax-agent-skills
 ```
 
 Report a suspected wrong rate, rule, or stale source through GitHub Issues.

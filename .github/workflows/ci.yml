@@ -28,3 +28,10 @@ jobs:
 
       - name: Codex manifests are valid JSON
         run: jq empty plugins/nl-tax-agent-skills/.codex-plugin/plugin.json .agents/plugins/marketplace.json
+
+      # A root plugin.json makes the Claude directory ignore the folder, and the
+      # plugin must stay Markdown/YAML only.
+      - name: Package rules
+        run: |
+          test ! -e plugins/nl-tax-agent-skills/plugin.json
+          test -z "$(find plugins/nl-tax-agent-skills -type f \( -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.ts' \))"

@@ -36,10 +36,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        # PyYAML for the OpenAI bundle builder below.
-        run: pip install -r requirements.txt
-
       - name: Check tag matches every plugin manifest
         run: |
           version="${GITHUB_REF_NAME#v}"
