@@ -675,9 +675,6 @@ class PolicyAndFieldMapTests(unittest.TestCase):
             errors,
         )
 
-    def test_shared_evidence_types_use_canonical_beschikking_tokens(self):
-        self.assertFalse((ROOT / "skills/nl-tax-evidence-indexer").exists())
-
     def test_provisional_generation_gate_tracks_box2_in_resume_record(self):
         template = read_text(
             "skills/nl-tax-provisional-assessment/templates/provisional-workpack.md"

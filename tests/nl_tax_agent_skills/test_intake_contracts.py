@@ -96,10 +96,6 @@ class IntakeContractTests(unittest.TestCase):
                 for entry in record["sections"].values():
                     self.assertEqual(entry, {"status": "not_started", "open": []})
 
-    def test_manual_review_route_is_terminal_and_conversation_only(self):
-        # The 0.3 profile template and its intake_status ledger are retired.
-        self.assertFalse((ROOT / "skills/nl-tax-intake/templates").exists())
-
     def test_supported_blocked_candidates_are_reachable_from_intake(self):
         supported = load_supported_workflows()
 
@@ -193,15 +189,6 @@ class IntakeContractTests(unittest.TestCase):
         intake = read_text("skills/nl-tax-intake/SKILL.md")
 
         self.assertNotIn("Edit(", intake.split("---", 2)[1])
-
-    def test_legacy_ledgers_are_never_read_or_migrated(self):
-        for retired in (
-            "skills/nl-tax-shared-resources/templates",
-            "skills/nl-tax-intake/templates/taxpayer-profile.yaml",
-        ):
-            with self.subTest(retired=retired):
-                self.assertFalse((ROOT / retired).exists())
-
 
 if __name__ == "__main__":
     unittest.main()

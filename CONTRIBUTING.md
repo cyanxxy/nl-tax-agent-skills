@@ -422,8 +422,11 @@ rates, thresholds, field maps, or box 3 logic for a future year.
 Maintainer checks use Python 3.10+ and PyYAML (`pip install -r requirements.txt`).
 Taxpayer workflows need no Python because every runtime check is an
 agent checklist. Run the following commands from the repo root.
-CI (`.github/workflows/ci.yml`) runs the full gate on every push/PR, from both the repo root
-and the plugin directory.
+CI (`.github/workflows/ci.yml`) runs only `claude plugin validate --strict` on the plugin
+and marketplace and a JSON check of the Codex manifests. The commands below are
+optional local maintainer checks. Model behaviour is tested by
+`.github/workflows/plugin-eval.yml`, a manual run that needs an
+`ANTHROPIC_API_KEY` repository secret and is billed per run.
 
 ```bash
 python3 -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json >/dev/null

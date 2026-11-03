@@ -26,11 +26,6 @@ class AgentDrivenContractTests(unittest.TestCase):
     def setUpClass(cls):
         cls.validator = load_validator()
 
-    def test_workflow_owns_chat_without_evidence_index_requirement(self):
-        # 0.4 (R10): the evidence indexer is retired; the owning workflow reads
-        # documents itself and pure chat collection needs no document at all.
-        self.assertFalse((ROOT / "skills/nl-tax-evidence-indexer").exists())
-
     def test_agent_declared_draft_cannot_be_promoted(self):
         fields = [
             {

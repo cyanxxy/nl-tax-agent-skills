@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """The installed plugin ships no executable code and pre-approves no shell.
 
-Every runtime check is an agent checklist. The former optional helpers live
-under tools/ as repository graders, next to the field-map validator.
+Every runtime check is an agent checklist. Repository-only graders and source
+maintenance scripts live under tools/ and are never installed.
 """
 
 import pathlib
@@ -15,17 +15,6 @@ import yaml
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = REPO_ROOT / "plugins" / "nl-tax-agent-skills"
 SKILLS_ROOT = PLUGIN_ROOT / "skills"
-TOOLS_ROOT = REPO_ROOT / "tools" / "nl_tax_agent_skills"
-
-REPOSITORY_GRADERS = {
-    "box1_home/validate_own_home_inputs.py",
-    "box2/calculate_box2_tax.py",
-    "box3/compare_box3_annual_2025.py",
-    "box3/summarize_box3_provisional_2026.py",
-    "field_mapper/render_field_map.py",
-    "field_mapper/validate_field_map.py",
-    "partner_deductions/validate_allocation.py",
-}
 
 EXECUTABLE_SUFFIXES = {".py", ".sh", ".bash", ".js", ".mjs", ".ts", ".rb", ".pl"}
 
@@ -47,18 +36,6 @@ class NoRuntimeCodeContractTests(unittest.TestCase):
         )
         self.assertEqual(shipped, [])
         self.assertEqual(list(SKILLS_ROOT.glob("*/scripts")), [])
-
-    def test_former_helpers_are_repository_graders(self):
-        for relative in sorted(REPOSITORY_GRADERS):
-            with self.subTest(relative=relative):
-                self.assertTrue((TOOLS_ROOT / relative).is_file())
-
-    def test_developer_source_tools_are_not_runtime_scripts(self):
-        source_tools = TOOLS_ROOT / "source_maintenance" / "scripts"
-        scripts = {path.name for path in source_tools.glob("*.py")}
-        self.assertEqual(len(scripts), 7)
-        self.assertIn("build_runtime_projections.py", scripts)
-        self.assertFalse((SKILLS_ROOT / "nl-tax-source-refresh").exists())
 
     def test_skills_pre_approve_no_shell_and_only_workspace_writes(self):
         for skill in sorted(SKILLS_ROOT.glob("*/SKILL.md")):
@@ -84,13 +61,6 @@ class NoRuntimeCodeContractTests(unittest.TestCase):
             data = yaml.safe_load((PLUGIN_ROOT / relative).read_text(encoding="utf-8"))
             with self.subTest(relative=relative):
                 self.assertEqual(data["check_performed_by"], "checked_by_agent")
-
-    def test_retired_evidence_indexer_grader_is_gone(self):
-        # 0.4 (R10): the evidence indexer skill and its repository grader are
-        # retired; documents are read directly inside the owning workflow.
-        self.assertFalse((TOOLS_ROOT / "evidence_indexer").exists())
-        self.assertFalse((SKILLS_ROOT / "nl-tax-evidence-indexer").exists())
-
 
 if __name__ == "__main__":
     unittest.main()

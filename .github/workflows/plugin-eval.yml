@@ -1,0 +1,70 @@
+name: Plugin eval
+
+# Behaviour tests: runs the native Claude eval cases in
+# plugins/nl-tax-agent-skills/evals/ against the plugin with a real model.
+# This is the only check that catches routing, safety-boundary and
+# save-consent regressions. Each run is billed to ANTHROPIC_API_KEY, so it is
+# manual. Run it before every release and after description or workflow edits.
+
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: "Case name glob"
+        default: "cowork-*"
+      runs:
+        description: "Runs per case (3 before a release)"
+        default: "1"
+      max_cost_usd:
+        description: "Hard cost ceiling in USD"
+        default: "15"
+
+jobs:
+  eval:
+    name: claude plugin eval
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - run: npm install -g @anthropic-ai/claude-code@2.1.317
+
+      - name: Require API key
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::Add an ANTHROPIC_API_KEY repository secret to run plugin evals."
+            exit 1
+          fi
+
+      # --allow-tools Edit Write: the save case needs them; every other case
+      # carries no-write/no-edit graders, so the grant cannot hide a bad write.
+      - name: Run eval suite
+        env:
+          CASE: ${{ inputs.case }}
+          RUNS: ${{ inputs.runs }}
+          MAX_COST: ${{ inputs.max_cost_usd }}
+        run: |
+          claude plugin eval plugins/nl-tax-agent-skills \
+            --trust-plugin \
+            --case "$CASE" \
+            --runs "$RUNS" \
+            --allow-tools Edit Write \
+            --threshold 1.0 \
+            --max-cost-usd "$MAX_COST" \
+            --no-publish \
+            --output-dir eval-results \
+            --report eval-results/report.html
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-eval-results
+          path: eval-results/
+          if-no-files-found: ignore

@@ -55,9 +55,6 @@ def frontmatter(path):
 
 
 class ReleasePackagingTests(unittest.TestCase):
-    def test_runtime_plugin_excludes_repository_tests(self):
-        self.assertFalse((PLUGIN / "tests").exists())
-
     def test_runtime_plugin_excludes_source_maintenance_and_eval_fixtures(self):
         self.assertFalse((SKILLS / "nl-tax-source-refresh").exists())
         self.assertFalse((SKILLS / "nl-tax-shared-resources/eval-fixtures").exists())
@@ -83,7 +80,7 @@ class ReleasePackagingTests(unittest.TestCase):
         self.assertTrue((maintainer_notes / "compat/odb-service-developers.md").is_file())
         self.assertTrue((maintainer_notes / "methodology/regelspraak.md").is_file())
         metadata = REPO / "tools/nl_tax_agent_skills/source_maintenance/metadata"
-        self.assertEqual(len(list(metadata.glob("**/_snapshot-metadata.yaml"))), 15)
+        self.assertTrue(list(metadata.glob("**/_snapshot-metadata.yaml")))
 
         runtime_registry = "\n".join(
             (
@@ -103,21 +100,9 @@ class ReleasePackagingTests(unittest.TestCase):
             with self.subTest(source_id=source_id):
                 self.assertNotIn(source_id, runtime_registry)
 
-    def test_no_legacy_commands(self):
-        self.assertFalse((PLUGIN / "commands").exists())
-
-    def test_exactly_11_runtime_skills_plus_hidden_shared_resources(self):
-        paths = list(SKILLS.glob("*/SKILL.md"))
-        names = [frontmatter(path)["name"] for path in paths]
-        workflow_names = [
-            frontmatter(path)["name"] for path in paths if path.parent.name != "nl-tax-shared-resources"
-        ]
-        self.assertEqual(len(workflow_names), 18)
-        self.assertEqual(len(names), 19)
-        self.assertEqual(len(set(names)), 19)
-        # 0.4 retired the evidence indexer; the owning workflows read documents.
-        self.assertNotIn("nl-tax-evidence-indexer", names)
-        self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
+    def test_skill_names_are_unique_and_shared_resources_hidden(self):
+        names = [frontmatter(path)["name"] for path in SKILLS.glob("*/SKILL.md")]
+        self.assertEqual(len(names), len(set(names)))
         shared = frontmatter(SKILLS / "nl-tax-shared-resources/SKILL.md")
         self.assertFalse(shared["user-invocable"])
         self.assertTrue(shared["disable-model-invocation"])

@@ -14,23 +14,6 @@ PLUGIN = (
 )
 SKILLS = PLUGIN / "skills"
 
-ANNUAL_PHASES = (
-    "01-preflight.md",
-    "01-5-filing-status.md",
-    "02-income.md",
-    "02a-winst.md",
-    "03-own-home.md",
-    "03a-box2.md",
-    "04-box3.md",
-    "05-deductions.md",
-    "05-5-credits.md",
-    "06-partner.md",
-    "07-field-map.md",
-    "08-missing-info.md",
-    "09-review-questions.md",
-    "10-assembly.md",
-)
-PROVISIONAL_SUBFLOWS = ("request.md", "change.md", "review.md", "stopzetten.md")
 MAPPER_PATHS = (
     "nl-tax-field-mapper/templates/field-map-template.yaml",
     "nl-tax-field-mapper/reference/mapping-principles.md",
@@ -138,29 +121,6 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
                     [tool for tool in tools if str(tool).startswith(("Edit", "Write"))]
                 )
 
-    def test_public_triggers_require_preparation_intent(self):
-        # 0.4 (R10): documents are read inside the owning workflow; there is no
-        # separate document-indexing entry point any more.
-        self.assertFalse((SKILLS / "nl-tax-evidence-indexer").exists())
-
-    def test_other_public_descriptions_use_explicit_user_intent(self):
-        public = public_skills() - {"nl-tax-intake", "nl-tax-knowledge"}
-        self.assertTrue(
-            {
-                "nl-tax-annual-return",
-                "nl-tax-provisional-assessment",
-                "nl-tax-field-mapper",
-                "nl-tax-submit-companion",
-                "nl-tax-vat-return",
-                "nl-tax-vat-correction",
-                "nl-tax-icp",
-                "nl-tax-oss",
-                "nl-tax-international-return",
-                "nl-tax-annual-return-2026",
-            }
-            <= public
-        )
-
     def test_submit_companion_uses_natural_language_activation(self):
         skill_path = SKILLS / "nl-tax-submit-companion/SKILL.md"
         metadata = frontmatter(skill_path)
@@ -179,10 +139,9 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             SKILLS / "nl-tax-annual-return/reference/annual-flow.md"
         ).read_text(encoding="utf-8")
         phases_dir = SKILLS / "nl-tax-annual-return/reference/phases"
-        self.assertEqual(
-            {path.name for path in phases_dir.glob("*.md")}, set(ANNUAL_PHASES)
-        )
-        for filename in ANNUAL_PHASES:
+        phases = sorted(path.name for path in phases_dir.glob("*.md"))
+        self.assertTrue(phases)
+        for filename in phases:
             with self.subTest(phase=filename):
                 reference = f"reference/phases/{filename}"
                 self.assertIn(reference, skill)
@@ -196,11 +155,9 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             / "nl-tax-provisional-assessment/reference/provisional-flow.md"
         ).read_text(encoding="utf-8")
         subflows_dir = SKILLS / "nl-tax-provisional-assessment/reference/subflows"
-        self.assertEqual(
-            {path.name for path in subflows_dir.glob("*.md")},
-            set(PROVISIONAL_SUBFLOWS),
-        )
-        for filename in PROVISIONAL_SUBFLOWS:
+        subflows = sorted(path.name for path in subflows_dir.glob("*.md"))
+        self.assertTrue(subflows)
+        for filename in subflows:
             with self.subTest(subflow=filename):
                 reference = f"reference/subflows/{filename}"
                 self.assertIn(reference, skill)

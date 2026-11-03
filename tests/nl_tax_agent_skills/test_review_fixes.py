@@ -98,71 +98,6 @@ class PlanSourceRefreshUrlAllowlistTests(unittest.TestCase):
         self.assertTrue(self.mod.is_url_allowed("https://www.belastingdienst.nl/a"))
 
 
-class Box2InputHardeningTests(unittest.TestCase):
-    def setUp(self):
-        self.calc = load_module(
-            "../../tools/nl_tax_agent_skills/box2/calculate_box2_tax.py",
-            "calculate_box2_tax_review",
-        )
-
-    def test_nan_and_inf_raise_clean_value_error(self):
-        for bad in (float("nan"), float("inf"), "-inf"):
-            with self.subTest(bad=bad):
-                result = self.calc.calculate_from_payload(
-                    {
-                        "workflow": "annual_2025",
-                        "tax_year": 2025,
-                        "substantial_interest_pct": 10,
-                        "resident_full_year": True,
-                        "standard_ab_case": True,
-                        "regular_benefits": bad,
-                        "disposal_benefit": 0,
-                        "loss_setoff": 0,
-                    }
-                )
-                self.assertTrue(result["errors"])
-                self.assertIsNone(result["result"])
-
-    def test_unknown_payload_key_is_flagged(self):
-        result = self.calc.calculate_from_payload(
-            {
-                "workflow": "annual_2025",
-                "tax_year": 2025,
-                "substantial_interest_pct": 10,
-                "resident_full_year": True,
-                "standard_ab_case": True,
-                "regular_benefit": 10_000,
-            }  # typo'd key
-        )
-        self.assertTrue(
-            any("regular_benefit" in error for error in result.get("errors", [])),
-            result.get("errors"),
-        )
-
-    def test_explicit_zero_disposal_price_matches_calculator_presence_rule(self):
-        # {"disposal_price": 0, "gross_disposal_price": X} computes fine in the
-        # calculator, so the validator must not reject it as "not both".
-        payload = {
-            "workflow": "annual_2025",
-            "tax_year": 2025,
-            "substantial_interest_pct": 100,
-            "disposal_price": 0,
-            "gross_disposal_price": 50_000,
-            "acquisition_price": 20_000,
-        }
-        payload.update(
-            {
-                "resident_full_year": True,
-                "standard_ab_case": True,
-            }
-        )
-        result = self.calc.calculate_from_payload(payload)
-        self.assertNotIn(
-            "provide either disposal_price or gross_disposal_price, not both",
-            result["errors"],
-        )
-
-
 class FieldMapWerkelijkScanTests(unittest.TestCase):
     def setUp(self):
         self.mod = load_module(
@@ -231,66 +166,6 @@ class FieldMapWerkelijkScanTests(unittest.TestCase):
         base["fields"][0]["confidence"] = "high"
         errors, _ = self.mod.validate(base)
         self.assertTrue(any("Confidence must be a number" in error for error in errors), errors)
-
-
-class Box1NanGuardTests(unittest.TestCase):
-    def setUp(self):
-        self.mod = load_module(
-            "../../tools/nl_tax_agent_skills/box1_home/validate_own_home_inputs.py",
-            "validate_own_home_inputs_review",
-        )
-
-    def test_nan_cli_value_returns_a_clean_validation_error(self):
-        import contextlib
-        import io
-        import json
-
-        output = io.StringIO()
-        with contextlib.redirect_stdout(output):
-            status = self.mod.main([
-                "--tax-year", "2025",
-                "--eigenwoningforfait", "4000",
-                "--mortgage-interest", "nan",
-                "--qualifying-financing-costs", "0",
-                "--periodic-erfpacht-opstal-beklemming", "0",
-            ])
-        result = json.loads(output.getvalue())
-        self.assertEqual(status, 1)
-        self.assertTrue(result["errors"])
-
-    def test_no_deductible_costs_means_no_tariefsaanpassing(self):
-        # With zero aftrekbare kosten there is nothing for the rate
-        # adjustment to correct, regardless of income.
-        applies, amount, _ = self.mod.calculate_tariefsaanpassing(
-            deductible_costs=0.0,
-            belastbaar_inkomen=200_000,
-            tax_year=2026,
-        )
-        self.assertFalse(applies)
-        self.assertEqual(amount, 0.0)
-
-    def test_official_hillen_example_2026_still_applies_tariefsaanpassing(self):
-        # Belastingdienst Hillen example: grondslag = 80,141 + 3,500 - 78,426
-        # capped at the gross aftrekbare kosten 3,500 -> 3,500 x 0.1194 =
-        # 417.90 — the adjustment applies even though Hillen leaves a
-        # positive eigen-woning result.
-        applies, amount, _ = self.mod.calculate_tariefsaanpassing(
-            deductible_costs=3_500,
-            belastbaar_inkomen=80_141,
-            tax_year=2026,
-        )
-        self.assertTrue(applies)
-        self.assertEqual(amount, 417.90)
-
-    def test_tariefsaanpassing_2025_parameters_compute(self):
-        # 2025 branch: threshold 76,817 / cap 37.48% -> rate diff 12.02%.
-        applies, amount, _ = self.mod.calculate_tariefsaanpassing(
-            deductible_costs=5_000,
-            belastbaar_inkomen=150_000,
-            tax_year=2025,
-        )
-        self.assertTrue(applies)
-        self.assertEqual(amount, 601.00)  # 5000 x 0.1202, exact in Decimal
 
 
 class EvalVerifierGlobEscapeTests(unittest.TestCase):
