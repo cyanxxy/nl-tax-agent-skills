@@ -16,9 +16,17 @@ INDEX = SHARED / "knowledge-index.md"
 INDEX_ROW = re.compile(r"^\| (.+?) \| (.+?) \| `(\.\./[^`]+)` \|$")
 
 
+def split_allowed_tools(metadata):
+    """Split the spec's space-separated `allowed-tools` string into a list."""
+    tools = metadata.get("allowed-tools")
+    if isinstance(tools, str):
+        metadata["allowed-tools"] = tools.split()
+    return metadata
+
+
 def frontmatter(path):
     _, block, _ = path.read_text(encoding="utf-8").split("---", 2)
-    return yaml.safe_load(block)
+    return split_allowed_tools(yaml.safe_load(block))
 
 
 def index_rows():

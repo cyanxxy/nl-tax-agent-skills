@@ -35,6 +35,23 @@ authoring guidance. No tax rule, rate, or workflow scope changes.
   inkomstenbelasting, belastingaangifte, jaaropgaaf, suppletie, voorbelasting)
   and without the word "explicitly", which suppressed triggering. Helper
   descriptions say they serve an active owning workflow only.
+- **One home for save rules.** The annual 2025 and provisional 2026 skills no
+  longer copy the save-consent, replace-or-keep, withdrawal, and resume rules;
+  they point to `runtime-workpack-files.md` and keep only their own file path,
+  template, and section details. The Box 2 phase no longer restates the rates
+  it says must come from the rate note.
+- **Spec-form `allowed-tools`.** Every skill declares `allowed-tools` as one
+  space-separated string, as the specification defines it, and a test keeps
+  it that way. The maintainer platform note drops the YAML-list and
+  `Bash(python3 ...)` guidance and documents which keys are Claude Code plugin
+  keys.
+
+### Added
+
+- A CI job that runs the official validators: `claude plugin validate
+  --strict` on the plugin and the marketplace, and `skills-ref validate`
+  (pinned commit) on every skill of the OpenAI bundle, which strips the
+  Claude-only keys.
 
 ## [0.5.1] — 2026-10-15
 

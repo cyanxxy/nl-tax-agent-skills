@@ -40,6 +40,13 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 - `allowed-tools` pre-approves tools for use during skill execution
 - This is NOT a security sandbox -- it is a convenience mechanism to avoid repeated approval prompts
 - Only list tools the skill genuinely needs
+- In Claude Code the pre-approval lasts only for the turn that invokes the skill
+
+## Frontmatter portability
+
+- The specification allows only `name`, `description`, `license`, `compatibility`, `metadata`, and `allowed-tools`. claude.ai skill uploads and the Skills API reject any other key
+- `argument-hint`, `user-invocable`, and `disable-model-invocation` are Claude Code plugin keys. They are valid here because the plugin is plugin-only and never distributed as separate skill uploads
+- `submission/openai/build_bundle.py` strips the Claude-only keys from the OpenAI bundle; CI runs `skills-ref validate` on that bundle and `claude plugin validate --strict` on the Claude plugin
 
 ## User guidance
 
@@ -60,7 +67,7 @@ When creating or modifying skills in this project:
 1. Keep SKILL.md concise -- move detailed rules, rates, and procedures to knowledge files in `nl-tax-shared-resources/knowledge/`
 2. Do NOT set `context: fork` on the workpack or intake skills. These are interactive workflows that need to ask the user follow-up questions and iterate across turns; a forked subagent cannot do that. Reserve `context: fork` for stateless one-shot analysis only
 3. Set `disable-model-invocation: true` only for skills that modify source data or perform destructive operations. Background helpers use `user-invocable: false` alone
-4. Always declare `allowed-tools` as a YAML list (space-separated strings also work, but lists are unambiguous). Use `python3` (not `python`) in `Bash(...)` patterns -- macOS does not ship a bare `python` interpreter
+4. Declare `allowed-tools` as one space-separated string, as the Agent Skills specification defines it (for example `allowed-tools: Read Glob Grep Edit(./workspace/**)`). Skills pre-approve no `Bash` and no `Write`; `Edit(...)` rules cover every built-in tool that creates or changes files
 5. Register any new external sources in `nl-tax-shared-resources/source-register.yaml`
 6. Keep natural-language Cowork prompts as the primary usage path; document direct namespaced invocation only as an advanced path
 7. Distinguish first-party Claude package validation from a human Cowork UI smoke test; one does not prove the other

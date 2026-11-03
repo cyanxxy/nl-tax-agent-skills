@@ -80,3 +80,57 @@ jobs:
       - name: Verify offline structural contract dataset
         run: |
           python evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
+
+  official-validators:
+    name: Official plugin and skill validators
+    runs-on: ubuntu-latest
+    env:
+      # Pinned so a validator release cannot change CI results unannounced.
+      CLAUDE_CODE_VERSION: "2.1.317"
+      SKILLS_REF_COMMIT: "69ef37e9424c0a7ea9dd2293b559e43ec8176379"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Install Claude Code and PyYAML
+        run: |
+          npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: claude plugin validate (plugin and marketplace)
+        run: |
+          claude plugin validate ./plugins/nl-tax-agent-skills --strict
+          claude plugin validate . --strict
+
+      - name: Install skills-ref at a pinned commit
+        run: |
+          git init -q "$RUNNER_TEMP/agentskills"
+          git -C "$RUNNER_TEMP/agentskills" fetch -q --depth 1 \
+            https://github.com/agentskills/agentskills.git "$SKILLS_REF_COMMIT"
+          git -C "$RUNNER_TEMP/agentskills" checkout -q FETCH_HEAD
+          pip install "$RUNNER_TEMP/agentskills/skills-ref"
+
+      - name: skills-ref validate (portable OpenAI bundle)
+        # The Claude plugin keeps Claude Code plugin keys (argument-hint,
+        # user-invocable, disable-model-invocation) that the specification
+        # does not allow, so the spec check runs on the bundle that strips them.
+        run: |
+          python submission/openai/build_bundle.py \
+            --output-dir "$RUNNER_TEMP/bundle/nl-tax-agent-skills" \
+            --zip-path "$RUNNER_TEMP/bundle.zip"
+          status=0
+          for skill in "$RUNNER_TEMP"/bundle/nl-tax-agent-skills/skills/*/; do
+            skills-ref validate "$skill" || status=1
+          done
+          exit "$status"

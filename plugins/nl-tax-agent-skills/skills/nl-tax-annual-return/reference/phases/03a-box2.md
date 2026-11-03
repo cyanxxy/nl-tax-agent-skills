@@ -3,8 +3,8 @@
 Compile standard aanmerkelijk-belang data for the annual 2025 return when applicable. If the taxpayer has no Box 2 position, emit the canonical "not applicable" line from the output contract and continue.
 
 When the taxpayer has an aanmerkelijk belang, read the rates from
-`../nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md` — never paraphrase the 24.5% /
-31% box 2 bracket from memory — and add `bd_box2_rates_2025_2026`,
+`../nl-tax-shared-resources/knowledge/years/2025/box2/box2-rates.md`; never state a
+Box 2 rate or bracket from memory. Add `bd_box2_rates_2025_2026`,
 `bd_box2_income_ab_guidance`, and `bd_fisin_aanmerkelijk_belang_2025` to this
 workflow's source list.
 

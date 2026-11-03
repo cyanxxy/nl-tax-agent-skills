@@ -3,11 +3,7 @@ name: nl-tax-submit-companion
 description: "Turns a mapped Dutch tax workpack into a human-only manual-entry checklist for Mijn Belastingdienst or Mijn Belastingdienst Zakelijk: which screens to open, which values to type, and what to check before the user signs and submits themselves. Covers income tax (annual, voorlopige aanslag, M- or C-biljet), btw-aangifte and suppletie, ICP, and OSS. Use when the user asks for a step-by-step entry checklist or accepts the checklist offer after mapping. A stale map or unreviewed sources block amounts."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|provisional|international|vat|vat-correction|icp|oss] [2025|2026] [identity]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
+allowed-tools: Read Glob Grep Edit(./workspace/**)
 ---
 
 # Manual-entry checklist

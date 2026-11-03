@@ -3,10 +3,7 @@ name: nl-tax-winst
 description: "Background helper for an owning Dutch tax workflow: determines the annual 2025 belastbare winst uit onderneming for an IB-ondernemer from the reviewed profit chain (investeringsaftrek, ondernemersaftrek, MKB-winstvrijstelling), or records one sourced 2026 expected-profit forecast for the voorlopige aanslag. Use only when an active annual or provisional workflow reaches its business-income section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Winst uit onderneming

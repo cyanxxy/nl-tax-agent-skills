@@ -2,12 +2,7 @@
 name: nl-tax-international-return
 description: "Prepares a draft Dutch M-biljet (year of emigration or immigration) or C-biljet (nonresident) income-tax workpack for 2025, or collects evidence for 2026: residence dates, Dutch and foreign income, treaty and social-insurance facts, and the split between resident and nonresident periods. Use when the user moved to or from the Netherlands during the year, or lived abroad with Dutch income, and needs that return prepared. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # NL Tax International Return

@@ -30,10 +30,18 @@ REPOSITORY_GRADERS = {
 EXECUTABLE_SUFFIXES = {".py", ".sh", ".bash", ".js", ".mjs", ".ts", ".rb", ".pl"}
 
 
+def split_allowed_tools(metadata):
+    """Split the spec's space-separated `allowed-tools` string into a list."""
+    tools = metadata.get("allowed-tools")
+    if isinstance(tools, str):
+        metadata["allowed-tools"] = tools.split()
+    return metadata
+
+
 def skill_frontmatter(path):
     text = path.read_text(encoding="utf-8")
     match = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
-    return yaml.safe_load(match.group(1)) if match else {}
+    return split_allowed_tools(yaml.safe_load(match.group(1)) if match else {})
 
 
 class NoRuntimeCodeContractTests(unittest.TestCase):

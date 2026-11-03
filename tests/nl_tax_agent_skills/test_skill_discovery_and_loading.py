@@ -44,10 +44,18 @@ def read_skill(skill_name):
     return (SKILLS / skill_name / "SKILL.md").read_text(encoding="utf-8")
 
 
+def split_allowed_tools(metadata):
+    """Split the spec's space-separated `allowed-tools` string into a list."""
+    tools = metadata.get("allowed-tools")
+    if isinstance(tools, str):
+        metadata["allowed-tools"] = tools.split()
+    return metadata
+
+
 def frontmatter(path):
     text = path.read_text(encoding="utf-8")
     _, block, _ = text.split("---", 2)
-    return yaml.safe_load(block)
+    return split_allowed_tools(yaml.safe_load(block))
 
 
 def all_skill_frontmatter():
@@ -160,6 +168,17 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             }
             <= public
         )
+
+    def test_allowed_tools_use_the_spec_space_separated_string(self):
+        # agentskills.io defines `allowed-tools` as one space-separated string.
+        for path in SKILLS.glob("*/SKILL.md"):
+            _, block, _ = path.read_text(encoding="utf-8").split("---", 2)
+            raw = yaml.safe_load(block).get("allowed-tools")
+            if raw is None:
+                continue
+            with self.subTest(skill=path.parent.name):
+                self.assertIsInstance(raw, str)
+                self.assertTrue(raw.split())
 
     def test_submit_companion_uses_natural_language_activation(self):
         skill_path = SKILLS / "nl-tax-submit-companion/SKILL.md"

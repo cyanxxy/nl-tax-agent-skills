@@ -3,12 +3,7 @@ name: nl-tax-field-mapper
 description: "Maps a confirmed Dutch tax workpack to the matching Mijn Belastingdienst or Mijn Belastingdienst Zakelijk fields, with each value's source and every missing or blocked field: annual 2025 and 2026, voorlopige aanslag 2026, btw-aangifte, suppletie, opgaaf ICP, OSS/IOSS, and M- or C-biljet. Use when a workpack has been generated and the user wants to know which value goes in which field, or when an owning workflow hands over its confirmed workpack for mapping."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|provisional|vat|vat-correction|icp|oss|international] [year] [period|form]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # NL Tax Field Mapper

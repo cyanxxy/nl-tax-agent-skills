@@ -3,10 +3,7 @@ name: nl-tax-knowledge
 description: "Answers questions about how Dutch tax rules work in 2025 and 2026 from bundled, source-cited notes: Box 1 (wages, eigen woning, hypotheekrenteaftrek), Box 2 (aanmerkelijk belang), Box 3 (heffingsvrij vermogen, werkelijk rendement), heffingskortingen, fiscaal partner, voorlopige aanslag, ZZP and winst uit onderneming, btw/VAT, KOR, ICP, OSS, and emigration or nonresident rules. Names the year and official source, flags notes still awaiting review, and writes no files. Use when the user asks what a rule, rate, threshold, or deadline is rather than asking to prepare a return."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[tax-rule question]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Knowledge

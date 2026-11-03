@@ -2,12 +2,7 @@
 name: nl-tax-icp
 description: "Prepares a draft 2025 or 2026 Dutch opgaaf ICP (intracommunautaire prestaties, EU sales listing) for one period: EU business customers by alias and VAT-ID check, goods versus services, corrections to earlier periods, and reconciliation with rubriek 3b of the btw-aangifte. Use when the user supplies goods or services to business customers in other EU countries and needs to file or correct the ICP declaration. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # NL Tax ICP

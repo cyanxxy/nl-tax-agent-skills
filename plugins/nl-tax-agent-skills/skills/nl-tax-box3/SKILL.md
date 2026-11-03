@@ -3,10 +3,7 @@ name: nl-tax-box3
 description: "Background helper for an owning Dutch tax workflow: classifies Box 3 savings, investments, and debts and prepares the arithmetic; annual 2025 compares the fictitious and actual return, provisional 2026 uses the fictitious method only. Use only when an active annual or provisional workflow reaches its Box 3 section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Box 3
