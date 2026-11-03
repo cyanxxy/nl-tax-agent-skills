@@ -1,6 +1,7 @@
 ---
 name: nl-tax-international-return
-description: Use when the user explicitly wants a Dutch M-biljet (emigration/immigration year) or C-biljet (nonresident) income-tax draft for 2025, or 2026 evidence collection, with residence and treaty facts.
+description: "Prepares a draft Dutch M-biljet (year of emigration or immigration) or C-biljet (nonresident) income-tax workpack for 2025, or collects evidence for 2026: residence dates, Dutch and foreign income, treaty and social-insurance facts, and the split between resident and nonresident periods. Use when the user moved to or from the Netherlands during the year, or lived abroad with Dutch income, and needs that return prepared. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools:
   - Read
   - Glob
@@ -62,7 +63,8 @@ annual M/C return.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `../nl-tax-shared-resources/reference/workflow-scopes.yaml` and
 `reference/international-return-flow.md`. Resolve bundled paths relative to
 this skill directory using the host's resource/file tools; `workspace/...`

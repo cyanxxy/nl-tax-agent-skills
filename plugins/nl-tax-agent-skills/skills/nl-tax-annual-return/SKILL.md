@@ -1,6 +1,7 @@
 ---
 name: nl-tax-annual-return
-description: Use when the user explicitly wants a 2025 Dutch annual-tax workpack for manual entry, including supported sole traders and Boxes 1–3.
+description: "Prepares a source-traceable 2025 Dutch annual income-tax return workpack (aangifte inkomstenbelasting 2025) for manual entry in Mijn Belastingdienst. Reads jaaropgaven and mortgage, bank, and investment statements, asks only the missing questions, and covers Box 1 wages and eigen woning, standard eenmanszaak/ZZP winst uit onderneming, Box 2, Box 3 with the actual-return comparison, deductions, credits, and fiscal-partner allocation. Use when the user wants to prepare, fill in, or resume their 2025 Dutch tax return (belastingaangifte). Never logs in, signs, or submits."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[2025] [confirm]"
 allowed-tools:
   - Read
@@ -48,7 +49,8 @@ follow-up, and stay the single owner of facts, section status, and readiness.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Resolve bundled
 resources relative to this skill directory; `workspace/...` is relative to the
 task's working folder. Never depend on vendor-specific environment variables.
 

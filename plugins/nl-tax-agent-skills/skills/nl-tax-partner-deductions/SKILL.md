@@ -1,8 +1,8 @@
 ---
 name: nl-tax-partner-deductions
-description: Use when an owning Dutch tax workflow needs fiscal-partner, deduction, or allocation facts and review scenarios for annual 2025 or provisional 2026 preparation.
+description: "Background helper for an owning Dutch tax workflow: checks fiscal-partner status (fiscaal partnerschap), deductions (aftrekposten), and neutral allocation scenarios for shared items in annual 2025 or provisional 2026 preparation, without choosing an allocation. Use only when an active annual or provisional workflow reaches its partner or deductions section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
 allowed-tools:
   - Read
   - Glob

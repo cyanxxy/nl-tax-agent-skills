@@ -1,6 +1,7 @@
 ---
 name: nl-tax-vat-return
-description: Use when the user explicitly wants a 2025/2026 Dutch btw-aangifte (VAT return) workpack for a ZZP or eenmanszaak period, with invoices and input VAT reconciled for manual entry.
+description: "Prepares a draft 2025 or 2026 Dutch btw-aangifte (VAT return) workpack for one period of a ZZP'er or eenmanszaak: reconciles sales and purchase invoices, output VAT and voorbelasting, reverse charge (verlegd), KOR, private use, and EU sales into the aangifte rubrieken for manual entry. Use when the user wants to prepare or check a monthly, quarterly, or yearly VAT return. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools:
   - Read
   - Glob
@@ -59,7 +60,8 @@ VAT preparation is separate from the annual income-tax return and its profit.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `reference/vat-return-flow.md`. Resolve bundled paths relative to this skill
 directory using the host's resource/file tools; `workspace/...` is relative
 to the user's selected working folder. Never depend on vendor-specific

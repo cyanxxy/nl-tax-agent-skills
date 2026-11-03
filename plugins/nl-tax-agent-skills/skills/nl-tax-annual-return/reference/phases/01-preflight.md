@@ -5,6 +5,19 @@ intake's screened facts from the conversation, or from the Taxpayer profile
 summary of an attached or found annual workpack. Nothing here writes a file;
 confirmed facts become rows of the Taxpayer profile summary.
 
+Contents:
+
+- 1.1 Screening facts available
+- 1.2 Workflow confirmation
+- 1.3 Residency confirmed
+- 1.4 Taxpayer type confirmed
+- 1.5 Living taxpayer confirmed
+- 1.6 No M-biljet required
+- 1.7 Household composition
+- 1.8 Documents already shared
+- 1.9 Box 2 scope check
+- 1.10 Knowledge loading boundary
+
 ### 1.1 Screening facts available
 
 - Confirm that intake's screening is in the conversation or in the resumed

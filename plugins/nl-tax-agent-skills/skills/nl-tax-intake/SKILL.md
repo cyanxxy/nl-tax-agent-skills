@@ -1,6 +1,7 @@
 ---
 name: nl-tax-intake
-description: Use when the user explicitly wants Dutch tax preparation. For informational questions use nl-tax-knowledge. Do not use after intake is complete.
+description: "Screens a Dutch tax preparation request and routes it to the right workflow: annual income-tax return (aangifte inkomstenbelasting) 2025 or 2026, voorlopige aanslag 2026 (request, change, review, stopzetten), M-biljet or C-biljet, btw-aangifte or suppletie, opgaaf ICP, or OSS/IOSS. Asks only the screening questions that change the route and finds a saved workpack to resume. Use when the user wants help preparing, filling in, or resuming Dutch tax paperwork for Mijn Belastingdienst. Not needed again once a preparation workflow has started. For questions about how a rule works, use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|international|request|change|review|stopzetten|vat|vat-correction|icp|oss]"
 allowed-tools:
   - Read
@@ -112,7 +113,8 @@ single offer when it starts. Add no generic warnings to ordinary replies.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md` first. Then read:
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Then read:
 
 1. `../nl-tax-shared-resources/knowledge/methods/interactive-elicitation.md`
    for the shared conversation, provenance, and batching rules.

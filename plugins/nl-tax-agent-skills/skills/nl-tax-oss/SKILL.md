@@ -1,6 +1,7 @@
 ---
 name: nl-tax-oss
-description: Use when the user explicitly wants a 2025/2026 OSS Union, non-Union or IOSS draft, with confirmed scheme, destination rates, corrections and separate country liabilities.
+description: "Prepares a draft 2025 or 2026 OSS return (Union or non-Union scheme) or IOSS return for EU distance sales and cross-border services to consumers: confirms the scheme, applies each destination country's VAT rates, handles corrections, and keeps each country's liability separate. Use when the user sells to consumers in other EU countries and files through the One Stop Shop. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools:
   - Read
   - Glob
@@ -56,7 +57,8 @@ non-Union and IOSS registrations, figures and files separate. Use
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md` then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md` then
 `reference/oss-flow.md`. Resolve bundled paths relative to this skill directory
 with host resource/file tools; `workspace/...` is relative to the selected
 working folder. Do not use vendor environment variables or shell discovery.

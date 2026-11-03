@@ -41,7 +41,8 @@ This document defines the mandatory sections, labeling requirements, and validat
   `save_consent` records that decision; it never authorizes a write. Update it
   in place; never create a copy, versioned or dated variant, or second
   `workspace/` tree. A file at that path that the user did not resume is
-  replaced only after the replace-or-keep question in the runtime contract,
+  replaced only after the replace-or-keep question in
+  `../nl-tax-shared-resources/runtime-workpack-files.md`,
   never merged into.
 - Never write `workspace/nl-tax-annual-2025-workpack.md` or any path other than
   the provisional workpack.

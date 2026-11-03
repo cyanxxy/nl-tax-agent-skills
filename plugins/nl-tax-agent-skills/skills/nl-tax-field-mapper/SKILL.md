@@ -1,6 +1,7 @@
 ---
 name: nl-tax-field-mapper
-description: Use when the user explicitly wants a supported workpack mapped to source-traceable Mijn Belastingdienst fields.
+description: "Maps a confirmed Dutch tax workpack to the matching Mijn Belastingdienst or Mijn Belastingdienst Zakelijk fields, with each value's source and every missing or blocked field: annual 2025 and 2026, voorlopige aanslag 2026, btw-aangifte, suppletie, opgaaf ICP, OSS/IOSS, and M- or C-biljet. Use when a workpack has been generated and the user wants to know which value goes in which field, or when an owning workflow hands over its confirmed workpack for mapping."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|provisional|vat|vat-correction|icp|oss|international] [year] [period|form]"
 allowed-tools:
   - Read
@@ -106,7 +107,8 @@ prepared first and offer to continue the matching owning workflow.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read [`../nl-tax-shared-resources/runtime-contract.md`](../nl-tax-shared-resources/runtime-contract.md),
+Read [`../nl-tax-shared-resources/runtime-contract.md`](../nl-tax-shared-resources/runtime-contract.md)
+and [`../nl-tax-shared-resources/runtime-workpack-files.md`](../nl-tax-shared-resources/runtime-workpack-files.md),
 then all of [`reference/mapper-flow.md`](reference/mapper-flow.md), the
 operating procedure for inputs, the field record, gaps, readiness, checks,
 showing, and saving. It delegates field policy to:

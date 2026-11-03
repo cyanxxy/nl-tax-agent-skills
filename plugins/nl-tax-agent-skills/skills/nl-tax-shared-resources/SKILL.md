@@ -1,6 +1,7 @@
 ---
 name: nl-tax-shared-resources
-description: Use when an NL Tax Agent Skill needs its internal resource bundle; never invoke it as a standalone taxpayer workflow.
+description: "Internal resource bundle for the NL Tax Agent Skills plugin: runtime contracts, reviewed tax notes, the source register, and document-reading rules. Never invoked as a skill; the plugin's other skills read its files by path."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
 disable-model-invocation: true
 ---

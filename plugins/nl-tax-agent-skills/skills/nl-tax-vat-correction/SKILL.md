@@ -1,6 +1,7 @@
 ---
 name: nl-tax-vat-correction
-description: Use when the user explicitly wants a btw-aangifte correction or suppletie workpack for one already filed 2025 or 2026 Dutch ZZP or eenmanszaak VAT period.
+description: "Prepares a draft btw-aangifte correction (suppletie) workpack for one already filed 2025 or 2026 Dutch VAT period of a ZZP'er or eenmanszaak: what was filed, what it should have been, the difference per rubriek, and whether a separate correction or the next return applies. Use when the user found a mistake in a VAT return they already submitted and wants to correct it. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools:
   - Read
   - Glob
@@ -76,7 +77,8 @@ review. Support exactly 2025/2026 Netherlands-established eenmanszaak or ZZP per
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `reference/vat-correction-flow.md`. Resolve bundled paths relative to this
 skill directory with the host's resource/file tools; `workspace/...` is
 relative to the task's working folder. Do not use shell discovery or depend

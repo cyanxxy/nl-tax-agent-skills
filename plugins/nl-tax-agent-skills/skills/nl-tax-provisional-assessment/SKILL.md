@@ -1,6 +1,7 @@
 ---
 name: nl-tax-provisional-assessment
-description: Use when the user explicitly wants a 2026 Dutch provisional request, change, review, or stopzetten workpack. Changes require complete-data re-entry before questions; Box 3 is fictitious-only.
+description: "Prepares a 2026 Dutch voorlopige aanslag (provisional assessment) workpack for manual entry: request a new one, change an existing one, review it against current circumstances, or stop it (stopzetten). Works from expected 2026 wages, mortgage, Box 2, Box 3 (fictitious method only), ZZP expected profit, and partner facts; a change re-enters the complete data set. Use when the user wants monthly 2026 tax refunds or payments set, adjusted, checked, or stopped, for example after buying a home, a salary change, or starting as ZZP."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[2026] [request|change|review|stopzetten|confirm]"
 allowed-tools:
   - Read
@@ -62,7 +63,8 @@ workflow.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Resolve bundled
 resources relative to this skill directory and `workspace/...` against the
 task's working folder (the folder the user selected or the host's task
 workspace). Never depend on vendor-specific environment variables.

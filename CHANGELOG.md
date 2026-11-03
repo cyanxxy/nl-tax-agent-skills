@@ -5,6 +5,37 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+Aligns the skills with the Agent Skills specification and Anthropic's skill
+authoring guidance. No tax rule, rate, or workflow scope changes.
+
+### Changed
+
+- **Plugin-only, stated plainly.** Every `SKILL.md` declares a `compatibility`
+  field saying it needs the complete plugin, and both READMEs warn that a
+  single skill does not work when copied or uploaded on its own.
+- **Background helpers are agent-invocable.** `nl-tax-box1-home`,
+  `nl-tax-box2`, `nl-tax-box3`, `nl-tax-winst`, `nl-tax-partner-deductions`,
+  and `nl-tax-vat-adjustments` drop `disable-model-invocation: true` and keep
+  `user-invocable: false`: hidden from the user's menu, invocable by the
+  owning workflow. Setting both flags had made them unreachable through the
+  Skill tool. Codex keeps `allow_implicit_invocation: false` and the inline
+  read path. `nl-tax-shared-resources` stays a never-invoked file bundle.
+- **Lighter runtime contract.** Save consent, stale outputs, the
+  one-file-per-workflow rule, and resume moved from `runtime-contract.md` into
+  `runtime-workpack-files.md`, which only the workflows that save, show, or
+  resume a workpack read. Read-only skills load about 30% less of it.
+- **Navigable long references.** Every workflow reference file over 100 lines
+  now starts with a `Contents` list, and the runtime contract requires reading
+  each opened resource in full rather than acting on a partial preview.
+  Hash-pinned reviewed knowledge notes are unchanged.
+- **Descriptions say what and when.** All descriptions now state what the
+  skill does and when to use it, with the Dutch terms users type (aangifte
+  inkomstenbelasting, belastingaangifte, jaaropgaaf, suppletie, voorbelasting)
+  and without the word "explicitly", which suppressed triggering. Helper
+  descriptions say they serve an active owning workflow only.
+
 ## [0.5.1] — 2026-10-15
 
 Brings the skills in line with current Claude Code plugin behaviour, re-verifies

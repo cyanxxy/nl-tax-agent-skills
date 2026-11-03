@@ -1,6 +1,7 @@
 ---
 name: nl-tax-icp
-description: Use when the user explicitly wants a 2025/2026 Dutch opgaaf ICP (intracommunautaire prestaties) draft, with customer aliases, goods/services, corrections and btw-aangifte 3b reconciliation.
+description: "Prepares a draft 2025 or 2026 Dutch opgaaf ICP (intracommunautaire prestaties, EU sales listing) for one period: EU business customers by alias and VAT-ID check, goods versus services, corrections to earlier periods, and reconciliation with rubriek 3b of the btw-aangifte. Use when the user supplies goods or services to business customers in other EU countries and needs to file or correct the ICP declaration. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools:
   - Read
   - Glob
@@ -55,7 +56,8 @@ different questions.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `reference/icp-flow.md`. Resolve bundled paths relative to this skill's
 directory through the host's resource/file tools; `workspace/...` is relative
 to the user's selected working folder. Do not use vendor environment variables

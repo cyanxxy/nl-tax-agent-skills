@@ -6,6 +6,17 @@ those notes. Every note carries its own `source_ids`, `workflow`, `tax_year`,
 and `review_status` header; the note, not this index, is canonical for every
 amount, percentage, threshold, and date.
 
+## Contents
+
+- How to use this index
+- Annual return 2025 (aangifte inkomstenbelasting 2025)
+- Voorlopige aanslag 2026 (provisional assessment)
+- VAT returns and corrections 2025/2026 (draft preparation)
+- Topics that span income-tax years
+- Legal basis (structural orientation only)
+- Not tax rules
+- Extended draft preparation
+
 ## How to use this index
 
 - Every path below is written relative to the active skill directory (the

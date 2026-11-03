@@ -4,7 +4,7 @@ source_ids: anthropic_agent_skills_overview, claude_code_skills
 workflow: all
 tax_year: all
 status: active
-last_reviewed: "2026-07-11"
+last_reviewed: "2026-11-03"
 review_status: reviewed
 
 ## Rule
@@ -31,8 +31,9 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 - Resolve bundled resources through host file tools. Treat Python helpers as optional accelerators and follow the documented agent check when the helper is unavailable
 
 - `context: fork` runs the skill in an isolated subagent with no access to the parent conversation. The subagent receives the SKILL.md content as a one-shot prompt and returns a single summary. Only use this for stateless analysis tasks that need no user follow-up (e.g. summarizing a fixed input). Never use it for skills that ask the user questions, iterate on assumptions, or produce workpacks across multiple turns -- the subagent cannot read or reply to the user
-- `disable-model-invocation: true` prevents auto-invocation (for maintenance or dangerous skills)
-- `user-invocable: false` hides from slash-command menu but allows model invocation
+- `disable-model-invocation: true` prevents Claude from invoking the skill and keeps its description out of context; only the user can run it (for maintenance or dangerous skills)
+- `user-invocable: false` hides the skill from the `/` menu but keeps it model-invocable; use it for background helpers that only an owning workflow should call
+- Setting both makes a skill unreachable through the Skill tool; reserve that for the `nl-tax-shared-resources` file bundle, which is read by path and never invoked
 
 ## Tool control
 
@@ -47,6 +48,7 @@ Claude Code Agent Skills follow a standard structure and set of conventions. All
 
 ## Shared resources
 
+- The plugin is plugin-only: skills reach `nl-tax-shared-resources/` and sibling skills through `../` paths, so a skill does not work when installed or uploaded on its own. Every `SKILL.md` states this in its `compatibility` field
 - Shared resources in `nl-tax-shared-resources/` are project-level, loaded on demand
 - Knowledge files, templates, and registers in `nl-tax-shared-resources/` are available to all skills
 - Skills reference shared resources by relative path from the skill directory. Claude Code may expose a current skill-directory path at runtime, but project instructions should prefer host-neutral relative paths.
@@ -57,7 +59,7 @@ When creating or modifying skills in this project:
 
 1. Keep SKILL.md concise -- move detailed rules, rates, and procedures to knowledge files in `nl-tax-shared-resources/knowledge/`
 2. Do NOT set `context: fork` on the workpack or intake skills. These are interactive workflows that need to ask the user follow-up questions and iterate across turns; a forked subagent cannot do that. Reserve `context: fork` for stateless one-shot analysis only
-3. Set `disable-model-invocation: true` for skills that modify source data or perform destructive operations
+3. Set `disable-model-invocation: true` only for skills that modify source data or perform destructive operations. Background helpers use `user-invocable: false` alone
 4. Always declare `allowed-tools` as a YAML list (space-separated strings also work, but lists are unambiguous). Use `python3` (not `python`) in `Bash(...)` patterns -- macOS does not ship a bare `python` interpreter
 5. Register any new external sources in `nl-tax-shared-resources/source-register.yaml`
 6. Keep natural-language Cowork prompts as the primary usage path; document direct namespaced invocation only as an advanced path

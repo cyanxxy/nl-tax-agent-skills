@@ -25,6 +25,18 @@ section 1 stays terminal. Only genuinely terminal cases follow these steps:
 
 ---
 
+## Contents
+
+- 1. Part-Year Dutch Resident (Buitenlandse Belastingplicht)
+- 2. Non-Resident Taxpayer (C-biljet / Kwalificerende Buitenlandse Belastingplichtige)
+- 3. Deceased Taxpayer (F-biljet)
+- 4. Complex Business Forms (Winst uit onderneming)
+- 5. M-Aangifte (Migration Return)
+- 6. Complex Box 2 Substantial-Interest Cases
+- 7. Multiple Nationalities with Tax Treaty Complications
+- 8. Foreign Pension with Treaty Override
+- General Guidance for Unsupported Cases
+
 ## 1. Part-Year Dutch Resident (Buitenlandse Belastingplicht)
 
 - **Description:** The taxpayer was a Dutch resident for only part of the tax year (e.g., emigrated or immigrated during 2025)
