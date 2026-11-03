@@ -1,6 +1,6 @@
 ---
 name: nl-tax-provisional-assessment
-description: "Prepares a 2026 Dutch voorlopige aanslag (provisional assessment) workpack for manual entry: request a new one, change an existing one, review it against current circumstances, or stop it (stopzetten). Works from expected 2026 wages, mortgage, Box 2, Box 3 (fictitious method only), ZZP expected profit, and partner facts; a change re-enters the complete data set. Use when the user wants monthly 2026 tax refunds or payments set, adjusted, checked, or stopped, for example after buying a home, a salary change, or starting as ZZP."
+description: "Prepares a 2026 Dutch voorlopige aanslag (provisional assessment) workpack for manual entry: request a new one, change an existing one, review it against current circumstances, or stop it (stopzetten). Works from expected 2026 wages, mortgage, Box 2, Box 3 (fictitious method only), ZZP expected profit, and partner facts; a change re-enters the complete data set. Use when the user wants monthly 2026 tax refunds or payments set, adjusted, checked, or stopped, for example after buying a home, a salary change, or starting as ZZP. For a question about how a rule works, use nl-tax-knowledge."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[2026] [request|change|review|stopzetten|confirm]"
 allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion

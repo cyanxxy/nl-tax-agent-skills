@@ -61,6 +61,27 @@ class InvocationPolicyTests(unittest.TestCase):
         ):
             self.assertIn(name, checked)
 
+    def test_real_skills_classify_manual_only_and_agent_only(self):
+        # The two Claude flags mean different things; the validator reports
+        # which one each guarded skill uses instead of merging them.
+        errors, kinds = self.mod.collect_policy(str(SKILLS_DIR))
+        self.assertEqual(errors, [])
+        self.assertEqual(
+            {name for name, kind in kinds.items() if kind == "manual_only"},
+            {"nl-tax-shared-resources"},
+        )
+        self.assertEqual(
+            {name for name, kind in kinds.items() if kind == "agent_only"},
+            {
+                "nl-tax-box1-home",
+                "nl-tax-box2",
+                "nl-tax-box3",
+                "nl-tax-partner-deductions",
+                "nl-tax-winst",
+                "nl-tax-vat-adjustments",
+            },
+        )
+
     def test_missing_openai_yaml_fails(self):
         with tempfile.TemporaryDirectory() as tmp:
             skills = pathlib.Path(tmp)

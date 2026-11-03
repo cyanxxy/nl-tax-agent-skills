@@ -1,6 +1,6 @@
 ---
 name: nl-tax-icp
-description: "Prepares a draft 2025 or 2026 Dutch opgaaf ICP (intracommunautaire prestaties, EU sales listing) for one period: EU business customers by alias and VAT-ID check, goods versus services, corrections to earlier periods, and reconciliation with rubriek 3b of the btw-aangifte. Use when the user supplies goods or services to business customers in other EU countries and needs to file or correct the ICP declaration. Draft-only while its sources await human review."
+description: "Prepares a draft 2025 or 2026 Dutch opgaaf ICP (intracommunautaire prestaties, EU sales listing) for one period: EU business customers by alias and VAT-ID check, goods versus services, corrections to earlier periods, and reconciliation with rubriek 3b of the btw-aangifte. Use when the user supplies goods or services to business customers in other EU countries and needs to file or correct the ICP declaration. For a question about how an ICP rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
@@ -75,7 +75,8 @@ user-named workpack and write nothing.
 
 ## Saving and ownership
 
-Follow the shared runtime contract's start/pause/post-generation save offers,
+Follow the start/pause/post-generation save offers in
+`../nl-tax-shared-resources/runtime-workpack-files.md`,
 each at most once and as its own reply with one yes/no question. At first
 save or final generation, read `templates/icp-workpack.md` and
 `reference/icp-output-contract.md`. First save includes everything established

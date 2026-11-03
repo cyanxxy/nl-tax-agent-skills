@@ -11,6 +11,10 @@ them.
   remains manual-entry only.
 - `methodology/` records the RegelSpraak authoring approach.
 
-Each directory keeps its reviewed-note hash metadata next to the note. Recheck
+Each directory keeps its reviewed-note hash metadata next to the note. A
+`*-pending-review.md` file next to a reviewed note holds drafted corrections
+that no human has reviewed yet; it has no hash entry and never counts as
+reviewed. A maintainer merges it into the note, re-records the hash, and
+deletes it. Recheck
 the cited official pages before changing architecture or claiming a newly
 available host capability.

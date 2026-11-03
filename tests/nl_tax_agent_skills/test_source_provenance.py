@@ -2,6 +2,7 @@
 """Reviewed-note provenance and legal-attribution contracts."""
 
 import hashlib
+import re
 import importlib.util
 import pathlib
 import unittest
@@ -104,6 +105,24 @@ class SourceProvenanceTests(unittest.TestCase):
                     note_text = note_by_hash[digest].read_text(encoding="utf-8")
                     self.assertIn(source_id, note_text)
                     self.assertTrue(item.get("source_url", "").startswith("https://"))
+
+    def test_pending_review_notes_never_count_as_reviewed(self):
+        # Drafted corrections to a reviewed maintainer note live beside it as
+        # `*-pending-review.md` until a human merges them and re-records the
+        # hash; their bytes must never appear as a reviewed hash.
+        reviewed = set()
+        for metadata_path in MAINTAINER_NOTES.glob("**/_snapshot-metadata.yaml"):
+            for item in load_yaml(metadata_path)["sources"].values():
+                reviewed.add(item.get("reviewed_note_hash_sha256"))
+        pending = sorted(MAINTAINER_NOTES.glob("**/*-pending-review.md"))
+        for path in pending:
+            with self.subTest(note=str(path.relative_to(MAINTAINER_NOTES))):
+                text = path.read_text(encoding="utf-8")
+                self.assertIn("review_status: pending_human_review", text)
+                self.assertNotIn(hashlib.sha256(path.read_bytes()).hexdigest(), reviewed)
+                corrects = re.search(r"(?m)^corrects: (\S+)$", text)
+                self.assertIsNotNone(corrects)
+                self.assertTrue((MAINTAINER_NOTES / corrects.group(1)).is_file())
 
     def test_plan_report_separates_reachability_and_review(self):
         script_path = (

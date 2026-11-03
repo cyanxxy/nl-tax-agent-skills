@@ -1,6 +1,6 @@
 ---
 name: nl-tax-oss
-description: "Prepares a draft 2025 or 2026 OSS return (Union or non-Union scheme) or IOSS return for EU distance sales and cross-border services to consumers: confirms the scheme, applies each destination country's VAT rates, handles corrections, and keeps each country's liability separate. Use when the user sells to consumers in other EU countries and files through the One Stop Shop. Draft-only while its sources await human review."
+description: "Prepares a draft 2025 or 2026 OSS return (Union or non-Union scheme) or IOSS return for EU distance sales and cross-border services to consumers: confirms the scheme, applies each destination country's VAT rates, handles corrections, and keeps each country's liability separate. Use when the user sells to consumers in other EU countries and files through the One Stop Shop. For a question about how an OSS rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---

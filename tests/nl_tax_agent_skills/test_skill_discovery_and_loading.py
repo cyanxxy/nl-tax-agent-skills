@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Cowork intent discovery and progressive-loading contracts."""
 
+import importlib.util
 import pathlib
+import re
 import unittest
 
 import yaml
@@ -44,12 +46,12 @@ def read_skill(skill_name):
     return (SKILLS / skill_name / "SKILL.md").read_text(encoding="utf-8")
 
 
-def split_allowed_tools(metadata):
-    """Split the spec's space-separated `allowed-tools` string into a list."""
-    tools = metadata.get("allowed-tools")
-    if isinstance(tools, str):
-        metadata["allowed-tools"] = tools.split()
-    return metadata
+_frontmatter_spec = importlib.util.spec_from_file_location(
+    "skill_frontmatter", pathlib.Path(__file__).with_name("skill_frontmatter.py")
+)
+_frontmatter_helpers = importlib.util.module_from_spec(_frontmatter_spec)
+_frontmatter_spec.loader.exec_module(_frontmatter_helpers)
+split_allowed_tools = _frontmatter_helpers.split_allowed_tools
 
 
 def frontmatter(path):
@@ -168,6 +170,33 @@ class SkillDiscoveryAndLoadingTests(unittest.TestCase):
             }
             <= public
         )
+        # Each preparation workflow triggers on a request to prepare, map, or
+        # check off a workpack, and sends a question about how a rule works to
+        # the knowledge skill, so a casual question starts no workflow.
+        for name in sorted(public):
+            description = all_skill_frontmatter()[name]["description"]
+            with self.subTest(skill=name):
+                self.assertIn("Use when", description)
+                self.assertIn("nl-tax-knowledge", description)
+                self.assertNotIn("explicitly", description)
+
+    def test_helper_descriptions_require_an_active_owner(self):
+        for name in sorted(background_helper_skills()):
+            description = all_skill_frontmatter()[name]["description"]
+            body = read_skill(name)
+            with self.subTest(skill=name):
+                self.assertIn("Use only when an active", description)
+                self.assertIn("**Only inside an owning workflow.**", body)
+
+    def test_allowed_tools_tokens_are_permission_rules(self):
+        # Malformed tokens such as "Edit(" or "Read," would still be a string,
+        # so check each space-separated token against the rule grammar.
+        token = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(\([^\s()]+\))?$")
+        for path in SKILLS.glob("*/SKILL.md"):
+            tools = frontmatter(path).get("allowed-tools") or []
+            with self.subTest(skill=path.parent.name):
+                for tool in tools:
+                    self.assertRegex(tool, token)
 
     def test_allowed_tools_use_the_spec_space_separated_string(self):
         # agentskills.io defines `allowed-tools` as one space-separated string.

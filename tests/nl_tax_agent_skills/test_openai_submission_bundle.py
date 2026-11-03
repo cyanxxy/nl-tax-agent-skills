@@ -53,6 +53,33 @@ class OpenAISubmissionBundleTests(unittest.TestCase):
                 ).read_text(encoding="utf-8")
                 self.assertIn("allow_implicit_invocation: true", policy)
 
+    def test_spec_skills_export_keeps_allowed_tools(self):
+        # skills-ref validates this export in CI, so it must strip only the
+        # Claude Code plugin keys and keep the specification's allowed-tools.
+        builder = load_builder()
+        with tempfile.TemporaryDirectory() as temporary:
+            output, removed = builder.export_spec_skills(
+                pathlib.Path(temporary) / "spec-skills"
+            )
+            self.assertGreater(removed, 0)
+            spec_keys = {
+                "name", "description", "license", "compatibility",
+                "metadata", "allowed-tools",
+            }
+            for skill_path in output.glob("*/SKILL.md"):
+                frontmatter = yaml.safe_load(
+                    skill_path.read_text(encoding="utf-8").split("---", 2)[1]
+                )
+                source = yaml.safe_load(
+                    (SOURCE_PLUGIN / "skills" / skill_path.parent.name / "SKILL.md")
+                    .read_text(encoding="utf-8").split("---", 2)[1]
+                )
+                with self.subTest(skill=skill_path.parent.name):
+                    self.assertLessEqual(set(frontmatter), spec_keys)
+                    self.assertEqual(
+                        frontmatter.get("allowed-tools"), source.get("allowed-tools")
+                    )
+
     def test_builder_sanitizes_only_the_copied_openai_bundle(self):
         builder = load_builder()
         with tempfile.TemporaryDirectory() as temporary:

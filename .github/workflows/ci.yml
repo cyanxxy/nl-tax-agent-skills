@@ -121,16 +121,21 @@ jobs:
           git -C "$RUNNER_TEMP/agentskills" checkout -q FETCH_HEAD
           pip install "$RUNNER_TEMP/agentskills/skills-ref"
 
-      - name: skills-ref validate (portable OpenAI bundle)
+      - name: skills-ref validate (Claude plugin skills and OpenAI bundle)
         # The Claude plugin keeps Claude Code plugin keys (argument-hint,
         # user-invocable, disable-model-invocation) that the specification
-        # does not allow, so the spec check runs on the bundle that strips them.
+        # does not allow. The spec-only export removes just those keys and
+        # keeps allowed-tools, so the shipped skills themselves are checked;
+        # the OpenAI bundle is checked as built.
         run: |
+          python submission/openai/build_bundle.py \
+            --spec-skills-dir "$RUNNER_TEMP/spec-skills"
           python submission/openai/build_bundle.py \
             --output-dir "$RUNNER_TEMP/bundle/nl-tax-agent-skills" \
             --zip-path "$RUNNER_TEMP/bundle.zip"
           status=0
-          for skill in "$RUNNER_TEMP"/bundle/nl-tax-agent-skills/skills/*/; do
+          for skill in "$RUNNER_TEMP"/spec-skills/*/ \
+                       "$RUNNER_TEMP"/bundle/nl-tax-agent-skills/skills/*/; do
             skills-ref validate "$skill" || status=1
           done
           exit "$status"

@@ -42,16 +42,38 @@ authoring guidance. No tax rule, rate, or workflow scope changes.
   it says must come from the rate note.
 - **Spec-form `allowed-tools`.** Every skill declares `allowed-tools` as one
   space-separated string, as the specification defines it, and a test keeps
-  it that way. The maintainer platform note drops the YAML-list and
-  `Bash(python3 ...)` guidance and documents which keys are Claude Code plugin
-  keys.
+  it that way, including that every token is a valid permission rule.
+- **Helpers stay inside their owner.** Each background helper refuses to run
+  without an active owning workflow and sends preparation requests to
+  `nl-tax-intake` and rule questions to `nl-tax-knowledge`. Every public
+  workflow description now routes rule questions to `nl-tax-knowledge`, and
+  the field mapper triggers only on a generated or attached workpack.
+- **Invocation policy names both flags.** `validate_invocation_policy.py`
+  reports manual-only skills (`disable-model-invocation`) and agent-only
+  helpers (`user-invocable: false`) separately. Codex keeps
+  `allow_implicit_invocation: false` for both, as the OpenAI submission
+  checklist requires, and each helper's `openai.yaml` records that it is
+  agent-invocable on Claude but reached by explicit name or inline read on
+  Codex.
+- **The VAT adjustments eval accepts both helper routes.** `helper-fired.md`
+  passes on a Skill call to the helper or a Read of its files.
 
 ### Added
 
 - A CI job that runs the official validators: `claude plugin validate
   --strict` on the plugin and the marketplace, and `skills-ref validate`
-  (pinned commit) on every skill of the OpenAI bundle, which strips the
-  Claude-only keys.
+  (pinned commit) on a spec-only export of the Claude plugin's skills (only
+  the Claude Code plugin keys removed, `allowed-tools` kept) and on the OpenAI
+  bundle. `build_bundle.py --spec-skills-dir` produces the export.
+- Eval cases `cowork-box2-rule-question-no-helper` and
+  `cowork-field-location-question`: a casual rule question must not invoke a
+  background helper or the field mapper.
+- `test_reference_contents.py`, which keeps every long workflow reference's
+  Contents list identical to its headings; it fixed five lists that had
+  already drifted.
+- `docs/maintainers/source-notes/platform/claude-skills-pending-review.md`
+  holds the drafted corrections to the reviewed Claude skills note, which keeps
+  its reviewed text and hash until a maintainer reviews and merges them.
 
 ## [0.5.1] — 2026-10-15
 

@@ -1,6 +1,6 @@
 ---
 name: nl-tax-vat-return
-description: "Prepares a draft 2025 or 2026 Dutch btw-aangifte (VAT return) workpack for one period of a ZZP'er or eenmanszaak: reconciles sales and purchase invoices, output VAT and voorbelasting, reverse charge (verlegd), KOR, private use, and EU sales into the aangifte rubrieken for manual entry. Use when the user wants to prepare or check a monthly, quarterly, or yearly VAT return. Draft-only while its sources await human review."
+description: "Prepares a draft 2025 or 2026 Dutch btw-aangifte (VAT return) workpack for one period of a ZZP'er or eenmanszaak: reconciles sales and purchase invoices, output VAT and voorbelasting, reverse charge (verlegd), KOR, private use, and EU sales into the aangifte rubrieken for manual entry. Use when the user wants to prepare a monthly, quarterly, or yearly VAT return for filing. For a question about how a VAT rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
@@ -82,8 +82,8 @@ reads only a saved workpack the user named and writes nothing.
 
 ## Saving
 
-Follow the shared runtime contract's session consent, first-save, withdrawal,
-download, and stale-output rules. Offer saving once at workflow start, once
+Follow `../nl-tax-shared-resources/runtime-workpack-files.md` for session
+consent, first-save, withdrawal, download, and stale-output rules. Offer saving once at workflow start, once
 at a pause, and once after generation/mapping if consent is still absent;
 each offer is its own reply, with one yes/no question. Load
 `templates/vat-workpack.md` and `reference/vat-return-output-contract.md`

@@ -5,6 +5,7 @@ Every runtime check is an agent checklist. The former optional helpers live
 under tools/ as repository graders, next to the field-map validator.
 """
 
+import importlib.util
 import pathlib
 import re
 import unittest
@@ -30,12 +31,12 @@ REPOSITORY_GRADERS = {
 EXECUTABLE_SUFFIXES = {".py", ".sh", ".bash", ".js", ".mjs", ".ts", ".rb", ".pl"}
 
 
-def split_allowed_tools(metadata):
-    """Split the spec's space-separated `allowed-tools` string into a list."""
-    tools = metadata.get("allowed-tools")
-    if isinstance(tools, str):
-        metadata["allowed-tools"] = tools.split()
-    return metadata
+_frontmatter_spec = importlib.util.spec_from_file_location(
+    "skill_frontmatter", pathlib.Path(__file__).with_name("skill_frontmatter.py")
+)
+_frontmatter_helpers = importlib.util.module_from_spec(_frontmatter_spec)
+_frontmatter_spec.loader.exec_module(_frontmatter_helpers)
+split_allowed_tools = _frontmatter_helpers.split_allowed_tools
 
 
 def skill_frontmatter(path):

@@ -10,6 +10,7 @@ review_status: reviewed
 ## Contents
 
 - Purpose
+- Own-home calculation contract
 - Eigenwoningforfait calculation
 - Hypotheekrenteaftrek (mortgage interest deduction)
 - Tariefsaanpassing eigen woning (rate adjustment for high earners)

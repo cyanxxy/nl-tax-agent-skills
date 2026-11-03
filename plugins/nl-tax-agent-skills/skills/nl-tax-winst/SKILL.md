@@ -25,6 +25,10 @@ Background helper with two modes that are never blended:
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Writes nothing.** Return structured facts and open questions to the owning
   workflow. Do not persist anything: no file, workpack section, field map, or
   checklist. The annual workflow owns persistence in annual mode. The

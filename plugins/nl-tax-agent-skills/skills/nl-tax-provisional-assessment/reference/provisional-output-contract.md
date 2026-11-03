@@ -17,7 +17,7 @@
 - Review subflow validation rules
 - Stopzetten validation rules
 - Sources used section — REQUIRED
-- Not submission advice section — REQUIRED
+- Not submission advice section -- REQUIRED
 - Appendix A — Resume record
 - Validation checklist
 

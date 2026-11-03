@@ -13,6 +13,10 @@ arithmetic, and open questions to the owning annual or provisional workflow.
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Provisional 2026 is fictitious-only.** Never collect, calculate, or ask for
   werkelijk rendement in a provisional workflow. If the user asks, say:
   "Werkelijk rendement may become relevant when filing the annual 2026 return

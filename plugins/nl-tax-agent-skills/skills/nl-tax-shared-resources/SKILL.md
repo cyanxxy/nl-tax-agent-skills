@@ -1,7 +1,7 @@
 ---
 name: nl-tax-shared-resources
 description: "Internal resource bundle for the NL Tax Agent Skills plugin: runtime contracts, reviewed tax notes, the source register, and document-reading rules. Never invoked as a skill; the plugin's other skills read its files by path."
-compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
+compatibility: "Plugin-only: part of the nl-tax-agent-skills plugin. Every other skill in the plugin reads these files through sibling paths, so this bundle is useful only inside the complete plugin."
 user-invocable: false
 disable-model-invocation: true
 ---

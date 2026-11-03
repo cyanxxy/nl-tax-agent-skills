@@ -1,6 +1,6 @@
 ---
 name: nl-tax-vat-correction
-description: "Prepares a draft btw-aangifte correction (suppletie) workpack for one already filed 2025 or 2026 Dutch VAT period of a ZZP'er or eenmanszaak: what was filed, what it should have been, the difference per rubriek, and whether a separate correction or the next return applies. Use when the user found a mistake in a VAT return they already submitted and wants to correct it. Draft-only while its sources await human review."
+description: "Prepares a draft btw-aangifte correction (suppletie) workpack for one already filed 2025 or 2026 Dutch VAT period of a ZZP'er or eenmanszaak: what was filed, what it should have been, the difference per rubriek, and whether a separate correction or the next return applies. Use when the user found a mistake in a VAT return they already submitted and wants to correct it. For a question about how a VAT correction rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
@@ -99,8 +99,8 @@ workpack the user named and writes nothing.
 
 ## Saving and output ownership
 
-Follow the shared session consent, first-save, download, withdrawal and stale
-rules. Offer saving once at workflow start, once at a pause and once after
+Follow `../nl-tax-shared-resources/runtime-workpack-files.md` for session
+consent, first-save, download, withdrawal and stale rules. Offer saving once at workflow start, once at a pause and once after
 generation/mapping when not opted in; each is its own reply and one yes/no
 question. Load `templates/vat-correction-workpack.md` and
 `reference/vat-correction-output-contract.md` at first save or final

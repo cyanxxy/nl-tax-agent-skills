@@ -16,6 +16,10 @@ file, field map, manual-entry checklist, evidence ledger, or workspace tree.
 
 ## Boundaries
 
+- **Only inside an owning workflow.** Run only when a VAT return or VAT correction workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - Use only the confirmed `2025` or `2026` VAT year and exact assigned filing
   period supplied by the owner. Annual income-tax bijtelling is a separate
   calculation; neither its private-distance exception nor its amount determines

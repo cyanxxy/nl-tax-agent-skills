@@ -156,12 +156,12 @@ PROVISIONAL_TAX_SECTIONS = [
 ]
 
 
-def split_allowed_tools(metadata):
-    """Split the spec's space-separated `allowed-tools` string into a list."""
-    tools = metadata.get("allowed-tools")
-    if isinstance(tools, str):
-        metadata["allowed-tools"] = tools.split()
-    return metadata
+_frontmatter_spec = importlib.util.spec_from_file_location(
+    "skill_frontmatter", pathlib.Path(__file__).with_name("skill_frontmatter.py")
+)
+_frontmatter_helpers = importlib.util.module_from_spec(_frontmatter_spec)
+_frontmatter_spec.loader.exec_module(_frontmatter_helpers)
+split_allowed_tools = _frontmatter_helpers.split_allowed_tools
 
 
 def frontmatter(path):

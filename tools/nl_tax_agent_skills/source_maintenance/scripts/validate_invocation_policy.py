@@ -4,24 +4,29 @@
 Usage:
     python3 validate_invocation_policy.py <path-to-skills-dir>
 
-On Codex, the full SKILL.md body is still LOADED on selection (progressive
-disclosure works), but the Claude frontmatter keys `disable-model-invocation:
-true`, `user-invocable: false`, and `allowed-tools` are NOT honored for
-invocation control. The ONLY thing that keeps a background helper or manual-only
-skill from being implicitly invoked on Codex is its `agents/openai.yaml` with
-`policy.allow_implicit_invocation: false`.
+Claude and Codex express invocation differently, so this validator names the
+mapping instead of treating the two Claude flags as one:
 
-This validator fails closed: for every skill whose SKILL.md frontmatter marks it
-non-implicitly-invocable (`disable-model-invocation: true` or
-`user-invocable: false`), it asserts that `agents/openai.yaml` exists and sets
-`policy.allow_implicit_invocation: false`. Without this check, a developer can add
-a new helper, forget the openai.yaml, pass every other validator and the test
-suite, and silently make the helper implicitly invocable on Codex.
+- **Manual-only** (`disable-model-invocation: true`): the model never invokes
+  the skill on Claude. Codex's equivalent is
+  `policy.allow_implicit_invocation: false`.
+- **Agent-only** (`user-invocable: false` without `disable-model-invocation`):
+  hidden from the user's menu on Claude but model-invocable, so an owning
+  workflow can invoke it as a skill. Codex has no agent-only mode. The
+  OpenAI submission checklist requires that internal helpers never trigger
+  implicitly, so Codex keeps `allow_implicit_invocation: false` and the
+  owning workflow reaches the helper by explicit name or by reading its
+  `SKILL.md` inline, as the runtime contract allows. This is a deliberate,
+  reported divergence: Claude may pick an agent-only helper from its
+  description, Codex may not.
 
-It also rejects an `interface.default_prompt` on those skills. Explicit
-`$skill` invocation still works when implicit invocation is off, and a default
-prompt is shown as a ready-made starter in the Codex / ChatGPT skill picker, so
-it would invite a user to run an internal helper without its owning workflow.
+On Codex the Claude frontmatter keys (`disable-model-invocation`,
+`user-invocable`, `allowed-tools`) are NOT honored; `agents/openai.yaml` is the
+only invocation control. This validator fails closed: every manual-only or
+agent-only skill must ship `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false` and no `interface.default_prompt`
+(a starter prompt in the Codex / ChatGPT skill picker would invite a user to
+run an internal skill without its owning workflow).
 """
 
 import os
@@ -74,14 +79,18 @@ def _as_bool(value):
     return None
 
 
-def is_non_user_invocable(frontmatter):
-    """True if the skill must NOT be implicitly invocable."""
+def invocation_kind(frontmatter):
+    """Return "manual_only", "agent_only", or None for a public skill."""
     if _as_bool(frontmatter.get("disable-model-invocation")) is True:
-        return True
-    user_invocable = _as_bool(frontmatter.get("user-invocable"))
-    if user_invocable is False:
-        return True
-    return False
+        return "manual_only"
+    if _as_bool(frontmatter.get("user-invocable")) is False:
+        return "agent_only"
+    return None
+
+
+def is_non_user_invocable(frontmatter):
+    """True if the skill must NOT be implicitly invocable on Codex."""
+    return invocation_kind(frontmatter) is not None
 
 
 def openai_policy_ok(openai_yaml_path):
@@ -110,8 +119,14 @@ def openai_policy_ok(openai_yaml_path):
 
 
 def collect_errors(skills_dir):
+    errors, kinds = collect_policy(skills_dir)
+    return errors, sorted(kinds)
+
+
+def collect_policy(skills_dir):
+    """Return (errors, {skill: kind}) for every manual-only or agent-only skill."""
     errors = []
-    checked = []
+    kinds = {}
     for name in sorted(os.listdir(skills_dir)):
         skill_dir = os.path.join(skills_dir, name)
         skill_md = os.path.join(skill_dir, "SKILL.md")
@@ -123,13 +138,14 @@ def collect_errors(skills_dir):
             # restriction, so it is an error, not a skip.
             errors.append((name, f"SKILL.md frontmatter unreadable ({fm_error})"))
             continue
-        if not is_non_user_invocable(frontmatter):
+        kind = invocation_kind(frontmatter)
+        if kind is None:
             continue
-        checked.append(name)
+        kinds[name] = kind
         ok, reason = openai_policy_ok(os.path.join(skill_dir, "agents", "openai.yaml"))
         if not ok:
             errors.append((name, reason))
-    return errors, checked
+    return errors, kinds
 
 
 def main():
@@ -150,7 +166,7 @@ def main():
         print(f"Error: skills dir not found: {skills_dir}", file=sys.stderr)
         sys.exit(1)
 
-    errors, checked = collect_errors(skills_dir)
+    errors, kinds = collect_policy(skills_dir)
 
     if errors:
         print("VALIDATION FAILED")
@@ -161,11 +177,12 @@ def main():
     else:
         print("VALIDATION PASSED")
 
+    manual = sorted(name for name, kind in kinds.items() if kind == "manual_only")
+    agent = sorted(name for name, kind in kinds.items() if kind == "agent_only")
     print()
-    print(
-        f"Checked {len(checked)} non-user-invocable skill(s): "
-        f"{', '.join(checked) if checked else '(none)'}"
-    )
+    print(f"Manual-only (no model invocation on any host): {', '.join(manual) or '(none)'}")
+    print(f"Agent-only (Claude: model-invocable, hidden from the menu; Codex: "
+          f"explicit or inline only): {', '.join(agent) or '(none)'}")
 
     sys.exit(1 if errors else 0)
 

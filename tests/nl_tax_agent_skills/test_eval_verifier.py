@@ -626,6 +626,8 @@ class AgenticSurfaceTests(unittest.TestCase):
     def test_first_party_cowork_cases_use_native_prose_format(self):
         case_names = {
             "cowork-casual-tax-question",
+            "cowork-box2-rule-question-no-helper",
+            "cowork-field-location-question",
             "cowork-explicit-annual-preparation",
             "cowork-annual-entrepreneur-boundary",
             "cowork-provisional-change",

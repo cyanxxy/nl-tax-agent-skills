@@ -23,6 +23,9 @@ CLAUDE_ONLY_KEYS = {
     "disable_model_invocation",
     "user-invocable",
 }
+# Keys the Claude Code plugin reads but the Agent Skills specification does not
+# allow. `allowed-tools` is a specification key, so a spec-only export keeps it.
+CLAUDE_CODE_PLUGIN_KEYS = CLAUDE_ONLY_KEYS - {"allowed-tools"}
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,6 +43,15 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Output ZIP path (default: <output-dir>.zip).",
     )
+    parser.add_argument(
+        "--spec-skills-dir",
+        type=Path,
+        help=(
+            "Instead of the bundle, write a copy of the Claude plugin's skills "
+            "with only the Claude Code plugin keys removed (allowed-tools kept), "
+            "for `skills-ref validate`."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -52,8 +64,8 @@ def _frontmatter_bounds(text: str, path: Path) -> tuple[int, int]:
     return 4, end
 
 
-def sanitize_skill(path: Path) -> int:
-    """Remove Claude-only invocation keys from one copied SKILL.md."""
+def sanitize_skill(path: Path, keys: set[str] = CLAUDE_ONLY_KEYS) -> int:
+    """Remove the given top-level frontmatter keys from one copied SKILL.md."""
     text = path.read_text(encoding="utf-8")
     start, end = _frontmatter_bounds(text, path)
     lines = text[start:end].splitlines()
@@ -67,7 +79,7 @@ def sanitize_skill(path: Path) -> int:
             skipping_value = False
         stripped = line.lstrip()
         key = stripped.split(":", 1)[0] if ":" in stripped else ""
-        if not line.startswith((" ", "\t")) and key in CLAUDE_ONLY_KEYS:
+        if not line.startswith((" ", "\t")) and key in keys:
             removed += 1
             skipping_value = True
             continue
@@ -130,8 +142,32 @@ def build_bundle(output_dir: Path, zip_path: Path | None = None) -> tuple[Path, 
     return output_dir, zip_path, removed
 
 
+def export_spec_skills(output_dir: Path) -> tuple[Path, int]:
+    """Copy the plugin's skills with only the Claude Code plugin keys removed."""
+    output_dir = output_dir.resolve()
+    _assert_safe_output(output_dir)
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    shutil.copytree(
+        SOURCE_PLUGIN / "skills",
+        output_dir,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".DS_Store"),
+    )
+    _assert_shippable_skills(output_dir)
+    removed = sum(
+        sanitize_skill(path, CLAUDE_CODE_PLUGIN_KEYS)
+        for path in output_dir.glob("*/SKILL.md")
+    )
+    return output_dir, removed
+
+
 def main() -> None:
     args = parse_args()
+    if args.spec_skills_dir:
+        output, removed = export_spec_skills(args.spec_skills_dir)
+        print(f"Spec-only skills directory: {output}")
+        print(f"Removed {removed} Claude Code plugin frontmatter field(s)")
+        return
     output, zip_path, removed = build_bundle(args.output_dir, args.zip_path)
     print(f"OpenAI bundle directory: {output}")
     print(f"OpenAI bundle ZIP: {zip_path}")
