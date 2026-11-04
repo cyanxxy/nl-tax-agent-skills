@@ -92,7 +92,7 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -421,11 +421,11 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.1`):
+Both plugin manifests pin a fixed version (currently `0.5.2`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.1"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.1"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.2"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.2"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
@@ -484,28 +484,17 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
      do not list a surface as supported until it passes.
 - Verify invocation-policy metadata in the target Claude Code and Codex builds.
 
-Guard against a retroactive or duplicate tag before letting Claude create the
-plugin release tag:
-
-```bash
-test "$(git tag --list 'nl-tax-agent-skills--v0.5.1')" = ""
-claude plugin tag plugins/nl-tax-agent-skills
-git tag --list 'nl-tax-agent-skills--v0.5.1'
-```
-
 ### Publish the GitHub release
 
-Pushing an annotated `vX.Y.Z` tag publishes the GitHub release through
-`.github/workflows/release.yml`. The workflow fails unless the tag matches the
-version in both plugin manifests and `CHANGELOG.md` has a `## [X.Y.Z]`
-section. It runs the unit suite, attaches
-`nl-tax-agent-skills-X.Y.Z-cowork.zip` (the tracked plugin files) and
-`nl-tax-agent-skills-X.Y.Z-openai.zip` (the OpenAI bundle), uses the changelog
-section as the notes, and takes the title from the tag message:
+Releases are automatic. `.github/workflows/release.yml` runs on every push to
+`main`. When both plugin manifests carry a version that has no `vX.Y.Z` tag
+yet, it validates the plugin, creates the tag and the GitHub release on that
+commit, attaches `nl-tax-agent-skills-X.Y.Z-cowork.zip` (the tracked plugin
+files) and `nl-tax-agent-skills-X.Y.Z-openai.zip` (the OpenAI bundle), and
+uses the `## [X.Y.Z]` section of `CHANGELOG.md` as the notes. It fails if the
+two manifests disagree or the changelog section is missing.
 
-```bash
-git tag -a v0.5.1 -m "v0.5.1 — <short release title>"
-git push origin v0.5.1
-```
-
-A version bump is not a release until this tag is pushed.
+So a release is: bump both manifests and every template `plugin_version`, add
+the dated `## [X.Y.Z]` changelog section, and merge to `main`. A merge without
+a version bump publishes nothing. To retry a failed release, run the workflow
+from the Actions tab.

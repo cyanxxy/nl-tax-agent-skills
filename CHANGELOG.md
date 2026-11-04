@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.2] — 2026-11-04
 
 Aligns the skills with the Agent Skills specification and Anthropic's skill
 authoring guidance. No tax rule, rate, or workflow scope changes.
@@ -56,8 +56,10 @@ authoring guidance. No tax rule, rate, or workflow scope changes.
   on the plugin and the marketplace, a JSON check of the Codex manifests, and
   two package rules (no root `plugin.json`, no executable code in the
   plugin). It no longer fails on source age, which had turned every push red
-  and skipped all later steps. The release workflow validates the same way
-  and still builds the Cowork and OpenAI ZIPs.
+  and skipped all later steps.
+- **Automatic releases.** A merge to `main` whose manifests carry a new
+  version publishes the GitHub release (tag, Cowork and OpenAI ZIPs, notes
+  from this changelog). Pushing a tag by hand is no longer needed.
 - **The VAT adjustments eval accepts both helper routes.** `helper-fired.md`
   passes on a Skill call to the helper or a Read of its files.
 
