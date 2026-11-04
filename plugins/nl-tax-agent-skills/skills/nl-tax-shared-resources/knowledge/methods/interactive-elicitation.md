@@ -7,7 +7,7 @@ last_reviewed: "2026-09-26"
 review_status: reviewed
 # Internal methodology contract (no external source_id — this file is authored
 # in-repo, like the other methods/ playbooks, and is exempt from the
-# source-citation rule; see validate_knowledge_pack.py INTERNAL_KNOWLEDGE_PREFIXES).
+# source-citation rule).
 
 All taxpayer-facing NL tax skills are **conversational**. The user does not
 pre-stage a folder of evidence and then run a skill once. They talk with the
@@ -127,7 +127,7 @@ record` as one fenced `yaml` block:
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.1"
+plugin_version: "0.5.2"
 workflow: annual_2025            # or provisional_2026_request|change|review|stopzetten
 tax_year: 2025                   # 2026 for provisional
 created_at: ""                   # ISO 8601

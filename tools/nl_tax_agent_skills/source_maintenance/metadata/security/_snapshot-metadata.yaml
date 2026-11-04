@@ -1,8 +1,0 @@
-metadata_version: '1.1'
-sources:
-  bd_machtigen_authorization:
-    review_status: reviewed
-    reviewed_note_hash_recorded_at: '2026-10-04T22:05:08.331668+00:00'
-    reviewed_note_hash_sha256: ad49efe58fcb913ef10c7f9803ae0f0211e71f84d184573a16275778ba700208
-    source_id: bd_machtigen_authorization
-    source_url: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen

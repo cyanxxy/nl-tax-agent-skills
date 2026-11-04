@@ -1,5 +1,14 @@
 # International return preparation flow
 
+## Contents
+
+- Sections and resources
+- Scope and residence periods
+- Income, assets and preparation arithmetic
+- Qualification and deductions
+- Insurance and treaty review
+- Final generation and mapping
+
 ## Sections and resources
 
 Track exact Appendix A section keys `international_scope`,

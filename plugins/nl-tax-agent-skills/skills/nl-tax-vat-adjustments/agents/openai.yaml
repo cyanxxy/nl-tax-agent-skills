@@ -11,6 +11,9 @@
 # to it and bypassing the owning VAT workflow. It has no default_prompt, so no
 # starter prompt invites standalone use. Explicit `$nl-tax-vat-adjustments`
 # invocation still works.
+# On Claude this helper is agent-only (user-invocable: false): the owning
+# workflow may invoke it as a skill. Codex has no agent-only mode, so the
+# owner reaches it here by explicit name or by reading its SKILL.md inline.
 interface:
   display_name: "Dutch VAT Adjustments Helper"
   short_description: "Internal VAT adjustment helper for the owning VAT workflow."

@@ -1,5 +1,14 @@
 ## Phase 10 — Workpack assembly
 
+Contents:
+
+- 10.1 Generation gate
+- 10.2 Use the template and output contract
+- 10.3 Run the workpack self-check
+- 10.4 Present, save, and map
+- 10.5 Dual-workflow handoff
+- 10.6 Summary to user
+
 ### 10.1 Generation gate
 
 Do not generate the workpack until every applicable annual section is

@@ -14,6 +14,12 @@ Every time a knowledge file or rate sheet is loaded, add its matching
 workflow's source list, which becomes `sources_loaded` in Appendix A and the
 workpack's Sources used section. Only annual IDs belong in that list.
 
+## Contents
+
+- Progressive loading
+- Section status
+- Common contract
+
 ## Progressive loading
 
 Load this common index when the annual workflow starts. Then load exactly one active phase file at a time, immediately before performing that phase. Each phase is linked directly here and from `SKILL.md`; do not follow a deeper reference chain.

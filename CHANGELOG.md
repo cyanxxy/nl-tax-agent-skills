@@ -5,6 +5,90 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.2] — 2026-11-04
+
+Aligns the skills with the Agent Skills specification and Anthropic's skill
+authoring guidance. No tax rule, rate, or workflow scope changes.
+
+### Changed
+
+- **Plugin-only, stated plainly.** Every `SKILL.md` declares a `compatibility`
+  field saying it needs the complete plugin, and both READMEs warn that a
+  single skill does not work when copied or uploaded on its own.
+- **Background helpers are agent-invocable.** `nl-tax-box1-home`,
+  `nl-tax-box2`, `nl-tax-box3`, `nl-tax-winst`, `nl-tax-partner-deductions`,
+  and `nl-tax-vat-adjustments` drop `disable-model-invocation: true` and keep
+  `user-invocable: false`: hidden from the user's menu, invocable by the
+  owning workflow. Setting both flags had made them unreachable through the
+  Skill tool. Codex keeps `allow_implicit_invocation: false` and the inline
+  read path. `nl-tax-shared-resources` stays a never-invoked file bundle.
+- **Lighter runtime contract.** Save consent, stale outputs, the
+  one-file-per-workflow rule, and resume moved from `runtime-contract.md` into
+  `runtime-workpack-files.md`, which only the workflows that save, show, or
+  resume a workpack read. Read-only skills load about 30% less of it.
+- **Navigable long references.** Every workflow reference file over 100 lines
+  now starts with a `Contents` list, and the runtime contract requires reading
+  each opened resource in full rather than acting on a partial preview.
+  Hash-pinned reviewed knowledge notes are unchanged.
+- **Descriptions say what and when.** All descriptions now state what the
+  skill does and when to use it, with the Dutch terms users type (aangifte
+  inkomstenbelasting, belastingaangifte, jaaropgaaf, suppletie, voorbelasting)
+  and without the word "explicitly", which suppressed triggering. Helper
+  descriptions say they serve an active owning workflow only.
+- **One home for save rules.** The annual 2025 and provisional 2026 skills no
+  longer copy the save-consent, replace-or-keep, withdrawal, and resume rules;
+  they point to `runtime-workpack-files.md` and keep only their own file path,
+  template, and section details. The Box 2 phase no longer restates the rates
+  it says must come from the rate note.
+- **Spec-form `allowed-tools`.** Every skill declares `allowed-tools` as one
+  space-separated string, as the specification defines it.
+- **Helpers stay inside their owner.** Each background helper refuses to run
+  without an active owning workflow and sends preparation requests to
+  `nl-tax-intake` and rule questions to `nl-tax-knowledge`. Every public
+  workflow description now routes rule questions to `nl-tax-knowledge`, and
+  the field mapper triggers only on a generated or attached workpack.
+- **Codex invocation policy.** Codex keeps `allow_implicit_invocation: false`
+  for manual-only skills and agent-only helpers, as the OpenAI submission
+  checklist requires, and each helper's `openai.yaml` records that it is
+  agent-invocable on Claude but reached by explicit name or inline read on
+  Codex.
+- **Simpler CI.** CI runs only Anthropic's `claude plugin validate --strict`
+  on the plugin and the marketplace, a JSON check of the Codex manifests, and
+  two package rules (no root `plugin.json`, no executable code in the
+  plugin). It no longer fails on source age, which had turned every push red
+  and skipped all later steps.
+- **Automatic releases.** A merge to `main` whose manifests carry a new
+  version publishes the GitHub release (tag, Cowork and OpenAI ZIPs, notes
+  from this changelog). Pushing a tag by hand is no longer needed.
+- **The VAT adjustments eval accepts both helper routes.** `helper-fired.md`
+  passes on a Skill call to the helper or a Read of its files.
+
+### Added
+
+- `plugin-eval.yml`, a manually started workflow that runs the native
+  `claude plugin eval` cases (needs an `ANTHROPIC_API_KEY` secret; billed per
+  run). It is the only check of routing, safety boundaries and save consent.
+- `build_bundle.py --spec-skills-dir` exports the skills with only the Claude
+  Code plugin keys removed, for a local `skills-ref validate` run.
+- Eval cases `cowork-box2-rule-question-no-helper` and
+  `cowork-field-location-question`: a casual rule question must not invoke a
+  background helper or the field mapper.
+- Five long workflow references had Contents lists that no longer matched
+  their headings; they are fixed.
+- `docs/maintainers/source-notes/platform/claude-skills-pending-review.md`
+  holds the drafted corrections to the reviewed Claude skills note, which keeps
+  its reviewed text until a maintainer reviews and merges them.
+
+### Removed
+
+- The Python unit tests (`tests/`), the repository graders and
+  source-maintenance scripts with their metadata (`tools/`), the offline
+  eval verifier and its dataset, and `requirements.txt`. Nothing in CI ran
+  them reliably, and code that never runs drifts out of date; they remain in
+  git history (tag `v0.5.1`). Source re-verification is now a manual step
+  described in `CONTRIBUTING.md`. The scenario fixtures stay because the
+  OpenAI submission test cases use them.
+
 ## [0.5.1] — 2026-10-15
 
 Brings the skills in line with current Claude Code plugin behaviour, re-verifies

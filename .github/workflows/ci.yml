@@ -1,82 +1,37 @@
 name: CI
 
+# Official Anthropic plugin validator plus a JSON check of the Codex manifests.
+# Offline, no API key, under a minute. Model behaviour is tested by
+# plugin-eval.yml (manual, billed).
+
 on:
   push:
   pull_request:
 
-env:
-  # Source-review dates follow the Dutch tax-content owner's calendar.
-  TZ: Europe/Amsterdam
-
 jobs:
   validate:
-    name: Validate package (Python ${{ matrix.python-version }})
+    name: Validate plugin
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.10", "3.12"]
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - uses: actions/setup-node@v4
         with:
-          python-version: ${{ matrix.python-version }}
+          node-version: "22"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - run: npm install -g @anthropic-ai/claude-code@2.1.317
 
-      - name: Parse plugin and marketplace manifests
+      - name: claude plugin validate
         run: |
-          python -m json.tool plugins/nl-tax-agent-skills/.codex-plugin/plugin.json > /dev/null
-          python -m json.tool plugins/nl-tax-agent-skills/.claude-plugin/plugin.json > /dev/null
-          python -m json.tool .claude-plugin/marketplace.json > /dev/null
-          python -m json.tool .agents/plugins/marketplace.json > /dev/null
-          test ! -e plugins/nl-tax-agent-skills/commands
+          claude plugin validate --strict plugins/nl-tax-agent-skills
+          claude plugin validate --strict .
 
-      - name: Validate source register
-        run: |
-          python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_source_register.py \
-            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
+      - name: Codex manifests are valid JSON
+        run: jq empty plugins/nl-tax-agent-skills/.codex-plugin/plugin.json .agents/plugins/marketplace.json
 
-      - name: Validate knowledge pack
+      # A root plugin.json makes the Claude directory ignore the folder, and the
+      # plugin must stay Markdown/YAML only.
+      - name: Package rules
         run: |
-          python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_knowledge_pack.py \
-            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
-
-      - name: Validate supported workflows
-        run: |
-          python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_supported_workflows.py \
-            tools/nl_tax_agent_skills/source_maintenance/supported-workflows.yaml \
-            plugins/nl-tax-agent-skills/skills/nl-tax-shared-resources/source-register.yaml
-
-      - name: Validate cross-host invocation policy
-        run: |
-          python tools/nl_tax_agent_skills/source_maintenance/scripts/validate_invocation_policy.py \
-            plugins/nl-tax-agent-skills/skills
-
-      - name: Compile-check every skill script
-        run: |
-          python -m compileall -q plugins/nl-tax-agent-skills/skills tools/nl_tax_agent_skills tests/nl_tax_agent_skills
-
-      - name: Validate current release package and skill discovery
-        run: |
-          python -m unittest discover -s tests/nl_tax_agent_skills -p 'test_release_packaging.py'
-          python -m unittest discover -s tests/nl_tax_agent_skills -p 'test_skill_discovery_and_loading.py'
-
-      - name: Run unit tests from repository root
-        run: |
-          python -m unittest discover -s tests/nl_tax_agent_skills -p 'test_*.py'
-
-      - name: Run unit tests from plugin directory (cwd-regression guard)
-        working-directory: plugins/nl-tax-agent-skills
-        run: |
-          python -m unittest discover -s ../../tests/nl_tax_agent_skills -p 'test_*.py'
-
-      - name: Verify offline structural contract dataset
-        run: |
-          python evals/nl-tax-agent-skills/verify_offline_workspace.py --check-dataset
+          test ! -e plugins/nl-tax-agent-skills/plugin.json
+          test -z "$(find plugins/nl-tax-agent-skills -type f \( -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.ts' \))"

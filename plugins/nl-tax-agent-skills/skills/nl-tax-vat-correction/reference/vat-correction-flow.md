@@ -1,5 +1,13 @@
 # VAT correction preparation flow
 
+## Contents
+
+- Sections and sources
+- Establish the correction case
+- Compare original with corrected full figures
+- Decide and explain the sourced route
+- Final review and mapping
+
 ## Sections and sources
 
 Track exactly `vat_scope`, `vat_original`, `vat_reconciliation`,

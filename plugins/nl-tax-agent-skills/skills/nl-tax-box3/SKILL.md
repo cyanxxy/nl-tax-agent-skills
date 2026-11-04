@@ -1,12 +1,9 @@
 ---
 name: nl-tax-box3
-description: Use when an owning Dutch tax workflow needs Box 3 facts and questions; annual 2025 compares fictitious and actual return, while provisional 2026 uses the fictitious method only.
+description: "Background helper for an owning Dutch tax workflow: classifies Box 3 savings, investments, and debts and prepares the arithmetic; annual 2025 compares the fictitious and actual return, provisional 2026 uses the fictitious method only. Use only when an active annual or provisional workflow reaches its Box 3 section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Box 3
@@ -16,6 +13,10 @@ arithmetic, and open questions to the owning annual or provisional workflow.
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Provisional 2026 is fictitious-only.** Never collect, calculate, or ask for
   werkelijk rendement in a provisional workflow. If the user asks, say:
   "Werkelijk rendement may become relevant when filing the annual 2026 return

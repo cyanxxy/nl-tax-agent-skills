@@ -2,6 +2,17 @@
 
 This is the common routing and conversation contract for the 2026 provisional-assessment workflow. Load this index when the workflow starts, then load exactly one active subflow file. If routing changes, stop using the old subflow and load exactly one newly active subflow.
 
+## Contents
+
+- Overview
+- Subflow routing
+- Direct subflow links
+- Sections and status
+- Common rules across all subflows
+- Documents
+- Helper and reviewer delegation
+- Conversation loop
+
 ## Overview
 
 This document is a conversational routing guide for the four provisional

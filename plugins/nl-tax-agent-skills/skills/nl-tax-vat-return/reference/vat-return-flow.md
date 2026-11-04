@@ -1,5 +1,13 @@
 # VAT return preparation flow
 
+## Contents
+
+- Sections and active resources
+- Scope and timing
+- Transactions and input tax
+- Reconciliation
+- Final generation and mapping
+
 ## Sections and active resources
 
 Track these exact Appendix A keys: `vat_scope`, `vat_transactions`,

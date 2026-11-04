@@ -1,12 +1,9 @@
 ---
 name: nl-tax-box2
-description: Use when an owning Dutch tax workflow needs standard Box 2 facts and questions; use reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for provisional workpacks.
+description: "Background helper for an owning Dutch tax workflow: collects and checks sourced Box 2 aanmerkelijk-belang facts (dividends, share disposals, acquisition price, withheld dividend tax), using reviewed 2025 amounts for annual workpacks and labeled 2026 estimates or baseline amounts for the voorlopige aanslag. Use only when an active annual or provisional workflow reaches its Box 2 section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Box 2
@@ -16,6 +13,10 @@ arithmetic, and open questions to the owning annual or provisional workflow.
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Writes nothing.** Return structured facts and open questions to the owning
   workflow. Do not persist anything: no file, workpack section, field map, or
   checklist. The owning workflow decides what enters its workpack.

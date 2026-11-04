@@ -1,71 +1,58 @@
 name: Release
 
-# Pushing an annotated vX.Y.Z tag publishes the GitHub release: it checks the
-# tag against both plugin manifests, builds the Cowork and OpenAI ZIPs,
-# and uses the matching CHANGELOG.md section as the release notes.
+# Every push to main publishes a GitHub release when the plugin manifests carry
+# a version that has no vX.Y.Z tag yet. A merge without a version bump does
+# nothing. The release creates the tag, attaches the Cowork and OpenAI ZIPs,
+# and uses the matching CHANGELOG.md section as its notes.
 
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
 
-env:
-  # Match the calendar used for source-review dates and local validation.
-  TZ: Europe/Amsterdam
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   publish:
     name: Publish GitHub release
     runs-on: ubuntu-latest
     steps:
-      - name: Check out tag
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
-      - name: Restore the annotated tag
-        # checkout can leave a lightweight copy of the tag; refetch it so the
-        # tag message (the release title) is available.
-        run: git fetch --force origin "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Check tag matches every plugin manifest
+      - name: Read version and skip if already released
+        id: version
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          for manifest in .claude-plugin/plugin.json .codex-plugin/plugin.json; do
-            actual=$(python -c "import json,sys; print(json.load(open(sys.argv[1]))['version'])" \
-              "plugins/nl-tax-agent-skills/$manifest")
-            if [ "$actual" != "$version" ]; then
-              echo "::error::$manifest has version $actual, tag is $GITHUB_REF_NAME"
-              exit 1
-            fi
-          done
-          echo "VERSION=$version" >> "$GITHUB_ENV"
+          claude_version=$(jq -r .version plugins/nl-tax-agent-skills/.claude-plugin/plugin.json)
+          codex_version=$(jq -r .version plugins/nl-tax-agent-skills/.codex-plugin/plugin.json)
+          if [ "$claude_version" != "$codex_version" ]; then
+            echo "::error::Manifest versions differ: Claude $claude_version, Codex $codex_version"
+            exit 1
+          fi
+          echo "version=$claude_version" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$claude_version" > /dev/null; then
+            echo "v$claude_version is already released; nothing to do."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Run unit tests
-        run: python -m unittest discover -s tests/nl_tax_agent_skills -p 'test_*.py'
+      - name: claude plugin validate
+        if: steps.version.outputs.release == 'true'
+        run: |
+          npm install -g @anthropic-ai/claude-code@2.1.317
+          claude plugin validate --strict plugins/nl-tax-agent-skills
 
-      - name: Build release ZIPs
+      - name: Release notes from CHANGELOG.md
+        if: steps.version.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           mkdir -p release
-          git archive --format=zip \
-            -o "release/nl-tax-agent-skills-${VERSION}-cowork.zip" \
-            "${GITHUB_REF_NAME}:plugins/nl-tax-agent-skills"
-          python submission/openai/build_bundle.py \
-            --zip-path "release/nl-tax-agent-skills-${VERSION}-openai.zip"
-
-      - name: Extract release notes from CHANGELOG.md
-        run: |
           awk -v v="$VERSION" '
             index($0, "## [" v "]") == 1 { found = 1; next }
             found && /^## \[/ { exit }
@@ -76,13 +63,25 @@ jobs:
             exit 1
           fi
 
+      - name: Build release ZIPs
+        if: steps.version.outputs.release == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git archive --format=zip \
+            -o "release/nl-tax-agent-skills-${VERSION}-cowork.zip" \
+            "HEAD:plugins/nl-tax-agent-skills"
+          python3 submission/openai/build_bundle.py \
+            --zip-path "release/nl-tax-agent-skills-${VERSION}-openai.zip"
+
       - name: Publish release
+        if: steps.version.outputs.release == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
-          title=$(git tag -l "$GITHUB_REF_NAME" --format='%(contents:subject)')
-          gh release create "$GITHUB_REF_NAME" \
-            --title "${title:-$GITHUB_REF_NAME}" \
+          gh release create "v$VERSION" \
+            --target "$GITHUB_SHA" \
+            --title "v$VERSION" \
             --notes-file release/notes.md \
-            --verify-tag \
             release/*.zip

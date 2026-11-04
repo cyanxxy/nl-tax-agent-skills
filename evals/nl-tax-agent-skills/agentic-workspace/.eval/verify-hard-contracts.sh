@@ -6,8 +6,7 @@
 #
 # Income tax has two fixed paths. The draft-only extension workflows write one
 # file per exact identity (year, assigned period, OSS scheme or international
-# return form); the patterns below mirror WORKPACK_PATHS in
-# tools/nl_tax_agent_skills/workpack/validate_workpack.py. Such a file passes
+# return form); the patterns below list those paths. Such a file passes
 # only when its Appendix A records save_consent: given and the workflow that
 # its file name encodes.
 set -euo pipefail

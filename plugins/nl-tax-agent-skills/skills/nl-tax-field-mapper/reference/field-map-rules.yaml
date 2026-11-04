@@ -1,14 +1,9 @@
 # Field-map validation rules -- canonical policy data
 #
-# This file is the single source for the field-map policy that both readers
-# apply:
-#
-#   - the agent, which applies these rules on every host via the checklist in
-#     reference/mapping-principles.md (the runtime check is that checklist
-#     plus human review -- no bundled validator runs in the workflow), and
-#   - the repository's offline eval harness, whose grader
-#     (tools/nl_tax_agent_skills/field_mapper/validate_field_map.py) loads
-#     this file to measure produced maps after the fact.
+# This file is the single source for the field-map policy. The agent applies
+# these rules on every host via the checklist in
+# reference/mapping-principles.md; the runtime check is that checklist plus
+# human review, and no bundled validator runs in the workflow.
 #
 # What belongs here: prohibitions, identifiers that carry special meaning, and
 # readiness disqualifiers. What does NOT belong here: the field inventory.

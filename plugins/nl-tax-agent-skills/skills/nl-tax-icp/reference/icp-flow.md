@@ -1,5 +1,14 @@
 # ICP preparation flow
 
+## Contents
+
+- Sections, sources and evidence
+- Confirm coverage and actual customer checks
+- Transaction grid and credit notes
+- Earlier statement errors
+- Same-coverage reconciliation and confirmation
+- Historical correction facts
+
 ## Sections, sources and evidence
 
 Appendix A keys: `icp_scope`, `icp_transactions`, `icp_corrections`,

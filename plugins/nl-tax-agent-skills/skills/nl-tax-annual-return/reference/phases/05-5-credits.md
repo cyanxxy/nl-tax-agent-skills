@@ -13,6 +13,16 @@ Load `../nl-tax-shared-resources/knowledge/years/2025/annual/credits.md`. Load
 `../nl-tax-shared-resources/knowledge/aow/aow-leeftijd.md` only if stored AOW-age facts must be
 checked.
 
+Contents:
+
+- Arbeidsinkomen when there is winst uit onderneming
+- 5.5.1 IACK (inkomensafhankelijke combinatiekorting)
+- 5.5.2 Ouderenkorting
+- 5.5.3 Alleenstaande-ouderenkorting
+- 5.5.4 Jonggehandicaptenkorting
+- 5.5.5 Possible payout of unused algemene heffingskorting
+- 5.5.6 Output
+
 ### Arbeidsinkomen when there is winst uit onderneming
 
 `credits.md` is canonical for the arbeidskorting bands and for the components of

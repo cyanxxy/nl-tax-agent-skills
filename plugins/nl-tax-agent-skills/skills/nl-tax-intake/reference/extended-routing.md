@@ -9,6 +9,12 @@ owners, identity keys, resume patterns, file paths and section inventories. It
 is a declarative contract, not a decision engine and not an authority for tax
 treatment. All paths in this file resolve relative to this skill directory.
 
+## Contents
+
+- Select one owner
+- Facts to establish per owner
+- Resume and handoff
+
 ## Select one owner
 
 | Preparation intent | Owner and confirmed identity |

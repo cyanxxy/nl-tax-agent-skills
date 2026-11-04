@@ -1,12 +1,9 @@
 ---
 name: nl-tax-vat-adjustments
-description: "Use when an owning Dutch VAT return or correction workflow needs sourced 2025/2026 adjustment findings: private use, pro-rata, revision, property, BUA or margin arithmetic."
+description: "Background helper for an owning Dutch VAT workflow: prepares sourced 2025 or 2026 adjustment findings for a btw-aangifte or suppletie, covering private use, pro-rata for mixed use, herziening, immovable property, BUA, and margin-scheme arithmetic. Use only when an active VAT return or VAT correction workflow needs one of these adjustments. It returns findings and open questions to that workflow, which keeps the conversation."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax VAT Adjustments
@@ -19,6 +16,10 @@ file, field map, manual-entry checklist, evidence ledger, or workspace tree.
 
 ## Boundaries
 
+- **Only inside an owning workflow.** Run only when a VAT return or VAT correction workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - Use only the confirmed `2025` or `2026` VAT year and exact assigned filing
   period supplied by the owner. Annual income-tax bijtelling is a separate
   calculation; neither its private-distance exception nor its amount determines

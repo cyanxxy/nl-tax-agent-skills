@@ -5,6 +5,19 @@ They are not a fixed questionnaire or decision tree: credit facts the user has
 already supplied, ask only about a material ambiguity, and let the owning agent
 choose the clearest conversational order.
 
+## Contents
+
+- Annual Return 2025
+- Annual Return 2026
+- Migration / Nonresident Annual 2025 or 2026
+- ICP / OSS / IOSS
+- Voorlopige Aanslag 2026 — Request
+- Voorlopige Aanslag 2026 — Change
+- Voorlopige Aanslag 2026 — Review
+- Voorlopige Aanslag 2026 — Stopzetten
+- Key Distinction
+- When the User is Unsure
+
 ## Annual Return 2025
 
 - **Direction:** Backward-looking — what happened in 2025

@@ -1,12 +1,9 @@
 ---
 name: nl-tax-submit-companion
-description: Use when a user explicitly asks in natural language for a human-only checklist from an IB, VAT, ICP or OSS workpack, or accepts the mapper's immediate checklist offer; source/schema blockers apply.
+description: "Turns a mapped Dutch tax workpack into a human-only manual-entry checklist for Mijn Belastingdienst or Mijn Belastingdienst Zakelijk: which screens to open, which values to type, and what to check before the user signs and submits themselves. Covers income tax (annual, voorlopige aanslag, M- or C-biljet), btw-aangifte and suppletie, ICP, and OSS. Use when the user asks for a step-by-step entry checklist or accepts the checklist offer after mapping. For a general question about how to fill in a portal screen, use nl-tax-knowledge. A stale map or unreviewed sources block amounts."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|provisional|international|vat|vat-correction|icp|oss] [2025|2026] [identity]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
+allowed-tools: Read Glob Grep Edit(./workspace/**)
 ---
 
 # Manual-entry checklist
@@ -54,7 +51,8 @@ exists, and never require a slash command or magic phrase.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`. Resolve bundled files
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`. Resolve bundled files
 relative to this skill directory with the host's skill-resource or file tools.
 
 For annual 2026, international migration/nonresident 2025/2026, ICP or OSS/IOSS,

@@ -51,8 +51,7 @@ The ZIP then defaults to `dist/openai-draft/nl-tax-agent-skills.zip`.
 
 Do not upload a package that adds skills under an already released version.
 Version 0.5.0 includes the draft-only previews added after `v0.4.0`. Keep both
-plugin manifests, `RELEASE_VERSION` in
-`tests/nl_tax_agent_skills/test_release_packaging.py`, every workpack
+plugin manifests, every workpack
 template's `plugin_version`, the CHANGELOG release heading, and the
 `release-notes.md` heading aligned for each release. Codex and Claude Code
 cache installs by version, so an unchanged version leaves existing installs

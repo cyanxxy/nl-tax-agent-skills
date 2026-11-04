@@ -21,6 +21,18 @@ substitutes for human source-content review or exact schema review. Their only
 save path is the one `../nl-tax-shared-resources/reference/workflow-scopes.yaml`
 gives for the confirmed identity (section 8).
 
+## Contents
+
+- 1. Load the mapping inputs
+- 2. Build or update the map
+- 3. Field record contract
+- 4. Handle gaps conversationally
+- 5. Derive readiness
+- 6. Check the map
+- 7. Show the Field map summary
+- 8. Save only with consent
+- 9. Report and offer the checklist
+
 ## 1. Load the mapping inputs
 
 Read, in order:

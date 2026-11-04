@@ -17,7 +17,7 @@
 - Review subflow validation rules
 - Stopzetten validation rules
 - Sources used section — REQUIRED
-- Not submission advice section — REQUIRED
+- Not submission advice section -- REQUIRED
 - Appendix A — Resume record
 - Validation checklist
 
@@ -41,7 +41,8 @@ This document defines the mandatory sections, labeling requirements, and validat
   `save_consent` records that decision; it never authorizes a write. Update it
   in place; never create a copy, versioned or dated variant, or second
   `workspace/` tree. A file at that path that the user did not resume is
-  replaced only after the replace-or-keep question in the runtime contract,
+  replaced only after the replace-or-keep question in
+  `../nl-tax-shared-resources/runtime-workpack-files.md`,
   never merged into.
 - Never write `workspace/nl-tax-annual-2025-workpack.md` or any path other than
   the provisional workpack.
@@ -513,7 +514,7 @@ Do not expand it into generic credential boilerplate.
 
 `Appendix A — Resume record` is one fenced `yaml` block with
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.1"`, `workflow: provisional_2026_<subflow>`,
+`plugin_version: "0.5.2"`, `workflow: provisional_2026_<subflow>`,
 `tax_year: 2026`, `created_at`, `updated_at`, `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow: null`, `sections`, and
 `sources_loaded`. `save_consent` defaults to `not_given` in the template and is

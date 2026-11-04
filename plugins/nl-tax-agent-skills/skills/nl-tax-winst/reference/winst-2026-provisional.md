@@ -7,6 +7,14 @@ status: active
 review_status: reviewed
 last_reviewed: "2026-08-15"
 
+## Contents
+
+- Scope
+- Output contract
+- Questions
+- The separate voorlopige aanslag Zvw
+- Exclusions
+
 ## Scope
 
 This reference supports one preparation-only value in a request or change of a
