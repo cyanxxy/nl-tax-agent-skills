@@ -1,5 +1,14 @@
 # OSS preparation flow
 
+## Contents
+
+- Resources, statuses and sources
+- Scheme and period
+- Current transaction and rate grid
+- Corrections to previously filed periods
+- Country reconciliation and final review
+- Historical correction facts
+
 ## Resources, statuses and sources
 
 Track `oss_scope`, `oss_transactions`, `oss_corrections`,

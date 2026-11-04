@@ -1,12 +1,9 @@
 ---
 name: nl-tax-winst
-description: "Use when an owning Dutch tax workflow needs the annual 2025 belastbare winst uit onderneming determined from the reviewed profit chain, or one sourced 2026 provisional expected-profit forecast."
+description: "Background helper for an owning Dutch tax workflow: determines the annual 2025 belastbare winst uit onderneming for an IB-ondernemer from the reviewed profit chain (investeringsaftrek, ondernemersaftrek, MKB-winstvrijstelling), or records one sourced 2026 expected-profit forecast for the voorlopige aanslag. Use only when an active annual or provisional workflow reaches its business-income section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Winst uit onderneming
@@ -28,6 +25,10 @@ Background helper with two modes that are never blended:
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Writes nothing.** Return structured facts and open questions to the owning
   workflow. Do not persist anything: no file, workpack section, field map, or
   checklist. The annual workflow owns persistence in annual mode. The

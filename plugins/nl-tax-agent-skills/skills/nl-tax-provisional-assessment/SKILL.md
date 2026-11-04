@@ -1,13 +1,9 @@
 ---
 name: nl-tax-provisional-assessment
-description: Use when the user explicitly wants a 2026 Dutch provisional request, change, review, or stopzetten workpack. Changes require complete-data re-entry before questions; Box 3 is fictitious-only.
+description: "Prepares a 2026 Dutch voorlopige aanslag (provisional assessment) workpack for manual entry: request a new one, change an existing one, review it against current circumstances, or stop it (stopzetten). Works from expected 2026 wages, mortgage, Box 2, Box 3 (fictitious method only), ZZP expected profit, and partner facts; a change re-enters the complete data set. Use when the user wants monthly 2026 tax refunds or payments set, adjusted, checked, or stopped, for example after buying a home, a salary change, or starting as ZZP. For a question about how a rule works, use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[2026] [request|change|review|stopzetten|confirm]"
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # NL Tax Provisional Assessment
@@ -62,7 +58,8 @@ workflow.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md` first. Resolve bundled
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Resolve bundled
 resources relative to this skill directory and `workspace/...` against the
 task's working folder (the folder the user selected or the host's task
 workspace). Never depend on vendor-specific environment variables.
@@ -92,53 +89,21 @@ start offer; do not repeat it.
 
 ## Saving the workpack
 
-- Offer to save in one short sentence, only at these points: when this
-  workflow starts ("This can take a few sessions. Want me to keep your workpack
-  as one file in your working folder so you can pick up later? Otherwise
-  everything stays in this conversation."), as its own reply before the first
-  collection question; when the user signals a pause (waiting for documents,
-  "later", "tomorrow", ending the session); and at generation, in the reply
-  after the workpack is generated (and, for request or change, mapped), never
-  in the final-review reply. Offer each point at most once. A "no" does not
-  suppress a later point, but after "don't ask again" make no further offers.
-  Ask one yes/no question per reply: never pair an offer with another offer or
-  a question.
-- Consent is any clear natural-language yes, or the user asking at any time
-  ("save my workpack", "keep a file", "bewaar").
-- Consent is session-scoped. Write only while save consent is active in this
-  conversation (a fresh yes, a found file the user confirmed resuming, or an
-  attached copy the user agreed to keep saving); check the conversation, never
-  the file's `save_consent`.
-- On consent, create `workspace/nl-tax-provisional-2026-workpack.md` from
-  `templates/provisional-workpack.md` immediately with everything established
-  so far, from the facts and provenance recorded in this conversation; mark
-  sections not yet discussed as not started instead of leaving placeholders
-  that look like values. Record `save_consent: given` in Appendix A. An
-  unsaved field map is not state: if mapping already ran, the field mapper
-  rebuilds the map for this save from the recorded facts, re-runs every FM-*
-  check, and re-confirms any value no longer visible verbatim before writing
-  the Field map summary and Appendix B; a Manual-entry checklist already shown
-  is carried over only when each of its values matches the rebuilt map, and is
-  otherwise written with the stale line below.
-- If a file already exists at that path and the user did not resume it in this
-  conversation, the consent step includes one short question: "There is
-  already a saved 2026 workpack at that path, last updated <date>. Replace
-  that older file with this one, or keep it and stay in this conversation
-  only?" Replace writes over it; keep writes nothing. Never merge into it.
-- Then keep that same file current: update your sections at the end of every
-  turn that adds or changes a sourced fact, an open question, or a section
-  status, and refresh Appendix A `updated_at`. The field mapper and the submit
-  companion keep their own sections current. Update the file in place; never
-  create a copy, `-v2`, dated variant, or second `workspace/` tree.
-- If the user withdraws ("stop saving"), stop writing, say the file stays where
-  it is, and tell them they can delete it themselves. Never delete files.
-- If the host has no writable working folder, deliver the same workpack through
-  the host's normal file or document output, only with consent, at the consent
-  point, at pauses, and at generation, and tell the user to keep it and attach
-  it to resume. If the working folder may not outlast the session (for example
-  a cloud task without a connected local folder), save there and also deliver a
-  download at pauses and at generation. A download at generation comes after
-  mapping, so it includes the map.
+Apply Save consent and One yes/no question per reply in
+`../nl-tax-shared-resources/runtime-workpack-files.md`: when to offer, what
+counts as consent, the replace-or-keep question, withdrawal, and downloads on
+hosts without a writable folder. For this workflow:
+
+- The only file is `workspace/nl-tax-provisional-2026-workpack.md`, for every
+  subflow. On consent, create it from `templates/provisional-workpack.md` at
+  once with everything established so far and `save_consent: given` in
+  Appendix A; mark sections not yet discussed as not started, never with
+  placeholders that look like values.
+- The generation save offer comes after the workpack is generated and, for
+  request or change, mapped.
+- Then keep it current at the end of every turn that changes a sourced fact,
+  an open question, or a section status, and refresh Appendix A `updated_at`.
+  The field mapper and submit companion update only their own sections.
 
 ## Conversation, recaps, and status
 

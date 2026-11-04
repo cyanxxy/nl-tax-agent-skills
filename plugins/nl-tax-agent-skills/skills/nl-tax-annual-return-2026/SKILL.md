@@ -1,12 +1,8 @@
 ---
 name: nl-tax-annual-return-2026
-description: Use when the user explicitly wants a resident Dutch annual income-tax return (aangifte) for 2026 from actual evidence, as a draft pending year-end; a 2026 estimate is the voorlopige aanslag.
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+description: "Collects evidence for a resident 2026 Dutch annual income-tax return (aangifte inkomstenbelasting 2026) into a draft-only workpack until the 2026 year-end figures and forms are final. Use when the user wants to start preparing that return by gathering or organizing actual 2026 income, mortgage, savings, or business documents. For a 2026 estimate or monthly refunds or payments, use nl-tax-provisional-assessment (voorlopige aanslag); for a rule question, use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # Annual income tax 2026
@@ -15,7 +11,8 @@ After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
 Prepare a resident annual 2026 return with sourced actual facts and open items.
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `reference/annual-2026-flow.md`. This owner has a separate year and file from
 annual 2025 and provisional 2026. Never substitute their rates or field maps.
 

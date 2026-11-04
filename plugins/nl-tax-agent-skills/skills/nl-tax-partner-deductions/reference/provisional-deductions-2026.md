@@ -17,6 +17,7 @@ review_status: reviewed
 - Key message: keep provisional scenario comparison proportionate
 - Focus areas for provisional 2026
 - Interaction with provisional subflows
+- Allocation arithmetic check
 - Notes
 
 ## Rule

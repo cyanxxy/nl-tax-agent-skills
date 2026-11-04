@@ -7,6 +7,13 @@ status: active
 last_reviewed: "2026-07-10"
 review_status: reviewed
 
+## Contents
+
+- Asset Classification
+- Key Parameters
+- Important Notes
+- Required two-method workpack treatment
+
 ## Asset Classification
 
 The agent applies these official categories to reviewed facts. It never

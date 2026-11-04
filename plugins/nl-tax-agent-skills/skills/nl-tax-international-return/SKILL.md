@@ -1,12 +1,8 @@
 ---
 name: nl-tax-international-return
-description: Use when the user explicitly wants a Dutch M-biljet (emigration/immigration year) or C-biljet (nonresident) income-tax draft for 2025, or 2026 evidence collection, with residence and treaty facts.
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
-  - Edit(./workspace/**)
-  - AskUserQuestion
+description: "Prepares a draft Dutch M-biljet (year of emigration or immigration) or C-biljet (nonresident) income-tax workpack for 2025, or collects evidence for 2026: residence dates, Dutch and foreign income, treaty and social-insurance facts, and the split between resident and nonresident periods. Use when the user moved to or from the Netherlands during the year, or lived abroad with Dutch income, and needs that return prepared. For a question about how a migration or nonresident rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
+allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
 ---
 
 # NL Tax International Return
@@ -62,7 +58,8 @@ annual M/C return.
 After any context compaction or summary, read the files named below again,
 plus any helper `SKILL.md` in use, before your next reply.
 
-Read `../nl-tax-shared-resources/runtime-contract.md`, then
+Read `../nl-tax-shared-resources/runtime-contract.md`
+and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
 `../nl-tax-shared-resources/reference/workflow-scopes.yaml` and
 `reference/international-return-flow.md`. Resolve bundled paths relative to
 this skill directory using the host's resource/file tools; `workspace/...`
@@ -93,7 +90,8 @@ saved workpack the user named and write nothing.
 
 ## Saving and generation
 
-Follow shared consent, first-save, download, withdrawal and stale rules.
+Follow the consent, first-save, download, withdrawal and stale rules in
+`../nl-tax-shared-resources/runtime-workpack-files.md`.
 Offer saving at workflow start, a pause and after generation/mapping if due,
 each in its own reply with one yes/no question. Credit an existing clear
 save instruction or refusal. At first save or final generation load

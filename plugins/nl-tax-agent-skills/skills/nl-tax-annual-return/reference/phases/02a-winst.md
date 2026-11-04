@@ -13,6 +13,18 @@ Read every rate, percentage, cap, hour count and year count from the reviewed
 knowledge notes named below. This phase file states the order and the questions;
 the knowledge pack states the figures.
 
+Contents:
+
+- 2A.1 Pre-screen: which income category the activity belongs to
+- 2A.2 Collect the chain inputs
+- 2A.3 Run the ordered chain
+- 2A.4 Vermogensvergelijking self-check
+- 2A.5 Downstream handoffs
+- 2A.6 Loss path
+- 2A.7 Per-form recognition and routing
+- 2A.8 Field-map readiness
+- 2A.9 Preparation boundary
+
 ### 2A.1 Pre-screen: which income category the activity belongs to
 
 Run this before any profit figure is collected. Load

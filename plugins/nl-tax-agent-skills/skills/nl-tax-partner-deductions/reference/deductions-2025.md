@@ -14,6 +14,7 @@ review_status: reviewed
 - Scenario-comparison principle
 - Heffingskorting interaction
 - Warning: this skill compares options but never selects one
+- Allocation arithmetic check
 - Common errors
 
 ## Rule

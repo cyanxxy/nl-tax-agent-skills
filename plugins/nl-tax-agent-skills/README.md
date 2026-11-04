@@ -168,8 +168,9 @@ review blockers.
 
 `skills/nl-tax-shared-resources/` holds the source-cited knowledge notes (the
 VAT, cross-border, international, and annual 2026 notes still await human
-review), the source register, and the shared runtime contract. Install the
-plugin as one package: the skills reference each other through sibling paths.
+review), the source register, and the shared runtime contracts. The plugin is
+plugin-only: install it as one package. The skills reference each other through
+sibling paths, so a single skill copied or uploaded on its own does not work.
 
 ## Draft-only previews
 

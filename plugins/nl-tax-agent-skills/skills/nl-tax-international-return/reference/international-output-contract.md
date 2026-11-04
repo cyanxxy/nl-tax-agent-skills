@@ -14,6 +14,12 @@ components. Legal residence, treaty rights and insurance eligibility cannot
 be supplied by an assumed default. Open questions, missing information,
 user-stated values and Sources used must match the body and resume record.
 
+## Contents
+
+- Readiness and ownership
+- Resume record
+- Owner checks
+
 ## Readiness and ownership
 
 Use `STATUS: DRAFT — N deferred section(s) — not for filing` for incomplete

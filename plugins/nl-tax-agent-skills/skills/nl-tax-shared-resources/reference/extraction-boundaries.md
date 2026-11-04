@@ -12,6 +12,15 @@ tool.
 
 ---
 
+## Contents
+
+- The `Documents and sources` row
+- What may be recorded
+- What may not be extracted or stored
+- Classifying is not deciding
+- Classification certainty
+- Key principle
+
 ## The `Documents and sources` row
 
 Record one row per document or chat value used:

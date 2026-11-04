@@ -1,12 +1,9 @@
 ---
 name: nl-tax-box1-home
-description: Use when an owning Dutch tax workflow needs sourced Box 1 or own-home facts and questions; use annual 2025 evidence for annual workpacks and labeled 2026 estimates for provisional workpacks.
+description: "Background helper for an owning Dutch tax workflow: collects and checks sourced Box 1 and own-home facts (eigen woning, eigenwoningforfait, hypotheekrenteaftrek, eigenwoningschuld), using 2025 evidence for annual workpacks and labeled 2026 estimates for the voorlopige aanslag. Use only when an active annual or provisional workflow reaches its income or own-home section. It returns findings and open questions to that workflow, which keeps the conversation; for rule questions use nl-tax-knowledge."
+compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 user-invocable: false
-disable-model-invocation: true
-allowed-tools:
-  - Read
-  - Glob
-  - Grep
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Box 1 And Own Home
@@ -16,6 +13,10 @@ arithmetic, and open questions to the owning annual or provisional workflow.
 
 ## Boundaries that always apply
 
+- **Only inside an owning workflow.** Run only when an annual 2025 or provisional 2026 workflow is already
+  active in this conversation and has handed you its facts. If none is, collect
+  nothing and answer nothing here: send a preparation request to
+  `nl-tax-intake` and a question about how a rule works to `nl-tax-knowledge`.
 - **Writes nothing.** Return structured facts and open questions to the owning
   workflow. Do not persist anything: no file, workpack section, field map, or
   checklist. The owning workflow decides what enters its workpack.

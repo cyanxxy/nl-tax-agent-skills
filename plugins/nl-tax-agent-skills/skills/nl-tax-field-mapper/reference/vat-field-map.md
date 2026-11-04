@@ -12,6 +12,13 @@ month token always has two digits. Confirm scope from assigned filing facts,
 not the file's name alone. Never map names, addresses, VAT numbers, BSN,
 IBAN, account identifiers, credentials, payment references, or tax numbers.
 
+## Contents
+
+- Rubric inventory
+- Completeness, rounding and provenance
+- Corrections
+- VAT checks in addition to FM checks
+
 ## Rubric inventory
 
 | Rubric | Meaning | Turnover ID | VAT ID |

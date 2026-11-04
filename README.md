@@ -139,6 +139,14 @@ host; the natural-language request above works everywhere.
 No shell or Python is needed on any host: the plugin ships no scripts, and
 it writes nothing unless you ask it to save your workpack.
 
+> [!WARNING]
+> **Plugin-only.** Install the whole plugin through one of the routes below.
+> The skills read shared files from sibling skill folders (mainly
+> `nl-tax-shared-resources/`), so a single skill does not work when it is
+> copied into `.claude/skills/`, uploaded on its own to claude.ai, or added
+> through the Skills API. Every `SKILL.md` states this in its `compatibility`
+> field.
+
 ### Claude Cowork
 
 Cowork is the primary host for NL Tax Agent Skills.
@@ -360,6 +368,13 @@ plugins/nl-tax-agent-skills/
   Appendix B; the submit companion writes `## Manual-entry checklist`.
 - **Helpers write nothing.** Intake, knowledge, and the background helpers
   return findings and questions to the owning workflow without touching files.
+- **Plugin-only packaging.** Skills reach shared resources through sibling
+  paths, so the plugin installs and loads as one package, never as separate
+  skills.
+- **Agent-invoked helpers.** Background helpers are hidden from the user's
+  skill menu (`user-invocable: false`) but the agent can invoke them; an owning
+  workflow invokes the helper by name, or reads its `SKILL.md` inline on hosts
+  without a skill tool.
 
 ## 🔒 Privacy
 

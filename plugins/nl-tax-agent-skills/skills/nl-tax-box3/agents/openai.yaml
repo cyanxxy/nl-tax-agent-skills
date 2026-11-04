@@ -11,6 +11,9 @@
 # straight to it and bypassing the orchestrating workflow skill (and the box-3
 # annual-vs-provisional method rules it enforces). Explicit `$nl-tax-box3`
 # invocation still works.
+# On Claude this helper is agent-only (user-invocable: false): the owning
+# workflow may invoke it as a skill. Codex has no agent-only mode, so the
+# owner reaches it here by explicit name or by reading its SKILL.md inline.
 interface:
   display_name: "Dutch Tax Box 3 Helper"
   short_description: "Internal Box 3 method and fact helper for supported workflows."
