@@ -6,7 +6,7 @@ tags: [cowork, vat, correction]
 runs: 1
 max_turns: 16
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Preserve two original periods, net differences and original/revised full totals without a combined threshold or invented payment reference.
 ---
 My Netherlands-established eenmanszaak filed Q1 and Q2 2026 VAT returns.

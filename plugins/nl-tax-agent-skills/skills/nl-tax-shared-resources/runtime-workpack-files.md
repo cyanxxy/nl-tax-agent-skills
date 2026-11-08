@@ -184,12 +184,10 @@ Appendix A, map and filename before resuming or writing.
   `nl-tax-submit-companion` (`## Manual-entry checklist` only). Each writer
   edits only its own sections. The one exception is the stale line: the
   owning workflow adds it to the mapper's and companion's sections after a
-  changed fact, without touching their content. Their `allowed-tools` keep
-  `Edit(./workspace/**)` and never list `Write` or `Bash`. In Claude Code that
-  pre-approval lasts only for the turn that invokes the skill, so a save in a
-  later turn shows the host's normal permission prompt. That prompt is
-  expected and is the user's to approve; saving never depends on the
-  pre-approval.
+  changed fact, without touching their content. Every skill's
+  `allowed-tools` lists only `Read Glob Grep`; no skill pre-approves `Edit`,
+  `Write`, or `Bash`. Every save therefore shows the host's normal permission
+  prompt. That prompt is expected and is the user's to approve.
 - `nl-tax-intake`, `nl-tax-knowledge`, and the background helpers
   (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`,
   `nl-tax-partner-deductions`, `nl-tax-winst`, `nl-tax-vat-adjustments`)

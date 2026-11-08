@@ -1,7 +1,9 @@
 name: Plugin eval
 
-# Behaviour tests: runs the native Claude eval cases in
-# plugins/nl-tax-agent-skills/evals/ against the plugin with a real model.
+# Behaviour tests: runs the native Claude eval cases in evals/claude-plugin/
+# against the plugin with a real model. The cases stay outside the plugin
+# folder (the directory is reported to refuse shipped non-skill frontmatter),
+# so this job stages a copy of the plugin with the cases in its evals/ folder.
 # This is the only check that catches routing, safety-boundary and
 # save-consent regressions. Each run is billed to ANTHROPIC_API_KEY, so it is
 # manual. Run it before every release and after description or workflow edits.
@@ -42,6 +44,12 @@ jobs:
             exit 1
           fi
 
+      - name: Stage plugin with eval cases
+        run: |
+          mkdir -p "$RUNNER_TEMP/stage"
+          cp -R plugins/nl-tax-agent-skills "$RUNNER_TEMP/stage/"
+          cp -R evals/claude-plugin "$RUNNER_TEMP/stage/nl-tax-agent-skills/evals"
+
       # --allow-tools Edit Write: the save case needs them; every other case
       # carries no-write/no-edit graders, so the grant cannot hide a bad write.
       - name: Run eval suite
@@ -50,7 +58,7 @@ jobs:
           RUNS: ${{ inputs.runs }}
           MAX_COST: ${{ inputs.max_cost_usd }}
         run: |
-          claude plugin eval plugins/nl-tax-agent-skills \
+          claude plugin eval "$RUNNER_TEMP/stage/nl-tax-agent-skills" \
             --trust-plugin \
             --case "$CASE" \
             --runs "$RUNS" \

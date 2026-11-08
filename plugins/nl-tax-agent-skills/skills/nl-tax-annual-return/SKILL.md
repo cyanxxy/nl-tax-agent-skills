@@ -3,7 +3,7 @@ name: nl-tax-annual-return
 description: "Prepares a source-traceable 2025 Dutch annual income-tax return workpack (aangifte inkomstenbelasting 2025) for manual entry in Mijn Belastingdienst. Reads jaaropgaven and mortgage, bank, and investment statements, asks only the missing questions, and covers Box 1 wages and eigen woning, standard eenmanszaak/ZZP winst uit onderneming, Box 2, Box 3 with the actual-return comparison, deductions, credits, and fiscal-partner allocation. Use when the user wants to prepare, fill in, or resume their 2025 Dutch tax return (belastingaangifte). For a question about how a rule works, use nl-tax-knowledge. Never logs in, signs, or submits."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[2025] [confirm]"
-allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Annual Return

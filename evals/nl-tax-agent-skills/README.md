@@ -75,10 +75,12 @@ the existing five profiles.
 
 ## Native Claude prose evaluation
 
-The first-party Claude cases live inside the plugin package, at
-`plugins/nl-tax-agent-skills/evals/cowork-*/`, because `claude plugin eval`
-discovers cases only in the `evals/` directory of the plugin under test and
-loads that plugin for them. A case kept outside the plugin runs against
+The first-party Claude cases live outside the plugin package, at
+`evals/claude-plugin/cowork-*/`, because the Claude plugin directory has been
+reported to refuse shipped Markdown with non-skill frontmatter. `claude plugin eval` discovers cases only in
+the `evals/` directory of the plugin under test, so every run first stages a
+copy of the plugin with the cases copied into its `evals/` folder (commands
+below). Pointing the CLI at the cases without staging runs them against
 baseline Claude Code with no plugin loaded. Each case has a natural prompt
 (`prompt.md`) and an LLM grader (`graders/criteria.md`), including
 `cowork-save-and-resume` (continue from a saved workpack's resume record
@@ -104,7 +106,10 @@ case's `file_exists` graders fail and the CLI warns that they cannot pass.
 When native evaluation is available, run a quick check from the repository root:
 
 ```bash
-claude plugin eval plugins/nl-tax-agent-skills \
+mkdir -p .eval-stage && rm -rf .eval-stage/nl-tax-agent-skills
+cp -R plugins/nl-tax-agent-skills .eval-stage/
+cp -R evals/claude-plugin .eval-stage/nl-tax-agent-skills/evals
+claude plugin eval .eval-stage/nl-tax-agent-skills \
   --trust-plugin \
   --case 'cowork-*' \
   --allow-tools Edit Write \
@@ -122,7 +127,7 @@ the same threshold to check consistency across repeated agent responses.
 To confirm discovery without spending anything, add `--max-cost-usd 0
 --ablation none`: the output names `Plugin under test: "nl-tax-agent-skills"`
 and stops before the first paid run. Never commit run results; keep them out
-of `plugins/nl-tax-agent-skills/evals/results/` so they are not packaged.
+of `evals/claude-plugin/` and the plugin folder.
 
 Graders follow the plugin-eval guidance of one grader on the result and one
 on the steps. `criteria.md` is the `llm` result grader on the final message.

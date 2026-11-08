@@ -32,8 +32,7 @@ python3 submission/openai/build_bundle.py
 Upload `dist/openai/nl-tax-agent-skills.zip`. The builder includes the Codex
 manifest, skills (Markdown and YAML only, with their references and workpack
 templates), assets, license, and package README. It excludes the Claude
-manifest, the Claude-only reviewer agent, the plugin's Claude eval cases
-(`plugins/nl-tax-agent-skills/evals/`), taxpayer workspaces, uploads,
+manifest, the Claude-only reviewer agent, taxpayer workspaces, uploads,
 evidence, tests, caches, repository-local evaluation output, and Git metadata,
 and it refuses to build when a skill directory has no `SKILL.md` or a retired
 skill (such as the 0.3 evidence indexer) is still present.
@@ -69,7 +68,7 @@ directory review and publication steps below.
   `knowledge/vat-cross-border/`, `knowledge/international/` and
   `knowledge/years/2026/annual/` notes with their official sources.
 - Real-host smoke scenarios for these previews live in
-  `plugins/nl-tax-agent-skills/evals/`: `cowork-vat-return-draft`,
+  `evals/claude-plugin/`: `cowork-vat-return-draft`,
   `cowork-vat-correction-periods`, `cowork-vat-adjustments-first-use-2026`,
   `cowork-icp-period-and-vat-id-review`,
   `cowork-oss-country-corrections-no-offset`,

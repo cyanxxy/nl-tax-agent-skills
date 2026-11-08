@@ -23,11 +23,13 @@ where this guide and the spec disagree, the spec wins.
 
 The plugin is the product package — `plugins/nl-tax-agent-skills/`. Repository-level
 tests, offline evaluations, submission tooling, marketplace manifests, and project docs
-stay outside that distributable directory. The Claude eval cases are the one
-exception: they live in the plugin's own `evals/` directory so that
-`claude plugin eval plugins/nl-tax-agent-skills` discovers them without extra
-flags. They are Markdown only, grant only read-only tools, and are excluded
-from the OpenAI bundle.
+stay outside that distributable directory. That includes the Claude eval cases
+in `evals/claude-plugin/`: since November 2026 the Claude plugin directory has
+been reported to refuse plugins that ship Markdown with non-skill frontmatter
+(an unpublished Verified-organizations rule), and every case and grader file
+carries eval frontmatter. `claude plugin eval` only discovers cases inside the plugin under
+test, so runs stage a copy of the plugin with the cases in its `evals/` folder
+(see the release checklist).
 
 ```text
 .claude-plugin/
@@ -92,7 +94,7 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -153,21 +155,16 @@ honor it):
 name: nl-tax-annual-return
 description: Use when preparing a 2025 Dutch annual tax manual-entry guide.
 argument-hint: "[2025] [confirm]"
-allowed-tools:
-  - Read
-  - Grep
-  - Edit(./workspace/**)
+allowed-tools: Read Glob Grep
 ---
 ```
 
-Only the four skills that may write a workpack (`nl-tax-annual-return`,
-`nl-tax-provisional-assessment`, `nl-tax-field-mapper`, `nl-tax-submit-companion`)
-carry `Edit(./workspace/**)`; intake, knowledge, and the background helpers have
-no `Edit` rule. Pre-approve file writes only as `Edit(./workspace/**)` and never pre-approve `Bash`:
-the Claude directory scan holds unscoped write grants and broad shell grants for
-human review. Do not list `Write` at all: Claude Code never consults a
-`Write(path)` rule (it warns at startup), and `Edit` rules already cover every
-built-in tool that creates or changes files. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
+Every skill declares exactly `allowed-tools: Read Glob Grep`. The Claude plugin
+directory accepts `allowed-tools` entries beyond Read/Grep/Glob/LS only from
+Verified organizations, and refused 0.5.2 for its `Edit(./workspace/**)` and
+`AskUserQuestion` entries. Do not add `Edit`, `Write`, `Bash`,
+`AskUserQuestion`, or any other tool: workpack saves and question forms still
+work, through the host's normal permission prompt. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
 prompts for the listed tools but does not deny others, and Codex ignores it. Real capability
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
@@ -398,7 +395,7 @@ skill and agent frontmatter. It runs offline and needs no API key.
 
 Model behaviour (skill triggering, routing, safety boundaries, save consent,
 rule-following) is tested by the native eval cases in
-`plugins/nl-tax-agent-skills/evals/`. Run them from the Actions tab with
+`evals/claude-plugin/`. Run them from the Actions tab with
 `.github/workflows/plugin-eval.yml`, which needs an `ANTHROPIC_API_KEY`
 repository secret and is billed per run, or locally with the command in the
 release checklist. Run them before a release and after any description or
@@ -421,11 +418,11 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.2`):
+Both plugin manifests pin a fixed version (currently `0.5.3`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.2"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.2"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.3"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.3"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
@@ -441,15 +438,22 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
 ### Release checklist
 
 - The release artifact contains only the plugin package, its README and
-  license, its Claude eval cases (`evals/`), and the Claude/Codex plugin
-  manifests. The OpenAI bundle excludes `evals/`.
+  license, and the Claude/Codex plugin manifests. It never contains eval cases.
 - Keep the plugin folder within the Claude directory review limits: every file
   that is not an image or font stays under 256 KiB, and the folder holds at most
   512 files. `source-register.yaml` is the file closest to the size limit, so
   trim or split it before adding many sources.
-- Run the Claude eval cases with the plugin loaded (save cases need write
-  tools, which the case files themselves never grant):
-  `claude plugin eval plugins/nl-tax-agent-skills --case 'cowork-*' --runs 3 --threshold 1.0 --allow-tools Edit Write --output-dir evals/results/latest`.
+- Run the Claude eval cases against a staged copy of the plugin (save cases
+  list `Edit` and `Write` in their own `allowed_tools` and also need the
+  operator grant):
+
+  ```bash
+  mkdir -p .eval-stage && rm -rf .eval-stage/nl-tax-agent-skills
+  cp -R plugins/nl-tax-agent-skills .eval-stage/
+  cp -R evals/claude-plugin .eval-stage/nl-tax-agent-skills/evals
+  claude plugin eval .eval-stage/nl-tax-agent-skills --trust-plugin --case 'cowork-*' --runs 3 --threshold 1.0 --allow-tools Edit Write --output-dir evals/results/latest
+  ```
+
   Every scored grader must pass, so passing file checks cannot hide a failed
   tax-rule or safety rubric. Three runs check consistency before release;
   `--runs 1` is only a quick check and keeps the same threshold.
