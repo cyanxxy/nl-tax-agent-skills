@@ -92,7 +92,7 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -153,21 +153,16 @@ honor it):
 name: nl-tax-annual-return
 description: Use when preparing a 2025 Dutch annual tax manual-entry guide.
 argument-hint: "[2025] [confirm]"
-allowed-tools:
-  - Read
-  - Grep
-  - Edit(./workspace/**)
+allowed-tools: Read Glob Grep
 ---
 ```
 
-Only the four skills that may write a workpack (`nl-tax-annual-return`,
-`nl-tax-provisional-assessment`, `nl-tax-field-mapper`, `nl-tax-submit-companion`)
-carry `Edit(./workspace/**)`; intake, knowledge, and the background helpers have
-no `Edit` rule. Pre-approve file writes only as `Edit(./workspace/**)` and never pre-approve `Bash`:
-the Claude directory scan holds unscoped write grants and broad shell grants for
-human review. Do not list `Write` at all: Claude Code never consults a
-`Write(path)` rule (it warns at startup), and `Edit` rules already cover every
-built-in tool that creates or changes files. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
+Every skill declares exactly `allowed-tools: Read Glob Grep`. The Claude plugin
+directory accepts `allowed-tools` entries beyond Read/Grep/Glob/LS only from
+Verified organizations, and refused 0.5.2 for its `Edit(./workspace/**)` and
+`AskUserQuestion` entries. Do not add `Edit`, `Write`, `Bash`,
+`AskUserQuestion`, or any other tool: workpack saves and question forms still
+work, through the host's normal permission prompt. `allowed-tools` is a pre-approval convenience, not a sandbox: on Claude Code it suppresses
 prompts for the listed tools but does not deny others, and Codex ignores it. Real capability
 boundaries are the Do/Never contracts in each skill, host permission/deny rules and hooks,
 and OS-level sandboxing.
@@ -421,11 +416,11 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.2`):
+Both plugin manifests pin a fixed version (currently `0.5.3`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.2"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.2"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.3"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.3"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;

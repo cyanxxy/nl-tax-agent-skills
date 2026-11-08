@@ -2,7 +2,7 @@
 name: nl-tax-vat-correction
 description: "Prepares a draft btw-aangifte correction (suppletie) workpack for one already filed 2025 or 2026 Dutch VAT period of a ZZP'er or eenmanszaak: what was filed, what it should have been, the difference per rubriek, and whether a separate correction or the next return applies. Use when the user found a mistake in a VAT return they already submitted and wants to correct it. For a question about how a VAT correction rule works, use nl-tax-knowledge. Draft-only while its sources await human review."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
-allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax VAT Correction

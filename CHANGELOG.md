@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.3] — 2026-11-08
+
+Clears the Claude plugin directory policy refusal of 0.5.2. No tax rule,
+rate, or workflow scope changes.
+
+### Changed
+
+- **Read-only tool pre-approval.** Every skill now declares
+  `allowed-tools: Read Glob Grep`. The `Edit(./workspace/**)` and
+  `AskUserQuestion` entries are gone: the directory accepts entries beyond
+  Read/Grep/Glob/LS only from Verified organizations. Saving a workpack still
+  works after the user agrees; the host now shows its normal permission
+  prompt for every save.
+- CI fails if any skill lists a tool beyond Read, Grep, Glob, or LS.
+
 ## [0.5.2] — 2026-11-04
 
 Aligns the skills with the Agent Skills specification and Anthropic's skill

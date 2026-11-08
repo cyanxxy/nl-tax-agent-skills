@@ -2,7 +2,7 @@
 name: nl-tax-annual-return-2026
 description: "Collects evidence for a resident 2026 Dutch annual income-tax return (aangifte inkomstenbelasting 2026) into a draft-only workpack until the 2026 year-end figures and forms are final. Use when the user wants to start preparing that return by gathering or organizing actual 2026 income, mortgage, savings, or business documents. For a 2026 estimate or monthly refunds or payments, use nl-tax-provisional-assessment (voorlopige aanslag); for a rule question, use nl-tax-knowledge."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
-allowed-tools: Read Glob Grep Edit(./workspace/**) AskUserQuestion
+allowed-tools: Read Glob Grep
 ---
 
 # Annual income tax 2026

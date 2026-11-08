@@ -35,3 +35,13 @@ jobs:
         run: |
           test ! -e plugins/nl-tax-agent-skills/plugin.json
           test -z "$(find plugins/nl-tax-agent-skills -type f \( -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.ts' \))"
+
+      # The directory accepts allowed-tools beyond Read/Grep/Glob/LS only from
+      # Verified organizations; it refused 0.5.2 for Edit and AskUserQuestion.
+      - name: allowed-tools stay read-only
+        run: |
+          bad=$(grep -h '^allowed-tools:' plugins/nl-tax-agent-skills/skills/*/SKILL.md \
+            | sed 's/^allowed-tools://' | tr ' ,' '\n\n' | grep -v -E '^(Read|Grep|Glob|LS)?$' || true)
+          if [ -n "$bad" ]; then echo "::error::Disallowed allowed-tools entries: $bad"; exit 1; fi
+          # A YAML-list form would slip past the one-line check above.
+          ! grep -q -E '^allowed-tools:[[:space:]]*$' plugins/nl-tax-agent-skills/skills/*/SKILL.md

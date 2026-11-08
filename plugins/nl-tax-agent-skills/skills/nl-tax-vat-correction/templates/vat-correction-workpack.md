@@ -176,7 +176,7 @@ operate the portal.
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.2"
+plugin_version: "0.5.3"
 workflow: vat_correction_<year>_<period>
 tax_year: null
 period: ""

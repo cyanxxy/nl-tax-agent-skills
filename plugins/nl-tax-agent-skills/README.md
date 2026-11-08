@@ -112,9 +112,8 @@ Say "stop saving" and it stops updating the file.
   folders, and saved workpack you select or attach.
 - **Writes:** nothing by default. Only after you agree to save, one workpack
   file per workflow, period, scheme, or form (the paths above) and nothing
-  else. Skills pre-approve
-  file edits for `./workspace/**` only, and never copy, move, rename, or change
-  your documents.
+  else. Skills pre-approve only reading and searching, so your host asks
+  before every save. They never copy, move, rename, or change your documents.
 - **Fetches:** nothing by default; skills answer from the bundled notes. When a
   workflow calls for a freshness check, the assistant may read public official
   pages such as belastingdienst.nl. In Claude, the bundled read-only

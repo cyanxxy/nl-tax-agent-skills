@@ -3,7 +3,7 @@ name: nl-tax-intake
 description: "Screens a Dutch tax preparation request and routes it to the right workflow: annual income-tax return (aangifte inkomstenbelasting) 2025 or 2026, voorlopige aanslag 2026 (request, change, review, stopzetten), M-biljet or C-biljet, btw-aangifte or suppletie, opgaaf ICP, or OSS/IOSS. Asks only the screening questions that change the route and finds a saved workpack to resume. Use when the user wants help preparing, filling in, or resuming Dutch tax paperwork for Mijn Belastingdienst. Not needed again once a preparation workflow has started. For questions about how a rule works, use nl-tax-knowledge."
 compatibility: "Plugin-only: requires the complete nl-tax-agent-skills plugin. Reads shared files from sibling skill folders such as nl-tax-shared-resources, so it does not work when installed or uploaded as a single skill."
 argument-hint: "[annual|international|request|change|review|stopzetten|vat|vat-correction|icp|oss]"
-allowed-tools: Read Glob Grep AskUserQuestion
+allowed-tools: Read Glob Grep
 ---
 
 # NL Tax Intake
