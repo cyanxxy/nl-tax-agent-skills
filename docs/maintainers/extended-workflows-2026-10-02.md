@@ -98,7 +98,7 @@ until an actual human recheck. Repository graders verify mechanics and
 provenance consistency, not legal accuracy.
 
 The Claude eval cases for these workflows live in
-`plugins/nl-tax-agent-skills/evals/` (`cowork-icp-period-and-vat-id-review`,
+`evals/claude-plugin/` (`cowork-icp-period-and-vat-id-review`,
 `cowork-oss-country-corrections-no-offset`,
 `cowork-vat-adjustments-first-use-2026`,
 `cowork-international-m-c-year-isolation`,

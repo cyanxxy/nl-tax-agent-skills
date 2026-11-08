@@ -34,6 +34,8 @@ jobs:
       - name: Package rules
         run: |
           test ! -e plugins/nl-tax-agent-skills/plugin.json
+          # Eval cases live in evals/claude-plugin/, never in the shipped folder.
+          test ! -e plugins/nl-tax-agent-skills/evals
           test -z "$(find plugins/nl-tax-agent-skills -type f \( -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.ts' \))"
 
       # The directory accepts allowed-tools beyond Read/Grep/Glob/LS only from

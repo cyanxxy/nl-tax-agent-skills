@@ -32,7 +32,7 @@ __pycache__/
 plugins/*/version.json
 evals/*/runs/
 evals/results/
-plugins/nl-tax-agent-skills/evals/results/
+.eval-stage/
 evals/*/benchmark-usage.jsonl
 *.bsn
 *.iban

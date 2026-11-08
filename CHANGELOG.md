@@ -19,6 +19,13 @@ rate, or workflow scope changes.
   works after the user agrees; the host now shows its normal permission
   prompt for every save.
 - CI fails if any skill lists a tool beyond Read, Grep, Glob, or LS.
+- **Eval cases moved out of the plugin.** The 23 `claude plugin eval` cases
+  now live in `evals/claude-plugin/` instead of `plugins/nl-tax-agent-skills/evals/`,
+  so the shipped folder carries no eval frontmatter. The eval workflow and the
+  documented local command stage a copy of the plugin with the cases inside.
+  CI fails if an `evals/` folder reappears in the plugin.
+- `cowork-vat-correction-periods` lists `Edit` and `Write` in its own
+  `allowed_tools`; without them its two `file_exists` graders could never pass.
 
 ## [0.5.2] — 2026-11-04
 
