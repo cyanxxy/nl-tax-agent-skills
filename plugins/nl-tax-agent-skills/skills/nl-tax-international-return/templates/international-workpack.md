@@ -196,7 +196,7 @@ yourself in Mijn Belastingdienst. The assistant must not access or operate it.
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.3"
+plugin_version: "0.5.4"
 workflow: international_<year>_<form>
 tax_year: null
 return_form: ""

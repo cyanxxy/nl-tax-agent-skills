@@ -118,8 +118,6 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 
 The own-home section must itemize mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming. Their sum is `total_deductible_own_home_costs`, and Hillen uses that total rather than mortgage interest alone.
 
-Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
-
 `box1_own_home_balance = eigenwoningforfait - total_deductible_own_home_costs - hillen_deduction`
 
 Tariefsaanpassing is separate from box1_own_home_balance. Show it in a separate review table as a tax-benefit adjustment and never add it to taxable Box 1 income. Optional helper fields are review inputs only: the agent verifies their evidence and keeps unresolved qualification or amount questions visible as manual review.
@@ -329,8 +327,8 @@ W&V, balance, private-movement, prior-year-set-off and entrepreneur-question
 inventories. Each identifier is mapped, sourced as not applicable, or unresolved;
 an omitted row or unanswered question is unresolved and keeps the map draft.
 `business.legal_form` and `onderneming.routing.complex_case` are sourced internal
-routing records and never appear in the taxpayer's portal-entry checklist. The
-optional validator cannot replace or relax this audit.
+routing records and never appear in the taxpayer's portal-entry checklist. No
+other check replaces or relaxes this audit.
 
 ### Winst uit onderneming manual-review routing
 
@@ -513,14 +511,14 @@ The field map must map each major workpack line item to:
 ### Schema conformance
 
 The Appendix B block MUST conform to
-`nl-tax-field-mapper/templates/field-map-template.yaml` (v1.1) and
-`nl-tax-field-mapper/reference/annual-field-map.md`; `field_id`s must come from
+`../nl-tax-field-mapper/templates/field-map-template.yaml` (v1.1) and
+`../nl-tax-field-mapper/reference/annual-field-map.md`; `field_id`s must come from
 that annual reference. Inside this workpack, `source.evidence_id` points to a
 Documents and sources row, `source.profile_path` to a Taxpayer profile summary
 key, and `missing_fields[].open_question_id` to an Open questions Q-ID.
 Conformance is checked by the mapper's own agent checklist in
-`nl-tax-field-mapper/reference/mapping-principles.md`, applying the rule data in
-`nl-tax-field-mapper/reference/field-map-rules.yaml`, whether or not the
+`../nl-tax-field-mapper/reference/mapping-principles.md`, applying the rule data in
+`../nl-tax-field-mapper/reference/field-map-rules.yaml`, whether or not the
 workpack is saved; the taxpayer's review before manual entry is the final check.
 
 ---
@@ -561,8 +559,8 @@ The Appendix B field map MUST carry a matching **top-level** `readiness` field,
 and Appendix A `readiness` MUST carry the same value: `draft` when this banner
 is `DRAFT`, and `review_ready` when this banner is `COMPLETE DRAFT FOR REVIEW`,
 unless a workflow-specific blocker (such as business schema review) requires
-`draft`. The agent derives all three from the same rollup. An optional
-validator may reject an impossible `review_ready` declaration but never promote
+`draft`. The agent derives all three from the same rollup. The mapper's
+checklist may reject an impossible `review_ready` declaration but never promotes
 `draft`.
 
 ---
@@ -571,7 +569,7 @@ validator may reject an impossible `review_ready` declaration but never promote
 
 Appendix A is one fenced `yaml` block with exactly these keys:
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.3"`, `workflow: annual_2025`, `tax_year: 2025`,
+`plugin_version: "0.5.4"`, `workflow: annual_2025`, `tax_year: 2025`,
 `created_at`, `updated_at` (ISO 8601), `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow`, `sections`, and `sources_loaded`.
 

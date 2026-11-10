@@ -95,7 +95,7 @@ can point to a row. No name, BSN, or IBAN is needed; do not record them.]
 
 | Key | Value | Src |
 |-----|-------|-----|
-| `residency.full_year_nl_resident` | [yes / moving abroad in 2026 -- residency review] | [F/U/?] |
+| `residency.full_year_nl_resident` | [yes / no -- moving or living abroad: terminal residency boundary, stop] | [F/U/?] |
 | `taxpayer.type` | [non-business individual / individual with a recognised IB business form] | [F/U/?] |
 | `person.date_of_birth` | [date] | [F/U/?] |
 | `person.aow_by_tax_year.2026.status` | [below_all_year / reaches_during_year / aow_all_year] | [C:aow_rule(person.date_of_birth) / F/U/?] |
@@ -405,7 +405,7 @@ the MKB-winstvrijstelling, excluding the btw payable and the btw reclaimable,
 with a minus sign for an expected loss. It is the only business figure the 2026
 form asks for; the Belastingdienst applies the ondernemersaftrek and the
 MKB-winstvrijstelling itself. Every 2026 business figure is read from
-`nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`.
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`.
 
 ### Rollover check
 
@@ -456,7 +456,7 @@ subtracted from the profit estimate. This section reports the Zvw alongside the
 income-tax dataset and never inside it: no bijdrage amount, no Zvw row in the
 income-tax form, and no Zvw instalment, deadline, payment, or refund timing.
 Percentages and the maximumbijdrage-inkomen are read from
-`nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
+`../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
 Belastingdienst calculates the bijdrage.
 
 The income-tax field map contains no Zvw field or value: no Zvw `field_id`,
@@ -495,7 +495,6 @@ Do not show calculated credit amounts unless exact reviewed sources are register
 | Eigenwoningforfait amount            | EUR               | C:woz*pct |
 | Hillen deduction, if applicable       | EUR               | [C:reviewed_formula/?] |
 | **Box 1 own-home balance** (`box1_own_home_balance`) | EUR | C:eigenwoningforfait-total_deductible_own_home_costs-hillen_deduction |
-
 | **Estimated Box 1 income after own-home balance** | EUR | C:income_before_own_home+box1_own_home_balance |
 
 The WOZ date above is the own-home WOZ peildatum. Do not replace it with the
@@ -580,7 +579,7 @@ a total.
 
 | Item                                  | Amount            | Src |
 |---------------------------------------|-------------------|-----|
-| Heffingsvrij vermogen (single)        | EUR [from `nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`] | C:from_2026_table |
+| Heffingsvrij vermogen (single)        | EUR [from `../nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md`] | C:from_2026_table |
 | Heffingsvrij vermogen (partners)      | EUR [from `box3-provisional.md`] | C:from_2026_table |
 | Applied heffingsvrij vermogen         | EUR               | C:depends_on_partner_status |
 
@@ -775,7 +774,7 @@ appendices.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.3"
+plugin_version: "0.5.4"
 workflow: provisional_2026_request   # provisional_2026_request | provisional_2026_change | provisional_2026_review | provisional_2026_stopzetten
 tax_year: 2026
 created_at: ""                       # ISO 8601

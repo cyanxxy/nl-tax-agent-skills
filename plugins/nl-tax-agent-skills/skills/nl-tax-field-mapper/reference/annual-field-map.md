@@ -154,7 +154,7 @@ addition to the ordinary source record:
 | field_id | Meaning | Allowed value |
 |---|---|---|
 | `business.legal_form` | Legal form established during intake | `eenmanszaak`, `vof`, `maatschap`, `cv`, `bv`, or `other` |
-| `onderneming.routing.complex_case` | At least one Phase 2A computation boundary applies | `true` or `false`; an omitted or unanswered marker is never interpreted as `false` |
+| `onderneming.routing.complex_case` | At least one Phase 2A computation boundary applies. `true` when the workpack profile row `routing.complex_business_screening` is `manual_review` **or** the Winst section records any blocked computation or manual-review boundary; `false` only when that row is `standard` and Phase 2A finished without one. Emit it only when `business.has_onderneming` is `true` | `true` or `false`; an omitted or unanswered marker is never interpreted as `false` |
 
 These records are not a substitute for the actual business-row coverage review.
 They route the case; they do not prove that the winst-en-verliesrekening, balans,
@@ -353,8 +353,8 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
   `not_applicable_sourced`, or `unresolved`; include the source/profile path that
   supports every `not_applicable_sourced` decision. An omitted row or unanswered
   yes/no question is `unresolved`, never false and never not applicable. A single
-  unresolved applicable-or-unknown row keeps the map `draft` independently of
-  what an optional validator reports. It also stays `draft` with the blocker
+  unresolved applicable-or-unknown row keeps the map `draft` whatever
+  any other check reports. It also stays `draft` with the blocker
   `business-section schema review`, recorded in top-level notes, when a needed
   rubriek, question or identifier falls outside the reviewed schema, or when a
   complex-business marker applies.
@@ -384,7 +384,7 @@ MKB-winstvrijstelling, or the kleinschaligheidsinvesteringsaftrek.
 ### Notes on eigen woning fields
 - Eigenwoningforfait is calculated as a percentage of the WOZ-waarde. The percentage depends on the WOZ value range (see `../nl-tax-shared-resources/knowledge/years/2025/annual/own-home.md`).
 - Hypotheekrente (mortgage interest) is deductible only for qualifying mortgages (annuitair or lineair for post-2013 mortgages).
-- The net eigen woning result (eigenwoningforfait minus hypotheekrente) flows into box 1.
+- The net eigen woning result (eigenwoningforfait minus total deductible own-home costs minus any Hillen deduction) flows into box 1.
 
 ---
 

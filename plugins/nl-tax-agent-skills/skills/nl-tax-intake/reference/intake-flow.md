@@ -165,9 +165,14 @@ After screening, cover the applicable follow-ups:
   `box2.has_aanmerkelijk_belang`.
 - **Complex Box 2:** when Box 2 exists or the user mentions a BV/DGA role,
   dividends, share sale, own-BV loan, or Box 2 estimate, ask before the
-  workflow anchor whether it involves a share sale or valuation dispute,
-  migration, restructuring, inheritance/gift, non-arm's-length pricing, or
-  borrowing from the own BV. A yes or unclear answer is terminal manual review.
+  workflow anchor whether it involves a valuation dispute, restructuring,
+  death, inheritance or gift of the shares, informal capital, a
+  non-arm's-length transfer, or a corporate-tax-heavy DGA question. A yes or
+  unclear answer is terminal manual review. An ordinary share sale and
+  borrowing from the own BV stay in scope as standard Box 2 preparation and are
+  never terminal; the Box 2 helper may still flag an uncertain
+  excessive-borrowing position. Emigration, immigration or a nonresident
+  position follows the residency route, not this screen.
 - **Business:** for an `eenmanszaak`/ZZP, `business.has_onderneming` is true,
   with the legal form. Annual 2025 prepares the complete business section, from
   the reviewed zakelijke schema through the ordered profit chain to the

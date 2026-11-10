@@ -95,10 +95,10 @@ so the download includes the field map; without consent, create no file.
 
 Then invoke `nl-tax-field-mapper`; it alone composes and checks the annual
 field map using
-`nl-tax-field-mapper/templates/field-map-template.yaml`,
-`nl-tax-field-mapper/reference/mapping-principles.md`,
-`nl-tax-field-mapper/reference/annual-field-map.md`, and
-`nl-tax-field-mapper/reference/field-map-rules.yaml`. It shows the `Field map
+`../nl-tax-field-mapper/templates/field-map-template.yaml`,
+`../nl-tax-field-mapper/reference/mapping-principles.md`,
+`../nl-tax-field-mapper/reference/annual-field-map.md`, and
+`../nl-tax-field-mapper/reference/field-map-rules.yaml`. It shows the `Field map
 summary` table in the conversation and, only when the workpack is saved, writes
 that summary and the Appendix B `yaml` block into the file. Its YAML is
 composed and checked but never printed in chat. The confirmed workpack
@@ -134,8 +134,7 @@ a standing reason to withhold `review_ready`.
 For a business map, require the mapper's per-identifier coverage notes before
 accepting that rollup: every W&V, balance, private, prior-year-set-off and question
 identifier must be mapped, sourced not applicable, or unresolved. Any unresolved
-or omitted classification forces `draft`; the optional validator is only a
-structural backstop and cannot waive this gate.
+or omitted classification forces `draft`; no later check can waive this gate.
 
 ### 10.5 Dual-workflow handoff
 

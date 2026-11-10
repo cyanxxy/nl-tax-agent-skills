@@ -125,7 +125,7 @@ The value is an estimate provided by the taxpayer or derived from available info
 The value comes from an existing voorlopige aanslag or prior-year filing.
 
 - `evidence_id`: optional -- references the beschikking's row in `## Documents and sources`
-- Used primarily in provisional change/review subflows
+- Used primarily in the provisional change subflow
 - Represents the "before" value in a delta comparison
 
 ### `calculated`
@@ -134,7 +134,7 @@ The value was computed from other field values using tax rules.
 
 - `evidence_id`: null
 - The calculation logic must be noted (e.g., "eigenwoningforfait = WOZ-waarde * 0.35%")
-- The input fields used in the calculation must be listed in `notes`
+- The input fields used in the calculation must be listed in `source.calculated_from`
 
 ### `assumption`
 

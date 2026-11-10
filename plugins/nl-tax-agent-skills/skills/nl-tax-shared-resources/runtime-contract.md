@@ -219,7 +219,7 @@ income tax; no browser or connector operates it.
   substitute the difference for the corrected totals on a suppletie form.
 - Changed transaction, period, accounting-system, KOR, or deduction facts
   invalidate generation, mapping, and any checklist under the stale-output
-  rules above. A later period does not clear an earlier period's stale state.
+  rules in `runtime-workpack-files.md`. A later period does not clear an earlier period's stale state.
 
 ## Box 3 actual-return comparison boundary
 
@@ -384,11 +384,11 @@ workflow or a requirement for completing the workpack.
   year, section, bounded review question, the facts under review with their
   provenance, and the reviewed source IDs or rule-note paths. If the workpack is
   saved, the brief may add its path; the reviewer reads nothing else from the
-  taxpayer's files. For an extended (VAT, ICP, OSS, international or annual
-  2026) workflow, the brief also carries the resolved path of
-  `../nl-tax-shared-resources/reference/workflow-scopes.yaml` and of each rule
-  note in use, because a reviewer agent has no skill directory to resolve
-  relative paths against.
+  taxpayer's files. For a VAT, ICP, OSS, international or annual 2026
+  workflow, the brief also carries the resolved path of each rule note in use
+  and, except for VAT and VAT correction (which have no scope there), of
+  `../nl-tax-shared-resources/reference/workflow-scopes.yaml`, because a
+  reviewer agent has no skill directory to resolve relative paths against.
 - Give a reviewer only read/research capabilities for the named material and
   public official sources. Never grant Bash, Write, Edit, computer use,
   connectors, MCP tools, or another write-capable tool. It may inspect

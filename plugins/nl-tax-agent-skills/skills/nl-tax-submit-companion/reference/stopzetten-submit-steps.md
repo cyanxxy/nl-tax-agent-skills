@@ -10,7 +10,8 @@ found under Inkomstenbelasting in Mijn Belastingdienst. It is only visible once
 the voorlopige aanslag (the monthly refund) has actually been issued.
 
 **Hard deadline: stopzetten for 2026 must be done before 1 October 2026.** After
-that the refund keeps running for the year and is settled at the annual return.
+that the form can no longer stop the 2026 refund; any difference is reconciled
+later, at the annual return when one is filed.
 Before writing checklist steps, compare the current date with 2026-10-01. If the
 current date is on or after 2026-10-01, do not generate a stopzetten checklist;
 put the passed cutoff in Blockers and route to review/change or annual-return

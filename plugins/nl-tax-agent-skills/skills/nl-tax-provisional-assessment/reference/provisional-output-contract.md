@@ -151,7 +151,7 @@ The workpack opens with a STATUS banner derived from the section rollup in
 
 Appendix A `readiness` (`draft` / `review_ready`) and the field-map
 `readiness` come from the same rollup. This skill is the single readiness
-authority; a validator may reject an impossible `review_ready` but never
+authority; the mapper's checklist may reject an impossible `review_ready` but never
 promotes `draft`.
 
 ---
@@ -514,7 +514,7 @@ Do not expand it into generic credential boilerplate.
 
 `Appendix A — Resume record` is one fenced `yaml` block with
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.3"`, `workflow: provisional_2026_<subflow>`,
+`plugin_version: "0.5.4"`, `workflow: provisional_2026_<subflow>`,
 `tax_year: 2026`, `created_at`, `updated_at`, `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow: null`, `sections`, and
 `sources_loaded`. `save_consent` defaults to `not_given` in the template and is

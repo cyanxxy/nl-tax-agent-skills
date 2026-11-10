@@ -159,7 +159,7 @@ documents: `verliesbeschikking`,
 - **Description:** RVO decision supporting a research or investment facility --
   an S&O-verklaring for the aftrek speur- en ontwikkelingswerk, or an EIA / MIA /
   Vamil verklaring for a qualifying investment.
-- **Typical fields:** type verklaring (S&O / EIA / MIA / Vamil), beschikkingsnummer, dagtekening, periode, goedgekeurd investeringsbedrag or toegekende S&O-uren, omschrijving bedrijfsmiddel.
+- **Typical fields:** type verklaring (S&O / EIA / MIA / Vamil), dagtekening, periode, goedgekeurd investeringsbedrag or toegekende S&O-uren, omschrijving bedrijfsmiddel.
 - **Boundary:** The facility is only claimable with the matching RVO verklaring.
   Without one, record the gap as an open question; never assume a verklaring
   exists because the investment looks eligible.
@@ -180,7 +180,7 @@ documents: `verliesbeschikking`,
 - **Description:** Annual statement from the insurer or bank for lijfrente
   premiums or inleg paid by the ondernemer, used for the jaarruimte and
   reserveringsruimte.
-- **Typical fields:** aanbieder, polis- of rekeningnummer, betaalde premie of inleg, producttype, tax year.
+- **Typical fields:** aanbieder, betaalde premie of inleg, producttype, tax year (never the polis- or rekeningnummer).
 - **Boundary:** Same document family as `lijfrente_overzicht` under Deductions &
   Gifts -- record the document once. Use `lijfrente_jaaroverzicht` for the
   ondernemer's annual statement feeding the jaarruimte and `lijfrente_overzicht`

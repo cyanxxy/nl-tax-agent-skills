@@ -97,7 +97,7 @@ The taxpayer can have only one fiscal partner at a time. If multiple people coul
 
 ### Emigration or immigration
 
-If either partner emigrated or immigrated during the year, additional rules apply. This project treats those cases as unsupported unless a dedicated reviewed source pack is added.
+If either partner emigrated or immigrated during the year, additional rules apply. This helper does not handle those cases. The resident workflows treat them as manual review; an annual M or C return is prepared, draft only, by `../nl-tax-international-return/SKILL.md`.
 
 ## Verification checklist
 

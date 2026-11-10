@@ -21,7 +21,7 @@ the next useful questions, and keeps judgment in the conversation; the subflow
 labels below are routing and resume aids, not an executable state machine or
 tax-decision engine.
 
-Across review/change output, state that a later **unsolicited** VA based on earlier data **may be issued**, but is **not guaranteed**. For a change, prepare and **verify** the **complete dataset**; all applicable categories are required, not only the changed item. **Moving abroad** routes to **residency review** and is **not a categorical stopzetten reason**.
+Across review/change output, state that a later **unsolicited** VA based on earlier data **may be issued**, but is **not guaranteed**. For a change, prepare and **verify** the **complete dataset**; all applicable categories are required, not only the changed item. **Moving abroad** routes to **residency review** and is **not a categorical stopzetten reason**. That residency review is terminal for this workflow: the provisional 2026 boundary in `../nl-tax-intake/reference/unsupported-cases.md` (section 1) applies, so prepare no provisional workpack or stopzetten checklist for it.
 
 For `provisional_2026_change`, load `subflows/change.md` before the first
 change question. When intake still had to establish missing setup facts, the

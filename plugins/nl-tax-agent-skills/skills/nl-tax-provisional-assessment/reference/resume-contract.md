@@ -72,6 +72,6 @@ write `profile.yaml`, `session-progress.yaml`, or `evidence-index.yaml`.
 ## Background, scheduled, or child tasks
 
 Such a task continues only from a saved workpack the user named. If none
-exists, it reports that and stops. It never re-runs intake, writes any other
-file, or passes the generation gate without the user's confirmation in the
-main conversation.
+exists, it reports that and stops. It never re-runs intake and never writes
+a file. It never passes the generation gate without the user's confirmation
+in the main conversation.

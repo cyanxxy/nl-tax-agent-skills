@@ -157,6 +157,12 @@ it with the taxpayer; never reconstruct an amount from memory or a summary.
 4. **Final human review.** The checks the taxpayer performs before deciding
    whether to sign and send personally.
 
+`templates/manual-entry-checklist.md` also carries three short parts: Warnings
+(low-confidence rows and assumptions the user already accepted), After sending, and the Authorization
+check. Keep them where the template places them; they never replace a blocker.
+Omit all three whenever only **Blockers** may be shown (a stale or unconfirmed
+map, and the draft-only workflows above).
+
 Keep checklist wording task-focused. Do not add generic credential warning
 paragraphs.
 

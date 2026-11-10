@@ -10,10 +10,10 @@ for a gap. Do not compose the field map yourself.
 After the workpack generation gate in Phase 10, `nl-tax-field-mapper` is the
 only author of the field map. It produces the `Field map summary` table and the
 canonical `yaml` block for Appendix B, using
-`nl-tax-field-mapper/templates/field-map-template.yaml`,
-`nl-tax-field-mapper/reference/mapping-principles.md`,
-`nl-tax-field-mapper/reference/annual-field-map.md`, and
-`nl-tax-field-mapper/reference/field-map-rules.yaml`. Until then both sections
+`../nl-tax-field-mapper/templates/field-map-template.yaml`,
+`../nl-tax-field-mapper/reference/mapping-principles.md`,
+`../nl-tax-field-mapper/reference/annual-field-map.md`, and
+`../nl-tax-field-mapper/reference/field-map-rules.yaml`. Until then both sections
 read `not yet mapped`.
 
 ### 7.2 Separation from provisional
