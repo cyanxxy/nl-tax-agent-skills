@@ -2,7 +2,7 @@
 
 This policy covers the `nl-tax-agent-skills` plugin. The plugin is a set of
 skills (Markdown and YAML instructions) that runs inside the AI host you choose:
-Claude (Cowork, Claude Code, or the Claude apps), ChatGPT Work, or Codex. It has
+Claude (the Claude apps or Claude Code), ChatGPT Work, or Codex. It has
 no backend, no server, and no account. The plugin authors receive none of your
 data.
 

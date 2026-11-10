@@ -1,6 +1,6 @@
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "Conversational, source-traceable Dutch tax workpacks for manual Mijn Belastingdienst entry.",
   "author": {
     "name": "Mansour Damanpak",
@@ -49,7 +49,7 @@
     "supportURL": "https://github.com/cyanxxy/nl-tax-agent-skills/issues",
     "privacyPolicyURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md",
     "termsOfServiceURL": "https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/TERMS.md",
-    "brandColor": "#1F6FEB",
+    "brandColor": "#21468B",
     "composerIcon": "./assets/icon.png",
     "logo": "./assets/icon.png"
   },

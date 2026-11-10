@@ -17,6 +17,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   install together, helpers are visible, and the reviewer subagent is absent.
   The plugin package itself is unchanged.
 
+## [0.5.5] — 2026-11-10 — New icon and current install steps
+
+Presentation release. No tax rule, workflow or skill behaviour changes.
+
+### Changed
+
+- **New icon.** A tax document with a euro sign and a check mark on the Dutch
+  flag replaces the old icon in the plugin and every public skill. Its SVG
+  source is in `docs/maintainers/assets/icon.svg`.
+- **Brand colour** is now Dutch flag blue `#21468B` in the Codex manifest and
+  every `agents/openai.yaml`.
+- **Claude manifest** declares `icon`, which the Claude plugin directory reads
+  for its listing.
+- **READMEs.** The repository README is shorter and user-focused: one
+  coverage table, a diagram of what the assistant does and what only you do,
+  and the architecture moved out to CONTRIBUTING. Install steps in both
+  READMEs follow the current Claude and ChatGPT docs: Unified Claude (Chat
+  and Cowork merged on 2026-11-10), the **Plugins** page that replaced
+  Customize, organization sync from Plugins & skills, Upload plugin, the
+  ChatGPT Plugins Directory, and `@` invocation in ChatGPT. CONTRIBUTING now
+  says claude.ai installs follow the repository, not the manifest version.
+
 ## [0.5.4] — 2026-11-10 — Audit consistency fixes
 
 Consistency release from a full-project audit. No tax rate, threshold or
