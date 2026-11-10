@@ -117,7 +117,7 @@ Record the app version, plan/workspace type, region, date, prompt, result, and
 reviewer for every smoke run.
 
 Current OpenAI requirements: https://developers.openai.com/plugins/deploy/submission
-and https://developers.openai.com/plugins/plugin-guidelines (checked 2026-10-01).
+and https://developers.openai.com/plugins/plugin-guidelines (checked 2026-11-10).
 Local source-review and smoke-test gates still apply independently of the
 portal's minimum upload requirements.
 

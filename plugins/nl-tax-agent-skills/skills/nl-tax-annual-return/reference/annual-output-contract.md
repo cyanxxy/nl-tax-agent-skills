@@ -569,7 +569,7 @@ checklist may reject an impossible `review_ready` declaration but never promotes
 
 Appendix A is one fenced `yaml` block with exactly these keys:
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.4"`, `workflow: annual_2025`, `tax_year: 2025`,
+`plugin_version: "0.5.5"`, `workflow: annual_2025`, `tax_year: 2025`,
 `created_at`, `updated_at` (ISO 8601), `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow`, `sections`, and `sources_loaded`.
 

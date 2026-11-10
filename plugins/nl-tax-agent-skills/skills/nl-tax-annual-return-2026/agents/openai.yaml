@@ -3,7 +3,7 @@ interface:
   short_description: "Collect draft 2026 annual income-tax evidence."
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  brand_color: "#1F6FEB"
+  brand_color: "#21468B"
   default_prompt: "Start collecting evidence for my draft 2026 Dutch annual income-tax workpack."
 
 policy:
