@@ -7,7 +7,7 @@
 **Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack<br />for manual entry in Mijn Belastingdienst.**
 
 For employees, homeowners, ZZP'ers and freelancers.<br />
-Runs in Claude, Claude Code, Codex and ChatGPT.
+Runs in Claude, Claude Code, Codex and ChatGPT, and installs in other agents through the `skills` CLI.
 
 [![Release](https://img.shields.io/github/v/release/cyanxxy/nl-tax-agent-skills?style=flat-square&label=release)](https://github.com/cyanxxy/nl-tax-agent-skills/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg?style=flat-square)](LICENSE)
@@ -90,8 +90,9 @@ kept for your tax professional. 2027 is blocked until its sources are in.
 
 ## 📦 Install
 
-Install the **whole plugin**. The skills share one knowledge pack, so copying a
-single skill folder or uploading it on its own doesn't work.
+Install the **whole plugin**, or all of its skills together. The skills share
+one knowledge pack, so copying a single skill folder or uploading it on its own
+doesn't work.
 
 <table>
 <tr><th>Host</th><th>How</th></tr>
@@ -127,6 +128,20 @@ Then start a new session.
 
 Coming to the ChatGPT Plugins Directory. Once it's listed, open **Plugins**,
 install **NL Tax Agent Skills**, then start a new chat (Chat or Work).
+
+</td></tr>
+<tr><td><b>Other agents</b><br/><sub>Cursor, Gemini CLI, Copilot, OpenCode…</sub></td><td>
+
+With the open [`skills` CLI](https://github.com/vercel-labs/skills) (Node.js
+22.20 or later), always with every skill together:
+
+```bash
+npx skills add cyanxxy/nl-tax-agent-skills --skill '*'
+```
+
+Start with `nl-tax-intake`. These agents also list the background helpers and
+`nl-tax-shared-resources` as skills, and the specialist reviewer isn't
+installed; the workflows run without it.
 
 </td></tr>
 </table>

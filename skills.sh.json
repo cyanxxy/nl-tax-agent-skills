@@ -1,0 +1,47 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "paths": ["./plugins/nl-tax-agent-skills/skills"],
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Start here",
+      "description": "Entry router and read-only rule lookup. Install every skill together: they read shared files from sibling folders.",
+      "skills": ["nl-tax-intake", "nl-tax-knowledge"]
+    },
+    {
+      "title": "Reviewed workflows",
+      "description": "Annual 2025 and voorlopige aanslag 2026 workpacks, the field map, and the manual-entry checklist.",
+      "skills": [
+        "nl-tax-annual-return",
+        "nl-tax-provisional-assessment",
+        "nl-tax-field-mapper",
+        "nl-tax-submit-companion"
+      ]
+    },
+    {
+      "title": "Draft-only previews",
+      "description": "VAT, ICP, OSS, M/C-biljet and annual 2026 drafts whose sources still await human review.",
+      "skills": [
+        "nl-tax-vat-return",
+        "nl-tax-vat-correction",
+        "nl-tax-icp",
+        "nl-tax-oss",
+        "nl-tax-international-return",
+        "nl-tax-annual-return-2026"
+      ]
+    },
+    {
+      "title": "Background helpers and shared resources",
+      "description": "Required by the workflows above and not meant to be started directly.",
+      "skills": [
+        "nl-tax-shared-resources",
+        "nl-tax-box1-home",
+        "nl-tax-box2",
+        "nl-tax-box3",
+        "nl-tax-winst",
+        "nl-tax-partner-deductions",
+        "nl-tax-vat-adjustments"
+      ]
+    }
+  ]
+}
