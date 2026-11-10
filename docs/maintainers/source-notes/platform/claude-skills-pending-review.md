@@ -30,11 +30,13 @@ re-records its hash. Until then, where the two disagree, follow this file.
 ## Tool control
 
 - Declare `allowed-tools` as one space-separated string, as the specification
-  defines it (for example `allowed-tools: Read Glob Grep Edit(./workspace/**)`).
+  defines it (for example `allowed-tools: Read Glob Grep`). Since 0.5.3 that is the only
+  value used: the Claude plugin directory accepts entries beyond
+  Read/Grep/Glob/LS only from Verified organizations, and CI enforces it.
   This replaces developer instruction 4, which asked for a YAML list.
 - Skills pre-approve no `Bash` and no `Write`, so the `python3` advice for
-  `Bash(...)` patterns no longer applies. `Edit(...)` rules cover every
-  built-in tool that creates or changes files.
+  `Bash(...)` patterns no longer applies. Skills pre-approve no `Edit` either;
+  a consented save goes through the host's normal permission prompt.
 - In Claude Code the pre-approval lasts only for the turn that invokes the
   skill.
 
@@ -51,5 +53,4 @@ re-records its hash. Until then, where the two disagree, follow this file.
   `compatibility` field.
 - `submission/openai/build_bundle.py` strips the Claude-only keys from the
   OpenAI bundle. CI runs `claude plugin validate --strict` on the plugin and
-  marketplace, and `skills-ref validate` on the OpenAI bundle and on a
-  spec-only copy of the Claude plugin skills.
+  marketplace.

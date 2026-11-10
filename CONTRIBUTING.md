@@ -8,7 +8,8 @@ backend, web app, or filing automation. Reasoning lives in `SKILL.md` playbooks;
 one Claude-only specialist reviewer provides bounded cross-checks without
 owning the taxpayer conversation or the workpack.
 Taxpayer workflows need no Python: the installed plugin ships no scripts and
-pre-approves no shell commands, and the repository has no Python tooling.
+pre-approves no shell commands, and the repository's only Python is the OpenAI bundle builder
+`submission/openai/build_bundle.py`.
 When extending behavior, put agent guidance in a `SKILL.md`, not in a script.
 
 Since 0.4 the plugin is **conversation-first**: nothing is written by default,
@@ -22,7 +23,7 @@ where this guide and the spec disagree, the spec wins.
 ## Repository layout
 
 The plugin is the product package — `plugins/nl-tax-agent-skills/`. Repository-level
-tests, offline evaluations, submission tooling, marketplace manifests, and project docs
+evaluations, submission tooling, marketplace manifests, and project docs
 stay outside that distributable directory. That includes the Claude eval cases
 in `evals/claude-plugin/`: since November 2026 the Claude plugin directory has
 been reported to refuse plugins that ship Markdown with non-skill frontmatter
@@ -42,7 +43,6 @@ plugins/nl-tax-agent-skills/
   .codex-plugin/plugin.json
   README.md
   assets/                           # icon.png (the plugin icon; public skills copy it to skills/<name>/assets/)
-  evals/                            # Claude eval cases (cowork-*/prompt.md + graders); not in the OpenAI bundle
   agents/
     nl-tax-specialist-reviewer.md   # Claude Cowork specialist reviewer
   skills/
@@ -70,6 +70,7 @@ plugins/nl-tax-agent-skills/
     nl-tax-partner-deductions/      # background helper; writes nothing
     nl-tax-field-mapper/            # field map summary + Appendix B of the workpack
     nl-tax-submit-companion/        # manual-entry checklist section of the workpack
+evals/claude-plugin/                # Claude eval cases (cowork-*/prompt.md + graders), staged into a plugin copy for runs
 evals/nl-tax-agent-skills/fixtures/ # repository-only scenarios (OpenAI submission test cases)
 submission/openai/build_bundle.py   # builds the OpenAI ZIP (release workflow)
 ```
@@ -94,7 +95,7 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -159,7 +160,8 @@ allowed-tools: Read Glob Grep
 ---
 ```
 
-Every skill declares exactly `allowed-tools: Read Glob Grep`. The Claude plugin
+Every skill except the never-invoked `nl-tax-shared-resources` bundle (which
+declares none) declares exactly `allowed-tools: Read Glob Grep`. The Claude plugin
 directory accepts `allowed-tools` entries beyond Read/Grep/Glob/LS only from
 Verified organizations, and refused 0.5.2 for its `Edit(./workspace/**)` and
 `AskUserQuestion` entries. Do not add `Edit`, `Write`, `Bash`,
@@ -385,10 +387,18 @@ CI (`.github/workflows/ci.yml`) runs on every push and pull request:
 claude plugin validate --strict plugins/nl-tax-agent-skills
 claude plugin validate --strict .
 jq empty plugins/nl-tax-agent-skills/.codex-plugin/plugin.json .agents/plugins/marketplace.json
-# Package rules: no root plugin.json, no executable code in the plugin
+# Package rules: no root plugin.json, no evals/ folder, no executable code in the plugin
 test ! -e plugins/nl-tax-agent-skills/plugin.json
+test ! -e plugins/nl-tax-agent-skills/evals
 test -z "$(find plugins/nl-tax-agent-skills -type f \( -name '*.py' -o -name '*.sh' -o -name '*.js' -o -name '*.ts' \))"
 ```
+
+Two more steps fail the build: when any `SKILL.md` lists an `allowed-tools`
+entry other than Read, Grep, Glob or LS, or uses the YAML-list form; and when
+the two manifests disagree on the version, a `plugin_version` anywhere under
+`skills/` differs from it, or `CHANGELOG.md` has no section for it. CI runs on
+pull requests and on `main`; the release workflow reruns it and publishes only
+from `main` after it passes.
 
 `claude plugin validate` is Anthropic's official check of the manifests and the
 skill and agent frontmatter. It runs offline and needs no API key.
@@ -418,11 +428,11 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.3`):
+Both plugin manifests pin a fixed version (currently `0.5.4`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.3"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.3"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.4"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.4"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
@@ -457,10 +467,11 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
   Every scored grader must pass, so passing file checks cannot hide a failed
   tax-rule or safety rubric. Three runs check consistency before release;
   `--runs 1` is only a quick check and keeps the same threshold.
-  The grant applies to every case in the run, so every case without save
-  consent in the conversation carries `graders/no-write.md` and
-  `graders/no-edit.md` (`tool_used` with `min: 0` and `max: 0` on `Write` and
-  `Edit`); give any new no-save case both graders.
+  A gated tool reaches the agent only when the case lists it and the run
+  grants it. Every case without save consent in the conversation therefore
+  lists `Edit, Write` in `allowed_tools` and carries `graders/no-write.md` and
+  `graders/no-edit.md` (`tool_used` with `min: 0` and `max: 0`); give any new
+  no-save case both the tools and both graders, or the graders cannot fail.
 - Exclude `.git/`, `.claude/`, `.codex/`, `.plugin-eval/`, `__MACOSX/`,
   `__pycache__/`, local workspaces, uploads, evidence files, compiled Python,
   and local `.agents/` state other than `.agents/plugins/marketplace.json`.

@@ -144,7 +144,7 @@ publisher's subsequent human sign-off.
 Before releasing this candidate, the live smoke-test record above must be
 completed. The ZIP must then be
 rebuilt and uploaded under the verified individual identity. Packaging checks
-and repository tests do not substitute for these remaining steps.
+do not substitute for these remaining steps.
 
 ## Draft-only previews — 2 October 2026
 

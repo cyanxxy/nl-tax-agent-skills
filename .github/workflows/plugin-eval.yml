@@ -50,8 +50,8 @@ jobs:
           cp -R plugins/nl-tax-agent-skills "$RUNNER_TEMP/stage/"
           cp -R evals/claude-plugin "$RUNNER_TEMP/stage/nl-tax-agent-skills/evals"
 
-      # --allow-tools Edit Write: the save case needs them; every other case
-      # carries no-write/no-edit graders, so the grant cannot hide a bad write.
+      # --allow-tools Edit Write: the save case needs them, and the no-save
+      # cases list both tools so their no-write/no-edit graders can fail.
       - name: Run eval suite
         env:
           CASE: ${{ inputs.case }}

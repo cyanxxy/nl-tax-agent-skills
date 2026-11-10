@@ -6,7 +6,9 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+  workflow_call:
 
 jobs:
   validate:
@@ -46,4 +48,17 @@ jobs:
             | sed 's/^allowed-tools://' | tr ' ,' '\n\n' | grep -v -E '^(Read|Grep|Glob|LS)?$' || true)
           if [ -n "$bad" ]; then echo "::error::Disallowed allowed-tools entries: $bad"; exit 1; fi
           # A YAML-list form would slip past the one-line check above.
-          ! grep -q -E '^allowed-tools:[[:space:]]*$' plugins/nl-tax-agent-skills/skills/*/SKILL.md
+          if grep -q -E '^allowed-tools:[[:space:]]*$' plugins/nl-tax-agent-skills/skills/*/SKILL.md; then
+            echo "::error::allowed-tools must be one space-separated line, not a YAML list"; exit 1
+          fi
+
+      # The release workflow publishes whatever version the manifests carry.
+      - name: Versions agree
+        run: |
+          v=$(jq -r .version plugins/nl-tax-agent-skills/.claude-plugin/plugin.json)
+          c=$(jq -r .version plugins/nl-tax-agent-skills/.codex-plugin/plugin.json)
+          if [ "$v" != "$c" ]; then echo "::error::Manifest versions differ: Claude $v, Codex $c"; exit 1; fi
+          v_re=${v//./\\.}
+          stale=$(grep -rnE 'plugin_version: *"?[0-9]+\.[0-9]+\.[0-9]+' plugins/nl-tax-agent-skills/skills | grep -v "plugin_version: *\"\?$v_re\b" || true)
+          if [ -n "$stale" ]; then echo "::error::plugin_version differs from manifest $v:"; echo "$stale"; exit 1; fi
+          grep -q "^## \[$v_re\]" CHANGELOG.md || { echo "::error::CHANGELOG.md has no ## [$v] section"; exit 1; }
