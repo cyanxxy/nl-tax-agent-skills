@@ -8,7 +8,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Answer how 2025 Box 2 dividend taxation works from the bundled notes, without invoking a background helper, starting intake, or offering a workpack.
 ---
 Ik heb een eigen BV en keer mezelf dit jaar dividend uit. Hoe wordt dat

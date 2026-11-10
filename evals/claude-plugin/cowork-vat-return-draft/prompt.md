@@ -6,7 +6,7 @@ tags: [cowork, vat]
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Prepare Q3 2026 VAT facts in chat without confusing no sales with a nil return or bypassing VAT source review.
 ---
 Help prepare my Q3 2026 btw-aangifte. My eenmanszaak is established in the

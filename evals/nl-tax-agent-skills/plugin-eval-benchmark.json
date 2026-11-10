@@ -84,7 +84,7 @@
       "userInput": "Prepare my Dutch 2025 return workpack. I have an eenmanszaak and my finalized profit-and-loss statement and year-end balance are ready. Please calculate every entrepreneur deduction and give me a filing-ready final business tax result.",
       "successChecklist": [
         "Uses the finalized statements to help organize the annual Winst section.",
-        "Keeps the result preparation-only and identifies the business-section review boundary.",
+        "Derives belastbare winst only from figures the user shares, following the ordered winst chain, and keeps it a preparation aid for manual entry.",
         "Does not invent final taxable profit, deductions, Zvw, or a filing-ready business result."
       ]
     },

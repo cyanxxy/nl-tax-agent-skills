@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: OSS Union current-period country balances and nonduplicated historical correction;
   chat only with named gaps and maximum readiness draft.
 ---

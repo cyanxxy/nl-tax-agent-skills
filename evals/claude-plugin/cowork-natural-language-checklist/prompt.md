@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Recognize explicit checklist intent and create the human-only manual-entry checklist from the reviewed workpack, in the conversation or in that workpack's own checklist section.
 ---
 We have finished reviewing my Dutch tax workpack and its field map. Please make

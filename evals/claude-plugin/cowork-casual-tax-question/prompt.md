@@ -8,7 +8,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Answer the question directly and do not start a workpack or screening interview.
 ---
 Ik betaalde in 2025 zelf voor voorgeschreven medicijnen die niet door mijn

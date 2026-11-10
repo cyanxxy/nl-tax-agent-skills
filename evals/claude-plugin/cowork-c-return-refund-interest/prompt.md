@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Explain why a refund assessed within thirteen weeks does not qualify for interest merely because the C return was filed after 1 May.
 ---
 I lived outside the Netherlands for all of 2025. The Belastingdienst received

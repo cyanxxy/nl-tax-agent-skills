@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Check the resume record, continue from the first unfinished section without re-asking answered questions, keep saving only to the one fixed file, and re-confirm a figure that is not visible.
 ---
 Last week you helped me with my Dutch 2025 aangifte and I asked you to save the

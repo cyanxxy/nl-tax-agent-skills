@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Start annual 2025 only, retain the new provisional-2026 request, and continue into its collection after annual completion without reusing either preparation request as final-generation consent.
 ---
 Help me prepare both my Dutch 2025 income-tax return and a new 2026

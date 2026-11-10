@@ -1,8 +1,8 @@
 # Agentic and structural evaluation
 
 This directory separates two different kinds of evidence. The live benchmark
-evaluates an LLM-driven Cowork conversation. The offline fixture library checks
-only hard structural contracts. Passing one does not imply passing the other.
+evaluates an LLM-driven Cowork conversation. The fixture library is a set of written
+scenario descriptions that nothing grades automatically.
 
 Both follow the 0.4 conversation-first design
 (`docs/maintainers/0.4-conversation-first-design.md`): nothing is written by
@@ -89,19 +89,23 @@ without re-asking answered questions), `cowork-stale-checklist-after-correction`
 only the stale blocker and asks once to regenerate, never the old value), and
 no-write assertions on opening turns.
 
-Every `prompt.md` lists only the read-only tools
-`allowed_tools: [Read, Glob, Grep, Skill]`, so the agent can load the plugin's
-skills and read its knowledge notes. Files inside the plugin never grant
-`Write`, `Edit` or `Bash`. The one case that must save files,
-`cowork-vat-correction-periods`, gets its write tools from the operator grant
-`--allow-tools Edit Write` on the command line. That grant applies to every
-case in the run, so each no-save case carries `no-write.md` and `no-edit.md`,
-`tool_used` graders with `min: 0` and `max: 0` on `Write` and on `Edit`, that
-fail if the agent writes or edits a file before the user consents to saving.
-Only `cowork-vat-correction-periods` (save consent in the prompt) and
-`cowork-stale-checklist-after-correction` (the user says saving is already
-active in this conversation) omit them. Without the grant, the correction
-case's `file_exists` graders fail and the CLI warns that they cannot pass.
+Every `prompt.md` lists `Read, Glob, Grep, Skill`, so the agent can load the
+plugin's skills and read its knowledge notes. Files inside the plugin never
+grant `Write`, `Edit` or `Bash`. A gated tool reaches the agent only when the
+case lists it in `allowed_tools` and the run passes the operator grant
+`--allow-tools Edit Write`. Every case except
+`cowork-stale-checklist-after-correction` lists `Edit, Write`: the save case
+`cowork-vat-correction-periods` needs them for its `file_exists` graders, and
+each no-save case lists them so that its `no-write.md` and `no-edit.md`
+graders (`tool_used` with `min: 0` and `max: 0`) can actually fail when the
+agent writes or edits a file before the user consents to saving. A no-save
+case without the two tools would pass those graders vacuously. Without the
+operator grant, the correction case's `file_exists` graders fail and the CLI
+warns that they cannot pass.
+
+Under the default with/without ablation a `tool_used: Skill` grader is only a
+plugin-fired indicator, not part of the score. The two must-not-invoke checks
+(`no-helper.md`, `no-mapper.md`) therefore set `arm: both` so they are scored.
 
 When native evaluation is available, run a quick check from the repository root:
 

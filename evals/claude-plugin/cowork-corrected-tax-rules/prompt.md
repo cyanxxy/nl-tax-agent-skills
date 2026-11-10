@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Answer all three 2025 rule questions accurately, keep the deadline branches separate, and remain informational.
 ---
 I am checking a few rules for my Dutch 2025 income tax, not asking you to

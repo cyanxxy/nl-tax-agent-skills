@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Continue a separate migration-year (M) draft in chat, identify missing residence/treaty facts, and retain draft readiness.
 ---
 I moved from Belgium to the Netherlands on 1 September 2025 and want help
