@@ -506,10 +506,12 @@ Releases are automatic. `.github/workflows/release.yml` runs on every push to
 yet, it validates the plugin, creates the tag and the GitHub release on that
 commit, attaches `nl-tax-agent-skills-X.Y.Z-cowork.zip` (the tracked plugin
 files) and `nl-tax-agent-skills-X.Y.Z-openai.zip` (the OpenAI bundle), and
-uses the `## [X.Y.Z]` section of `CHANGELOG.md` as the notes. It fails if the
-two manifests disagree or the changelog section is missing.
+uses the `## [X.Y.Z]` section of `CHANGELOG.md` as the notes. The release is
+named after the heading's title part: `## [0.5.5] — 2026-12-01 — Short title`
+becomes "v0.5.5 — Short title"; a heading without one gives "v0.5.5". It
+fails if the two manifests disagree or the changelog section is missing.
 
 So a release is: bump both manifests and every template `plugin_version`, add
-the dated `## [X.Y.Z]` changelog section, and merge to `main`. A merge without
+the dated, titled `## [X.Y.Z] — date — title` changelog section, and merge to `main`. A merge without
 a version bump publishes nothing. To retry a failed release, run the workflow
 from the Actions tab.

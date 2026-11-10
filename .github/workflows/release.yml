@@ -3,7 +3,8 @@ name: Release
 # Every push to main publishes a GitHub release when the plugin manifests carry
 # a version that has no vX.Y.Z tag yet. A merge without a version bump does
 # nothing. The release creates the tag, attaches the Cowork and OpenAI ZIPs,
-# and uses the matching CHANGELOG.md section as its notes.
+# and uses the matching CHANGELOG.md section as its notes and the title after
+# the heading's date as its name.
 
 on:
   push:
@@ -78,6 +79,15 @@ jobs:
             echo "::error::CHANGELOG.md has no ## [$VERSION] section"
             exit 1
           fi
+          # Title from the heading "## [X.Y.Z] — YYYY-MM-DD — Short title";
+          # without a title part the release is named "vX.Y.Z".
+          title=$(awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 { print; exit }' CHANGELOG.md \
+            | sed -n 's/^## \[[^]]*\] — [0-9-]* — //p')
+          if [ -n "$title" ]; then
+            echo "v$VERSION — $title" > release/title.txt
+          else
+            echo "v$VERSION" > release/title.txt
+          fi
 
       - name: Build release ZIPs
         run: |
@@ -93,6 +103,6 @@ jobs:
         run: |
           gh release create "v$VERSION" \
             --target "$GITHUB_SHA" \
-            --title "v$VERSION" \
+            --title "$(cat release/title.txt)" \
             --notes-file release/notes.md \
             release/*.zip

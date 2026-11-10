@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.5.4] — 2026-11-10
+## [0.5.4] — 2026-11-10 — Audit consistency fixes
 
 Consistency release from a full-project audit. No tax rate, threshold or
 workflow scope changes; the fixes remove contradictions an agent would follow.
@@ -54,7 +54,7 @@ workflow scope changes; the fixes remove contradictions an agent would follow.
   is due, publishes only from `main`, and grants write access to the publish
   job alone.
 
-## [0.5.3] — 2026-11-08
+## [0.5.3] — 2026-11-08 — Read-only tool pre-approval
 
 Clears the Claude plugin directory policy refusal of 0.5.2. No tax rule,
 rate, or workflow scope changes.
@@ -76,7 +76,7 @@ rate, or workflow scope changes.
 - `cowork-vat-correction-periods` lists `Edit` and `Write` in its own
   `allowed_tools`; without them its two `file_exists` graders could never pass.
 
-## [0.5.2] — 2026-11-04
+## [0.5.2] — 2026-11-04 — Skills spec alignment, simpler CI, automatic releases
 
 Aligns the skills with the Agent Skills specification and Anthropic's skill
 authoring guidance. No tax rule, rate, or workflow scope changes.
