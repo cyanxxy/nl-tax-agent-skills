@@ -76,7 +76,7 @@ breakdown are explicit.
 
 | Group alias | Consumption state | Supply kind/origin | Period basis | Taxable base/currency | Verified rate/evidence and date | VAT/currency | EUR conversion/source | Src |
 |-------------|-------------------|--------------------|--------------|-----------------------|-----------------------------|--------------|-----------------------|-----|
-| [alias] | [country] | [goods/services/imports; origin] | [supply/payment date] | [amount/currency] | [rate/category/official evidence and human date] | [amount/currency] | [ECB date/rate/direction/formula] | [F/U/C/?] |
+| [alias] | [country] | [goods/services; origin] | [supply/payment date] | [amount/currency] | [rate/category/official evidence and human date] | [amount/currency] | [ECB date/rate/direction/formula] | [F/U/C/?] |
 
 Record excluded domestic/exempt/zero-rated supplies separately and explain
 their evidence-based classification. Input VAT is not an OSS deduction.
@@ -165,7 +165,7 @@ Belastingdienst Zakelijk. The assistant must not access or operate the portal.
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.3"
+plugin_version: "0.5.4"
 workflow: oss_<scheme>_<year>_<period>
 tax_year: null
 scheme: ""

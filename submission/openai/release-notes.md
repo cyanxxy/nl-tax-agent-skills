@@ -1,12 +1,13 @@
-# OpenAI Plugin Directory release 0.5.0
+# OpenAI Plugin Directory release 0.5.4
 
 NL Tax Agent Skills is a skills-only plugin for preparing source-traceable Dutch
 individual income-tax workpacks for manual Mijn Belastingdienst entry. It
 supports annual 2025 preparation, the 2026 voorlopige aanslag request, change,
 review, and stopzetten workflows, and read-only rule questions for both years.
 
-This release adds draft-only VAT, ICP, OSS/IOSS, international and annual 2026
-preparation. Skills guide the agent's use of the user's evidence and the
+It also includes draft-only VAT, ICP, OSS/IOSS, international and annual 2026
+preparation. Since 0.5.3 skills pre-approve only read tools, so the host asks
+for permission on every consented save. Skills guide the agent's use of the user's evidence and the
 bundled references. Preparation remains conversation-first: nothing is
 written by default, and saving requires consent. Each saved workpack holds
 the evidence, questions, resume record and field map for its workflow and

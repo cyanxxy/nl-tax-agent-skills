@@ -183,10 +183,15 @@ living status, and workflow first, batched as
 `intake-flow.md` describes; then fiscal partner, Box 2, business form,
 household composition, and the workflow-specific anchor.
 
-Before the workflow-specific anchor, screen complex Box 2 facts involving a
-share sale/valuation dispute, migration, restructuring, inheritance/gift,
-non-arm's-length pricing, or borrowing from an own BV; a yes or unclear answer
-is terminal manual review. A standard `eenmanszaak` is supported with
+Before the workflow-specific anchor, screen complex Box 2 facts: a valuation
+dispute, restructuring, death, inheritance or gift of the shares, informal
+capital, a non-arm's-length transfer, or a corporate-tax-heavy DGA question; a
+yes or unclear answer is terminal manual review. An ordinary share sale and
+borrowing from the own BV are standard Box 2 preparation and never terminal;
+the Box 2 helper may still flag an uncertain excessive-borrowing position for
+manual review. Emigration, immigration or a nonresident position is not a
+Box 2 screen: it follows the residency route (section 6 of
+`unsupported-cases.md`). A standard `eenmanszaak` is supported with
 `business.has_onderneming: true`. Complex business forms keep `annual_2025`
 active: only the blocked computation goes to manual review, with the roadmap
 marker `annual_2025_entrepreneurs` when the business computation itself is

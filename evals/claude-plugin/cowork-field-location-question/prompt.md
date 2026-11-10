@@ -8,7 +8,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Explain in general terms where mortgage interest goes in the 2025 return, without running the field mapper, starting intake, or offering a workpack.
 ---
 Waar in de aangifte inkomstenbelasting 2025 vul ik eigenlijk mijn betaalde

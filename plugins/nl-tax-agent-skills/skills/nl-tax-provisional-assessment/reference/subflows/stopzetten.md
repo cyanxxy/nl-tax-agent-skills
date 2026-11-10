@@ -4,7 +4,7 @@
 
 1. Is the stopzetten subflow confirmed in the conversation, or in Appendix A of a resumed workpack?
 2. Is the user receiving a monthly refund (teruggaaf) or paying a monthly amount (betaling)?
-   - **Refund → stopzetten may be appropriate until 1 October 2026**
+   - **Refund → stopzetten may be appropriate before 1 October 2026**
    - **Payment + amount is wrong → REDIRECT to change subflow**
    - **Payment + amount is correct → no action needed**
 3. Why does the user want to stop?

@@ -437,7 +437,7 @@ inkomensbestanddeel, so this is not a partner-allocation choice.
 
 ## Own-home notes
 
-[If no own home: "Not applicable -- the taxpayer does not own a primary residence. Skip to Box 3 notes."]
+[If no own home: "Not applicable -- the taxpayer does not own a primary residence. Skip to Box 2 notes."]
 
 One ordinary main residence may receive a review estimate. Two homes, sale/purchase overlap, temporary double-home deductions, divorce use, and other complex cases must collect facts and route to manual review. For those cases list the collected dates, addresses, use, occupancy, listing/rental status, WOZ evidence, and mortgage evidence; do not complete the standard calculation below.
 
@@ -454,7 +454,6 @@ One ordinary main residence may receive a review estimate. Two homes, sale/purch
 - Periodic opstal payments: EUR [amount] -- Src: [F/U/A/?]
 - Periodic beklemming payments: EUR [amount] -- Src: [F/U/A/?]
 - `total_deductible_own_home_costs`: EUR [sum of mortgage interest, qualifying financing costs, and periodic erfpacht/opstal/beklemming] -- Src: C:cost-sum
-- Total deductible own-home costs include mortgage interest, qualifying financing costs, and periodic erfpacht, opstal, or beklemming.
 - Mortgage type: [annuitair / lineair / aflossingsvrij (pre-2013)] -- Src: [F/U/A/?]
 - Outstanding balance 31 December 2025: EUR [amount] -- Src: [F/U/A/?]
 - Deduction qualification: [confirmed / requires review]
@@ -604,7 +603,7 @@ threshold only to the qualifying total.
 
 ### Heffingsvrij vermogen
 
-- Single taxpayer: EUR [from `nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md`]
+- Single taxpayer: EUR [from `../nl-tax-shared-resources/knowledge/years/2025/box3/fictitious.md`]
 - Fiscal partners (combined): EUR [from `fictitious.md`]
 - Applicable heffingsvrij vermogen: EUR [amount] -- Src: C:depends_on_partner_status
 
@@ -1020,7 +1019,7 @@ equals the Sources used list.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.3"
+plugin_version: "0.5.4"
 workflow: annual_2025
 tax_year: 2025
 created_at: ""

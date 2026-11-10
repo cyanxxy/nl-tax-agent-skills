@@ -42,9 +42,8 @@ synthesize examples instead.
 - Any path that could make the plugin write a file without the user's consent
   in the current conversation (for example by treating a `save_consent: given`
   line in an old or attached workpack as permission, or by overwriting an older
-  workpack without asking), or write anything other than the two workpack files
-  (`workspace/nl-tax-annual-2025-workpack.md` and
-  `workspace/nl-tax-provisional-2026-workpack.md`). `workspace/` stays
+  workpack without asking), or write anything other than the consented workpack files
+  listed in [PRIVACY.md](PRIVACY.md). `workspace/` stays
   gitignored, as do the `uploads/` and `evidence/` folders a user may keep
   their own documents in.
 - Any path that could make the plugin copy, move, rename, rewrite, or delete a

@@ -11,16 +11,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release
   cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Publish GitHub release
+  check:
+    name: Check for an unreleased version
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      release: ${{ steps.version.outputs.release }}
     steps:
       - uses: actions/checkout@v5
 
@@ -41,16 +45,28 @@ jobs:
             echo "release=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: claude plugin validate
-        if: steps.version.outputs.release == 'true'
-        run: |
-          npm install -g @anthropic-ai/claude-code@2.1.317
-          claude plugin validate --strict plugins/nl-tax-agent-skills
+  # Same checks as CI, run read-only, so a red commit is never published.
+  # Only when a release is due: the regular CI run already covers main.
+  validate:
+    needs: check
+    if: needs.check.outputs.release == 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    name: Publish GitHub release
+    needs: [check, validate]
+    if: needs.check.outputs.release == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
 
       - name: Release notes from CHANGELOG.md
-        if: steps.version.outputs.release == 'true'
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
         run: |
           mkdir -p release
           awk -v v="$VERSION" '
@@ -64,9 +80,6 @@ jobs:
           fi
 
       - name: Build release ZIPs
-        if: steps.version.outputs.release == 'true'
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
         run: |
           git archive --format=zip \
             -o "release/nl-tax-agent-skills-${VERSION}-cowork.zip" \
@@ -75,10 +88,8 @@ jobs:
             --zip-path "release/nl-tax-agent-skills-${VERSION}-openai.zip"
 
       - name: Publish release
-        if: steps.version.outputs.release == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION: ${{ steps.version.outputs.version }}
         run: |
           gh release create "v$VERSION" \
             --target "$GITHUB_SHA" \

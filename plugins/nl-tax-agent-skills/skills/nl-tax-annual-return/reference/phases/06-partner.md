@@ -3,7 +3,7 @@
 If the taxpayer has a fiscal partner, compile the partner section.
 
 Delegate fiscal-partner determination and allocation modelling to
-`nl-tax-partner-deductions` (`../nl-tax-partner-deductions/SKILL.md`) under the Helper delegation contract in `SKILL.md`.
+`nl-tax-partner-deductions` (`../nl-tax-partner-deductions/SKILL.md`) under the helper and reviewer delegation rules in `reference/annual-flow.md`.
 Record the returned facts and open questions in the Fiscal partner notes, ask
 the user, and re-invoke the helper with newly sourced answers. The helper
 writes nothing; this skill owns the annual workpack and its section status.

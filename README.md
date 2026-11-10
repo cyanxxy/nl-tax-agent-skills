@@ -70,8 +70,8 @@ income-tax request is ambiguous and the distinction changes the answer.
 
 The plugin bundles Markdown/YAML guidance and sources, with no runtime
 scripts, hooks or MCP server. Its workflows are agent-driven, not a
-deterministic tax engine. Repository validators help maintainers check files,
-source metadata and output contracts; behavioral evaluations check agent
+deterministic tax engine. Anthropic's plugin validator checks the manifests and skill
+frontmatter in CI; behavioral evaluations check agent
 responses. Neither replaces human tax-content review or your review of a
 workpack.
 
@@ -121,16 +121,31 @@ first, then the 2026 flow continues. Each keeps its own facts and sources, and
 its own workpack file if you save one.
 
 <details>
-<summary><strong>Invoke a skill directly</strong></summary>
+<summary><strong>Slash commands</strong></summary>
 
-```text
-/nl-tax-agent-skills:nl-tax-intake annual
-/nl-tax-agent-skills:nl-tax-provisional-assessment 2026 request
-/nl-tax-agent-skills:nl-tax-vat-return 2026 Q3
-```
+In Claude Code, each workflow is also a slash command:
 
-Replace `request` with `change`, `review`, or `stopzetten`. Syntax varies by
-host; the natural-language request above works everywhere.
+| Command | Arguments (all optional) | Use |
+|---|---|---|
+| `/nl-tax-agent-skills:nl-tax-intake` | `annual`, `international`, `request`, `change`, `review`, `stopzetten`, `vat`, `vat-correction`, `icp`, `oss` | Not sure where to start: screens scope and routes |
+| `/nl-tax-agent-skills:nl-tax-knowledge` | your question | Rule questions only; prepares and saves nothing |
+| `/nl-tax-agent-skills:nl-tax-annual-return` | `2025`, `confirm` | Annual return 2025 |
+| `/nl-tax-agent-skills:nl-tax-provisional-assessment` | `2026`, `request`, `change`, `review`, `stopzetten`, `confirm` | Voorlopige aanslag 2026 |
+| `/nl-tax-agent-skills:nl-tax-annual-return-2026` | `2026` | Annual return 2026 evidence (draft) |
+| `/nl-tax-agent-skills:nl-tax-international-return` | `M` or `C`, `2025` or `2026` | Migration or nonresident return (draft) |
+| `/nl-tax-agent-skills:nl-tax-vat-return` | year, period (`Q1`-`Q4`, `M01`-`M12`, `Y`) | btw-aangifte (draft) |
+| `/nl-tax-agent-skills:nl-tax-vat-correction` | year, original period | Correction or suppletie (draft) |
+| `/nl-tax-agent-skills:nl-tax-icp` | year, period | Opgaaf ICP (draft) |
+| `/nl-tax-agent-skills:nl-tax-oss` | `union`, `non-union` or `ioss`, year, period | OSS or IOSS return (draft) |
+| `/nl-tax-agent-skills:nl-tax-field-mapper` | workflow, year, period or form | Field map for a workpack in this conversation |
+| `/nl-tax-agent-skills:nl-tax-submit-companion` | workflow, year, identity | Manual-entry checklist (blockers only for drafts) |
+
+The background helpers (Box 1/home, Box 2, Box 3, winst, partner deductions,
+VAT adjustments) have no command: they have no save, readiness or checklist
+rules of their own, so the workflows call them. Ask a rule question through
+`nl-tax-knowledge` instead; it reads the same source notes. In Codex, invoke a
+skill as `$nl-tax-intake` and so on. Syntax varies by host; a plain-language
+request works everywhere.
 
 </details>
 
@@ -340,7 +355,6 @@ plugins/nl-tax-agent-skills/
 ├── .codex-plugin/plugin.json          # Codex manifest
 ├── agents/
 │   └── nl-tax-specialist-reviewer.md  # Read-only specialist reviewer subagent
-├── evals/                             # Cowork behavioral eval cases
 └── skills/
     ├── nl-tax-shared-resources/       # Runtime contract, knowledge notes, source register
     ├── nl-tax-intake/                 # Entry router and scope screening

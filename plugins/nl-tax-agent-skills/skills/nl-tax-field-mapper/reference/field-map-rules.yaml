@@ -13,8 +13,8 @@
 # question for the taxpayer conversation, never a mechanical rejection.
 #
 # Readiness direction (load-bearing): `readiness` in the map is the agent's
-# declaration derived from the owning workflow's section rollup. A check --
-# scripted or manual -- may REJECT a declared review_ready via a disqualifier
+# declaration derived from the owning workflow's section rollup. A check
+# (the agent checklist or a human) may REJECT a declared review_ready via a disqualifier
 # below, but nothing here can prove completeness or promote a draft.
 # Completeness is established in the taxpayer conversation and, when the
 # taxpayer saves the workpack, recorded in its Appendix A resume record.

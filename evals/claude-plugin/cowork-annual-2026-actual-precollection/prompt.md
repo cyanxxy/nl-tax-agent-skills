@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Actual annual 2026 precollection remains separate from 2025 and provisional 2026; chat
   only with named gaps and maximum readiness draft.
 ---

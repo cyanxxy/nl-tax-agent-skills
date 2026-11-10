@@ -32,7 +32,7 @@ goal; do not silently choose an action for them.
 | Pays monthly amount       | Stop because amount is wrong | Change (NOT stop)  |
 | Pays monthly amount       | Reduce monthly payment       | Change             |
 | Pays monthly amount       | Amount is correct            | No action needed   |
-| Moving abroad             | Determine provisional route  | Residency review; not a categorical stopzetten reason |
+| Moving abroad             | Outside this workflow        | Terminal residency boundary; not a categorical stopzetten reason. The taxpayer adjusts or stops it personally or with an adviser |
 
 ---
 
@@ -102,7 +102,7 @@ change form before the taxpayer chooses:
 | Mortgage paid off                     | Full stop is backdated to 1 January; consider change if part-year deduction should remain in the estimate |
 | Alimony ended                         | Full stop is backdated to 1 January; consider change if part-year deduction should remain in the estimate |
 | Income increased significantly        | Consider change instead to keep partial refund |
-| Moving abroad                         | Residency review; not a categorical stopzetten reason |
+| Moving abroad                         | Terminal residency boundary; not a categorical stopzetten reason. No stopzetten checklist |
 | Want to avoid later repayment risk    | Review retroactive/prospective effect; later notice or filed annual return can reconcile amounts |
 
 ---
@@ -168,7 +168,7 @@ Some taxpayers want to stop their voorlopige aanslag because they plan to file t
 - Explain that, when a 2026 annual return is filed, its assessment reconciles
   the provisional refunds or payments against the annual result
 - Stopzetten is only an option if the taxpayer is receiving a monthly refund; payment cases must use the change flow
-- If the taxpayer receives a monthly refund and wants to avoid further refunds in the interim, stopzetten can be appropriate until 1 October 2026
+- If the taxpayer receives a monthly refund and wants to avoid further refunds in the interim, stopzetten can be appropriate before 1 October 2026
 - Check the annual filing obligation separately. If the taxpayer must file, or
   otherwise files, the return can reconcile the provisional amounts;
   stopzetten does not make filing universally required.

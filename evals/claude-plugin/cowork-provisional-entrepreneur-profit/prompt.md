@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Record the sourced full-year business forecast for a new 2026 provisional assessment without producing annual or final-tax calculations.
 ---
 Help me prepare a new Dutch voorlopige aanslag for 2026. I will live in the

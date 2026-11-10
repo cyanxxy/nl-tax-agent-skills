@@ -102,7 +102,7 @@ separately. Record bookkeeping reconciliation and every unresolved difference.
 
 - Original-period deadline passed on correction date: [yes/no + Src].
 - Original-period VAT correction measure: [signed delta and magnitude + Src].
-- Sourced threshold and route: [small later-return / suppletie / unresolved;
+- Sourced threshold and route: [suppletie / next_return / letter / human_review;
   knowledge note source_id].
 - Separate-period screen: [this original period only; other periods separate].
 - Small correction: [confirmed next (eerstvolgende) return's year/assigned
@@ -176,7 +176,7 @@ operate the portal.
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.3"
+plugin_version: "0.5.4"
 workflow: vat_correction_<year>_<period>
 tax_year: null
 period: ""

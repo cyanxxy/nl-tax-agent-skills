@@ -63,7 +63,7 @@ expected_outputs:
       contains: "fictitious"
       not_contains: "werkelijk rendement"   # beyond the one required note
     - section: "Box 3 provisional estimate"
-      contains: "provisional fictitious calculation"
+      contains: "provisional fictitious return calculation"
     - section: "Income estimate"
       contains: "estimate"
     - section: "Not submission advice"

@@ -8,7 +8,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Start the annual preparation workflow and request only the remaining screening facts or relevant documents.
 ---
 Help me prepare my Dutch 2025 income-tax return. I was resident in the

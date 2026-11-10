@@ -229,7 +229,7 @@ The following annual return fields have no equivalent in the provisional assessm
 |---|---|
 | `box3.werkelijk_rendement_*` | Werkelijk rendement is not part of provisional 2026 |
 | `onderneming.*` other than `onderneming.geschatte_winst` | Only the dedicated expected-profit forecast is supported in provisional 2026 |
-| `onderneming.zelfstandigenaftrek` / `onderneming.startersaftrek` / `onderneming.ondernemersaftrek_totaal` / `onderneming.mkb_winstvrijstelling` / `onderneming.kleinschaligheidsinvesteringsaftrek` | Entrepreneur deductions are annual-2025 only; never applied in a provisional estimate |
+| `onderneming.zelfstandigenaftrek` / `onderneming.startersaftrek` / `onderneming.ondernemersaftrek_totaal` / `onderneming.mkb_winstvrijstelling` / `onderneming.kleinschaligheidsinvesteringsaftrek` | Entrepreneur deductions are never entered or computed in a provisional workpack; the Belastingdienst applies them itself |
 | `aftrek.zorgkosten` | Rolled into general estimated deductions |
 | `aftrek.giften_anbi` | Rolled into general estimated deductions |
 | `aftrek.giften_cultureel` | Rolled into general estimated deductions |

@@ -240,8 +240,7 @@ Coverage is an explicit case audit, not an inference from totals. Review every
 W&V, balance, private-movement, prior-year-set-off and entrepreneur-question row
 in `zakelijke-schema-2025.md` and classify it as mapped, sourced not applicable,
 or unresolved. Never turn an omitted yes/no question into `false`. Any unresolved
-classification keeps the map draft even if a structural validator accepts the
-minimum anchors.
+classification keeps the map draft.
 
 Keep every `onderneming.*` row conditional or optional, never required, and
 create manual-entry ids only for figures the taxpayer actually types.

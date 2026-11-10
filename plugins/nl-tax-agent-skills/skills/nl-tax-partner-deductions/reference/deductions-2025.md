@@ -62,7 +62,7 @@ The persoonsgebonden aftrek is freely allocatable between fiscal partners, but i
 
 - The deduction is allocated to the partner who pays the premium.
 - However, the jaarruimte (annual space) calculation considers the pension gap of the paying partner.
-- If one partner has a large pension gap and the other does not, the partner with the gap should pay and claim the premium.
+- If only one partner has a pension gap, only that partner has jaarruimte for the premium. State this as a fact; do not recommend who should pay.
 - The reservation space (reserveringsruimte) from prior years is also personal to the partner who had the unused jaarruimte.
 
 ### Restant persoonsgebonden aftrek (carryforward)

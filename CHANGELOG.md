@@ -5,6 +5,55 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.4] — 2026-11-10
+
+Consistency release from a full-project audit. No tax rate, threshold or
+workflow scope changes; the fixes remove contradictions an agent would follow.
+
+### Fixed
+
+- **Intake Box 2 screen.** An ordinary share sale and borrowing from the own BV
+  are standard Box 2 preparation and never end intake in terminal manual
+  review; the Box 2 helper may still flag an uncertain excessive-borrowing
+  position. Emigration, immigration and nonresident positions follow the
+  residency route instead of the Box 2 screen.
+- **Moving abroad in the voorlopige aanslag 2026.** The flow, template and
+  stopzetten guidance now all treat it as the terminal residency boundary.
+- **Business routing record.** `onderneming.routing.complex_case` is `true`
+  when intake screening or the Winst section records any blocked computation,
+  so a boundary found in Phase 2A keeps the field map `draft`.
+- **Contract mismatches.** The VAT correction template uses the canonical route
+  tokens; the Box 1 helper no longer calls resultaat uit overige werkzaamheden
+  manual review; the stopzetten submit steps no longer say every refund is
+  settled at the annual return; the OSS template no longer offers an `imports`
+  supply kind; evidence types no longer list policy or decision numbers as
+  fields; a partner helper no longer recommends who should claim.
+- **Reviewer brief.** VAT and VAT correction briefs no longer require a
+  `workflow-scopes.yaml` scope that does not exist.
+- **Paths and references.** Fifteen skill paths gained their `../` prefix, bare
+  knowledge filenames now have full paths, a dangling source id was replaced,
+  and leftover references to a validator that no longer ships were removed.
+- **Checklist and background tasks.** The submit companion omits its extra
+  checklist parts when only blockers may be shown; background tasks never
+  write a file.
+
+### Added
+
+- Argument hints for the six slash commands that had none, and a full command
+  table in both READMEs.
+
+### Changed
+
+- **Evals.** No-save cases list `Edit` and `Write`, so their no-write and
+  no-edit graders can actually fail; the two must-not-invoke graders are
+  scored (`arm: both`); the entrepreneur case tests the current winst path
+  instead of the retired preparation-only ceiling; a fixture for a removed rule
+  was deleted.
+- **CI and release.** CI checks that both manifests, every `plugin_version`
+  and `CHANGELOG.md` agree. The release reruns CI read-only only when a release
+  is due, publishes only from `main`, and grants write access to the publish
+  job alone.
+
 ## [0.5.3] — 2026-11-08
 
 Clears the Claude plugin directory policy refusal of 0.5.2. No tax rule,

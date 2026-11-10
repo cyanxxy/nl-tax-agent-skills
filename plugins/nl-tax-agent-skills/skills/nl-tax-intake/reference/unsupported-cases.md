@@ -10,7 +10,7 @@ Migration/nonresident 2025/2026 now uses
 `../nl-tax-international-return/SKILL.md`; annual 2026 uses
 `../nl-tax-annual-return-2026/SKILL.md`. Both support draft evidence collection
 with specific review blockers. Sections 1, 2, 4 and 5 are preparation routes
-for the annual M or C return (sections 1 and 2) or the annual business section
+for the annual M or C return (sections 1, 2 and 5) or the annual business section
 (section 4), not terminal outcomes. The provisional 2026 boundary at the end of
 section 1 stays terminal. Only genuinely terminal cases follow these steps:
 

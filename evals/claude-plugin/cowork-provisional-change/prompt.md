@@ -9,7 +9,7 @@ tags:
 runs: 1
 max_turns: 12
 timeout_seconds: 300
-allowed_tools: [Read, Glob, Grep, Skill]
+allowed_tools: [Read, Glob, Grep, Skill, Edit, Write]
 expected_outcome: Help update the 2026 estimate through the change flow while reviewing all currently applicable data.
 ---
 My salary estimate for 2026 increased from EUR 52,000 to EUR 62,000. Please

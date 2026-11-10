@@ -97,7 +97,7 @@ Because all amounts are estimates and the allocation can be changed:
 
 - Show the estimated effect of the mortgage interest deduction for each partner
   under a small set of eligible splits.
-- Consider the tariefsaanpassing cap (projected 2026 rate -- verify in `rates-and-credits.md`).
+- Consider the tariefsaanpassing cap (2026 percentage in `../nl-tax-shared-resources/knowledge/years/2026/provisional/own-home.md`).
 - If both partners are in the same bracket, allocation has minimal marginal-rate impact but may still affect heffingskortingen.
 - Compare simple 100%-total scenarios based on current estimates, keep each result traceable, and require taxpayer review. Do not select the mortgage allocation automatically.
 
@@ -139,5 +139,5 @@ these invariants and record `check_performed_by: checked_by_agent`.
 ## Notes
 
 - The provisional assessment for 2026 uses ONLY the fictitious return method for box 3. Werkelijk rendement is not relevant for the provisional and should not be considered in allocation calculations.
-- Provisional 2026 rates differ from annual 2025 rates. Always use the rates from `rates-and-credits.md` for 2026, not the 2025 annual rates.
+- Provisional 2026 rates differ from annual 2025 rates. Always use the rates from `../nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md` for 2026, not the 2025 annual rates.
 - If the partner situation is uncertain (e.g., considering moving in together, possible separation), advise filing the provisional assessment based on the current situation and changing it if the situation changes.
