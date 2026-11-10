@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="r"><rect width="512" height="512" rx="112"/></clipPath>
+  </defs>
+  <g clip-path="url(#r)">
+    <rect width="512" height="171" fill="#AE1C28"/>
+    <rect y="171" width="512" height="170" fill="#FFFFFF"/>
+    <rect y="341" width="512" height="171" fill="#21468B"/>
+  </g>
+  <!-- document shadow -->
+  <path d="M164 104 h158 l66 66 v252 a28 28 0 0 1 -28 28 h-196 a28 28 0 0 1 -28 -28 v-290 a28 28 0 0 1 28 -28 z" fill="#0B1A33" opacity="0.22" transform="translate(8 12)"/>
+  <!-- document -->
+  <path d="M164 92 h158 l66 66 v252 a28 28 0 0 1 -28 28 h-196 a28 28 0 0 1 -28 -28 v-290 a28 28 0 0 1 28 -28 z" fill="#FFFFFF" stroke="#13213F" stroke-width="14" stroke-linejoin="round"/>
+  <path d="M322 92 v46 a20 20 0 0 0 20 20 h46" fill="#E6EAF2" stroke="#13213F" stroke-width="14" stroke-linejoin="round"/>
+  <!-- euro sign -->
+  <path d="M311.3 197.7 A62 62 0 1 0 311.3 286.3" fill="none" stroke="#21468B" stroke-width="28" stroke-linecap="round"/>
+  <path d="M184 226 h104 M184 260 h96" fill="none" stroke="#21468B" stroke-width="20" stroke-linecap="round"/>
+  <!-- lines -->
+  <path d="M190 344 h132 M190 382 h86" fill="none" stroke="#13213F" stroke-width="16" stroke-linecap="round" opacity="0.28"/>
+  <!-- check badge -->
+  <circle cx="384" cy="392" r="66" fill="#F68B1F" stroke="#FFFFFF" stroke-width="12"/>
+  <path d="M352 393 l22 22 l42 -44" fill="none" stroke="#FFFFFF" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

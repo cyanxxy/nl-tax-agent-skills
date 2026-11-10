@@ -44,7 +44,7 @@ plugins/nl-tax-agent-skills/
   README.md
   assets/                           # icon.png (the plugin icon; public skills copy it to skills/<name>/assets/)
   agents/
-    nl-tax-specialist-reviewer.md   # Claude Cowork specialist reviewer
+    nl-tax-specialist-reviewer.md   # Claude specialist reviewer (desktop tasks and Claude Code; chat ignores agents)
   skills/
     nl-tax-shared-resources/        # hidden resource bundle (not a workflow)
       runtime-contract.md           # cross-host rules every skill loads first
@@ -95,13 +95,13 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
     "category": "Productivity",
     "capabilities": ["Agent Skills", "Reviewable Workpacks", "Source-Backed Guidance"],
-    "brandColor": "#1F6FEB"
+    "brandColor": "#21468B"
   }
 }
 ```
@@ -428,22 +428,23 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.4`):
+Both plugin manifests pin a fixed version (currently `0.5.5`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.4"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.4"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.5"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.5"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
 bump it with the manifests.
 
 Each release bumps **both** manifests **and** adds a [`CHANGELOG.md`](CHANGELOG.md) entry in
-the same commit, so Claude Code, Cowork, and Codex installs pin to semver. The two
+the same commit. Claude Code and Codex cache installs by version, so an unchanged
+version leaves them on the old package. Plugins added to a claude.ai account (the Claude
+apps) and organization sync do not read the manifest version: they follow the
+repository's default branch, so anything merged to `main` reaches those users. The two
 marketplace files (`.claude-plugin/marketplace.json`, `.agents/plugins/marketplace.json`)
-omit a version; for those GitHub-synced marketplaces Claude falls back to the git commit SHA,
-so a pushed commit is still picked up by the Cowork marketplace **Update** button or by
-`/plugin update` in Claude Code.
+omit a version.
 
 ### Release checklist
 
@@ -476,14 +477,15 @@ so a pushed commit is still picked up by the Cowork marketplace **Update** butto
   `__pycache__/`, local workspaces, uploads, evidence files, compiled Python,
   and local `.agents/` state other than `.agents/plugins/marketplace.json`.
 - Run `claude plugin validate --strict` (CI does this on every push). It is a
-  package check, not a Cowork UI result.
-- In Cowork, install/update the plugin, open a fresh local or remote task, verify that
+  package check, not a Claude app UI result.
+- In the Claude desktop app (Cowork and Chat merged into Unified Claude on 2026-11-10),
+  install/update the plugin, open a fresh task with a local folder, verify that
   bundled references load, and run one annual and one provisional natural-language smoke
   prompt. Confirm that no file appears before you consent to saving, that "save my
   workpack" creates only that workflow's one file under `workspace/`, and that attaching
   it in a fresh task resumes from it. Record this separately; do not claim it from static
   or CLI validation alone.
-- **Sibling-path check (Cowork, then claude.ai chat).** Skills read each other and the
+- **Sibling-path check (Claude desktop app, then claude.ai on the web).** Skills read each other and the
   knowledge pack through sibling paths such as `../nl-tax-shared-resources/`. Claude's
   docs only describe files inside a skill's own folder, and claude.ai chat copies just
   that folder into its sandbox, so verify on each surface before a directory review:

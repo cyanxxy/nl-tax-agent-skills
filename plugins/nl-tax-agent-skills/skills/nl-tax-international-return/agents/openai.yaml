@@ -3,7 +3,7 @@ interface:
   short_description: "Draft M/C migration and nonresident evidence"
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  brand_color: "#1F6FEB"
+  brand_color: "#21468B"
   default_prompt: "Prepare a draft Dutch migration (M) or nonresident (C) income-tax workpack from my facts and documents."
 
 policy:

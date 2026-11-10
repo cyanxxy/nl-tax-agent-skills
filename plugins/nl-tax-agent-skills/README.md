@@ -88,8 +88,8 @@ The background helpers (Box 1/home, Box 2, Box 3, winst, partner deductions,
 VAT adjustments) have no command: they have no save, readiness or checklist
 rules of their own, so the workflows call them. Ask a rule question through
 `nl-tax-knowledge` instead; it reads the same source notes. In Codex, invoke a
-skill as `$nl-tax-intake` and so on. Syntax varies by host; a plain-language
-request works everywhere.
+skill as `$nl-tax-intake` and so on; in ChatGPT, type `@` and pick the plugin
+or a skill. Syntax varies by host; a plain-language request works everywhere.
 
 ## Saving your work
 
@@ -143,8 +143,8 @@ Say "stop saving" and it stops updating the file.
   before every save. They never copy, move, rename, or change your documents.
 - **Fetches:** nothing by default; skills answer from the bundled notes. When a
   workflow calls for a freshness check, the assistant may read public official
-  pages such as belastingdienst.nl. In Claude, the bundled read-only
-  `nl-tax-specialist-reviewer` agent may also read public official sources for
+  pages such as belastingdienst.nl. In the Claude desktop app and Claude Code,
+  the bundled read-only `nl-tax-specialist-reviewer` agent may also read public official sources for
   such a freshness check; it writes nothing. The plugin sends your data to no
   one and never opens Mijn Belastingdienst, Mijn Belastingdienst Zakelijk, or
   any other authenticated portal.
@@ -236,6 +236,8 @@ income-tax draft".
 - [Privacy](https://github.com/cyanxxy/nl-tax-agent-skills/blob/main/PRIVACY.md):
   what the plugin reads, stores, and sends (it sends nothing), and how to delete
   a saved workpack.
+- Install in Claude: **Plugins** (older apps: **Customize → Plugins**) **→ Add →
+  Add marketplace → Add from a repository**, then enter `cyanxxy/nl-tax-agent-skills`.
 - Install in Claude Code (2.1.275 or later):
   `/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills`
 - Install steps and contributor docs: <https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;

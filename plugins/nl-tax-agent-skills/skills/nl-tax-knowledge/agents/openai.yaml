@@ -3,7 +3,7 @@ interface:
   short_description: "Answer sourced 2025/2026 Dutch income-tax, VAT, ICP, OSS and M/C rule questions."
   icon_small: "./assets/icon.png"
   icon_large: "./assets/icon.png"
-  brand_color: "#1F6FEB"
+  brand_color: "#21468B"
   default_prompt: "How does Box 3 work for my 2025 Dutch income-tax return?"
 
 policy:
