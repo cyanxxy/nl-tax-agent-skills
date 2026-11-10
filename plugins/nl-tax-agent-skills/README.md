@@ -238,5 +238,8 @@ income-tax draft".
   a saved workpack.
 - Install in Claude Code (2.1.275 or later):
   `/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills`
+- Install in Cursor, Gemini CLI, GitHub Copilot, OpenCode and other agents
+  through the open `skills` CLI, always with every skill together:
+  `npx skills add cyanxxy/nl-tax-agent-skills --skill '*'`
 - Install steps and contributor docs: <https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;
 see the bundled [LICENSE](LICENSE).

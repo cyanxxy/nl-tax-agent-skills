@@ -7,7 +7,7 @@
 <p>
   <strong>Turn scattered Dutch tax paperwork into a reviewable, source-cited workpack for manual Mijn Belastingdienst entry.</strong>
   <br />
-  <sub>An Agent Skills plugin for Claude Cowork, ChatGPT Work, Claude Code, and Codex CLI: annual 2025 &amp; voorlopige aanslag 2026 for employees, <b>ZZP'ers and freelancers</b>, plus draft-only VAT, ICP, OSS, M/C and annual 2026 previews.</sub>
+  <sub>An Agent Skills plugin for Claude Cowork, ChatGPT Work, Claude Code, and Codex CLI, installable in other agents through the open <code>skills</code> CLI: annual 2025 &amp; voorlopige aanslag 2026 for employees, <b>ZZP'ers and freelancers</b>, plus draft-only VAT, ICP, OSS, M/C and annual 2026 previews.</sub>
 </p>
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg?style=flat-square)](LICENSE)
@@ -15,6 +15,7 @@
 [![ChatGPT Work](https://img.shields.io/badge/ChatGPT%20Work-compatible-10A37F.svg?style=flat-square)](#chatgpt-work)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-supported-D97757.svg?style=flat-square)](#claude-code)
 [![Codex CLI](https://img.shields.io/badge/Codex%20CLI-compatible-111111.svg?style=flat-square)](#codex-cli)
+[![Other agents](https://img.shields.io/badge/skills%20CLI-Cursor%20%C2%B7%20Gemini%20%C2%B7%20Copilot%20%C2%B7%20more-000000.svg?style=flat-square)](#other-agents-skills-cli)
 [![Tax Years](https://img.shields.io/badge/Tax%20Years-2025%20annual%20%C2%B7%202026%20provisional%20%C2%B7%20drafts-2EA44F.svg?style=flat-square)](#%EF%B8%8F-supported-workflows)
 
 </div>
@@ -155,11 +156,11 @@ No shell or Python is needed on any host: the plugin ships no scripts, and
 it writes nothing unless you ask it to save your workpack.
 
 > [!WARNING]
-> **Plugin-only.** Install the whole plugin through one of the routes below.
-> The skills read shared files from sibling skill folders (mainly
-> `nl-tax-shared-resources/`), so a single skill does not work when it is
-> copied into `.claude/skills/`, uploaded on its own to claude.ai, or added
-> through the Skills API. Every `SKILL.md` states this in its `compatibility`
+> **One package.** Install the whole plugin, or all of its skills together,
+> through one of the routes below. The skills read shared files from sibling
+> skill folders (mainly `nl-tax-shared-resources/`), so a single skill does
+> not work when it is copied into `.claude/skills/`, uploaded on its own to
+> claude.ai, or added through the Skills API. Every `SKILL.md` states this in its `compatibility`
 > field.
 
 ### Claude Cowork
@@ -202,6 +203,37 @@ codex plugin marketplace add cyanxxy/nl-tax-agent-skills --ref main
 codex plugin add nl-tax-agent-skills@nl-tax-agent-skills-local
 codex plugin list
 ```
+
+### Other agents (skills CLI)
+
+For Cursor, Gemini CLI, GitHub Copilot, OpenCode, and the other agents the
+open [`skills` CLI](https://github.com/vercel-labs/skills) supports, install
+every skill in one go (needs Node.js 22.20 or later):
+
+```bash
+npx skills add cyanxxy/nl-tax-agent-skills --skill '*'
+```
+
+The CLI detects your agents and asks where to install. To skip the prompt and
+write one shared copy to `.agents/skills/`, which most of these agents read:
+
+```bash
+npx skills add cyanxxy/nl-tax-agent-skills --skill '*' --agent universal -y
+```
+
+- **Always install all 19 skills.** `--skill '*'` keeps
+  `nl-tax-shared-resources` and the helpers next to the workflows that read
+  them; a single `--skill <name>` install does not work.
+- **Start with `nl-tax-intake`**, or `nl-tax-knowledge` for a rule question.
+  These agents ignore the Claude-only `user-invocable` and
+  `disable-model-invocation` fields, so the background helpers and
+  `nl-tax-shared-resources` also show up in the skill list. They are not
+  meant to be started directly.
+- **No reviewer subagent.** This route installs skills only, so the read-only
+  `nl-tax-specialist-reviewer` subagent is absent and the owning workflow does
+  that review inline.
+- On Claude Cowork, Claude Code, ChatGPT Work and Codex CLI, prefer the plugin
+  routes above: they install the complete plugin and track its versions.
 
 <details>
 <summary><strong>Other paths</strong>: Cowork organizations, ZIP upload, unpublished ChatGPT build</summary>
@@ -382,9 +414,10 @@ plugins/nl-tax-agent-skills/
   Appendix B; the submit companion writes `## Manual-entry checklist`.
 - **Helpers write nothing.** Intake, knowledge, and the background helpers
   return findings and questions to the owning workflow without touching files.
-- **Plugin-only packaging.** Skills reach shared resources through sibling
+- **One-package installs.** Skills reach shared resources through sibling
   paths, so the plugin installs and loads as one package, never as separate
-  skills.
+  skills. The root `skills.sh.json` points the open `skills` CLI at the same
+  `skills/` folder, so other agents get all 19 skills side by side.
 - **Agent-invoked helpers.** Background helpers are hidden from the user's
   skill menu (`user-invocable: false`) but the agent can invoke them; an owning
   workflow invokes the helper by name, or reads its `SKILL.md` inline on hosts

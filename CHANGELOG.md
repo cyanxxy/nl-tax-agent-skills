@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Other agents through the `skills` CLI.** A root `skills.sh.json` points the
+  open `skills` CLI at `plugins/nl-tax-agent-skills/skills` and groups the 19
+  skills on the skills.sh repository page. The README documents
+  `npx skills add cyanxxy/nl-tax-agent-skills --skill '*'` for Cursor, Gemini
+  CLI, GitHub Copilot, OpenCode and other agents, with its limits: all skills
+  install together, helpers are visible, and the reviewer subagent is absent.
+  The plugin package itself is unchanged.
+
 ## [0.5.4] — 2026-11-10 — Audit consistency fixes
 
 Consistency release from a full-project audit. No tax rate, threshold or
