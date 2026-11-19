@@ -1,11 +1,12 @@
 ---
 type: tool_used
-tool: Skill
-input_match: '"skill"\s*:\s*"(?:[\w-]+:)?nl-tax-(?:box1-home|box2|box3|winst|partner-deductions|vat-adjustments)"'
+tool: Read
+input_match: 'nl-tax-shared-resources/helpers/'
 min: 0
 max: 0
 arm: both
 ---
-No background helper is invoked. Helpers are agent-invocable on Claude, but
-they run only inside an active owning workflow; a rule question has none, so it
-belongs to `nl-tax-knowledge`.
+No internal workflow helper under `nl-tax-shared-resources/helpers/` is loaded
+for a pure Box 2 rule question: helpers serve an active owning preparation
+workflow only, while rule questions belong to `nl-tax-knowledge` reading the
+canonical knowledge notes directly.

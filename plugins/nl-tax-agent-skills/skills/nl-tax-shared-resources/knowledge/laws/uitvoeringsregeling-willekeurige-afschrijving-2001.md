@@ -160,3 +160,7 @@ only as a cross-reference to the kleinschaligheidsinvesteringsaftrek table of
 article 3.41 lid 2 Wet IB 2001. Do not assume that a willekeurige afschrijving in
 one variant is available in another, and do not extend the closed 2023 paragraaf
 to an investment committed to after calendar year 2023.
+
+## Official sources
+
+- `law_uwa_2001` — Uitvoeringsregeling willekeurige afschrijving 2001 (BWBR0012035): https://wetten.overheid.nl/BWBR0012035

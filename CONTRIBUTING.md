@@ -13,10 +13,10 @@ pre-approves no shell commands, and the repository's only Python is the OpenAI b
 When extending behavior, put agent guidance in a `SKILL.md`, not in a script.
 
 Since 0.4 the plugin is **conversation-first**: nothing is written by default,
-and with the user's consent each workflow keeps exactly one workpack file. The
-binding spec is
-[docs/maintainers/0.4-conversation-first-design.md](docs/maintainers/0.4-conversation-first-design.md);
-where this guide and the spec disagree, the spec wins.
+and with the user's consent each workflow keeps exactly one workpack file.
+Maintainer-only design docs, raw source notes, and the full source register
+live locally under `docs/` (gitignored, not part of the public repository or
+shipped plugin).
 
 ---
 
@@ -48,10 +48,11 @@ plugins/nl-tax-agent-skills/
   skills/
     nl-tax-shared-resources/        # hidden resource bundle (not a workflow)
       runtime-contract.md           # cross-host rules every skill loads first
-      knowledge-index.md            # topic → note map for every reviewed note
-      source-register.yaml          # every cited source_id with metadata
-      knowledge/                    # bundled source-cited rule notes
-      reference/                    # evidence types and extraction boundaries
+      runtime-workpack-files.md     # save consent, stale outputs, resume, file paths
+      knowledge-index.md            # topic → note map for every bundled note
+      knowledge/                    # bundled source-cited rule notes (inline Official sources)
+      helpers/                      # internal read-only domain helpers (box1-home, box2, box3, winst, partner-deductions, vat-adjustments)
+      reference/                    # workflow-scopes.yaml, evidence types, extraction boundaries
     nl-tax-intake/                  # scope screening and routing; writes nothing
     nl-tax-knowledge/               # read-only rule lookup; writes nothing
     nl-tax-annual-return/           # annual 2025 workflow; owns the annual workpack
@@ -62,12 +63,6 @@ plugins/nl-tax-agent-skills/
     nl-tax-icp/                     # draft-only opgaaf ICP; one workpack per period
     nl-tax-oss/                     # draft-only OSS/IOSS; one workpack per scheme and period
     nl-tax-international-return/    # draft-only M/C return; one workpack per year and form
-    nl-tax-vat-adjustments/         # background helper for the VAT owners; writes nothing
-    nl-tax-box1-home/               # background helper; writes nothing
-    nl-tax-box2/                    # background helper; writes nothing
-    nl-tax-box3/                    # background helper; writes nothing
-    nl-tax-winst/                   # annual-2025 preparation / provisional-2026 forecast helper
-    nl-tax-partner-deductions/      # background helper; writes nothing
     nl-tax-field-mapper/            # field map summary + Appendix B of the workpack
     nl-tax-submit-companion/        # manual-entry checklist section of the workpack
 evals/claude-plugin/                # Claude eval cases (cowork-*/prompt.md + graders), staged into a plugin copy for runs
@@ -80,9 +75,10 @@ skills are bundled inside the plugin and are the workflow discovery surface.
 The plugin-level `agents/` directory is a Claude component, not local assistant
 state; it contains only a specialist reviewer and is deliberately excluded from
 the OpenAI submission bundle. The only tracked root `.agents/` file is
-`.agents/plugins/marketplace.json`; local assistant state under `.agents/`, `.claude/`,
-`.codex/`, plus `CLAUDE.md`, `claude.md`, `*.local.md`, and `*.session.log`, is git-ignored
-and is not plugin package content.
+`.agents/plugins/marketplace.json`; local assistant state and dev-only design
+docs under `.agents/`, `.claude/`, `.codex/`, `docs/`, plus `CLAUDE.md`,
+`claude.md`, `*.local.md`, and `*.session.log`, are git-ignored and are not
+plugin package content.
 
 ### Plugin manifests
 
@@ -95,7 +91,7 @@ CI enforces this:
 ```json
 {
   "name": "nl-tax-agent-skills",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "skills": "./skills",
   "interface": {
     "displayName": "NL Tax Agent Skills",
@@ -217,12 +213,15 @@ name is registered only once and cannot collide with a same-named command wrappe
 
 ### Cross-host invocation policy
 
-Non-user-invocable background helpers and skills explicitly carrying
-`disable-model-invocation: true` must ship an `agents/openai.yaml` with
-`policy.allow_implicit_invocation: false`. Codex does not honor
-the Claude frontmatter keys (`disable-model-invocation`, `user-invocable`, `allowed-tools`)
-for invocation control, so this file is what keeps those skills from being implicitly
-invoked on Codex. Check this by hand whenever you add or change a helper.
+Any skill explicitly carrying `disable-model-invocation: true` (such as
+`nl-tax-shared-resources`) must ship an `agents/openai.yaml` with
+`policy.allow_implicit_invocation: false`. Codex does not honor the Claude
+frontmatter keys (`disable-model-invocation`, `user-invocable`, `allowed-tools`)
+for invocation control, so this file keeps non-invocable bundles out of
+implicit Codex triggering. Internal domain helpers live as plain Markdown files
+under `nl-tax-shared-resources/helpers/` rather than as separate skills, so
+they consume no skill-description budget and cannot be triggered directly on
+any host.
 
 ---
 
@@ -231,9 +230,9 @@ invoked on Codex. Check this by hand whenever you add or change a helper.
 Nothing is written by default. Collection, questions, recaps, the workpack, the
 field map, and the manual-entry checklist all happen in the conversation, where
 the workpack shows only filled sections and never the Appendix A/B YAML. The
-owning workflow offers to save at three points (workflow start, a pause, after
-generation and mapping), each at most once and each as the only yes/no question
-in its reply; consent is any clear natural-language yes, or the user asking
+owning workflow offers to save at three points (first progress checkpoint, a
+pause, after generation and mapping), each at most once and each as the only
+yes/no question in its reply; consent is any clear natural-language yes, or the user asking
 "save my workpack" at any time. Consent is session-scoped: every writer checks
 this conversation, never the file's `save_consent` (a record, `not_given` in the
 templates). A file at the path that the user did not resume is replaced only
@@ -335,8 +334,12 @@ annual amount is copied into provisional facts. Each workpack's Appendix A
 
 ## Source register & knowledge pack
 
-Taxpayer-facing skills read a bundled knowledge pack — never live websites. Every rule note
-in `knowledge/` must cite a `source_id` from `source-register.yaml`. An entry looks like:
+Taxpayer-facing skills read a bundled knowledge pack — never live websites.
+Every rule note in `knowledge/` cites its `source_ids` in its header AND
+includes an inline `## Official sources` section with the official title and
+URL, so runtime lookups never read a central register. Maintainer-only
+provenance metadata (`docs/maintainers/source-register.yaml`) and design/source
+notes (`docs/`) are local-only and gitignored. An entry looks like:
 
 ```yaml
 - id: bd_box3_2025_calc
@@ -351,14 +354,13 @@ in `knowledge/` must cite a `source_id` from `source-register.yaml`. An entry lo
   workflow: annual_return
   tax_year: 2025
   mandatory_for:
-    - nl-tax-box3
     - nl-tax-annual-return
 ```
 
 Runtime `source_type` values are `law | official_guidance | official_rates |
 official_doctrine | official_algorithm_register`. Platform, future-compatibility,
-and authoring-method research lives under `docs/maintainers/source-notes/`
-rather than in the taxpayer source register.
+and authoring-method research lives locally under `docs/` (gitignored) rather
+than in the public repo or shipped plugin.
 
 To add a rate or rule: put it in the right `knowledge/years/<year>/<scope>/*.md`, register
 the source (with `mandatory_for` listing every skill that needs it), add a row to
@@ -428,11 +430,11 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py \
 
 ## Release process
 
-Both plugin manifests pin a fixed version (currently `0.5.5`):
+Both plugin manifests pin a fixed version (currently `0.6.0`):
 
 ```text
-plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.5.5"
-plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.5.5"
+plugins/nl-tax-agent-skills/.claude-plugin/plugin.json   # "version": "0.6.0"
+plugins/nl-tax-agent-skills/.codex-plugin/plugin.json    # "version": "0.6.0"
 ```
 
 The workpack templates record the same value as `plugin_version` in Appendix A;
@@ -452,8 +454,7 @@ omit a version.
   license, and the Claude/Codex plugin manifests. It never contains eval cases.
 - Keep the plugin folder within the Claude directory review limits: every file
   that is not an image or font stays under 256 KiB, and the folder holds at most
-  512 files. `source-register.yaml` is the file closest to the size limit, so
-  trim or split it before adding many sources.
+  512 files. CI enforces both limits in the `Package rules` step.
 - Run the Claude eval cases against a staged copy of the plugin (save cases
   list `Edit` and `Write` in their own `allowed_tools` and also need the
   operator grant):

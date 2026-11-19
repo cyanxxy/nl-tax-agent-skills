@@ -101,3 +101,7 @@ When building deduction validation or evidence checks:
 ## Common failure
 
 Do not treat this file as the source for specific deduction rules or thresholds. Detailed operational rules from this regulation are incorporated into topic-specific knowledge files (e.g., evidence-checklist, own-home rules). Always use those downstream files for implementation.
+
+## Official sources
+
+- `law_uitvoeringsregeling_ib_2001` — Uitvoeringsregeling inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0012031/

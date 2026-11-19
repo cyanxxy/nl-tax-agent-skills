@@ -110,3 +110,10 @@ When the taxpayer reports two homes during the tax year:
 - Flag post-2013 mortgages for manual confirmation of linear or annuity repayment.
 - For two-home situations, collect move date, old-home sale/listing status, vacancy/rental status, expected move-in date for the new home, and any divorce-use facts; route the result to manual review.
 - Do not calculate a final filing value when qualification facts are missing; mark the item as missing or manual review.
+
+## Official sources
+
+- `bd_hypotheekrenteaftrek_conditions` — Mag ik mijn hypotheekrente altijd aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken
+- `bd_hypotheek_oversluiten` — Ik ga mijn hypotheek oversluiten — hoe zit het met mijn hypotheekrenteaftrek?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrenteaftrek-bij-oversluiten-hypotheek
+- `bd_own_home_deductible_costs` — Eigen woning - welke kosten mag ik aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten
+- `bd_temporary_two_homes_interest` — Ik heb tijdelijk 2 woningen - hoe zit het dan met de hypotheekrenteaftrek?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek

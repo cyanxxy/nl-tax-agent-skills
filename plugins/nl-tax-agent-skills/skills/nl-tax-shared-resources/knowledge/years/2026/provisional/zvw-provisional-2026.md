@@ -223,3 +223,17 @@ here:
     asks for DigiD details; the taxpayer performs every authenticated action.
 11. This is a 2026 provisional note. Do not import figures or outputs from any
     other tax year into this flow.
+
+## Official sources
+
+- `bd_zvw_percentages_2025_2026` — Percentages inkomensafhankelijke bijdrage Zvw: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/veranderingen-bijdrage-zvw/percentages-zvw
+- `bd_zvw_provisional_aanslag_2026` — Voorlopige aanslag Zorgverzekeringswet (Zvw): https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/voorlopige-aanslag-zvw
+- `bd_zvw_inkomensafhankelijke_bijdrage` — Inkomensafhankelijke bijdrage Zvw: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+- `bd_zvw_resultaat_overig_werk` — Bijdrage Zorgverzekeringswet over resultaat uit overig werk: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/zorgverzekeringswet
+- `bd_zvw_hoe_betalen` — Hoe betaal ik mijn bijdrage Zorgverzekeringswet (Zvw)?: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-betaal-ik-mijn-bijdrage-zorgverzekeringswet
+- `bd_zvw_werkgeversheffing_of_bijdrage_tabel` — Werkgeversheffing Zvw of bijdrage Zvw?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/tabel_werkgeversheffing_zvw_of_bijdrage_zvw/tabel_werkgeversheffing_zvw_of_bijdrage_zvw
+- `bd_zvw_teruggaaf` — Teruggaaf bijdrage Zvw: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/teruggaaf_bijdrage_zvw/teruggaaf_bijdrage_zvw
+- `bd_fisin_zvw_2026` — Fiscale informatie 2026, hoofdstuk 28: Inkomensafhankelijke bijdrage Zorgverzekeringswet: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+- `reg_zorgverzekering_h5_2026` — Regeling zorgverzekering, hoofdstuk 5 (geldende tekst 29-07-2026): https://wetten.overheid.nl/BWBR0018715
+- `wet_zvw_art41_49_2026` — Zorgverzekeringswet, artikelen 41-49 (geldende tekst 01-01-2026): https://wetten.overheid.nl/BWBR0018450/2026-01-01
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

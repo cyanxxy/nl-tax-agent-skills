@@ -54,10 +54,10 @@ If the taxpayer currently PAYS a monthly amount and the amount is wrong:
 
 ## How to stop
 
-1. Log in to Mijn Belastingdienst
-2. Navigate to the existing voorlopige aanslag 2026
-3. Select the option to stop (stopzetten) the monthly refund
-4. Confirm the request
+1. **Taxpayer:** Log in to Mijn Belastingdienst
+2. **Taxpayer:** Navigate to the existing voorlopige aanslag 2026
+3. **Taxpayer:** Select the option to stop (stopzetten) the monthly refund
+4. **Taxpayer:** Confirm the request
 5. Stopzetten can be done until 1 October 2026
 
 ## Effect of stopzetten
@@ -122,3 +122,7 @@ separate repayment of amounts already received. Do not say every taxpayer must
 file solely because a provisional refund was stopped.
 
 Do not leave a payment case in `provisional_2026_stopzetten` after redirecting it. Copy the payment baseline into the change subflow so the change flow can continue from the same beschikking without re-asking the stopzetten direction question.
+
+## Official sources
+
+- `bd_provisional_stopzetten_2026` — Ik wil mijn voorlopige aanslag 2026 stopzetten - kan dat?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-stoppen

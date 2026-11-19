@@ -62,3 +62,9 @@ the year has a distinct, month-dependent position. Also do not assume a fixed
 age of 67 for future years — 67 applies only through 2027; for 2028-2031 the
 AOW age is fixed at 67 years and 3 months, and beyond 2031 it is provisional.
 For tax years 2025 and 2026 specifically it is 67.
+
+## Official sources
+
+- `svb_aow_leeftijd` — AOW-leeftijd — Uw AOW-leeftijd: https://www.svb.nl/nl/aow/aow-leeftijd/uw-aow-leeftijd
+- `rijksoverheid_aow_leeftijd` — AOW-leeftijd 2025-2031: https://www.rijksoverheid.nl/onderwerpen/algemene-ouderdomswet-aow/aow-leeftijd
+- `bd_heffingskortingen_aow_2025_2026` — Heffingskortingen voor AOW-gerechtigden (ouderenkorting en alleenstaande-ouderenkorting): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/heffingskortingen_voor_aow_gerechtigden

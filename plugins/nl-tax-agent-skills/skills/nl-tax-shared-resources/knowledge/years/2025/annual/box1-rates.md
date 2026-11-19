@@ -142,3 +142,10 @@ date.
 - For part-year tax residency, the brackets are not pro-rated; however, the premie volksverzekeringen may be pro-rated for the period of residency/insurance.
 - The premie volksverzekeringen have a maximum income base equal to the top of schijf 1 (EUR 38,441). Above that threshold, only IB is owed.
 - Box 1 tax is calculated before applying heffingskortingen (tax credits). The net tax payable is the gross tax minus applicable credits.
+
+## Official sources
+
+- `bd_box1_rates_2025` — Box 1: uitleg en tarieven: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+- `bd_bijtelling_auto_2025` — Bijtelling privegebruik auto 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-auto-2025
+- `bd_stock_options_2025` — Handboek Loonheffingen 2025 (aandelenopties): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/handboek-loonheffingen
+- `bd_jaaropgaaf_fields_2025` — Wat staat er in een jaaropgaaf?: https://www.belastingdienst.nl/wps/wcm/connect/nl/jongeren/content/wat-staat-er-in-een-jaaropgaaf

@@ -37,8 +37,9 @@ VAT preparation is separate from the annual income-tax return and its profit.
   timing, rounding, deduction and rubrics; never recall them from memory.
   Standard transactions and confirmed foreign-supplier services are supported.
   For car/private use, pro-rata, investment/property revision, BUA or margin
-  arithmetic invoke `../nl-tax-vat-adjustments/SKILL.md` with established
-  inputs and provenance. It returns supported bounded findings; unresolved
+  arithmetic read and apply `../nl-tax-shared-resources/helpers/vat-adjustments.md`
+  with established inputs and provenance. It returns supported bounded findings;
+  unresolved
   classification or election blocks only the affected position. The owner
   reconciles accepted results once. Confirmed adviser figures remain valid
   sourced inputs. Do not choose/elect KOR or property/margin treatment.
@@ -54,7 +55,7 @@ VAT preparation is separate from the annual income-tax return and its profit.
 ## Start, resources, and resume
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
@@ -64,8 +65,8 @@ to the user's selected working folder. Never depend on vendor-specific
 environment variables or shell discovery.
 
 The flow names the knowledge notes required for the active topic. Read only
-those notes and their entries in `../nl-tax-shared-resources/source-register.yaml`.
-A missing named resource blocks that topic. An unreviewed note or missing
+those notes and use their `source_ids` header and inline `## Official sources`
+section. A missing named resource blocks that topic. An unreviewed note or missing
 source-content attestation permits draft preparation only; it blocks
 `review_ready` and a manual-entry checklist. Never invent a review or infer
 it from a successful URL fetch or hash check.
@@ -84,7 +85,7 @@ reads only a saved workpack the user named and writes nothing.
 ## Saving
 
 Follow `../nl-tax-shared-resources/runtime-workpack-files.md` for session
-consent, first-save, withdrawal, download, and stale-output rules. Offer saving once at workflow start, once
+consent, first-save, withdrawal, download, and stale-output rules. Offer saving once at the first progress checkpoint, once
 at a pause, and once after generation/mapping if consent is still absent;
 each offer is its own reply, with one yes/no question. Load
 `templates/vat-workpack.md` and `reference/vat-return-output-contract.md`

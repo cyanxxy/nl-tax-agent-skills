@@ -16,8 +16,8 @@ Track `oss_scope`, `oss_transactions`, `oss_corrections`,
 complete, chat_only or deferred and each section's open Q-IDs. Complete/chat_only
 records whether sourced answers are established, not whether tax review cleared.
 
-Read `../nl-tax-shared-resources/knowledge/vat-cross-border/oss.md` and the
-applicable named entries in `../nl-tax-shared-resources/source-register.yaml`.
+Read `../nl-tax-shared-resources/knowledge/vat-cross-border/oss.md` and use its
+`source_ids` header and inline `## Official sources` links.
 Use bd_oss_reporting, eu_oss_scope, eu_oss_registration and eu_oss_declare_pay
 for ordinary scheme/period preparation. For non_union also consult
 bd_oss_non_union and bd_oss_non_union_reporting; for threshold screening use

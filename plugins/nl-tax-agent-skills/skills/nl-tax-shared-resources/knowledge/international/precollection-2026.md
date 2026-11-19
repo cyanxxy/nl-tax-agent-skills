@@ -58,3 +58,8 @@ separate workflow with its own sources and consent.
 
 - bd_intl_fisin_2026: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/u_woont_buiten_nederland
 - bd_intl_partial_foreign_liability: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/vermogen/wat_is_uw_vermogen/partiele_buitenlandse_belastingplicht_30_bewijsregel
+
+## Official sources
+
+- `bd_intl_fisin_2026` — Fiscale informatie 2026 (FISIN): U woont buiten Nederland: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/u_woont_buiten_nederland
+- `bd_intl_partial_foreign_liability` — Partiële buitenlandse belastingplicht (30%-bewijsregel): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/vermogen/wat_is_uw_vermogen/partiele_buitenlandse_belastingplicht_30_bewijsregel

@@ -151,3 +151,9 @@ When generating box 3 examples or performing calculations in the workpack:
 Do not subtract the full debt amount. First subtract the debt threshold and use only aftrekbare schulden in the return and rendementsgrondslag calculations.
 
 Do not apply the heffingsvrij vermogen before calculating the belastbaar rendement. The heffingsvrij vermogen is only deducted to determine the grondslag sparen en beleggen.
+
+## Official sources
+
+- `bd_box3_2025_calc` — Hoe wordt mijn box 3-inkomen over 2025 berekend?: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025
+- `bd_box3_2025_actual_return` — Werkelijk rendement in belastingaangifte 2025: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/werkelijk-rendement-belastingaangifte
+- `bd_box3_2025_worked_examples` — Box 3 2025 worked examples note: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025

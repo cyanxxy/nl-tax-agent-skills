@@ -118,3 +118,9 @@ When building the workpack for box 3 with actual return data:
 Do not deduct custody fees, transaction costs, management fees, maintenance costs, or adviser fees from actual return.
 
 If total actual return is negative, present the actual return method as EUR 0 box 3 income for the comparison. Negative actual return is not carried to another year.
+
+## Official sources
+
+- `bd_box3_2025_actual_return` — Werkelijk rendement in belastingaangifte 2025: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/werkelijk-rendement-belastingaangifte
+- `bd_fisin_box3_actual_return_2025` — Fiscale Informatie 2025 — Box 3 Werkelijk rendement: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/Box_3_Werkelijk_rendement
+- `bd_box3_2025_actual_return_examples` — Rekenvoorbeelden berekening werkelijk rendement: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/rekenvoorbeelden-berekening-werkelijk-rendement

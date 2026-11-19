@@ -121,16 +121,17 @@ supplied in chat. `deferred` means an open question remains; it stays under
   `workspace/nl-tax-provisional-2026-workpack.md`, and only while save consent
   is active in this conversation (the file's `save_consent` is a record, never
   an authorization); never write the annual workpack
-- Ask one yes/no question per reply. When the workflow starts, the save offer
-  in `SKILL.md` is its own reply, before the first collection question (a
-  return-capable structured control with clearly separate choices may combine
-  them). After the annual handoff, a save offer that covered both files counts
-  as this start offer
+- Ask one yes/no question per reply. Offer saving at the first natural progress
+  checkpoint (after crediting the first shared document or completing the first
+  section), at a pause, or after generation/mapping, as that reply's sole
+  yes/no question (a return-capable structured control with clearly separate
+  choices may combine them). After the annual handoff, a save offer that
+  covered both files counts as this checkpoint offer
 
-The first time an applicable source is loaded, compare its registered
-`last_checked` date with its `freshness_policy`. Warn once, without blocking,
-when it is past cadence; name the stale `source_id`s and carry them into the
-workpack review items. Do not stale-check an inactive subflow or topic.
+The first time an applicable source note is loaded, check its `last_reviewed`
+(or `last_verified`) header date. Warn once, without blocking, when that date
+is more than 12 months old; name the stale `source_id`s and carry them into
+the workpack review items. Do not stale-check an inactive subflow or topic.
 
 Add each consulted provisional `source_id` once to `Sources used` (and, when
 saved, to Appendix A `sources_loaded`). Never add an annual source merely
@@ -152,21 +153,20 @@ document or annual workpack may be cited as a source, but its amounts become
 
 ## Helper and reviewer delegation
 
-Use the active subflow to select only the relevant background helpers. Each
-helper's `SKILL.md` path is resolved from this skill directory and is part of
-this workflow's resource allowlist:
+Use the active subflow to select only the relevant internal helper modules
+under `../nl-tax-shared-resources/helpers/` (resolved from this skill
+directory and part of this workflow's resource allowlist):
 
-- `nl-tax-box1-home`: `../nl-tax-box1-home/SKILL.md`
-- `nl-tax-winst`: `../nl-tax-winst/SKILL.md`
-- `nl-tax-box2`: `../nl-tax-box2/SKILL.md`
-- `nl-tax-box3`: `../nl-tax-box3/SKILL.md`
-- `nl-tax-partner-deductions`: `../nl-tax-partner-deductions/SKILL.md`
+- Box 1 / own home: `../nl-tax-shared-resources/helpers/box1-home.md`
+- Winst forecast: `../nl-tax-shared-resources/helpers/winst.md`
+- Box 2: `../nl-tax-shared-resources/helpers/box2.md`
+- Box 3: `../nl-tax-shared-resources/helpers/box3.md`
+- Partner / deductions: `../nl-tax-shared-resources/helpers/partner-deductions.md`
 
-Prefer a host Skill/Task invocation when available; otherwise inline the
-helper's instructions by reading that `SKILL.md`. In either mode, the helper
-writes nothing and returns structured facts and open questions. This workflow
-records those results in its sections, asks the user, and re-runs the helper
-after newly sourced answers. Keep the handoff invisible.
+Read each needed helper inline via `Read` and apply its rules. Helpers write
+nothing and return structured facts and open questions. This workflow records
+those results in its sections, asks the user, and re-applies the helper after
+newly sourced answers. Keep the handoff invisible.
 
 After independent facts are collected, the owner may request a bounded
 specialist review under `../nl-tax-shared-resources/runtime-contract.md`. Pass

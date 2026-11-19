@@ -31,16 +31,10 @@
       ]
     },
     {
-      "title": "Background helpers and shared resources",
-      "description": "Required by the workflows above and not meant to be started directly.",
+      "title": "Shared resources",
+      "description": "Shared runtime contracts, source-cited tax notes, and internal domain helpers required by the workflows above; not meant to be started directly.",
       "skills": [
-        "nl-tax-shared-resources",
-        "nl-tax-box1-home",
-        "nl-tax-box2",
-        "nl-tax-box3",
-        "nl-tax-winst",
-        "nl-tax-partner-deductions",
-        "nl-tax-vat-adjustments"
+        "nl-tax-shared-resources"
       ]
     }
   ]

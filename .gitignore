@@ -42,7 +42,7 @@ evals/*/benchmark-usage.jsonl
 .env
 .env.*
 
-# Local AI assistant/session files
+# Local AI assistant/session files and dev-only maintainer docs
 .agents/*
 !.agents/plugins/
 .agents/plugins/*
@@ -52,6 +52,7 @@ evals/*/benchmark-usage.jsonl
 CLAUDE.md
 claude.md
 CLAUDE.local.md
+docs/
 *.session.log
 *.local.md
 

@@ -33,8 +33,9 @@ Load only the active topic's named resource, relative to this skill directory:
 | Any 2026 international collection | `../nl-tax-shared-resources/knowledge/international/precollection-2026.md` |
 
 Record actually consulted `source_ids` once in Sources used and Appendix A
-`sources_loaded`; check their applicability, review metadata and freshness
-in the source register. Warn once for a stale applicable source. A missing
+`sources_loaded`; check their year applicability, `review_status`, and
+`last_reviewed` / `last_verified` in the note header. Warn once if that date is
+more than 12 months old. A missing
 note or attestation is a named `International source-content review` blocker;
 an unreviewed required M/C inventory is `International form schema review`.
 Do not infer review from a network fetch or user acceptance.

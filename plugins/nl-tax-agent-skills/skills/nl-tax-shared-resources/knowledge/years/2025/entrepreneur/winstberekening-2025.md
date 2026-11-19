@@ -360,3 +360,22 @@ following is present:
     and enter the saldo winst-en-verliesrekening." Never collect a BSN.
 15. **Recheck the 2025 amounts in this note before the 2026 season**, and treat
     the component notes as the place where any change is made first.
+
+## Official sources
+
+- `bd_ondernemer_cijfers_aangifte_2025` — Ondernemer: welke cijfers voor uw aangifte inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
+- `bd_fisin_2025_h7` — Fiscale informatie 2025 - 7 Winst-en-verliesrekening en balans | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans
+- `bd_fisin_2025_h8` — Fiscale informatie 2025 - 8 Ondernemersaftrek en investeringsaftrek | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/ondernemersaftrek_en_investeringsaftrek
+- `bd_ola_ih2025_winstberekening` — Online aangifte IH 2025 - invulhulp 'Winstberekening' (vermogensvergelijking): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wberwv.htm
+- `bd_kia_2025` — Kleinschaligheidsinvesteringsaftrek (KIA): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/kleinschaligheidsinvesteringsaftrek_kia
+- `bd_ondernemersaftrek_2025` — Ondernemersaftrek: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/
+- `bd_verrekenen_ngz` — Verrekenen niet-gerealiseerde zelfstandigenaftrek: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/zelfstandigenaftrek1/verrekenen_niet_gerealiseerde_zelfstandigenaftrek
+- `bd_mkb_winstvrijstelling_2025` — MKB-winstvrijstelling 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/mkb-winstvrijstelling-2025
+- `bd_tariefsaanpassing_aftrekposten` — Belastingdienst - Afbouw tarief aftrekposten als u een hoog inkomen hebt (tariefsaanpassing): https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
+- `bd_deduction_rate_cap_2025` — Afbouw tarief aftrekposten bij hoog inkomen: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
+- `bd_box1_rates_2025` — Box 1: uitleg en tarieven: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+- `bd_arbeidsinkomen_definition_2025` — Arbeidsinkomen (inkomen uit werk voor arbeidskorting): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/inkomen_uit_werk
+- `bd_zvw_inkomensafhankelijke_bijdrage` — Inkomensafhankelijke bijdrage Zvw: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/zorgverzekeringswet/bijdrage_zorgverzekeringswet/inkomensafhankelijke_bijdrage_zorgverzekeringswet
+- `bd_verlies_uit_onderneming` — Verlies uit onderneming | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/verlies_uit_onderneming
+- `bd_beperkt_aftrekbare_kosten_2025` — Drempel beperkt aftrekbare kosten 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

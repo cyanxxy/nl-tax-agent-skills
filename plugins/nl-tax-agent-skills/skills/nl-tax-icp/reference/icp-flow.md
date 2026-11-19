@@ -17,8 +17,8 @@ Appendix A keys: `icp_scope`, `icp_transactions`, `icp_corrections`,
 Document-complete answers are complete; wholly sourced chat answers are
 chat_only. Sourced not-applicable answers count; omitted answers do not.
 
-Read `../nl-tax-shared-resources/knowledge/vat-cross-border/icp.md` and its
-named entries in `../nl-tax-shared-resources/source-register.yaml`. For period
+Read `../nl-tax-shared-resources/knowledge/vat-cross-border/icp.md` and use its
+`source_ids` header and inline `## Official sources` links. For period
 timing apply icp.md (source bd_vat_icp and the matching year's ICP
 explanation): goods in the period of the invoice date, services in the period
 in which the service was supplied, call-off stock in the period in which the

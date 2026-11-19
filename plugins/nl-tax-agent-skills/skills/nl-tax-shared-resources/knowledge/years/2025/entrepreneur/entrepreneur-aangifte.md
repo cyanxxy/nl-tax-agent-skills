@@ -151,3 +151,12 @@ already available and can be taken over.
    and do not state an aanvullend-uitstel date.
 7. Use `zakelijke-schema-2025.md` as the rubriek inventory when building the
    zakelijk deel, and present it as a checklist rather than a screen order.
+
+## Official sources
+
+- `bd_aangifte_ondernemers_2025` — Aangifte inkomstenbelasting voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
+- `bd_ondernemer_cijfers_aangifte_2025` — Ondernemer: welke cijfers voor uw aangifte inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
+- `bd_ondernemer_voorbereiden_2025` — Voorbereid op uw belastingaangifte voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/voorbereid-op-uw-belastingaangifte-voor-ondernemers
+- `bd_hoe_aangifte_doen_online_app_papier` — Aangifte inkomstenbelasting doen: online, met de app of op papier: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/hoe-aangifte-inkomstenbelasting-doen
+- `bd_ib_aangifte_voor_ondernemers` — Aangifte inkomstenbelasting voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/
+- `bd_becon_uitstel_fiscaal_dienstverleners` — Uitstel aanvragen voor fiscaal dienstverleners (becon-uitstel): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/intermediairs/aangifte_doen/uitstel-aanvragen-voor-fiscaal-dienstverleners-becon-uitstel/

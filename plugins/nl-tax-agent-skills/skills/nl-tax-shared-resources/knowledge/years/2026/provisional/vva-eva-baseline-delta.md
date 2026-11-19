@@ -79,3 +79,7 @@ When modeling the provisional assessment workflow:
 ## Common failure
 
 Do not claim that the Belastingdienst uses or accepts a baseline + forecast + delta submission. A delta summary is only a taxpayer-facing explanation of what changed between the current assessment and the prepared updated estimates.
+
+## Official sources
+
+- `bd_algoritmeregister_vva_eva` — Weegmodule verzoek voorlopige aanslag (VVA) en bedrijfsregels eerste voorlopige aanslag (EVA): https://over-ons.belastingdienst.nl/onderwerpen/omgaan-met-gegevens/algoritmeregister/weegmodule-verzoek-voorlopige-aanslag-vva-en-bedrijfsregels-eerste-voorlopige-aanslag-eva/

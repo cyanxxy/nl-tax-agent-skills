@@ -9,10 +9,10 @@ data is missing, record the gap and continue. The owning workflow keeps the
 facts, section status, and (only with consent) the saved workpack; background
 helpers return facts and questions only.
 
-Every time a knowledge file or rate sheet is loaded, add its matching
-`source_id` from `../nl-tax-shared-resources/source-register.yaml` once to this
-workflow's source list, which becomes `sources_loaded` in Appendix A and the
-workpack's Sources used section. Only annual IDs belong in that list.
+Every time a knowledge file or rate sheet is loaded, add its `source_id`s (from
+the note's `source_ids` header and inline `## Official sources` section) once to
+this workflow's source list, which becomes `sources_loaded` in Appendix A and
+the workpack's Sources used section. Only annual IDs belong in that list.
 
 ## Contents
 
@@ -82,14 +82,23 @@ from silence. Each section's open Q-IDs sit beside its status.
 - Keep annual and provisional sources, facts, and outputs separate.
 - Never invent a missing amount or silently treat it as zero.
 - Load phase-specific reviewed knowledge only when that phase needs it.
-- Load the workpack template only when the taxpayer consents to saving or the
-  generation gate opens; load the output contract only after the generation
-  gate opens in Phase 10.
-- Preserve the phase order and all requirements in the linked phase files.
-- Ask one yes/no question per reply. When the workflow starts, the save offer
-  in `SKILL.md` is its own reply, before the first collection question (a
-  return-capable structured control with clearly separate choices may combine
-  them). Never pair an offer with another offer or a question.
+- Load the core workpack template (`templates/annual-workpack.md`) plus only
+  applicable conditional snippets under `templates/sections/` (`winst.md`,
+  `own-home.md`, `box2.md`, `partner.md`) only when the taxpayer consents to
+  saving or the generation gate opens; load the output contract only after the
+  generation gate opens in Phase 10.
+- Preserve the phase order and all requirements in the linked phase files when
+  building a full workpack. For **VIA verify-and-complete**, confirm pre-filled
+  items quickly against documents and prioritize un-prefilled sections. For a
+  **Focused section** request, run only the requested phase and helper and
+  deliver a sourced section summary in chat (never pretend a single-section
+  review is a complete return workpack).
+- Ask one yes/no question per reply. Offer saving at the first natural progress
+  checkpoint (after crediting the first shared document or completing the first
+  section), at a pause, or after generation and mapping, as that reply's sole
+  yes/no question (a return-capable structured control with clearly separate
+  choices may combine them). Never pair an offer with another offer or a
+  question.
 - Write only while save consent is active in this conversation; the file's
   `save_consent` value is a record, never an authorization.
 
@@ -145,34 +154,32 @@ that phase and tell the user; never reconstruct a rate from memory. If the list
 is no longer visible after a long conversation, rebuild it only from the notes
 actually consulted for this workpack's sections; never pad it.
 
-The first time a source is loaded in a session, compare its registered
-`last_checked` date with its `freshness_policy`. Warn once, without blocking, if
-an applicable source is stale; name the stale IDs and carry them into the Human
+The first time a source note is loaded in a session, check its `last_reviewed`
+(or `last_verified`) header date. Warn once, without blocking, if that date is
+more than 12 months old; name the stale IDs and carry them into the Human
 review checklist. Never stale-check an inapplicable branch.
 
 ### Helper and reviewer delegation
 
-For the active phase, prefer a host Skill/Task invocation when available;
-otherwise inline the helper's instructions by reading its `SKILL.md` at the
-path listed below (resolved from this skill directory). These helper paths are
-part of this workflow's resource allowlist. In either mode, a helper writes
-nothing and returns structured facts and open questions. The owning workflow
-records those results, asks the user, and re-runs the helper after newly
-sourced answers. Keep the delegation invisible and speak in one voice.
+For the active phase, read the needed internal helper module inline via `Read`
+from `../nl-tax-shared-resources/helpers/` (resolved from this skill directory
+and part of this workflow's resource allowlist). Helpers write nothing and
+return structured facts, arithmetic checks, and open questions. The owning
+workflow records those results, asks the user, and re-applies the helper after
+newly sourced answers. Keep the delegation invisible and speak in one voice.
 
-- Box 1 / own home: `nl-tax-box1-home` (`../nl-tax-box1-home/SKILL.md`)
-- Winst uit onderneming: `nl-tax-winst` (`../nl-tax-winst/SKILL.md`) only when
+- Box 1 / own home: `../nl-tax-shared-resources/helpers/box1-home.md`
+- Winst uit onderneming: `../nl-tax-shared-resources/helpers/winst.md` only when
   `business.has_onderneming` is true. It runs the income-category pre-screen,
   then the ordered chain from the saldo fiscale winstberekening through
   investeringsaftrek, ondernemersaftrek and MKB-winstvrijstelling to the
   belastbare winst uit onderneming, which feeds the box 1 total. It also returns
   the vermogensvergelijking self-check, the bijdrage Zvw and lijfrente handoffs,
   the loss path, and the per-form routing markers that stay manual review.
-- Box 2: `nl-tax-box2` (`../nl-tax-box2/SKILL.md`) only when an aanmerkelijk belang exists.
-- Box 3: `nl-tax-box3` (`../nl-tax-box3/SKILL.md`), collecting both fictitious and actual-return data for
+- Box 2: `../nl-tax-shared-resources/helpers/box2.md` only when an aanmerkelijk belang exists.
+- Box 3: `../nl-tax-shared-resources/helpers/box3.md`, collecting both fictitious and actual-return data for
   the official comparison.
-- Partner / deductions: `nl-tax-partner-deductions`
-  (`../nl-tax-partner-deductions/SKILL.md`).
+- Partner / deductions: `../nl-tax-shared-resources/helpers/partner-deductions.md`.
 
 After independent sections have been collected, the owning agent may request a
 bounded specialist cross-check under the optional reviewer contract in
@@ -182,7 +189,3 @@ reviewer never writes, and returns conflicts, missing facts, and source checks
 without selecting a Box 3 result, partner allocation, or readiness. The owning
 agent reconciles every finding and remains the only writer and readiness
 authority. Review inline when a specialist agent is unavailable.
-
-A 0.3 `return-pack.md`, notes file, or other older document the user shares is
-an ordinary source document: record it as a `Documents and sources` row and
-confirm material figures with the user. 0.3 `workspace/` ledgers are not read.

@@ -116,3 +116,13 @@ verzuimboete; the estimate can differ from the true tax. A **vergrijpboete** is
 separate: it applies only when the Belastingdienst establishes intent (opzet) or
 gross negligence (grove schuld). It does not follow automatically, and the
 initial estimated assessment is not a navorderingsaanslag.
+
+## Official sources
+
+- `bd_annual_deadline_2025` — Wanneer moet mijn aangifte inkomstenbelasting binnen zijn?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen
+- `bd_annual_extension_2025` — Kan ik nog uitstel aanvragen voor de belastingaangifte 2025?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte
+- `bd_annual_extension_eligibility_2025` — Uitstel aanvragen voor de belastingaangifte 2025 - hoe doe ik dat?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ik-moet-aangifte-doen-maar-ik-wil-graag-uitstel-kan-dat
+- `bd_verzuimboete` — Boete -- verzuimboete bij niet of niet op tijd aangifte: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/boete
+- `bd_belastingrente_overview` — Overzicht percentages belastingrente: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente
+- `bd_belastingrente_ib` — Belastingrente betalen bij inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting
+- `bd_invorderingsrente` — Invorderingsrente: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/invorderingsrente

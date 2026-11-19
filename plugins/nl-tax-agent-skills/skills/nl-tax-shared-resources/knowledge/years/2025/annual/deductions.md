@@ -243,3 +243,16 @@ For 2025, the deduction-rate adjustment applies when income from work and home (
 - The agent applies these tables only after gathering the required facts and
   shows its classification and arithmetic. The tables support agent reasoning;
   they are not a substitute for taxpayer review in Mijn Belastingdienst.
+
+## Official sources
+
+- `bd_fisin_2025_index` — Fiscale Informatie 2025: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
+- `bd_partneralimentatie_2025` — Partneralimentatie betalen voor uw ex-partner: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/alimentatie/alimentatie_betalen_voor_uw_ex_partner/alimentatie_betalen_voor_uw_ex_partner
+- `bd_fisin_partneralimentatie_2025` — Fiscale informatie 2025 -- 19 Aftrek betaalde partneralimentatie en andere onderhoudsverplichtingen: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_betaalde_partneralimentatie
+- `bd_giften_aftrek_2025` — Hoeveel aftrek krijgt u? -- giften aan goede doelen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/aftrekposten/persoonsgebonden-aftrek/giften_aan_goede_doelen/hoeveel_aftrek_krijg_u/
+- `bd_zorgkosten_overzicht_2025` — Zorgkosten 2025 -- overzicht aftrekbare kosten ziekte of invaliditeit: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/overzicht-zorgkosten-2025
+- `bd_fisin_zorgkosten_2025` — Fiscale informatie 2025 -- aftrek specifieke zorgkosten: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_specifieke_zorgkosten
+- `bd_vervoerskosten_ziekte_2025` — Welke vervoerskosten mag ik bij ziekte of invaliditeit aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/vervoerskosten-ziekte-invaliditeit-aftrekken
+- `bd_fisin_lijfrente_2025` — Fiscale informatie 2025 -- uitgaven voor inkomensvoorzieningen: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/uitgaven_voor_inkomensvoorzieningen
+- `bd_fisin_studiekosten_2025` — Fiscale informatie 2025 -- aftrek studiekosten: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aftrek_studiekosten
+- `bd_deduction_rate_cap_2025` — Afbouw tarief aftrekposten bij hoog inkomen: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen

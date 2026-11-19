@@ -620,3 +620,29 @@ finished.
     participant separately, open Mijn Belastingdienst, enter your own winstaandeel
     and your own reliefs in your own aangifte, and submit. The plugin prepares and
     explains the figures and never logs in, enters, or sends anything.
+
+## Official sources
+
+- `bd_vof_rechtsvorm` — Vennootschap onder firma (vof) en gevolgen voor uw belastingen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/vennootschap-onder-firma-vof
+- `bd_maatschap_rechtsvorm` — Maatschap en gevolgen voor uw belastingen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/maatschap
+- `bd_cv_rechtsvorm` — Commanditaire vennootschap (cv) en gevolgen voor uw belastingen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/commanditaire-vennootschap-cv
+- `bd_medegerechtigde` — Medegerechtigde in onderneming of geldverstrekker: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/medegerechtigde_in_onderneming_of_geldverstrekker
+- `bd_fisin2025_h6_winst_uit_onderneming` — Fiscale informatie 2025, hoofdstuk 6 - Winst uit onderneming: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming
+- `bd_fisin_2025_h7` — Fiscale informatie 2025 - 7 Winst-en-verliesrekening en balans | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans
+- `bd_urencriterium_2025` — Voorwaarden urencriterium: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+- `bd_kia_2025` — Kleinschaligheidsinvesteringsaftrek (KIA): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/kleinschaligheidsinvesteringsaftrek_kia
+- `bd_tbs_bezittingen` — Ter beschikking stellen van bezittingen (Prive > Werken > Niet in loondienst werken): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/ter_beschikking_stellen_van_bezittingen/ter_beschikking_stellen_van_bezittingen
+- `fisin2025_beschikbaar_stellen` — Fiscale informatie 2025 - hoofdstuk 9 Beschikbaar stellen van bezittingen: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/beschikbaar_stellen_van_bezittingen
+- `bd_rechtsvorm_wijzigen` — Uw onderneming wijzigt van rechtsvorm: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/uw_onderneming_wijzigt_van_rechtsvorm/
+- `bd_u_staakt_uw_onderneming` — Wat moet u regelen als u stopt met uw onderneming?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/u_staakt_uw_onderneming
+- `bd_overdracht_medeondernemer_werknemer` — Uw onderneming overdragen aan een medeondernemer of werknemer: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_draagt_uw_onderneming_over/uw-onderneming-overdragen-aan-een-medeondernemer-of-werknemer
+- `bd_personeel_in_uw_onderneming` — Belastingdienst - Personeel in uw onderneming? Misschien moet u loonheffingen betalen.: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/personeel_in_uw_onderneming/
+- `bd_aanmelden_werkgever` — Personeel in dienst nemen en aanmelden als werkgever: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/aanmelden-als-werkgever
+- `bd_aangifte_loonheffingen` — Aangifte loonheffingen (loonaangifte) doen: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/loonaangifte-aangifte-loonheffingen
+- `wet_ib_3_3` — Artikel 3.3 Wet IB 2001 - Medegerechtigden en schuldeisers (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.3/afdrukken
+- `wet_ib_3_4` — Artikel 3.4 Wet IB 2001 - Begrip ondernemer (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.1/Artikel3.4/afdrukken
+- `wet_ib_3_9` — Artikel 3.9 Wet IB 2001 - Maximum verlies medegerechtigden (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.9/afdrukken
+- `wet_ib_3_41_2025` — Artikel 3.41 Wet IB 2001 - Kleinschaligheidsinvesteringsaftrek (versie 1 januari 2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.41/afdrukken
+- `wet_ib_3_63` — Artikel 3.63 Wet IB 2001 - Doorschuiving naar ondernemers (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.2/Artikel3.63/afdrukken
+- `wetib_consolidated_2025` — Wet inkomstenbelasting 2001 (BWBR0011353), geldende tekst per 2025-01-01: https://wetten.overheid.nl/BWBR0011353/2025-01-01
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

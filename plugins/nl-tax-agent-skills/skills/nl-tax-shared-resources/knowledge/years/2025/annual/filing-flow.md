@@ -113,3 +113,13 @@ The workpack is a preparation tool. The taxpayer retains full responsibility for
 - Check VIA availability in the official filing environment before relying on pre-filled data. Filing before the pre-filled data is complete means more data may need to be entered manually.
 - Fiscal partners can allocate certain income and deductions between them. The workpack should note allocation choices and their tax impact.
 - The Belastingdienst may send a voorlopige aanslag (provisional assessment) based on the filed return. This is separate from the definitieve aanslag (final assessment) which may follow later.
+
+## Official sources
+
+- `bd_annual_return_landing_2025` — Belastingaangifte: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/belastingaangifte
+- `bd_annual_return_4_steps_2025` — Doe online aangifte inkomstenbelasting in 4 stappen: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/online-aangifte-doen-in-4-stappen
+- `bd_fisin_2025_index` — Fiscale Informatie 2025: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/index
+- `bd_annual_deadline_2025` — Wanneer moet mijn aangifte inkomstenbelasting binnen zijn?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/wanneer-moet-ik-aangifte-doen
+- `bd_annual_filing_obligation_2025` — Moet ik aangifte inkomstenbelasting 2025 doen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/moet_ik_aangifte_doen
+- `bd_annual_extension_2025` — Kan ik nog uitstel aanvragen voor de belastingaangifte 2025?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/kan-ik-nog-uitstel-aanvragen-belastingaangifte
+- `bd_annual_extension_eligibility_2025` — Uitstel aanvragen voor de belastingaangifte 2025 - hoe doe ik dat?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ik-moet-aangifte-doen-maar-ik-wil-graag-uitstel-kan-dat

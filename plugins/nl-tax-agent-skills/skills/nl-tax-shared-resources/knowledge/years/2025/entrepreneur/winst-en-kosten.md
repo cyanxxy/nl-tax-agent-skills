@@ -267,3 +267,21 @@ do not calculate it as a standard entrepreneur case.
    bedrijfsmiddel or fiscale-reserve question to
    `afschrijving-en-bedrijfsmiddelen-2025.md`. Do not answer either subject from
    this note alone, and do not compute a youngtimer or zonnecelauto outcome.
+
+## Official sources
+
+- `bd_zakelijke_kosten_2025` — Zakelijke kosten: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/zakelijke_kosten
+- `bd_zakelijke_kosten_een_jaar_2025` — Kosten die u in 1 jaar mag aftrekken: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_in_1_jaar_mag_aftrekken
+- `bd_zakelijke_kosten_meerdere_jaren_2025` — Kosten die u gespreid over een aantal jaren moet aftrekken: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_gespreid_over_een_aantal_jaren_moet_aftrekken
+- `bd_beperkt_aftrekbare_kosten_2025` — Drempel beperkt aftrekbare kosten 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
+- `bd_overzicht_aftrekbare_zakelijke_kosten` — Overzicht mogelijk aftrekbare zakelijke kosten: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/overzicht-mogelijk-aftrekbare-zakelijke-kosten
+- `bd_werkruimte_2025` — Werkruimte in de woning: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/werkruimte_in_de_woning
+- `bd_privevervoermiddel_2025` — Zakelijk gebruik privevervoermiddel 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/zakelijk-gebruik-privevervoermiddel-2025
+- `bd_oudedagsreserve_2025` — Oudedagsreserve: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve
+- `bd_aov_voor_ondernemers` — Arbeidsongeschiktheidsverzekering voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsongeschiktheidsverzekering-voor-ondernemers
+- `bd_administratie_bewaren_2025` — Administratie bewaren: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/administratie_bewaren
+- `bd_bijtelling_auto_2025` — Bijtelling privegebruik auto 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-auto-2025
+- `urib_2001_art_7_werkkleding` — Uitvoeringsregeling inkomstenbelasting 2001, artikel 7 - werkkleding (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0012031/2025-01-01/0/Hoofdstuk3/Artikel7/afdrukken
+- `law_uitvoeringsregeling_ib_2001` — Uitvoeringsregeling inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0012031/
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/
+- `law_awr_artikel_52` — Algemene wet inzake rijksbelastingen — artikel 52: https://wetten.overheid.nl/jci1.3:c:BWBR0002320&artikel=52

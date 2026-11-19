@@ -316,3 +316,18 @@ These are reference notes for workpack preparation -- not final tax advice.
 11. Recheck the jaarruimte figures, the reserveringsruimte cap, the
     stakingslijfrente maxima and the payout-form limits before the 2026 season;
     all of them are reset each year.
+
+## Official sources
+
+- `bd_aftrekken_lijfrentepremies` — Aftrekken lijfrentepremies: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/lijfrente/aftrekken-lijfrentepremies/aftrekken-lijfrentepremies
+- `bd_hoe_bereken_ik_mijn_jaarruimte` — Hoe bereken ik mijn jaarruimte voor aftrek van lijfrente?: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/hoe-bereken-ik-mijn-jaarruimte
+- `bd_fisin_lijfrente_2025` — Fiscale informatie 2025 -- uitgaven voor inkomensvoorzieningen: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/uitgaven_voor_inkomensvoorzieningen
+- `wet_ib2001_2025_geldend` — Wet inkomstenbelasting 2001 (versie geldend van 01-01-2025) - artt. 3.125, 3.126a, 3.127, 3.129, 3.130: https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk3/Afdeling3.7/Artikel3.127
+- `wet_ib2001_2023_art3127` — Wet inkomstenbelasting 2001, artikel 3.127 (versie geldend van 01-07-2023 t/m 31-12-2023) - pre-Wtp factor A rule: https://wetten.overheid.nl/jci1.3:c:BWBR0011353&hoofdstuk=3&afdeling=3.7&artikel=3.127&z=2023-12-31&g=2023-12-31
+- `bd_extra_lijfrenteaftrek_staking_2025` — Extra lijfrentepremieaftrek bij stakende ondernemers 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/extra-lijfrentepremieaftrek-bij-stakende-ondernemers-2025
+- `bd_aov_voor_ondernemers` — Arbeidsongeschiktheidsverzekering voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsongeschiktheidsverzekering-voor-ondernemers
+- `bd_aov_prive_aftrek` — Arbeidsongeschiktheidsverzekering (Prive - Werk en inkomen): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/arbeidsongeschiktheidsverzekering/arbeidsongeschiktheidsverzekering
+- `bd_oudedagsreserve_2025` — Oudedagsreserve: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/oudedagsreserve
+- `wet_ib2001_2022_for_artikelen` — Wet inkomstenbelasting 2001 (versie geldend van 01-04-2022 t/m 31-12-2022) - artt. 3.67-3.71 oudedagsreserve: https://wetten.overheid.nl/BWBR0011353/2022-12-31/0/Hoofdstuk3/Afdeling3.2/Paragraaf3.2.3/Artikel3.70
+- `wetten_ib_10a_29_for_overgangsrecht` — Artikel 10a.29 Wet inkomstenbelasting 2001 - Overgangsbepaling oudedagsreserve (geldend 01-01-2025): https://wetten.overheid.nl/BWBR0011353/2025-01-01/0/Hoofdstuk10A/Artikel10a.29/afdrukken
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

@@ -250,3 +250,15 @@ required and the asset must not have been used before.
    taxpayer lists one, say so plainly, remove it from the KIA base, and point them
    to `afschrijving-en-bedrijfsmiddelen-2025.md` for the depreciation and
    vermogensetikettering treatment that does apply.
+
+## Official sources
+
+- `bd_kia_2025` — Kleinschaligheidsinvesteringsaftrek (KIA): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/kleinschaligheidsinvesteringsaftrek_kia
+- `bd_eia_2025` — Energie-investeringsaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/investeringsaftrek-2025/energie-investeringsaftrek-2025
+- `bd_eia_mia_vamil_2025` — Milieu-investeringsaftrek (MIA) en Vamil: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/milieu_investeringsaftrek_mia_willekeurige_afschrijving_milieu_investeringen_vamil
+- `rvo_mia_vamil_2025_maximum` — Milieulijst 2025 - annual MIA/Vamil investment maximum: https://www.rvo.nl/sites/default/files/2025-10/BrochureMilieulijst2025v3.pdf
+- `bd_voorwaarden_investeringsregelingen` — Voorwaarden investeringsregelingen | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/voorwaarden_investeringsregelingen
+- `bd_desinvesteringsbijtelling` — Desinvesteringsbijtelling: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/desinvesteringsbijtelling
+- `bd_geen_recht_op_investeringsaftrek` — Geen recht op investeringsaftrek | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/investeringsaftrek_en_desinvesteringsbijtelling/geen_recht_op_investeringsaftrek
+- `bd_fisin_2025_h8` — Fiscale informatie 2025 - 8 Ondernemersaftrek en investeringsaftrek | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/ondernemersaftrek_en_investeringsaftrek
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

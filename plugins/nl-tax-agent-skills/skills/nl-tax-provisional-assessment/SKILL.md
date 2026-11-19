@@ -56,7 +56,7 @@ workflow.
 ## Start
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Resolve bundled
@@ -85,7 +85,7 @@ never writes the annual file (the annual workflow cleared its
 `queued_workflow` at the handoff). Consent to save the annual file covers this
 file only if the user said so or confirms it in one short question. A save
 offer made at the handoff that covered both files counts as this workflow's
-start offer; do not repeat it.
+first-checkpoint offer; do not repeat it.
 
 ## Saving the workpack
 
@@ -138,9 +138,9 @@ stop using the stopzetten files, and load only the change files.
 
 Load only the exact source resource required by the active subflow or topic:
 
-- request procedure: `reference/source-projections/request-flow-human.md`
-- change procedure: `reference/source-projections/change-flow-human.md`
-- stopzetten procedure: `reference/source-projections/stopzetten-flow-human.md`
+- request procedure: `../nl-tax-shared-resources/knowledge/years/2026/provisional/request-flow.md`
+- change procedure: `../nl-tax-shared-resources/knowledge/years/2026/provisional/change-flow.md`
+- stopzetten procedure: `../nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md`
 - review procedure: `../nl-tax-shared-resources/knowledge/years/2026/provisional/review-flow.md`
 - rates and credits: `../nl-tax-shared-resources/knowledge/years/2026/provisional/rates-and-credits.md`
 - Box 2: `../nl-tax-shared-resources/knowledge/years/2026/provisional/box2.md`
@@ -157,19 +157,14 @@ Load only the exact source resource required by the active subflow or topic:
 - fiscal-partner details, only when applicable:
   `../nl-tax-shared-resources/knowledge/partners/fiscal-partnership.md`
 
-The three `*-human.md` resources are mechanically reversible runtime
-projections of reviewed source notes. Use the projection header's `source_ids`
-for provenance; the projection is not an independent review attestation. Do
-not open the raw reviewed `request-flow.md`, `change-flow.md`, or
-`stopzetten-flow.md` during a taxpayer workflow. Their registered
-`snapshot_path` values are maintainer provenance only.
-
-Record each consulted `source_id` once for this workflow: it appears in
+Record each consulted `source_id` once for this workflow (using the note's
+`source_ids` header and inline `## Official sources` links): it appears in
 `Sources used` and, when saved, in Appendix A `sources_loaded`. Never fabricate
 a rate when a required note cannot be loaded, and never use a 2025 annual rate
 sheet.
 
-Load `templates/provisional-workpack.md` when the user consents to saving or at
+Load `templates/provisional-workpack.md` (plus only the active subflow snippet
+under `templates/sections/`) when the user consents to saving or at
 the generation gate, whichever comes first. Load
 `reference/provisional-output-contract.md` at final review.
 
@@ -183,7 +178,8 @@ the generation gate, whichever comes first. Load
   first-bracket rate, and use the live portal result for affected credits
   instead of choosing a whole-year credit table.
 - For an eenmanszaak/ZZP, collect only a sourced, user-reviewed full-year
-  `onderneming.geschatte_winst` forecast through `nl-tax-winst`, with manual
+  `onderneming.geschatte_winst` forecast through
+  `../nl-tax-shared-resources/helpers/winst.md`, with manual
   review -- the winst before ondernemersaftrek and mkb-winstvrijstelling,
   excluding btw, with a minus sign for a loss. Include it in the Box 1 rollup
   and change delta; do not prepare annual accounts, entrepreneur deductions, a

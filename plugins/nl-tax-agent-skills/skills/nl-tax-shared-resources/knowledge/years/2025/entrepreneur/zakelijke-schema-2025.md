@@ -482,3 +482,17 @@ value, not two.
 13. Label wording and section names can change between filing seasons. Recheck
     this inventory before the 2026 season and confirm anything the taxpayer sees
     on screen that does not match.
+
+## Official sources
+
+- `bd_aangifte_ondernemers_2025` — Aangifte inkomstenbelasting voor ondernemers: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/aangifte_inkomstenbelasting_voor_ondernemers
+- `bd_ondernemer_cijfers_aangifte_2025` — Ondernemer: welke cijfers voor uw aangifte inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/ondernemer-bekijk-welke-cijfers-u-nodig-hebt-voor-uw-aangifte-inkomstenbelasting
+- `bd_fisin_2025_h7` — Fiscale informatie 2025 - 7 Winst-en-verliesrekening en balans | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans
+- `bd_ola_ih2025_wv_opbrengsten` — Online aangifte IH 2025 - invulhulp 'Opbrengsten' (winst-en-verliesrekening): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvopbpan.htm
+- `bd_ola_ih2025_wv_afschrijvingen` — Online aangifte IH 2025 - invulhulp 'Afschrijvingen' (winst-en-verliesrekening): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvafschpan.htm
+- `bd_ola_ih2025_wv_overige_bedrijfskosten` — Online aangifte IH 2025 - invulhulp 'Overige bedrijfskosten' (winst-en-verliesrekening): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvovrpan.htm
+- `bd_ola_ih2025_wv_buitengewoon` — Online aangifte IH 2025 - invulhulp 'Buitengewone baten en lasten' (winst-en-verliesrekening): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvbgewpan.htm
+- `bd_ola_ih2025_activa_materieel` — Online aangifte IH 2025 - invulhulp 'Materiele vaste activa' (balans, activa): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wactmatvapan.htm
+- `bd_ola_ih2025_passiva_ondernemingsvermogen` — Online aangifte IH 2025 - invulhulp 'Ondernemingsvermogen' (balans, passiva): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wpasvermpan.htm
+- `bd_ola_ih2025_winstberekening` — Online aangifte IH 2025 - invulhulp 'Winstberekening' (vermogensvergelijking): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wberwv.htm
+- `bd_ola_ih2025_urencriterium_vraag` — Online aangifte IH 2025 - invulhulp urencriterium-vraag in de ondernemersaftrek: https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wondaftuur.htm

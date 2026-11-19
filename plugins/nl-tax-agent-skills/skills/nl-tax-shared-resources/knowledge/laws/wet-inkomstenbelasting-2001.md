@@ -516,3 +516,7 @@ When building any income tax calculation or workpack:
 ## Common failure
 
 Do not apply box 3 percentages or heffingsvrij vermogen amounts from this file. This is a structural reference only. Specific rates and amounts come from year-specific knowledge files under `nl-tax-shared-resources/knowledge/years/`.
+
+## Official sources
+
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

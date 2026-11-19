@@ -56,19 +56,16 @@ or a partner allocation.
 
 1. Read `../nl-tax-shared-resources/knowledge-index.md`.
 2. Match the question's year and workflow first, then its topic. Open only the
-   one or two notes the index names for it.
-3. For how to request, change, or stop a voorlopige aanslag 2026, open the
-   human-subject runtime projections the index lists under
-   `../nl-tax-provisional-assessment/reference/source-projections/`. Never open
-   the raw `request-flow.md`, `change-flow.md`, or `stopzetten-flow.md` notes.
-4. If the index does not settle the choice, search for the Dutch or English
+   one or two notes the index names for it. (For a side-by-side comparison
+   between 2025 and 2026, open both years' notes and label every figure with
+   its exact tax year and workflow.)
+3. If the index does not settle the choice, search for the Dutch or English
    term only inside `../nl-tax-shared-resources/knowledge/`. Do not search or
    list the rest of the plugin, and never read test, eval, fixture, or
    repository files.
-5. Read the selected note's `source_ids` header, then search
-   `../nl-tax-shared-resources/source-register.yaml` for only those entries to
-   get each source's title and official URL. Do not read the complete register.
-6. If a named path cannot be opened, report that exact path and say the plugin
+4. Use each opened note's `source_ids` header and inline `## Official sources`
+   section for the source title and official URL.
+5. If a named path cannot be opened, report that exact path and say the plugin
    may be installed incompletely. Do not guess other filenames.
 
 ## Answer

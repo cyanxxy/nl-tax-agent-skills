@@ -1,7 +1,8 @@
 # Annual 2026 flow
 
 Load `../nl-tax-shared-resources/knowledge/years/2026/annual/preparation.md`
-and its exact source-register entries before tax treatment. Read only the
+and use its `source_ids` header and inline `## Official sources` links before
+tax treatment. Read only the
 note needed for the current topic; current general guidance cannot prove a
 future annual screen. Use the section keys in `../nl-tax-shared-resources/reference/workflow-scopes.yaml`.
 As the runtime contract says, every path in this file resolves relative to the

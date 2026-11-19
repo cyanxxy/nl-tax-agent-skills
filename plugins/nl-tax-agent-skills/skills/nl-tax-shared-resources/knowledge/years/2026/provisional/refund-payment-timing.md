@@ -40,3 +40,7 @@ and do not convert a workpack estimate into a payment promise.
 ## Common failure
 
 Do not promise a lump-sum refund for a mid-year request — a refund is paid in monthly termijnen across the remaining year, not all at once.
+
+## Official sources
+
+- `bd_provisional_refund_timing_2026` — Voorlopige aanslag 2026 aangevraagd en ik krijg geld terug — hoe en wanneer?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-aangevraagd-hoe-en-wanneer-krijg-ik-mijn-geld

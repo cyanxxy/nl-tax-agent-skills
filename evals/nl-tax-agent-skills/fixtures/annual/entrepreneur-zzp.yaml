@@ -7,7 +7,7 @@
 # Expected behavior:
 #   - Case is SUPPORTED and routes into annual_2025 (NOT out of scope)
 #   - Finalized profit-and-loss and balance evidence are Documents and sources
-#     rows, organized in Phase 2A via the nl-tax-winst helper
+#     rows, organized in Phase 2A via the internal winst helper (`helpers/winst.md`)
 #   - The workpack walks the ordered chain: winst -> ondernemersaftrek ->
 #     MKB-winstvrijstelling -> belastbare winst. No asset was bought in 2025, so
 #     no investeringsaftrek screen is claimed and no schema blocker arises.

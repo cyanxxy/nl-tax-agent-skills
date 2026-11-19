@@ -33,3 +33,7 @@ balance evidence before using any amount in the workpack.
 Do not treat this as portal automation support. Use it only to prepare manual
 questions, calculations, evidence prompts, and field-mapping notes for the
 2025 annual return.
+
+## Official sources
+
+- `bd_fisin_aanmerkelijk_belang_2025` — Fiscale Informatie 2025 -- Aanmerkelijk belang: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/aanmerkelijk_belang

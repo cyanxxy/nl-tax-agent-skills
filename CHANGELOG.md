@@ -5,17 +5,85 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.0] — 2026-11-19 — 13 skills, inline sources, prefilled-return mode
+
+The plugin drops from 19 skills to 13 and loads less text per conversation.
+No rate, threshold or cited source changes.
 
 ### Added
 
+- **Check a prefilled return.** `nl-tax-annual-return` can start from the
+  vooringevulde aangifte the taxpayer already has open: it checks the
+  prefilled figures against the taxpayer's documents and spends its questions
+  on what the Belastingdienst does not prefill (deductions, foreign and crypto
+  box 3 assets, the actual-return comparison, winst, partner allocation). A
+  prefilled figure still needs a document or the taxpayer's confirmation.
+- **One section only.** Asking for help with a single topic, such as box 3 or
+  the eigen woning after a move, runs that section and returns a sourced
+  summary in the conversation without the full workpack.
+- **Cross-year questions.** `nl-tax-knowledge` answers side-by-side 2025 and
+  2026 questions, labelling every figure with its tax year and workflow.
 - **Other agents through the `skills` CLI.** A root `skills.sh.json` points the
-  open `skills` CLI at `plugins/nl-tax-agent-skills/skills` and groups the 19
+  open `skills` CLI at `plugins/nl-tax-agent-skills/skills` and groups the 13
   skills on the skills.sh repository page. The README documents
-  `npx skills add cyanxxy/nl-tax-agent-skills --skill '*'` for Cursor, Gemini
-  CLI, GitHub Copilot, OpenCode and other agents, with its limits: all skills
-  install together, helpers are visible, and the reviewer subagent is absent.
-  The plugin package itself is unchanged.
+  `npx skills add cyanxxy/nl-tax-agent-skills --skill '*'` for Antigravity,
+  Cursor, GitHub Copilot, OpenCode and other agents, with its limits: all
+  skills install together, `nl-tax-shared-resources` is visible, and the
+  reviewer subagent is absent.
+- **Three eval cases** in `evals/claude-plugin/`:
+  `cowork-box3-truncation-arithmetic`, `cowork-annual-via-focused-section` and
+  `cowork-knowledge-cross-year-inline-sources`.
+
+### Changed
+
+- **Official sources are inline.** All 72 tax-rule notes end with an
+  `## Official sources` section giving each source's title and URL, so an
+  answer cites its source from the note it already read instead of a second
+  lookup.
+- **The save offer comes later.** A workflow offers to keep a workpack file
+  after the first shared document or the first finished section, not as its
+  opening reply. Nothing is written before the taxpayer says yes.
+- **Arithmetic is shown line by line.** Every multi-step calculation prints
+  its intermediate lines, names the rounding or truncation rule from the note,
+  and checks its totals (partner shares sum to 100%, equity reconciles, VAT
+  rubrics match the ledger) before presenting a result.
+- **Workpack templates load only what applies.** The winst, own-home, box 2
+  and partner sections of the annual template, and the subflow sections of
+  the provisional template, moved to `templates/sections/` and load only when
+  relevant. The annual template core is 39.8 KiB (was 55.7), the provisional
+  core 28.8 KiB (was 45.8).
+- **Helper files point to the rule notes for every figure.** The Box 1 and
+  own-home, Box 2, Box 3 and partner and deductions helpers no longer repeat
+  rates and amounts; `knowledge/` is the only place a figure is written.
+- **Voorlopige aanslag procedure notes.** The request, change and stopzetten
+  notes in `knowledge/years/2026/provisional/` now name the taxpayer as the
+  one who logs in, enters and sends, and are read directly.
+- **`workflow-scopes.yaml` covers all eight workflows**, including annual
+  2025, provisional 2026, VAT return and VAT correction, with each one's
+  owner, maturity, readiness ceiling, save path and sections.
+- **Stale-source warning.** A note warns once when its review date is more
+  than 12 months old or predates January of the current filing year.
+
+### Removed
+
+- **Six helper skills.** `nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`,
+  `nl-tax-winst`, `nl-tax-partner-deductions` and `nl-tax-vat-adjustments` are
+  now reference files under `nl-tax-shared-resources/helpers/`, read by the
+  workflow that needs them. They no longer appear in skill lists or compete
+  with `nl-tax-knowledge` for rule questions, and the skill descriptions the
+  host loads shrink by about 28%.
+- **`source-register.yaml` from the package.** The 241 KiB register sat at 94%
+  of the Claude directory's 256 KiB per-file limit. The largest shipped file
+  is now 43 KiB.
+- **The `source-projections/` copies** of the three provisional procedure
+  notes, and the projection rules in `runtime-contract.md`.
+- **`docs/` from the repository.** Maintainer design notes, raw source notes
+  and the source register are kept locally and are gitignored.
+
+### Maintenance
+
+- CI fails when a plugin file reaches 256 KiB or the package exceeds 512
+  files.
 
 ## [0.5.5] — 2026-11-10 — New icon and current install steps
 

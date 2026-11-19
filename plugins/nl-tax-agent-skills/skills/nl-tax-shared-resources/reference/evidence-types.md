@@ -66,7 +66,7 @@ Use these canonical type tokens exactly as the headings below in the row's type 
 ## Business / Enterprise (Winst uit onderneming)
 
 Evidence for an IB-ondernemer with an eenmanszaak / ZZP. Used by the annual
-`nl-tax-winst` helper (Phase 2A). Collect only what the winst section needs; never
+`../nl-tax-shared-resources/helpers/winst.md` helper (Phase 2A). Collect only what the winst section needs; never
 gather the BSN.
 
 Three Belastingdienst documents that belong to a business case are listed under
@@ -409,7 +409,7 @@ customer personal identifiers, VAT registration numbers, or payment references.
   rubric, amount, explanation and deduction treatment.
 - **Boundary:** record accepted treatment, period and calculation provenance.
   The VAT owner may obtain bounded supported arithmetic from
-  `../nl-tax-vat-adjustments/SKILL.md`; unresolved classification/elections
+  `../nl-tax-shared-resources/helpers/vat-adjustments.md`; unresolved classification/elections
   remain named blockers. An adviser statement is not required for every
   complete car, property, mixed-use or capital-goods calculation.
 

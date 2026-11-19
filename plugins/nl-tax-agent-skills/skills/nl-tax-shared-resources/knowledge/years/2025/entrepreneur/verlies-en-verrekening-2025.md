@@ -272,3 +272,14 @@ Record the facts, do not compute, and route these to manual review:
 10. Every portal action stays with the human: you (the taxpayer) open Mijn
     Belastingdienst, enter the loss and NGZ figures, and submit. The plugin
     prepares the figures and never logs in, enters, or sends anything.
+
+## Official sources
+
+- `bd_verlies_uit_onderneming` — Verlies uit onderneming | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/verlies_uit_onderneming
+- `bd_fisin_2025_h25` — Fiscale informatie 2025, hoofdstuk 25 - Te verrekenen verliezen - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/te_verrekenen_verliezen
+- `bd_verrekenen_ngz` — Verrekenen niet-gerealiseerde zelfstandigenaftrek: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/zelfstandigenaftrek1/verrekenen_niet_gerealiseerde_zelfstandigenaftrek
+- `bd_middeling_aanvragen` — Hoe kan ik mijn inkomen middelen en geld terugkrijgen? - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/hoe-kan-ik-mijn-inkomen-middelen-en-geld-terugkrijgen
+- `bd_middeling_teruggaaf` — Teruggaaf door middeling berekenen - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/bijzondere_situaties/teruggaaf_door_middeling_berekenen/teruggaaf-door-middeling-berekenen
+- `bd_zelfstandigenaftrek_2025` — Zelfstandigenaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/zelfstandigenaftrek-2025
+- `law_besluit_ngz_staking` — Besluit Inkomstenbelasting, staking gehele onderneming; verrekening niet gerealiseerde zelfstandigenaftrek (art. 3.76 Wet IB 2001), BWBR0037558: https://wetten.overheid.nl/BWBR0037558
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

@@ -35,3 +35,7 @@ details.
 Do not treat a local reviewed-note hash or a source-register date as proof that
 the remote law page was retrieved. Legal review and URL reachability are separate
 facts.
+
+## Official sources
+
+- `law_awr_artikel_52` — Algemene wet inzake rijksbelastingen — artikel 52: https://wetten.overheid.nl/jci1.3:c:BWBR0002320&artikel=52

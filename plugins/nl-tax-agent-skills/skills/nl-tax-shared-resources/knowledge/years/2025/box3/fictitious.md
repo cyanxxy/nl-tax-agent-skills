@@ -120,3 +120,8 @@ Do not subtract the full debt amount. First subtract the debt threshold and use 
 Do not apply the heffingsvrij vermogen before calculating the belastbaar rendement. The heffingsvrij vermogen is only deducted to determine the grondslag sparen en beleggen.
 
 Do not allocate individual assets or debts between fiscal partners for the fictitious calculation. Allocate the joint grondslag sparen en beleggen.
+
+## Official sources
+
+- `bd_box3_2025_calc` — Hoe wordt mijn box 3-inkomen over 2025 berekend?: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2025
+- `bd_fisin_box3_assets_debts_2025` — Fiscale Informatie 2025 — Bezittingen en schulden box 3: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/bezittingen_en_schulden_box_3_

@@ -21,10 +21,13 @@ workpack applies this file together with
   `nl-tax-vat-return`, `nl-tax-vat-correction`, `nl-tax-icp`, or
   `nl-tax-oss`) offers to save, in one short sentence, only
   at these points:
-  1. when the workflow starts after intake ("This can take a few sessions. Want
-     me to keep your workpack as one file in your working folder so you can pick
-     up later? Otherwise everything stays in this conversation."), as its own
-     reply before the first collection question;
+  1. at the first natural progress checkpoint — after crediting the first shared
+     document or completing the first tax section — rather than interrupting
+     turn 1 before helping ("Want me to keep your workpack as one file in your
+     working folder so you can pick up later? Otherwise everything stays in this
+     conversation."), as the reply's sole yes/no question (a return-capable
+     structured control with clearly separate choices may combine it with a
+     collection step);
   2. when the user signals a pause (waiting for documents, "later", "tomorrow",
      ending the session), if not yet opted in;
   3. at generation, if not yet opted in: in the reply after the workpack is
@@ -84,10 +87,9 @@ workpack applies this file together with
 Never put two yes/no offers, or a question plus an offer, in the same reply, so
 a bare "yes" is unambiguous. Final review asks only the generation question.
 After generation and mapping, the save offer (if due) comes next, in its own
-reply; the checklist offer comes in the reply after that. The workflow-start
-save offer is its own reply, before the first collection question. A
-return-capable structured control with clearly separate choices may combine
-them.
+reply; the checklist offer comes in the reply after that. At the first progress
+checkpoint, keep the save offer as that reply's only yes/no question (unless a
+return-capable structured control presents clearly separate choices).
 
 ## Showing the workpack in the conversation
 
@@ -138,8 +140,9 @@ them.
 Resident annual 2025, resident annual 2026, provisional 2026, international
 returns, domestic VAT, ICP and each OSS scheme stay separate. Each confirmed
 workflow identity has exactly one file, never a combined one. Use
-`../nl-tax-shared-resources/reference/workflow-scopes.yaml` for extended owner,
-identity, path and section contracts; it records scope rather than choosing
+`../nl-tax-shared-resources/reference/workflow-scopes.yaml` as the single
+canonical registry for every workflow's owner, maturity, readiness ceiling,
+identity keys, path, and sections; it records scope rather than choosing
 questions or tax treatment:
 
 | Workflow | The only file the plugin may write |
@@ -188,10 +191,9 @@ Appendix A, map and filename before resuming or writing.
   `allowed-tools` lists only `Read Glob Grep`; no skill pre-approves `Edit`,
   `Write`, or `Bash`. Every save therefore shows the host's normal permission
   prompt. That prompt is expected and is the user's to approve.
-- `nl-tax-intake`, `nl-tax-knowledge`, and the background helpers
-  (`nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`,
-  `nl-tax-partner-deductions`, `nl-tax-winst`, `nl-tax-vat-adjustments`)
-  write nothing.
+- `nl-tax-intake`, `nl-tax-knowledge`, and the internal helpers under
+  `../nl-tax-shared-resources/helpers/` (`box1-home.md`, `box2.md`, `box3.md`,
+  `partner-deductions.md`, `winst.md`, `vat-adjustments.md`) write nothing.
 
 ## Resume from a saved workpack
 

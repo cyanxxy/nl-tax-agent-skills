@@ -46,7 +46,8 @@ review. Support exactly 2025/2026 Netherlands-established eenmanszaak or ZZP per
   threshold. A suppletie uses corrected full rubric totals, including
   unchanged applicable rubrics; a delta is not a replacement total.
 - **Bounded adjustment support.** Routine foreign-supplier services need
-  confirmed treatment. Invoke `../nl-tax-vat-adjustments/SKILL.md` for complete
+  confirmed treatment. Read and apply
+  `../nl-tax-shared-resources/helpers/vat-adjustments.md` for complete
   sourced car/private-use, pro-rata, capital-goods/services revision, property,
   BUA and margin arithmetic. Accept its bounded results into corrected full
   totals once; uncertain classification/elections stay affected-line blockers.
@@ -71,7 +72,7 @@ review. Support exactly 2025/2026 Netherlands-established eenmanszaak or ZZP per
 ## Start, resources, and resume
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
@@ -80,8 +81,8 @@ skill directory with the host's resource/file tools; `workspace/...` is
 relative to the task's working folder. Do not use shell discovery or depend
 on vendor-specific environment variables.
 
-Read only the flow's knowledge notes for the active topic and their entries
-in `../nl-tax-shared-resources/source-register.yaml`. A missing named resource
+Read only the flow's knowledge notes for the active topic and use their
+`source_ids` header and inline `## Official sources` section. A missing named resource
 blocks the topic. A `needs_review` note, missing source-content attestation,
 or unreviewed rubric schema permits only draft preparation; no
 `review_ready` or manual-entry checklist until content review. Fetching an
@@ -101,7 +102,7 @@ workpack the user named and writes nothing.
 ## Saving and output ownership
 
 Follow `../nl-tax-shared-resources/runtime-workpack-files.md` for session
-consent, first-save, download, withdrawal and stale rules. Offer saving once at workflow start, once at a pause and once after
+consent, first-save, download, withdrawal and stale rules. Offer saving once at the first progress checkpoint, once at a pause and once after
 generation/mapping when not opted in; each is its own reply and one yes/no
 question. Load `templates/vat-correction-workpack.md` and
 `reference/vat-correction-output-contract.md` at first save or final
