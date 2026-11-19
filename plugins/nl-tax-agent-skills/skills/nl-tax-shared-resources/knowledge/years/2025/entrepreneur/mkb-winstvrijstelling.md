@@ -114,3 +114,9 @@ and ondernemersaftrek).
    vrijstelling. Ask the taxpayer whether any part of the profit was earned in
    one of those capacities rather than as ondernemer; if the answer is yes, or is
    not established, split out that part and route it to manual review.
+
+## Official sources
+
+- `bd_mkb_winstvrijstelling_2025` — MKB-winstvrijstelling 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/mkb-winstvrijstelling-2025
+- `bd_mkb_winstvrijstelling_general` — Mkb-winstvrijstelling: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/mkb_winstvrijstelling
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

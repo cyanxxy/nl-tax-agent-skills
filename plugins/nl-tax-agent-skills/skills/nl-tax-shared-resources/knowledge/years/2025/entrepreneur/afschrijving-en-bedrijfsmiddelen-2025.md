@@ -345,3 +345,23 @@ paid during the investment year.
     facts collected and the reason it was routed. You (the taxpayer) enter and
     check all final figures yourself in Mijn Belastingdienst; this workpack never
     does that for you.
+
+## Official sources
+
+- `bd_vermogensetikettering` — Vermogensetikettering bedrijfsmiddel | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/vermogensetikettering-bedrijfsmiddel
+- `bd_wat_is_afschrijven` — Belastingdienst - Wat is afschrijven?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/wat_is_afschrijven
+- `bd_afschrijving_berekening` — Hoe berekent u het bedrag van de afschrijving? - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/hoe_berekent_u_het_bedrag_van_de_afschrijving
+- `bd_afschrijving_bedrijfspand` — Afschrijving bedrijfspand - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/afschrijving_bedrijfspand
+- `bd_afschrijving_bedrijfspand_2025` — Afschrijving bedrijfspand 2025 - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/afschrijving-bedrijfspand-2025
+- `bd_ola_ih2025_wv_afschrijvingen` — Online aangifte IH 2025 - invulhulp 'Afschrijvingen' (winst-en-verliesrekening): https://www.belastingdienst.nl/data/online_aangifte/ih2025/contextafhankelijkehelp/nlw/invulhulp/wwvafschpan.htm
+- `bd_fisin_2025_h7` — Fiscale informatie 2025 - 7 Winst-en-verliesrekening en balans | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_en_verliesrekening_en_balans
+- `bd_zakelijke_kosten_een_jaar_2025` — Kosten die u in 1 jaar mag aftrekken: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_in_1_jaar_mag_aftrekken
+- `bd_zakelijke_kosten_meerdere_jaren_2025` — Kosten die u gespreid over een aantal jaren moet aftrekken: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_die_u_gespreid_over_een_aantal_jaren_moet_aftrekken
+- `bd_willekeurige_afschrijving_algemeen` — Willekeurige afschrijving - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/willekeurige_afschrijving
+- `bd_willekeurige_afschrijving_starters` — Willekeurige afschrijving - Startende ondernemer - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/startende_ondernemer
+- `bd_herinvesteringsreserve` — Herinvesteringsreserve - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/herinvesteringsreserve
+- `bd_egalisatiereserve` — Egalisatiereserve (kostenegalisatiereserve) - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/fiscale_reserves/egalisatiereserve
+- `bd_privegebruik_woning` — Belastingdienst - Privegebruik woning (woningforfait bij ondernemingsvermogen): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/privegebruik_woning/privegebruik_woning
+- `bd_bijtelling_woning_2025` — Belastingdienst - Bijtelling privegebruik woning 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/bijtelling-privegebruik-woning-2025
+- `law_uwa_2001` — Uitvoeringsregeling willekeurige afschrijving 2001 (BWBR0012035): https://wetten.overheid.nl/BWBR0012035
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

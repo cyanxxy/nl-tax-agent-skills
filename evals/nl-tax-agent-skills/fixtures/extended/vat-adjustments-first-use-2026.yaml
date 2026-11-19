@@ -27,7 +27,7 @@ scenario_facts:
 expected_outputs:
   files_created: []
 expected_behavior:
-- The owning VAT return uses nl-tax-vat-adjustments as a read-only helper; the helper writes no independent
+- The owning VAT return reads the internal VAT adjustments helper (`helpers/vat-adjustments.md`) as a read-only helper; the helper writes no independent
   workpack/map/ledger.
 - Preserve acquisition/invoice year 2025 separately from first-use year 2026 and active VAT year/period.
   Historic acquisition evidence may be applicable without importing 2025 current-period amounts.

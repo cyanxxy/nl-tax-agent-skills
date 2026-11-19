@@ -657,3 +657,26 @@ Current status of the scheme:
     position in Part 3, both handhavingsplan documents named there, and the
     special-category limits in Part 2. All of them are reset or restated each
     year.
+
+## Official sources
+
+- `bd_bron_van_inkomen` — Bron van inkomen - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/bron-van-inkomen
+- `bd_ondernemer_criteria_2025` — Wanneer bent u ondernemer voor de inkomstenbelasting?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
+- `bd_ondernemerscheck_2025` — OndernemersCheck inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/checken-of-ik-ondernemer-ben-voor-de-inkomstenbelasting
+- `bd_weet_wanneer_ondernemer` — Weet wanneer u ondernemer bent voor de Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/weet-wanneer-u-ondernemer-bent/
+- `bd_fisin2025_h6_winst_uit_onderneming` — Fiscale informatie 2025, hoofdstuk 6 - Winst uit onderneming: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming
+- `bd_wat_zijn_inkomsten_overig_werk` — Wat zijn inkomsten uit overig werk?: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/wat-zijn-inkomsten-uit-overig-werk
+- `bd_niet_in_loondienst_werken` — Niet in loondienst werken: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/niet-in-loondienst-werken
+- `bd_welke_kosten_bijverdiensten` — Welke zakelijke kosten mag ik aftrekken? (bijverdiensten / inkomsten uit overig werk): https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/welke-kosten-mag-ik-aftrekken-van-mijn-bijverdiensten
+- `bd_fisin2025_row` — Fiscale informatie 2025, hoofdstuk 5 Inkomsten uit overig werk: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomsten_uit_overig_werk
+- `fisin2025_fiscaal_partnerschap` — Fiscale informatie 2025 - hoofdstuk 1 Fiscaal partnerschap: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/fiscaal_partnerschap
+- `bd_beperkt_aftrekbare_kosten_2025` — Drempel beperkt aftrekbare kosten 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/drempel-beperkt-aftrekbare-kosten-2025
+- `bd_zvw_resultaat_overig_werk` — Bijdrage Zorgverzekeringswet over resultaat uit overig werk: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/werk_en_inkomen/werken/niet_in_loondienst_werken/zorgverzekeringswet
+- `bd_wanneer_loondienst` — Wanneer is sprake van loondienst?: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/wanneer-is-sprake-van-loondienst
+- `bd_beoordeel_samen` — Samen verantwoordelijk voor uw arbeidsrelatie: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/beoordeel-samen-uw-arbeidsrelatie
+- `bd_handhaving_arbeidsrelaties` — Arbeidsrelaties en handhaving door de Belastingdienst (einde handhavingsmoratorium): https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/handhaving
+- `bd_handhavingsplan_landing` — Handhavingsplan arbeidsrelaties (downloadoverzicht): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/themaoverstijgend/brochures_en_publicaties/handhavingsplan-arbeidsrelaties
+- `bd_geen_nieuwe_modelovereenkomsten` — Geen nieuwe modelovereenkomsten meer: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/geen-nieuwe-modelovereenkomsten-meer
+- `bd_werken_met_modelovereenkomsten` — Werken met modelovereenkomsten: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-met-modelovereenkomsten
+- `bd_gevolgen_opdrachtnemer` — Werken in loondienst - gevolgen voor de opdrachtnemer: https://www.belastingdienst.nl/wps/wcm/connect/nl/arbeidsrelaties/content/werken-in-loondienst-gevolgen-opdrachtnemer
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

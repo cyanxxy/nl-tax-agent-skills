@@ -91,7 +91,7 @@ Every workpack MUST contain ALL of the following sections, in order. If a sectio
 5. **Unsupported-case checks** — checklist confirming the case is within scope
 6. **Taxpayer profile summary** — the screened facts, one keyed row each with provenance: residency, taxpayer type, AOW status for 2025 (three-state value, transition month, single-person AOW entitlement), fiscal partner and partner AOW status, household composition (children at home, children's dates of birth, single-parent status), Box 2 screening, and business screening. No BSN, IBAN, or names
 7. **Documents and sources** — one row per document or chat value used: `ev_NNN | document as named by the user | type | tax year | owner | location (page/section) | values taken | status (extracted / needs review)`. A chat value's row is named `chat YYYY-MM-DD` with type `user_chat`. No file hashes, no full BSN, IBAN, policy, contract, or aanslag number, and no copied content beyond the short quote needed for provenance
-8. **Sources used** — the `source_id`s from `../nl-tax-shared-resources/source-register.yaml` actually consulted for the annual workflow, one per line, identical to Appendix A `sources_loaded`
+8. **Sources used** — the `source_id`s from the consulted knowledge notes actually loaded for the annual workflow, one per line, identical to Appendix A `sources_loaded`
 9. **Filing status and late-filing exposure** — one of the four filing-route
    labels, timing facts, route-specific potential penalty, and belastingrente
    review when applicable
@@ -569,7 +569,7 @@ checklist may reject an impossible `review_ready` declaration but never promotes
 
 Appendix A is one fenced `yaml` block with exactly these keys:
 `workpack_format: nl-tax-workpack`, `workpack_version: "2.0"`,
-`plugin_version: "0.5.5"`, `workflow: annual_2025`, `tax_year: 2025`,
+`plugin_version: "0.6.0"`, `workflow: annual_2025`, `tax_year: 2025`,
 `created_at`, `updated_at` (ISO 8601), `save_consent`, `readiness`,
 `generation_confirmed`, `queued_workflow`, `sections`, and `sources_loaded`.
 

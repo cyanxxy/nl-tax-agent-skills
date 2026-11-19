@@ -59,3 +59,9 @@ For 2026, the aftrek wegens geen of geringe eigenwoningschuld applies to 71.867%
 - Those moving-home rules are fact-collection prompts in the workpack: any two-home, overlap, temporary double-home, or divorce-use case routes to manual review for the actual period and qualification outcome.
 - Do not carry thresholds, fixed amounts, or Hillen percentages from one year to another.
 - If the official form computes a different amount, the official form is binding and the workpack should record the difference as a review item.
+
+## Official sources
+
+- `bd_eigenwoningforfait_2025_2026` — Eigenwoningforfait - wat is het en hoe bereken ik het?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hoe-werkt-eigenwoningforfait
+- `bd_eigenwoningforfait_multiple_homes` — Verschillende woningen in het jaar: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/
+- `bd_woz_value_provisional_2026` — Hulp bij de voorlopige aanslag — wat neemt u mee?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hulp-bij-de-voorlopige-aanslag-wat-neemt-u-mee

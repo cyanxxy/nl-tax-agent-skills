@@ -85,6 +85,6 @@ question, stop workflow-resource loading for this turn.
 
 - Total persoonsgebonden aftrek
 - Note the allocation order: box 1 first, then box 3, then box 2
-- If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best. Partner allocation of these deductions is finalized in Phase 6 via `nl-tax-partner-deductions`.
+- If fiscal partners: note allocation options and model scenarios; do not assume the highest marginal-rate partner is always best. Partner allocation of these deductions is finalized in Phase 6 via `../nl-tax-shared-resources/helpers/partner-deductions.md`.
 
 ---

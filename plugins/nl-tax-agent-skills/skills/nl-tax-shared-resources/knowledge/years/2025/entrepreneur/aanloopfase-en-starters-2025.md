@@ -324,3 +324,17 @@ Record the facts, do not compute, and route to manual review:
     Belastingdienst, enter the aanloopkosten, hours answer and starter reliefs,
     and submit. The plugin prepares and explains the figures and never logs in,
     enters, or sends anything.
+
+## Official sources
+
+- `bd_kosten_aanloopfase` — Kosten gemaakt in de aanloopfase - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/zakelijke_kosten/kosten_gemaakt_in_de_aanloopfase
+- `bd_urencriterium_2025` — Voorwaarden urencriterium: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+- `bd_startersaftrek_2025` — Startersaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek
+- `bd_zelfstandigenaftrek_2025` — Zelfstandigenaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/zelfstandigenaftrek-2025
+- `bd_startersaftrek_ao_2025` — Startersaftrek bij arbeidsongeschiktheid: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek_bij_arbeidsongeschiktheid
+- `bd_vermogensetikettering` — Vermogensetikettering bedrijfsmiddel | Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/vermogensetikettering-bedrijfsmiddel
+- `bd_willekeurige_afschrijving_starters` — Willekeurige afschrijving - Startende ondernemer - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/startende_ondernemer
+- `bd_willekeurige_afschrijving_algemeen` — Willekeurige afschrijving - Belastingdienst: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/afschrijving/willekeurige_afschrijving/willekeurige_afschrijving
+- `law_uwa_2001` — Uitvoeringsregeling willekeurige afschrijving 2001 (BWBR0012035): https://wetten.overheid.nl/BWBR0012035
+- `law_uitvoeringsregeling_ib_2001` — Uitvoeringsregeling inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0012031/
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

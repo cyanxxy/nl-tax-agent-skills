@@ -4,8 +4,7 @@ This directory separates two different kinds of evidence. The live benchmark
 evaluates an LLM-driven Cowork conversation. The fixture library is a set of written
 scenario descriptions that nothing grades automatically.
 
-Both follow the 0.4 conversation-first design
-(`docs/maintainers/0.4-conversation-first-design.md`): nothing is written by
+Both follow the 0.4 conversation-first design: nothing is written by
 default, and only with the taxpayer's consent does the plugin keep exactly one
 workpack file per workflow identity, holding the readable workpack, the
 Appendix A resume record, and the Appendix B field map. The income-tax
@@ -147,8 +146,8 @@ after a direct Skill invocation. Owner routing stays invisible in the reply,
 so the `criteria.md` rubrics judge only its visible effect, such as a separate
 migration-year (M) draft, never internal workflow identifiers.
 `cowork-vat-adjustments-first-use-2026` adds a
-`helper-fired.md` indicator that the read-only `nl-tax-vat-adjustments`
-helper was read. `cowork-vat-correction-periods` adds `file_exists` graders:
+`helper-fired.md` indicator that the read-only
+`nl-tax-shared-resources/helpers/vat-adjustments.md` helper was read. `cowork-vat-correction-periods` adds `file_exists` graders:
 one saved correction workpack each for Q1 and Q2, and no Q3 or combined file.
 The LLM criteria judge only what a correct first reply can show; they do not
 require mapper internals, Appendix YAML or discussion of facts the prompt does

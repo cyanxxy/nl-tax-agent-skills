@@ -60,11 +60,9 @@ Return a compact review with these headings:
 Return the review to the owning agent. It decides what to record and what to
 ask in the main conversation.
 
-For an extended scope (VAT, VAT correction, ICP, OSS, international M or C,
-or annual 2026), read only the rule-note paths and, for ICP, OSS,
-international and annual 2026, the resolved path of the shared
-`workflow-scopes.yaml` contract that the owner names in the brief. VAT and VAT
-correction have no scope in that file, so their brief names rule notes only.
+For any extended scope (VAT, VAT correction, ICP, OSS, international M or C,
+or annual 2026), read only the rule-note paths and the resolved path of the
+shared `workflow-scopes.yaml` contract that the owner names in the brief.
 If a path the brief should carry is missing, return that to the owner instead
 of searching for it. Keep the identity of the active return (year, period,
 scheme or form) distinct from historical acquisition and correction facts.

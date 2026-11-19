@@ -33,3 +33,7 @@ Ask for dividend statements, withholding evidence, share-sale agreements, and
 acquisition-price support where relevant. Keep the output as a manual
 preparation workpack; do not handle portal navigation or
 submission.
+
+## Official sources
+
+- `bd_box2_income_ab_guidance` — Inkomsten uit aanmerkelijk belang: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang

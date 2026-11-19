@@ -165,10 +165,10 @@ blocker applies still counts as successful after a complete rollup.
   2025 workpack as a file in your working folder so you can pick up later, and
   the 2026 one too once we start it? Otherwise everything stays in this
   conversation." This is the annual generation-point offer and also counts as
-  the 2026 workflow-start offer, so the 2026 workflow does not repeat it; the
+  the 2026 first-checkpoint offer, so the 2026 workflow does not repeat it; the
   first 2026 question comes in the next reply. A consent given earlier for the
   annual file extends to the 2026 file only if the user said so; otherwise the
-  2026 workflow asks once, as its workflow-start offer.
+  2026 workflow asks once, as its first-checkpoint offer.
 - Do not ask an annual-checklist question at the handoff. State only that the
   annual checklist remains available on request, then make the next actual
   question a 2026-subflow question (after the save offer, when one is due). A

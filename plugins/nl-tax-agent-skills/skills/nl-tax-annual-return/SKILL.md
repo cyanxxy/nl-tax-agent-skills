@@ -42,7 +42,7 @@ follow-up, and stay the single owner of facts, section status, and readiness.
 ## Start and resume
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md` first. Resolve bundled
@@ -55,16 +55,27 @@ task's working folder. Never depend on vendor-specific environment variables.
   `../nl-tax-shared-resources/runtime-workpack-files.md`. This workflow
   expects `workflow: annual_2025` and `tax_year: 2025`; a provisional workpack
   belongs to `nl-tax-provisional-assessment`, and any other mismatch makes the
-  file an ordinary source document (see Older files). If annual is already
-  complete and `queued_workflow` is set, ask once whether to continue with
-  that 2026 workflow; never start it silently.
+  file an ordinary source document. If annual is already complete and
+  `queued_workflow` is set, ask once whether to continue with that 2026
+  workflow; never start it silently.
 - **Fresh start.** Otherwise take intake's screened facts from this
   conversation. If screening has not happened, hand back to `nl-tax-intake`
   for only the missing screening; if intake is complete, never restart it.
-- **Older files.** A 0.3 `return-pack.md` or any other older document is an
-  ordinary source document: record it in `Documents and sources` and confirm
-  material figures. 0.3 ledgers (`profile.yaml`, `session-progress.yaml`,
-  `evidence-index.yaml`) are never read or written.
+- **Preparation depth (choose from user intent, never over-interview):**
+  - **Full workpack (default when preparing the whole return):** walk through
+    all applicable sections to build the complete 2025 workpack and field map.
+  - **VIA (*Vooringevulde Aangifte*) verify-and-complete:** when the user says
+    they already have their pre-filled return open in Mijn Belastingdienst,
+    verify pre-filled figures against source documents (`jaaropgaaf`, WOZ, bank
+    statements) with `F:`/`U:` provenance and focus collection on un-prefilled
+    areas (deductions, foreign/crypto Box 3, actual-return comparison, ZZP
+    winst, fiscal-partner allocation). Never silently trust a pre-filled figure
+    without user confirmation or a source document.
+  - **Focused section:** when the user explicitly asks for step-by-step help on
+    a single topic (for example *just* Box 3 actual vs forfaitair, or *just*
+    eigen woning after moving), run only that section's phase and helper and
+    present a sourced section summary in chat without forcing all 14 phases or
+    generating a full workpack unless the user asks to expand to the full return.
 - **Background tasks.** A scheduled, background, or child task continues only
   from a saved workpack the user named, reads it as data, and never writes it;
   if none exists, it reports that and stops.
@@ -77,9 +88,11 @@ counts as consent, the replace-or-keep question, withdrawal, and downloads on
 hosts without a writable folder. For this workflow:
 
 - The only file is `workspace/nl-tax-annual-2025-workpack.md`. On consent,
-  load `templates/annual-workpack.md` and write it at once with everything
-  established so far, `save_consent: given` in Appendix A, and
-  `Not yet reviewed.` in each tax section not reached yet.
+  load `templates/annual-workpack.md` (plus only the applicable conditional
+  snippets under `templates/sections/` for `winst`, `own-home`, `box2`, or
+  `partner`) and write it at once with everything established so far,
+  `save_consent: given` in Appendix A, and `Not yet reviewed.` in each tax
+  section not reached yet.
 - Then keep it current at the end of every turn that changes a sourced fact,
   an open question, a section status, or readiness. The field mapper and
   submit companion update only their own sections.

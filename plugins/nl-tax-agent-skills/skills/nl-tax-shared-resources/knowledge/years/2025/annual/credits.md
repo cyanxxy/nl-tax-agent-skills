@@ -219,3 +219,14 @@ as employment income.
 - In the workpack, show the credit calculation step by step so the taxpayer can verify the amounts against the online return.
 - The Belastingdienst's online system calculates credits automatically, but the workpack should include the expected amounts for verification.
 - AOW-age taxpayers get lower credit amounts because the credits are proportionally reduced to reflect the lower premie volksverzekeringen they owe.
+
+## Official sources
+
+- `bd_general_tax_credit_2025` — Tabel algemene heffingskorting 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/algemene_heffingskorting/tabel-algemene-heffingskorting-2025
+- `bd_labour_tax_credit_2025` — Tabel arbeidskorting 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/tabel-arbeidskorting-2025
+- `bd_tax_credit_payout_2025` — Heffingskortingen laten uitbetalen: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/heffingskortingen-laten-uitbetalen
+- `bd_iack_2025` — Tabel inkomensafhankelijke combinatiekorting 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/inkomensafhankelijke_combikorting/inkomensafhankelijke-combinatiekorting-2025
+- `bd_heffingskortingen_aow_2025_2026` — Heffingskortingen voor AOW-gerechtigden (ouderenkorting en alleenstaande-ouderenkorting): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/heffingskortingen_voor_aow_gerechtigden
+- `bd_jonggehandicaptenkorting_2025` — Jonggehandicaptenkorting: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/jonggehandicaptenkorting
+- `bd_heffingskortingen_how_2025` — Hoe werken heffingskortingen?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/hoe_werken_heffingskortingen
+- `bd_arbeidsinkomen_definition_2025` — Arbeidsinkomen (inkomen uit werk voor arbeidskorting): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/arbeidskorting/inkomen_uit_werk

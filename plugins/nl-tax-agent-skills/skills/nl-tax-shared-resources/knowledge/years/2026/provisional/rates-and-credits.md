@@ -190,3 +190,10 @@ Do not use 2025 rates for a 2026 provisional assessment. Do not treat a
 taxpayer who reaches AOW age during 2026 as if they were below AOW age or at
 AOW age for the whole year. Do not treat single-parent status as entitlement
 to alleenstaandeouderenkorting.
+
+## Official sources
+
+- `bd_provisional_rates_2026` — Voorlopige aanslag 2026: gebruikte tarieven en heffingskortingen: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/voorlopige-aanslag-tarieven-en-heffingskortingen
+- `bd_box1_rates_2026` — Box 1: uitleg en tarieven 2026, inclusief AOW-overgangsmaand: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_1/box_1
+- `bd_fisin_2026_belastingberekening` — Fiscale informatie 2026 -- Hoe wordt de belasting berekend?: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/belastingberekening
+- `bd_heffingskortingen_aow_2025_2026` — Heffingskortingen voor AOW-gerechtigden (ouderenkorting en alleenstaande-ouderenkorting): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/heffingskortingen/heffingskortingen_voor_aow_gerechtigden

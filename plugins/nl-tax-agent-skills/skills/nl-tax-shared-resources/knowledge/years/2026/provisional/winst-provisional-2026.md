@@ -292,3 +292,19 @@ flow:
     say so in the workpack rather than producing a number.
 12. This is a 2026 provisional note. Do not import figures, deduction sets, or
     outputs from any other tax year into this flow.
+
+## Official sources
+
+- `ola_va2026_schatting_winst` — Voorlopige aanslag 2026 online - invulhulp 'Winst als ondernemer' (schatting): https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/invulhulp/inkwinstondbdrg.htm
+- `ola_va2026_winst_als_ondernemer` — Voorlopige aanslag 2026 online - hulponderwerp 'Winst uit onderneming': https://www.belastingdienst.nl/data/online_aangifte/va2026/contextafhankelijkehelp/nlw/wa/winst_als_ondernemer.htm
+- `bd_provisional_check_and_change_2026` — Hoe controleer ik mijn voorlopige aanslag en in welke situaties moet ik hem wijzigen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen
+- `bd_provisional_annual_renewal` — Moet ik ieder jaar opnieuw een voorlopige aanslag aanvragen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/moet-ik-ieder-jaar-opnieuw-een-maandelijkse-voorlopige-aanslag-aanvragen
+- `bd_provisional_change_2026` — In 4 stappen zelf online uw voorlopige aanslag 2026 wijzigen: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen
+- `bd_provisional_stopzetten_2026` — Ik wil mijn voorlopige aanslag 2026 stopzetten - kan dat?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-stoppen
+- `bd_zelfstandigenaftrek_2026` — Zelfstandigenaftrek 2026: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/ondernemersaftrek-2026/zelfstandigenaftrek-2026
+- `bd_mkb_winstvrijstelling_2026` — Mkb-winstvrijstelling 2026: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/mkb-winstvrijstelling-2026
+- `bd_tariefsaanpassing_aftrekposten` — Belastingdienst - Afbouw tarief aftrekposten als u een hoog inkomen hebt (tariefsaanpassing): https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
+- `bd_privevervoermiddel_2026` — Zakelijk gebruik privevervoermiddel 2026: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/veranderingen-inkomstenbelasting-2026/zakelijk-gebruik-privevervoermiddel-2026
+- `bd_fisin2026_h8` — Fiscale informatie 2026, hoofdstuk 8 - Ondernemersaftrek en investeringsaftrek: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/ondernemersaftrek_en_investeringsaftrek
+- `bd_belastingrente_pay_ib` — Belastingrente betalen bij inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/belastingrente_betalen_bij_inkomstenbelasting
+- `bd_belastingrente_percentages` — Overzicht percentages belastingrente: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/standaard_functies/prive/contact/rechten_en_plichten_bij_de_belastingdienst/belastingrente/overzicht_percentages_belastingrente

@@ -45,26 +45,27 @@ variables are optional implementation details, not workflow requirements.
 - Treat the direct resource paths named by the active `SKILL.md` and its flow
   index as the resource allowlist for the current turn. Open those paths
   directly; do not inventory the plugin, enumerate sibling skills, or search
-  inactive phase/subflow files for possible questions. A helper `SKILL.md`
-  path named by the owning workflow's flow file is part of that allowlist.
-- Background helpers are hidden from the user's skill menu
-  (`user-invocable: false`) but remain available to the agent. When the owning
-  workflow's flow file names a helper, invoke that helper skill by name if the
-  host lists it; otherwise read the helper `SKILL.md` at the named path and
-  apply it inline. Either way the owning workflow keeps the conversation, the
-  facts, and the readiness decision; the helper only returns findings.
+  inactive phase/subflow files for possible questions. An internal helper
+  module path under `../nl-tax-shared-resources/helpers/` named by the owning
+  workflow's flow file is part of that allowlist.
+- Internal domain helpers (`../nl-tax-shared-resources/helpers/*.md`) are
+  read-only modules, not standalone skills. When the owning workflow's flow
+  file names a helper, read that helper file inline via `Read` and apply its
+  checks and question-packet rules. The owning workflow keeps the conversation,
+  the facts, and the readiness decision; helpers never write.
 - Read every resource you open in full. Do not preview a named resource with a
   partial read (for example only its first lines) and act on the preview. Long
   resources start with a `Contents` list; use it to find the section, then read
   that section completely.
 - For a tax-rule lookup, `../nl-tax-shared-resources/knowledge-index.md` is the
-  topic map for every reviewed note. Use it to choose the note, then open only
-  that note. When the index does not settle the choice, a narrow text search for
-  the Dutch or English term inside `../nl-tax-shared-resources/knowledge/` is
-  allowed; it never extends to the rest of the plugin.
+  topic map for every bundled note. Use it to choose the note, then open only
+  that note; each note carries its `source_ids` header and inline `## Official
+  sources` links. When the index does not settle the choice, a narrow text
+  search for the Dutch or English term inside
+  `../nl-tax-shared-resources/knowledge/` is allowed; it never extends to the
+  rest of the plugin.
 - Do not run package-wide `rg --files`, `find`, or equivalent discovery during
-  a taxpayer conversation. A narrow search inside a specifically named file,
-  such as matching loaded `source_id`s in `source-register.yaml`, is allowed.
+  a taxpayer conversation.
 - Never read `.eval/`, test, fixture, benchmark, verifier, repository, or
   release-maintenance files to decide a taxpayer response. Those are developer
   surfaces, not tax-workflow resources.
@@ -75,21 +76,6 @@ variables are optional implementation details, not workflow requirements.
 - If a required named resource cannot be opened, report that exact missing
   path. Do not probe guessed filenames or broader directories to find a
   substitute.
-
-### Reviewed-note runtime projections
-
-- When an active skill names a runtime projection for a reviewed source note,
-  load that projection instead of the raw reviewed snapshot. The source
-  register's `snapshot_path` remains audit provenance and is not an alternate
-  runtime path.
-- A projection must identify the exact source path, the reviewed note's full
-  byte hash, and every represented `source_id`. It is derived material, not a
-  separate review attestation.
-- The only permitted projection transform is mechanically reversible insertion
-  of an explicit human subject before a portal-action imperative. Stripping
-  that subject must reproduce the reviewed body byte-for-byte. If the hash or
-  reversal check fails, do not load the projection or silently fall back to the
-  raw note; report the exact missing or invalid resource instead.
 
 ## User files and outputs
 
@@ -200,12 +186,12 @@ income tax; no browser or connector operates it.
   checklist is requested, show only **Blockers**, with no amounts, steps or
   checklist write, even with save consent. Do not interpret agent arithmetic checks
   or source browsing as a human review attestation.
-- The domestic VAT owner may read and apply the read-only `nl-tax-vat-adjustments`
-  helper for complete bounded car/private-use, pro-rata, capital-goods/services
-  revision, property, BUA and margin lines. Unsettled classification/elections
-  are named affected-line blockers; they do not make every adjustment
-  unsupported. Private use, exempt use and prior deductions are reconciled
-  without double counting.
+- The domestic VAT owner may read and apply the read-only
+  `../nl-tax-shared-resources/helpers/vat-adjustments.md` helper for complete
+  bounded car/private-use, pro-rata, capital-goods/services revision, property,
+  BUA and margin lines. Unsettled classification/elections are named
+  affected-line blockers; they do not make every adjustment unsupported. Private
+  use, exempt use and prior deductions are reconciled without double counting.
 - ICP and registered OSS/IOSS use their separate owners and files, never the
   domestic VAT correction route by substitution. Preserve human customer-ID
   verification and separate manual identity entry without storing actual IDs.
@@ -251,11 +237,21 @@ authorization for the assistant to make or recommend the taxpayers' choice.
 - Both partners must agree, every eligible split must meet the applicable
   100%-total rule, and the official filing environment remains binding.
 
-## No code execution
+## No code execution and arithmetic verification
 
 - The plugin ships no scripts and needs no shell or Python. The agent performs
   every arithmetic, schema, and provenance check from the skill's documented
   checklist and records `check_performed_by: checked_by_agent`.
+- **Show scratchpad math and reconciliation checks:** for every multi-step
+  calculation (Box 1 brackets/AOW transition rate, eigen woning + Hillen +
+  tariefsaanpassing, Box 2 brackets, Box 3 6-step model with explicit 2-decimal
+  truncation toward zero for 2025, ZZP winstberekening chain, fiscal-partner
+  allocation scenarios, or VAT rubric/adjustment totals), print each
+  intermediate line (`base * rate = intermediate`), state the exact rounding or
+  truncation rule from the canonical note, and verify reconciliation invariants
+  (`taxpayer_pct + partner_pct = 100%`, `opening_equity + profit - drawings +
+  contributions = closing_equity`, `sum(VAT rubrics) = ledger total`) before
+  presenting totals.
 - The conversational agent owns routing, completeness, readiness, and the next
   user question. A saved workpack never becomes a second workflow engine.
 - Do not ask a taxpayer to install software or grant broader filesystem access.
@@ -334,14 +330,14 @@ owning workflow active at a time:
 - At the handoff, if the user has not opted in and has not said not to ask
   again, the handoff reply's only question is the save offer, covering both
   files. It is the annual generation-point offer and also counts as the
-  provisional workflow-start offer, so provisional does not repeat it.
+  provisional first-checkpoint offer, so provisional does not repeat it.
   Otherwise the handoff reply asks the first 2026 question. Either way,
   continue into provisional collection without a new activation phrase, and
   mention the available annual manual-entry checklist only as a non-question
   sentence, so a bare "yes" answers only the question just asked.
 - Provisional starts its own file only with consent. Consent given for the
   annual file extends to the provisional file only if the user said so or
-  confirms in one short question, asked as the provisional workflow-start
+  confirms in one short question, asked as the provisional first-checkpoint
   offer.
 - When provisional collection starts, `queued_workflow` is cleared: if the
   annual workpack is saved, the annual workflow sets it to `null` in that
@@ -384,9 +380,8 @@ workflow or a requirement for completing the workpack.
   year, section, bounded review question, the facts under review with their
   provenance, and the reviewed source IDs or rule-note paths. If the workpack is
   saved, the brief may add its path; the reviewer reads nothing else from the
-  taxpayer's files. For a VAT, ICP, OSS, international or annual 2026
-  workflow, the brief also carries the resolved path of each rule note in use
-  and, except for VAT and VAT correction (which have no scope there), of
+  taxpayer's files. For any workflow, the brief carries the resolved path of
+  each rule note in use and of
   `../nl-tax-shared-resources/reference/workflow-scopes.yaml`, because a
   reviewer agent has no skill directory to resolve relative paths against.
 - Give a reviewer only read/research capabilities for the named material and

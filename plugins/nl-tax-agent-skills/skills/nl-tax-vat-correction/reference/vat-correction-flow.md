@@ -27,7 +27,7 @@ Read directly from this skill directory as each topic needs it:
   timing and deduction when an invoice/error changes those facts.
 - `../nl-tax-shared-resources/knowledge/vat/kor-and-special-cases.md` —
   KOR/foreign-service/special-case treatment when relevant.
-- `../nl-tax-vat-adjustments/SKILL.md` — bounded private-use, pro-rata,
+- `../nl-tax-shared-resources/helpers/vat-adjustments.md` — bounded private-use, pro-rata,
   revision, property, BUA and margin findings from its named notes.
 - `../nl-tax-icp/SKILL.md` or `../nl-tax-oss/SKILL.md` — separate ICP/OSS
   correction owner when the error belongs to that reporting scheme.

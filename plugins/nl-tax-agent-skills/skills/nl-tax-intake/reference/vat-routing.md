@@ -34,7 +34,7 @@ Route return preparation to `../nl-tax-vat-return/SKILL.md` and corrections to
 `../nl-tax-vat-correction/SKILL.md`. A correction requires original filed
 figures and revised complete figures; a current unfiled return belongs to the
 return workflow. The owner checks special-case scope and source-review status.
-The VAT owner invokes `../nl-tax-vat-adjustments/SKILL.md` for complete bounded
+The VAT owner reads `../nl-tax-shared-resources/helpers/vat-adjustments.md` for complete bounded
 car/private-use, pro-rata, property/revision, BUA and margin arithmetic.
 Classification uncertainty stays specific; these topics are not blanket
 unsupported cases. Separate ICP obligations route to `../nl-tax-icp/SKILL.md`

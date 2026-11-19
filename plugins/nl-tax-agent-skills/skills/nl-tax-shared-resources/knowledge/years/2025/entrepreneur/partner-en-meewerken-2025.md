@@ -327,3 +327,19 @@ Record the facts, do not compute, and route to manual review:
     the partner's inkomsten uit overig werk in the partner's own part of the
     return, and submit. The plugin prepares and explains the figures and never
     logs in, enters, or sends anything.
+
+## Official sources
+
+- `bd_partner_gaat_meewerken` — Uw partner gaat meewerken (Meewerkende partner): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/uw_partner_gaat_meewerken/uw_partner_gaat_meewerken
+- `bd_meewerkaftrek_algemeen` — Meewerkaftrek (algemene pagina, Inkomstenbelasting voor ondernemers > Ondernemersaftrek): https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/meewerkaftrek
+- `bd_meewerkaftrek_2025` — Meewerkaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/meewerkaftrek-2025
+- `bd_arbeidsbeloning_fiscale_partner` — Belastingdienst - Arbeidsbeloning aan fiscale partner: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/arbeidsbeloning_aan_fiscale_partner
+- `bd_fisin2025_row` — Fiscale informatie 2025, hoofdstuk 5 Inkomsten uit overig werk: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/inkomsten_uit_overig_werk
+- `bd_wat_zijn_inkomsten_overig_werk` — Wat zijn inkomsten uit overig werk?: https://www.belastingdienst.nl/wps/wcm/connect/nl/werk-en-inkomen/content/wat-zijn-inkomsten-uit-overig-werk
+- `fisin2025_fiscaal_partnerschap` — Fiscale informatie 2025 - hoofdstuk 1 Fiscaal partnerschap: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/fiscaal_partnerschap
+- `bd_urencriterium_2025` — Voorwaarden urencriterium: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+- `bd_personeel_in_uw_onderneming` — Belastingdienst - Personeel in uw onderneming? Misschien moet u loonheffingen betalen.: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/hulp_in_uw_onderneming/personeel_in_uw_onderneming/
+- `bd_aanmelden_werkgever` — Personeel in dienst nemen en aanmelden als werkgever: https://www.belastingdienst.nl/wps/wcm/connect/nl/personeel-en-loon/content/aanmelden-als-werkgever
+- `bd_vof_rechtsvorm` — Vennootschap onder firma (vof) en gevolgen voor uw belastingen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_starten/rechtsvorm/vennootschap-onder-firma-vof
+- `wetib_consolidated_2025` — Wet inkomstenbelasting 2001 (BWBR0011353), geldende tekst per 2025-01-01: https://wetten.overheid.nl/BWBR0011353/2025-01-01
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

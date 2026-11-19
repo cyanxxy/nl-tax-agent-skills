@@ -27,14 +27,15 @@ from this skill directory:
 | KOR, foreign services and special-case screening | `../nl-tax-shared-resources/knowledge/vat/kor-and-special-cases.md` |
 | Filed-period error | `../nl-tax-shared-resources/knowledge/vat/corrections.md`, then `../nl-tax-vat-correction/SKILL.md` |
 | Small earlier-period correction carried into this return (sources `bd_vat_corrections`, `bd_vat_suppletie_explanation`) | `../nl-tax-shared-resources/knowledge/vat/corrections.md` |
-| Bounded private use, pro-rata, revision, property, BUA, margin | `../nl-tax-vat-adjustments/SKILL.md` and its relevant named adjustment note |
+| Bounded private use, pro-rata, revision, property, BUA, margin | `../nl-tax-shared-resources/helpers/vat-adjustments.md` and its relevant named adjustment note |
 | EU business-customer declaration | `../nl-tax-icp/SKILL.md` for a separate ICP workflow |
 | Confirmed OSS/IOSS scheme | `../nl-tax-oss/SKILL.md` for a separate scheme workflow |
 
 Record every actually consulted note's `source_ids` once in Sources used and
-Appendix A `sources_loaded`. Match them in the source register, verify year
-applicability and review metadata, and apply its freshness policy. Warn once
-for a stale applicable source; keep it in human review. A note marked
+Appendix A `sources_loaded`. Verify year applicability, `review_status`, and
+`last_reviewed` / `last_verified` from the note header and inline `## Official
+sources` links. Warn once if that date is more than 12 months old; keep it in
+human review. A note marked
 `needs_review`, a missing content-review attestation, or an unreviewed required
 rubric blocks review readiness and checklist generation. The safe output is
 an explicitly marked draft that explains the remaining source-content review.
@@ -92,7 +93,7 @@ OSS/IOSS preparation routes to `../nl-tax-oss/SKILL.md`; those foreign VAT
 amounts do not silently become ordinary domestic VAT liabilities. Use one
 owner at a time, preserving unresolved treatment and separate consent/ledgers.
 
-Invoke `../nl-tax-vat-adjustments/SKILL.md` for an applicable adjustment. Supply
+Read and apply `../nl-tax-shared-resources/helpers/vat-adjustments.md` for an applicable adjustment. Supply
 confirmed workflow/year/period, item or cost pool, acquisition/first-use dates,
 accepted VAT treatment, relevant amounts/use shares, prior deductions and
 provenance. Read only its applicable named note. Accept bounded complete

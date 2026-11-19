@@ -98,3 +98,10 @@ These are reference notes for workpack preparation -- not final tax advice.
   signs the own return and, where allocation is legally available, shared
   entries must remain consistent across both returns and total no more than
   100%. Keep part-year/separation eligibility as a manual review question.
+
+## Official sources
+
+- `bd_annual_data_checklist_2025` — Deze gegevens hebt u nodig bij het invullen van uw belastingaangifte: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/welke_gegevens_heb_ik_nodig_voor_mijn_belastingaangifte
+- `bd_jaaropgaaf_fields_2025` — Wat staat er in een jaaropgaaf?: https://www.belastingdienst.nl/wps/wcm/connect/nl/jongeren/content/wat-staat-er-in-een-jaaropgaaf
+- `bd_woz_value_annual_2025` — Fiscale informatie 2025 — Eigen woning en restschuld vroegere eigen woning: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/eigen_woning_en_restschuld_vroegere
+- `bd_joint_filing_2025` — Hoe kan ik samen met mijn partner aangifte doen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/samen-met-mijn-partner-aangifte-doen

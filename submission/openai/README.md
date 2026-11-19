@@ -62,8 +62,8 @@ directory review and publication steps below.
 - The VAT, ICP, OSS/IOSS, VAT-adjustment, M/C and annual 2026 workflows are
   draft-only previews. This bundle must not claim filing readiness or final
   future forms for them. Before enabling filing readiness, a human reviewer
-  compares `docs/maintainers/vat-support-2026-10-02.md`,
-  `docs/maintainers/extended-workflows-2026-10-02.md`, the four
+  compares the maintainers' local review records (`vat-support-2026-10-02.md`
+  and `extended-workflows-2026-10-02.md`, kept outside the repository), the four
   `knowledge/vat/` notes, the seven `knowledge/vat-adjustments/` notes, and the
   `knowledge/vat-cross-border/`, `knowledge/international/` and
   `knowledge/years/2026/annual/` notes with their official sources.
@@ -106,7 +106,7 @@ be completed by repository validation alone:
 | --- | --- |
 | ChatGPT Work web | Upload fixture documents and confirm nothing is written without consent; after consent, deliver the one workpack as a downloadable file and resume by attaching it in a new task, without claiming local-computer access. |
 | ChatGPT Work desktop | Use only a selected local test folder; confirm the default writes nothing, then after consent keep exactly one workpack file per workflow and period, at the path that workflow's SKILL.md declares (for example `workspace/nl-tax-annual-2025-workpack.md`, `workspace/nl-tax-provisional-2026-workpack.md`, or, for a VAT period, `workspace/nl-tax-vat-<year>-<period>-workpack.md`), current in place, and verify that a second period never overwrites the first period's file. |
-| Codex desktop | Install from the repository marketplace in a fresh task and verify the twelve public skills (intake, knowledge, annual return 2025, annual return 2026, provisional assessment, VAT return, VAT correction, ICP, OSS, international return, field mapper, submit companion) are discoverable, and that the six background helpers, including `nl-tax-vat-adjustments`, are not. Ask naturally for a human-only checklist and verify no skill name or slash command is required. |
+| Codex desktop | Install from the repository marketplace in a fresh task and verify the twelve public skills (intake, knowledge, annual return 2025, annual return 2026, provisional assessment, VAT return, VAT correction, ICP, OSS, international return, field mapper, submit companion) are discoverable, and that `nl-tax-shared-resources` (plus the internal helper modules under its `helpers/` folder) are not surfaced as standalone workflows. Ask naturally for a human-only checklist and verify no skill name or slash command is required. |
 | Draft-only gate | Run a Q3 2026 VAT draft and an ICP draft; ask for a manual-entry checklist and verify it is refused with the pending human-review reason, shows no amounts, and makes no filing-ready claim. |
 | Invocation policy | Verify background/internal helpers do not trigger implicitly; verify the checklist skill triggers only from explicit natural-language checklist intent or a clear reply to the mapper's immediate offer, never merely because a map exists. |
 | No-shell path | Complete a fixture with Python and shell unavailable, recording agent-performed checks. |
@@ -154,7 +154,7 @@ review gates remain pending, and this bundle must not claim filing readiness or
 final future forms for them. `reviews/release-status-2026-10-01.json` is
 superseded for upload purposes: the ZIP at `dist/openai/nl-tax-agent-skills.zip`
 was rebuilt on 2 October 2026 with the previews and no longer matches its
-recorded hash. See `docs/maintainers/extended-workflows-2026-10-02.md` for the
-review and activation steps. Version 0.5.0 records these previews; a new
+recorded hash. The maintainers' local `extended-workflows-2026-10-02.md` record
+holds the review and activation steps. Version 0.5.0 records these previews; a new
 human-approved release-status record and the external completion gates above
 are still required before an OpenAI directory upload.

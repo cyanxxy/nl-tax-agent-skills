@@ -24,15 +24,15 @@ A taxpayer may want to review a request when:
 
 ### Step 1 -- Prepare
 
-Prepare the estimated income, deduction, own-home, and box 3 information for 2026.
+**Taxpayer:** Prepare the estimated income, deduction, own-home, and box 3 information for 2026.
 
 ### Step 2 -- Log in
 
-Log in to Mijn Belastingdienst.
+**Taxpayer:** Log in to Mijn Belastingdienst.
 
 ### Step 3 -- Fill in the request
 
-Enter all expected income for the year 2026, including:
+**Taxpayer:** Enter all expected income for the year 2026, including:
 
 - Employment income (loon uit dienstbetrekking)
 - Pension income (pensioen, AOW)
@@ -40,7 +40,7 @@ Enter all expected income for the year 2026, including:
 - Self-employment income (winst uit onderneming)
 - Other income sources
 
-Enter expected deductions, assets, and candidate debts:
+**Taxpayer:** Enter expected deductions, assets, and candidate debts:
 
 - Own-home components: WOZ value with peildatum 1 January 2025,
   eigenwoningforfait, mortgage interest, qualifying financing costs, periodic
@@ -54,9 +54,9 @@ Enter expected deductions, assets, and candidate debts:
 
 ### Step 4 -- Sign and send
 
-- Review the calculated monthly payment or refund amount
-- Verify that all entered amounts are reasonable estimates
-- Sign and send the request
+- **Taxpayer:** Review the calculated monthly payment or refund amount
+- **Taxpayer:** Verify that all entered amounts are reasonable estimates
+- **Taxpayer:** Sign and send the request
 
 ## Processing and result
 
@@ -88,3 +88,8 @@ Do not treat the voorlopige aanslag as a final tax calculation. It is a
 forward-looking estimate. Do not present the preview as a definitive amount or
 payment schedule; the beschikking controls. Do not say that every taxpayer
 must file solely because a provisional assessment exists.
+
+## Official sources
+
+- `bd_provisional_landing_2026` — Voorlopige aanslag: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/voorlopige-aanslag
+- `bd_provisional_request_2026` — In 4 stappen zelf online een voorlopige aanslag 2026 aanvragen: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-4-stappen-zelf-voorlopige-aanslag-aanvragen

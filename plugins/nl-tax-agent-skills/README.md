@@ -84,9 +84,9 @@ In Claude Code, each workflow is also a slash command, for example
 | `/nl-tax-agent-skills:nl-tax-field-mapper` | workflow, year, period or form | Field map for a workpack in this conversation |
 | `/nl-tax-agent-skills:nl-tax-submit-companion` | workflow, year, identity | Manual-entry checklist (blockers only for drafts) |
 
-The background helpers (Box 1/home, Box 2, Box 3, winst, partner deductions,
-VAT adjustments) have no command: they have no save, readiness or checklist
-rules of their own, so the workflows call them. Ask a rule question through
+The domain helpers (Box 1/home, Box 2, Box 3, winst, partner deductions,
+VAT adjustments) are internal read-only modules that the workflows load as
+needed, not standalone commands. Ask a rule question through
 `nl-tax-knowledge` instead; it reads the same source notes. In Codex, invoke a
 skill as `$nl-tax-intake` and so on; in ChatGPT, type `@` and pick the plugin
 or a skill. Syntax varies by host; a plain-language request works everywhere.
@@ -94,8 +94,8 @@ or a skill. Syntax varies by host; a plain-language request works everywhere.
 ## Saving your work
 
 The plugin writes nothing unless you ask. Tax preparation can take a few
-sessions, so the assistant offers to keep your workpack as a file when the
-workflow starts, when you pause, and after the workpack is generated, each at
+sessions, so the assistant offers to keep your workpack as a file at the first
+progress checkpoint, when you pause, and after the workpack is generated, each at
 most once and always as the only question in its reply (tell it not to ask
 again and it stops). Say yes, or "save my workpack" at any time, and it keeps
 **one file per workflow** (and, for VAT, ICP, and OSS, one per period or
@@ -190,11 +190,11 @@ review blockers.
 | `nl-tax-international-return` | Prepares a draft M-biljet (emigration or immigration year) or C-biljet (nonresident) from your residence facts and documents |
 | `nl-tax-field-mapper` | Maps workpack amounts to Mijn Belastingdienst fields; the only author of the field map |
 | `nl-tax-submit-companion` | Builds a manual-entry checklist when you ask for one; for a draft-only preview it lists only the blockers |
-| `nl-tax-box1-home`, `nl-tax-box2`, `nl-tax-box3`, `nl-tax-winst`, `nl-tax-partner-deductions`, `nl-tax-vat-adjustments` | Background helpers the workflows consult; they write nothing |
 
-`skills/nl-tax-shared-resources/` holds the source-cited knowledge notes (the
-VAT, cross-border, international, and annual 2026 notes still await human
-review), the source register, and the shared runtime contracts. The plugin is
+`skills/nl-tax-shared-resources/` holds the source-cited knowledge notes (with
+inline official links; the VAT, cross-border, international, and annual 2026
+notes still await human review), the internal domain helpers (`helpers/`), the
+workflow scope registry, and the shared runtime contracts. The plugin is
 plugin-only: install it as one package. The skills reference each other through
 sibling paths, so a single skill copied or uploaded on its own does not work.
 
@@ -211,7 +211,7 @@ lists only the blockers, without amounts.
   confirmed accounting system, rate, and deduction treatment. Evidenced
   calculations for private use of a business car, mixed taxable and exempt
   use, revision of investment goods and property, BUA, and the margin scheme
-  go through the read-only `nl-tax-vat-adjustments` helper. Unresolved KOR
+  go through the internal read-only VAT adjustments helper. Unresolved KOR
   transitions, import goods, and any undecided classification or election (for
   example a property or margin choice) remain review blockers.
 - **ICP and OSS.** Each has its own workpack, separate from the domestic VAT
@@ -240,7 +240,7 @@ income-tax draft".
   Add marketplace → Add from a repository**, then enter `cyanxxy/nl-tax-agent-skills`.
 - Install in Claude Code (2.1.275 or later):
   `/plugin install nl-tax-agent-skills --marketplace cyanxxy/nl-tax-agent-skills`
-- Install in Cursor, Gemini CLI, GitHub Copilot, OpenCode and other agents
+- Install in Antigravity, Cursor, GitHub Copilot, OpenCode and other agents
   through the open `skills` CLI, always with every skill together:
   `npx skills add cyanxxy/nl-tax-agent-skills --skill '*'`
 - Install steps and contributor docs: <https://github.com/cyanxxy/nl-tax-agent-skills>. Licensed under Apache-2.0;

@@ -14,8 +14,17 @@ SOURCE_PLUGIN = REPO / "plugins" / "nl-tax-agent-skills"
 DEFAULT_OUTPUT = REPO / "dist" / "openai" / "nl-tax-agent-skills"
 PLUGIN_DIRS = (".codex-plugin", "assets", "skills")
 PLUGIN_FILES = ("LICENSE", "README.md")
-# Skills retired from the plugin. A stale local copy must never ship.
-RETIRED_SKILLS = {"nl-tax-evidence-indexer"}
+# Skills retired from the plugin (or demoted to internal helpers under
+# nl-tax-shared-resources/helpers/). A stale local copy must never ship.
+RETIRED_SKILLS = {
+    "nl-tax-evidence-indexer",
+    "nl-tax-box1-home",
+    "nl-tax-box2",
+    "nl-tax-box3",
+    "nl-tax-winst",
+    "nl-tax-partner-deductions",
+    "nl-tax-vat-adjustments",
+}
 CLAUDE_ONLY_KEYS = {
     "allowed-tools",
     "argument-hint",

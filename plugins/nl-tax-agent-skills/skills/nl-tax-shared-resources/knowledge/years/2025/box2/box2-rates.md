@@ -41,3 +41,7 @@ Use this shared official rate source for both the 2025 annual-return workpack
 and the 2026 provisional-assessment workpack. Do not substitute Box 1 or Box 3
 rates. Do not automate portal access or filing submission; prepare
 manual workpack calculations and evidence prompts only.
+
+## Official sources
+
+- `bd_box2_rates_2025_2026` — Box 2: uitleg en tarieven: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2

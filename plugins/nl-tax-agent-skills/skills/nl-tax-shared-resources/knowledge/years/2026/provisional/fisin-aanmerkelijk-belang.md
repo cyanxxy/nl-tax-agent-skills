@@ -47,3 +47,7 @@ regular benefit amount in a provisional workpack.
 Do not treat this as portal automation support. Use it only to prepare manual
 questions, calculations, evidence prompts, and field-mapping notes for the
 2026 provisional assessment.
+
+## Official sources
+
+- `bd_fisin_aanmerkelijk_belang_2026` — Fiscale Informatie 2026 -- Aanmerkelijk belang: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang

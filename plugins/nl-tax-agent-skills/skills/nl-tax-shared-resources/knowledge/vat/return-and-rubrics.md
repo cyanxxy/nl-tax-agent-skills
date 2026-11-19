@@ -73,7 +73,7 @@ A ZZP'er or eenmanszaak logs in to Mijn Belastingdienst Zakelijk with DigiD and 
 ## Extended preparation links
 
 For private-use/pro-rata/revision/BUA/margin arithmetic the owning VAT skill
-loads `../nl-tax-vat-adjustments/SKILL.md` and the relevant separately sourced
+loads `../nl-tax-shared-resources/helpers/vat-adjustments.md` and the relevant separately sourced
 adjustment note. The helper can calculate a bounded line after classification
 and inputs are confirmed; this general rubric note does not supply those
 formulas. ICP/OSS uses separate owners, source notes and workpacks. These

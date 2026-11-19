@@ -91,3 +91,7 @@ When helping a user review their voorlopige aanslag:
 ## Common failure
 
 Do not assume that an existing voorlopige aanslag is correct just because the Belastingdienst issued it. An EVA issued without a taxpayer request can use earlier data that may be outdated. Always prompt the user to compare it with their current situation.
+
+## Official sources
+
+- `bd_provisional_review_2026` — Hoe controleer ik mijn voorlopige aanslag en in welke situaties moet ik hem wijzigen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/in-welke-situaties-moet-ik-mijn-voorlopige-aanslag-wijzigen

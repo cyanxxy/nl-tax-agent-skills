@@ -48,12 +48,12 @@ Official guidance states that all data must be present in the form, including da
 
 ## How to change
 
-1. Log in to Mijn Belastingdienst
-2. Open "Voorlopige aanslag aanvragen of wijzigen" for 2026 (request and change share one combined flow)
-3. Choose to change (wijzigen) the existing 2026 voorlopige aanslag; optionally accept the offer to pre-fill prior-year figures
-4. Prepare and verify the complete dataset: all applicable income, deductions, and box 3 categories, not only the changed item
-5. Review the portal's estimated summary and possible future monthly amount
-6. Sign and send (ondertekenen en verzenden)
+1. **Taxpayer:** Log in to Mijn Belastingdienst
+2. **Taxpayer:** Open "Voorlopige aanslag aanvragen of wijzigen" for 2026 (request and change share one combined flow)
+3. **Taxpayer:** Choose to change (wijzigen) the existing 2026 voorlopige aanslag; optionally accept the offer to pre-fill prior-year figures
+4. **Taxpayer:** Prepare and verify the complete dataset: all applicable income, deductions, and box 3 categories, not only the changed item
+5. **Taxpayer:** Review the portal's estimated summary and possible future monthly amount
+6. **Taxpayer:** Sign and send (ondertekenen en verzenden)
 
 ## Developer instruction
 
@@ -70,3 +70,7 @@ When building a workpack for changing a voorlopige aanslag 2026:
 ## Common failure
 
 Do not prepare only the changed fields. The Belastingdienst guidance requires all data to be filled in again, including unchanged data. Always ensure the workpack contains the full dataset.
+
+## Official sources
+
+- `bd_provisional_change_2026` — In 4 stappen zelf online uw voorlopige aanslag 2026 wijzigen: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hoe-kan-ik-mijn-voorlopige-aanslag-wijzigen

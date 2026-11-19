@@ -41,3 +41,7 @@ When building own-home or box 3 calculations:
 ## Common failure
 
 Do not look up specific rates or thresholds in this file. This is a structural reference that explains what the Uitvoeringsbesluit covers. Specific rates and thresholds are in year-specific knowledge files under `nl-tax-shared-resources/knowledge/years/`.
+
+## Official sources
+
+- `law_uitvoeringsbesluit_ib_2001` — Uitvoeringsbesluit inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0012066/

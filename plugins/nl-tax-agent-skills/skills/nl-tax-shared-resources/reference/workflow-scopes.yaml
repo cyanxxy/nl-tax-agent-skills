@@ -1,97 +1,208 @@
-# Declarative identity and path contract for the extended preparation owners.
-# The `template` values are plugin-root-relative for the repository graders.
-# At runtime each owner reads its own `templates/` file named in its SKILL.md.
-version: 1
-policy:
-  maximum_readiness: draft
-  human_source_review_required: true
-  manual_entry_schema_review_required: true
-scopes:
+# Canonical declarative registry for every supported Dutch tax workflow.
+# Records scope, maturity, readiness ceilings, save paths, identity keys,
+# and section keys. Field-map prohibitions remain canonical in
+# nl-tax-field-mapper/reference/field-map-rules.yaml. This file never chooses
+# the next question or decides tax treatment.
+version: 2
+
+workflows:
+  annual_2025:
+    owner: nl-tax-annual-return
+    maturity: reviewed
+    maximum_readiness: review_ready
+    checklist_allowed: true
+    map_workflow: annual_return
+    tax_years: [2025]
+    resume_pattern: '^annual_(?P<tax_year>2025)$'
+    identity_keys: []
+    path: workspace/nl-tax-annual-2025-workpack.md
+    title: Dutch Annual Income Tax Workpack
+    template: skills/nl-tax-annual-return/templates/annual-workpack.md
+    sections:
+      - filing_status
+      - box1
+      - winst
+      - eigen_woning
+      - box2
+      - box3_peildatum
+      - box3_actual
+      - deductions
+      - credits_screening
+      - partner_allocation
+      - confirm
+
+  provisional_2026:
+    owner: nl-tax-provisional-assessment
+    maturity: reviewed
+    maximum_readiness: review_ready
+    checklist_allowed: true
+    map_workflow: provisional_assessment
+    subflows: [request, change, review, stopzetten]
+    mapped_subflows: [request, change]
+    tax_years: [2026]
+    resume_pattern: '^provisional_(?P<tax_year>2026)_(?P<subflow>request|change|review|stopzetten)$'
+    identity_keys: []
+    path: workspace/nl-tax-provisional-2026-workpack.md
+    title: Dutch Provisional Assessment Workpack
+    template: skills/nl-tax-provisional-assessment/templates/provisional-workpack.md
+    sections:
+      - baseline
+      - income_employment
+      - income_pension_benefit
+      - income_other
+      - winst_forecast
+      - deductions
+      - box2
+      - box3_peildatum
+      - partner_allocation
+      - stopzetten_direction
+      - confirm
+
   annual_2026:
     owner: nl-tax-annual-return-2026
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: true
     map_workflow: annual_return
-    tax_years:
-    - 2026
-    resume_pattern: ^annual_(?P<tax_year>2026)$
+    tax_years: [2026]
+    resume_pattern: '^annual_(?P<tax_year>2026)$'
     identity_keys: []
     path: workspace/nl-tax-annual-2026-workpack.md
     title: Dutch Annual Income Tax Workpack
     template: skills/nl-tax-annual-return-2026/templates/annual-2026-workpack.md
     sections:
-    - annual_scope
-    - household
-    - income
-    - business
-    - home
-    - box2
-    - box3
-    - deductions_credits
-    - reconciliation
-    - confirm
+      - annual_scope
+      - household
+      - income
+      - business
+      - home
+      - box2
+      - box3
+      - deductions_credits
+      - reconciliation
+      - confirm
     field_prefix: annual2026.
     internal_only: true
     review_blocker: Annual 2026 source and annual schema review
+
+  vat_return:
+    owner: nl-tax-vat-return
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: false
+    map_workflow: vat_return
+    tax_years: [2025, 2026]
+    resume_pattern: '^vat_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$'
+    identity_keys: [period]
+    path: workspace/nl-tax-vat-{year}-{period}-workpack.md
+    title: Dutch VAT Return Workpack
+    template: skills/nl-tax-vat-return/templates/vat-workpack.md
+    sections:
+      - vat_scope
+      - vat_sales
+      - vat_purchases
+      - vat_adjustments
+      - vat_reconciliation
+      - confirm
+    review_blocker: VAT source-content review
+
+  vat_correction:
+    owner: nl-tax-vat-correction
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: false
+    map_workflow: vat_correction
+    tax_years: [2025, 2026]
+    resume_pattern: '^vat_correction_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$'
+    identity_keys: [period]
+    path: workspace/nl-tax-vat-correction-{year}-{period}-workpack.md
+    title: Dutch VAT Correction Workpack
+    template: skills/nl-tax-vat-correction/templates/vat-correction-workpack.md
+    sections:
+      - vat_correction_scope
+      - vat_original_figures
+      - vat_corrected_figures
+      - vat_correction_route
+      - vat_reconciliation
+      - confirm
+    review_blocker: VAT source-content review
+
   icp:
     owner: nl-tax-icp
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: true
     map_workflow: icp_declaration
-    tax_years:
-    - 2025
-    - 2026
-    resume_pattern: ^icp_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$
-    identity_keys:
-    - period
+    tax_years: [2025, 2026]
+    resume_pattern: '^icp_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2])|Y)$'
+    identity_keys: [period]
     path: workspace/nl-tax-icp-{year}-{period}-workpack.md
     title: Dutch ICP
     template: skills/nl-tax-icp/templates/icp-workpack.md
     sections:
-    - icp_scope
-    - icp_transactions
-    - icp_corrections
-    - icp_reconciliation
-    - confirm
+      - icp_scope
+      - icp_transactions
+      - icp_corrections
+      - icp_reconciliation
+      - confirm
     review_blocker: ICP source-content and schema review
+
   oss:
     owner: nl-tax-oss
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: true
     map_workflow: oss_return
-    tax_years:
-    - 2025
-    - 2026
-    resume_pattern: ^(?=oss_(?:(?:union|non_union)_\d{4}_Q[1-4]|ioss_\d{4}_M(?:0[1-9]|1[0-2]))$)oss_(?P<scheme>union|non_union|ioss)_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2]))$
-    identity_keys:
-    - period
-    - scheme
+    tax_years: [2025, 2026]
+    resume_pattern: '^(?=oss_(?:(?:union|non_union)_\d{4}_Q[1-4]|ioss_\d{4}_M(?:0[1-9]|1[0-2]))$)oss_(?P<scheme>union|non_union|ioss)_(?P<tax_year>2025|2026)_(?P<period>Q[1-4]|M(?:0[1-9]|1[0-2]))$'
+    identity_keys: [period, scheme]
     path: workspace/nl-tax-oss-{scheme}-{year}-{period}-workpack.md
     title: Dutch OSS
     template: skills/nl-tax-oss/templates/oss-workpack.md
     sections:
-    - oss_scope
-    - oss_transactions
-    - oss_corrections
-    - oss_reconciliation
-    - confirm
+      - oss_scope
+      - oss_transactions
+      - oss_corrections
+      - oss_reconciliation
+      - confirm
     review_blocker: OSS source-content and scheme schema review
+
   international:
     owner: nl-tax-international-return
+    maturity: draft
+    maximum_readiness: draft
+    checklist_allowed: false
+    human_source_review_required: true
+    manual_entry_schema_review_required: true
     map_workflow: international_return
-    tax_years:
-    - 2025
-    - 2026
-    resume_pattern: ^international_(?P<tax_year>2025|2026)_(?P<return_form>migration|nonresident)$
-    identity_keys:
-    - return_form
+    tax_years: [2025, 2026]
+    resume_pattern: '^international_(?P<tax_year>2025|2026)_(?P<return_form>migration|nonresident)$'
+    identity_keys: [return_form]
     path: workspace/nl-tax-international-{year}-{return_form}-workpack.md
     title: Dutch International
     template: skills/nl-tax-international-return/templates/international-workpack.md
     sections:
-    - international_scope
-    - residence_periods
-    - income_assets
-    - qualifying_status
-    - social_insurance
-    - treaty_review
-    - deductions_credits
-    - reconciliation
-    - confirm
+      - international_scope
+      - residence_periods
+      - income_assets
+      - qualifying_status
+      - social_insurance
+      - treaty_review
+      - deductions_credits
+      - reconciliation
+      - confirm
     field_prefix: international.
     internal_only: true
     review_blocker: International source-content and form schema review
+
+blocked_tax_years: [2027]

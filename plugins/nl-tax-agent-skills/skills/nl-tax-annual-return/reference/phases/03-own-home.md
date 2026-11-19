@@ -58,10 +58,12 @@ One ordinary main residence may receive a review estimate. Two homes, sale/purch
 
 ### 3.9 Partner handling for own home
 
-- If fiscal partners co-own the property: allocate based on ownership shares (typically 50/50)
+- Full-year fiscal partners may allocate the net eigen woning saldo in any split
+  totaling 100%, regardless of legal ownership shares (ownership shares govern
+  only when co-owners are not fiscal partners)
 - When legally available, show traceable alternative allocation scenarios for
   the net eigen woning result without ranking or selecting one; the taxpayers
   make the allocation choice
-- Both partners must report their share in their individual return
+- Both partners must report the same consistent allocation across their returns
 
 ---

@@ -22,19 +22,14 @@ what remains open. They are a record, not a state machine: they do not
 prescribe a fixed interview order, choose a tax treatment, or replace the
 agent's judgment about the clearest next question.
 
-This contract applies to:
-- `nl-tax-intake`
-- `nl-tax-annual-return`
-- `nl-tax-provisional-assessment`
-- `nl-tax-box1-home`
-- `nl-tax-box2`
-- `nl-tax-box3`
-- `nl-tax-partner-deductions`
-- `nl-tax-winst`
-- `nl-tax-field-mapper`
-- `nl-tax-submit-companion`
+This contract applies to all taxpayer-facing preparation skills (`nl-tax-intake`,
+`nl-tax-annual-return`, `nl-tax-annual-return-2026`,
+`nl-tax-provisional-assessment`, `nl-tax-vat-return`, `nl-tax-vat-correction`,
+`nl-tax-icp`, `nl-tax-oss`, `nl-tax-international-return`,
+`nl-tax-field-mapper`, `nl-tax-submit-companion`) and the internal domain
+helpers under `../nl-tax-shared-resources/helpers/`.
 
-Background helpers return their questions to the owning workflow, which asks
+Internal domain helpers return their questions to the owning workflow, which asks
 them in the main conversation.
 
 ## Core principles
@@ -63,9 +58,9 @@ them in the main conversation.
    filled sections and no Appendix A or B YAML.
 6. **One yes/no question per reply.** Never put two yes/no offers, or a
    question plus an offer, in the same reply, so a bare "yes" is unambiguous.
-   The workflow-start save offer is its own reply, before the first collection
-   question; a return-capable structured control with clearly separate choices
-   may combine them.
+   Offer saving at the first natural progress checkpoint (not before helping on
+   turn 1), at a pause, or after generation and mapping; a return-capable
+   structured control with clearly separate choices may combine them.
 7. **Keep exact figures safe from compaction.** After each completed section,
    show a compact "Confirmed so far" recap for that section: each value with its
    provenance code, citing a document by name with its ev ID (for example
@@ -127,7 +122,7 @@ record` as one fenced `yaml` block:
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.5"
+plugin_version: "0.6.0"
 workflow: annual_2025            # or provisional_2026_request|change|review|stopzetten
 tax_year: 2025                   # 2026 for provisional
 created_at: ""                   # ISO 8601

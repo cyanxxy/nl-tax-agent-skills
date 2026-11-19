@@ -40,3 +40,10 @@ helper must flag this for manual review before using an amount.
 Use this note for manual provisional workpacks only. Ask for dividend estimates,
 share-transfer evidence, acquisition-price support, and withholding evidence.
 Do not automate portal access or submission.
+
+## Official sources
+
+- `bd_box2_rates_2025_2026` — Box 2: uitleg en tarieven: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2
+- `bd_box2_income_ab_guidance` — Inkomsten uit aanmerkelijk belang: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/vermogen_en_aanmerkelijk_belang/aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang/inkomsten_uit_aanmerkelijk_belang
+- `bd_fisin_aanmerkelijk_belang_2026` — Fiscale Informatie 2026 -- Aanmerkelijk belang: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/aanmerkelijk_belang
+- `bd_box2_provisional_2026` — Box 2 provisional assessment 2026 preparation note: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/inkomstenbelasting/heffingskortingen_boxen_tarieven/boxen_en_tarieven/box_2/box_2

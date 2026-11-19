@@ -418,3 +418,25 @@ anything.
     stakingslijfrente maxima and the age-bracket wording are reset and republished
     each year; the doorschuif terms and the bewaarplicht are not year figures but
     confirm them when the reviewed sources are refreshed.
+
+## Official sources
+
+- `bd_u_staakt_uw_onderneming` — Wat moet u regelen als u stopt met uw onderneming?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/u_staakt_uw_onderneming
+- `bd_stakingswinst_berekenen` — Stakingswinst berekenen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/stakingswinst_berekenen
+- `bd_gedeeltelijke_doorschuiving_of_staking` — (Gedeeltelijke) doorschuiving of staking onderneming: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/gedeeltelijke_doorschuiving_of_staking_onderneming
+- `bd_stakingsaftrek_2025` — Stakingsaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/stakingsaftrek-2025
+- `bd_stakingsaftrek_algemeen` — Stakingsaftrek: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/stakingsaftrek
+- `bd_extra_lijfrenteaftrek_staking_2025` — Extra lijfrentepremieaftrek bij stakende ondernemers 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/extra-lijfrentepremieaftrek-bij-stakende-ondernemers-2025
+- `bd_desinvesteringsbijtelling_bij_staking` — Desinvesteringsbijtelling bij verkoop bedrijfsmiddel na staken bedrijf: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/desinvesteringsbijtelling-bij-verkoop-bedrijfsmiddel-na-staken-bedrijf
+- `bd_doorschuiven_nieuwe_bestaande_onderneming` — Doorschuiven naar een nieuwe of bestaande onderneming: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/doorschuiven-naar-een-nieuwe-of-bestaande-onderneming
+- `bd_overdracht_medeondernemer_werknemer` — Uw onderneming overdragen aan een medeondernemer of werknemer: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_draagt_uw_onderneming_over/uw-onderneming-overdragen-aan-een-medeondernemer-of-werknemer
+- `bd_oudedagsreserve_afrekenen` — Oudedagsreserve afrekenen: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/oudedagsreserve_afrekenen
+- `bd_rechtsvorm_wijzigen` — Uw onderneming wijzigt van rechtsvorm: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/uw_onderneming_wijzigt_van_rechtsvorm/
+- `bd_waar_moet_ik_me_uitschrijven` — Waar moet ik me uitschrijven?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/ondernemen/onderneming_wijzigen_of_beeindigen/u_staakt_uw_onderneming/waar-moet-ik-me-uitschrijven
+- `bd_btw_onderneming_wijzigen_of_beeindigen` — Onderneming wijzigen of beeindigen: hoe zit het met de btw?: https://www.belastingdienst.nl/wps/wcm/connect/nl/btw/content/btw-onderneming-wijzigen-of-beeindigen
+- `bd_administratie_bewaren_2025` — Administratie bewaren: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/btw/administratie_bijhouden/administratie_bewaren/administratie_bewaren
+- `bd_loondienst_na_ondernemerschap` — In loondienst nadat u bent gestopt met uw onderneming: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/loondienst-na-ondernemerschap
+- `bd_urencriterium_2025` — Voorwaarden urencriterium: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+- `bd_stoppende_ondernemers` — Stoppende ondernemers (themadossier belastingdienst.nl/staken): https://www.belastingdienst.nl/wps/wcm/connect/nl/stoppende-ondernemers/
+- `bd_fisin2025_h6_winst_uit_onderneming` — Fiscale informatie 2025, hoofdstuk 6 - Winst uit onderneming: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/winst_uit_onderneming
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

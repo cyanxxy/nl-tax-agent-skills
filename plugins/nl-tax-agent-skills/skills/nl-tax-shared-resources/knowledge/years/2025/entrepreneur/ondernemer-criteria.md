@@ -179,3 +179,10 @@ decision itself to manual review.
    scope -- record the facts and route to manual review.
 6. Once both tests are settled, follow `winstberekening-2025.md` for the order in
    which the figures are combined.
+
+## Official sources
+
+- `bd_ondernemer_criteria_2025` — Wanneer bent u ondernemer voor de inkomstenbelasting?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting/wanneer_bent_u_ondernemer_voor_de_inkomstenbelasting
+- `bd_ondernemerscheck_2025` — OndernemersCheck inkomstenbelasting: https://www.belastingdienst.nl/wps/wcm/connect/nl/ondernemers/content/checken-of-ik-ondernemer-ben-voor-de-inkomstenbelasting
+- `bd_urencriterium_2025` — Voorwaarden urencriterium: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/voorwaarden_urencriterium
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

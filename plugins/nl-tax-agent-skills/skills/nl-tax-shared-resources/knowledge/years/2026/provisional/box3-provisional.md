@@ -146,3 +146,8 @@ inconsistent publication. Use estimates for review and defer to the live portal
 and beschikking.
 
 Do not allocate individual assets or debts between fiscal partners for the fictitious calculation. Allocate the joint grondslag sparen en beleggen.
+
+## Official sources
+
+- `bd_box3_2026_provisional` — Hoe is het box 3-inkomen op mijn voorlopige aanslag 2026 berekend?: https://www.belastingdienst.nl/wps/wcm/connect/nl/box-3/content/berekening-box-3-inkomen-2026
+- `bd_fisin_box3_assets_debts_2026` — Fiscale Informatie 2026 — Bezittingen en schulden box 3: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2026/bezittingen_en_schulden_box_3_

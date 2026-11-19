@@ -50,7 +50,7 @@ different questions.
 ## Start, resources and resume
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md`, then

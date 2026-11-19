@@ -46,3 +46,7 @@ When someone other than the taxpayer is preparing or submitting a tax return or 
 ## Developer instruction
 
 If the user mentions they are helping someone else with their taxes, include an authorization check step in the submission checklist.
+
+## Official sources
+
+- `bd_machtigen_authorization` — Representative authorization: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/aangifte_doen/praktische_informatie/digid_machtigen/digid_machtigen

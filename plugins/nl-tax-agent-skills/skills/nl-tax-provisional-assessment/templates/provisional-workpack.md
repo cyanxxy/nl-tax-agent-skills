@@ -212,174 +212,15 @@ voorlopige aanslag Zorgverzekeringswet.
 
 ## Delta summary
 
-[For change: complete the comparison below. For request: "N/A — new request".
-For review: "N/A — see Review questions". For stopzetten: "N/A — stopzetten does
-not require a delta calculation".]
-
-### Baseline
-
-| Field                | Value                                          | Src |
-|----------------------|------------------------------------------------|-----|
-| Source               | [existing voorlopige aanslag / prior-year data] | [F/U/?] |
-| Date                 | [date of baseline beschikking or data]          | [F/U/?] |
-| Monthly amount       | [EUR X,XXX payment / EUR X,XXX refund]          | [F/U/?] |
-| Source type          | [beschikking / user input / EVA / VVA]          | [F/U/?] |
-
-### Changes
-
-| Category               | Baseline      | Src (baseline) | Current Estimate | Src (current) | Delta         | Notes |
-|------------------------|---------------|----------------|------------------|---------------|---------------|-------|
-| Employment income      | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Pension/benefit income | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Expected business profit (`onderneming.geschatte_winst`) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | [N/A if no enterprise] |
-| Other income           | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Eigenwoningforfait (WOZ peildatum 1 January 2025) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | |
-| Total deductible own-home costs | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | mortgage interest + financing costs + periodic rights |
-| Hillen deduction       | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           | [if applicable] |
-| Box 1 own-home balance (`box1_own_home_balance`) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | EWF - deductible costs - Hillen |
-| Box 3 assets (Cat I)   | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Box 3 assets (Cat II)  | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Box 3 qualifying debts (Cat III) | EUR | [F/U/B/?] | EUR | [F/U/A/?] | EUR | accepted rows only; unresolved candidates excluded |
-| Alimentatie            | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Other deductions       | EUR           | [F/U/B/?]      | EUR              | [F/U/A/?]     | EUR           |       |
-| Partner changes        | [description] | [F/U/B/?]      | [description]    | [F/U/A/?]     | [description] |       |
-
-Label key:
-
-- All "Baseline" values are labeled as **from-baseline**
-- All "Current Estimate" values are labeled as **estimate**
-- Delta = Current Estimate minus Baseline for workpack review only
-- Any row where either side is `?` is also listed under Missing information
-- A baseline field the taxpayer cannot provide from the existing voorlopige
-  aanslag reads `unknown` (not `?`), and its row has no delta
-
-Baseline fields unavailable: [none / list of fields]. This is a non-blocking
-note: it is not an assumption, an open question, or a Missing information row,
-and the delta is calculated only where both baseline and current estimate are
-available.
-
-Zvw companion: [where applicable, whether a separate voorlopige aanslag
-Zorgverzekeringswet 2026 exists and what income estimate it uses, as recorded
-in the `Winst uit onderneming forecast` section; otherwise N/A]. It has its own
-change route and is never a row in this table or part of a total.
-
-### Impact
-
-[Reviewed possible future payment/refund direction, or `uncertain`; never a cash-flow prediction]
-
-- If the reviewed estimate points upward: "The prepared 2026 estimate is higher than the current baseline. The portal may therefore show a higher future payment or lower future refund."
-- If the reviewed estimate points downward: "The prepared 2026 estimate is lower than the current baseline. The portal may therefore show a lower future payment or higher future refund."
-- If the reviewed estimate is similar: "The prepared 2026 estimate is similar to the current baseline, but the portal can still produce a different monthly amount."
-
-These are review directions, not predicted cash flows. The Belastingdienst
-performs its own recalculation from the complete dataset you submit; only the
-live portal result and the replacement beschikking determine the actual future
-payment/refund amount and timing. Prepare and verify the complete dataset; the
-change form requires all applicable categories, not only the changed item.
+[For `request`, `review`, or `stopzetten`, emit: `N/A — change subflow only.` For `change`, load `templates/sections/delta-summary.md` and fill that section here.]
 
 ## Review questions
 
-[For review: complete the review below. For request/change/stopzetten: "N/A —
-not applicable for this subflow".]
-
-This review compares the current 2026 voorlopige aanslag baseline (see Existing
-baseline above) with your current 2026 situation. It is a review aid: if
-material changes are found, the next step is the change subflow with a complete
-change workpack.
-
-### Category review
-
-| Category | Baseline field | Current 2026 estimate | Change status | Evidence / quote | Recommended action |
-|----------|----------------|-----------------------|---------------|------------------|--------------------|
-| Employment income | [baseline row] | [current estimate or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| Pension and benefits | [baseline row] | [current estimate or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| AOW status and transition month | [below_all_year / reaches_during_year / aow_all_year] | [reviewed state and month/N/A] | [unchanged / changed / unknown] | [F/U/C/?] | [manual portal review for transition / ask follow-up / change subflow] |
-| Expected business profit (`onderneming.geschatte_winst`) | [baseline row/N/A] | [current estimate or unchanged] | [unchanged / changed / unknown / N/A] | [F/U/?] | [no action / ask follow-up / change subflow / manual review] |
-| Other income | [baseline row] | [current estimate or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| Own-home WOZ / eigenwoningforfait | [WOZ peildatum 1 January 2025 and baseline EWF] | [current estimate or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| Own-home deductible costs / Hillen / `box1_own_home_balance` | [baseline components] | [current components or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow / manual review] |
-| Deductions | [baseline row] | [current estimate or unchanged] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| Box 2 | [baseline row] | [current estimate or not applicable] | [unchanged / changed / unknown / not applicable] | [F/U/?] | [no action / ask follow-up / change subflow / manual review] |
-| Box 3 peildatum assets | [baseline row] | [current estimate or unchanged at 1 January 2026] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow] |
-| Box 3 qualifying debts | [accepted baseline rows] | [accepted current rows after inclusion/exclusion screen] | [unchanged / changed / unknown] | [F/U/?] | [no action / ask follow-up / change subflow / manual review] |
-| Alleenstaandeouderenkorting | [baseline credit/N/A] | [entitlement to an AOW pension for a single person / unresolved] | [unchanged / changed / unknown / N/A] | [F/U/?] | [manual review; never infer from single-parent status] |
-| Partner allocation | [baseline row] | [current estimate or unchanged] | [unchanged / changed / unknown / not applicable] | [F/U/?] | [no action / ask follow-up / change subflow] |
-
-Every category still `unknown` has a question under Open questions.
-
-### Recommended action summary
-
-| Recommended action | Applies? | Reason |
-|--------------------|----------|--------|
-| No action | [yes/no] | [reason] |
-| Continue review | [yes/no] | [remaining unknowns] |
-| Change subflow | [yes/no] | [changed categories] |
-| Manual review | [yes/no] | [complex or unsupported facts] |
-
-### Change-subflow trigger
-
-If a reviewed category is marked `changed` and may materially affect the
-portal estimate, discuss the change subflow. A change workpack must collect the
-complete dataset again; do not prepare only the changed rows. The live portal
-and replacement beschikking, not this review table, determine the actual future
-payment/refund amount and timing.
+[For `request`, `change`, or `stopzetten`, emit: `N/A — review subflow only.` For `review`, load `templates/sections/review-questions.md` and fill that section here.]
 
 ## Stopzetten outcome
 
-[For stopzetten, and for a change reached through the stopzetten payment-case
-redirect. For request/review and any other change, replace this section's body
-with "N/A — not applicable for this subflow"; do not omit the heading.]
-
-If the taxpayer is **moving abroad**, record: "Residency review required; moving abroad is **not a categorical stopzetten reason**." The provisional 2026 migration boundary applies and is terminal for this provisional workflow: do not emit a refund-stop checklist solely because of the move, and tell the taxpayer to adjust or stop the voorlopige aanslag personally or with an adviser. An annual M or C precollection draft is a separate workflow and does not change or stop the voorlopige aanslag.
-
-### Current-date cutoff gate
-
-| Item | Value | Src |
-|------|-------|-----|
-| Current date used for cutoff | [YYYY-MM-DD] | [system/user] |
-| Stopzetten cutoff | 2026-10-01 | C:bd_provisional_stopzetten_2026 |
-| Cutoff result | [before cutoff / cutoff passed] | C:date_compare |
-
-If the current date is on or after 2026-10-01, do not generate a stopzetten checklist. State that the 2026 stopzetten cutoff has passed and route the user to review/change or to a separate filing-status review and, when a return will be filed, annual settlement.
-
-### Cash-flow direction and route
-
-| Item | Value | Src |
-|------|-------|-----|
-| Current monthly direction | [refund / payment / unknown] | [F/U/?] |
-| Route chosen | [stop refund / change VA (payment case) / no action] | C:decision |
-| Reason | [short reason] | [F/U/C] |
-| Refund component | [deductions / IACK / algemene heffingskorting / unknown] | [F/U/?] |
-| Effective date | [2026-01-01 / selected first day of month / unknown] | [F/U/C/?] |
-| Amount already received in 2026 | EUR [amount / unknown] | [F/U/?] |
-| Separate repayment notice | [expected for paid deductions/IACK / not applicable / unresolved] | C:review |
-| 2026 annual filing status | [required / not required / unresolved / plans to file] | [F/U/?] |
-
-### Refund-stop checklist
-
-[Include only when the taxpayer receives a monthly refund and the current-date cutoff gate is before 2026-10-01.]
-
-> **HUMAN-ONLY PORTAL STEPS.** The taxpayer or an authorized human performs any
-> authenticated portal action below personally. The assistant must not open or
-> operate the portal, click controls, confirm, send, or submit.
-
-- [ ] I confirmed the current VA pays a monthly refund
-- [ ] I confirmed the current date is before 2026-10-01
-- [ ] I identified whether the selected refund concerns deductions, IACK, or the algemene heffingskorting
-- [ ] For deductions/IACK: I confirmed the effect is retroactive to 1 January 2026 and prior payments may be reclaimed in a separate notice
-- [ ] For algemene heffingskorting: I confirmed the selected first day of a month and prospective payment effect from that selected/next payment month
-- [ ] I checked the 2026 annual filing obligation separately; stopzetten itself does not make filing universally required
-- [ ] I used the official Mijn Belastingdienst stopzetten form personally for my 2026 monthly refund
-- [ ] I kept the confirmation for my records
-
-### Payment-case redirect
-
-[Include only when the taxpayer pays monthly and the amount is wrong.]
-
-Stopping payments does not reduce the tax obligation, and simply ceasing
-payments can create arrears under the current beschikking. Route to the change
-subflow and carry the payment baseline forward there; do not include the
-refund-stop checklist.
+[For `request`, `change`, or `review`, emit: `N/A — stopzetten subflow only.` For `stopzetten`, load `templates/sections/stopzetten-outcome.md` and fill that section here.]
 
 ## Income estimate
 
@@ -395,85 +236,7 @@ refund-stop checklist.
 
 ## Winst uit onderneming forecast
 
-[Repeat or reference the sourced `onderneming.geschatte_winst` forecast above.
-If not applicable, state that explicitly. Preserve manual review and do not
-include annual deduction or final-tax calculations.]
-
-Definition confirmed with the taxpayer before the amount was recorded: the winst
-expected as ondernemer in 2026, **before** the ondernemersaftrek and **before**
-the MKB-winstvrijstelling, excluding the btw payable and the btw reclaimable,
-with a minus sign for an expected loss. It is the only business figure the 2026
-form asks for; the Belastingdienst applies the ondernemersaftrek and the
-MKB-winstvrijstelling itself. Every 2026 business figure is read from
-`../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md`.
-
-### Rollover check
-
-| Item | Value | Src |
-|------|-------|-----|
-| 2026 voorlopige aanslag extended automatically or opened pre-filled | [yes / no / unknown] | [F/U/?] |
-| Year whose figures the current 2026 voorlopige aanslag rests on | [year / unknown] | [F/U/?] |
-| Profit estimate the current 2026 voorlopige aanslag uses | EUR [amount / unknown] (from-baseline) | [F/U/B/?] |
-| Still the taxpayer's own best estimate for 2026 | [yes / no / unknown] | [F/U/?] |
-| Reasoning still uses an earlier year's zelfstandigenaftrek | [yes / no / unknown] | [F/U/?] |
-| Finding | [carried-over zelfstandigenaftrek above the 2026 amount in `winst-provisional-2026.md` / no rollover issue found / unresolved] | C:review |
-
-A carried-over zelfstandigenaftrek above the 2026 amount overstates the
-deduction, so too little is paid through the year and the difference is owed
-when the final 2026 assessment is made up. Leave an unanswered row as `?` and
-list it under Missing information; never assume and never enter a zero. A change
-made to the voorlopige aanslag 2025 after the cut-off date stated in
-`winst-provisional-2026.md` is not carried into 2026 automatically.
-
-### Zvw companion -- separate voorlopige aanslag Zorgverzekeringswet
-
-[Required whenever there is winst uit onderneming or income from work performed
-outside employment. Otherwise state "N/A -- no winst uit onderneming or income
-from work outside employment reported."]
-
-| Item | Value | Src |
-|------|-------|-----|
-| Voorlopige aanslag Zorgverzekeringswet 2026 received | [yes / no / unknown] | [F/U/?] |
-| Income estimate that voorlopige aanslag Zvw uses | EUR [amount / unknown] (from-baseline) | [F/U/B/?] |
-| Still matches the taxpayer's own 2026 expectation | [yes / no / unknown] | [F/U/?] |
-| Handling | separate aanslag, separate change route -- manual review | C:review |
-
-You (the taxpayer) receive two aanslagen: one for the inkomstenbelasting/premie
-volksverzekeringen and a separate one for the bijdrage Zorgverzekeringswet. At
-this stage there can be two voorlopige aanslagen, with separate change routes.
-Whether a change to the income-tax voorlopige aanslag is coupled to the Zvw
-assessment is not established in the reviewed sources. You therefore check the
-Zvw assessment separately, and this workpack records what you find.
-
-- [ ] You (the taxpayer) also check your voorlopige aanslag Zorgverzekeringswet
-  2026 in Mijn Belastingdienst and change it through its own route if its
-  estimate is no longer right.
-
-The Zvw base is the belastbare winst -- a different figure from
-`onderneming.geschatte_winst`, which is taken before the ondernemersaftrek and
-the MKB-winstvrijstelling. The bijdrage is not deductible and is never
-subtracted from the profit estimate. This section reports the Zvw alongside the
-income-tax dataset and never inside it: no bijdrage amount, no Zvw row in the
-income-tax form, and no Zvw instalment, deadline, payment, or refund timing.
-Percentages and the maximumbijdrage-inkomen are read from
-`../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md`; the
-Belastingdienst calculates the bijdrage.
-
-The income-tax field map contains no Zvw field or value: no Zvw `field_id`,
-label, note, amount, baseline, estimate, or manual-entry row.
-
-### Estimated tax credits
-
-| Credit area                           | Handling | Src |
-|---------------------------------------|----------|-----|
-| Algemene heffingskorting              | [portal estimate / source-backed estimate / manual review] | [C/F/U/A/?] |
-| Arbeidskorting                        | [portal estimate / source-backed estimate / manual review] | [C/F/U/A/?] |
-| IACK                                  | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
-| Ouderenkorting                        | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
-| Alleenstaandeouderenkorting           | [manual review of entitlement to an AOW pension for a single person; never infer from single-parent status or children] | [F/U/A/?] |
-| Jonggehandicaptenkorting              | [manual review unless exact reviewed sources and required facts are present] | [F/U/A/?] |
-
-Do not show calculated credit amounts unless exact reviewed sources are registered and all required taxpayer facts are available.
+[If `business.has_onderneming` is `no`, emit: `Not applicable — no business income (Src: profile.business.has_onderneming).` If applicable, load `templates/sections/winst-forecast.md` and fill that section here.]
 
 ## Own-home estimate
 
@@ -503,18 +266,7 @@ the live portal groups or labels them differently.
 
 ## Box 2 provisional estimate
 
-[If no aanmerkelijk belang: "Not applicable -- no substantial interest (aanmerkelijk belang) reported."]
-
-| Item | Amount label | Src |
-|------|--------------|-----|
-| Estimated regular benefits, including dividends (`box2.geschatte_reguliere_voordelen`) | EUR [amount] (estimate/from-baseline) | [F/U/A/B/?] |
-| Estimated disposal benefits (`box2.geschatte_vervreemdingsvoordelen`) | EUR [amount] (estimate/from-baseline) | [F/U/A/B/?] |
-| Estimated costs (`box2.geschatte_kosten`) | EUR [amount] (estimate/from-baseline) | [F/U/A/B/?] |
-| Estimated dividend withholding tax (`box2.geschatte_ingehouden_dividendbelasting`) | EUR [amount] (estimate/from-baseline) | [F/U/A/B/?] |
-| Estimated fictitious regular benefit from BV lending (`box2.geschat_fictief_regulier_voordeel_bv_lening`) | EUR [amount] (estimate/from-baseline/manual review) | [F/U/A/B/?] |
-| Fiscal-partner Box 2 allocation (`partner.verdeling_box2_inkomen`) | [taxpayer %] / [partner %] (estimate/from-baseline) | [U/B/?] |
-
-Manual review / unsupported triggers: valuation disputes, emigration, death, restructurings, treaty/nonresident issues, informal capital, non-arm's-length transfers, and corporate-tax-heavy DGA issues.
+[If `box2.has_aanmerkelijk_belang` is `no`, emit: `Not applicable — no substantial interest in 2026 (Src: profile.box2.has_aanmerkelijk_belang).` If applicable, load `templates/sections/box2-provisional.md` and fill that section here.]
 
 ## Box 3 provisional estimate
 
@@ -774,7 +526,7 @@ appendices.]
 ```yaml
 workpack_format: nl-tax-workpack
 workpack_version: "2.0"
-plugin_version: "0.5.5"
+plugin_version: "0.6.0"
 workflow: provisional_2026_request   # provisional_2026_request | provisional_2026_change | provisional_2026_review | provisional_2026_stopzetten
 tax_year: 2026
 created_at: ""                       # ISO 8601

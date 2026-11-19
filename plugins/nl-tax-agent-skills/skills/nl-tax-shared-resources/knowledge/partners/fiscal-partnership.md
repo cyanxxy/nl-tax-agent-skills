@@ -69,3 +69,10 @@ When a fiscal partner dies, the surviving partner can choose to be fiscal partne
 - If fiscal partnership is only part-year, ask whether the taxpayer intends to choose whole-year treatment.
 - For death, divorce, emigration, immigration, or multiple partner situations, flag the case for human review.
 - Do not infer an optimal allocation automatically; present source-backed allocation options and require taxpayer review.
+
+## Official sources
+
+- `bd_fiscal_partnership` — Fiscaal partnerschap - Wanneer ben ik fiscaal partner?: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/relatie_familie_en_gezondheid/relatie/fiscaal_partnerschap/fiscaal_partnerschap
+- `bd_joint_filing_2025` — Hoe kan ik samen met mijn partner aangifte doen?: https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte/content/samen-met-mijn-partner-aangifte-doen
+- `bd_fiscal_partner_death_return` — Ik ben fiscale partner van de overledene - hoe doe ik aangifte inkomstenbelasting voor mijzelf?: https://www.belastingdienst.nl/wps/wcm/connect/nl/na-een-overlijden/content/inkomstenbelasting-fiscale-partner-hoe-aangifte-doen-na-overlijden
+- `bd_fiscal_partner_separation` — Is mijn ex nog mijn fiscale partner?: https://www.belastingdienst.nl/wps/wcm/connect/nl/scheiden/content/zijn-we-nog-fiscale-partners

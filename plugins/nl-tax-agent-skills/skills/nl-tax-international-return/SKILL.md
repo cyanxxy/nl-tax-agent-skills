@@ -57,7 +57,7 @@ annual M/C return.
 ## Start, resources and resume
 
 After any context compaction or summary, read the files named below again,
-plus any helper `SKILL.md` in use, before your next reply.
+plus any internal helper module in use, before your next reply.
 
 Read `../nl-tax-shared-resources/runtime-contract.md`
 and `../nl-tax-shared-resources/runtime-workpack-files.md`, then
@@ -67,8 +67,8 @@ this skill directory using the host's resource/file tools; `workspace/...`
 is relative to the selected working folder. Do not use shell discovery or
 vendor-specific environment variables.
 
-Read only the flow's notes for the active topic and their entries in
-`../nl-tax-shared-resources/source-register.yaml`. Missing named resources
+Read only the flow's notes for the active topic and use their `source_ids`
+header and inline `## Official sources` links. Missing named resources
 block that topic. New international notes and the form inventory require
 human source-content review: `needs_review`, missing attestation or unreviewed
 schema keeps workpack and map `draft` and blocks a manual-entry checklist.
@@ -93,7 +93,7 @@ saved workpack the user named and write nothing.
 
 Follow the consent, first-save, download, withdrawal and stale rules in
 `../nl-tax-shared-resources/runtime-workpack-files.md`.
-Offer saving at workflow start, a pause and after generation/mapping if due,
+Offer saving at the first progress checkpoint, a pause and after generation/mapping if due,
 each in its own reply with one yes/no question. Credit an existing clear
 save instruction or refusal. At first save or final generation load
 `templates/international-workpack.md` and

@@ -128,3 +128,14 @@ The Hillenregeling reduces a positive own-home balance when a homeowner has no o
 - The eigenwoningforfait percentage of 0.35% has been adjusted over the years; always use the percentage valid for the relevant tax year.
 - The tariefsaanpassing rate (37.48% cap) is part of the broader policy to gradually reduce the benefit of mortgage interest deduction for higher incomes.
 - For the workpack: collect the WOZ-beschikking and mortgage annual statement (jaaroverzicht hypotheek) as evidence. See evidence-checklist.md.
+
+## Official sources
+
+- `bd_own_home_deduction_cap_2025` — Beperking hypotheekrenteaftrek als u een hoog inkomen hebt: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
+- `bd_woz_value_annual_2025` — Fiscale informatie 2025 — Eigen woning en restschuld vroegere eigen woning: https://www.belastingdienst.nl/wps/wcm/connect/fisin/fisin2025/eigen_woning_en_restschuld_vroegere
+- `bd_eigenwoningforfait_2025_2026` — Eigenwoningforfait - wat is het en hoe bereken ik het?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hoe-werkt-eigenwoningforfait
+- `bd_eigenwoningforfait_multiple_homes` — Verschillende woningen in het jaar: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/
+- `bd_hypotheekrenteaftrek_conditions` — Mag ik mijn hypotheekrente altijd aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken
+- `bd_hypotheek_oversluiten` — Ik ga mijn hypotheek oversluiten — hoe zit het met mijn hypotheekrenteaftrek?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrenteaftrek-bij-oversluiten-hypotheek
+- `bd_own_home_deductible_costs` — Eigen woning - welke kosten mag ik aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten
+- `bd_temporary_two_homes_interest` — Ik heb tijdelijk 2 woningen - hoe zit het dan met de hypotheekrenteaftrek?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek

@@ -225,3 +225,15 @@ deduction-rate cap in `../annual/deductions.md` (bd_deduction_rate_cap_2025).
    record the facts and hand the checking step to the taxpayer with an explicit
    human subject -- "You (the taxpayer) check these amounts in Mijn
    Belastingdienst." This plugin never opens or operates the portal.
+
+## Official sources
+
+- `bd_ondernemersaftrek_2025` — Ondernemersaftrek: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/
+- `bd_zelfstandigenaftrek_2025` — Zelfstandigenaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/zelfstandigenaftrek-2025
+- `bd_startersaftrek_2025` — Startersaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek
+- `bd_startersaftrek_ao_2025` — Startersaftrek bij arbeidsongeschiktheid: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/inkomstenbelasting_voor_ondernemers/ondernemersaftrek/startersaftrek_bij_arbeidsongeschiktheid
+- `bd_meewerkaftrek_2025` — Meewerkaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/meewerkaftrek-2025
+- `bd_stakingsaftrek_2025` — Stakingsaftrek 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/stakingsaftrek-2025
+- `bd_so_aftrek_2025` — Aftrek voor speur- en ontwikkelingswerk 2025: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/zakelijk/winst/inkomstenbelasting/verandering_inkomstenbelasting_vorige_jaren/veranderingen-inkomstenbelasting-2025/ondernemersaftrek-2025/aftrek-voor-speur-en-ontwikkelingswerk-2025
+- `bd_deduction_rate_cap_2025` — Afbouw tarief aftrekposten bij hoog inkomen: https://www.belastingdienst.nl/wps/wcm/connect/nl/aftrek-en-kortingen/content/afbouw-tarief-aftrekposten-bij-hoog-inkomen
+- `law_wet_inkomstenbelasting_2001` — Wet inkomstenbelasting 2001: https://wetten.overheid.nl/BWBR0011353/

@@ -76,3 +76,13 @@ Also inventory expected qualifying financing costs and periodic erfpacht/opstal/
 - For two homes or any other complex own-home situation, collect the relevant dates, addresses, occupancy/use, listing/rental, mortgage, and divorce facts and route the calculation to manual review.
 - Do not reuse 2025 eigenwoningforfait thresholds or Hillen percentages.
 - If projected values are missing, record missing information rather than carrying forward a previous-year value without a taxpayer-provided estimate.
+
+## Official sources
+
+- `bd_eigenwoningforfait_2025_2026` — Eigenwoningforfait - wat is het en hoe bereken ik het?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hoe-werkt-eigenwoningforfait
+- `bd_eigenwoningforfait_multiple_homes` — Verschillende woningen in het jaar: https://www.belastingdienst.nl/wps/wcm/connect/bldcontentnl/belastingdienst/prive/woning/eigenwoningforfait/verschillende_woningen_in_het_jaar/
+- `bd_own_home_deduction_cap_2026` — Beperking hypotheekrenteaftrek als u een hoog inkomen hebt: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tariefsaanpassing-eigen-woning
+- `bd_woz_value_provisional_2026` — Hulp bij de voorlopige aanslag — wat neemt u mee?: https://www.belastingdienst.nl/wps/wcm/connect/nl/voorlopige-aanslag/content/hulp-bij-de-voorlopige-aanslag-wat-neemt-u-mee
+- `bd_hypotheekrenteaftrek_conditions` — Mag ik mijn hypotheekrente altijd aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/hypotheekrente-aftrekken
+- `bd_own_home_deductible_costs` — Eigen woning - welke kosten mag ik aftrekken?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/eigen-woning-aftrekbare-kosten
+- `bd_temporary_two_homes_interest` — Ik heb tijdelijk 2 woningen - hoe zit het dan met de hypotheekrenteaftrek?: https://www.belastingdienst.nl/wps/wcm/connect/nl/koopwoning/content/tijdelijk-2-woningen-renteaftrek

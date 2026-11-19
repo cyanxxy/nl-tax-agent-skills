@@ -52,7 +52,7 @@ expected_conversation:
     annual_checklist_availability_is_non_question: true
     bare_yes_activates_annual_checklist: false
     # Annual consent covered only the annual file, so the provisional workflow
-    # asks once, as its own workflow-start offer, in a reply with no other
+    # asks once, as its own first-checkpoint offer, in a reply with no other
     # yes/no question.
     provisional_file_consent_asked_once: true
     one_yes_no_question_per_reply: true

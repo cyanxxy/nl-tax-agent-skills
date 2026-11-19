@@ -37,8 +37,13 @@ amount, percentage, threshold, and date.
 - If no row fits, a narrow text search for the Dutch term inside
   `../nl-tax-shared-resources/knowledge/` is allowed. Do not search the rest of
   the plugin.
-- To cite a source, read the selected note's `source_ids` and look up only those
-  entries in `../nl-tax-shared-resources/source-register.yaml`.
+- To cite a source, read the selected note's `source_ids` header and its inline
+  `## Official sources` section for each source's title and official URL.
+- Side-by-side comparisons across supported years (for example "how did Box 3
+  or zelfstandigenaftrek change between 2025 and 2026?") are allowed: open both
+  years' notes, label every figure with its exact tax year and workflow (annual
+  2025 vs provisional 2026 vs draft annual 2026), and disclose `needs_review` on
+  any draft note.
 - Covered: the reviewed notes for the annual return 2025 and the voorlopige
   aanslag 2026, and the draft notes (review status `needs_review`) for VAT
   returns and corrections, VAT adjustments, ICP, OSS/IOSS, the international
@@ -108,16 +113,12 @@ when filing the annual 2026 return in 2027.
 | Box 3 in 2026 | heffingsvrij vermogen, forfaitair rendement, peildatum, fictitious return | `../nl-tax-shared-resources/knowledge/years/2026/provisional/box3-provisional.md` |
 | Expected business profit 2026 | winst uit onderneming, geschatte_winst, forecast, rollover, belastingrente | `../nl-tax-shared-resources/knowledge/years/2026/provisional/winst-provisional-2026.md` |
 | Zvw contribution 2026 | bijdrage Zvw, voorlopige aanslag Zorgverzekeringswet | `../nl-tax-shared-resources/knowledge/years/2026/provisional/zvw-provisional-2026.md` |
-| How to request one | request, voorlopige aanslag, monthly | `../nl-tax-provisional-assessment/reference/source-projections/request-flow-human.md` |
-| How to change one | change, wijzigen, complete dataset | `../nl-tax-provisional-assessment/reference/source-projections/change-flow-human.md` |
-| How to stop one | stopzetten, stop, refund | `../nl-tax-provisional-assessment/reference/source-projections/stopzetten-flow-human.md` |
+| How to request one | request, voorlopige aanslag, monthly | `../nl-tax-shared-resources/knowledge/years/2026/provisional/request-flow.md` |
+| How to change one | change, wijzigen, complete dataset | `../nl-tax-shared-resources/knowledge/years/2026/provisional/change-flow.md` |
+| How to stop one | stopzetten, stop, refund | `../nl-tax-shared-resources/knowledge/years/2026/provisional/stopzetten-flow.md` |
 | When to review one | check, too high, too low, review | `../nl-tax-shared-resources/knowledge/years/2026/provisional/review-flow.md` |
 | Refund payment timing | teruggaaf, refund, monthly, payment | `../nl-tax-shared-resources/knowledge/years/2026/provisional/refund-payment-timing.md` |
 | Prefilled estimate and baseline | VVA, EVA, algorithm register, weegmodule | `../nl-tax-shared-resources/knowledge/years/2026/provisional/vva-eva-baseline-delta.md` |
-
-For request, change, and stopzetten procedures, open the human-subject runtime
-projection listed above, not the raw `request-flow.md`, `change-flow.md`, or
-`stopzetten-flow.md` notes. The raw notes are maintainer provenance.
 
 ## VAT returns and corrections 2025/2026 (draft preparation)
 
@@ -171,9 +172,9 @@ The notes below cover VAT adjustments, the opgaaf ICP, OSS and IOSS, the
 international M and C returns, and the resident annual income-tax return 2026.
 They summarize public research dated 2 October 2026 and await human
 tax-content review (`needs_review`). Disclose that status in every answer, and
-keep the exact tax year, OSS scheme, and M or C form of the question. The
-source register records the year of each authority, including the
-investment-services and IOSS customs changes that apply only from 2026.
+keep the exact tax year, OSS scheme, and M or C form of the question. Each
+note records the year of its authorities and inline official links, including
+the investment-services and IOSS customs changes that apply only from 2026.
 
 ### VAT adjustments 2025/2026 (draft)
 
